@@ -1,0 +1,34 @@
+//============================================================================
+// Name        : c_mysql_api.cpp
+// Author      : zhaohongjie
+// Version     :
+// Copyright   : reserved
+// Description : Hello World in C++, Ansi-style
+//============================================================================
+#include "c_mysql_api.h"
+
+void case_mysql_real_query(MYSQL* conn){
+	    printf("==> mysql_real_query test suites\n");
+        MYSQL *mysql = mysql_init(NULL);
+        if(IS_DEBUG){
+            mysql_real_connect(mysql, Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, TEST_DB, MYSQL_PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        }else{
+            mysql_real_connect(mysql, Host_Test, TEST_USER, TEST_USER_PASSWD, TEST_DB, TEST_PORT, NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        }
+
+        if (mysql == NULL) {
+            printf("Error connecting to database: %s\n", mysql_error(mysql));
+            exit(1);
+        }
+
+        char sql[50];
+        sprintf(sql, "create table t(id int);insert into t values(1)");
+//        printf("%s\n", sql);
+        if(mysql_real_query(mysql, sql, 50)){
+                const char * err=mysql_error(mysql);
+                printf("create table t err: %s\n", err);
+                exit(1);
+        }else{
+                printf("    pass! mysql_real_query mult-query success\n");
+        }
+}

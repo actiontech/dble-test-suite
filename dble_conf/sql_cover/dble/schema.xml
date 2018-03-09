@@ -1,0 +1,109 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE dble:schema SYSTEM "schema.dtd">
+<dble:schema xmlns:dble="http://dble.cloud/">
+	<schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+
+
+		<!--mf test table -->
+    	<table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="mod-long"/>
+        <table name="sbtest2" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+        <table name="a_test" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+        <table name="a_order" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+        <table name="a_manager" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+    	<table name="test_global" dataNode="dn1,dn2,dn3,dn4" type="global"/>
+        <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" primaryKey="R_REGIONKEY" autoIncrement="true"/>
+        <table name="auto_table" primaryKey="id" autoIncrement="true" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+        <table name="sbtest1" dataNode="dn1,dn2,dn3,dn4" rule="mod-long"/>
+        <table name="a_two" primaryKey="id" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="a_three" primaryKey="id" dataNode="dn1,dn2,dn3" rule="hash-three" />
+		
+		<!--固定Hash分区(string)-->
+        <table name="fixed_patch_uniform_string" dataNode="dn1,dn2,dn3,dn4" rule="fixed_uniform_string_rule" />
+        <table name="fixed_patch_nonuniform_string" dataNode="dn1,dn2,dn3" rule="fixed_nonuniform_string_rule" />
+
+        <!--枚举方式分区-->
+        <table name="enum_patch_integer" dataNode="dn1,dn2,dn3,dn4" rule="enum_integer_rule"/>
+		<table name="enum_patch_string" dataNode="dn1,dn2,dn3,dn4" rule="enum_string_rule"/>
+
+		<!--数字范围分区-->
+		<table name="range_patch" dataNode="dn1,dn2,dn3,dn4" rule="range_rule" />
+        <table name="range_patch_default" dataNode="dn1,dn2,dn3,dn4" rule="range_default_rule" /> 
+
+        <!--按日期分区-->
+		<table name="date_patch" dataNode="dn1,dn2,dn3,dn4" rule="date_rule" />
+		<table name="date_patch_default" dataNode="dn1,dn2,dn3,dn4" rule="date_default_rule" />
+
+		<!--全局表-->
+		<table name="global_table1" primaryKey="id" type="global" dataNode="dn1,dn2,dn3,dn4" />
+		<table name="global_table2" primaryKey="id" type="global" dataNode="dn1,dn2,dn3,dn4" />
+		<table name="global_table3" primaryKey="id" type="global" dataNode="dn1,dn2" />
+
+		<!--ER 拆分键=parentKey-->
+		<table name="warehouse" dataNode="dn1,dn2,dn3,dn4" rule="sharding-by-fixed">
+			<childTable name="district" primaryKey="d_w_id" joinKey="d_w_id" parentKey="w_id" />
+		</table>
+
+		<!--ER 拆分键!=parentKey-->
+		<table name="parent_table" dataNode="dn1,dn2,dn3,dn4" rule="sharding-by-fixed1">
+			<childTable name="child_table" primaryKey="c_id" joinKey="c_id" parentKey="c_id" />
+		</table>
+
+		<!-- 取模 -->
+		<table name="aly_test" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+		<table name="aly_order" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" /> 
+	
+		<!--固定Hash分区-->
+		<table name="fixed_patch_uniform" dataNode="dn1,dn2,dn3,dn4" rule="fixed_uniform_rule" />
+		<table name="fixed_patch_nonuniform" dataNode="dn1,dn2,dn3" rule="fixed_nonuniform_rule" />              
+	</schema>
+	<schema name="tpccdb" sqlMaxLimit="100">
+
+		<table name="customer" dataNode="dn1,dn2,dn3,dn4" rule="c_mod-long" />
+		<table name="district" dataNode="dn1,dn2,dn3,dn4" rule="d_mod-long" /> 
+		<table name="history" dataNode="dn1,dn2,dn3,dn4" rule="h_mod-long" />
+		<table name="item" dataNode="dn1,dn2,dn3,dn4" rule="i_mod-long" /> 
+		<table name="new_orders" dataNode="dn1,dn2,dn3,dn4" rule="n_mod-long" />
+		<table name="order_line" dataNode="dn1,dn2,dn3,dn4" rule="ol_mod-long" /> 
+		<table name="orders" dataNode="dn1,dn2,dn3,dn4" rule="o_mod-long" />
+		<table name="stock" dataNode="dn1,dn2,dn3,dn4" rule="s_mod-long" /> 
+		<table name="warehouse" dataNode="dn1,dn2,dn3,dn4" rule="w_mod-long" /> 
+		
+	</schema>
+
+	<schema name="testdb" sqlMaxLimit="100">
+		<table name="tb_test" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+		<table name="friend" dataNode="dn1,dn2,dn3,dn4" rule="f_mod-long" />
+		<table name="enum" dataNode="dn1,dn2,dn3,dn4" rule="enum_integer_rule"/>
+		<table name="ranges" dataNode="dn1,dn2,dn3,dn4" rule="range_rule" />
+		<table name="fixed" dataNode="dn1,dn2,dn3,dn4" rule="fixed_uniform_string_rule" />
+
+		<table name="global1" primaryKey="id" type="global" dataNode="dn1,dn2,dn3,dn4" />
+		<table name="global2" primaryKey="id" type="global" dataNode="dn1,dn2,dn3,dn4" />
+		<table name="normal1" dataNode="dn1" />
+		<table name="normal2" dataNode="dn3" />
+
+	</schema>
+
+	<dataNode name="dn1" dataHost="172.100.9.5" database="db1" />
+	<dataNode name="dn2" dataHost="172.100.9.6" database="db1" />
+	<dataNode name="dn3" dataHost="172.100.9.5" database="db2" />
+	<dataNode name="dn4" dataHost="172.100.9.6" database="db2" />
+	<dataNode name="dn5" dataHost="172.100.9.5" database="db3" />
+
+	<dataHost name="172.100.9.5" maxCon="1000" minCon="10" balance="0"
+			  writeType="0" switchType="1"  slaveThreshold="100">
+		<heartbeat>select user()</heartbeat>
+		<writeHost host="hostM1" url="172.100.9.5:3306" user="test"
+				   password="test">
+		</writeHost>
+	</dataHost>
+
+	<dataHost name="172.100.9.6" maxCon="1000" minCon="10" balance="0"
+			  writeType="0" switchType="1"  slaveThreshold="100">
+		<heartbeat>select user()</heartbeat>
+		<writeHost host="hostM2" url="172.100.9.6:3306" user="test"
+				   password="test">
+		</writeHost>
+	</dataHost>
+	
+</dble:schema>
