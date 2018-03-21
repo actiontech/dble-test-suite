@@ -17,8 +17,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7131:8066"
-            - "7141:3306"
+            - "7131:7131"
+            - "7141:7141"
         networks:
             net:
               ipv4_address: 172.100.9.1
@@ -34,8 +34,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7132:8066"
-            - "7142:3306"
+            - "7132:7132"
+            - "7142:7142"
         networks:
             net:
               ipv4_address: 172.100.9.2
@@ -51,8 +51,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7133:8066"
-            - "7143:3306"
+            - "7133:7133"
+            - "7143:7143"
         networks:
             net:
               ipv4_address: 172.100.9.3
@@ -68,7 +68,7 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7144:3306"
+            - "7144:7144"
         networks:
             net:
               ipv4_address: 172.100.9.4
@@ -84,7 +84,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7145:3306"
+            - "7145:7145"
+            - "7146:7146"
         networks:
             net:
               ipv4_address: 172.100.9.5
@@ -100,7 +101,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7146:3306"
+            - "7147:7147"
+            - "7148:7148"
         networks:
             net:
               ipv4_address: 172.100.9.6
@@ -116,7 +118,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7147:3306"
+            - "7149:7149"
+            - "7150:7150"
         networks:
             net:
               ipv4_address: 172.100.9.7
@@ -132,7 +135,8 @@ services:
         volumes:
             - /opt/auto_build:/init_assets
         ports:
-            - "7148:3306"
+            - "7151:7151"
+            - "7152:7152"
         networks:
             net:
               ipv4_address: 172.100.9.8

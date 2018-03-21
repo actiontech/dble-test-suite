@@ -8,7 +8,7 @@ select @@auto_increment_increment
 set @@session.auto_increment_increment=12
 select @@auto_increment_increment
 #
-#auto_increment_offset: determines the starting porint for the AUTO_INCREMENT
+#auto_increment_offset: determines the starting point for the AUTO_INCREMENT
 #When the value of auto_increment_offset is greater than of auto_increment_increment,the value of auto_increment_offset is ignored 
 #!share_conn
 set @@auto_increment_offset=10

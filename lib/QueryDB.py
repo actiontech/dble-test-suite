@@ -8,7 +8,7 @@ class QueryDB:
         self._host = strHost
         context.logger.info('create query connection with host:{0},user:{1},passwd:{2},db:{3},port:{4}'.format(strHost,strUser,strPassword,strDataBase, strPort))
         try:
-            self._conn = MySQLdb.connect(host = strHost, user = strUser, passwd = strPassword, db = strDataBase, port = strPort, autocommit=True, charset = "utf8", use_unicode = True)
+            # self._conn = MySQLdb.connect(host = strHost, user = strUser, passwd = strPassword, db = strDataBase, port = strPort, autocommit=True, charset = "utf8", use_unicode = True)
             self.conn = MySQLdb.connect(host = strHost, user = strUser, passwd = strPassword, db = strDataBase, port = strPort, autocommit=True)
             self.cur = self.conn.cursor()
         except MySQLdb.Error,e:

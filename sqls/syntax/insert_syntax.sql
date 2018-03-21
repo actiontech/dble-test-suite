@@ -71,7 +71,7 @@ INSERT INTO aly_test VALUES (6,'ggg')
 SELECT * FROM aly_test
 #
 #INSERT INTO tbl_name ... VALUES ... ON DUPLICATE KEY UPDATE ...
-#After duplicate key update not supported use Sharding key
+#if duplicate key exists,insert... update not supported use Sharding key
 #PRIMARY KEY must be sharding key,otherwise "on duplicate key update" maybe Invalid
 DROP TABLE IF EXISTS aly_test
 CREATE TABLE aly_test (id INT NOT NULL PRIMARY KEY,number INT, name VARCHAR(10))
