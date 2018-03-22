@@ -21,7 +21,20 @@ def step_impl(context):
         local_file = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], file)
         remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
         context.ssh_sftp.sftp_put(remove_file, local_file)
-    context.execute_steps(u'Given Restart dble in "{0}"'.format(context.dble_test_config['dble_host']))
+    context.execute_steps(u'Given Restart dble by "{0}"'.format(context.dble_test_config['dble_host']))
+
+@Given('Replace the existing configuration with the conf sql_cover directory')
+def step_impl(context):
+    cmd = 'rm -rf {0}/dble/conf_*'.format(context.dble_test_config['dble_basepath'])
+    context.ssh_client.exec_command(cmd)
+    cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(context.dble_test_config['dble_basepath'])
+    context.ssh_client.exec_command(cmd)
+    files = os.listdir(context.dble_test_config['dble_sql_conf'])
+    for file in files:
+        local_file = "{0}/{1}".format(context.dble_test_config['dble_sql_conf'], file)
+        remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
+        context.ssh_sftp.sftp_put(remove_file, local_file)
+    context.execute_steps(u'Given Restart dble by "{0}"'.format(context.dble_test_config['dble_host']))
 
 @Then('Create "{auto_table}" table that uses a global sequence, and the auto_inc type is "{data_type}"')
 def step_impl(context,auto_table,data_type):

@@ -79,6 +79,7 @@ def install_dble_by_ip(context, ip):
 def install_dble_in_hostname(context, hostname):
     node = Nodes(context.dbles.nodes).get_node_by_host_name(hostname)
     install_dble_by_ip(context, node.ip)
+    update_dble_config(context, node.ip)
 
 @Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
@@ -132,10 +133,10 @@ def update_dble_config(context, ip):
     ssh_sftp_client = context.ssh_sftps[ip]
     ssh_client = context.ssh_clients[ip]
     dble_conf_path = context.dble_test_config['dble_basepath'] + "/dble/conf"
-    cmd = "ls {0}".format(context.dble_test_config['dble_sql_conf'])
+    cmd = "ls {0}".format(context.dble_test_config['dble_base_conf'])
     str = commands.getoutput(cmd)
     for file in str.split("\n"):
-        local_file = "{0}/{1}".format(context.dble_test_config['dble_sql_conf'], file)
+        local_file = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], file)
         remove_path = "{0}/{1}".format(dble_conf_path, file)
         cmd = "cd {0}/conf && rm -rf {1}".format(context.dble_test_config['dble']['home'], file)
         ssh_client.exec_command(cmd)

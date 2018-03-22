@@ -46,3 +46,27 @@ Step3:cd drivers/java 执行
 1，mysql 5.7.13
 2, zookeeper 3.4.9
 3, jdk-8u121
+
+#通过ftp包解压安装到所有节点，启动"dble-1"
+behave features/install_uninstall/install_dble.feature
+
+#更新dble
+behave features/install_uninstall/update_dble.feature
+
+#通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
+behave features/install_uninstall/install_dble_and_zk.feature
+
+#sql覆盖
+behave -D sql_cover=true features/sql_cover/sql.feature features/sql_cover/select.feature features/sql_cover/transaction.feature features/sql_cover/manager.feature
+
+#算法
+behave -D sql_cover=false features/function/date.feature features/function/enum.feature features/function/hash.feature features/function/patternrange.feature features/function/rangenumber.feature features/function/stringhash.feature
+
+#配置
+behave -D sql_cover=false features/reload_conf/rule.feature features/reload_conf/schema.feature features/reload_conf/server.feature
+
+#全局序列(本地文件)
+behave -D sql_cover=false features/sequence/sequence.feature
+
+#安全性
+behave -D sql_cover=false features/safety/safety.feature

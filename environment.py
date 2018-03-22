@@ -90,22 +90,25 @@ def before_feature(context, feature):
     logger.info('Enter hook <{0}>'.format('before_feature'))
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Set the log level to debug and restart server')
-    if "modify_conf" in feature.tags:
-        context.execute_steps(u'Given Back up the original configuration')
-    # if "cluster" in feature.tags:
-    #     context.execute_steps(u'Given config zookeeper cluster in all dble nodes')
-    # else:
-    #     context.execute_steps(u'Given Restore and ensure that all dble nodes are not cluster-mode')
+    try:
+        sql_cover = context.config.userdata.pop('sql_cover')
+    except KeyError:
+        raise KeyError('Not define test_config in behave -D sql_cover=XXX')
+    flag = True
+    if sql_cover.lower() == "true":
+        if flag:
+            context.execute_steps(u'Given Replace the existing configuration with the conf sql_cover directory')
+            flag = False
+    elif sql_cover.lower() == "false":
+        context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
+    else:
+        pass
     logger.info('Exit hook <{0}>'.format('befor_feature'))
 
 def after_feature(context, feature):
     logger.info('Enter hook <{0}>'.format('after_feature'))
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Reset the Log level and restart server')
-    if "modify_conf" in feature.tags:
-        context.execute_steps(u'Given Restore the original configuration')
-    if "conf_template" in feature.tags:
-        context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
     logger.info('Exit hook <{0}>'.format('after_feature'))
     logger.info('Feature end: <{0}>'.format(feature.name))
     logger.info('*' * 30)
