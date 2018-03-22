@@ -1,10 +1,13 @@
-import os
-from ssh import SSH
-from behave import *
-from DBUtil import DBUtil
 import datetime
+import os
 import re
+
+from behave import *
+from ssh import SSH
 from util import get_log_linenu
+
+from lib.DBUtil import DBUtil
+
 
 @Given('init transaction_test data')
 def step_impl(context):

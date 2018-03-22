@@ -1,3 +1,4 @@
+# explain syntax with mysql client
 class Explain:
 
     def __init__(self, result, context):

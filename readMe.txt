@@ -41,3 +41,8 @@ Step3:cd drivers/java 执行
 	java -jar read_write_split.jar | tee output.log 2>&1
     java -jar interface_test.jar | tee output.log 2>&1
 	如果打印调试信息：java -jar interface_test.jar debug| tee output.log 2>&1
+
+环境依赖：
+1，mysql 5.7.13
+2, zookeeper 3.4.9
+3, jdk-8u121

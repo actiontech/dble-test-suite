@@ -1,5 +1,5 @@
 from hamcrest import *
-
+# no use at present -- zhj
 class CheckReload:
     def __init__(self, conn, context):
         self._conn = conn

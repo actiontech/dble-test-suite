@@ -1,0 +1,78 @@
+rule.xml
+1 添加TableRule：python rule_template.py createTableRule --path=./rule.xml --name=dble --columns=id --algorithm=mod-long
+
+2 修改TableRule：python rule_template.py editTableRule --path=./rule.xml --name=dble --columns=id --algorithm=mod-long
+ps: columns,algorithm可修改，若不修改传空值;
+	删除时，不提供对应property
+
+3 删除TableRule：python rule_template.py delTableRule --path=./rule.xml --name=dble
+
+4 添加Function： python rule_template.py createFunction --path=./rule.xml --class=hash --name=mod-long --propertys=parititionCount:4,parititionLength:256
+ps:  propertys为键-值对方式
+
+5 修改Function： python rule_template.py editFunction --path=./rule.xml --class=hash --name=mod-long --propertys=parititionCount:4,parititionLength:256
+ps: ①添加新的property：传入key-value
+    ②删除已有property：只传入key
+    ③修改已有property的值：传入key-nwevalue
+
+6 删除Function：python rule_template.py delFunction --path=./rule.xml --name=mod-long
+
+
+server.xml（未完）
+缺少firewall,privileges
+1 添加system：python rule_template.py createProperty --path=./server.xml --name=port --text=8066
+
+2 修改/删除system：python rule_template.py editOrDelProperty --path=./server.xml --name=port --text=8066
+ps：当text为空值时，删除对应的property
+
+3 添加User：python  rule_template.py createUser --path=./server.xml --name=test --propertys=password:"test",schemas:"mytest,tpccdb,testdb"
+
+4 修改User：python  rule_template.py editUser --path=./server.xml --name=test --propertys=password:"test",schemas:"mytest,tpccdb,testdb"
+ps: ①添加新的property：传入key-value
+    ②删除已有property：只传入key
+    ③修改已有property的值：传入key-nwevalue
+
+5 删除User：python  rule_template.py delUser --path=./server.xml --name=test
+
+6 添加createUserPrivileges: python rule_template.py createUserPrivilege --path=./server.xml --privilege=fathernode:test_user,check:true --schemas=name:mytest,dml:0000 --tables=fathernode:mytest,name:test_table,dml:1111
+ps: 不添加tables时，--tables参数为空
+
+7 删除delUserPrivileges：python rule_template.py delUserPrivileges --path=./server.xml --name=test_user
+
+8 添加firewall：python rule_template.py createFirewall --path=./server_template.xml  --hosts=host:werre,user:gert&host:345,user:234 --blacklist=check:true --propertys=name:sret&name:jgiorgn --values=fatherNode:sret,value:false 
+
+9 删除firewall：python rule_template.py delFirewall --path=./server_template.xml
+
+schema.xml
+未完，缺少dataNode,dataHost,heartbeat,writeHost,readHost
+自修改：schema未完，缺少propertys
+1 添加schema：python rule_template.py createSchema --path=./schema.xml --name=mytest --attributes=dataNode:dn5
+ps：attributes为可选：不加时，创建的schema除name无其他参数 
+
+2 删除schema：python rule_template.py delSchema --path=./schema.xml --name=mytest 
+
+table未完，缺少childTable
+3 添加table：python rule_template.py createTable --path=./schema.xml --schemaName=mytest --tableName=mytest_table --attributes=dataNode:"dn1,dn2,dn3,dn4",rule:"mod-long"
+
+4 编辑table：python rule_template.py editTable --path=./schema.xml --schemaName=mytest --tableName=mytest_table --attributes=dataNode:"dn1,dn2,dn3,dn4",rule:"mod-long"
+ps: ①添加新的property：传入key-value
+    ②删除已有property：只传入key
+    ③修改已有property的值：传入key-nwevalue
+
+5 删除table：python rule_template.py delTable --path=./schema.xml --schemaName=mytest --name=mytest_table
+
+6 添加ChildThable: python rule_template.py createChildTable --path=./schema.xml --schemaName=mytest --tableName=parentTable --childTables=childTable --attributes=joinkey:id,parentKey:id
+tableName: 表示为最上层父表
+childTables: 表示上级节点的名称，如果上级是table，则为空；如果有多个子表嵌套，节点名字用逗号隔开
+
+
+7 编辑ChildTable：python rule_template.py editChildTable --path=./schema.xml --schemaName=mytest --tableName=parentTable --childTables=childTable --attributes=....
+
+8 删除ChildTable：python rule_template.py delChildTable --path=./schema.xml --schemaName=mytest --tableName=parentTable --childTables= --childName=child_table
+
+9 添加DataNode：python rule_template.py createDataNode --path=./schema.xml --name=dn1 --dataHost=10.186.23.12 --database=db1
+
+10 删除DataNode：python rule_template.py delDataNode --path=./schema.xml --name=dn1
+
+11 添加DataHost:
+

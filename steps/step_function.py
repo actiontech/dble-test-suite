@@ -86,6 +86,7 @@ def create_node_conn(context):
         context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = "show @@datanode"
     result, error = context.manager_conn.query(sql)
+    context.manager_conn.close()
     datanode = {}
     if type(result) == tuple:
         for i in range(len(result)):
@@ -109,6 +110,7 @@ def test_reload_failure(context):
         context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = "reload @@config_all"
     result, error = context.manager_conn.query(sql)
+    context.manager_conn.close()
     assert_that(str(error[1]), contains_string(context.text))
 
 @Then('Test the use of limit by the sharding column')

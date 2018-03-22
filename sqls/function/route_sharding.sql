@@ -1,3 +1,4 @@
+#no use -- zhj
 #ENUM
 DROP TABLE IF EXISTS enum_patch_integer /* 1_2_3_4 */
 CREATE TABLE enum_patch_integer(id int not null primary key,data varchar(10))/* 1_2_3_4 */

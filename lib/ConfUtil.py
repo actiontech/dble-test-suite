@@ -3,6 +3,7 @@
 # author : wklken@yeah.net
 # date: 2012-05-25
 # version: 0.1
+# deal with xml config files -- zhj
 import optparse
 import sys
 import re
@@ -225,7 +226,7 @@ def main():
         sys.exit(1)
 
     command = sys.argv[1]
-    if command == 'createTableRule':  # 新增tablerule
+    if command == 'createTableRule':  # 新增tablerule in rule.xml
         arg_names = [
             'path',
             'name',
@@ -254,8 +255,8 @@ def main():
         # 将更改保存到文件
         write_xml(tree, getattr(options, 'path'))
         # 增加丢失部分
-        replace(getattr(options, 'path'), 1)
-    elif command == 'editTableRule':  # 更改tablerule
+        replace(getattr(options, 'path'), 1) # #
+    elif command == 'editTableRule':  # 更改tablerule in rule.xml
         arg_names = [
             'path',
             'name',
@@ -281,7 +282,7 @@ def main():
                     algorithm.text = getattr(options, 'algorithm')
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 1)
-    elif command == 'delTableRule':  # 删除tablerule节点
+    elif command == 'delTableRule':  # 删除tablerule节点 in rule.xml
         arg_names = [
             'path',
             'name'
@@ -300,7 +301,7 @@ def main():
                 root.remove(tableRule)
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 1)
-    elif command == 'createFunction':  # 创建function
+    elif command == 'createFunction':  # 创建function in rule.xml
         arg_names = [
             'path',
             'class',
@@ -327,7 +328,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # 添加缺省值
         replace(getattr(options, 'path'), 1)
-    elif command == 'editFunction':  # 创建function
+    elif command == 'editFunction':  # 创建function in rule.xml
         arg_names = [
             'path',
             'name',
@@ -363,7 +364,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # 添加缺省值
         replace(getattr(options, 'path'), 1)
-    elif command == 'delFunction':  # 删除tablerule节点
+    elif command == 'delFunction':  # 删除tablerule节点 in rule.xml
         arg_names = [
             'path',
             'name'
@@ -382,7 +383,7 @@ def main():
                 root.remove(function)
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 1)
-    elif command == 'createProperty':  # 添加property节点
+    elif command == 'createProperty':  # 添加property节点 in server.xml
         arg_names = [
             'path',
             'name',
@@ -397,7 +398,7 @@ def main():
         functions[0].append(newproperty)
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 2)
-    elif command == 'editOrDelProperty':  # 添加property节点
+    elif command == 'editOrDelProperty':  # edit or delete property节点 in server.xml
         arg_names = [
             'path',
             'name',
@@ -418,7 +419,7 @@ def main():
 
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 2)
-    elif command == 'createUser':  # 创建user
+    elif command == 'createUser':  # 创建user in server.xml
         arg_names = [
             'path',
             'name',
@@ -444,7 +445,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # 添加缺省值
         replace(getattr(options, 'path'), 2)
-    elif command == 'editUser':  # 创建function
+    elif command == 'editUser':  # edit function in server.xml
         arg_names = [
             'path',
             'name',
@@ -480,7 +481,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # 添加缺省值
         replace(getattr(options, 'path'), 2)
-    elif command == 'delUser':  # 删除user节点
+    elif command == 'delUser':  # 删除user节点 in server.xml
         arg_names = [
             'path',
             'name'
@@ -499,7 +500,7 @@ def main():
                 root.remove(user)
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 2)
-    elif command == 'createUserPrivilege':  # 创建user
+    elif command == 'createUserPrivilege':  # 创建user in server.xml
         arg_names = [
             'path',
             'privileges',
@@ -539,7 +540,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # 添加缺省值
         replace(getattr(options, 'path'), 2)
-    elif command == 'delUserPrivileges':  # 删除user节点
+    elif command == 'delUserPrivileges':  # 删除privileges节点 in server.xml
         arg_names = [
             'path',
             'name'
@@ -560,7 +561,7 @@ def main():
                     user.remove(privilege)
         write_xml(tree, getattr(options, 'path'))
         replace(getattr(options, 'path'), 2)
-    elif command == 'createFirewall':   # 创建user
+    elif command == 'createFirewall':   # 创建user in server.xml
         arg_names = [
             'path',
             'hosts',
@@ -603,7 +604,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # 添加缺省值
         replace(getattr(options, 'path'), 2)
-    elif command == "delFirewall":
+    elif command == "delFirewall": # in server.xml
         arg_names = [
             'path'
         ]
@@ -619,7 +620,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 2)
-    elif command == 'createSchema':  # 创建user
+    elif command == 'createSchema':  # 创建 schema in schema.xml
         arg_names = [
             'path',
             'name',
@@ -646,7 +647,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'delSchema':  # 创建user
+    elif command == 'delSchema':  # delete schema in schema.xml
         arg_names = [
             'path',
             'name'
@@ -670,7 +671,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'createTable':  # 创建user
+    elif command == 'createTable':  # in schema.xml
         arg_names = [
             'path',
             'schemaName',
@@ -704,7 +705,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'editTable':  # 创建user
+    elif command == 'editTable':  # in schema.xml
         arg_names = [
             'path',
             'schemaName',
@@ -738,7 +739,8 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'delTable':  # 创建user
+    elif command == 'delTable':  # in schema.xml
+# bug：delTable接口：会删除所有schema里的指定表 -- fenghua
         arg_names = [
             'path',
             'schemaName',
@@ -755,7 +757,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'createChildTable':  # 创建user
+    elif command == 'createChildTable':  # in schema.xml
         arg_names = [
             'path',
             'schemaName',
@@ -797,7 +799,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'editChildTable':  # 创建user
+    elif command == 'editChildTable':  # in schema.xml
         arg_names = [
             'path',
             'schemaName',
@@ -840,7 +842,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'delChildTable':  # 创建user
+    elif command == 'delChildTable':  # in schema.xml
         arg_names = [
             'path',
             'schemaName',
@@ -877,7 +879,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'createDataNode':  # 创建DataNode
+    elif command == 'createDataNode':  # in schema.xml
         arg_names = [
             'path',
             'name',
@@ -898,7 +900,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'delDataNode':  # 创建user
+    elif command == 'delDataNode':  # in schema.xml
         arg_names = [
             'path',
             'name'
@@ -922,7 +924,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'createDataHost':  # 创建DataNode
+    elif command == 'createDataHost':  # in schema.xml
         arg_names = [
             'path',
             'name',
@@ -953,7 +955,7 @@ def main():
         write_xml(tree, getattr(options, 'path'))
         # #添加缺省值
         replace(getattr(options, 'path'), 3)
-    elif command == 'delDataHost':  #
+    elif command == 'delDataHost':  # in schema.xml
         arg_names = [
             'path',
 
