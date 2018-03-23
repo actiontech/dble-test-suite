@@ -3,10 +3,10 @@ import os
 import re
 
 from behave import *
-from ssh import SSH
-from util import get_log_linenu
+from step_check_sql import get_log_linenu
 
 from lib.DBUtil import DBUtil
+from lib.ssh import SSHClient
 
 
 @Given('init transaction_test data')
@@ -267,7 +267,7 @@ def step_impl(context):
     hosts = [context.mysql.ip]
 
     for host in hosts:
-        ssh = SSH(host, context.ssh_user, context.ssh_passwd, context)
+        ssh = SSHClient(host, context.ssh_user, context.ssh_passwd)
         ssh.connect()
         ssh.exec_command(rmCmd)
-        ssh.close_ssh()
+        ssh.close()

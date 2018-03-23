@@ -13,7 +13,7 @@ LOGGER = logging.getLogger('steps.safety')
 def test_tenancy(context):
     text = json.loads(context.text)
     for item in text:
-        dble_conn = DBnodb(context.dble_test_config['dble_host'], item['user'], item['password'],"", context.dble_test_config['client_port'], context)
+        dble_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'],"", context.dble_test_config['client_port'], context)
         sql = "show databases"
         res, errs = dble_conn.query(sql)
         assert_that(res[0], has_items(item['is_schema']))

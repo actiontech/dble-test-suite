@@ -45,7 +45,8 @@ Step3:cd drivers/java 执行
 环境依赖：
 1，mysql 5.7.13
 2, zookeeper 3.4.9
-3, jdk-8u121
+3, jdk-8u121 in dble resides node
+4, easy_install python-yaml in behave resides node
 
 #通过ftp包解压安装到所有节点，启动"dble-1"
 behave features/install_uninstall/install_dble.feature

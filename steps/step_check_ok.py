@@ -29,11 +29,12 @@ def do_query(context, line_nu, sql, toClose, default_db="mytest"):
         if (not hasattr(context, "conn_mycat")) or context.conn_mycat is None:
             context.logger.info("default db is : {0}".format(default_db))
             context.conn_mycat = get_compare_conn(context, default_db)
-        result2, err2 = context.conn_mycat.tran_query(sql, toClose)
+        result2, err2 = context.conn_mycat.query(sql)
         context.logger.info("check sql result:")
         compare_result(context, line_nu, sql, result2, err2)
         context.logger.info("toClose value is : {0}".format(toClose))
         if toClose:
+            context.conn_mycat.close()
             context.conn_mycat = None
     return result2
 

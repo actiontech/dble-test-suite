@@ -5,5 +5,5 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
         Given clear dirty data yield by sql
 
         Examples:Types
-          | filename                                  |
-          | syntax/sysfunction1.sql                   |
+          | filename                   |
+          | test.sql                   |
