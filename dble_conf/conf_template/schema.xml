@@ -12,13 +12,13 @@
 
 	<dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1" writeType="0">
 		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM1" password="test" url="172.100.9.5:3306" user="test">
+		<writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		</writeHost>
 	</dataHost>
 
 	<dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1" writeType="0">
 		<heartbeat>select user()</heartbeat>
-		<writeHost host="hostM2" password="test" url="172.100.9.6:3306" user="test">
+		<writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
 		</writeHost>
 	</dataHost>
 	

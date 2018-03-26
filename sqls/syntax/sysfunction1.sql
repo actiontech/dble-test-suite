@@ -139,7 +139,7 @@ SELECT HEX(vbin1 & vbin2) AS op1,HEX(vbin1 | vbin2) AS op2 FROM global_table1
 drop table if exists global_table1
 create table global_table1(a json, b int)
 insert into global_table1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)
-SELECT a, JSON_EXTRACT(a, "$.id"), b FROM global_table1 WHERE JSON_EXTRACT(a, "$.id") > 1 ORDER BY JSON_EXTRACT(a, "$.name")
+#@skip SELECT a, JSON_EXTRACT(a, "$.id"), b FROM global_table1 WHERE JSON_EXTRACT(a, "$.id") > 1 ORDER BY JSON_EXTRACT(a, "$.name")
 drop table if exists global_table1
 #SELECT JSON_UNQUOTE(a->'$.name') AS name FROM global_table1 WHERE b > 2
 #SELECT a->>'$.name' AS name FROM global_table1 WHERE b > 2

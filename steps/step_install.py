@@ -106,9 +106,9 @@ def stop_dble_in_hostname(context, hostname):
     cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
     rc, sto, re = ssh_client.exec_command(cmd)
     if re.find(" "):
-        assert_that(True, "stop succeed")
+        assert_that(True, "stop dble succeed")
     else:
-        assert_that(False, "stop stop service fail !")
+        assert_that(False, "stop dble service fail !")
 
 @Given('download dble')
 def download_dble(context):
@@ -147,9 +147,9 @@ def update_dble_config(context, ip):
 def check_dble_installed(context, hostname):
     node = Nodes(context.dbles.nodes).get_node_by_host_name(hostname)
     ssh_client = context.ssh_clients[node.ip]
-    cmd = "sh {0}/bin/dble status".format(context.dble_test_config['dble_basepath'])
+    cmd = "sh {0}/dble/bin/dble status".format(context.dble_test_config['dble_basepath'])
     rc, sto, ste = ssh_client.exec_command(cmd)
-    if sto.find("dble-server is running"):
+    if sto.find("dble-server is running") != -1:
         return True
     return False
 

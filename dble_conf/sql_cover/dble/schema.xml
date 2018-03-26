@@ -94,7 +94,7 @@
 			  writeType="0" switchType="1"  slaveThreshold="100">
 		<heartbeat>select user()</heartbeat>
 		<writeHost host="hostM1" url="172.100.9.5:3306" user="test"
-				   password="test">
+				   password="111111">
 		</writeHost>
 	</dataHost>
 
@@ -102,7 +102,7 @@
 			  writeType="0" switchType="1"  slaveThreshold="100">
 		<heartbeat>select user()</heartbeat>
 		<writeHost host="hostM2" url="172.100.9.6:3306" user="test"
-				   password="test">
+				   password="111111">
 		</writeHost>
 	</dataHost>
 	

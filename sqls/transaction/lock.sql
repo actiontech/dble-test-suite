@@ -43,7 +43,7 @@ begin;
 select * from sbtest1 order by id lock in share mode;
 #!session 2
 begin;
-update sbtest1 set pad=22 where id=1;/*hang*/
+update sbtest1 set pad=22 where id=1 /*hang*/ ;
 #!session 1
 commit;
 #!session 2

@@ -8,11 +8,11 @@
 	</system>
 	
 	<user name="test">
-		<property name="password">test</property>
+		<property name="password">111111</property>
 		<property name="schemas">mytest</property>
 	</user>
 	<user name="root">
-		<property name="password">123456</property>
+		<property name="password">111111</property>
 		<property name="manager">true</property>
 	</user>
 

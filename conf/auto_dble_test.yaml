@@ -6,17 +6,17 @@ dble_test_config:
   ssh_user: root
   ssh_password: sshpass
   mysql_user: test
-  mysql_password: test
+  mysql_password: 111111
   dble_basepath: /opt
   dble_base_conf: dble_conf/conf_template
   dble_sql_conf: dble_conf/sql_cover/dble
   ftp_user: ftp
   ftp_password: ftp
   client_user: test
-  client_password: test
+  client_password: 111111
   client_port: 8066
   manager_user: root
-  manager_password: 123456
+  manager_password: 111111
   manager_port: 9066
   dble_host: 172.100.9.1
 

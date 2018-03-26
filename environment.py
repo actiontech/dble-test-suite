@@ -89,7 +89,7 @@ def before_feature(context, feature):
     logger.info('Feature start: <{0}>'.format(feature.name))
     logger.info('Enter hook <{0}>'.format('before_feature'))
     if "log_debug" in feature.tags:
-        context.execute_steps(u'Given Set the log level to debug and restart server')
+        context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
     try:
         sql_cover = context.config.userdata.pop('sql_cover')
     except KeyError:
