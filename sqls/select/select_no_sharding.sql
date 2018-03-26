@@ -1,9 +1,9 @@
 drop table if exists test_no_shard
-CREATE TABLE test_no_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
+CREATE TABLE test_no_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8
 insert into test_no_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)
 insert into test_no_shard(id,k,pad) values(19,19,19)
 drop table if exists testdb.tb_test
-CREATE TABLE testdb.tb_test(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))
+CREATE TABLE testdb.tb_test(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8
 insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15)
 #
 #select select_expr
@@ -80,8 +80,7 @@ select * from test_no_shard group by id asc
 select pad,count(id) t from test_no_shard group by pad having t>1
 select pad,count(id) t from test_no_shard group by pad limit 1
 select pad,count(id) t from test_no_shard group by pad order by pad
-#########################unsupport now ##########################
-##select pad,count(id) t from test_no_shard group by pad with rollup
+select pad,count(id) t from test_no_shard group by pad with rollup
 #
 #having
 #
@@ -186,8 +185,7 @@ select * from test_no_shard where id=@var1 := 1
 select * from test_no_shard where id=COALESCE(2,3)
 select * from test_no_shard where id=COALESCE(null,3)
 select * from test_no_shard where id=GREATEST(2,3,6.4,7,12)
-#####################UNsupport now######################
-##select * from test_no_shard where id in(2,3,6.4,7,12)
+select * from test_no_shard where id in(2,3,6.4,7,12)
 select * from test_no_shard where pad in(2,3,6.4,7,12)
 select * from test_no_shard where id not in(2,3)
 select * from test_no_shard where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)
@@ -280,5 +278,3 @@ select * from test_no_shard limit 1,2
 select id,R_REGIONKEY from test_no_shard order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_no_shard group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_no_shard group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3
-drop table if exists test_no_shard
-drop table if exists testdb.tb_test

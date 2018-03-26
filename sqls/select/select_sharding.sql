@@ -254,4 +254,3 @@ select person, max(saleNum) MAX from aly_test group by person
 select person, max(saleNum) as MAX from aly_test group by person
 select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg1, sum(saleNum) sum from aly_test group by person
 select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg2, sum(saleNum) sum from aly_test group by person order by person desc
-drop table if exists aly_test

@@ -11,9 +11,8 @@ insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'tes
 insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
 insert into global_table3 values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
 create index pad_index on test_global(pad)
-##############unsupport################
-#select * from test_global t use index()
-#select * from test_global t use key()
+select * from test_global t use index()
+select * from test_global t use key()
 select * from test_global use index(k_1)
 select * from test_global ignore index(k_1)
 select * from test_global force index(k_1)
@@ -35,11 +34,10 @@ select * from test_global force index for join(pad_index,k_1)
 select * from test_global use key(k_1)
 select * from test_global ignore key(k_1)
 select * from test_global force key(k_1)
-#########################unsupport################
-#select * from test_global t use key(k_1) use index(pad_index) use index()
-#select * from test_global t ignore key(k_1) use index(pad_index) use index()
-#select * from test_global t ignore key(k_1) ignore index(pad_index) use index()
-select * from test_global t force key(k_1) force index(pad_index) 
+select * from test_global t use key(k_1) use index(pad_index) use index()
+select * from test_global t ignore key(k_1) use index(pad_index) use index()
+select * from test_global t ignore key(k_1) ignore index(pad_index) use index()
+select * from test_global t force key(k_1) force index(pad_index)
 select * from test_global t ignore key(k_1) force index(pad_index)
 select id,pad,name from (select * from test_global where pad>2) as a
 select * from test_global a,global_table2 b
@@ -62,6 +60,3 @@ select * from test_global union distinct select * from global_table3 union disti
 (select * from test_global where pad=1) union (select * from global_table2 where pad=1) order by id limit 10
 (select name as sort_a from test_global where pad=1) union (select name from global_table2 where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from test_global where pad=1) union (select name,pad from global_table2 where pad=1) order by sort_a,pad limit 10
-drop table if exists test_global
-drop table if exists global_table2
-drop table if exists global_table3

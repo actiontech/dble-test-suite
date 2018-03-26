@@ -11,9 +11,8 @@ insert into a_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中i
 insert into a_two values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
 insert into a_three values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
 create index pad_index on a_test(pad)
-##############unsupport################
-#select * from a_test t use index()
-#select * from a_test t use key()
+select * from a_test t use index()
+select * from a_test t use key()
 select * from a_test use index(k_1)
 select * from a_test ignore index(k_1)
 select * from a_test force index(k_1)
@@ -34,12 +33,11 @@ select * from a_test ignore index for join(pad_index,k_1)
 select * from a_test force index for join(pad_index,k_1)
 select * from a_test use key(k_1)
 select * from a_test ignore key(k_1)
-select * from a_test force key(k_1)
-#########################unsupport################
-#select * from a_test t use key(k_1) use index(pad_index) use index()
-#select * from a_test t ignore key(k_1) use index(pad_index) use index()
-#select * from a_test t ignore key(k_1) ignore index(pad_index) use index()
-select * from a_test t force key(k_1) force index(pad_index) 
+select * from a_test force key(k_1)#
+select * from a_test t use key(k_1) use index(pad_index) use index()
+select * from a_test t ignore key(k_1) use index(pad_index) use index()
+select * from a_test t ignore key(k_1) ignore index(pad_index) use index()
+select * from a_test t force key(k_1) force index(pad_index)
 select * from a_test t ignore key(k_1) force index(pad_index)
 select id,pad,name from (select * from a_test where pad>2) as a
 select * from a_test a,a_two b
@@ -62,6 +60,3 @@ select * from a_test union distinct select * from a_three union distinct select 
 (select * from a_test where pad=1) union (select * from a_two where pad=1) order by id limit 10
 (select name as sort_a from a_test where pad=1) union (select name from a_two where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from a_test where pad=1) union (select name,pad from a_two where pad=1) order by sort_a,pad limit 10
-drop table if exists a_test
-drop table if exists a_two
-drop table if exists a_three

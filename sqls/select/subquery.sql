@@ -29,9 +29,8 @@ select count(*) from (select pad,count(*) a from a_test group by pad) a;
 select * from a_test where pad<(select pad from a_order where id=3);
 select * from a_test having pad<(select pad from a_order where id=3);
 select a.id,b.id,b.pad,a.t_id from a_test a,(select * from a_order where pad>3) b where a.t_id=b.o_id;
-###################unsupport now##################################
-#select id,name,(select count(*) from a_order) count from a_test;
-#select * from a_test where pad like (select pad from a_order where id=3);
+select id,name,(select count(*) from a_order) count from a_test;
+select * from a_test where pad like (select pad from a_order where id=3);
 select id,pad from a_test where pad>(select pad from a_test where id=2);
 select id,pad from a_test where pad<(select pad from a_test where id=2);
 select id,pad from a_test where pad=(select pad from a_test where id=2);
@@ -39,40 +38,33 @@ select id,pad from a_test where pad>=(select pad from a_test where id=2);
 select id,pad from a_test where pad<=(select pad from a_test where id=2);
 select id,pad from a_test where pad<>(select pad from a_test where id=2);
 select id,pad from a_test where pad !=(select pad from a_test where id=2);
-###################unsupport now##################################
-#select * from a_test where exists(select * from a_test where pad>1);
-#select * from a_test where not exists(select * from a_test where pad>1);
+select * from a_test where exists(select * from a_test where pad>1);
+select * from a_test where not exists(select * from a_test where pad>1);
 select * from a_test where pad not in(select id from a_test where pad>1);
 select * from a_test where pad in(select id from a_test where pad>1);
-###################unsupport now##################################
-#select * from a_test where pad=some(select id from a_test where pad>1);
-#select * from a_test where pad=any(select id from a_test where pad>1);
-#select * from a_test where pad !=any(select id from a_test where pad=3);
-select a.id,b.id,b.pad,a.t_id from (select a_test.id,a_test.pad,a_test.t_id from a_test join a_order where a_test.pad=a_order.pad ) a,(select a_manager.id,a_manager.pad from a_test join a_manager where a_test.pad=a_manager.pad) b where a.pad=b.pad;
+select * from a_test where pad=some(select id from a_test where pad>1);
+select * from a_test where pad=any(select id from a_test where pad>1);
+select * from a_test where pad !=any(select id from a_test where pad=3);
+#################bug:299##############
+#select a.id,b.id,b.pad,a.t_id from (select a_test.id,a_test.pad,a_test.t_id from a_test join a_order where a_test.pad=a_order.pad ) a,(select a_manager.id,a_manager.pad from a_test join a_manager where a_test.pad=a_manager.pad) b where a.pad=b.pad;
 select * from a_test where pad>(select pad from a_test where pad=2);
 select * from a_test,(select * from a_test where id>3 union select * from a_order where id<2) a where a.id >3 and a_test.pad=a.pad;
 select count(*) from (select * from a_test where pad=(select pad from a_order where id=1)) a;
 #
 #Second supplement
 #
-########################unsupport now###################
-#select (select name from a_test limit 1)
+select (select name from a_test limit 1)
 select * from a_test where 'test_2'=(select name from a_order where id=2)
 select * from a_test where 5=(select count(*) from a_order)
-########################unsupport now###################
-#select * from a_test where 'test_2' like(select name from a_order where id=2)
-#select * from a_test where 2 >any(select id from a_test where pad>1)
+select * from a_test where 'test_2' like(select name from a_order where id=2)
+select * from a_test where 2 >any(select id from a_test where pad>1)
 select * from a_test where 2 in(select id from a_test where pad>1)
-########################unsupport now###################
-#select * from a_test where 2<>some(select id from a_test where pad>1)
-#select * from a_test where 2>all(select id from a_test where pad<1)
-#select * from a_test where (id,pad)=(select id,pad from a_order limit 1)
-#select * from a_test where row(id,pad)=(select id,pad from a_order limit 1)
-#select id,name,pad from a_test where (id,pad)in(select id,pad from a_order)
-#select id,name,pad from a_test where (1,1)in(select id,pad from a_order)
+select * from a_test where 2<>some(select id from a_test where pad>1)
+select * from a_test where 2>all(select id from a_test where pad<1)
+select * from a_test where (id,pad)=(select id,pad from a_order limit 1)
+select * from a_test where row(id,pad)=(select id,pad from a_order limit 1)
+select id,name,pad from a_test where (id,pad)in(select id,pad from a_order)
+select id,name,pad from a_test where (1,1)in(select id,pad from a_order)
 SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from a_test)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from a_test group by pad) as t1
-drop table if exists a_test
-drop table if exists a_order
-drop table if exists a_manager

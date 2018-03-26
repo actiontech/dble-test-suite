@@ -39,15 +39,13 @@ select id,pad from test_global where pad>=(select pad from test_global where id=
 select id,pad from test_global where pad<=(select pad from test_global where id=2);
 select id,pad from test_global where pad<>(select pad from test_global where id=2);
 select id,pad from test_global where pad !=(select pad from test_global where id=2);
-###################unsupport now##################################
-#select * from test_global where exists(select * from test_global where pad>1);
-#select * from test_global where not exists(select * from test_global where pad>1);
+select * from test_global where exists(select * from test_global where pad>1);
+select * from test_global where not exists(select * from test_global where pad>1);
 select * from test_global where pad not in(select id from test_global where pad>1);
 select * from test_global where pad in(select id from test_global where pad>1);
-###################unsupport now##################################
-#select * from test_global where pad=some(select id from test_global where pad>1);
-#select * from test_global where pad=any(select id from test_global where pad>1);
-#select * from test_global where pad !=any(select id from test_global where pad=3);
+select * from test_global where pad=some(select id from test_global where pad>1);
+select * from test_global where pad=any(select id from test_global where pad>1);
+select * from test_global where pad !=any(select id from test_global where pad=3);
 select a.id,b.id,b.pad,a.t_id from (select test_global.id,test_global.pad,test_global.t_id from test_global join global_table3 where test_global.pad=global_table3.pad ) a,(select global_table2.id,global_table2.pad from test_global join global_table2 where test_global.pad=global_table2.pad) b where a.pad=b.pad;
 select * from test_global where pad>(select pad from test_global where pad=2);
 select * from test_global,(select * from test_global where id>3 union select * from global_table3 where id<2) a where a.id >3 and test_global.pad=a.pad;
@@ -55,24 +53,18 @@ select count(*) from (select * from test_global where pad=(select pad from globa
 #
 #Second supplement
 #
-########################unsupport now###################
-#select (select name from test_global limit 1)
+select (select name from test_global limit 1)
 select * from test_global where 'test_2'=(select name from global_table3 where id=2)
 select * from test_global where 5=(select count(*) from global_table3)
-########################unsupport now###################
-#select * from test_global where 'test_2' like(select name from global_table3 where id=2)
-#select * from test_global where 2 >any(select id from test_global where pad>1)
+select * from test_global where 'test_2' like(select name from global_table3 where id=2)
+select * from test_global where 2 >any(select id from test_global where pad>1)
 select * from test_global where 2 in(select id from test_global where pad>1)
-########################unsupport now###################
-#select * from test_global where 2<>some(select id from test_global where pad>1)
-#select * from test_global where 2>all(select id from test_global where pad<1)
-#select * from test_global where (id,pad)=(select id,pad from global_table3 limit 1)
-#select * from test_global where row(id,pad)=(select id,pad from global_table3 limit 1)
-#select id,name,pad from test_global where (id,pad)in(select id,pad from global_table3)
-#select id,name,pad from test_global where (1,1)in(select id,pad from global_table3)
+select * from test_global where 2<>some(select id from test_global where pad>1)
+select * from test_global where 2>all(select id from test_global where pad<1)
+select * from test_global where (id,pad)=(select id,pad from global_table3 limit 1)
+select * from test_global where row(id,pad)=(select id,pad from global_table3 limit 1)
+select id,name,pad from test_global where (id,pad)in(select id,pad from global_table3)
+select id,name,pad from test_global where (1,1)in(select id,pad from global_table3)
 SELECT pad FROM test_global AS x WHERE x.id = (SELECT pad FROM global_table3 AS y WHERE x.id = (SELECT pad FROM global_table2 WHERE y.id = global_table2.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from test_global)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from test_global group by pad) as t1
-drop table if exists test_global
-drop table if exists global_table3
-drop table if exists global_table2

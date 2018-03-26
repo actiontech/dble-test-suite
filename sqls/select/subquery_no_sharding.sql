@@ -29,9 +29,8 @@ select count(*) from (select pad,count(*) a from a_test_no_shard group by pad) a
 select * from a_test_no_shard where pad<(select pad from a_order_no_shard where id=3);
 select * from a_test_no_shard having pad<(select pad from a_order_no_shard where id=3);
 select a.id,b.id,b.pad,a.t_id from a_test_no_shard a,(select * from a_order_no_shard where pad>3) b where a.t_id=b.o_id;
-###################unsupport now##################################
-#select id,name,(select count(*) from a_order_no_shard) count from a_test_no_shard;
-#select * from a_test_no_shard where pad like (select pad from a_order_no_shard where id=3);
+select id,name,(select count(*) from a_order_no_shard) count from a_test_no_shard;
+select * from a_test_no_shard where pad like (select pad from a_order_no_shard where id=3);
 select id,pad from a_test_no_shard where pad>(select pad from a_test_no_shard where id=2);
 select id,pad from a_test_no_shard where pad<(select pad from a_test_no_shard where id=2);
 select id,pad from a_test_no_shard where pad=(select pad from a_test_no_shard where id=2);
@@ -39,15 +38,13 @@ select id,pad from a_test_no_shard where pad>=(select pad from a_test_no_shard w
 select id,pad from a_test_no_shard where pad<=(select pad from a_test_no_shard where id=2);
 select id,pad from a_test_no_shard where pad<>(select pad from a_test_no_shard where id=2);
 select id,pad from a_test_no_shard where pad !=(select pad from a_test_no_shard where id=2);
-###################unsupport now##################################
-#select * from a_test_no_shard where exists(select * from a_test_no_shard where pad>1);
-#select * from a_test_no_shard where not exists(select * from a_test_no_shard where pad>1);
+select * from a_test_no_shard where exists(select * from a_test_no_shard where pad>1);
+select * from a_test_no_shard where not exists(select * from a_test_no_shard where pad>1);
 select * from a_test_no_shard where pad not in(select id from a_test_no_shard where pad>1);
 select * from a_test_no_shard where pad in(select id from a_test_no_shard where pad>1);
-###################unsupport now##################################
-#select * from a_test_no_shard where pad=some(select id from a_test_no_shard where pad>1);
-#select * from a_test_no_shard where pad=any(select id from a_test_no_shard where pad>1);
-#select * from a_test_no_shard where pad !=any(select id from a_test_no_shard where pad=3);
+select * from a_test_no_shard where pad=some(select id from a_test_no_shard where pad>1);
+select * from a_test_no_shard where pad=any(select id from a_test_no_shard where pad>1);
+select * from a_test_no_shard where pad !=any(select id from a_test_no_shard where pad=3);
 select a.id,b.id,b.pad,a.t_id from (select a_test_no_shard.id,a_test_no_shard.pad,a_test_no_shard.t_id from a_test_no_shard join a_order_no_shard where a_test_no_shard.pad=a_order_no_shard.pad ) a,(select a_manager_no_shard.id,a_manager_no_shard.pad from a_test_no_shard join a_manager_no_shard where a_test_no_shard.pad=a_manager_no_shard.pad) b where a.pad=b.pad;
 select * from a_test_no_shard where pad>(select pad from a_test_no_shard where pad=2);
 select * from a_test_no_shard,(select * from a_test_no_shard where id>3 union select * from a_order_no_shard where id<2) a where a.id >3 and a_test_no_shard.pad=a.pad;
@@ -55,24 +52,18 @@ select count(*) from (select * from a_test_no_shard where pad=(select pad from a
 #
 #Second supplement
 #
-########################unsupport now###################
-#select (select name from a_test_no_shard limit 1)
+select (select name from a_test_no_shard limit 1)
 select * from a_test_no_shard where 'test_2'=(select name from a_order_no_shard where id=2)
 select * from a_test_no_shard where 5=(select count(*) from a_order_no_shard)
-########################unsupport now###################
-#select * from a_test_no_shard where 'test_2' like(select name from a_order_no_shard where id=2)
-#select * from a_test_no_shard where 2 >any(select id from a_test_no_shard where pad>1)
+select * from a_test_no_shard where 'test_2' like(select name from a_order_no_shard where id=2)
+select * from a_test_no_shard where 2 >any(select id from a_test_no_shard where pad>1)
 select * from a_test_no_shard where 2 in(select id from a_test_no_shard where pad>1)
-########################unsupport now###################
-#select * from a_test_no_shard where 2<>some(select id from a_test_no_shard where pad>1)
-#select * from a_test_no_shard where 2>all(select id from a_test_no_shard where pad<1)
-#select * from a_test_no_shard where (id,pad)=(select id,pad from a_order_no_shard limit 1)
-#select * from a_test_no_shard where row(id,pad)=(select id,pad from a_order_no_shard limit 1)
-#select id,name,pad from a_test_no_shard where (id,pad)in(select id,pad from a_order_no_shard)
-#select id,name,pad from a_test_no_shard where (1,1)in(select id,pad from a_order_no_shard)
+select * from a_test_no_shard where 2<>some(select id from a_test_no_shard where pad>1)
+select * from a_test_no_shard where 2>all(select id from a_test_no_shard where pad<1)
+select * from a_test_no_shard where (id,pad)=(select id,pad from a_order_no_shard limit 1)
+select * from a_test_no_shard where row(id,pad)=(select id,pad from a_order_no_shard limit 1)
+select id,name,pad from a_test_no_shard where (id,pad)in(select id,pad from a_order_no_shard)
+select id,name,pad from a_test_no_shard where (1,1)in(select id,pad from a_order_no_shard)
 SELECT pad FROM a_test_no_shard AS x WHERE x.id = (SELECT pad FROM a_order_no_shard AS y WHERE x.id = (SELECT pad FROM a_manager_no_shard WHERE y.id = a_manager_no_shard.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from a_test_no_shard)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from a_test_no_shard group by pad) as t1
-drop table if exists a_test_no_shard
-drop table if exists a_order_no_shard
-drop table if exists a_manager_no_shard

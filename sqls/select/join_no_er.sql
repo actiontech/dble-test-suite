@@ -81,6 +81,3 @@ select distinct a.pad from a_test a,a_two b where a.pad=b.pad
 select distinct b.pad,a.pad from a_test a,(select * from a_two where pad=1) b where a.t_id=b.o_id
 select count(distinct pad,name),avg(distinct t_id) from a_test
 select count(distinct id),sum(distinct name) from a_test where id=3 or id=7
-drop table if exists a_test
-drop table if exists a_two
-drop table if exists a_three

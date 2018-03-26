@@ -81,6 +81,3 @@ select distinct a.pad from test_global a,global_table2 b where a.pad=b.pad
 select distinct b.pad,a.pad from test_global a,(select * from global_table2 where pad=1) b where a.t_id=b.o_id
 select count(distinct pad,name),avg(distinct t_id) from test_global
 select count(distinct id),sum(distinct name) from test_global where id=3 or id=7
-drop table if exists test_global
-drop table if exists global_table2
-drop table if exists global_table3
