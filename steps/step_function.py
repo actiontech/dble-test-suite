@@ -27,7 +27,7 @@ def test_sharding(context, table):
     if (not hasattr(context, "dble_conn")) or context.dble_conn is None:
         context.dble_conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
        context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'], context)
-    context.dble_conn.dropTable(table, context)
+    context.dble_conn.dropTable(table)
     sql = ""
     key_value = {}
     for item in text:
@@ -81,14 +81,14 @@ def test_sharding(context, table):
                 sql = "insert into {0} value ('{1}')".format(table, str(value))
             result, errMes = context.dble_conn.query(sql)
             assert_that(str(errMes), contains_string("Please check if the format satisfied"))
-    context.dble_conn.dropTable(table, context)
+    context.dble_conn.dropTable(table)
 
 def create_node_conn(context):
-    if (not hasattr(context, "manager_conn")) or context.manager_conn is None:
-        context.manager_conn = create_conn_manager_or_client(context, "management")
+    context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = "show @@datanode"
     result, error = context.manager_conn.query(sql)
     context.manager_conn.close()
+
     datanode = {}
     if type(result) == tuple:
         for i in range(len(result)):
@@ -108,8 +108,7 @@ def create_node_conn(context):
 
 @Then('Test and check reload config failure')
 def test_reload_failure(context):
-    if (not hasattr(context, "manager_conn")) or context.manager_conn is None:
-        context.manager_conn = create_conn_manager_or_client(context, "management")
+    context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = "reload @@config_all"
     result, error = context.manager_conn.query(sql)
     context.manager_conn.close()

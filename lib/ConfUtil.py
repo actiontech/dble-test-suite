@@ -103,7 +103,7 @@ def child_node_add_child_node(element1, element):
     element1.append(element)
 
 def del_node_by_tagkeyvalue(nodelist, tag, kv_map):
-    '''''同过属性及属性值定位一个节点，并删除之
+    '''''通过属性及属性值定位一个节点，并删除之
        nodelist: 父节点列表
        tag:子节点标签
        kv_map: 属性及属性值列表'''

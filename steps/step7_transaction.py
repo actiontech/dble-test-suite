@@ -259,15 +259,3 @@ def step_impl(context, filename):
                 sql = ''
                 is_multiline = False
     destroy_share_n_conn(context)
-
-
-@Given('close ssh')
-def step_impl(context):
-    rmCmd = "rm -rf /tmp/outfile*.txt /tmp/dumpfile.txt"
-    hosts = [context.mysql.ip]
-
-    for host in hosts:
-        ssh = SSHClient(host, context.ssh_user, context.ssh_passwd)
-        ssh.connect()
-        ssh.exec_command(rmCmd)
-        ssh.close()

@@ -2,8 +2,6 @@
 <!DOCTYPE dble:schema SYSTEM "schema.dtd">
 <dble:schema xmlns:dble="http://dble.cloud/">
 	<schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
-
-
 		<!--mf test table -->
     	<table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="mod-long"/>
         <table name="sbtest2" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
@@ -72,6 +70,8 @@
 
 	<schema name="testdb" sqlMaxLimit="100">
 		<table name="tb_test" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+		<table name="test_db" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
+		<table name="test_db2" dataNode="dn1,dn2,dn3,dn4" rule="mod-long" />
 		<table name="friend" dataNode="dn1,dn2,dn3,dn4" rule="f_mod-long" />
 		<table name="enum" dataNode="dn1,dn2,dn3,dn4" rule="enum_integer_rule"/>
 		<table name="ranges" dataNode="dn1,dn2,dn3,dn4" rule="range_rule" />

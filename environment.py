@@ -2,7 +2,9 @@ import ConfigParser
 import logging
 import os
 import sys
-from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_all_nodes, create_ssh_client, create_sftp_client, get_nodes, Nodes
+
+from lib.nodes import get_ssh, get_sftp
+from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_nodes
 
 from behave.log_capture import capture
 from pprint import pformat
@@ -24,12 +26,6 @@ def init_log(context):
 
     context.config.setup_logging()
 
-def init_ssh(context):
-    if (not hasattr(context, "ssh_client")) or context.ssh_client is None:
-        context.ssh_client = context.ssh_clients[context.dble_test_config['dble_host']]
-    if (not hasattr(context, "ssh_sftp")) or context.ssh_sftp is None:
-        context.ssh_sftp = context.ssh_sftps[context.dble_test_config['dble_host']]
-
 def before_all(context):
     context.current_log = init_log_directory()
     setup_logging(os.path.join(CONF_PATH, 'logging.yaml'))
@@ -50,12 +46,12 @@ def before_all(context):
 
     parsed = load_yaml_config(context.dble_test_config['docker_compose_path'])
     #get dble all nodes
-    context.dbles = get_nodes(context, "dble", parsed)
-    context.mysqls = get_nodes(context, "mysql", parsed)
-    context.nodes = get_all_nodes(context, parsed)
+    context.dbles = get_nodes(context, parsed, "dble")
+    context.mysqls = get_nodes(context, parsed, "mysql")
+    context.nodes = get_nodes(context, parsed)
 
-    context.ssh_clients = create_ssh_client(context.nodes)
-    context.ssh_sftps = create_sftp_client(context.nodes)
+    context.ssh_client = get_ssh(context.dbles, context.dble_test_config['dble_host'])
+    context.ssh_sftp = get_sftp(context.dbles, context.dble_test_config['dble_host'])
 
     #clean last result
     osCmd= 'rm -rf {0} && mkdir {0}'.format(context.dble_test_config['result']['dir'])
@@ -63,7 +59,7 @@ def before_all(context):
     steps_dir = "{0}/steps".format(os.getcwd())
     sys.path.append(steps_dir)
     init_log(context)
-    init_ssh(context)
+
     if context.config.userdata["tar_local"].lower() == "true":
         context.need_download = False
     else:
@@ -91,15 +87,15 @@ def before_feature(context, feature):
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
     try:
-        sql_cover = context.config.userdata.pop('sql_cover')
+        dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define test_config in behave -D sql_cover=XXX')
     flag = True
-    if sql_cover.lower() == "true":
+    if dble_conf.lower() == "sql_cover":
         if flag:
             context.execute_steps(u'Given Replace the existing configuration with the conf sql_cover directory')
             flag = False
-    elif sql_cover.lower() == "false":
+    elif dble_conf.lower() == "template":
         context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
     else:
         pass

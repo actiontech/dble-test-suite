@@ -19,7 +19,7 @@ path=/opt/mycat_build/
 		&& docker exec ${mysql_install[$i]} sh -c "cd /usr/local/mysql && bin/mysql_ssl_rsa_setup && chown -R root . && chown -R mysql data mysql-files && mkdir -p /var/log/mariadb && touch /var/log/mariadb/mariadb.log" \
 		&& docker exec ${mysql_install[$i]} sh -c "cd /usr/local/mysql && support-files/mysql.server start" \
 		&& tmppwd=\'$(docker exec "${mysql_install[$i]}" sh -c "cat /usr/local/mysql/tmppwd.log|xargs echo")\' \
-		&& docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p${tmppwd} -h127.0.0.1 -e \"alter user user() identified by '123456'\" --connect-expired-password" \
+		&& docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p${tmppwd} -h127.0.0.1 -e \"alter user user() identified by '111111'\" --connect-expired-password" \
 		&& echo "install mysql in ${mysql_install[$i]} finished" \
 		&& docker exec ${mysql_install[$i]} sh -c "yum install -y openssh-server" \
 		&& docker exec ${mysql_install[$i]} sh -c "sed -i '$ a UseDNS no \nGSSAPIAuthentication no ' /etc/ssh/sshd_config" \
@@ -32,12 +32,12 @@ path=/opt/mycat_build/
 	sleep 10s
 
 	for((i=0;i<count;i=i+1)); do
-		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p123456 -h127.0.0.1 -e \"create user 'test'@'%' identified by 'test'\" "
-		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p123456 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
-		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p123456 -h127.0.0.1 -e \"create database db1\" "
-		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p123456 -h127.0.0.1 -e \"create database db2\" "
-	    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p123456 -h127.0.0.1 -e \"create database db3\" "
-		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p123456 -h127.0.0.1 -e \"create database db4\" "
+		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create user 'test'@'%' identified by 'test'\" "
+		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
+		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db1\" "
+		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db2\" "
+	    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db3\" "
+		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db4\" "
 	done
 
 	for(( i=0;i<count;i=i+1 ));

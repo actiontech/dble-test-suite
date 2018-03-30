@@ -8,13 +8,10 @@ from hamcrest import *
 from lib.DBUtil import DBUtil
 from lib.nodes import *
 
-ssh_client = None
-
 def get_log_linenu(context):
-    ssh_client = context.ssh_clients[context.dble_test_config['dble_host']]
     logpath = get_full_log_path(context)
     cmd = "wc -l %s | awk '{print $1}'" % logpath
-    re, sdo, sdr = ssh_client.exec_command(cmd)
+    re, sdo, sdr = context.ssh_client.exec_command(cmd)
     context.logger.info("log lines: {0}".format(sdo))
     context.log_linenu = sdo.strip()
 
@@ -52,10 +49,6 @@ def step_impl(context):
     if re.search(r'^route',sql_file_name):
         context.cur_route_log = "{0}{1}_send.log".format(subdir,sql_file_name)
     context.cur_serious_warn_log = "{0}/{1}_serious_warn.log".format(subdir,sql_file_name)
-
-def get_dble_ip(context, hostname):
-    node = Nodes(context.dbles.nodes).get_node_by_host_name(hostname)
-    return node.ip
 
 def get_compare_conn(context, default_db="mytest"):
     m_ip = context.dble_test_config['compare_mysql']['ip']
@@ -240,8 +233,7 @@ def check_sql_dest(context,line_nu, sql):
         sql1 = str(sql_cmd).strip('\n')
 
     cmd1 = "sed '1,{0}d' {1}|sed -n '{2}'p |sed -n '/{3}/p' | sed -n '{4}'".format(context.log_linenu,logpath,sr,sql1, node)
-    ssh_client = context.ssh_clients[context.dble_test_config['dble_host']]
-    rc, stdout, stderr = ssh_client.exec_command(cmd1)
+    rc, stdout, stderr = context.ssh_client.exec_command(cmd1)
     assert_that(stderr, is_(" "))
     sum = 0
     for i in stdout.readlines():

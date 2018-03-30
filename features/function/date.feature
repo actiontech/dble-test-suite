@@ -1,13 +1,21 @@
 Feature:
   Scenario: #Date function
-    Given Drop a tableRule "date_rule" in rule.xml
-    Given Drop a "date_func" function in rule.xml
     #test: sBeginDate not configured
-    Given Add a "date_func" Date function in rule.xml
+    Given add xml segment in "rule.xml" to "root"
     """
-    "dateFormat":"yyyy-MM-dd","sEndDate":"2018-01-31","sPartionDay":"10"
+        <tableRule name="date_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>date_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sEndDate">2018-01-31</property>
+            <property name="sPartionDay">10</property>
+        </function>
     """
-    Then Test and check reload config failure
+    Then excute admin cmd "reload @@config_all" get the following output
     """
     The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NullPointerException
     """

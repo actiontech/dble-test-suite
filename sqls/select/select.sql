@@ -11,29 +11,36 @@ insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(
 select 1+1
 SELECT ABS(2)
 select * from test_shard
-select avg(pad) from test_shard 
-select BIT_AND(pad) from test_shard 
-select BIT_OR(pad) from test_shard 
-select BIT_XOR(pad) from test_shard 
-select count(pad) from test_shard 
-select count(distinct pad) from test_shard 
-select group_concat(pad) from test_shard 
-select max(pad) from test_shard 
-select min(pad) from test_shard 
-select std(pad) from test_shard 
-select stddev(pad) from test_shard 
-select stddev_pop(pad) from test_shard 
-select stddev_samp(pad) from test_shard 
-select sum(pad) from test_shard 
-select var_pop(pad) from test_shard 
-select var_samp(pad) from test_shard 
-select variance(pad) from test_shard 
+select avg(pad) from test_shard
+select BIT_AND(pad) from test_shard
+select BIT_OR(pad) from test_shard
+select BIT_XOR(pad) from test_shard
+select count(pad) from test_shard
+select count(distinct pad) from test_shard
+select group_concat(pad) from test_shard
+select max(pad) from test_shard
+select min(pad) from test_shard
+select std(pad) from test_shard
+select stddev(pad) from test_shard
+select stddev_pop(pad) from test_shard
+select stddev_samp(pad) from test_shard
+select sum(pad) from test_shard
+select var_pop(pad) from test_shard
+select var_samp(pad) from test_shard
+select variance(pad) from test_shard
 select test_shard.pad from test_shard
 select pad t1 from test_shard
 select pad as t1 from test_shard
 select test_shard.pad as t1 from test_shard
 select test_shard.pad t1 from test_shard
 select k,pad from test_shard
+select !1 from test_shard;
+select !id from test_shard;
+#select !(select pad from sbtest2 where id=1) from test_shard;
+select id=1 from test_shard;
+select 1=id from test_shard;
+select id=BIT_COUNT(29) from test_shard;
+#select pad=(select pad from sbtest2 where id=1) from test_shard;
 #
 #from table_references
 #
@@ -52,6 +59,7 @@ select * from test_shard t1 where t1.pad<5
 select * from test_shard where 1;
 select * from test_shard where now();
 select * from test_shard where id;
+select * from test_shard where (select pad from test_shard where id>3 limit 1);
 select * from test_shard where !id;
 select * from test_shard where 1=id;
 #
@@ -85,8 +93,8 @@ select * from test_shard group by id asc
 select pad,count(id) t from test_shard group by pad having t>1
 select pad,count(id) t from test_shard group by pad limit 1
 select pad,count(id) t from test_shard group by pad order by pad
-########################unsupportted########################
-#select pad,count(id) t from test_shard group by pad with rollup
+#########################unsupport now ##########################
+##select pad,count(id) t from test_shard group by pad with rollup
 #
 #having
 #
@@ -190,7 +198,8 @@ select * from test_shard where id=@var1 := 1
 select * from test_shard where id=COALESCE(2,3)
 select * from test_shard where id=COALESCE(null,3)
 select * from test_shard where id=GREATEST(2,3,6.4,7,12)
-#select * from test_shard where id in(2,3,6.4,7,12)
+#####################UNsupport now######################
+##select * from test_shard where id in(2,3,6.4,7,12)
 select * from test_shard where pad in(2,3,6.4,7,12)
 select * from test_shard where id not in(2,3)
 select * from test_shard where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)
@@ -286,16 +295,49 @@ select id,R_REGIONKEY from test_shard group by id,R_REGIONKEY order by id,R_REGI
 #
 #Rewrite the rules
 #
-drop table if exists test_shard
-CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8
-insert into test_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)
-insert into test_shard(id,k,pad) values(19,19,19)
+drop table if exists test_shard;
+CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8;
+insert into test_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18);
+insert into test_shard(id,k,pad) values(19,19,19);
 select count(distinct pad),sum(distinct id) from test_shard group by pad;
 select count(distinct pad,k),sum(distinct id) from test_shard group by pad;
-select distinct a_test.id from a_test,a_order where a_test.pad=a_order.pad;
 select distinct pad from test_shard limit 4;
 select * from test_shard limit 2,3;
 select id,pad from test_shard order by id,pad limit 2,3;
 select id,pad from test_shard group by id,pad  order by id limit 2,3;
 select id,pad,sum(id) from test_shard group by id,pad  order by id,pad limit 2,3;
-
+#
+# table_factor
+#
+drop table if exists test_shard
+CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`));
+insert into test_shard values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6);
+create index pad_index on test_shard(pad)
+select * from test_shard t use index();
+select * from test_shard t use key();
+select * from test_shard use index(k_1);
+select * from test_shard ignore index(k_1);
+select * from test_shard force index(k_1);
+select * from test_shard use index(pad_index,k_1);
+select * from test_shard ignore index(pad_index,k_1);
+select * from test_shard force index(pad_index,k_1);
+select * from test_shard use key for join(k_1);
+select * from test_shard ignore key for join(k_1);
+select * from test_shard force key for join(k_1);
+select * from test_shard use key for order by(k_1);
+select * from test_shard ignore key for order by(k_1);
+select * from test_shard force key for order by(k_1);
+select count(*) from test_shard use key for group by(k_1);
+select count(*) from test_shard ignore key  for group by(k_1);
+select count(*) from test_shard force key for group by(k_1);
+select * from test_shard use index for join(pad_index,k_1);
+select * from test_shard ignore index for join(pad_index,k_1);
+select * from test_shard force index for join(pad_index,k_1);
+select * from test_shard use key(k_1);
+select * from test_shard ignore key(k_1);
+select * from test_shard force key(k_1);
+select * from test_shard t use key(k_1) use index(pad_index) use index();
+select * from test_shard t ignore key(k_1) use index(pad_index) use index();
+select * from test_shard t ignore key(k_1) ignore index(pad_index) use index();
+select * from test_shard t force key(k_1) force index(pad_index) ;
+select * from test_shard t ignore key(k_1) force index(pad_index);

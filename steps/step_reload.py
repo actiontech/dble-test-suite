@@ -7,6 +7,7 @@ sys.path.append("..")
 from behave import *
 from hamcrest import *
 from lib.DBUtil import *
+from lib.XMLUtil import add_child_node
 
 LOGGER = logging.getLogger('steps.reload')
 
@@ -37,26 +38,26 @@ def create_conn_manager_or_client(context, clientName):
 
 @When('Execute reload @@config_all anomalous')
 def execute_reload_anomalous(context):
-    if (not hasattr(context, "manager_conn")) or context.manager_conn is None:
-        context.manager_conn = create_conn_manager_or_client(context, "management")
+    context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = "reload @@config_all"
     result, error = context.manager_conn.query(sql)
+    context.manager_conn.close()
     assert_that(str(error), contains_string("Reload config failure"))
 
 @When('Execute reload @@config_all')
 def execute_reload(context):
-    if (not hasattr(context, "manager_conn")) or context.manager_conn is None:
-        context.manager_conn = create_conn_manager_or_client(context, "management")
+    context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = "reload @@config_all"
     result, error = context.manager_conn.query(sql)
+    context.manager_conn.close()
     assert_that(str(error), has_string('None'))
 
 @When('Execute sql in manager')
 def execute_manager_sql(context,):
-    if (not hasattr(context, "manager_conn")) or context.manager_conn is None:
-        context.manager_conn = create_conn_manager_or_client(context, "management")
+    context.manager_conn = create_conn_manager_or_client(context, "management")
     sql = str(context.text)
     result, error = context.manager_conn.query(sql)
+    context.manager_conn.close()
     assert_that(str(error), has_string('None'))
 
 @Given('Add a tableRule consisting of "{tablerule_name}","{column}","{function}" in rule.xml')
@@ -101,27 +102,11 @@ def edit_tableRule(context, tablerule_name, column, function):
     os.popen(cmd)
     upload_and_replace_conf(context, "rule.xml")
 
-@Given('Drop a tableRule "{rule_name}" in rule.xml')
-def del_tableRule(context,rule_name):
-    filename, op_xmlfile = get_opxml_and_localxml_path(context, "rule.xml")
-    cmd = "python {0} delTableRule --path={1} --name={2} ".format(op_xmlfile,
-                                                                  filename,
-                                                                  rule_name)
-    os.popen(cmd)
-    upload_and_replace_conf(context, "rule.xml")
-    check_not_has_value(context, "rule.xml", rule_name)
-
-@Given('Add a "{rule_name}" hash function in rule.xml')
-def add_hash_function(context, rule_name):
-    context.execute_steps(u'Given Drop a "{0}" function in rule.xml'.format(rule_name))
-    filename, op_xmlfile = get_opxml_and_localxml_path(context, "rule.xml")
-    cmd="python {0} createFunction --path={1} --class=hash --name={2} --propertys={3}".format(op_xmlfile,
-                                                                                            filename,
-                                                                                            rule_name,
-                                                                                            str(context.text))
-    os.popen(cmd)
-    upload_and_replace_conf(context, "rule.xml")
-    check_has_value(context, "rule.xml", rule_name)
+@Given('add xml segment in "{file}" to "{parentTag}"')
+def step_impl(context, file, parentTag):
+    get_abs_path(context, file)
+    add_child_node(file, parentTag, context.text)
+    upload_and_replace_conf(context, file)
 
 @Given('Edit a "{rule_name}" hash function in rule.xml')
 def edit_hash_function(context, rule_name):
@@ -528,10 +513,13 @@ def add_dataNode(context):
     upload_and_replace_conf(context, "schema.xml")
     check_has_value(context, "schema.xml", str(text['name']))
 
-def get_opxml_and_localxml_path(context,filename):
-    op_file_path = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], filename)
-    op_xml_path = "{0}".format(context.dble_test_config['opterate_xml_script'])
-    return op_file_path,op_xml_path
+# def get_opxml_and_localxml_path(context,filename):
+#     op_file_path = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], filename)
+#     op_xml_path = "{0}".format(context.dble_test_config['opterate_xml_script'])
+#     return op_file_path,op_xml_path
+def get_abs_path(context, file):
+    path = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], file)
+    return path
 
 def upload_and_replace_conf(context, filename):
     local_file = "{0}/{1}".format(context.dble_test_config['dble_base_conf'],filename)

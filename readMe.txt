@@ -58,16 +58,21 @@ behave features/install_uninstall/update_dble.feature
 behave features/install_uninstall/install_dble_and_zk.feature
 
 #sql覆盖
-behave -D sql_cover=true features/sql_cover/sql.feature features/sql_cover/select.feature features/sql_cover/transaction.feature features/sql_cover/manager.feature
+behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature
 
 #算法
-behave -D sql_cover=false features/function/date.feature features/function/enum.feature features/function/hash.feature features/function/patternrange.feature features/function/rangenumber.feature features/function/stringhash.feature
+behave -D dble_conf=template features/function/date.feature features/function/enum.feature features/function/hash.feature features/function/patternrange.feature features/function/rangenumber.feature features/function/stringhash.feature
 
 #配置
-behave -D sql_cover=false features/reload_conf/rule.feature features/reload_conf/schema.feature features/reload_conf/server.feature
+behave -D dble_conf=template features/reload_conf/rule.feature features/reload_conf/schema.feature features/reload_conf/server.feature
 
 #全局序列(本地文件)
-behave -D sql_cover=false features/sequence/sequence.feature
+behave -D dble_conf=template features/sequence/sequence.feature
 
 #安全性
-behave -D sql_cover=false features/safety/safety.feature
+behave -D dble_conf=template features/safety/safety.feature
+
+#maofei
+behave -D reinstall=true -D tar_local=true features/sql_cover/transaction.feature
+behave -D reinstall=true -D tar_local=true features/sql_cover/sql.feature
+behave -D reinstall=true -D tar_local=true features/sql_cover/manager.feature

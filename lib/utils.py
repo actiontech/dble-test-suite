@@ -5,7 +5,7 @@ import time
 import logging
 from logging import config
 from lib import log_it
-from lib.nodes import Node, Nodes
+from lib.nodes import Node
 
 def init_log_directory(symbolic=False):
     logs_dir = 'logs'
@@ -52,51 +52,17 @@ def load_yaml_config(config_path):
     return parsed
 
 @log_it
-def get_all_nodes(context, docker_compose):
-    nodes = Nodes()
-    for _, node_info in docker_compose['services'].iteritems():
-        ip = node_info['networks']['net']['ipv4_address']
-        ssh_user = context.dble_test_config['ssh_user']
-        ssh_password = context.dble_test_config['ssh_password']
-        host_name = node_info['hostname']
-        node = Node(ip, ssh_user, ssh_password, host_name)
-        if 'ports' in node_info:
-            node.is_ports = True
-        nodes.add_node(node)
-    return nodes
-
-@log_it
-def get_nodes(context, rexg, docker_compose):
-    nodes = Nodes()
-    for _, node_info in docker_compose['services'].iteritems():
-        if node_info['hostname'].startswith(rexg):
-            ip = node_info['networks']['net']['ipv4_address']
+def get_nodes(context, docker_compose , rexg=''):
+    nodes = []
+    for _, container_info in docker_compose['services'].iteritems():
+        if container_info['hostname'].startswith(rexg):
+            ip = container_info['networks']['net']['ipv4_address']
             ssh_user = context.dble_test_config['ssh_user']
             ssh_password = context.dble_test_config['ssh_password']
-            host_name = node_info['hostname']
+            host_name = container_info['hostname']
             node = Node(ip, ssh_user, ssh_password, host_name)
-            if 'ports' in node_info:
-                node.is_ports = True
-            nodes.add_node(node)
+            nodes.append(node)
     return nodes
-
-@log_it
-def create_ssh_client(nodes):
-    ssh_clients = {}
-
-    for node in nodes.nodes:
-        ssh_client = node.get_connection()
-        ssh_clients[node.ip] = ssh_client
-
-    return ssh_clients
-
-def create_sftp_client(nodes):
-    ssh_sftps = {}
-    for node in nodes.nodes:
-        ssh_sftp = node.get_sftp_connection()
-        ssh_sftps[node.ip] = ssh_sftp
-
-    return ssh_sftps
 
 
 

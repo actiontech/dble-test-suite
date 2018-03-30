@@ -25,10 +25,10 @@
 #SELECT id title body MATCH (titlebody)  AGAINST ('database' IN BOOLEAN MODE) AS score FROM articles ORDER BY score DESC id
 #SELECT * FROM articles WHERE MATCH (titlebody) AGAINST ('database' WITH QUERY EXPANSION)
 ##case2::cast functions and operators
-#SELECT BINARY 'a' = 'A'
-#select cast('a'='A' as binary)
-#SELECT CONCAT('hello you ',2)
-#SELECT _binary 'a' = 'A'
+SELECT BINARY 'a' = 'A'
+select cast('a'='A' as binary)
+SELECT CONCAT('hello you ',2)
+SELECT _binary 'a' = 'A'
 #CREATE TABLE new_table SELECT CAST('2000-01-01' AS DATE)
 ##case3::XML Functions
 #!share_conn
@@ -40,7 +40,7 @@ SELECT @k, ExtractValue(@xml, '//b[$@k]')
 SELECT ExtractValue('<a><b/></a>', 'count(/a/b)')
 SELECT UpdateXML('<a><b>ccc</b><d></d></a>', '/a', '<e>fff</e>') AS val1, UpdateXML('<a><b>ccc</b><d></d></a>', '/b', '<e>fff</e>') AS val2,UpdateXML('<a><b>ccc</b><d></d></a>', '//b', '<e>fff</e>') AS val3, UpdateXML('<a><b>ccc</b><d></d></a>', '/a/d', '<e>fff</e>') AS val4,UpdateXML('<a><d></d><b>ccc</b><d></d></a>', '/a/d', '<e>fff</e>') AS val5
 SELECT ExtractValue('<a><b c="1"><d>X</d></b><b c="2"><d>X</d></b></a>','a/b/d[../@c="1"]') AS result
-#SELECT @id = ExtractValue(LOAD_FILE('users.xml'),'//user[login/text()="" or 1=1 and password/text()="" or 1=1]/attribute::id' )
+SELECT @id = ExtractValue(LOAD_FILE('users.xml'),'//user[login/text()="" or 1=1 and password/text()="" or 1=1]/attribute::id' )
 ##case4::Bit Functions and Operators
 #!diff_conn
 SELECT BIT_COUNT(29), BIT_COUNT(b'101010')

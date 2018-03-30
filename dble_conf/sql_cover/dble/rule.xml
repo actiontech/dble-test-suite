@@ -190,7 +190,7 @@
 	<function name="enum_string" class="Enum">
 		<property name="mapFile">enum-string.txt</property>
 		<property name="type">1</property>
-		<property name="defaultNode">3</property>
+		<property name="defaultNode">0</property>
 	</function>	
 	<function name="range" class="NumberRange">
 		<property name="mapFile">range.txt</property>
