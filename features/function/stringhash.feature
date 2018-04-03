@@ -1,71 +1,82 @@
 Feature:
   Scenario: #stringhash function
     #test: <= 2880
-    Given Drop a tableRule "string_hash_rule" in rule.xml
-    Given Drop a "string_hash_func" function in rule.xml
-    Given Add a "string_hash_func" StringHash function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "partitionCount":4,"partitionLength":"721","hashSlice":"0:2"
+        <tableRule name="string_hash_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>string_hash_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="stringhash" name="string_hash_func">
+            <property name="partitionCount">4</property>
+            <property name="partitionLength">721</property>
+            <property name="hashSlice">0:2</property>
+        </function>
     """
-    Then Test and check reload config failure
+    Then excute admin cmd "reload @@config_all" get the following output
     """
     Sum(count[i]*length[i]) must be less than 2880
     """
     #test: uniform
-    Given Drop a tableRule "string_hash_rule" in rule.xml
-    Given Drop a "string_hash_func" function in rule.xml
-    Given Add a "string_hash_func" StringHash function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "partitionCount":4,"partitionLength":256,"hashSlice":"0:2"
+        <function class="stringhash" name="string_hash_func">
+            <property name="partitionCount">4</property>
+            <property name="partitionLength">256</property>
+            <property name="hashSlice">0:2</property>
+        </function>
     """
-    Given Add a tableRule consisting of "string_hash_rule","id","string_hash_func" in rule.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"string_hash_table","rule":"string_hash_rule","dataNode":"dn1,dn2,dn3,dn4"
-     """
-    When Execute reload @@config_all
-    Then Create table "string_hash_table" and check sharding
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
-    [{"name":"type","value":"string"},
-    {"name":"key","value":"id"},
-    {"name":"normal_value","value":"aa,bb,jj,rr,zz"},
-    {"name":"dn1","value":"bb,aa"},
-    {"name":"dn2","value":"jj"},
-    {"name":"dn3","value":"rr"},
-    {"name":"dn4","value":"zz"}]
+        <table name="string_hash_table" dataNode="dn1,dn2,dn3,dn4" rule="string_hash_rule" />
     """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | mytest |
+        | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn2*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn3*/   | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn4*/   | success | mytest |
+
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
-    [{"name":"table","value":"string_hash_table"},
-    {"name":"key","value":"id"}]
+    {"table":"string_hash_table","key":"id"}
     """
      #test: data types in sharding_key
     #Then Test the data types supported by the sharding column in "hashString.sql"
     #test: non-uniform
-    Given Drop a tableRule "string_hash_rule" in rule.xml
-    Given Drop a "string_hash_func" function in rule.xml
-    Given Add a "string_hash_func" StringHash function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "partitionCount":"2,1","partitionLength":"256,512","hashSlice":"0:2"
+        <function class="stringhash" name="string_hash_func">
+            <property name="partitionCount">2,1</property>
+            <property name="partitionLength">256,512</property>
+            <property name="hashSlice">0:2</property>
+        </function>
     """
-    Given Add a tableRule consisting of "string_hash_rule","id","string_hash_func" in rule.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"string_hash_table","rule":"string_hash_rule","dataNode":"dn1,dn2,dn3"
-     """
-    When Execute reload @@config_all
-    #Then Create table "string_hash_table" and check sharding
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
-    [{"name":"type","value":"string"},
-    {"name":"key","value":"id"},
-    {"name":"normal_value","value":"aa,bb,jj,rr,zz"},
-    {"name":"dn1","value":"bb,aa,jj"},
-    {"name":"dn2","value":"rr"},
-    {"name":"dn3","value":"zz"}]
+        <table name="string_hash_table" dataNode="dn1,dn2,dn3" rule="string_hash_rule" />
     """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | mytest |
+        | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn2*/   | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn3*/   | success | mytest |
     #clearn all conf
-    Given Drop a tableRule "string_hash_rule" in rule.xml
-    Given Drop a "string_hash_func" function in rule.xml
-    Given Delete the "string_hash_table" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Given delete the following xml segment
+      |file        | parent                                        | child                                  |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'string_hash_rule'}} |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'string_hash_func'}}  |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'string_hash_table'}}    |
+    Then excute admin cmd "reload @@config_all"

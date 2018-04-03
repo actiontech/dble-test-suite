@@ -69,11 +69,11 @@ def before_all(context):
 def after_all(context):
     logger.info('Enter hook <{0}>'.format('after_all'))
 
-    for node in context.nodes.nodes:
+    for node in context.nodes:
         logger.debug('ip <{0}>'.format(node.ip))
-        logger.debug('connection <{0}>'.format(node.connection))
-        if node.connection:
-            node.connection.close()
+        logger.debug('connection <{0}>'.format(node.sshconn))
+        if node.sshconn:
+            node.sshconn.close()
 
     logger.info('Exit hook <{0}>'.format('after_all'))
     logger.info('*' * 30)

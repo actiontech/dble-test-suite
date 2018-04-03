@@ -11,21 +11,23 @@ class Node(Logging):
         self._ssh_user = ssh_user
         self._ssh_password = ssh_password
         self._host_name = host_name
+        self.sshconn = None
         self.sftp_connection = None
 
-    def get_connection(self):
-        if self.sftp_connection is None:
-            self.logger.debug('create ssh to ip: <{0}> host_name: <{1}>'.format(self.ip, self.host_name))
-            self.connection = SSHClient(self.ip, self.ssh_user, self.ssh_password)
-            self.connection.connect()
 
-        assert self.connection is not None, "get ssh to {0} fail".format(self._ip)
-        return self.connection
+    def create_connection(self):
+        if self.sshconn is None:
+            self.logger.debug('create ssh to ip: <{0}> host_name: <{1}>'.format(self.ip, self.host_name))
+            self.sshconn = SSHClient(self.ip, self._ssh_user, self.ssh_password)
+            self.sshconn.connect()
+
+        assert self.sshconn is not None, "get ssh to {0} fail".format(self._ip)
+        return self.sshconn
 
     def get_sftp_connection(self):
         if self.sftp_connection is None:
             port = '22'
-            self.sftp_connection = SFTPClient(self.ip, self.ssh_user, self.ssh_password, int(port))
+            self.sftp_connection = SFTPClient(self.ip, self._ssh_user, self.ssh_password, int(port))
             self.sftp_connection.sftp_connect()
 
         assert self.sftp_connection is not None, "get sftp to {0} fail".format(self._ip)
@@ -40,12 +42,12 @@ class Node(Logging):
         self._ip = value
 
     @property
-    def ssh_user(self):
-        return self._ssh_user
+    def sshconn(self):
+        return self._sshconn
 
-    @ssh_user.setter
-    def ssh_user(self, value):
-        self._ssh_user = value
+    @sshconn.setter
+    def sshconn(self, value):
+        self._sshconn = value
 
     @property
     def ssh_password(self):
@@ -75,7 +77,7 @@ def get_node(nodes, host):
 # get ssh by host or ip
 def get_ssh(nodes, host):
     node = get_node(nodes, host)
-    return node.get_connection()
+    return node.create_connection()
 
 # get sftp by host or ip
 def get_sftp(nodes, host):

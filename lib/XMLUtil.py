@@ -2,7 +2,9 @@
 # @Time    : 2018/3/30 PM5:54
 # @Author  : zhaohongjie@actionsky.com
 
-from xml.etree.cElementTree import ElementTree as ET
+from xml.etree import ElementTree as ET
+from lxml import etree as ET
+# from xml.etree.ElementTree import ElementTree as ET
 
 def if_match(node, kv_map):
     '''判断某个节点是否包含所有传入参数属性
@@ -50,32 +52,118 @@ def change_node_text(nodelist, text, is_add=False, is_delete=False):
         else:
             node.text = text
 
-def add_child_node(file, parentTag, childNodeInText):
+def get_xml_from_str(str):
+    return ET.fromstring("<tmproot>" + str + "</tmproot>")
+
+def add_child_in_text(file, parentNode, childNodeInText):
     '''file:指定的xml文件的一个节点添加子节点
        parentNodeID: 要添加节点的父节点，格式 {tag:schema,kv_map:{k1:v1,k2:v2}}
        childNodeInText: 子节点'''
-    tree = ET()
-    tree.parse(file=file)
+    childNodeRoot = get_xml_from_str(childNodeInText)
 
-    if parentTag.lower() == "root":
-        parentNodes = tree.getroot()
+    add_child_in_xml(file, parentNode, childNodeRoot)
+
+def add_child_in_xml(file, parentNode, childNodeRoot):
+    ET.register_namespace("dble", "http://dble.cloud/")
+    tree = ET.parse(file)
+
+    if parentNode["tag"].lower() == "root":
+        parentNodes = [tree.getroot()]
     else:
-        parentNodes = tree.findall(parentTag.tag)
-    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(parentTag, file)
-    childNodeRoot = ET.fromstring("<tmproot>" + childNodeInText + "</tmproot>")
+        tagNodes = tree.findall(parentNode["tag"])
+        parentNodes = get_node_by_keyvalue(tagNodes, parentNode["kv_map"])
+
+    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(parentNode["tag"], file)
 
     #add child nodes, delete the same name ones if exists
     for node in parentNodes:
         for child in childNodeRoot:
             del_node_by_name(node, child)
-            node.append(child)
+            idx = get_Insert_Idx(node, child)
+            node.insert(idx,child)
 
-    tree.write(file, encoding="utf-8", xml_declaration=True)
+    doctype=""
+    if file.find('rule.xml') > -1:
+        doctype='<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
+    elif file.find('schema.xml') > -1:
+        doctype='<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
+    elif file.find('server.xml') > -1:
+        doctype='<!DOCTYPE dble:server SYSTEM "server.dtd">'
+
+    xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
+    with open(file, 'wb') as f:
+        f.writelines(xmlstr)
+
+def delete_child_node(file, kv_child, kv_parent):
+    ET.register_namespace("dble", "http://dble.cloud/")
+    tree = ET.parse(file)
+
+    parentTag = kv_parent["tag"].lower()
+    if parentTag == "root":
+        parentNodes = [tree.getroot()]
+    else:
+        tagNodes = tree.findall(parentTag)
+        parentNodes = get_node_by_keyvalue(tagNodes, kv_parent["kv_map"])
+
+    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(kv_parent["tag"], file)
+
+    for node in parentNodes:
+        children = node.findall(kv_child["tag"])
+        for child in children:
+            if if_match(child, kv_child["kv_map"]):
+                node.remove(child)
+
+    doctype=""
+    if file.find('rule.xml') > -1:
+        doctype='<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
+    elif file.find('schema.xml') > -1:
+        doctype='<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
+    elif file.find('server.xml') > -1:
+        doctype='<!DOCTYPE dble:server SYSTEM "server.dtd">'
+
+    xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
+    with open(file, 'wb') as f:
+        f.writelines(xmlstr)
+
 
 # delete the same name node with the given child
 def del_node_by_name(node, child):
-    nodeChildren = node.findall(child.tag)
     name_to_del = child.get('name')
+    nodeChildren = node.findall(child.tag)
+
     for nchild in nodeChildren:
-        if nchild.get(name_to_del, None) is not None:
+        if nchild.get('name')==name_to_del:
             node.remove(nchild)
+
+def get_Insert_Idx(node, child):
+    existsChildren = node.findall(child.tag)
+    idx = 0
+    for tagChild in existsChildren:
+        tmp = node.index(tagChild)
+        if tmp > idx: idx = tmp
+
+    return idx+1
+
+if __name__ == "__main__":
+    import sys
+    command = sys.argv[1]
+    if command == "rule":
+        seg="""
+        <tableRule name="date_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>date_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sEndDate">2018-01-31</property>
+            <property name="sPartionDay">10</property>
+        </function>
+        """
+        add_child_in_text('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map":{}}, seg)
+    elif command == "schema":
+        seg="""
+        <table name="date_table" dataNode="dn1,dn2,dn3,dn4" rule="date_rule" />
+        """
+        add_child_in_text('dble_conf/conf_template/schema.xml', {"tag": "schema", "kv_map":{"name": "mytest"}}, seg)

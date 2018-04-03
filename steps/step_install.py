@@ -87,12 +87,20 @@ def start_dble_in_hostname(context, hostname):
     ssh_client = get_ssh(context.dbles, hostname)
     cmd = "cd {0} && (./dble/bin/dble start)".format(context.dble_test_config['dble_basepath'])
     ssh_client.exec_command(cmd)
+    context.retry = 0
+    check_dble_started(context, ssh_client)
+
+def check_dble_started(context, ssh_client):
     time.sleep(5)
     cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
     rc, sto, ste = ssh_client.exec_command(cmd)
     LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
     if len(sto) == 0:
-        assert_that(False, "start dble service fail in 25 seconds!")
+        if context.retry < 5:
+            context.retry = context.retry+1
+            check_dble_started(context, ssh_client)
+        else:
+            assert_that(False, "start dble service fail in 25 seconds!")
     else:
         LOGGER.info("start dble success !!!")
 
@@ -251,7 +259,7 @@ def restore_and_ensure_dble_uncluster(context):
         cmd = "cat {0} | grep 'loadZK*' | cut -d= -f2".format(conf_file)
         for node in context.dbles:
             stop_dble_in_hostname(context, node.host_name)
-            ssh_client = node.get_connection()
+            ssh_client = node.create_connection()
             rc, sto, ste = ssh_client.exec_command(cmd)
             LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
             assert_that(ste, is_(""))
@@ -268,7 +276,7 @@ def restore_and_ensure_dble_uncluster(context):
 def check_zk_node_exists(context):
     cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
     for node in context.dbles:
-        ssh_client = node.get_connection()
+        ssh_client = node.create_connection()
         rc, sto, ste = ssh_client.exec_zk_command(cmd)
         LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
         if "Node does not exist: /dble" not in sto:

@@ -23,7 +23,7 @@ Feature: Functional testing of global sequences
     """
     "name":"test_auto","primaryKey":"auto_col","autoIncrement":"true","rule":"add_rule","dataNode:dn1,dn2,dn3,dn4"
     """
-    When execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
     Then Testing the global sequence can used in table
     """
     [{"name":"sequnceHandlerType","value":2},
@@ -35,8 +35,7 @@ Feature: Functional testing of global sequences
     #2
     Given Delete the "test_auto" table in the "mytest" logical database in schema.xml
     Given Add a table consisting of "mytest","test_auto","primaryKey:id,autoIncrement:true,rule:hash-four,dataNode:dn1,dn2,dn3,dn4" in schema.xml
-    When Log in "management" client
-    When execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
     Then Testing the global sequence can used in table
     """
     [{"name":"sequnceHandlerType","value":2},

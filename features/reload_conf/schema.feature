@@ -4,20 +4,14 @@ Feature: #
    """
    "name":"test_table","type":"global","dataNode":"dn1,dn2,dn3,dn4"
    """
-   When Execute sql in manager
-   """
-   reload @@config_all
-   """
+   Then excute admin cmd "reload @@config_all"
    Then Check add table success
    """
    [{"name":"schema","value":"mytest"},
    {"name":"table","value":"test_table"},
    {"name":"type","value":"GLOBAL"}]
    """
-   When Execute sql in manager
-   """
-   rollback @@config
-   """
+   Then excute admin cmd "rollback @@config"
    Given Delete the "test_table" table in the "mytest" logical database in schema.xml
 
   Scenario: #test add/drop child table
@@ -40,4 +34,4 @@ Feature: #
     """
     {"name":"testdn","dataHost":"172.100.9.6","database":"db3"}
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"

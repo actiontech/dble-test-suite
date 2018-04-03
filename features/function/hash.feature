@@ -1,72 +1,90 @@
 Feature:
   Scenario: #hash function
     #test: <= 2880
-    Given Drop a tableRule "hash_rule" in rule.xml
-    Given Drop a "hash_func" function in rule.xml
-    Given Add a "hash_func" hash function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "partitionCount":4,"partitionLength":721
+        <tableRule name="hash_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>hash_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="Hash" name="hash_func">
+            <property name="partitionCount">4</property>
+            <property name="partitionLength">721</property>
+        </function>
     """
-    Then Test and check reload config failure
+    Then excute admin cmd "reload @@config_all" get the following output
     """
     Sum(count[i]*length[i]) must be less than 2880
     """
-    Given Drop a "hash_func" function in rule.xml
     #test: uniform
-    Given Add a "hash_func" hash function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "partitionCount":4,"partitionLength":1
+        <function class="Hash" name="hash_func">
+            <property name="partitionCount">4</property>
+            <property name="partitionLength">1</property>
+        </function>
     """
-    Given Add a tableRule consisting of "hash_rule","id","hash_func" in rule.xml
-    Given Delete the "hash_table" table in the "mytest" logical database in schema.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"hash_table","rule":"hash_rule","dataNode":"dn1,dn2,dn3,dn4"
-     """
-    When Execute reload @@config_all
-    Then Create table "hash_table" and check sharding
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
-    [{"name":"type","value":"number"},
-    {"name":"key","value":"id"},
-    {"name":"normal_value","value":"-1,-2,0,1,2,3"},
-    {"name":"dn1","value":"0"},
-    {"name":"dn2","value":"1"},
-    {"name":"dn3","value":"2,-2"},
-    {"name":"dn4","value":"3,-1"}]
+        <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
     """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | mytest |
+        | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-1)/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-2)/*dest_node:dn3*/    | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(0)/*dest_node:dn1*/     | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(1)/*dest_node:dn2*/     | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(2)/*dest_node:dn3*/     | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into hash_table values(3)/*dest_node:dn4*/     | success | mytest |
+
      #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
-    [{"name":"table","value":"hash_table"},
-    {"name":"key","value":"id"}]
+    {"table":"hash_table","key":"id"}
     """
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "hashInteger.sql"
     #test: non-uniform
-    Given Drop a tableRule "hash_rule" in rule.xml
-    Given Drop a "hash_func" function in rule.xml
-    Given Add a "hash_func" hash function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "partitionCount":"3,1","partitionLength":"200,300"
+        <function class="Hash" name="hash_func">
+            <property name="partitionCount">3,1</property>
+            <property name="partitionLength">200,300</property>
+        </function>
     """
-    Given Add a tableRule consisting of "hash_rule","id","hash_func" in rule.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"hash_table","rule":"hash_rule","dataNode":"dn1,dn2,dn3,dn4"
-     """
-    When Execute reload @@config_all
-    Then Create table "hash_table" and check sharding
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
-    [{"name":"type","value":"number"},
-    {"name":"key","value":"id"},
-    {"name":"normal_value","value":"-1,-2,-300,-301,0,1,2,199,200,399,400,599,600,999,1000"},
-    {"name":"dn1","value":"0,1,2,199,999,1000"},
-    {"name":"dn2","value":"200,399"},
-    {"name":"dn3","value":"400,599,-301"},
-    {"name":"dn4","value":"600,-1,-2,-300"}]
+        <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
     """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | mytest |
+        | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-1)/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-2)/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-300)/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-301)/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(0)/*dest_node:dn1*/     | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(1)/*dest_node:dn1*/     | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(2)/*dest_node:dn1*/     | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(199)/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(200)/*dest_node:dn2*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(399)/*dest_node:dn2*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(400)/*dest_node:dn3*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(599)/*dest_node:dn3*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(600)/*dest_node:dn4*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(999)/*dest_node:dn1*/   | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into hash_table values(1000)/*dest_node:dn1*/  | success | mytest |
     #clearn all conf
-    Given Drop a tableRule "hash_rule" in rule.xml
-    Given Drop a "hash_func" function in rule.xml
-    Given Delete the "hash_table" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Given delete the following xml segment
+      |file        | parent                                        | child                                  |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'hash_rule'}} |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'hash_func'}}  |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'hash_table'}}    |
+    Then excute admin cmd "reload @@config_all"

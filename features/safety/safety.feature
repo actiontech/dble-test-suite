@@ -1,107 +1,94 @@
 Feature:# multi-tenancy, user-Permission
-  Scenario: #config multi-tenancy
-    Given Delete the dataNode "dn6" in schema.xml
-    Given Delete the dataNode "dn7" in schema.xml
-    Given Delete the dataNode "dn8" in schema.xml
-    Given Add the dataNode in schema.xml
+  Scenario: #multi-tenancy
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    {"name":"dn6","dataHost":"172.100.9.6","database":"db3"}
+    <schema name="mytestA">
+        <table dataNode="dn1,dn2,dn3,dn4" name="test1" rule="hash-four"/>
+        <table dataNode="dn1,dn2,dn3,dn4" name="test2" rule="hash-four"/>
+    </schema>
+    <schema name="mytestB">
+        <table dataNode="dn5,dn6,dn7,dn8" name="test1" rule="hash-four"/>
+    </schema>
+    <schema name="mytestC">
+        <table dataNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestC1" rule="eight-long"/>
+    </schema>
+    <schema name="mytestD">
+        <table dataNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestD1" rule="eight-long"/>
+    </schema>
+    <dataNode dataHost="172.100.9.6" database="db3" name="dn6"/>
+    <dataNode dataHost="172.100.9.5" database="db4" name="dn7"/>
+    <dataNode dataHost="172.100.9.6" database="db4" name="dn8"/>
     """
-    Given Add the dataNode in schema.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    {"name":"dn7","dataHost":"172.100.9.5","database":"db4"}
+        <tableRule name="eight-long">
+            <rule>
+                <columns>id</columns>
+                <algorithm>eight</algorithm>
+            </rule>
+        </tableRule>
+        <function class="Hash" name="eight">
+            <property name="partitionCount">8</property>
+            <property name="partitionLength">1</property>
+        </function>
     """
-    Given Add the dataNode in schema.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    {"name":"dn8","dataHost":"172.100.9.6","database":"db4"}
+    <user name="testA">
+        <property name="password">testA</property>
+        <property name="schemas">mytestA</property>
+    </user>
+    <user name="testB">
+        <property name="password">testB</property>
+        <property name="schemas">mytestB</property>
+    </user>
+    <user name="testC">
+        <property name="password">testC</property>
+        <property name="schemas">mytestC</property>
+    </user>
+    <user name="testD">
+        <property name="password">testD</property>
+        <property name="schemas">mytestD</property>
+    </user>
     """
-    Then Delete the "mytestA" schema in schema.xml
-    Given Add a "mytestA" schema in schema.xml
-    Given Add a table consisting of "mytestA" in schema.xml
-    """
-    "name":"test1","dataNode":"dn1,dn2,dn3,dn4","rule":"hash-four"
-    """
-    Given Add a table consisting of "mytestA" in schema.xml
-    """
-    "name":"test2","dataNode":"dn1,dn2,dn3,dn4","rule":"hash-four"
-    """
-    Then Delete the "mytestB" schema in schema.xml
-    Given Add a "mytestB" schema in schema.xml
-    Given Add a table consisting of "mytestB" in schema.xml
-    """
-    "name":"test1","dataNode":"dn5,dn6,dn7,dn8","rule":"hash-four"
-    """
-    Given Drop a tableRule "eight-long" in rule.xml
-    Given Drop a "eight" function in rule.xml
-    Given Add a "eight" hash function in rule.xml
-    """
-    "partitionCount":"8","partitionLength":"1"
-    """
-    Given Add a tableRule consisting of "eight-long","id","eight" in rule.xml
-    Then Delete the "mytestC" schema in schema.xml
-    Given Add a "mytestC" schema in schema.xml
-    Given Add a table consisting of "mytestC" in schema.xml
-    """
-    "name":"sbtestC1","dataNode":"dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8","rule":"eight-long"
-    """
-    Then Delete the "mytestD" schema in schema.xml
-    Given Add a "mytestD" schema in schema.xml
-    Given Add a table consisting of "mytestD" in schema.xml
-    """
-    "name":"sbtestD1","dataNode":"dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8","rule":"eight-long"
-    """
-    Then Delete the user "testA"
-    Given Add a user consisting of "testA" in server.xml
-    """
-    "password":"testA","schemas":"mytestA"
-    """
-    Then Delete the user "testB"
-    Given Add a user consisting of "testB" in server.xml
-    """
-    "password":"testB","schemas":"mytestB"
-    """
-    Then Delete the user "testC"
-    Given Add a user consisting of "testC" in server.xml
-    """
-    "password":"testC","schemas":"mytestC"
-    """
-    Then Delete the user "testD"
-    Given Add a user consisting of "testD" in server.xml
-    """
-    "password":"testD","schemas":"mytestD"
-    """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
-  Scenario: #test multi-tenancy
     #Standalone database: A tenant a database
-    Then Test multi-tenancy features
-    """
-    [{"user":"testA","password":"testA","is_schema":"mytestA","not_schema":"mytestB","table":"test2"},
-    {"user":"testB","password":"testB","is_schema":"mytestB","not_schema":"mytestA","table":"test1"}]
-    """
-    #shared database:
-    Then Test multi-tenancy features
-    """
-    [{"user":"testC","password":"testC","is_schema":"mytestC","not_schema":"mytestD","table":"sbtestC1"},
-    {"user":"testD","password":"testD","is_schema":"mytestD","not_schema":"mytestC","table":"sbtestD1"}
-    ]
-    """
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                   | expect            | db     |
+        | testA| testA  | conn_0 | False    | show databases                        | has:{mytestA},hasnot:{mytestB}  |        |
+        | testA| testA  | conn_0 | False    | use mytestB                           | Access denied for user |   |
+        | testA| testA  | conn_0 | False    | drop table if exists mytestA.test2    | success           |        |
+        | testA| testA  | conn_0 | False    | create table mytestA.test2(id int)    | success           |        |
+        | testA| testA  | conn_0 | True     | drop table if exists mytestA.test2    | success           |        |
+        | testB| testB  | conn_1 | False    | show databases                        | has:{mytestB},hasnot:{mytestA}  |        |
+        | testB| testB  | conn_1 | False    | use mytestA                           | Access denied for user |   |
+        | testB| testB  | conn_1 | False    | drop table if exists mytestB.test1    | success           |        |
+        | testB| testB  | conn_1 | False    | create table mytestB.test1(id int)    | success           |        |
+        | testB| testB  | conn_1 | True     | drop table if exists mytestB.test1    | success           |        |
+        | testC| testC  | conn_1 | False    | show databases                        | has:{mytestC},hasnot:{mytestD}  |        |
+        | testC| testC  | conn_1 | False    | use mytestD                           | Access denied for user |   |
+        | testC| testC  | conn_1 | False    | drop table if exists mytestC.sbtestC1 | success           |        |
+        | testC| testC  | conn_1 | False    | create table mytestC.sbtestC1(id int) | success           |        |
+        | testC| testC  | conn_1 | True     | drop table if exists mytestC.sbtestC1 | success           |        |
 
-  Scenario: #clean multi-tenancy config
-    Then Delete the "mytestA" schema in schema.xml
-    Then Delete the "mytestB" schema in schema.xml
-    Then Delete the "mytestC" schema in schema.xml
-    Then Delete the "mytestD" schema in schema.xml
-    Given Delete the dataNode "dn6" in schema.xml
-    Given Delete the dataNode "dn7" in schema.xml
-    Given Delete the dataNode "dn8" in schema.xml
-    Given Drop a tableRule "eight-long" in rule.xml
-    Given Drop a "eight" function in rule.xml
-    Then Delete the user "testA"
-    Then Delete the user "testB"
-    Then Delete the user "testC"
-    Then Delete the user "testD"
-    When Execute reload @@config_all
+    #clean multi-tenancy config
+    Given delete the following xml segment
+      |file        | parent                 | child                                  |
+      |rule.xml    | {'tag':'root'}         | {'tag':'tableRule','kv_map':{'name':'eight-long'}} |
+      |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'eight'}}  |
+      |schema.xml  | {'tag':'root'}         | {'tag':'dataNode','kv_map':{'name':'dn6'}}    |
+      |schema.xml  | {'tag':'root'}         | {'tag':'dataNode','kv_map':{'name':'dn7'}}    |
+      |schema.xml  | {'tag':'root'}         | {'tag':'dataNode','kv_map':{'name':'dn8'}}    |
+      |schema.xml  | {'tag':'root'}         | {'tag':'schema','kv_map':{'name':'mytestA'}}  |
+      |schema.xml  | {'tag':'root'}         | {'tag':'schema','kv_map':{'name':'mytestB'}}  |
+      |schema.xml  | {'tag':'root'}         | {'tag':'schema','kv_map':{'name':'mytestC'}}  |
+      |schema.xml  | {'tag':'root'}         | {'tag':'schema','kv_map':{'name':'mytestD'}}  |
+      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testA'}}      |
+      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testB'}}      |
+      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testC'}}      |
+      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testD'}}      |
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #1 test user Permission
     #single control: only readonly
@@ -114,14 +101,14 @@ Feature:# multi-tenancy, user-Permission
     """
     "password":"test_readonly","schemas":"mytest","readOnly":"true"
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
     Then Test readonly user features
     """
     {"user":"test_readonly","password":"test_readonly","schema":"mytest","table":"readonly_table"}
     """
     Then Delete the user "test_readonly"
     Given Delete the "readonly_table" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #2 config user Permission
     #single control: only schema level permission
@@ -190,7 +177,7 @@ Feature:# multi-tenancy, user-Permission
     "privileges"="fathernode:testF,check:true"
     "schemas"="name:mytest,dml:1000"
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #2 test user Permission
     #single control: only schema level permission
@@ -211,7 +198,7 @@ Feature:# multi-tenancy, user-Permission
     Then Delete the user "testE"
     Then Delete the user "testF"
     Given Delete the "schema_permission" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #3 config user Permission
     Given Delete the "schema_permission" table in the "mytest" logical database in schema.xml
@@ -219,7 +206,7 @@ Feature:# multi-tenancy, user-Permission
     """
     "name":"schema_permission","dataNode":"dn1,dn2,dn3,dn4","rule":"hash-four"
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #3 config user Permission
     #mixture control: readonly + schema
@@ -253,7 +240,7 @@ Feature:# multi-tenancy, user-Permission
     "privileges"="fathernode:readonly_schema3,check:true"
     "schemas"="name:mytest,dml:1101"
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
     Then Test config readonly and schema permission feature
     """
     [{"user":"readonly_schema1","password":"readonly_schema1","schema":"mytest","dml":"1111","table":"schema_permission"},
@@ -264,7 +251,7 @@ Feature:# multi-tenancy, user-Permission
     Then Delete the user "readonly_schema1"
     Then Delete the user "readonly_schema2"
     Then Delete the user "readonly_schema3"
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #4 test user Permission
     Then Delete the user "schema_table1"
@@ -289,7 +276,7 @@ Feature:# multi-tenancy, user-Permission
     "schemas"="name:mytest,dml:0000"
     "tables"="fathernode:mytest,name:table1,dml:1111&fathernode:mytest,name:table2,dml:0000&fathernode:mytest,name:table3,dml:0001&fathernode:mytest,name:table4,dml:0010&fathernode:mytest,name:table5,dml:0100&fathernode:mytest,name:table6,dml:1000"
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
     Then Test config schema and table permission feature
     """
     [{"user":"schema_table1","password":"schema_table1","schema":"mytest","schema_dml":"1111","single_table":"schema_permission","tables_config":
@@ -315,7 +302,7 @@ Feature:# multi-tenancy, user-Permission
     Then Delete the user "schema_table1"
     Then Delete the user "schema_table2"
     Given Delete the "schema_permission" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
 
   Scenario: #test front-end usingDecrypt
     Then Delete the user "test_user"
@@ -323,7 +310,7 @@ Feature:# multi-tenancy, user-Permission
       """
       "password":"test_password","schemas":"mytest","usingDecrypt":"1"
       """
-    When execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"
     Then Check add "client" user success
       """
       {"user":"test_user","password":"test_password","schemas":"mytest"}
@@ -338,4 +325,4 @@ Feature:# multi-tenancy, user-Permission
     "propertys"="name:selelctAllow"
     "values"="fatherNode:selelctAllow,value:false"
     """
-    When Execute reload @@config_all
+    Then excute admin cmd "reload @@config_all"

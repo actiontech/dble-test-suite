@@ -1,7 +1,7 @@
 Feature:
   Scenario: #Date function
     #test: sBeginDate not configured
-    Given add xml segment in "rule.xml" to "root"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <tableRule name="date_rule">
             <rule>
@@ -19,111 +19,130 @@ Feature:
     """
     The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NullPointerException
     """
+
     #test: sBegin < sEndDate-nodes*sPartition+1
-    Given Drop a "date_func" function in rule.xml
-    Given Add a "date_func" Date function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "dateFormat":"yyyy-MM-dd","sBeginDate":"2017-01-01","sEndDate":"2018-01-31","sPartionDay":"10"
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sBeginDate">2017-01-01</property>
+            <property name="sEndDate">2018-01-31</property>
+            <property name="sPartionDay">10</property>
+        </function>
     """
-    Given Add a tableRule consisting of "date_rule","id","date_func" in rule.xml
-    Given Delete the "date_table" table in the "mytest" logical database in schema.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"date_table","rule":"date_rule","dataNode":"dn1,dn2,dn3,dn4"
-     """
-    Then Test and check reload config failure
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
+    """
+        <table name="date_table" dataNode="dn1,dn2,dn3,dn4" rule="date_rule" />
+    """
+    Then excute admin cmd "reload @@config_all" get the following output
     """
     please make sure table datanode size = function partition size
     """
+
     #test: set sBeginDate and defaultNode
-    Given Drop a tableRule "date_rule" in rule.xml
-    Given Drop a "date_func" function in rule.xml
-    Given Add a tableRule consisting of "date_rule","id","date_func" in rule.xml
-    Given Add a "date_func" Date function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "dateFormat":"yyyy-MM-dd","sBeginDate":"2017-12-01","sEndDate":"2018-01-8","sPartionDay":"10","defaultNode":3
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sBeginDate">2017-12-01</property>
+            <property name="sEndDate">2018-01-8</property>
+            <property name="sPartionDay">10</property>
+            <property name="defaultNode">3</property>
+        </function>
     """
-    When Execute reload @@config_all
-    Then Create table "date_table" and check sharding
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
+        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into date_table values('2018-01-9')/*dest_node:dn4*/   | success | mytest |
+
+    #test: set sEndDate and no defaultNode
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    [{"name":"key","value":"id"},
-    {"name":"type","value":"date"},
-    {"name":"normal_value","value":"2017-11-11,2017-12-01,2017-12-11,2017-12-21,2017-12-31,2018-1-8,2018-01-9"},
-    {"name":"dn1","value":"2017-12-01"},
-    {"name":"dn2","value":"2017-12-11"},
-    {"name":"dn3","value":"2017-12-21"},
-    {"name":"dn4","value":"2018-01-8,2018-01-9,2017-11-11,2017-12-31"}]
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sBeginDate">2017-12-01</property>
+            <property name="sEndDate">2018-01-8</property>
+            <property name="sPartionDay">10</property>
+        </function>
     """
-    #test: set sEndDate and not defaultNode
-    Given Drop a tableRule "date_rule" in rule.xml
-    Given Drop a "date_func" function in rule.xml
-    Given Add a tableRule consisting of "date_rule","id","date_func" in rule.xml
-    Given Add a "date_func" Date function in rule.xml
-    """
-    "dateFormat":"yyyy-MM-dd","sBeginDate":"2017-12-01","sEndDate":"2018-01-8","sPartionDay":"10"
-    """
-    When Execute reload @@config_all
-    Then Create table "date_table" and check sharding
-    """
-    [{"name":"key","value":"id"},
-    {"name":"type","value":"date"},
-    {"name":"normal_value","value":"2017-12-01,2017-12-11,2017-12-21,2017-12-31,2018-1-8,2018-01-9"},
-    {"name":"abnormal_value","value":"2017-11-11"},
-    {"name":"dn1","value":"2017-12-01"},
-    {"name":"dn2","value":"2017-12-11"},
-    {"name":"dn3","value":"2017-12-21"},
-    {"name":"dn4","value":"2018-01-8,2018-01-9,2017-12-31"}]
-    """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
+        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-8')/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-9')/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into date_table values('2017-11-11')                    | can't find any valid data node | mytest |
+
      #test: not sEndDate and set defaultNode
-    Given Drop a tableRule "date_rule" in rule.xml
-    Given Drop a "date_func" function in rule.xml
-    Given Add a tableRule consisting of "date_rule","id","date_func" in rule.xml
-    Given Add a "date_func" Date function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "dateFormat":"yyyy-MM-dd","sBeginDate":"2017-12-01","sPartionDay":"10","defaultNode":"3"
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sBeginDate">2017-12-01</property>
+            <property name="sPartionDay">10</property>
+            <property name="defaultNode">3</property>
+        </function>
     """
-    When Execute reload @@config_all
-    Then Create table "date_table" and check sharding
-    """
-    [{"name":"key","value":"id"},
-    {"name":"type","value":"date"},
-    {"name":"normal_value","value":"2017-11-11,2017-12-01,2017-12-11,2017-12-21,2017-12-31,2018-1-8"},
-    {"name":"abnormal_value","value":"2018-11-11"},
-    {"name":"dn1","value":"2017-12-01"},
-    {"name":"dn2","value":"2017-12-11"},
-    {"name":"dn3","value":"2017-12-21"},
-    {"name":"dn4","value":"2018-01-8,2017-12-31,2017-11-11"}]
-    """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
+        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into date_table values('2018-11-11')                   | can't find any valid data node | mytest |
+
     #test: set not sEndDate and not defaultNode
-    Given Drop a tableRule "date_rule" in rule.xml
-    Given Drop a "date_func" function in rule.xml
-    Given Add a tableRule consisting of "date_rule","id","date_func" in rule.xml
-    Given Add a "date_func" Date function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "dateFormat":"yyyy-MM-dd","sBeginDate":"2017-12-01","sPartionDay":"10"
+        <function class="Date" name="date_func">
+            <property name="dateFormat">yyyy-MM-dd</property>
+            <property name="sBeginDate">2017-12-01</property>
+            <property name="sPartionDay">10</property>
+        </function>
     """
-    When Execute reload @@config_all
-    Then Create table "date_table" and check sharding
-    """
-    [{"name":"key","value":"id"},
-    {"name":"type","value":"date"},
-    {"name":"normal_value","value":"2017-12-01,2017-12-11,2017-12-21,2017-12-31,2018-1-8"},
-    {"name":"abnormal_value","value":"2017-11-11,2018-11-11"},
-    {"name":"dn1","value":"2017-12-01"},
-    {"name":"dn2","value":"2017-12-11"},
-    {"name":"dn3","value":"2017-12-21"},
-    {"name":"dn4","value":"2018-01-8,2018-01-9,2017-12-31"}]
-    """
-     #test: use of limit in sharding_key
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
+        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')                   | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | True     | insert into date_table values('2018-11-11')                   | can't find any valid data node | mytest |
+
+    #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
-    [{"name":"table","value":"date_table"},
-    {"name":"key","value":"id"}]
+    {"table":"date_table","key":"id"}
     """
      #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "date.sql"
+
     #clearn all conf
-    Given Drop a tableRule "date_rule" in rule.xml
-    Given Drop a "date_func" function in rule.xml
-    Given Delete the "date_table" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Given delete the following xml segment
+      |file        | parent                                        | child                                  |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'date_rule'}} |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'date_func'}}  |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'date_table'}}    |
+    Then excute admin cmd "reload @@config_all"

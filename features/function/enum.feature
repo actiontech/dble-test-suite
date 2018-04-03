@@ -1,11 +1,18 @@
 Feature:
   Scenario: #Enum function
     #test: type:integer not default node
-    Given Drop a tableRule "enum_rule" in rule.xml
-    Given Drop a "enum_func" function in rule.xml
-    Given Add a "enum_func" Enum function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "mapFile":"enum.txt","type":"0"
+        <tableRule name="enum_rule">
+            <rule>
+                <columns>id</columns>
+                <algorithm>enum_func</algorithm>
+            </rule>
+        </tableRule>
+        <function class="Enum" name="enum_func">
+            <property name="mapFile">enum.txt</property>
+            <property name="type">0</property>
+        </function>
     """
     When Add some data in "enum.txt"
     """
@@ -16,30 +23,32 @@ Feature:
     2=2
     3=3
     """
-    Given Add a tableRule consisting of "enum_rule","id","enum_func" in rule.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"enum_table","rule":"enum_rule","dataNode":"dn1,dn2,dn3,dn4"
-     """
-    When Execute reload @@config_all
-    Then Create table "enum_table" and check sharding
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
-    [{"name":"key","value":"id"},
-    {"name":"type","value":"number"},
-    {"name":"normal_value","value":"0,1,2,3"},
-    {"name":"abnormal_value","value":"-1,4,5"},
-    {"name":"error_type_value","value":"aaa,bbb"},
-    {"name":"dn1","value":"0"},
-    {"name":"dn2","value":"1"},
-    {"name":"db3","value":"2"},
-    {"name":"dn4","value":"3"}]
+        <table name="enum_table" dataNode="dn1,dn2,dn3,dn4" rule="enum_rule" />
     """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists enum_table                               | success | mytest |
+        | test | 111111 | conn_0 | False    | create table enum_table(id int)                               | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(0)/*dest_node:dn1*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(1)/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(2)/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(3)/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(-1)                  | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(4)                   | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(5)                   | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | True     | insert into enum_table values('aaa')               | Please check if the format satisfied | mytest |
+
     #test: type:string default node
-    Given Drop a tableRule "enum_rule" in rule.xml
-    Given Drop a "enum_func" function in rule.xml
-    Given Add a "enum_func" Enum function in rule.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "mapFile":"enum.txt","type":"1","defaultNode":"3"
+        <function class="Enum" name="enum_func">
+            <property name="mapFile">enum.txt</property>
+            <property name="type">1</property>
+            <property name="defaultNode">3</property>
+        </function>
     """
     When Add some data in "enum.txt"
     """
@@ -51,32 +60,32 @@ Feature:
     2=2
     3=3
     """
-    Given Add a tableRule consisting of "enum_rule","id","enum_func" in rule.xml
-    Given Add a table consisting of "mytest" in schema.xml
-     """
-     "name":"enum_table","rule":"enum_rule","dataNode":"dn1,dn2,dn3,dn4"
-     """
-    When Execute reload @@config_all
-    Then Create table "enum_table" and check sharding
-    """
-    [{"name":"key","value":"id"},
-    {"name":"type","value":"string"},
-    {"name":"normal_value","value":"0,1,2,3,aaa,bbb,ccc,ddd,eee"},
-    {"name":"dn1","value":"aaa"},
-    {"name":"dn2","value":"bbb,1"},
-    {"name":"dn3","value":"ccc,2"},
-    {"name":"dn4","value":"0,3,ddd,eee"}]
-    """
+    Then excute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists enum_table                               | success | mytest |
+        | test | 111111 | conn_0 | False    | create table enum_table(id varchar(10))                       | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(0)/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(1)/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(2)/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(3)/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values('aaa')/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values('bbb')/*dest_node:dn2*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values('ccc')/*dest_node:dn3*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values('ddd')/*dest_node:dn4*/ | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into enum_table values('eee')/*dest_node:dn4*/ | success | mytest |
+
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "enum.sql"
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
-    [{"name":"table","value":"enum_table"},
-    {"name":"key","value":"id"}]
+    {"table":"enum_table","key":"id"}
     """
     #clearn all conf
-    Given Drop a tableRule "enum_rule" in rule.xml
-    Given Drop a "enum_func" function in rule.xml
-    Given Delete the "enum_table" table in the "mytest" logical database in schema.xml
-    When Execute reload @@config_all
+    Given delete the following xml segment
+      |file        | parent                                        | child                                  |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'enum_rule'}} |
+      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}  |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'enum_table'}}    |
+    Then excute admin cmd "reload @@config_all"
