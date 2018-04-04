@@ -92,90 +92,83 @@ Feature:# multi-tenancy, user-Permission
 
   Scenario: #1 test user Permission
     #single control: only readonly
-    Then Delete the user "test_readonly"
-    Given Add a table consisting of "mytest" in schema.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    "name":"readonly_table","dataNode":"dn1,dn2,dn3,dn4","rule":"hash-four"
+    <schema name="mytest">
+        <table dataNode="dn1,dn2,dn3,dn4" name="readonly_table" rule="hash-four"/>
+    </schema>
     """
-    Given Add a user consisting of "test_readonly" in server.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    "password":"test_readonly","schemas":"mytest","readOnly":"true"
+    <user name="test_readonly">
+        <property name="password">test_readonly</property>
+        <property name="schemas">mytest</property>
+        <property name="readOnly">true</property>
+    </user>
     """
     Then excute admin cmd "reload @@config_all"
     Then Test readonly user features
     """
     {"user":"test_readonly","password":"test_readonly","schema":"mytest","table":"readonly_table"}
     """
-    Then Delete the user "test_readonly"
-    Given Delete the "readonly_table" table in the "mytest" logical database in schema.xml
+    Given delete the following xml segment
+      |file        | parent           | child                                            |
+      |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_readonly'}} |
+      |schema.xml  | {'tag':'root'}   | {'tag':'schema','kv_map':{'name':'mytest'}}      |
     Then excute admin cmd "reload @@config_all"
 
   Scenario: #2 config user Permission
     #single control: only schema level permission
-    Given Delete the "schema_permission" table in the "mytest" logical database in schema.xml
-    Given Add a table consisting of "mytest" in schema.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    "name":"schema_permission","dataNode":"dn1,dn2,dn3,dn4","rule":"hash-four"
+    <schema name="mytest">
+        <table dataNode="dn1,dn2,dn3,dn4" name="schema_permission" rule="hash-four"/>
+    </schema>
     """
-    Then Delete the user "testA"
-    Given Add a user consisting of "testA" in server.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-    "password":"testA","schemas":"mytest"
-    """
-    Given Add a privilege of "testA" user in server.xml
-    """
-    "privileges"="fathernode:testA,check:true"
-    "schemas"="name:mytest,dml:0000"
-    """
-    Then Delete the user "testB"
-    Given Add a user consisting of "testB" in server.xml
-    """
-    "password":"testB","schemas":"mytest"
-    """
-    Given Add a privilege of "testB" user in server.xml
-    """
-    "privileges"="fathernode:testB,check:true"
-    "schemas"="name:mytest,dml:1111"
-    """
-    Then Delete the user "testC"
-    Given Add a user consisting of "testC" in server.xml
-    """
-    "password":"testC","schemas":"mytest"
-    """
-    Given Add a privilege of "testC" user in server.xml
-    """
-    "privileges"="fathernode:testC,check:true"
-    "schemas"="name:mytest,dml:0001"
-    """
-    Then Delete the user "testD"
-    Given Add a user consisting of "testD" in server.xml
-    """
-    "password":"testD","schemas":"mytest"
-    """
-    Given Add a privilege of "testD" user in server.xml
-    """
-    "privileges"="fathernode:testD,check:true"
-    "schemas"="name:mytest,dml:0010"
-    """
-    Then Delete the user "testE"
-    Given Add a user consisting of "testE" in server.xml
-    """
-    "password":"testE","schemas":"mytest"
-    """
-    Given Add a privilege of "testE" user in server.xml
-    """
-    "privileges"="fathernode:testE,check:true"
-    "schemas"="name:mytest,dml:0100"
-    """
-    Then Delete the user "testF"
-    Given Add a user consisting of "testF" in server.xml
-    """
-    "password":"testF","schemas":"mytest"
-    """
-    Given Add a privilege of "testF" user in server.xml
-    """
-    "privileges"="fathernode:testF,check:true"
-    "schemas"="name:mytest,dml:1000"
+    <user name="testA">
+        <property name="password">testA</property>
+        <property name="schemas">mytest</property>
+        <privileges check="true">
+            <schema name="mytest" dml="0000" />
+        </privileges>
+    </user>
+    <user name="testB">
+        <property name="password">testB</property>
+        <property name="schemas">mytest</property>
+        <privileges check="true">
+            <schema name="mytest" dml="1111" />
+        </privileges>
+    </user>
+    <user name="testC">
+        <property name="password">testC</property>
+        <property name="schemas">mytest</property>
+        <privileges check="true">
+            <schema name="mytest" dml="0001" />
+        </privileges>
+    </user>
+    <user name="testD">
+        <property name="password">testD</property>
+        <property name="schemas">mytest</property>
+        <privileges check="true">
+            <schema name="mytest" dml="0010" />
+        </privileges>
+    </user>
+    <user name="testE">
+        <property name="password">testE</property>
+        <property name="schemas">mytest</property>
+        <privileges check="true">
+            <schema name="mytest" dml="0100" />
+        </privileges>
+    </user>
+    <user name="testF">
+        <property name="password">testF</property>
+        <property name="schemas">mytest</property>
+        <privileges check="true">
+            <schema name="mytest" dml="1000" />
+        </privileges>
+    </user>
     """
     Then excute admin cmd "reload @@config_all"
 

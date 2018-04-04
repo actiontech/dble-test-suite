@@ -209,18 +209,6 @@ def check_privilege(context, user):
         for table in tables:
             tabs = []
 
-@Given('Delete the "{tablename}" table in the "{schemaname}" logical database in schema.xml')
-def del_table(context, tablename, schemaname):
-    filename, op_xmlfile = get_opxml_and_localxml_path(context, "schema.xml")
-    cmd = "python {0} delTable --path={1} --schemaName={2} --name={3}".format(op_xmlfile,
-                                                                                    filename,
-                                                                                    schemaname,
-                                                                                    tablename)
-    os.popen(cmd)
-    request = os.popen(cmd).read()
-    assert_that(str(request), is_(""))
-    upload_and_replace_conf(context, "schema.xml")
-    check_not_has_value(context, "schema.xml", tablename)
 
 @When('Execute "{cmd}" on the managerment client and check system property with "{name}","{text}"')
 def check_sys_property(context, cmd, name, text):
@@ -248,21 +236,6 @@ def del_child_table(context):
     assert_that(str(request), is_(""))
     upload_and_replace_conf(context, "schema.xml")
     check_not_has_value(context, "schema.xml", text['childName'])
-
-@Given('Add a "{child_tables}" of the "{parent_table}" table in the "{schema_name}" logical database in schema.xml')
-def add_child_table(context, child_tables, parent_table, schema_name):
-    filename, op_xmlfile = get_opxml_and_localxml_path(context, "schema.xml")
-    table = str(context.text).split(',')[0].split(':')[1]
-    cmd = "python {0} createChildTable --path={1} --schemaName={2} --tableName={3} --childTables={4} --attributes={5}".format(op_xmlfile,
-                                                                                                                              filename,
-                                                                                                                              schema_name,
-                                                                                                                              parent_table,
-                                                                                                                              child_tables,
-                                                                                                                              str(context.text))
-    os.popen(cmd)
-    upload_and_replace_conf(context, "schema.xml")
-    LOGGER.info("table: {0}".format(table))
-    check_has_value(context, "schema.xml", table)
 
 # def get_opxml_and_localxml_path(context,filename):
 #     op_file_path = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], filename)
