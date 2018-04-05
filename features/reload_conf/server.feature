@@ -9,10 +9,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </user>
     """
     Then excute admin cmd "reload @@config_all"
-    Then Check add "client" user success
-    """
-    {"user":"test_user","password":"test_password","schemas":"mytest"}
-    """
+    Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
   Scenario: #test usingDecrypt
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -24,10 +23,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </user>
     """
     Then excute admin cmd "reload @@config_all"
-    Then Check add "client" user success
-      """
-      {"user":"test_user","password":"test_password","schemas":"mytest"}
-      """
+    Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
   Scenario: #2 add/delete manager user
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -38,10 +36,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </user>
     """
     Then excute admin cmd "reload @@config_all"
-    Then Check add "manager" user success
-    """
-    {"user":"test_user","password":"test_password"}
-    """
+    Then excute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
   Scenario: #3 add/delete privilege
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -72,19 +67,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |file        | parent           | child                                        |
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
     Then excute admin cmd "reload @@config_all"
-#    Then Check the privilege of user "test_user"
-#    """
-#    [{"readOnly":"true"},
-#    {"privilege":"true"},
-#    {"schema":"mytest","dml":"0000","table":
-#    [{"name":"tableA","dml":"1111"},
-#    {"name":"tableB","dml":"1111"}]
-#    },
-#    {"schema":"testdb","dml":"1111","table":
-#    [{"name":"test1","dml":"0000"},
-#    {"name":"test2","dml":"0110"}]
-#    }]
-#    """
 
   Scenario: #4 add/delete Firewall
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"

@@ -142,7 +142,8 @@ def get_Insert_Idx(node, child):
         tmp = node.index(tagChild)
         if tmp > idx: idx = tmp
 
-    return idx+1
+    if idx > 0: idx = idx+1
+    return idx
 
 if __name__ == "__main__":
     import sys

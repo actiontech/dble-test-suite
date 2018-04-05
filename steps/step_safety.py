@@ -2,6 +2,9 @@ import sys
 import os
 import logging
 import json
+
+from steps.step_reload import get_dble_conn
+
 sys.path.append("..")
 from behave import *
 from hamcrest import *
@@ -9,57 +12,10 @@ from lib.DBUtil import *
 
 LOGGER = logging.getLogger('steps.safety')
 
-@Then('Test readonly user features')
-def test_readoly(context):
-    text = json.loads(context.text)
-    user = password = schema = table = ""
-    for key, value in text.items():
-        if key == "user":
-            user = value
-        if key == "password":
-            password = value
-        if key == "schema":
-            schema = value
-        if key == "table":
-            table = value
-    if (not hasattr(context, "dble_conn")) or context.dble_conn is None:
-        context.dble_conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-           context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'], context)
-    test_conn = DBUtil(context.dble_test_config['dble_host'], user, password, schema, context.dble_test_config['client_port'], context)
-    sql = "drop table if exists {0}".format(table)
-    context.dble_conn.query(sql)
-    sql = "create table {0}(id int, data varchar(10))".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs[1], contains_string('User READ ONLY'))
-    context.dble_conn.query(sql)
-    sql = "drop table {0}".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs[1], contains_string('User READ ONLY'))
-    sql = "alter table {0} add column data1 varchar(10)".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs[1], contains_string('User READ ONLY'))
-    sql = "insert into {0} values (1, 'aaa')".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs[1], contains_string('User READ ONLY'))
-    sql = "update {0} set data = 'bbb' where id = 1 ".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs[1], contains_string('User READ ONLY'))
-    sql = "delete from {0}".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs[1], contains_string('User READ ONLY'))
-    sql = "select * from {0}".format(table)
-    res, errs = test_conn.query(sql)
-    assert_that(errs, is_(None))
-    sql = "drop table if exists {0}".format(table)
-    context.dble_conn.query(sql)
-
 @Then('Test only schema level permission feature')
 def test_schema_permission(context):
-    text = json.loads(context.text)
-    if (not hasattr(context, "dble_conn")) or context.dble_conn is None:
-        context.dble_conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-           context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'], context)
-    for item in text:
+    dble_conn = get_dble_conn(context)
+    for item in context.table:
         test_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'], item['schema'],
                            context.dble_test_config['client_port'], context)
         sql = "drop table if exists {0}".format(item['table'])
@@ -67,7 +23,7 @@ def test_schema_permission(context):
         sql = "create table {0}(id int, data varchar(10))".format(item['table'])
         test_conn.query(sql)
         sql = "insert into {0} values (1,'aaa'),(2,'bbb'),(3,'ccc'),(4,'ddd')".format(item['table'])
-        context.dble_conn.query(sql)
+        dble_conn.query(sql)
         permission = []
         value = int(item['dml'])
         LOGGER.info("dml: {0}".format(value/1))
@@ -111,22 +67,22 @@ def test_schema_permission(context):
         else:
             res, errs = test_conn.query(ins_sql)
             assert_that(errs[1], contains_string('The statement DML privilege check is not passed'))
+        test_conn.close()
+    dble_conn.close()
 
 @Then('Test config readonly and schema permission feature')
 def test_readonly_schema(context):
     text = json.loads(context.text)
-    if (not hasattr(context, "dble_conn")) or context.dble_conn is None:
-        context.dble_conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-           context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'], context)
+    dble_conn = get_dble_conn(context)
     for item in text:
         test_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'], item['schema'],
                            context.dble_test_config['client_port'], context)
         sql = "drop table if exists {0}".format(item['table'])
-        context.dble_conn.query(sql)
+        dble_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(item['table'])
-        context.dble_conn.query(sql)
+        dble_conn.query(sql)
         sql = "insert into {0} values (1,'aaa'),(2,'bbb'),(3,'ccc'),(4,'ddd')".format(item['table'])
-        context.dble_conn.query(sql)
+        dble_conn.query(sql)
         permission = []
         value = int(item['dml'])
         LOGGER.info("dml: {0}".format(value / 1))
@@ -161,13 +117,14 @@ def test_readonly_schema(context):
         if "INSERT" in permission:
             res, errs = test_conn.query(ins_sql)
             assert_that(errs[1], contains_string('User READ ONLY'))
+        test_conn.close()
+
+    dble_conn.close()
 
 @Then('Test config schema and table permission feature')
 def test_schema_table(context):
     text = json.loads(context.text)
-    if (not hasattr(context, "dble_conn")) or context.dble_conn is None:
-        context.dble_conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-           context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'], context)
+    dble_conn = get_dble_conn(context)
     for item in text:
         test_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'], item['schema'],
                            context.dble_test_config['client_port'], context)
@@ -176,7 +133,7 @@ def test_schema_table(context):
         sql = "create table {0}(id int, data varchar(10))".format(item['single_table'])
         test_conn.query(sql)
         sql = "insert into {0} values (1,'aaa'),(2,'bbb'),(3,'ccc'),(4,'ddd')".format(item['single_table'])
-        context.dble_conn.query(sql)
+        dble_conn.query(sql)
         schema_permission = []
         value = int(item['schema_dml'])
         LOGGER.info("dml: {0}".format(value / 1))
@@ -226,7 +183,7 @@ def test_schema_table(context):
             sql = "create table {0}(id int, data varchar(10))".format(conf_table['table'])
             test_conn.query(sql)
             sql = "insert into {0} values (1,'aaa'),(2,'bbb'),(3,'ccc'),(4,'ddd')".format(conf_table['table'])
-            context.dble_conn.query(sql)
+            dble_conn.query(sql)
             table_permission = []
             value = int(conf_table['dml'])
             for i in range(4):
@@ -278,3 +235,7 @@ def test_schema_table(context):
                 assert_that(errs[1], contains_string('The statement DML privilege check is not passed'))
             sql = "drop table if exists {0}".format(conf_table['table'])
             test_conn.query(sql)
+
+        test_conn.close()
+
+    dble_conn.close()
