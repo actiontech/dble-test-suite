@@ -29,6 +29,6 @@ Feature: #
     """
     Then excute admin cmd "reload @@config_all"
     Given delete the following xml segment
-      |file        | parent                                        | child                                          |
+      |file        | parent                                       | child                                          |
       |schema.xml  |{'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'test_table'}}  |
     Then excute admin cmd "reload @@config_all"

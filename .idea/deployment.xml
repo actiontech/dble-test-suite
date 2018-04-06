@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData">
+  <component name="PublishConfigData" serverName="dble">
     <serverData>
       <paths name="dble">
         <serverdata>
           <mappings>
-            <mapping deploy="/dble" local="$PROJECT_DIR$" web="/" />
+            <mapping deploy="/root/dble" local="$PROJECT_DIR$" web="/" />
           </mappings>
           <excludedPaths>
+            <excludedPath local="true" path="$PROJECT_DIR$/compose" />
             <excludedPath local="true" path="$PROJECT_DIR$/drivers" />
+            <excludedPath local="true" path="$PROJECT_DIR$/sqls" />
           </excludedPaths>
         </serverdata>
       </paths>

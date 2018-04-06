@@ -9,6 +9,8 @@ from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_n
 from behave.log_capture import capture
 from pprint import pformat
 
+from steps.step_reload import upload_and_replace_conf
+
 CONF_PATH = './conf'
 logger = logging.getLogger('environment')
 root = logging.getLogger('root')
@@ -33,11 +35,7 @@ def before_all(context):
     logger.info('*' * 30)
     logger.info('*       DBLE TEST START       *')
     logger.info('*' * 30)
-    logger.info('Enter hook <{0}>'.format('before_all'))
-    # try:
-    #     test_config = context.config.userdata.pop('test_config')
-    # except KeyError:
-    #     raise KeyError('Not define test_config in behave -D test_config=XXX')
+    logger.info('Enter hook before_all')
     test_config = "./conf/auto_dble_test.yaml"
 
     parsed = load_yaml_config(test_config)
@@ -56,6 +54,7 @@ def before_all(context):
     #clean last result
     osCmd= 'rm -rf {0} && mkdir {0}'.format(context.dble_test_config['result']['dir'])
     os.system(osCmd)
+
     steps_dir = "{0}/steps".format(os.getcwd())
     sys.path.append(steps_dir)
     init_log(context)
@@ -90,15 +89,11 @@ def before_feature(context, feature):
         dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define test_config in behave -D sql_cover=XXX')
-    flag = True
     if dble_conf.lower() == "sql_cover":
-        if flag:
-            context.execute_steps(u'Given Replace the existing configuration with the conf sql_cover directory')
-            flag = False
+        context.execute_steps(u'Given Replace the existing configuration with the conf sql_cover directory')
     elif dble_conf.lower() == "template":
         context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
-    else:
-        pass
+
     logger.info('Exit hook <{0}>'.format('befor_feature'))
 
 def after_feature(context, feature):
@@ -117,7 +112,7 @@ def before_scenario(context, scenario):
     logger.info('Exit hook <{0}>'.format('before_scenario'))
 
 def after_scenario(context, scenario):
-    logger.info('Enter hook <{0}>'.format('after_scenario'))
+    logger.info('Enter hook after_scenario')
     #clear conns in case of the same name conn is used in after test cases
     for i in range(0, 10):
         conn_name = "conn_{0}".format(i)
@@ -125,20 +120,20 @@ def after_scenario(context, scenario):
             conn = getattr(context, conn_name)
             conn.close()
             delattr(context, conn_name)
-    logger.info('Exit hook <{0}>'.format('after_scenario'))
+
+    if context.config.stop and scenario.status == "failed":
+        context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 
 def before_step(context, step):
     logger.info('-' * 30)
     logger.info('Step start: <{0}>'.format(step.name))
-    logger.info('Enter hook <{0}>'.format('before_step'))
     pass
-    logger.info('Exit hook <{0}>'.format('before_step'))
+    logger.info('Exit hook Step start <{0}>'.format(step.name))
 
 def after_step(context, step):
-    logger.info('Enter hook <{0}>'.format('after_step'))
+    logger.info('Enter hook after_step')
     pass
-    logger.info('Exit hook <{0}>'.format('after_step'))
     logger.info('Step end: <{0}>'.format(step.name))
     logger.info('-' * 30)

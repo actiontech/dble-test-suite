@@ -22,6 +22,10 @@ def get_sql(type):
 def step_impl(context):
     exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['client_port'])
 
+@Then('execute admin sql')
+def step_impl(context):
+    exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['manager_port'])
+
 def exec_sql(context, ip, port):
     '''
     if row["sql"] is none, just create connection
@@ -77,11 +81,11 @@ def exec_sql(context, ip, port):
             elif hasObj or hasnotObj:
                 if hasObj:
                     expectRS=hasObj.group(1)
-                    context.logger.info("zhj debug expectRS:{0}".format(expectRS))
+                    # context.logger.info("debug expectRS:{0}".format(expectRS))
                     hasResultSet(res, expectRS, True)
                 if hasnotObj:
                     notExpectRS=hasnotObj.group(1)
-                    context.logger.info("zhj debug notExpectRS:{0}".format(notExpectRS))
+                    # context.logger.info("debug notExpectRS:{0}".format(notExpectRS))
                     hasResultSet(res, notExpectRS, False)
             else:
                 assert_that(err, not None, "Err is None, expect:{0}".format(expect))

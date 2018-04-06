@@ -68,8 +68,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
     Then excute admin cmd "reload @@config_all"
 
+  @current
   Scenario: #4 add/delete Firewall
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
       <blacklist check="true">
@@ -79,7 +80,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Then excute admin cmd "reload @@config_all"
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
         <whitehost>
@@ -88,11 +89,11 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
             <host host="172.100.9.253" user="root"/>
             <host host="172.100.9.253" user="test"/>
         </whitehost>
-    <firewall>
+    </firewall>
     """
     Then excute admin cmd "reload @@config_all"
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
         <whitehost>
@@ -106,15 +107,17 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </whitehost>
     </firewall>
     """
-    Then excute admin cmd "reload @@config_all"
-
+    Then excute admin cmd "reload @@config_all" get the following output
+    """
+    Access denied for user 'root' with host '172.100.9.253'
+    """
     Given delete the following xml segment
       |file        | parent           | child              |
       |rule.xml    | {'tag':'root'}   | {'tag':'firewall'} |
     Then excute admin cmd "reload @@config_all"
 
 
- Scenario: #
+ Scenario: #5
    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
@@ -174,4 +177,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </system>
     """
    Given Restart dble in "dble-1"
+   Then excute admin cmd "show @@sysparam" get the following output
+    """
+    Access denied for user 'root' with host '172.100.9.253'
+    """
    When Execute "show @@sysparam" on the managerment client and check system property with "managerPort","9066"

@@ -13,15 +13,20 @@ LOGGER = logging.getLogger('steps.sequence')
 
 @Given('Replace the existing configuration with the conf template directory')
 def step_impl(context):
+    osCmd = 'rm -rf {0} && cp -r {0}_bk {0}'.format(context.dble_test_config['dble_base_conf'])
+    os.system(osCmd)
+
     cmd = 'rm -rf {0}/dble/conf_*'.format(context.dble_test_config['dble_basepath'])
     context.ssh_client.exec_command(cmd)
     cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(context.dble_test_config['dble_basepath'])
     context.ssh_client.exec_command(cmd)
+
     files = os.listdir(context.dble_test_config['dble_base_conf'])
     for file in files:
         local_file = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], file)
         remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
         context.ssh_sftp.sftp_put(remove_file, local_file)
+
     context.execute_steps(u'Given Restart dble by "{0}"'.format(context.dble_test_config['dble_host']))
 
 @Given('Replace the existing configuration with the conf sql_cover directory')

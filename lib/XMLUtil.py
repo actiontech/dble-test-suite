@@ -2,9 +2,8 @@
 # @Time    : 2018/3/30 PM5:54
 # @Author  : zhaohongjie@actionsky.com
 
-from xml.etree import ElementTree as ET
+# from xml.etree import ElementTree as ET
 from lxml import etree as ET
-# from xml.etree.ElementTree import ElementTree as ET
 
 def if_match(node, kv_map):
     '''判断某个节点是否包含所有传入参数属性
@@ -24,33 +23,6 @@ def get_node_by_keyvalue(nodelist, kv_map):
         if if_match(node, kv_map):
             result_nodes.append(node)
     return result_nodes
-
-
-# ---------------change -----
-def change_node_properties(nodelist, kv_map, is_delete=False):
-    '''修改/增加 /删除 节点的属性及属性值
-       nodelist: 节点列表
-       kv_map:属性及属性值map'''
-    for node in nodelist:
-        for key in kv_map:
-            if is_delete:
-                if key in node.attrib:
-                    del node.attrib[key]
-            else:
-                node.set(key, kv_map.get(key))
-
-
-def change_node_text(nodelist, text, is_add=False, is_delete=False):
-    '''改变/增加/删除一个节点的文本
-       nodelist:节点列表
-       text : 更新后的文本'''
-    for node in nodelist:
-        if is_add:
-            node.text += text
-        elif is_delete:
-            node.text = ""
-        else:
-            node.text = text
 
 def get_xml_from_str(str):
     return ET.fromstring("<tmproot>" + str + "</tmproot>")
@@ -74,12 +46,15 @@ def add_child_in_xml(file, parentNode, childNodeRoot):
         parentNodes = get_node_by_keyvalue(tagNodes, parentNode["kv_map"])
 
     assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(parentNode["tag"], file)
-
+    prevTag = parentNode.get("prev")
     #add child nodes, delete the same name ones if exists
     for node in parentNodes:
+        if prevTag:
+            prevNodes = node.findall(prevTag)
+            idx = len(prevNodes)
         for child in childNodeRoot:
             del_node_by_name(node, child)
-            idx = get_Insert_Idx(node, child)
+            if not prevTag: idx = get_Insert_Idx(node, child)
             node.insert(idx,child)
 
     doctype=""
@@ -168,3 +143,15 @@ if __name__ == "__main__":
         <table name="date_table" dataNode="dn1,dn2,dn3,dn4" rule="date_rule" />
         """
         add_child_in_text('dble_conf/conf_template/schema.xml', {"tag": "schema", "kv_map":{"name": "mytest"}}, seg)
+    elif command == "server":
+        seg = """
+      <firewall>
+          <whitehost>
+              <host host="10.186.23.68" user="test"/>
+              <host host="10.186.23.68" user="root"/>
+              <host host="172.100.9.253" user="root"/>
+              <host host="172.100.9.253" user="test"/>
+          </whitehost>
+      </firewall>
+            """
+        add_child_in_text('dble_conf/conf_template/server.xml', {"tag": "root", "prev": 'system'}, seg)
