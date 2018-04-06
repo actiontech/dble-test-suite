@@ -8,6 +8,8 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
+from lib.XMLUtil import get_node_attr_by_kv
+from steps.step_reload import get_abs_path
 
 
 def get_sql(type):
@@ -23,7 +25,7 @@ def step_impl(context):
     exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['client_port'])
 
 @Then('execute admin sql')
-def step_impl(context):
+def execute_admin_sql(context):
     exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['manager_port'])
 
 def exec_sql(context, ip, port):
@@ -47,6 +49,9 @@ def exec_sql(context, ip, port):
         db = row["db"]
         if db is None: db = ''
 
+        do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bclose=bClose, conn_type=conn_type, expect=expect)
+
+def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
         conn = None
         try:
             err=None
@@ -68,8 +73,18 @@ def exec_sql(context, ip, port):
             if err is not None:
                 context.logger.info("exec sql err is {0} {1}".format(err[0], err[1]))
             elif sql is not None and len(sql)>0:
+                need_check_sharding = re.search(r'\/\*dest_node:(.*?)\*\/', sql, re.I)
                 context.logger.info("sql:{0}, conn:{1}, err:{2}".format(sql,conn,err))
+
+                if need_check_sharding:
+                    shardings = need_check_sharding.group(1)
+                    turn_on_general_log(context, shardings)
+
                 res,err = conn.query(sql)
+
+                if need_check_sharding:
+                    check_for_dest_sharding(sql, shardings)
+
                 if bClose:
                     conn.close()
 
@@ -122,3 +137,18 @@ def findFromMultiRes(res, expect):
                 if item.__contains__(subExpect): k = k+1
             if expLen == k: return True
     return False
+
+def turn_on_general_log(context, shardings):
+    sharding_list = shardings.split(",")
+    fullpath = get_abs_path(context, "schema.xml")
+    parentNode = {'tag':'root'}
+    childNode = {'tag':'dataNode', 'attr':['dataHost','database']}
+    for sharding in sharding_list:
+        childNode['kv_map'] = {'name': sharding}
+        dic = get_node_attr_by_kv(parentNode, childNode, fullpath)
+        ip = dic.get("dataHost")
+        db = dic.get('database')
+        do_exec_sql(context, ip, user, passwd, db, port, sql='set global general_log=on', True, 'new', 'success')
+
+def check_for_dest_sharding(sql, shardings):
+    pass

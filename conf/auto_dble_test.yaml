@@ -35,9 +35,11 @@ dble_test_config:
 
   compare_mysql:
     ip: 172.100.9.4
+    port: 3306
 
   mysql_master1:
     ip: 172.100.9.5
+    port: 3306
     dnode1:
       mysql_db: db1
     dnode3:
@@ -45,6 +47,7 @@ dble_test_config:
 
   mysql_master2:
     ip: 172.100.9.6
+    port: 3306
     dnode2:
       mysql_db: db1
     dnode4:
@@ -52,9 +55,11 @@ dble_test_config:
 
   mysql_slave1:
     ip: 172.100.9.7
+    port: 3306
 
   mysql_slave2:
     ip: 172.100.9.8
+    port: 3306
 
   result:
     dir: logs/result

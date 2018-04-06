@@ -3,6 +3,8 @@ import sys
 import logging
 import MySQLdb
 
+from steps.SqlUtil import exec_sql
+
 sys.path.append("..")
 from behave import *
 from hamcrest import *
@@ -35,17 +37,31 @@ def get_admin_conn(context, user="", passwd=""):
 @Then('excute admin cmd "{adminsql}" get the following output')
 @Then('excute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
 def exec_admin_cmd(context, adminsql, user="", passwd=""):
-    conn, error = get_admin_conn(context, user, passwd)
-    if conn:
-        result, error = conn.query(adminsql)
-    if error is not None:
-        assert_that(context.text is not None, "expect success, but get err:{0}".format(error[1]))
-        assert_that(str(error[1]), contains_string(context.text.strip()))
-    else:
-        assert_that(context.text is None, 'expect "{0}" fail with err: {1}, but success'.format(adminsql, context.text))
+    if len(user.strip()) == 0:
+        user = context.dble_test_config['manager_user']
+    if len(passwd.strip()) == 0:
+        passwd = str(context.dble_test_config['manager_password'])
 
-    if conn:
-        conn.close()
+    if context.text: expect = context.text
+    else: expect = "success"
+
+    context.execute_steps(u"""
+    Then execute admin sql
+        | user    | passwd | conn   | toClose | sql      | expect   | db |
+        | {0}     | {1}    | conn_0 | True    | {2}      | {3}      |    |
+    """.format(user, passwd, adminsql, expect))
+
+    # conn, error = get_admin_conn(context, user, passwd)
+    # if conn:
+    #     result, error = conn.query(adminsql)
+    # if error is not None:
+    #     assert_that(context.text is not None, "expect success, but get err:{0}".format(error[1]))
+    #     assert_that(str(error[1]), contains_string(context.text.strip()))
+    # else:
+    #     assert_that(context.text is None, 'expect "{0}" fail with err: {1}, but success'.format(adminsql, context.text))
+    #
+    # if conn:
+    #     conn.close()
 
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):

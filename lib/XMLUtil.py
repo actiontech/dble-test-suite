@@ -9,9 +9,10 @@ def if_match(node, kv_map):
     '''判断某个节点是否包含所有传入参数属性
        node: 节点
        kv_map: 属性及属性值组成的map'''
-    for key in kv_map:
-        if node.get(key) != kv_map.get(key):
-            return False
+    if kv_map:
+        for key in kv_map:
+            if node.get(key) != kv_map.get(key):
+                return False
     return True
 
 def get_node_by_keyvalue(nodelist, kv_map):
@@ -23,6 +24,38 @@ def get_node_by_keyvalue(nodelist, kv_map):
         if if_match(node, kv_map):
             result_nodes.append(node)
     return result_nodes
+
+def get_node_attr_by_kv(parentNode, childNode, file):
+    tree = ET.parse(file)
+    parentNodes = get_parent_nodes_from_dic(tree, parentNode)
+    childTag = childNode.get("tag")
+    childAttr = childNode.get("attr")
+
+    targets = None
+    for node in parentNodes:
+        children = node.findall(childTag)
+        targets=get_node_by_keyvalue(children, childNode.get("kv_map"))
+        if len(targets) == 1 : break
+
+    assert targets, "get node attribute fail, no targets node found"
+
+    target = targets[0]
+    dic = {}
+    if isinstance(childAttr, list):#get multi-attr
+        for attr in childAttr:
+            dic[attr] = target.get(attr)
+    else:#get single attr
+        dic[childAttr] = target.get(childAttr)
+    return dic
+
+def get_parent_nodes_from_dic(tree, parentNode):
+    if parentNode.get("tag").lower() == "root":
+        parentNodes = [tree.getroot()]
+    else:
+        tagNodes = tree.findall(parentNode.get("tag"))
+        parentNodes = get_node_by_keyvalue(tagNodes, parentNode.get("kv_map"))
+    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(parentNode.get("tag"), file)
+    return parentNodes
 
 def get_xml_from_str(str):
     return ET.fromstring("<tmproot>" + str + "</tmproot>")
@@ -39,13 +72,8 @@ def add_child_in_xml(file, parentNode, childNodeRoot):
     ET.register_namespace("dble", "http://dble.cloud/")
     tree = ET.parse(file)
 
-    if parentNode["tag"].lower() == "root":
-        parentNodes = [tree.getroot()]
-    else:
-        tagNodes = tree.findall(parentNode["tag"])
-        parentNodes = get_node_by_keyvalue(tagNodes, parentNode["kv_map"])
+    parentNodes = get_parent_nodes_from_dic(tree, parentNode)
 
-    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(parentNode["tag"], file)
     prevTag = parentNode.get("prev")
     #add child nodes, delete the same name ones if exists
     for node in parentNodes:
@@ -73,19 +101,19 @@ def delete_child_node(file, kv_child, kv_parent):
     ET.register_namespace("dble", "http://dble.cloud/")
     tree = ET.parse(file)
 
-    parentTag = kv_parent["tag"].lower()
+    parentTag = kv_parent.get("tag").lower()
     if parentTag == "root":
         parentNodes = [tree.getroot()]
     else:
         tagNodes = tree.findall(parentTag)
-        parentNodes = get_node_by_keyvalue(tagNodes, kv_parent["kv_map"])
+        parentNodes = get_node_by_keyvalue(tagNodes, kv_parent.get("kv_map"))
 
-    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(kv_parent["tag"], file)
+    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(kv_parent.get("tag"), file)
 
     for node in parentNodes:
-        children = node.findall(kv_child["tag"])
+        children = node.findall(kv_child.get("tag"))
         for child in children:
-            if if_match(child, kv_child["kv_map"]):
+            if if_match(child, kv_child.get("kv_map")):
                 node.remove(child)
 
     doctype=""
@@ -155,3 +183,8 @@ if __name__ == "__main__":
       </firewall>
             """
         add_child_in_text('dble_conf/conf_template/server.xml', {"tag": "root", "prev": 'system'}, seg)
+    elif command == "delete":
+        file="dble_conf/conf_template/server.xml"
+        kv_child=eval("{'tag':'user','kv_map':{'name':'mnger'}}")
+        kv_parent = eval("{'tag':'root'}")
+        delete_child_node(file, kv_child, kv_parent)

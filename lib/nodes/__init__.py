@@ -5,15 +5,15 @@ from lib.log import Logging
 
 
 class Node(Logging):
-    def __init__(self, ip, ssh_user, ssh_password, host_name=None):
+    def __init__(self, ip, ssh_user, ssh_password, host_name=None, mysql_port=None):
         super(Node, self).__init__()
         self._ip = ip
         self._ssh_user = ssh_user
         self._ssh_password = ssh_password
         self._host_name = host_name
+        self._mysql_port = mysql_port
         self.sshconn = None
         self.sftp_connection = None
-
 
     def create_connection(self):
         if self.sshconn is None:
@@ -27,7 +27,7 @@ class Node(Logging):
     def get_sftp_connection(self):
         if self.sftp_connection is None:
             port = '22'
-            self.sftp_connection = SFTPClient(self.ip, self._ssh_user, self.ssh_password, int(port))
+            self.sftp_connection = SFTPClient(self.ip, self._ssh_user, self._ssh_password, int(port))
             self.sftp_connection.sftp_connect()
 
         assert self.sftp_connection is not None, "get sftp to {0} fail".format(self._ip)
@@ -50,12 +50,12 @@ class Node(Logging):
         self._sshconn = value
 
     @property
-    def ssh_password(self):
-        return self._ssh_password
+    def mysql_port(self):
+        return self._mysql_port
 
-    @ssh_password.setter
-    def ssh_password(self, value):
-        self._ssh_password = value
+    @mysql_port.setter
+    def mysql_port(self, value):
+        self._mysql_port = value
 
     @property
     def host_name(self):

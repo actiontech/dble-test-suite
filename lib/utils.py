@@ -59,10 +59,14 @@ def get_nodes(context, docker_compose , rexg=''):
             ip = container_info['networks']['net']['ipv4_address']
             ssh_user = context.dble_test_config['ssh_user']
             ssh_password = context.dble_test_config['ssh_password']
+            mysql_port = get_port_by_ip(ip)
             host_name = container_info['hostname']
-            node = Node(ip, ssh_user, ssh_password, host_name)
+            node = Node(ip, ssh_user, ssh_password, host_name, mysql_port)
             nodes.append(node)
     return nodes
+
+def get_port_by_ip(ip):
+    pass
 
 
 

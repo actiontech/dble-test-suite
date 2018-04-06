@@ -78,8 +78,26 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       </blacklist>
     </firewall>
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <user name="mnger">
+        <property name="password">111111</property>
+        <property name="manager">true</property>
+    </user>
+    """
     Then excute admin cmd "reload @@config_all"
-
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    """
+    <firewall>
+        <whitehost>
+            <host host="10.186.23.68" user="test"/>
+            <host host="10.186.23.68" user="mnger"/>
+            <host host="172.100.9.253" user="mnger"/>
+            <host host="172.100.9.253" user="test"/>
+        </whitehost>
+    </firewall>
+    """
+    Then excute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -88,37 +106,26 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
             <host host="10.186.23.68" user="root"/>
             <host host="172.100.9.253" user="root"/>
             <host host="172.100.9.253" user="test"/>
+            <host host="127.0.0.1" user="root"/>
         </whitehost>
+        <blacklist check="true">
+            <property name="selelctAllow">false</property>
+        </blacklist>
     </firewall>
     """
-    Then excute admin cmd "reload @@config_all"
-
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    Then excute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
     """
-    <firewall>
-        <whitehost>
-            <host host="10.186.23.68" user="test"/>
-            <host host="10.186.23.68" user="root"/>
-            <host host="172.100.9.253" user="root"/>
-            <host host="172.100.9.253" user="test"/>
-            <blacklist check="true">
-                <property name="selelctAllow">false</property>
-            </blacklist>
-        </whitehost>
-    </firewall>
-    """
-    Then excute admin cmd "reload @@config_all" get the following output
-    """
-    Access denied for user 'root' with host '172.100.9.253'
+    Access denied for user 'mnger' with host '172.100.9.253'
     """
     Given delete the following xml segment
-      |file        | parent           | child              |
-      |rule.xml    | {'tag':'root'}   | {'tag':'firewall'} |
+      |file        | parent           | child                                   |
+      |server.xml  | {'tag':'root'}   | {'tag':'firewall'}                      |
+      |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'mnger'}}|
     Then excute admin cmd "reload @@config_all"
 
-
- Scenario: #5
-   Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+  @skip
+  Scenario: #5
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
         <property name="bindIp">0.0.0.0</property>
@@ -176,9 +183,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="frontSocketNoDelay">1         </property>
     </system>
     """
-   Given Restart dble in "dble-1"
-   Then excute admin cmd "show @@sysparam" get the following output
+    Given Restart dble in "dble-1"
+    Then excute admin cmd "show @@sysparam" get the following output
     """
-    Access denied for user 'root' with host '172.100.9.253'
+    has{('managerPort','9066','Manager connection port. The default number is 9066')}
     """
-   When Execute "show @@sysparam" on the managerment client and check system property with "managerPort","9066"
