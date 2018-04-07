@@ -12,7 +12,7 @@ class Node(Logging):
         self._ssh_password = ssh_password
         self._host_name = host_name
         self._mysql_port = mysql_port
-        self.sshconn = None
+        self._sshconn = None
         self.sftp_connection = None
 
     def create_connection(self):
@@ -43,6 +43,12 @@ class Node(Logging):
 
     @property
     def sshconn(self):
+        if self._sshconn is None:
+            self.logger.debug('create ssh to ip: <{0}> host_name: <{1}>'.format(self.ip, self.host_name))
+            self._sshconn = SSHClient(self.ip, self._ssh_user, self._ssh_password)
+            self._sshconn.connect()
+
+        assert self._sshconn is not None, "get ssh to {0} fail".format(self._ip)
         return self._sshconn
 
     @sshconn.setter
@@ -77,7 +83,7 @@ def get_node(nodes, host):
 # get ssh by host or ip
 def get_ssh(nodes, host):
     node = get_node(nodes, host)
-    return node.create_connection()
+    return node.sshconn
 
 # get sftp by host or ip
 def get_sftp(nodes, host):

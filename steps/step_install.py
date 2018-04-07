@@ -14,11 +14,7 @@ LOGGER = logging.getLogger('steps.install')
 def clean_dble_in_all_nodes(context):
     threads = []
     for node in context.dbles:
-        threads.append(threading.Thread(target=uninstall_dble_by_ip, args=(context, node.ip)))
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
+        uninstall_dble_by_ip(context, node.ip)
 
 @When('uninstall dble by "{ip}" ')
 def uninstall_dble_by_ip(context, ip):
@@ -68,9 +64,9 @@ def install_dble_by_ip(context, ip):
     else:
         context.execute_steps(u'Given download dble')
         dble_packget = "{0}".format(context.dble_test_config['dble']['remote_packget'])
-    cmd = "cd {0} && rm -rf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
+    cmd = "cd {0} && sudo rm -rf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
     ssh_client.exec_command(cmd)
-    cmd = "cd {0} && cp -r {1} {2}".format(context.dble_test_config['share_path_docker'], dble_packget,
+    cmd = "cd {0} && sudo cp -r {1} {2}".format(context.dble_test_config['share_path_docker'], dble_packget,
                                            context.dble_test_config['dble_basepath'])
     ssh_client.exec_command(cmd)
     cmd = "cd {0} && tar xf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
@@ -259,7 +255,7 @@ def restore_and_ensure_dble_uncluster(context):
         cmd = "cat {0} | grep 'loadZK*' | cut -d= -f2".format(conf_file)
         for node in context.dbles:
             stop_dble_in_hostname(context, node.host_name)
-            ssh_client = node.create_connection()
+            ssh_client = node.sshconn
             rc, sto, ste = ssh_client.exec_command(cmd)
             LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
             assert_that(ste, is_(""))
@@ -276,7 +272,7 @@ def restore_and_ensure_dble_uncluster(context):
 def check_zk_node_exists(context):
     cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
     for node in context.dbles:
-        ssh_client = node.create_connection()
+        ssh_client = node.sshconn
         rc, sto, ste = ssh_client.exec_zk_command(cmd)
         LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
         if "Node does not exist: /dble" not in sto:

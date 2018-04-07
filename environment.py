@@ -46,7 +46,6 @@ def before_all(context):
     #get dble all nodes
     context.dbles = get_nodes(context, parsed, "dble")
     context.mysqls = get_nodes(context, parsed, "mysql")
-    context.nodes = get_nodes(context, parsed)
 
     context.ssh_client = get_ssh(context.dbles, context.dble_test_config['dble_host'])
     context.ssh_sftp = get_sftp(context.dbles, context.dble_test_config['dble_host'])
@@ -68,9 +67,12 @@ def before_all(context):
 def after_all(context):
     logger.info('Enter hook <{0}>'.format('after_all'))
 
-    for node in context.nodes:
-        logger.debug('ip <{0}>'.format(node.ip))
-        logger.debug('connection <{0}>'.format(node.sshconn))
+    for node in context.dbles:
+        logger.debug('close ssh connection to <{0}>'.format(node.ip))
+        if node.sshconn:
+            node.sshconn.close()
+    for node in context.mysqls:
+        logger.debug('close ssh connection to <{0}>'.format(node.ip))
         if node.sshconn:
             node.sshconn.close()
 
@@ -82,7 +84,6 @@ def after_all(context):
 def before_feature(context, feature):
     logger.info('*' * 30)
     logger.info('Feature start: <{0}>'.format(feature.name))
-    logger.info('Enter hook <{0}>'.format('before_feature'))
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
     try:
@@ -94,22 +95,20 @@ def before_feature(context, feature):
     elif dble_conf.lower() == "template":
         context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
 
-    logger.info('Exit hook <{0}>'.format('befor_feature'))
+    logger.info('Exit hook befor_feature')
 
 def after_feature(context, feature):
-    logger.info('Enter hook <{0}>'.format('after_feature'))
+    logger.info('Enter hook after_feature')
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Reset the Log level and restart server')
-    logger.info('Exit hook <{0}>'.format('after_feature'))
     logger.info('Feature end: <{0}>'.format(feature.name))
     logger.info('*' * 30)
 
 def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
-    logger.info('Enter hook <{0}>'.format('before_scenario'))
     pass
-    logger.info('Exit hook <{0}>'.format('before_scenario'))
+    logger.info('Exit hook before_scenario')
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')

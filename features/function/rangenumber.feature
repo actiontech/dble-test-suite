@@ -39,7 +39,7 @@ Feature:
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(501)/*dest_node:dn3*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(755)/*dest_node:dn3*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(756)/*dest_node:dn4*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)/*dest_node:dn4*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)/*dest_node:dn1*/ | success | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(1001)/*dest_node:dn1*/ | success | mytest |
 
     #test: use of limit in sharding_key
@@ -67,7 +67,7 @@ Feature:
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(501)/*dest_node:dn3*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(755)/*dest_node:dn3*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(756)/*dest_node:dn4*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)/*dest_node:dn4*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)/*dest_node:dn1*/ | success | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(1001)/*dest_node:dn1*/ | success | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(-1)                    | can't find any valid data node | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(-2)                    | can't find any valid data node | mytest |

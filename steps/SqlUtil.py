@@ -9,8 +9,7 @@ from hamcrest import *
 
 from lib.DBUtil import DBUtil
 from lib.XMLUtil import get_node_attr_by_kv
-from steps.step_reload import get_abs_path
-
+from lib.nodes import get_node
 
 def get_sql(type):
     if type == "read":
@@ -49,7 +48,7 @@ def exec_sql(context, ip, port):
         db = row["db"]
         if db is None: db = ''
 
-        do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bclose=bClose, conn_type=conn_type, expect=expect)
+        do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
 def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
         conn = None
@@ -74,16 +73,19 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 context.logger.info("exec sql err is {0} {1}".format(err[0], err[1]))
             elif sql is not None and len(sql)>0:
                 need_check_sharding = re.search(r'\/\*dest_node:(.*?)\*\/', sql, re.I)
+
                 context.logger.info("sql:{0}, conn:{1}, err:{2}".format(sql,conn,err))
 
                 if need_check_sharding:
+                    cidx = need_check_sharding.start()
+                    sql = sql[:cidx]
                     shardings = need_check_sharding.group(1)
-                    turn_on_general_log(context, shardings)
+                    turn_on_general_log(context, shardings, user, passwd)
 
                 res,err = conn.query(sql)
 
                 if need_check_sharding:
-                    check_for_dest_sharding(sql, shardings)
+                    check_for_dest_sharding(context, sql, shardings, user, passwd)
 
                 if bClose:
                     conn.close()
@@ -138,9 +140,12 @@ def findFromMultiRes(res, expect):
             if expLen == k: return True
     return False
 
-def turn_on_general_log(context, shardings):
+def turn_on_general_log(context, shardings, user, passwd):
     sharding_list = shardings.split(",")
+
+    from steps.step_reload import get_abs_path
     fullpath = get_abs_path(context, "schema.xml")
+
     parentNode = {'tag':'root'}
     childNode = {'tag':'dataNode', 'attr':['dataHost','database']}
     for sharding in sharding_list:
@@ -148,7 +153,53 @@ def turn_on_general_log(context, shardings):
         dic = get_node_attr_by_kv(parentNode, childNode, fullpath)
         ip = dic.get("dataHost")
         db = dic.get('database')
-        do_exec_sql(context, ip, user, passwd, db, port, sql='set global general_log=on', True, 'new', 'success')
+        node = get_node(context.mysqls, ip)
+        conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
 
-def check_for_dest_sharding(sql, shardings):
-    pass
+        res, err = conn.query("set global general_log=off")
+        assert err is None, "set general log off fail for {0}".format(err[1])
+
+        res, err = conn.query("show variables like 'general_log_file'")
+        assert err is None, "get general log file fail for {0}".format(err[1])
+
+        general_log_file = res[0][1]
+        rc, sto, ste = node.sshconn.exec_command('rm -rf {0}'.format(general_log_file))
+        assert len(ste)==0, "rm general_log_file fail for {0}".format(ste)
+
+        res, err = conn.query("set global general_log=on")
+        assert err is None, "set general log on fail for {0}".format(err[1])
+
+        conn.close()
+
+#at present , it works only for insert
+def check_for_dest_sharding(context, sql, shardings, user, passwd):
+    sharding_list = shardings.split(",")
+
+    sql_glog = sql.split("values")
+
+    from steps.step_reload import get_abs_path
+    fullpath = get_abs_path(context, "schema.xml")
+
+    parentNode = {'tag': 'root'}
+    childNode = {'tag': 'dataNode', 'attr': ['dataHost', 'database']}
+    for sharding in sharding_list:
+        childNode['kv_map'] = {'name': sharding}
+        dic = get_node_attr_by_kv(parentNode, childNode, fullpath)
+        ip = dic.get("dataHost")
+        db = dic.get('database')
+        node = get_node(context.mysqls, ip)
+        conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
+
+        res, err = conn.query("show variables like 'general_log_file'")
+        assert err is None, "get general log file fail for {0}".format(err[1])
+
+        general_log_file = res[0][1]
+
+        rc, sto, ste = node.sshconn.exec_command('grep -i -F -n "{0}" {1}'.format(sql_glog[1], general_log_file))
+        assert len(ste)==0, "grep sql in general_log_file fail for {0}".format(ste)
+        assert len(sto)>0, "can not found the sql general log in expect sharding node"
+
+        res, err = conn.query("set global general_log=off")
+        assert err is None, "set general log on fail for {0}".format(err[1])
+
+        conn.close()

@@ -57,8 +57,8 @@ behave features/install_uninstall/update_dble.feature
 #通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
 behave features/install_uninstall/install_dble_and_zk.feature
 
-#sql覆盖
-behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature
+#sql覆盖 #maofei
+behave -D dble_conf=sql_cover features/sql_cover/sql.feature  features/sql_cover/manager.feature
 
 #算法
 behave -D dble_conf=template features/function/date.feature features/function/enum.feature features/function/hash.feature features/function/patternrange.feature features/function/rangenumber.feature features/function/stringhash.feature
@@ -72,7 +72,4 @@ behave -D dble_conf=template features/sequence/sequence.feature
 #安全性
 behave -D dble_conf=template features/safety/safety.feature
 
-#maofei
-behave -D reinstall=true -D tar_local=true features/sql_cover/transaction.feature
-behave -D reinstall=true -D tar_local=true features/sql_cover/sql.feature
-behave -D reinstall=true -D tar_local=true features/sql_cover/manager.feature
+#Q: stringhash.feature line 73, expect dn1, but dn2 in fact

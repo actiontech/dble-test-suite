@@ -90,10 +90,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     <firewall>
         <whitehost>
-            <host host="10.186.23.68" user="test"/>
-            <host host="10.186.23.68" user="mnger"/>
-            <host host="172.100.9.253" user="mnger"/>
-            <host host="172.100.9.253" user="test"/>
+            <host host="10.186.23.68" user="test,mnger"/>
+            <host host="172.100.9.253" user="test,mnger"/>
         </whitehost>
     </firewall>
     """
@@ -102,10 +100,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     <firewall>
         <whitehost>
-            <host host="10.186.23.68" user="test"/>
-            <host host="10.186.23.68" user="root"/>
-            <host host="172.100.9.253" user="root"/>
-            <host host="172.100.9.253" user="test"/>
+            <host host="10.186.23.68" user="test,root"/>
+            <host host="172.100.9.253" user="test,root"/>
             <host host="127.0.0.1" user="root"/>
         </whitehost>
         <blacklist check="true">
