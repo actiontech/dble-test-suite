@@ -1,0 +1,27 @@
+===file:transaction/lock.sql, id:62, sql:[update sbtest1 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]
+===file:transaction/lock.sql, id:79, sql:[update sbtest2 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]
+===file:transaction/lock.sql, id:96, sql:[update sbtest2 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]
+===file:transaction/lock.sql, id:112, sql:[select * from sbtest1 for update;/*hang*/]===
+dble:[((2L, 2L, '2', 2L), (6L, 6L, '6', 6L), (1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (4L, 4L, '4', 4L), (3L, 3L, '3', 3L))]
+mysql:[[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L)), ()]]
+===file:transaction/lock.sql, id:127, sql:[select * from sbtest1 for update;/*hang*/]===
+dble:[((4L, 4L, '4', 4L), (3L, 3L, '3', 3L), (2L, 2L, '2', 2L), (6L, 6L, '6', 6L), (1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
+mysql:[[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L)), ()]]
+===file:transaction/lock.sql, id:142, sql:[update sbtest1 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]
+===file:transaction/lock.sql, id:158, sql:[update sbtest1 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]
+===file:transaction/lock.sql, id:175, sql:[update sbtest2 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]
+===file:transaction/lock.sql, id:192, sql:[update sbtest2 set pad=22 where id=1;/*hang*/]===
+dble:[()]
+mysql:[[(), ()]]

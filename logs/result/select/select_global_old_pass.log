@@ -1,0 +1,242 @@
+===file:select/select_global_old.sql, id:1, sql:[drop table if exists global_table1]===
+===file:select/select_global_old.sql, id:2, sql:[CREATE TABLE global_table1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)]===
+===file:select/select_global_old.sql, id:3, sql:[create index ID_index on global_table1(ID)]===
+===file:select/select_global_old.sql, id:4, sql:[INSERT INTO global_table1 VALUES(201,'Mazojys','Fxoj','Finance',7800),(202,'Jozzh','Lnanyo','Finance',45800),(203,'Syllauu','Dfaafk','Finance',57000),(204,'Gecrrcc','Srlkrt','Finance',62000),(205,'Jssme','Bdnaa','Development',75000),(206,'Dnnaao','Errllov','Development',55000),(207,'Tyoysww','Osk','Development',49000)]===
+===file:select/select_global_old.sql, id:5, sql:[select id,FirstName,lastname,department,salary from global_table1 use index(ID_index) where  Department ='Finance']===
+===file:select/select_global_old.sql, id:6, sql:[select id,FirstName,lastname,department,salary from global_table1 force index(ID_index) where ID= 205]===
+===file:select/select_global_old.sql, id:7, sql:[SELECT FirstName, LastName,Department = CASE Department WHEN 'F' THEN 'Financial' WHEN 'D' THEN 'Development'  ELSE 'Other' END FROM global_table1]===
+===file:select/select_global_old.sql, id:8, sql:[select id,FirstName,lastname,department,salary from global_table1 where Salary >'40000' and Salary <'70000' and Department ='Finance']===
+===file:select/select_global_old.sql, id:9, sql:[SELECT count(*), Department  FROM (SELECT * FROM global_table1 ORDER BY FirstName DESC) AS Actions GROUP BY Department ORDER BY ID DESC]===
+===file:select/select_global_old.sql, id:10, sql:[SELECT id,FirstName,lastname,department,salary FROM global_table1 ORDER BY FIELD( ID, 203, 207,206)]===
+===file:select/select_global_old.sql, id:11, sql:[SELECT Department, COUNT(ID) FROM global_table1 GROUP BY Department HAVING COUNT(ID)>3]===
+===file:select/select_global_old.sql, id:12, sql:[select id,FirstName,lastname,department,salary from global_table1 order by ID ASC]===
+===file:select/select_global_old.sql, id:13, sql:[select id,FirstName,lastname,department,salary from global_table1 group by Department]===
+===file:select/select_global_old.sql, id:14, sql:[SELECT Department, MIN(Salary) FROM global_table1  GROUP BY Department HAVING MIN(Salary)>46000]===
+===file:select/select_global_old.sql, id:15, sql:[select Department,max(Salary) from global_table1 group by Department order by Department asc]===
+===file:select/select_global_old.sql, id:16, sql:[select Department,min(Salary) from global_table1 group by Department order by Department asc]===
+===file:select/select_global_old.sql, id:17, sql:[select Department,avg(Salary) from global_table1 group by Department order by Department asc]===
+===file:select/select_global_old.sql, id:18, sql:[select Department,sum(Salary) from global_table1 group by Department order by Department asc]===
+===file:select/select_global_old.sql, id:19, sql:[select ID,Department,Salary from global_table1 order by 2,3]===
+===file:select/select_global_old.sql, id:20, sql:[select id,FirstName,lastname,department,salary from global_table1 order by Department ,ID desc]===
+===file:select/select_global_old.sql, id:21, sql:[SELECT Department, COUNT(Salary) FROM global_table1 GROUP BY Department]===
+===file:select/select_global_old.sql, id:22, sql:[SELECT Department, COUNT(Salary) FROM global_table1 GROUP BY Department DESC]===
+===file:select/select_global_old.sql, id:23, sql:[select Department,count(Salary) as a from global_table1 group by Department having a=3]===
+===file:select/select_global_old.sql, id:24, sql:[select Department,count(Salary) as a from global_table1 group by Department having a>0]===
+===file:select/select_global_old.sql, id:25, sql:[select Department,count(Salary) from global_table1 group by Department having count(ID) >2]===
+===file:select/select_global_old.sql, id:26, sql:[select Department,count(*) as num from global_table1 group by Department having count(*) >1]===
+===file:select/select_global_old.sql, id:27, sql:[select Department,count(*) as num from global_table1 group by Department having count(*) <=3]===
+===file:select/select_global_old.sql, id:28, sql:[select Department from global_table1 having Department >3]===
+===file:select/select_global_old.sql, id:29, sql:[select Department from global_table1 where Department >0]===
+===file:select/select_global_old.sql, id:30, sql:[select Department,max(salary) from global_table1 group by Department having max(salary) >10]===
+===file:select/select_global_old.sql, id:31, sql:[select 12 as Department, Department from global_table1 group by Department]===
+===file:select/select_global_old.sql, id:32, sql:[select id,FirstName,lastname,department,salary from global_table1 limit 2,10]===
+===file:select/select_global_old.sql, id:33, sql:[select id,FirstName,lastname,department,salary from global_table1 order by FirstName in ('Syllauu','Dnnaao') desc]===
+===file:select/select_global_old.sql, id:34, sql:[select max(salary) from global_table1 group by department order by department asc]===
+===file:select/select_global_old.sql, id:35, sql:[select min(salary) from global_table1 group by department order by department asc]===
+===file:select/select_global_old.sql, id:36, sql:[select avg(salary) from global_table1 group by department order by department asc]===
+===file:select/select_global_old.sql, id:37, sql:[select sum(salary) from global_table1 group by department order by department asc]===
+===file:select/select_global_old.sql, id:38, sql:[select count(salary) from global_table1 group by department order by department asc]===
+===file:select/select_global_old.sql, id:39, sql:[select Department,sum(Salary) a from global_table1 group by Department having a >=1 order by Department DESC]===
+===file:select/select_global_old.sql, id:40, sql:[select Department,count(*) as num from global_table1 group by Department having count(*) >=4 order by Department ASC]===
+===file:select/select_global_old.sql, id:41, sql:[select FirstName,LastName,Department,ABS(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:42, sql:[select FirstName,LastName,Department,ACOS(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:43, sql:[select FirstName,LastName,Department,ASIN(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:44, sql:[select FirstName,LastName,Department,ATAN(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:45, sql:[select FirstName,LastName,Department,ATAN(salary,100) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:46, sql:[select FirstName,LastName,Department,ATAN2(salary,100) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:47, sql:[select FirstName,LastName,Department,CEIL(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:48, sql:[select FirstName,LastName,Department,CEILING(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:49, sql:[select FirstName,LastName,Department,COT(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:50, sql:[select FirstName,LastName,Department,CRC32(Department) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:51, sql:[select FirstName,LastName,Department,FLOOR(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:52, sql:[select FirstName,LN(FirstName),LastName,Department from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:53, sql:[select FirstName,LastName,Department,LOG(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:54, sql:[select FirstName,LastName,Department,LOG2(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:55, sql:[select FirstName,LastName,Department,LOG10(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:56, sql:[select FirstName,LastName,Department,MOD(salary,2) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:57, sql:[select FirstName,LastName,Department,RADIANS(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:58, sql:[select FirstName,LastName,Department,ROUND(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:59, sql:[select FirstName,LastName,Department,SIGN(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:60, sql:[select FirstName,LastName,Department,SIN(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:61, sql:[select FirstName,LastName,Department,SQRT(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:62, sql:[select FirstName,LastName,Department,TAN(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:63, sql:[select FirstName,LastName,Department,TRUNCATE(salary,1) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:64, sql:[select FirstName,LastName,Department,TRUNCATE(salary*100,0) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:65, sql:[select FirstName,LastName,Department,SIN(salary) from global_table1 order by Department]===
+===file:select/select_global_old.sql, id:66, sql:[select id,FirstName,lastname,department,salary from global_table1 where Department is Null]===
+===file:select/select_global_old.sql, id:67, sql:[select id,FirstName,lastname,department,salary from global_table1 where Department is not Null]===
+===file:select/select_global_old.sql, id:68, sql:[select id,FirstName,lastname,department,salary from global_table1 where NOT (ID < 200)]===
+===file:select/select_global_old.sql, id:69, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID <300]===
+===file:select/select_global_old.sql, id:70, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID <1]===
+===file:select/select_global_old.sql, id:71, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID <> 0]===
+===file:select/select_global_old.sql, id:72, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID <> 0 and ID <=1]===
+===file:select/select_global_old.sql, id:73, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID >=205]===
+===file:select/select_global_old.sql, id:74, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID <=205]===
+===file:select/select_global_old.sql, id:75, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID >=205 and ID <=205]===
+===file:select/select_global_old.sql, id:76, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID >1 and ID <=203]===
+===file:select/select_global_old.sql, id:77, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID >=1 and ID=205]===
+===file:select/select_global_old.sql, id:78, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID=(ID>>1)<<1]===
+===file:select/select_global_old.sql, id:79, sql:[select id,FirstName,lastname,department,salary from global_table1 where ID&1]===
+===file:select/select_global_old.sql, id:80, sql:[select id,FirstName,lastname,department,salary from global_table1 where Salary >'40000' and Salary <'70000' and Department ='Finance' order by Salary ASC]===
+===file:select/select_global_old.sql, id:81, sql:[select id,FirstName,lastname,department,salary from global_table1 where (Salary >'50000' and Salary <'70000') or Department ='Finance' order by Salary ASC]===
+===file:select/select_global_old.sql, id:82, sql:[select id,FirstName,lastname,department,salary from global_table1 where FirstName like 'J%']===
+===file:select/select_global_old.sql, id:83, sql:[select count(*) FROM global_table1 WHERE Salary is null or FirstName not like '%M%']===
+===file:select/select_global_old.sql, id:84, sql:[SELECT id,FirstName,lastname,department,salary FROM global_table1  WHERE ID IN (SELECT ID FROM global_table1 WHERE ID >0)]===
+===file:select/select_global_old.sql, id:85, sql:[SELECT distinct * FROM global_table1 WHERE ID IN ( SELECT ID FROM global_table1 WHERE ID >0)]===
+===file:select/select_global_old.sql, id:86, sql:[select id,FirstName,lastname,department,salary from global_table1 where FirstName in ('Mazojys','Syllauu','Tyoysww')]===
+===file:select/select_global_old.sql, id:87, sql:[select id,FirstName,lastname,department,salary from global_table1 where Salary between 40000 and 50000]===
+===file:select/select_global_old.sql, id:88, sql:[select sum(salary) from global_table1 where department = 'Finance']===
+===file:select/select_global_old.sql, id:89, sql:[select max(salary) from global_table1 where department = 'Finance']===
+===file:select/select_global_old.sql, id:90, sql:[select min(salary) from global_table1 where department = 'Finance']===
+===file:select/select_global_old.sql, id:91, sql:[select avg(salary) from global_table1 where department = 'Finance']===
+===file:select/select_global_old.sql, id:92, sql:[drop table if exists global_table1]===
+===file:select/select_global_old.sql, id:93, sql:[create table global_table1 (id int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select_global_old.sql, id:94, sql:[insert into global_table1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')]===
+===file:select/select_global_old.sql, id:95, sql:[select CURRENT_USER FROM global_table1]===
+===file:select/select_global_old.sql, id:96, sql:[select sum(distinct id) from global_table1]===
+===file:select/select_global_old.sql, id:97, sql:[select sum(all id) from global_table1]===
+===file:select/select_global_old.sql, id:98, sql:[select id, R_REGIONKEY from global_table1]===
+===file:select/select_global_old.sql, id:99, sql:[select id,'user is user' from global_table1]===
+===file:select/select_global_old.sql, id:100, sql:[select id*5,'user is user',10 from global_table1]===
+===file:select/select_global_old.sql, id:101, sql:[select ALL id, R_REGIONKEY, R_NAME, R_COMMENT from global_table1]===
+===file:select/select_global_old.sql, id:102, sql:[select DISTINCT id, R_REGIONKEY, R_NAME, R_COMMENT from global_table1]===
+===file:select/select_global_old.sql, id:103, sql:[select DISTINCTROW id, R_REGIONKEY, R_NAME, R_COMMENT from global_table1]===
+===file:select/select_global_old.sql, id:104, sql:[select ALL HIGH_PRIORITY id,'ID' as detail  from global_table1]===
+===file:select/select_global_old.sql, id:105, sql:[drop table if exists global_table1]===
+===file:select/select_global_old.sql, id:106, sql:[create table global_table1 (id int(11),O_ORDERKEY varchar(20) primary key,O_CUSTKEY varchar(20),O_TOTALPRICE int(20),MYDATE date)]===
+===file:select/select_global_old.sql, id:107, sql:[insert into global_table1 (id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE) values (1,'ORDERKEY_001','CUSTKEY_003',200000,'20141022'),(2,'ORDERKEY_002','CUSTKEY_003',100000,'19920501'),(4,'ORDERKEY_004','CUSTKEY_111',500,'20080105'),(5,'ORDERKEY_005','CUSTKEY_132',100,'19920628'),(10,'ORDERKEY_010','CUSTKEY_333',88888888,'19920720'),(11,'ORDERKEY_011','CUSTKEY_012',323456,'19920822'),(7,'ORDERKEY_007','CUSTKEY_980',12000,'19920910'),(6,'ORDERKEY_006','CUSTKEY_420',231,'19921111')]===
+===file:select/select_global_old.sql, id:108, sql:[select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from global_table1 where id=1]===
+===file:select/select_global_old.sql, id:109, sql:[select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from global_table1 where id=1 or not id=1]===
+===file:select/select_global_old.sql, id:110, sql:[select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from global_table1 where id=1 and not id=1]===
+===file:select/select_global_old.sql, id:111, sql:[select id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from global_table1 where id=1]===
+===file:select/select_global_old.sql, id:112, sql:[select count(*) counts from global_table1 a where MYDATE is null]===
+===file:select/select_global_old.sql, id:113, sql:[select count(*) counts from global_table1 a where id is null]===
+===file:select/select_global_old.sql, id:114, sql:[select count(*) counts from global_table1 a where id is not null]===
+===file:select/select_global_old.sql, id:115, sql:[select count(*) counts from global_table1 a where not (id is null)]===
+===file:select/select_global_old.sql, id:116, sql:[select count(O_ORDERKEY) counts from global_table1 a where O_ORDERKEY like 'ORDERKEY_00%']===
+===file:select/select_global_old.sql, id:117, sql:[select count(O_ORDERKEY) counts from global_table1 a where O_ORDERKEY not like '%00%']===
+===file:select/select_global_old.sql, id:118, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a where O_ORDERKEY<'ORDERKEY_010' and O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:119, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a where O_ORDERKEY<'ORDERKEY_010' or O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:120, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a where O_CUSTKEY in ('CUSTKEY_003','CUSTKEY_420','CUSTKEY_980') group by o_custkey]===
+===file:select/select_global_old.sql, id:121, sql:[select sum(O_TOTALPRICE) as sums,count(O_ORDERKEY) counts from global_table1 a where O_CUSTKEY not in ('CUSTKEY_003','CUSTKEY_420','CUSTKEY_980')]===
+===file:select/select_global_old.sql, id:122, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from global_table1 where id=1]===
+===file:select/select_global_old.sql, id:123, sql:[select O_CUSTKEY,case when sum(O_TOTALPRICE)<100000 then 'D' when sum(O_TOTALPRICE)>100000 and sum(O_TOTALPRICE)<1000000 then 'C' when sum(O_TOTALPRICE)>1000000 and sum(O_TOTALPRICE)<5000000 then 'B' else 'A' end as jibie  from global_table1 a group by O_CUSTKEY order by jibie, O_CUSTKEY limit 10]===
+===file:select/select_global_old.sql, id:124, sql:[select sum(O_TOTALPRICE) as sums,count(O_ORDERKEY) counts from global_table1 a where not O_CUSTKEY ='CUSTKEY_003']===
+===file:select/select_global_old.sql, id:125, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from global_table1 where id=1]===
+===file:select/select_global_old.sql, id:128, sql:[select id,sum(O_TOTALPRICE) from global_table1 where id>1 and id<50 group by  id]===
+===file:select/select_global_old.sql, id:129, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE id,sum(O_TOTALPRICE) from global_table1 where id>1 and id<50 group by  id]===
+===file:select/select_global_old.sql, id:130, sql:[select count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from global_table1 where id>1 and id<50 group by date_format(id,'%Y-%m')]===
+===file:select/select_global_old.sql, id:131, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from global_table1 where id>1 and id<50 group by date_format(MYDATE,'%Y-%m')]===
+===file:select/select_global_old.sql, id:132, sql:[select count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from global_table1 where id>1 and id<50 group by 2 asc]===
+===file:select/select_global_old.sql, id:133, sql:[select id, O_ORDERKEY, O_TOTALPRICE,MYDATE from global_table1 group by id,O_ORDERKEY,MYDATE]===
+===file:select/select_global_old.sql, id:134, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth from global_table1 where id>1 and id<50 group by 2 asc]===
+===file:select/select_global_old.sql, id:135, sql:[select count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth,id from global_table1 where id>1 and id<50 group by 2 asc ,id desc]===
+===file:select/select_global_old.sql, id:136, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS count(id) as counts,date_format(MYDATE,'%Y-%m') as mouth,id from global_table1 where id>1 and id<50 group by 2 asc ,id desc]===
+===file:select/select_global_old.sql, id:137, sql:[select sum(O_TOTALPRICE) as sums,id from global_table1 where id>1 and id<50 group by 2 asc]===
+===file:select/select_global_old.sql, id:138, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,id from global_table1 where id>1 and id<50 group by 2 asc]===
+===file:select/select_global_old.sql, id:139, sql:[select sum(O_TOTALPRICE ) as sums,id from global_table1 where id>1 and id<50 group by 2 asc having sums>2000000]===
+===file:select/select_global_old.sql, id:140, sql:[select sum(O_TOTALPRICE ) as sums,id from global_table1 where id>1 and id<50 group by 2 asc   having sums>2000000]===
+===file:select/select_global_old.sql, id:141, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE ) as sums,id from global_table1 where id>1 and id<50 group by 2 asc   having sums>2000000]===
+===file:select/select_global_old.sql, id:142, sql:[select sum(O_TOTALPRICE ) as sums,id,count(O_ORDERKEY) counts from global_table1 where id>1 and id<50 group by 2 asc   having count(O_ORDERKEY)>2]===
+===file:select/select_global_old.sql, id:143, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE ) as sums,id,count(O_ORDERKEY) counts from global_table1 where id>1 and id<50 group by 2 asc   having count(O_ORDERKEY)>2]===
+===file:select/select_global_old.sql, id:144, sql:[select sum(O_TOTALPRICE ) as sums,id,count(O_ORDERKEY) counts from global_table1 where id>1 and id<50 group by 2 asc   having min(O_ORDERKEY)>10 and max(O_ORDERKEY)<10000000]===
+===file:select/select_global_old.sql, id:145, sql:[select sum(O_TOTALPRICE ) from global_table1 where id>1 and id<50 having min(O_ORDERKEY)<10000]===
+===file:select/select_global_old.sql, id:146, sql:[select id,O_ORDERKEY,O_TOTALPRICE from global_table1 where id>36900 and id<36902 group by O_ORDERKEY  having O_ORDERKEY in (select O_ORDERKEY from global_table1 group by id having sum(id)>10000)]===
+===file:select/select_global_old.sql, id:147, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:148, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a where O_CUSTKEY not between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:149, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a where not (O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300') group by o_custkey]===
+===file:select/select_global_old.sql, id:150, sql:[drop table if exists global_table2]===
+===file:select/select_global_old.sql, id:151, sql:[create table global_table2(id int(11),C_NAME varchar(20),C_NATIONKEY varchar(20),C_ORDERKEY varchar(20),C_CUSTKEY varchar(20) primary key)]===
+===file:select/select_global_old.sql, id:152, sql:[insert into global_table2 (id,C_NAME,C_NATIONKEY,C_ORDERKEY,C_CUSTKEY) values (1,'chenxiao','NATIONKEY_001','ORDERKEY_001','CUSTKEY_003'),(3,'wangye','NATIONKEY_001','ORDERKEY_004','CUSTKEY_111'),(2,'xiaojuan','NATIONKEY_001','ORDERKEY_005','CUSTKEY_132'),(4,'chenqi','NATIONKEY_051','ORDERKEY_010','CUSTKEY_333'),(5,'marui','NATIONKEY_002','ORDERKEY_011','CUSTKEY_012'),(8,'huachen','NATIONKEY_002','ORDERKEY_007','CUSTKEY_980'),(7,'yanglu','NATIONKEY_132','ORDERKEY_006','CUSTKEY_420')]===
+===file:select/select_global_old.sql, id:153, sql:[select C_NAME from global_table2 where C_NAME like 'A__A']===
+===file:select/select_global_old.sql, id:154, sql:[select C_NAME from global_table2 where C_NAME like 'm___i']===
+===file:select/select_global_old.sql, id:155, sql:[select C_NAME from global_table2 where C_NAME like 'ch___i%%']===
+===file:select/select_global_old.sql, id:156, sql:[select C_NAME from global_table2 where C_NAME like 'ch___i%%' ESCAPE 'i']===
+===file:select/select_global_old.sql, id:157, sql:[select count(*) from global_table2 where C_NAME not like 'chen%']===
+===file:select/select_global_old.sql, id:158, sql:[select count(*) from global_table2 where not (C_NAME like 'chen%')]===
+===file:select/select_global_old.sql, id:159, sql:[select C_NAME from global_table2 where C_NAME like binary 'chen%']===
+===file:select/select_global_old.sql, id:160, sql:[select C_NAME from global_table2 where C_NAME like 'chen%']===
+===file:select/select_global_old.sql, id:161, sql:[select C_NAME from global_table2 where  C_NAME  like concat('%','AM','%')]===
+===file:select/select_global_old.sql, id:162, sql:[select C_NAME from global_table2 where  C_NAME  like concat('%','en','%')]===
+===file:select/select_global_old.sql, id:163, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132']===
+===file:select/select_global_old.sql, id:164, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY) union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY)]===
+===file:select/select_global_old.sql, id:165, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY]===
+===file:select/select_global_old.sql, id:166, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 1, O_ORDERKEY desc]===
+===file:select/select_global_old.sql, id:167, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 2,1]===
+===file:select/select_global_old.sql, id:168, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_330') union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_420') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY<'CUSTKEY_200') order by 2,1]===
+===file:select/select_global_old.sql, id:169, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') order by O_ORDERKEY]===
+===file:select/select_global_old.sql, id:170, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY limit 5) union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_980' order by O_ORDERKEY limit 5)]===
+===file:select/select_global_old.sql, id:171, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') order by O_ORDERKEY limit 5]===
+===file:select/select_global_old.sql, id:172, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') union DISTINCT (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') order by O_ORDERKEY limit 5]===
+===file:select/select_global_old.sql, id:173, sql:[select O_ORDERKEY,O_CUSTKEY,C_NAME from global_table1,global_table2 where O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006']===
+===file:select/select_global_old.sql, id:174, sql:[select count(*) from global_table1 as a where a.id >= any(select id from global_table2)]===
+===file:select/select_global_old.sql, id:175, sql:[select count(*) from global_table1 as a where a.id >= any(select avg(id) from global_table2 group by id)]===
+===file:select/select_global_old.sql, id:176, sql:[select count(*) from global_table1 as a where a.id in(select id from global_table2)]===
+===file:select/select_global_old.sql, id:177, sql:[select count(*) from global_table1 as a where a.id not in(select id from global_table2)]===
+===file:select/select_global_old.sql, id:178, sql:[select count(*) from global_table1 as a where not (a.id in(select id from global_table2))]===
+===file:select/select_global_old.sql, id:179, sql:[select count(*) from global_table1 as a where a.id not in(select id from global_table2 where C_ORDERKEY in(1,2))]===
+===file:select/select_global_old.sql, id:180, sql:[select count(*) from global_table1 as a where not (a.id in(select id from global_table2 where C_ORDERKEY in(1,2)))]===
+===file:select/select_global_old.sql, id:181, sql:[select count(*) from global_table1 as a where a.id =some(select id from global_table2)]===
+===file:select/select_global_old.sql, id:182, sql:[select count(*) from global_table1 as a where a.id != any(select id from global_table2)]===
+===file:select/select_global_old.sql, id:183, sql:[select count(*) from (select O_CUSTKEY,count(O_CUSTKEY) as counts from global_table1 group by O_CUSTKEY) as a where counts<10 group by counts]===
+===file:select/select_global_old.sql, id:184, sql:[select O_ORDERKEY,O_CUSTKEY,C_NAME from global_table1 join global_table2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007']===
+===file:select/select_global_old.sql, id:185, sql:[select O_ORDERKEY,O_CUSTKEY,C_NAME from global_table1 INNER join global_table2 where O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007']===
+===file:select/select_global_old.sql, id:186, sql:[select O_ORDERKEY,O_CUSTKEY,C_NAME from global_table1 INNER join global_table2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006']===
+===file:select/select_global_old.sql, id:187, sql:[select O_ORDERKEY,O_CUSTKEY,C_NAME from global_table1 CROSS join global_table2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006']===
+===file:select/select_global_old.sql, id:188, sql:[select global_table1.O_ORDERKEY,global_table1.O_CUSTKEY,C_NAME from global_table1 CROSS join global_table2 using(id) order by global_table1.O_ORDERKEY,global_table1.O_CUSTKEY,C_NAME]===
+===file:select/select_global_old.sql, id:189, sql:[select O_ORDERKEY,O_CUSTKEY,C_NAME from global_table2 as a STRAIGHT_JOIN global_table1 b where b.O_CUSTKEY=a.c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007']===
+===file:select/select_global_old.sql, id:190, sql:[select b.O_ORDERKEY,b.O_CUSTKEY,a.C_NAME from global_table2 a STRAIGHT_JOIN global_table1 b on b.O_CUSTKEY=a.c_CUSTKEY and b.O_ORDERKEY<'ORDERKEY_007']===
+===file:select/select_global_old.sql, id:191, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table2 as a left join global_table1 b on b.O_CUSTKEY=a.C_CUSTKEY and a.C_CUSTKEY<'CUSTKEY_300']===
+===file:select/select_global_old.sql, id:192, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table2 as a left join global_table1 b using(id) where a.C_CUSTKEY<'CUSTKEY_300']===
+===file:select/select_global_old.sql, id:193, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table2 as a left OUTER join global_table1 b using(id)]===
+===file:select/select_global_old.sql, id:194, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table1 b right join global_table2 as a using(id) where a.c_CUSTKEY<'CUSTKEY_300']===
+===file:select/select_global_old.sql, id:195, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table1 b right join global_table2 as a  using(id)]===
+===file:select/select_global_old.sql, id:196, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table1 b right join global_table2 as a on b.O_CUSTKEY=a.C_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300']===
+===file:select/select_global_old.sql, id:197, sql:[drop table if exists global_table1]===
+===file:select/select_global_old.sql, id:198, sql:[drop table if exists global_table2]===
+===file:select/select_global_old.sql, id:199, sql:[create table global_table1 (id int(11),O_ORDERKEY varchar(20) primary key,O_CUSTKEY varchar(20),O_TOTALPRICE int(20),MYDATE date)]===
+===file:select/select_global_old.sql, id:200, sql:[create table global_table2(id int(11),C_NAME varchar(20),C_NATIONKEY varchar(20),C_ORDERKEY varchar(20),C_CUSTKEY varchar(20) primary key)]===
+===file:select/select_global_old.sql, id:201, sql:[insert into global_table1 (id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE) values (1,'ORDERKEY_001','CUSTKEY_003',200000,'20141022'),(2,'ORDERKEY_002','CUSTKEY_003',100000,'19920501'),(4,'ORDERKEY_004','CUSTKEY_111',500,'20080105'),(5,'ORDERKEY_005','CUSTKEY_132',100,'19920628'),(10,'ORDERKEY_010','CUSTKEY_333',88888888,'19920720'),(11,'ORDERKEY_011','CUSTKEY_012',323456,'19920822'),(7,'ORDERKEY_007','CUSTKEY_980',12000,'19920910'),(6,'ORDERKEY_006','CUSTKEY_420',231,'19921111')]===
+===file:select/select_global_old.sql, id:202, sql:[insert into global_table2 (id,C_NAME,C_NATIONKEY,C_ORDERKEY,C_CUSTKEY) values (1,'chenxiao','NATIONKEY_001','ORDERKEY_001','CUSTKEY_003'),(3,'wangye','NATIONKEY_001','ORDERKEY_004','CUSTKEY_111'),(2,'xiaojuan','NATIONKEY_001','ORDERKEY_005','CUSTKEY_132'),(4,'chenqi','NATIONKEY_051','ORDERKEY_010','CUSTKEY_333'),(5,'marui','NATIONKEY_002','ORDERKEY_011','CUSTKEY_012'),(8,'huachen','NATIONKEY_002','ORDERKEY_007','CUSTKEY_980'),(7,'yanglu','NATIONKEY_132','ORDERKEY_006','CUSTKEY_420')]===
+===file:select/select_global_old.sql, id:203, sql:[create index ORDERS_FK1 on global_table1(O_CUSTKEY)]===
+===file:select/select_global_old.sql, id:204, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by o_custkey]===
+===file:select/select_global_old.sql, id:205, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1  where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by o_custkey]===
+===file:select/select_global_old.sql, id:206, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by 2]===
+===file:select/select_global_old.sql, id:207, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by 2]===
+===file:select/select_global_old.sql, id:208, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY), sums]===
+===file:select/select_global_old.sql, id:209, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY),sums]===
+===file:select/select_global_old.sql, id:212, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by counts asc,2 desc]===
+===file:select/select_global_old.sql, id:213, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by counts asc,2 desc]===
+===file:select/select_global_old.sql, id:214, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_013' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by o_custkey]===
+===file:select/select_global_old.sql, id:215, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_012' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by o_custkey]===
+===file:select/select_global_old.sql, id:216, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by 2]===
+===file:select/select_global_old.sql, id:217, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by 2]===
+===file:select/select_global_old.sql, id:218, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY)]===
+===file:select/select_global_old.sql, id:219, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY)]===
+===file:select/select_global_old.sql, id:222, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by counts asc,2 desc]===
+===file:select/select_global_old.sql, id:223, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by counts asc,2 desc]===
+===file:select/select_global_old.sql, id:224, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,2 desc limit 2]===
+===file:select/select_global_old.sql, id:225, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,2 desc limit 2]===
+===file:select/select_global_old.sql, id:226, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,3]===
+===file:select/select_global_old.sql, id:227, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,3]===
+===file:select/select_global_old.sql, id:228, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1]===
+===file:select/select_global_old.sql, id:229, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1]===
+===file:select/select_global_old.sql, id:230, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY) asc,2 desc limit 10]===
+===file:select/select_global_old.sql, id:231, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY) asc,2 desc limit 10]===
+===file:select/select_global_old.sql, id:232, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,10]===
+===file:select/select_global_old.sql, id:233, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,10]===
+===file:select/select_global_old.sql, id:234, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1]===
+===file:select/select_global_old.sql, id:235, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1]===
+===file:select/select_global_old.sql, id:236, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts,MYDATE from global_table1 use index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:237, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use key (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_800' group by o_custkey]===
+===file:select/select_global_old.sql, id:238, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use key (ORDERS_FK1) ignore index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_800' group by o_custkey]===
+===file:select/select_global_old.sql, id:239, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:241, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use index for order by (ORDERS_FK1) ignore index for group by (ORDERS_FK1) where O_CUSTKEY between 1 and 50 group by o_custkey]===
+===file:select/select_global_old.sql, id:242, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 as a use index for group by (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:243, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a use index for join (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+===file:select/select_global_old.sql, id:244, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table2 as a left join global_table1 b ignore index for join(ORDERS_FK1) on b.O_CUSTKEY=a.c_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300']===
+===file:select/select_global_old.sql, id:245, sql:[select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from global_table2 as a force index for join(primary) left join global_table1 b ignore index for join(ORDERS_FK1) on b.O_CUSTKEY=a.c_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300']===
+===file:select/select_global_old.sql, id:246, sql:[select UPPER((select C_NAME FROM global_table2 limit 1)) FROM global_table2 limit 1]===
+===file:select/select_global_old.sql, id:247, sql:[select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY=(select min(C_CUSTKEY) from global_table2)]===
+===file:select/select_global_old.sql, id:248, sql:[select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY) from global_table2)]===
+===file:select/select_global_old.sql, id:249, sql:[select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY)+1 from global_table2)]===

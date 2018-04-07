@@ -1,0 +1,61 @@
+===file:syntax/character.sql, id:3, sql:[drop table if EXISTS  t1]===
+===file:syntax/character.sql, id:4, sql:[CREATE TABLE t1 ( c1 CHAR(1) CHARACTER SET latin1, c2 CHAR(1) CHARACTER SET ascii)]===
+===file:syntax/character.sql, id:5, sql:[INSERT INTO t1 VALUES ('a','b')]===
+===file:syntax/character.sql, id:6, sql:[SELECT CONCAT(c1,c2) FROM t1]===
+===file:syntax/character.sql, id:8, sql:[drop table if EXISTS  t1]===
+===file:syntax/character.sql, id:9, sql:[SET NAMES ascii]===
+===file:syntax/character.sql, id:10, sql:[CREATE TABLE t1 (a INT, b VARCHAR(10) CHARACTER SET latin1)]===
+===file:syntax/character.sql, id:11, sql:[INSERT INTO t1 VALUES (1,'b')]===
+===file:syntax/character.sql, id:12, sql:[SELECT CONCAT(FORMAT(a, 4), b) FROM t1]===
+===file:syntax/character.sql, id:16, sql:[drop table if exists t]===
+===file:syntax/character.sql, id:22, sql:[drop table if exists t]===
+===file:syntax/character.sql, id:23, sql:[CREATE TABLE `t` ( `c` char(50) CHARACTER SET gbk DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8]===
+===file:syntax/character.sql, id:25, sql:[select sleep(3) union select * from mytest.t]===
+===file:syntax/character.sql, id:27, sql:[SELECT _utf8'abc' COLLATE utf8_danish_ci]===
+===file:syntax/character.sql, id:28, sql:[select _ascii'asdf' collate ascii_general_ci]===
+===file:syntax/character.sql, id:29, sql:[select _utf8'你']===
+===file:syntax/character.sql, id:31, sql:[SET NAMES sjis]===
+===file:syntax/character.sql, id:32, sql:[SELECT HEX('à\n'), HEX(_latin1'à\n')]===
+===file:syntax/character.sql, id:34, sql:[set names gbk]===
+===file:syntax/character.sql, id:35, sql:[select '好']===
+===file:syntax/character.sql, id:36, sql:[SELECT N'hello你']===
+===file:syntax/character.sql, id:37, sql:[SELECT n'你hello']===
+===file:syntax/character.sql, id:38, sql:[SELECT _utf8'hello你']===
+===file:syntax/character.sql, id:40, sql:[set names default]===
+===file:syntax/character.sql, id:41, sql:[select '好']===
+===file:syntax/character.sql, id:42, sql:[SELECT n'hello']===
+===file:syntax/character.sql, id:43, sql:[SELECT _utf8'hello你']===
+===file:syntax/character.sql, id:45, sql:[drop table if exists t]===
+===file:syntax/character.sql, id:46, sql:[create table t(c nchar(10))]===
+===file:syntax/character.sql, id:47, sql:[insert into t values('你好')]===
+===file:syntax/character.sql, id:48, sql:[select * from t]===
+===file:syntax/character.sql, id:50, sql:[insert into t values('你好2')]===
+===file:syntax/character.sql, id:51, sql:[select * from t]===
+===file:syntax/character.sql, id:53, sql:[drop table if EXISTS  t]===
+===file:syntax/character.sql, id:54, sql:[create table t(c char(50))]===
+===file:syntax/character.sql, id:56, sql:[set names 'gbk']===
+===file:syntax/character.sql, id:59, sql:[select * from t/* master */;]===
+===file:syntax/character.sql, id:60, sql:[select * from t]===
+===file:syntax/character.sql, id:61, sql:[alter table t modify c varchar(50) character set utf8]===
+===file:syntax/character.sql, id:65, sql:[set names 'utf8']===
+===file:syntax/character.sql, id:66, sql:[insert into t values("e")]===
+===file:syntax/character.sql, id:67, sql:[insert into t values("我")]===
+===file:syntax/character.sql, id:71, sql:[insert into t values("他")]===
+===file:syntax/character.sql, id:73, sql:[set character set 'gb2312']===
+===file:syntax/character.sql, id:74, sql:[insert into t values("她")]===
+===file:syntax/character.sql, id:77, sql:[insert into t values("它")]===
+===file:syntax/character.sql, id:79, sql:[set character set 'ascii']===
+===file:syntax/character.sql, id:80, sql:[insert into t values("它a")]===
+===file:syntax/character.sql, id:83, sql:[insert into t values("他a")]===
+===file:syntax/character.sql, id:85, sql:[truncate t]===
+===file:syntax/character.sql, id:86, sql:[set names utf8]===
+===file:syntax/character.sql, id:87, sql:[insert into t values("它");]===
+===file:syntax/character.sql, id:88, sql:[select * FROM t]===
+===file:syntax/character.sql, id:90, sql:[insert into t values("她");]===
+===file:syntax/character.sql, id:91, sql:[select * FROM t]===
+===file:syntax/character.sql, id:92, sql:[set @@character_set_results=NULL ;]===
+===file:syntax/character.sql, id:93, sql:[insert into t values("你");]===
+===file:syntax/character.sql, id:94, sql:[select * FROM t]===
+===file:syntax/character.sql, id:96, sql:[insert into t values("我");]===
+===file:syntax/character.sql, id:97, sql:[select * FROM t]===
+===file:syntax/character.sql, id:98, sql:[drop table t;]===

@@ -1,0 +1,741 @@
+===file:transaction/t_langues.sql, id:103, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:17.027077]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:115, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:17.831913]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:120, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+mysql:[()]
+===file:transaction/t_langues.sql, id:123, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 10L),)]
+mysql:[()]
+===file:transaction/t_langues.sql, id:127, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:18.669726]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:139, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:19.475714]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:144, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+mysql:[()]
+===file:transaction/t_langues.sql, id:147, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+mysql:[()]
+===file:transaction/t_langues.sql, id:151, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:20.283393]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:163, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:21.104467]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:168, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+mysql:[()]
+===file:transaction/t_langues.sql, id:171, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+mysql:[()]
+===file:transaction/t_langues.sql, id:175, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:21.942455]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:187, sql:[begin work]===
+dble:[None]
+mysql:[()]
+[13:43:22.757542]dble err :(1064, 'TODO : IDENTIFIER work')
+===file:transaction/t_langues.sql, id:192, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+mysql:[()]
+===file:transaction/t_langues.sql, id:195, sql:[select * from sbtest1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+mysql:[()]
+===file:transaction/t_langues.sql, id:501, sql:[--#***********************read write*************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#***********************read write*************************' at line 1")
+[13:43:45.609929]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:502, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:45.695255]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:503, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:45.780548]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:504, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:45.866727]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:505, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:45.953339]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:506, sql:[--insert into sbtest1 values(1,1,1,1)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1)' at line 1")
+[13:43:46.040689]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:507, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:46.126441]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:508, sql:[--SET @@session.autocommit = ON]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--SET @@session.autocommit = ON' at line 1")
+[13:43:46.212155]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:509, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:46.296009]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:510, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:46.381223]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:511, sql:[--insert into sbtest1 values(5,5,5,5)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5)' at line 1")
+[13:43:46.467030]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:512, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:46.554429]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:513, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:46.639916]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:514, sql:[--update sbtest1 set pad=10 where id =1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--update sbtest1 set pad=10 where id =1' at line 1")
+[13:43:46.724786]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:515, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:46.811671]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:516, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:46.897199]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:517, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:46.983179]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:518, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:47.068452]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:519, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:47.153130]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:520, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:47.237746]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:521, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:47.324681]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:522, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:47.410571]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:523, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:47.495676]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:524, sql:[--insert into sbtest1 values(1,1,1,1)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1)' at line 1")
+[13:43:47.582938]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:525, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:47.669274]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:526, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:47.755643]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:527, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:47.840791]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:528, sql:[--insert into sbtest1 values(5,5,5,5)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5)' at line 1")
+[13:43:47.926027]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:529, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:48.010161]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:530, sql:[--rollback]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--rollback' at line 1")
+[13:43:48.095088]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:531, sql:[--insert into sbtest1 values(1,1,1,1)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1)' at line 1")
+[13:43:48.181141]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:532, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:48.266299]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:533, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:48.351619]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:534, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:48.436398]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:535, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:48.520768]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:536, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:48.606596]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:537, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:48.691720]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:538, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:48.777949]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:539, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:48.864713]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:540, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:48.950599]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:541, sql:[--insert into sbtest1 values(1,1,1,1),(2,2,2,2)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1),(2,2,2,2)' at line 1")
+[13:43:49.037044]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:542, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:49.124328]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:543, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:49.210974]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:544, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:49.297470]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:545, sql:[--insert into sbtest1 values(5,5,5,5),(6,6,6,6)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5),(6,6,6,6)' at line 1")
+[13:43:49.385225]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:546, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:49.470508]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:547, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:49.558245]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:548, sql:[--update sbtest1 set pad=10 where id =1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--update sbtest1 set pad=10 where id =1' at line 1")
+[13:43:49.644287]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:549, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:49.731888]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:550, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:49.817607]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:551, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:49.902673]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:552, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:49.989261]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:553, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:50.074239]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:554, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:50.160204]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:555, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:50.245644]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:556, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:50.329735]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:557, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:50.414852]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:558, sql:[--insert into sbtest1 values(1,1,1,1),(2,2,2,2)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1),(2,2,2,2)' at line 1")
+[13:43:50.501000]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:559, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:50.591740]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:560, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:50.679226]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:561, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:50.766373]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:562, sql:[--insert into sbtest1 values(5,5,5,5),(6,6,6,6)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5),(6,6,6,6)' at line 1")
+[13:43:50.853488]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:563, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:50.938005]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:564, sql:[--rollback]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--rollback' at line 1")
+[13:43:51.023640]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:565, sql:[--insert into sbtest1 values(1,1,1,1)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1)' at line 1")
+[13:43:51.107828]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:566, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:51.200858]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:567, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:51.298192]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:568, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:51.394532]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:569, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:51.468919]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:570, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:51.577951]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:571, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:51.684617]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:572, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:51.792084]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:573, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:51.865709]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:574, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:51.981604]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:575, sql:[--insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)' at line 1")
+[13:43:52.093958]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:576, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:52.170603]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:577, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:52.247461]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:578, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:52.342209]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:579, sql:[--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)' at line 1")
+[13:43:52.435958]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:580, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:52.524190]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:581, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:52.610554]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:582, sql:[--update sbtest1 set pad=10 where id =1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--update sbtest1 set pad=10 where id =1' at line 1")
+[13:43:52.694767]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:583, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:52.779175]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:584, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:52.864758]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:585, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:52.949759]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:586, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:53.035296]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:587, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:53.119216]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:588, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:53.204459]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:589, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:53.291232]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:590, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:53.375869]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:591, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:53.462088]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:592, sql:[--insert into sbtest1 values(1,1,1,1),(2,2,2,2,(3,3,3,3)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1),(2,2,2,2,(3,3,3,3)' at line 1")
+[13:43:53.547367]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:593, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:53.632178]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:594, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:53.717128]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:595, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:53.802602]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:596, sql:[--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)' at line 1")
+[13:43:53.888492]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:597, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:53.973955]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:598, sql:[--rollback]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--rollback' at line 1")
+[13:43:54.059769]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:599, sql:[--insert into sbtest1 values(1,1,1,1)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1)' at line 1")
+[13:43:54.145707]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:600, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:54.231014]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:601, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:54.317192]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:602, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:54.403422]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:603, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:54.489594]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:604, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:54.575111]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:605, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:54.661139]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:606, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:54.745342]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:607, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:54.833377]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:608, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:54.922522]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:609, sql:[--insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)' at line 1")
+[13:43:55.009772]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:610, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:55.095774]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:611, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:55.180960]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:612, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:55.266096]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:613, sql:[--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)' at line 1")
+[13:43:55.350096]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:614, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:55.434951]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:615, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:55.521579]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:616, sql:[--update sbtest1 set pad=10 where id =1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--update sbtest1 set pad=10 where id =1' at line 1")
+[13:43:55.608346]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:617, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:55.693692]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:618, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:55.778987]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:619, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:55.863574]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:620, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:55.949521]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:621, sql:[--#************************************************]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#************************************************' at line 1")
+[13:43:56.035144]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:622, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:56.120647]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:623, sql:[--delete from sbtest1]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--delete from sbtest1' at line 1")
+[13:43:56.207926]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:624, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:56.293819]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:625, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:56.378488]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:626, sql:[--insert into sbtest1 values(1,1,1,1),(2,2,2,2,(3,3,3,3),(4,4,4,4)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1),(2,2,2,2,(3,3,3,3),(4,4,4,4)' at line 1")
+[13:43:56.464939]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:627, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:56.552439]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:628, sql:[--start transaction read write]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--start transaction read write' at line 1")
+[13:43:56.637717]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:629, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:56.721799]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:630, sql:[--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)' at line 1")
+[13:43:56.807372]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:631, sql:[--#!share_conn]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!share_conn' at line 1")
+[13:43:56.894262]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:632, sql:[--rollback]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--rollback' at line 1")
+[13:43:56.980215]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:633, sql:[--insert into sbtest1 values(1,1,1,1)]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--insert into sbtest1 values(1,1,1,1)' at line 1")
+[13:43:57.065201]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:634, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:57.150986]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:635, sql:[--#!session 2]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--#!session 2' at line 1")
+[13:43:57.236505]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:636, sql:[--commit]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--commit' at line 1")
+[13:43:57.321394]dble err :(1064, 'Index: 0, Size: 0')
+===file:transaction/t_langues.sql, id:637, sql:[--select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '--select * from sbtest1 order by id' at line 1")
+[13:43:57.409176]dble err :(1064, 'Index: 0, Size: 0')

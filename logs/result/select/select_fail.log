@@ -1,0 +1,36 @@
+===file:select/select.sql, id:6, sql:[CREATE TABLE testdb.tb_test(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8]===
+dble:[()]
+mysql:[None]
+mysql err:(1049, "Unknown database 'testdb'")
+===file:select/select.sql, id:7, sql:[insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15)]===
+dble:[()]
+mysql:[None]
+mysql err:(1146, "Table 'testdb.tb_test' doesn't exist")
+===file:select/select.sql, id:52, sql:[select * from testdb.tb_test]===
+dble:[((12L, 12L, '_g', 5L), (11L, 11L, 'i_', 4L), (15L, 15L, 'a_1', 15L), (13L, 13L, 'y_u', 6L), (10L, 10L, '\xe4\xb8\xad', 3L), (14L, 14L, '20%', 14L))]
+mysql:[None]
+mysql err:(1146, "Table 'testdb.tb_test' doesn't exist")
+===file:select/select.sql, id:316, sql:[select * from test_shard t use index();]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+[13:39:39.707353]dble err :(1064, 'error RPAREN index')
+===file:select/select.sql, id:317, sql:[select * from test_shard t use key();]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+[13:39:39.790400]dble err :(1064, 'error RPAREN key')
+===file:select/select.sql, id:339, sql:[select * from test_shard t use key(k_1) use index(pad_index) use index();]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+[13:39:41.604158]dble err :(1064, 'error INDEX index')
+===file:select/select.sql, id:340, sql:[select * from test_shard t ignore key(k_1) use index(pad_index) use index();]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+[13:39:41.688597]dble err :(1064, 'error INDEX index')
+===file:select/select.sql, id:341, sql:[select * from test_shard t ignore key(k_1) ignore index(pad_index) use index();]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+[13:39:41.772212]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
+===file:select/select.sql, id:342, sql:[select * from test_shard t force key(k_1) force index(pad_index) ;]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+[13:39:41.857094]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")

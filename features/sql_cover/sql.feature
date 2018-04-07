@@ -28,7 +28,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | syntax/truncate.sql                       |
           | syntax/update_syntax.sql                  |
 
-    Scenario Outline:#1 check read-write-split work fine and slaves load balance
+    Scenario Outline:#2 check read-write-split work fine and slaves load balance
         Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
         Given clear dirty data yield by sql
 
@@ -66,7 +66,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | select/subquery_shard_noshard.sql           |
 
     @current
-    Scenario Outline:#1 check read-write-split work fine and slaves load balance transaction
+    Scenario Outline:#3 check read-write-split work fine and slaves load balance transaction
         Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
         Given clear dirty data yield by sql
 

@@ -1,0 +1,20 @@
+===file:select/select_global_old.sql, id:126, sql:[select count(*) from global_table1 where MYDATE between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')]===
+dble:[None]
+mysql:[((2L,),)]
+[13:40:10.738384]dble err :(1064, 'NullPointerException')
+===file:select/select_global_old.sql, id:127, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT count(*) from global_table1 where mydate between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')]===
+dble:[None]
+mysql:[((2L,),)]
+[13:40:10.822700]dble err :(1064, 'NullPointerException')
+===file:select/select_global_old.sql, id:210, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
+dble:[None]
+mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
+[13:40:16.940314]dble err :(-1, 'error totally whack')
+===file:select/select_global_old.sql, id:211, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
+dble:[None]
+mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
+[13:40:17.023157]dble err :(-1, 'error totally whack')
+===file:select/select_global_old.sql, id:220, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
+dble:[None]
+mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
+[13:40:17.574624]dble err :(-1, 'error totally whack')

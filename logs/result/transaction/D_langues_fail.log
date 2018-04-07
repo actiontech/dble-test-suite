@@ -1,0 +1,218 @@
+===file:transaction/D_langues.sql, id:752, sql:[use test]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'test'")
+[13:42:50.142741]dble err :(1049, "Unknown database 'test'")
+===file:transaction/D_langues.sql, id:753, sql:[delete from test1]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:50.227938]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:754, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:50.311721]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:756, sql:[select a.*,b.* from test1 a,sbtest.sbtest1 b where a.pad=b.pad]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:50.480813]dble err :(1146, "Table `sbtest`.`sbtest1` doesn't exist")
+===file:transaction/D_langues.sql, id:757, sql:[update test1 set c='test']===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:50.567681]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:758, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:50.652266]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:759, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:50.735194]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:760, sql:[commit]===
+dble:[None]
+mysql:[()]
+[13:42:50.820720]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:761, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:50.904543]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:762, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:50.988750]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:763, sql:[use sbtest]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'sbtest'")
+[13:42:51.072715]dble err :(1049, "Unknown database 'sbtest'")
+===file:transaction/D_langues.sql, id:768, sql:[use test]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'test'")
+[13:42:51.292610]dble err :(1049, "Unknown database 'test'")
+===file:transaction/D_langues.sql, id:769, sql:[delete from test1]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:51.380221]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:770, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:51.466803]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:772, sql:[select a.*,b.* from test1 a,sbtest.sbtest1 b where a.pad=b.pad]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:51.636934]dble err :(1146, "Table `sbtest`.`sbtest1` doesn't exist")
+===file:transaction/D_langues.sql, id:773, sql:[update test1 set c='test']===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:51.722407]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:774, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:51.807118]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:775, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:51.895017]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:777, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:52.066857]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:778, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:52.151560]dble err :(1146, "Table `sbtest`.`sbtest1` doesn't exist")
+===file:transaction/D_langues.sql, id:779, sql:[use sbtest]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'sbtest'")
+[13:42:52.236292]dble err :(1049, "Unknown database 'sbtest'")
+===file:transaction/D_langues.sql, id:784, sql:[use test]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'test'")
+[13:42:52.477836]dble err :(1049, "Unknown database 'test'")
+===file:transaction/D_langues.sql, id:785, sql:[delete from test1]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:52.562806]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:786, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:52.649360]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:788, sql:[update sbtest.sbtest1 set pad=200]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:52.817988]dble err :(1146, "Table `sbtest`.`sbtest1` doesn't exist")
+===file:transaction/D_langues.sql, id:789, sql:[update test1 set c='test']===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:52.902945]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:790, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:52.988025]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:791, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:53.073007]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:792, sql:[commit]===
+dble:[None]
+mysql:[()]
+[13:42:53.156490]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:793, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:53.240167]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:794, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:53.324836]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:795, sql:[use sbtest]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'sbtest'")
+[13:42:53.408456]dble err :(1049, "Unknown database 'sbtest'")
+===file:transaction/D_langues.sql, id:800, sql:[use test]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'test'")
+[13:42:53.675223]dble err :(1049, "Unknown database 'test'")
+===file:transaction/D_langues.sql, id:801, sql:[delete from test1]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:53.761485]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:802, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:53.848886]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:804, sql:[update sbtest.sbtest1 set pad=200]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:54.017946]dble err :(1146, "Table `sbtest`.`sbtest1` doesn't exist")
+===file:transaction/D_langues.sql, id:805, sql:[update test1 set c='test']===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:54.102879]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:806, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:54.186555]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:807, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:54.270598]dble err :(1003, "Transaction error, need to rollback.Reason:[ errNo:1146 Table 'db3.test1' doesn't exist]")
+===file:transaction/D_langues.sql, id:809, sql:[select * from test1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.test1' doesn't exist")
+[13:42:54.441893]dble err :(1146, "Table 'db3.test1' doesn't exist")
+===file:transaction/D_langues.sql, id:810, sql:[select * from sbtest.sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'sbtest.sbtest1' doesn't exist")
+[13:42:54.526119]dble err :(1146, "Table `sbtest`.`sbtest1` doesn't exist")
+===file:transaction/D_langues.sql, id:811, sql:[use sbtest]===
+dble:[None]
+mysql:[None]
+mysql err:(1049, "Unknown database 'sbtest'")
+[13:42:54.609940]dble err :(1049, "Unknown database 'sbtest'")
+===file:transaction/D_langues.sql, id:817, sql:[select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.sbtest1' doesn't exist")
+[13:42:54.931168]dble err :(1105, 'table sbtest1 is not exists!You should create it OR reload metadata')
+===file:transaction/D_langues.sql, id:825, sql:[select * from sbtest1 order by id]===
+dble:[None]
+mysql:[None]
+mysql err:(1146, "Table 'mytest.sbtest1' doesn't exist")
+[13:42:55.405955]dble err :(1105, 'table sbtest1 is not exists!You should create it OR reload metadata')

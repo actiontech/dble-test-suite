@@ -1,15 +1,14 @@
 Feature: Functional testing of global sequences
-  Background: Use conf_template directory configuration
-    Given Replace the existing configuration with the conf template directory
-
   Scenario: Configuration test for local file mode
     #1 test config
-    Given Delete the "test_auto" table in the "mytest" logical database in schema.xml
-    Given Add a table consisting of "mytest" in schema.xml
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
-    "name":"test_auto","primaryKey":"id","autoIncrement":"true","rule":"hash-four","dataNode:dn1,dn2,dn3,dn4"
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
     """
-    Given Add a system property consisting of "sequnceHandlerType","2" in server.xml
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="sequnceHandlerType">2</property>
+    """
     Given Restart dble in "dble-1"
     Then Testing the global sequence can used in table
     """
@@ -17,11 +16,18 @@ Feature: Functional testing of global sequences
     {"name":"table","value":"test_auto"},
     {"name":"auto_col","value":"id"}]
     """
-    Given Delete the "test_auto" table in the "mytest" logical database in schema.xml
-    Given Add a tableRule consisting of "add_rule","auto_col","rule" in rule.xml
-    Given Add a table consisting of "mytest" in schema.xml
+    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
-    "name":"test_auto","primaryKey":"auto_col","autoIncrement":"true","rule":"add_rule","dataNode:dn1,dn2,dn3,dn4"
+        <tableRule name="add_rule">
+            <rule>
+                <columns>auto_col</columns>
+                <algorithm>rule</algorithm>
+            </rule>
+        </tableRule>
+    """
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
+    """
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="auto_col" autoIncrement="true" rule="add_rule" />
     """
     Then excute admin cmd "reload @@config_all"
     Then Testing the global sequence can used in table

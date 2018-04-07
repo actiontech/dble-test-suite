@@ -1,0 +1,256 @@
+===file:select/select_sharding.sql, id:1, sql:[drop table if exists aly_test]===
+===file:select/select_sharding.sql, id:2, sql:[CREATE TABLE aly_test(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)]===
+===file:select/select_sharding.sql, id:3, sql:[create index ID_index on aly_test(ID)]===
+===file:select/select_sharding.sql, id:4, sql:[INSERT INTO aly_test VALUES(201,'Mazojys','Fxoj','Finance',7800),(202,'Jozzh','Lnanyo','Finance',45800),(203,'Syllauu','Dfaafk','Finance',57000),(204,'Gecrrcc','Srlkrt','Finance',62000),(205,'Jssme','Bdnaa','Development',75000),(206,'Dnnaao','Errllov','Development',55000),(207,'Tyoysww','Osk','Development',49000)]===
+===file:select/select_sharding.sql, id:5, sql:[select * from aly_test]===
+===file:select/select_sharding.sql, id:6, sql:[select id, firstname,lastname,department,salary  from aly_test]===
+===file:select/select_sharding.sql, id:7, sql:[select id, salary  from aly_test]===
+===file:select/select_sharding.sql, id:8, sql:[select id, salary as "salary_alias" from aly_test]===
+===file:select/select_sharding.sql, id:9, sql:[select id, salary  salary_alias from aly_test]===
+===file:select/select_sharding.sql, id:10, sql:[select id, salary  'salary_alias' from aly_test]===
+===file:select/select_sharding.sql, id:11, sql:[select id, salary+10  'salary_alias' from aly_test]===
+===file:select/select_sharding.sql, id:12, sql:[select lower(id) as "Lower",upper(salary) as "upper" from aly_test]===
+===file:select/select_sharding.sql, id:13, sql:[select id,Concat(firstname,'.',lastname) as name,salary,department from aly_test]===
+===file:select/select_sharding.sql, id:14, sql:[SELECT FirstName, LastName,Department = CASE Department WHEN 'F' THEN 'Financial' WHEN 'D' THEN 'Development'  ELSE 'Other' END FROM aly_test]===
+===file:select/select_sharding.sql, id:15, sql:[select all * from aly_test]===
+===file:select/select_sharding.sql, id:16, sql:[select distinct id,firstname,lastname,salary from aly_test]===
+===file:select/select_sharding.sql, id:17, sql:[select distinctrow * from aly_test]===
+===file:select/select_sharding.sql, id:18, sql:[select straight_join * from aly_test]===
+===file:select/select_sharding.sql, id:19, sql:[select SQL_SMALL_RESULT * from aly_test]===
+===file:select/select_sharding.sql, id:20, sql:[select SQL_BIG_RESULT * from aly_test]===
+===file:select/select_sharding.sql, id:21, sql:[select SQL_BUFFER_RESULT * from aly_test]===
+===file:select/select_sharding.sql, id:22, sql:[select SQL_CACHE * from aly_test]===
+===file:select/select_sharding.sql, id:23, sql:[select SQL_NO_CACHE * from aly_test]===
+===file:select/select_sharding.sql, id:24, sql:[select SQL_CALC_FOUND_ROWS * from aly_test]===
+===file:select/select_sharding.sql, id:25, sql:[select avg(salary) from aly_test]===
+===file:select/select_sharding.sql, id:26, sql:[select avg(salary) as avg1 from aly_test]===
+===file:select/select_sharding.sql, id:27, sql:[select count(*) from aly_test]===
+===file:select/select_sharding.sql, id:28, sql:[select count(id) from aly_test]===
+===file:select/select_sharding.sql, id:29, sql:[select count(distinct salary) from aly_test]===
+===file:select/select_sharding.sql, id:30, sql:[select max(salary) from aly_test]===
+===file:select/select_sharding.sql, id:31, sql:[select max(salary + 10) from aly_test]===
+===file:select/select_sharding.sql, id:32, sql:[select max(salary * id) as MAX from aly_test]===
+===file:select/select_sharding.sql, id:33, sql:[select min(salary) from aly_test]===
+===file:select/select_sharding.sql, id:34, sql:[select sum(salary) from aly_test]===
+===file:select/select_sharding.sql, id:35, sql:[select avg(salary+10) avg1 from aly_test]===
+===file:select/select_sharding.sql, id:36, sql:[select avg(salary*id) as avg1 from aly_test]===
+===file:select/select_sharding.sql, id:37, sql:[select id,firstname,lastname,salary,department from aly_test order by id]===
+===file:select/select_sharding.sql, id:38, sql:[select * from aly_test order by id asc]===
+===file:select/select_sharding.sql, id:39, sql:[select * from aly_test order by id desc]===
+===file:select/select_sharding.sql, id:40, sql:[select id,firstname,lastname,salary,department from aly_test order by id desc]===
+===file:select/select_sharding.sql, id:41, sql:[select * from aly_test order by department,salary]===
+===file:select/select_sharding.sql, id:42, sql:[select id,firstname,lastname,salary,department from aly_test order by salary,department]===
+===file:select/select_sharding.sql, id:43, sql:[select * from aly_test order by id limit 4]===
+===file:select/select_sharding.sql, id:44, sql:[select id,firstname,lastname,salary,department from aly_test order by id limit 1,5]===
+===file:select/select_sharding.sql, id:45, sql:[select id, firstname,lastname,department,salary  from aly_test group by id]===
+===file:select/select_sharding.sql, id:46, sql:[select id, firstname,lastname,department,salary  from aly_test group by firstname]===
+===file:select/select_sharding.sql, id:47, sql:[select department from aly_test group by department]===
+===file:select/select_sharding.sql, id:48, sql:[select department,id from aly_test group by id,department]===
+===file:select/select_sharding.sql, id:49, sql:[select department,id,concat(firstname,'.',lastname) as NAME from aly_test group by id,department]===
+===file:select/select_sharding.sql, id:50, sql:[select id, sum(salary) from aly_test group by id]===
+===file:select/select_sharding.sql, id:51, sql:[select department,count(*) as COUNT from aly_test group by department]===
+===file:select/select_sharding.sql, id:52, sql:[select department,max(salary) as max_salary from aly_test group by department]===
+===file:select/select_sharding.sql, id:53, sql:[select department,min(salary) as min_salary from aly_test group by department]===
+===file:select/select_sharding.sql, id:54, sql:[select department,sum(salary) as sum_salary from aly_test group by department]===
+===file:select/select_sharding.sql, id:55, sql:[select department,avg(salary) as avg1 from aly_test group by department]===
+===file:select/select_sharding.sql, id:56, sql:[select department,sum(salary) as sum_salary from aly_test group by department order by sum_salary]===
+===file:select/select_sharding.sql, id:57, sql:[select department,avg(salary) as avg2 from aly_test group by department order by department desc]===
+===file:select/select_sharding.sql, id:58, sql:[select department,sum(salary) as sum_salary from aly_test group by department order by department desc,sum_salary asc]===
+===file:select/select_sharding.sql, id:59, sql:[drop table if exists aly_test]===
+===file:select/select_sharding.sql, id:60, sql:[create table aly_test(ID int(10) NOT NULL,name varchar(50),brithday date,Email varchar(60),mobile varchar(50),IDcard varchar(100),address varchar(100),zipcode varchar(100),age int(10),Position varchar(100),department varchar(100),cloum varchar(100),cloum2 varchar(100),cloum3 varchar(100),cloum4 varchar(100),cloum5 varchar(100),cloum6 varchar(100),cloum7 varchar(100),cloum8 varchar(100),cloum9 varchar(100),cloum10 varchar(100),PRIMARY KEY (ID))]===
+===file:select/select_sharding.sql, id:61, sql:[create index Name_I on aly_test (name(20))]===
+===file:select/select_sharding.sql, id:62, sql:[INSERT INTO aly_test VALUES (100,'Samantha','2011/11/29','Eric@Duis.com','210-086-6295','844-02-2300','92363 West Akron Ct.','56752',22,'Gilbert','Saint Vincent and The Grenadines','Nulla ridiculus','Nulla posuere ultricies Cras','enim magna blandit imperdiet justo','dictum Aenean taciti egestas Ut'...entesque ultrices','viverra','Morbi sem facilisi')]===
+===file:select/select_sharding.sql, id:63, sql:[INSERT INTO aly_test VALUES (600,'Chava','2004/10/25','Declan@aptent.net','026-455-9818','258-75-0705','94200 South Burkina Faso Way','89120',30,'Artesia','Mexico','litora','elementum sem','imperdiet metus nunc morbi','accumsan eget In semper vestibulum','Etiam','Cras','convallis Aliquam vitae Class...smod','In facilisis bibendum malesuada imperdiet')]===
+===file:select/select_sharding.sql, id:64, sql:[INSERT INTO aly_test VALUES (1100,'Byron','2008/9/20','Noel@odio.com','201-164-8432','388-13-7090','65818 North Estonia Way','32395',22,'Hackensack','Burundi','nibh penatibus viverra convallis','sagittis natoque sapien','cubilia nisi','facilisi','amet sollicitudin fringilla rutrum','Pellentesque fac...ida','Nullam sollicitudin parturient nisi libero')]===
+===file:select/select_sharding.sql, id:65, sql:[INSERT INTO aly_test VALUES (1600,'Lacota','2013/11/22','Elijah@Curae.net','292-344-3387','968-14-6413','64598 East Swaziland Ln.','49041',20,'Pueblo','Nigeria','metus feugiat Maecenas','nonummy pulvinar commodo scelerisque','sapien non sodales sit','Nulla Donec varius','Curae tempor','In habitant s...t sed augue','leo eu','elementum lectus elit sit')]===
+===file:select/select_sharding.sql, id:66, sql:[INSERT INTO aly_test VALUES (2100,'Keith','1991/3/26','Dante@blandit.gov','084-258-7661','461-34-9560','53878 South Japan Ln.','17458',28,'Richmond','Poland','aptent quam','nostra placerat turpis dis ut','nonummy dapibus odio','nonummy litora','placerat mollis','nec placerat','at','In pulvinar mauri...auris ligula','Nam Quisque hymenaeos semper nisl')]===
+===file:select/select_sharding.sql, id:67, sql:[select ID,name,brithday,mobile from aly_test where ID=600]===
+===file:select/select_sharding.sql, id:68, sql:[select ID,name,brithday,mobile from aly_test where ID >=600]===
+===file:select/select_sharding.sql, id:69, sql:[select ID,name,brithday,mobile from aly_test where ID>100]===
+===file:select/select_sharding.sql, id:70, sql:[select ID,name,brithday,mobile from aly_test where ID <= 600]===
+===file:select/select_sharding.sql, id:71, sql:[select ID,name,brithday,mobile from aly_test where ID < 1100]===
+===file:select/select_sharding.sql, id:72, sql:[select ID,name,brithday,mobile from aly_test where ID <>1100]===
+===file:select/select_sharding.sql, id:73, sql:[select ID,name,brithday,mobile from aly_test where ID != 1100]===
+===file:select/select_sharding.sql, id:74, sql:[select ID,name,brithday,mobile from aly_test where name = 'Samantha']===
+===file:select/select_sharding.sql, id:75, sql:[select ID,name,brithday,mobile from aly_test where binary name = 'samantha']===
+===file:select/select_sharding.sql, id:76, sql:[select ID,name,brithday,mobile from aly_test where name > 'Samantha']===
+===file:select/select_sharding.sql, id:77, sql:[select ID,name,brithday,mobile from aly_test where name >= 'Samantha']===
+===file:select/select_sharding.sql, id:78, sql:[select ID,name,brithday,mobile from aly_test where name < 'Samantha']===
+===file:select/select_sharding.sql, id:79, sql:[select ID,name,brithday,mobile from aly_test where name <= 'Samantha']===
+===file:select/select_sharding.sql, id:80, sql:[select ID,name,brithday,mobile from aly_test where name <> 'Samantha']===
+===file:select/select_sharding.sql, id:81, sql:[select ID,name,brithday,mobile from aly_test where ID=1 or ID=500 or ID=600 or ID=1100 or ID=2100]===
+===file:select/select_sharding.sql, id:82, sql:[select ID,name,brithday,mobile from aly_test where ID>=400 and ID <1100]===
+===file:select/select_sharding.sql, id:83, sql:[select ID,name,brithday,mobile from aly_test where ID>600 and ID <1600]===
+===file:select/select_sharding.sql, id:84, sql:[select ID,name,brithday,mobile from aly_test where ID>1100 and ID <=1100]===
+===file:select/select_sharding.sql, id:85, sql:[select ID,name,brithday,mobile from aly_test where ID>=200 and ID <=620]===
+===file:select/select_sharding.sql, id:86, sql:[select ID,name,brithday,mobile from aly_test where not (ID>=200) and ID <=620]===
+===file:select/select_sharding.sql, id:87, sql:[select ID,name,brithday,mobile from aly_test where not (ID>=200 and ID <=620)]===
+===file:select/select_sharding.sql, id:88, sql:[select ID,name from aly_test where ID>=450 and ID <650]===
+===file:select/select_sharding.sql, id:89, sql:[select ID,name from aly_test where ID between 480 and 650]===
+===file:select/select_sharding.sql, id:90, sql:[select * from aly_test where ID=(id>>1)<<1]===
+===file:select/select_sharding.sql, id:91, sql:[select ID,name from aly_test where name='cathy' order by ID asc]===
+===file:select/select_sharding.sql, id:92, sql:[select a.name,a.brithday,if(ID in (100,101,600,601,602,603),1,null) test from aly_test a group by a.name order by name asc]===
+===file:select/select_sharding.sql, id:93, sql:[(select ID,name,brithday,mobile from aly_test where ID>450 and ID <650) union (select ID,name,brithday,mobile from aly_test where name='sunny')]===
+===file:select/select_sharding.sql, id:94, sql:[select id,name,brithday,mobile from aly_test where name like 'Samantha']===
+===file:select/select_sharding.sql, id:95, sql:[select ID,name,brithday,mobile from aly_test where name like '%a%']===
+===file:select/select_sharding.sql, id:96, sql:[select ID,name,brithday,mobile from aly_test where name like 'Sa%']===
+===file:select/select_sharding.sql, id:97, sql:[insert into aly_test values (500,'!aaa','2011/11/29','Eric@Duis.com','210-086-6295','844-02-2300','92363 West Akron Ct.','56752',22,'Gilbert','Saint Vincent and The Grenadines','Nulla ridiculus','Nulla posuere ultricies Cras','enim magna blandit imperdiet justo','dictum Aenean taciti egestas Ut','Cras tempor pulvinar pellentesque','mi Aenean dapibus justo','Pellentesque consectetuer Pellentesque libero velit','fames convallis Vivamus netus','fermentum nisi dapibus cursus blandit','velit senectus tempus mollis')]===
+===file:select/select_sharding.sql, id:98, sql:[select ID,name,brithday,mobile from aly_test where name like '%!%%' escape '!']===
+===file:select/select_sharding.sql, id:99, sql:[delete from aly_test where id = 500]===
+===file:select/select_sharding.sql, id:100, sql:[select ID,name,brithday,mobile from aly_test where name regexp '^Sa']===
+===file:select/select_sharding.sql, id:101, sql:[select ID,name,brithday,mobile from aly_test where name like binary 'Sa%']===
+===file:select/select_sharding.sql, id:102, sql:[select ID,name,brithday,mobile from aly_test where name not like 'Samantha']===
+===file:select/select_sharding.sql, id:103, sql:[select ID,name,brithday,mobile from aly_test where name not like upper('Samantha')]===
+===file:select/select_sharding.sql, id:104, sql:[select ID,name,brithday,mobile from aly_test where mobile not like '210-___-____' and mobile not like '379-___-%' and mobile not like '336-%']===
+===file:select/select_sharding.sql, id:105, sql:[select ID,name,brithday,mobile from aly_test where name like 'ca%' and ID >100 and ID<5000]===
+===file:select/select_sharding.sql, id:106, sql:[select ID,name,brithday,mobile from aly_test where name like 'a%' and ID >=100 and ID<=5000]===
+===file:select/select_sharding.sql, id:107, sql:[select ID,name,brithday,mobile from aly_test where name like 'fre%' and ID >1000 and ID<5000]===
+===file:select/select_sharding.sql, id:108, sql:[insert into aly_test values (500,null,'2011/11/29','Eric@Duis.com','210-086-6295','844-02-2300','92363 West Akron Ct.','56752',22,'Gilbert','Saint Vincent and The Grenadines','Nulla ridiculus','Nulla posuere ultricies Cras','enim magna blandit imperdiet justo','dictum Aenean taciti egestas Ut','Cras tempor pulvinar pellentesque','mi Aenean dapibus justo','Pellentesque consectetuer Pellentesque libero velit','fames convallis Vivamus netus','fermentum nisi dapibus cursus blandit','velit senectus tempus mollis')]===
+===file:select/select_sharding.sql, id:109, sql:[select id,name,brithday,mobile from aly_test where name is null]===
+===file:select/select_sharding.sql, id:110, sql:[select id,name,brithday,mobile from aly_test where name = null]===
+===file:select/select_sharding.sql, id:111, sql:[select id,name,brithday,mobile from aly_test where name is not null]===
+===file:select/select_sharding.sql, id:112, sql:[delete from aly_test where id = 500]===
+===file:select/select_sharding.sql, id:113, sql:[select ID,name,brithday,mobile from aly_test where ID in (109,609,1109,1609,2609,100,600,1100,2600,3800,4000,4300)]===
+===file:select/select_sharding.sql, id:114, sql:[select ID,name,brithday,mobile from aly_test where brithday > '2000-01-10' and brithday <'2005-01-20']===
+===file:select/select_sharding.sql, id:115, sql:[select ID,name,brithday,mobile from aly_test where brithday >='2001-01-10' and brithday <='2002-01-20']===
+===file:select/select_sharding.sql, id:116, sql:[select ID,name,brithday,mobile from aly_test where YEAR(brithday)< YEAR(0)]===
+===file:select/select_sharding.sql, id:117, sql:[select distinct name,brithday,mobile from aly_test]===
+===file:select/select_sharding.sql, id:118, sql:[select id,name from aly_test where id between 100 and 103]===
+===file:select/select_sharding.sql, id:119, sql:[select id,name from aly_test where id between 100 and 104]===
+===file:select/select_sharding.sql, id:120, sql:[select  ID,name from aly_test where ID  not between 100 and 1500]===
+===file:select/select_sharding.sql, id:121, sql:[select DISTINCTROW ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:122, sql:[select ALL  ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:123, sql:[select HIGH_PRIORITY ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:124, sql:[select STRAIGHT_JOIN ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:125, sql:[select SQL_SMALL_RESULT ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:126, sql:[select SQL_BIG_RESULT ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:127, sql:[select SQL_BUFFER_RESULT ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:128, sql:[select SQL_CACHE  ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:129, sql:[select SQL_NO_CACHE ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:130, sql:[select SQL_CALC_FOUND_ROWS ID,name from aly_test where ID between 100 and 1500]===
+===file:select/select_sharding.sql, id:131, sql:[select Concat(name,',',mobile) as a from aly_test where ID between 480 and 550]===
+===file:select/select_sharding.sql, id:132, sql:[select id,name,mobile,brithday,Email from aly_test group by name order by ID asc]===
+===file:select/select_sharding.sql, id:133, sql:[select id,name,mobile as phone,brithday,Email from aly_test group by name order by ID,phone]===
+===file:select/select_sharding.sql, id:134, sql:[select distinct id, name,mobile,brithday,Email from aly_test group by name order by ID asc]===
+===file:select/select_sharding.sql, id:135, sql:[select name,mobile,brithday,Email from aly_test order by name asc limit 480,600]===
+===file:select/select_sharding.sql, id:136, sql:[select distinct name from aly_test order by name asc]===
+===file:select/select_sharding.sql, id:137, sql:[select all id,name,mobile,brithday,Email from aly_test group by name order by ID asc]===
+===file:select/select_sharding.sql, id:138, sql:[select name,count(age) from aly_test group by name desc]===
+===file:select/select_sharding.sql, id:139, sql:[select ID,name,age+10 as ages,IDcard from aly_test where id in (100) order by ID]===
+===file:select/select_sharding.sql, id:140, sql:[select ID,name,age+10 as ages,IDcard from aly_test where id in (100) order by ages]===
+===file:select/select_sharding.sql, id:141, sql:[select ID,name,count(age) from aly_test where id in (101) order by ID]===
+===file:select/select_sharding.sql, id:142, sql:[select ID,name,count(age) as age from aly_test where id in (101)]===
+===file:select/select_sharding.sql, id:143, sql:[select ID,name,count(age) as age from aly_test where id in (101) group by age]===
+===file:select/select_sharding.sql, id:144, sql:[select ID,name,count(age) as age from aly_test where id in (101) group by age order by ID]===
+===file:select/select_sharding.sql, id:145, sql:[select ID,name,count(age) as age,sum(age) total_age, avg(age) avg_age from aly_test where ID in (600) order by ID]===
+===file:select/select_sharding.sql, id:146, sql:[select ID,name,count(age) as age,sum(age) total_age, avg(age) avg_age from aly_test where ID in (600) group by age]===
+===file:select/select_sharding.sql, id:147, sql:[select ID,name,count(age) as age,sum(age) total_age, avg(age) avg_age from aly_test where ID in (600) group by age]===
+===file:select/select_sharding.sql, id:148, sql:[select ID,name,age+10 as ages,IDcard from aly_test where id in (100,109) order by ID]===
+===file:select/select_sharding.sql, id:149, sql:[select ID,name,age+10 as ages,IDcard from aly_test where id in (1100,109) order by ages]===
+===file:select/select_sharding.sql, id:150, sql:[select ID,name,count(age) from aly_test where id in (600,1600) order by ID]===
+===file:select/select_sharding.sql, id:151, sql:[select ID,name,count(age) as age from aly_test where id in (600,1600)]===
+===file:select/select_sharding.sql, id:152, sql:[select ID,name,count(age) as age from aly_test where id in (600,1600) group by age]===
+===file:select/select_sharding.sql, id:153, sql:[select ID,name,count(age) as age from aly_test where id in (600,1600) group by age order by ID]===
+===file:select/select_sharding.sql, id:154, sql:[select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (600,601,602,603,1600) group by age]===
+===file:select/select_sharding.sql, id:155, sql:[select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (600,601,602,603,1600,100) group by age]===
+===file:select/select_sharding.sql, id:156, sql:[select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ID]===
+===file:select/select_sharding.sql, id:157, sql:[select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ages]===
+===file:select/select_sharding.sql, id:158, sql:[select ID,name,count(age) as age from aly_test where id in (109,609,1109,1609,2609,100,600,1100,2600,3800,4000,4300)]===
+===file:select/select_sharding.sql, id:159, sql:[select age,count(age) as count_age from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age]===
+===file:select/select_sharding.sql, id:160, sql:[select id,age,count(age) as age_count from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID]===
+===file:select/select_sharding.sql, id:161, sql:[select id,age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID]===
+===file:select/select_sharding.sql, id:162, sql:[drop table if exists aly_test]===
+===file:select/select_sharding.sql, id:163, sql:[create table aly_test(id int(6) NOT NULL ,productID int(11),saleNum int,postion varchar(100),total_price decimal(10,2),person varchar(100),primary key(id)) ENGINE=InnoDB]===
+===file:select/select_sharding.sql, id:164, sql:[INSERT INTO aly_test VALUES (0,100,1175,'Moldova',144.51,'aaa'),(1,220,1008,'Suriname',105.09,'ccc'),(2,340,1021,'Panama',118.19,'fff'),(3,460,1167,'Malawi',126.67,'bbb'),(4,580,1039,'Canada',103.75,'ddd'),(5,700,1005,'Suriname',108.03,'ccc'),(6,820,1004,'Canada',111.77,'ddd'),(7,940,1081,'Panama',1...15.42,'ccc'),(49,5980,1027,'Moldova',111.35,'aaa')]===
+===file:select/select_sharding.sql, id:165, sql:[INSERT INTO aly_test VALUES (50,6100,1195,'Moldova',102.56,'aaa'),(51,6220,1129,'Moldova',115.71,'aaa'),(52,6340,1109,'Malawi',126.92,'bbb'),(53,6460,1019,'Panama',144.27,'fff'),(54,6580,1187,'Canada',110.33,'ddd'),(55,6700,1011,'Panama',100.47,'fff'),(56,6820,1177,'Panama',148.87,'fff'),(57,6940,10....50,'bbb'),(99,11980,1052,'Suriname',121.21,'ccc')]===
+===file:select/select_sharding.sql, id:166, sql:[INSERT INTO aly_test VALUES (100,12100,1148,'Panama',104.12,'fff'),(101,12220,1097,'Panama',141.38,'fff'),(102,12340,1176,'Canada',113.62,'ddd'),(103,12460,1093,'Panama',105.05,'fff'),(104,12580,1192,'Malawi',142.87,'bbb'),(105,12700,1114,'Malawi',140.91,'bbb'),(106,12820,1012,'Moldova',132.11,'aaa'...3.03,'eee'),(149,17980,1027,'Canada',144.85,'ddd')]===
+===file:select/select_sharding.sql, id:167, sql:[INSERT INTO aly_test VALUES (150,18100,1199,'Suriname',129.94,'ccc'),(151,18220,1108,'Panama',134.70,'fff'),(152,18340,1101,'Uganda',137.35,'eee'),(153,18460,1031,'Moldova',128.47,'aaa'),(154,18580,1061,'Uganda',147.81,'eee'),(155,18700,1139,'Canada',119.68,'ddd'),(156,18820,1038,'Suriname',122.10,'...7.02,'eee'),(199,23980,1110,'Panama',148.05,'fff')]===
+===file:select/select_sharding.sql, id:168, sql:[INSERT INTO aly_test VALUES (200,24100,1080,'Uganda',120.25,'eee'),(201,24220,1181,'Panama',125.83,'fff'),(202,24340,1085,'Panama',149.39,'fff'),(203,24460,1119,'Malawi',124.18,'bbb'),(204,24580,1071,'Malawi',127.81,'bbb'),(205,24700,1143,'Canada',113.49,'ddd'),(206,24820,1033,'Uganda',130.18,'eee')...3.91,'aaa'),(249,29980,1052,'Malawi',140.52,'bbb')]===
+===file:select/select_sharding.sql, id:169, sql:[select count(*)  from aly_test where id between 0 and 0]===
+===file:select/select_sharding.sql, id:170, sql:[select count(*)  from aly_test where id between 0 and 2]===
+===file:select/select_sharding.sql, id:171, sql:[select count(*)  from aly_test where id between 0 and 4]===
+===file:select/select_sharding.sql, id:172, sql:[select count(saleNum)  from aly_test where id between 0 and 250]===
+===file:select/select_sharding.sql, id:173, sql:[select max(saleNum)  from aly_test where id between 0 and 250]===
+===file:select/select_sharding.sql, id:174, sql:[select max( distinct saleNum)  from aly_test where id between 0 and 250]===
+===file:select/select_sharding.sql, id:175, sql:[select min(saleNum)  from aly_test where id between 0 and 250]===
+===file:select/select_sharding.sql, id:176, sql:[select avg(saleNum)  from aly_test where id between 0 and 250]===
+===file:select/select_sharding.sql, id:177, sql:[select sum(saleNum) from aly_test where id between 0 and 250]===
+===file:select/select_sharding.sql, id:178, sql:[select person from aly_test group by person]===
+===file:select/select_sharding.sql, id:179, sql:[select person,sum(saleNum) from aly_test group by person]===
+===file:select/select_sharding.sql, id:180, sql:[select person,max(saleNum) from aly_test group by person]===
+===file:select/select_sharding.sql, id:181, sql:[select person,min(saleNum) from aly_test group by person]===
+===file:select/select_sharding.sql, id:182, sql:[select person,avg(total_price) from aly_test group by person]===
+===file:select/select_sharding.sql, id:183, sql:[select person, max(saleNum) MAX from aly_test group by person]===
+===file:select/select_sharding.sql, id:184, sql:[select person, max(saleNum) as MAX from aly_test group by person]===
+===file:select/select_sharding.sql, id:185, sql:[select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg1, sum(saleNum) sum from aly_test group by person]===
+===file:select/select_sharding.sql, id:186, sql:[select id,person from aly_test where id = 1 group by person]===
+===file:select/select_sharding.sql, id:187, sql:[select person from aly_test where id > 1 group by person]===
+===file:select/select_sharding.sql, id:188, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id > 1 group by person]===
+===file:select/select_sharding.sql, id:189, sql:[select person from aly_test where id like '1']===
+===file:select/select_sharding.sql, id:190, sql:[select person from aly_test where id like '1%' group by person]===
+===file:select/select_sharding.sql, id:191, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id like '%1' group by person]===
+===file:select/select_sharding.sql, id:192, sql:[select person from aly_test where id not like '2%' group by person]===
+===file:select/select_sharding.sql, id:193, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id not like '%1' group by person]===
+===file:select/select_sharding.sql, id:194, sql:[select person from aly_test where person  like 'm%' group by person]===
+===file:select/select_sharding.sql, id:195, sql:[select postion from aly_test where person in (null) group by postion]===
+===file:select/select_sharding.sql, id:196, sql:[select postion from aly_test where id in (1,2,3,4,5) group by postion]===
+===file:select/select_sharding.sql, id:197, sql:[select postion from aly_test where id not in (1,2,3,4,5) group by postion]===
+===file:select/select_sharding.sql, id:198, sql:[select postion, sum(postion) SUM from aly_test where id in (1,2,3,4,5) group by postion]===
+===file:select/select_sharding.sql, id:199, sql:[select postion from aly_test where person in ('aaa','bbb','ccc') group by postion]===
+===file:select/select_sharding.sql, id:200, sql:[select postion from aly_test where person not in ('aaa','bbb','ccc') group by postion]===
+===file:select/select_sharding.sql, id:201, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where person in ('aaa','bbb','ccc') group by person]===
+===file:select/select_sharding.sql, id:202, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where person not in ('aaa','bbb','ccc') group by person]===
+===file:select/select_sharding.sql, id:203, sql:[select person from aly_test where id between 1 and 4 group by person]===
+===file:select/select_sharding.sql, id:204, sql:[select person from aly_test where id between 1 and 5 group by person]===
+===file:select/select_sharding.sql, id:205, sql:[select person from aly_test where id between 1 and 50 group by person]===
+===file:select/select_sharding.sql, id:206, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id between 1 and 50 group by person]===
+===file:select/select_sharding.sql, id:207, sql:[select person from aly_test where id is null group by person]===
+===file:select/select_sharding.sql, id:208, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id is null group by person]===
+===file:select/select_sharding.sql, id:209, sql:[select person from aly_test where id is not null group by person]===
+===file:select/select_sharding.sql, id:210, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id is not null group by person]===
+===file:select/select_sharding.sql, id:211, sql:[select person from aly_test where id is not null and id > 1 and person in ('aaa','bbb') group by person]===
+===file:select/select_sharding.sql, id:212, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where id is not null and id > 1 and person in ('aaa','bbb') group by person]===
+===file:select/select_sharding.sql, id:213, sql:[select person from aly_test where ( id is not null and id > 1) or person in ('aaa','bbb') group by person]===
+===file:select/select_sharding.sql, id:214, sql:[select person, count(person) count, avg(saleNum) as avg1, max(saleNum) as max, min(saleNum) min, sum(saleNum) sum from aly_test where (id is not null and id > 1) or person in ('aaa','bbb') group by person]===
+===file:select/select_sharding.sql, id:215, sql:[select id,person from aly_test where id = 1 order by id]===
+===file:select/select_sharding.sql, id:216, sql:[select id,person from aly_test where id = 1 order by id,person]===
+===file:select/select_sharding.sql, id:217, sql:[select person from aly_test where id > 1 order by person limit 100]===
+===file:select/select_sharding.sql, id:218, sql:[select person from aly_test where id like '1' order by person]===
+===file:select/select_sharding.sql, id:219, sql:[select person from aly_test where id like '1%' order by person limit 100]===
+===file:select/select_sharding.sql, id:220, sql:[select person from aly_test where id not like '2%' order by person limit 100]===
+===file:select/select_sharding.sql, id:221, sql:[select person from aly_test where postion  like 'm%' order by person]===
+===file:select/select_sharding.sql, id:222, sql:[select id,person from aly_test where postion  like 'm%' order by id]===
+===file:select/select_sharding.sql, id:223, sql:[select id,person,saleNum from aly_test where postion  like 'm%' order by person,saleNum]===
+===file:select/select_sharding.sql, id:224, sql:[select id,person,saleNum from aly_test where postion  like 'm%' order by person,saleNum desc]===
+===file:select/select_sharding.sql, id:225, sql:[select postion from aly_test where person in (null) order by postion]===
+===file:select/select_sharding.sql, id:226, sql:[select postion,saleNum from aly_test where person in (null) order by postion desc,saleNum]===
+===file:select/select_sharding.sql, id:227, sql:[select postion from aly_test where id in (1,2,3,4,5) order by postion]===
+===file:select/select_sharding.sql, id:228, sql:[select postion from aly_test where id in (1,2,3,4,5) order by postion desc]===
+===file:select/select_sharding.sql, id:229, sql:[select id,saleNum,postion from aly_test where id in (1,2,3,4,5) order by postion, saleNum]===
+===file:select/select_sharding.sql, id:230, sql:[select postion from aly_test where id not in (1,2,3,4,5) order by postion limit 100]===
+===file:select/select_sharding.sql, id:231, sql:[select id,saleNum,postion from aly_test where id not in (1,2,3,4,5) order by postion, saleNum limit 100]===
+===file:select/select_sharding.sql, id:232, sql:[select postion from aly_test where person in ('aaa','bbb','ccc') order by postion limit 100]===
+===file:select/select_sharding.sql, id:233, sql:[select postion from aly_test where person not in ('aaa','bbb','ccc') order by postion limit 100]===
+===file:select/select_sharding.sql, id:234, sql:[select person from aly_test where id between 1 and 4 order by person]===
+===file:select/select_sharding.sql, id:235, sql:[select person from aly_test where id between 1 and 5 order by person]===
+===file:select/select_sharding.sql, id:236, sql:[select person from aly_test where id between 1 and 50 order by person]===
+===file:select/select_sharding.sql, id:237, sql:[select person,saleNum from aly_test where id between 1 and 51 order by person,saleNum]===
+===file:select/select_sharding.sql, id:238, sql:[select person from aly_test where id is null order by person]===
+===file:select/select_sharding.sql, id:239, sql:[select person,saleNum from aly_test where id is null order by person,saleNum]===
+===file:select/select_sharding.sql, id:240, sql:[select person from aly_test where id is not null order by person limit 100]===
+===file:select/select_sharding.sql, id:241, sql:[select person from aly_test where id is not null and id > 1 and person in ('aaa','bbb') order by person limit 100]===
+===file:select/select_sharding.sql, id:242, sql:[select person from aly_test where ( id is not null and id > 1) or person in ('aaa','bbb') order by person limit 100]===
+===file:select/select_sharding.sql, id:243, sql:[select person from aly_test group by person order by person]===
+===file:select/select_sharding.sql, id:244, sql:[select person from aly_test group by person order by person desc]===
+===file:select/select_sharding.sql, id:245, sql:[select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc limit 100]===
+===file:select/select_sharding.sql, id:246, sql:[select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc,total_price limit 100]===
+===file:select/select_sharding.sql, id:247, sql:[select id,productID,saleNum,postion,total_price,person from aly_test group by id order by person desc,total_price limit 100]===
+===file:select/select_sharding.sql, id:248, sql:[select person,sum(saleNum) from aly_test group by person order by person]===
+===file:select/select_sharding.sql, id:249, sql:[select person,max(saleNum) from aly_test group by person order by person]===
+===file:select/select_sharding.sql, id:250, sql:[select person,max(saleNum) MAX_SALE from aly_test group by person order by max_sale]===
+===file:select/select_sharding.sql, id:251, sql:[select person,min(saleNum) from aly_test group by person]===
+===file:select/select_sharding.sql, id:252, sql:[select person,avg(total_price) from aly_test group by person]===
+===file:select/select_sharding.sql, id:253, sql:[select person, max(saleNum) MAX from aly_test group by person]===
+===file:select/select_sharding.sql, id:254, sql:[select person, max(saleNum) as MAX from aly_test group by person]===
+===file:select/select_sharding.sql, id:255, sql:[select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg1, sum(saleNum) sum from aly_test group by person]===
+===file:select/select_sharding.sql, id:256, sql:[select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg2, sum(saleNum) sum from aly_test group by person order by person desc]===

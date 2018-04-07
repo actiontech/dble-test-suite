@@ -1,0 +1,244 @@
+===file:select/select_no_sharding.sql, id:1, sql:[drop table if exists test_no_shard]===
+===file:select/select_no_sharding.sql, id:2, sql:[CREATE TABLE test_no_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8]===
+===file:select/select_no_sharding.sql, id:3, sql:[insert into test_no_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)]===
+===file:select/select_no_sharding.sql, id:4, sql:[insert into test_no_shard(id,k,pad) values(19,19,19)]===
+===file:select/select_no_sharding.sql, id:5, sql:[drop table if exists testdb.tb_test]===
+===file:select/select_no_sharding.sql, id:11, sql:[select 1+1]===
+===file:select/select_no_sharding.sql, id:12, sql:[SELECT ABS(2)]===
+===file:select/select_no_sharding.sql, id:13, sql:[select * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:14, sql:[select avg(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:15, sql:[select BIT_AND(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:16, sql:[select BIT_OR(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:17, sql:[select BIT_XOR(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:18, sql:[select count(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:19, sql:[select count(distinct pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:20, sql:[select group_concat(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:21, sql:[select max(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:22, sql:[select min(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:23, sql:[select std(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:24, sql:[select stddev(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:25, sql:[select stddev_pop(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:26, sql:[select stddev_samp(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:27, sql:[select sum(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:28, sql:[select var_pop(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:29, sql:[select var_samp(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:30, sql:[select variance(pad) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:31, sql:[select test_no_shard.pad from test_no_shard]===
+===file:select/select_no_sharding.sql, id:32, sql:[select pad t1 from test_no_shard]===
+===file:select/select_no_sharding.sql, id:33, sql:[select pad as t1 from test_no_shard]===
+===file:select/select_no_sharding.sql, id:34, sql:[select test_no_shard.pad as t1 from test_no_shard]===
+===file:select/select_no_sharding.sql, id:35, sql:[select test_no_shard.pad t1 from test_no_shard]===
+===file:select/select_no_sharding.sql, id:36, sql:[select k,pad from test_no_shard]===
+===file:select/select_no_sharding.sql, id:40, sql:[select 1+1 from dual]===
+===file:select/select_no_sharding.sql, id:41, sql:[select * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:42, sql:[select * from test_no_shard t1]===
+===file:select/select_no_sharding.sql, id:43, sql:[select * from test_no_shard as t1]===
+===file:select/select_no_sharding.sql, id:44, sql:[select * from mytest.test_no_shard]===
+===file:select/select_no_sharding.sql, id:49, sql:[select * from test_no_shard where pad<10]===
+===file:select/select_no_sharding.sql, id:50, sql:[select * from test_no_shard where id>(SELECT ABS(2)) order by id]===
+===file:select/select_no_sharding.sql, id:51, sql:[select * from test_no_shard t1 where t1.pad<5]===
+===file:select/select_no_sharding.sql, id:55, sql:[select avg(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:56, sql:[select BIT_AND(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:57, sql:[select BIT_OR(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:58, sql:[select BIT_XOR(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:59, sql:[select count(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:60, sql:[select count(distinct pad) from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:61, sql:[select group_concat(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:62, sql:[select max(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:63, sql:[select min(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:64, sql:[select std(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:65, sql:[select stddev(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:66, sql:[select stddev_pop(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:67, sql:[select stddev_samp(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:68, sql:[select sum(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:69, sql:[select var_pop(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:70, sql:[select var_samp(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:71, sql:[select variance(id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:72, sql:[select sum(id) from test_no_shard a group by a.pad]===
+===file:select/select_no_sharding.sql, id:73, sql:[select id ,pad from test_no_shard group by id]===
+===file:select/select_no_sharding.sql, id:74, sql:[drop table if exists mytest_auto_test1]===
+===file:select/select_no_sharding.sql, id:75, sql:[create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select_no_sharding.sql, id:76, sql:[insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4)]===
+===file:select/select_no_sharding.sql, id:77, sql:[select count(*) from mytest_auto_test1 group by R_REGIONKEY]===
+===file:select/select_no_sharding.sql, id:78, sql:[select * from test_no_shard group by id desc]===
+===file:select/select_no_sharding.sql, id:79, sql:[select * from test_no_shard group by id asc]===
+===file:select/select_no_sharding.sql, id:80, sql:[select pad,count(id) t from test_no_shard group by pad having t>1]===
+===file:select/select_no_sharding.sql, id:81, sql:[select pad,count(id) t from test_no_shard group by pad limit 1]===
+===file:select/select_no_sharding.sql, id:82, sql:[select pad,count(id) t from test_no_shard group by pad order by pad]===
+===file:select/select_no_sharding.sql, id:83, sql:[select pad,count(id) t from test_no_shard group by pad with rollup]===
+===file:select/select_no_sharding.sql, id:87, sql:[select id,pad from test_no_shard having pad=(select min(id) from test_no_shard)]===
+===file:select/select_no_sharding.sql, id:88, sql:[select pad,count(*) a from test_no_shard group by pad having a>1]===
+===file:select/select_no_sharding.sql, id:89, sql:[select id,pad from test_no_shard having pad<6]===
+===file:select/select_no_sharding.sql, id:93, sql:[select * from test_no_shard order by null]===
+===file:select/select_no_sharding.sql, id:94, sql:[select * from test_no_shard order by id desc]===
+===file:select/select_no_sharding.sql, id:95, sql:[select * from test_no_shard order by id asc]===
+===file:select/select_no_sharding.sql, id:96, sql:[select id t,pad from test_no_shard order by t]===
+===file:select/select_no_sharding.sql, id:97, sql:[select id,pad from test_no_shard order by pad]===
+===file:select/select_no_sharding.sql, id:98, sql:[select id,pad from test_no_shard a order by a.id]===
+===file:select/select_no_sharding.sql, id:99, sql:[select id,pad from test_no_shard a order by a.pad]===
+===file:select/select_no_sharding.sql, id:103, sql:[select * from test_no_shard order by id limit 1,3]===
+===file:select/select_no_sharding.sql, id:104, sql:[prepare select_table from 'select * from test_no_shard order by id limit ?']===
+===file:select/select_no_sharding.sql, id:105, sql:[select * from test_no_shard order by id limit 3]===
+===file:select/select_no_sharding.sql, id:106, sql:[select * from test_no_shard order by id limit 3 offset 1]===
+===file:select/select_no_sharding.sql, id:110, sql:[select all * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:111, sql:[select distinct pad from test_no_shard]===
+===file:select/select_no_sharding.sql, id:112, sql:[select Distinctrow * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:113, sql:[select distinct pad,id from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:114, sql:[select distinct pad,id from test_no_shard where pad>2 order by id]===
+===file:select/select_no_sharding.sql, id:115, sql:[select distinct pad,id from test_no_shard group by id,pad]===
+===file:select/select_no_sharding.sql, id:116, sql:[select count(distinct id),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:117, sql:[select distinct SQL_BIG_RESULT pad from test_no_shard]===
+===file:select/select_no_sharding.sql, id:118, sql:[select distinct SQL_BIG_RESULT pad from test_no_shard order by pad]===
+===file:select/select_no_sharding.sql, id:119, sql:[select distinctrow SQL_BIG_RESULT * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:120, sql:[select distinctrow SQL_BIG_RESULT * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:121, sql:[select SQL_BIG_RESULT count(*),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:122, sql:[select distinct SQL_SMALL_RESULT pad from test_no_shard]===
+===file:select/select_no_sharding.sql, id:123, sql:[select distinct SQL_SMALL_RESULT pad from test_no_shard order by pad]===
+===file:select/select_no_sharding.sql, id:124, sql:[select distinctrow SQL_SMALL_RESULT * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:125, sql:[select distinctrow SQL_SMALL_RESULT * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:126, sql:[select SQL_SMALL_RESULT count(*),pad from test_no_shard group by pad]===
+===file:select/select_no_sharding.sql, id:127, sql:[select SQL_BUFFER_RESULT * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:128, sql:[select SQL_BUFFER_RESULT * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:129, sql:[select straight_join * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:130, sql:[select straight_join * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:131, sql:[select sql_cache * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:132, sql:[select sql_cache * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:133, sql:[select sql_no_cache * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:134, sql:[select sql_no_cache * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:135, sql:[select SQL_CALC_FOUND_ROWS * from test_no_shard order by id]===
+===file:select/select_no_sharding.sql, id:136, sql:[select SQL_CALC_FOUND_ROWS * from test_no_shard]===
+===file:select/select_no_sharding.sql, id:140, sql:[select * from test_no_shard where id=1+1]===
+===file:select/select_no_sharding.sql, id:141, sql:[select * from test_no_shard where id=2*3]===
+===file:select/select_no_sharding.sql, id:142, sql:[select * from test_no_shard where id=9/3]===
+===file:select/select_no_sharding.sql, id:143, sql:[select * from test_no_shard where id=12 div 4]===
+===file:select/select_no_sharding.sql, id:144, sql:[select * from test_no_shard where id=10-4]===
+===file:select/select_no_sharding.sql, id:145, sql:[select * from test_no_shard where id=1+2*3-9/3+12 div 4]===
+===file:select/select_no_sharding.sql, id:146, sql:[select * from test_no_shard where id=-3]===
+===file:select/select_no_sharding.sql, id:147, sql:[select * from test_no_shard where id=6|3]===
+===file:select/select_no_sharding.sql, id:148, sql:[select * from test_no_shard where id=2&3]===
+===file:select/select_no_sharding.sql, id:149, sql:[select * from test_no_shard where id=7^3]===
+===file:select/select_no_sharding.sql, id:150, sql:[select * from test_no_shard where id=1<<2]===
+===file:select/select_no_sharding.sql, id:151, sql:[select * from test_no_shard where id=4>>2]===
+===file:select/select_no_sharding.sql, id:152, sql:[select * from test_no_shard where id=5 & ~1]===
+===file:select/select_no_sharding.sql, id:153, sql:[select * from test_no_shard where id=BIT_COUNT(29)]===
+===file:select/select_no_sharding.sql, id:154, sql:[select * from test_no_shard where id>=1]===
+===file:select/select_no_sharding.sql, id:155, sql:[select * from test_no_shard where id<=3]===
+===file:select/select_no_sharding.sql, id:156, sql:[select * from test_no_shard where id<5]===
+===file:select/select_no_sharding.sql, id:157, sql:[select * from test_no_shard where id>6]===
+===file:select/select_no_sharding.sql, id:158, sql:[select * from test_no_shard where id!=7]===
+===file:select/select_no_sharding.sql, id:159, sql:[select * from test_no_shard where id between 2 and 4]===
+===file:select/select_no_sharding.sql, id:160, sql:[select * from test_no_shard where id not between 3 and 5]===
+===file:select/select_no_sharding.sql, id:161, sql:[select * from test_no_shard where id is true]===
+===file:select/select_no_sharding.sql, id:162, sql:[select * from test_no_shard where id is false]===
+===file:select/select_no_sharding.sql, id:163, sql:[select * from test_no_shard where id is unknown]===
+===file:select/select_no_sharding.sql, id:164, sql:[select * from test_no_shard where id is not true]===
+===file:select/select_no_sharding.sql, id:165, sql:[select * from test_no_shard where id is not false]===
+===file:select/select_no_sharding.sql, id:166, sql:[select * from test_no_shard where id is not unknown]===
+===file:select/select_no_sharding.sql, id:167, sql:[select * from test_no_shard where c is not null]===
+===file:select/select_no_sharding.sql, id:168, sql:[select * from test_no_shard where c is null]===
+===file:select/select_no_sharding.sql, id:169, sql:[select * from test_no_shard where c like '中']===
+===file:select/select_no_sharding.sql, id:170, sql:[select * from test_no_shard where c like '%3']===
+===file:select/select_no_sharding.sql, id:171, sql:[select * from test_no_shard where c like 'i%']===
+===file:select/select_no_sharding.sql, id:172, sql:[select * from test_no_shard where c like '$%$']===
+===file:select/select_no_sharding.sql, id:173, sql:[select * from test_no_shard where c like 'id_']===
+===file:select/select_no_sharding.sql, id:174, sql:[select * from test_no_shard where c like '_d3']===
+===file:select/select_no_sharding.sql, id:175, sql:[select * from test_no_shard where c like 'i_4']===
+===file:select/select_no_sharding.sql, id:176, sql:[select * from test_no_shard where c like '20\%']===
+===file:select/select_no_sharding.sql, id:177, sql:[select * from test_no_shard where c like 'a\_1']===
+===file:select/select_no_sharding.sql, id:178, sql:[select * from test_no_shard where c not like '中']===
+===file:select/select_no_sharding.sql, id:179, sql:[select * from test_no_shard where id<>2]===
+===file:select/select_no_sharding.sql, id:180, sql:[select * from test_no_shard where id <=>1]===
+===file:select/select_no_sharding.sql, id:181, sql:[select * from test_no_shard where 1 <=> 1]===
+===file:select/select_no_sharding.sql, id:182, sql:[select * from test_no_shard where NULL <=> NULL]===
+===file:select/select_no_sharding.sql, id:183, sql:[select * from test_no_shard where 1 <=> NULL]===
+===file:select/select_no_sharding.sql, id:184, sql:[select * from test_no_shard where id=@var1 := 1]===
+===file:select/select_no_sharding.sql, id:185, sql:[select * from test_no_shard where id=COALESCE(2,3)]===
+===file:select/select_no_sharding.sql, id:186, sql:[select * from test_no_shard where id=COALESCE(null,3)]===
+===file:select/select_no_sharding.sql, id:187, sql:[select * from test_no_shard where id=GREATEST(2,3,6.4,7,12)]===
+===file:select/select_no_sharding.sql, id:188, sql:[select * from test_no_shard where id in(2,3,6.4,7,12)]===
+===file:select/select_no_sharding.sql, id:189, sql:[select * from test_no_shard where pad in(2,3,6.4,7,12)]===
+===file:select/select_no_sharding.sql, id:190, sql:[select * from test_no_shard where id not in(2,3)]===
+===file:select/select_no_sharding.sql, id:191, sql:[select * from test_no_shard where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)]===
+===file:select/select_no_sharding.sql, id:192, sql:[select * from test_no_shard where id=LEAST(23, 1, 15, 17, 30, 44, 200)]===
+===file:select/select_no_sharding.sql, id:193, sql:[select * from test_no_shard where id not in(2,3,6.4,7,12)]===
+===file:select/select_no_sharding.sql, id:194, sql:[select * from test_no_shard where pad=strcmp('test','test')]===
+===file:select/select_no_sharding.sql, id:195, sql:[select * from test_no_shard where pad=strcmp('test1','test')]===
+===file:select/select_no_sharding.sql, id:196, sql:[select * from test_no_shard where pad=strcmp('test','test1')]===
+===file:select/select_no_sharding.sql, id:197, sql:[select * from test_no_shard where c regexp '.*']===
+===file:select/select_no_sharding.sql, id:198, sql:[select * from test_no_shard where c regexp 'new\\*.\\*line']===
+===file:select/select_no_sharding.sql, id:199, sql:[select * from test_no_shard where c regexp 'A']===
+===file:select/select_no_sharding.sql, id:200, sql:[select * from test_no_shard where c regexp BINARY 'A']===
+===file:select/select_no_sharding.sql, id:201, sql:[select * from test_no_shard where c regexp '^[a-d]']===
+===file:select/select_no_sharding.sql, id:202, sql:[select * from test_no_shard where c not regexp '.*']===
+===file:select/select_no_sharding.sql, id:203, sql:[select * from test_no_shard where c rlike '^[a-d]']===
+===file:select/select_no_sharding.sql, id:204, sql:[select * from test_no_shard where 1 AND 1]===
+===file:select/select_no_sharding.sql, id:205, sql:[select * from test_no_shard where 1 AND 0]===
+===file:select/select_no_sharding.sql, id:206, sql:[select * from test_no_shard where 1 AND NULL]===
+===file:select/select_no_sharding.sql, id:207, sql:[select * from test_no_shard where 0 AND NULL]===
+===file:select/select_no_sharding.sql, id:208, sql:[select * from test_no_shard where NULL AND 0]===
+===file:select/select_no_sharding.sql, id:209, sql:[select * from test_no_shard where 1 && 1]===
+===file:select/select_no_sharding.sql, id:210, sql:[select * from test_no_shard where NOT 10]===
+===file:select/select_no_sharding.sql, id:211, sql:[select * from test_no_shard where NOT 0]===
+===file:select/select_no_sharding.sql, id:212, sql:[select * from test_no_shard where  NOT NULL]===
+===file:select/select_no_sharding.sql, id:213, sql:[select * from test_no_shard where  ! (1+1)]===
+===file:select/select_no_sharding.sql, id:214, sql:[select * from test_no_shard where  ! 1+1]===
+===file:select/select_no_sharding.sql, id:215, sql:[select * from test_no_shard where 1 OR 1]===
+===file:select/select_no_sharding.sql, id:216, sql:[select * from test_no_shard where 1 OR 0]===
+===file:select/select_no_sharding.sql, id:217, sql:[select * from test_no_shard where 0 OR 0]===
+===file:select/select_no_sharding.sql, id:218, sql:[select * from test_no_shard where 0 || NULL]===
+===file:select/select_no_sharding.sql, id:219, sql:[select * from test_no_shard where 1 || NULL]===
+===file:select/select_no_sharding.sql, id:220, sql:[select * from test_no_shard where 1 XOR 1]===
+===file:select/select_no_sharding.sql, id:221, sql:[select * from test_no_shard where 1 XOR 0]===
+===file:select/select_no_sharding.sql, id:222, sql:[select * from test_no_shard where 1 XOR NULL]===
+===file:select/select_no_sharding.sql, id:223, sql:[select * from test_no_shard where 1 XOR 1 XOR 1]===
+===file:select/select_no_sharding.sql, id:227, sql:[drop table if exists test_no_shard]===
+===file:select/select_no_sharding.sql, id:228, sql:[create table test_no_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select_no_sharding.sql, id:229, sql:[insert into test_no_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:select/select_no_sharding.sql, id:230, sql:[insert into test_no_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:select/select_no_sharding.sql, id:231, sql:[insert into test_no_shard values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
+===file:select/select_no_sharding.sql, id:232, sql:[select count(*) from test_no_shard group by R_COMMENT,1+1]===
+===file:select/select_no_sharding.sql, id:233, sql:[select count(*) from test_no_shard group by R_COMMENT asc]===
+===file:select/select_no_sharding.sql, id:234, sql:[select count(*) from test_no_shard group by R_COMMENT desc]===
+===file:select/select_no_sharding.sql, id:235, sql:[select count(*) from test_no_shard group by 1+1]===
+===file:select/select_no_sharding.sql, id:236, sql:[select count(*) from test_no_shard group by R_COMMENT,R_NAME order by null]===
+===file:select/select_no_sharding.sql, id:237, sql:[select count(*) from test_no_shard group by R_COMMENT,R_NAME order by R_NAME asc]===
+===file:select/select_no_sharding.sql, id:238, sql:[select count(*) from test_no_shard group by 1+1,1*5 order by 2*2 asc]===
+===file:select/select_no_sharding.sql, id:239, sql:[select count(*) from test_no_shard group by R_COMMENT,R_NAME having count(*) order by 1+1]===
+===file:select/select_no_sharding.sql, id:240, sql:[select count(*) from test_no_shard group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2]===
+===file:select/select_no_sharding.sql, id:241, sql:[select count(*) from test_no_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 asc  limit 2 offset 2]===
+===file:select/select_no_sharding.sql, id:242, sql:[select count(*) from test_no_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2]===
+===file:select/select_no_sharding.sql, id:243, sql:[select R_comment,count(*) a from test_no_shard group by R_comment having a>1+1]===
+===file:select/select_no_sharding.sql, id:244, sql:[select R_comment,count(*) a from test_no_shard group by R_comment having count(*)>1+1]===
+===file:select/select_no_sharding.sql, id:245, sql:[select * from test_no_shard order by R_COMMENT+1 asc]===
+===file:select/select_no_sharding.sql, id:246, sql:[select * from test_no_shard order by R_COMMENT,1+1]===
+===file:select/select_no_sharding.sql, id:247, sql:[select * from test_no_shard order by id,R_COMMENT]===
+===file:select/select_no_sharding.sql, id:251, sql:[drop table if exists test_no_shard]===
+===file:select/select_no_sharding.sql, id:252, sql:[create table test_no_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select_no_sharding.sql, id:253, sql:[insert into test_no_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:select/select_no_sharding.sql, id:254, sql:[insert into test_no_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:select/select_no_sharding.sql, id:255, sql:[insert into test_no_shard values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
+===file:select/select_no_sharding.sql, id:256, sql:[select * from test_no_shard order by R_comment]===
+===file:select/select_no_sharding.sql, id:257, sql:[select * from test_no_shard where id =2 order by R_comment]===
+===file:select/select_no_sharding.sql, id:258, sql:[select count(*),R_COMMENT from test_no_shard group by R_comment]===
+===file:select/select_no_sharding.sql, id:259, sql:[select count(*),R_COMMENT from test_no_shard where id=2 group by R_comment]===
+===file:select/select_no_sharding.sql, id:260, sql:[select count(R_COMMENT) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:261, sql:[select count(R_COMMENT) from test_no_shard where id=2]===
+===file:select/select_no_sharding.sql, id:262, sql:[select sum(R_COMMENT) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:263, sql:[select sum(R_COMMENT) from test_no_shard where id=2]===
+===file:select/select_no_sharding.sql, id:264, sql:[select distinct R_COMMENT from test_no_shard]===
+===file:select/select_no_sharding.sql, id:265, sql:[select distinct R_COMMENT from test_no_shard where id=2]===
+===file:select/select_no_sharding.sql, id:266, sql:[select avg(R_REGIONKEY) from test_no_shard]===
+===file:select/select_no_sharding.sql, id:267, sql:[drop table if exists test_no_shard]===
+===file:select/select_no_sharding.sql, id:268, sql:[create table test_no_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT date)]===
+===file:select/select_no_sharding.sql, id:269, sql:[insert into test_no_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:select/select_no_sharding.sql, id:270, sql:[insert into test_no_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:select/select_no_sharding.sql, id:271, sql:[insert into test_no_shard values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')]===
+===file:select/select_no_sharding.sql, id:272, sql:[select * from test_no_shard order by R_COMMENT]===
+===file:select/select_no_sharding.sql, id:273, sql:[select * from test_no_shard order by R_NAME]===
+===file:select/select_no_sharding.sql, id:274, sql:[select R_NAME,max(R_REGIONKEY) from test_no_shard group by R_name]===
+===file:select/select_no_sharding.sql, id:275, sql:[select * from test_no_shard limit 2,3]===
+===file:select/select_no_sharding.sql, id:276, sql:[select * from test_no_shard limit 1,1]===
+===file:select/select_no_sharding.sql, id:277, sql:[select * from test_no_shard limit 1,2]===
+===file:select/select_no_sharding.sql, id:278, sql:[select id,R_REGIONKEY from test_no_shard order by id,R_REGIONKEY limit 2,3]===
+===file:select/select_no_sharding.sql, id:279, sql:[select id,R_REGIONKEY from test_no_shard group by id,R_REGIONKEY limit 2,3]===
+===file:select/select_no_sharding.sql, id:280, sql:[select id,R_REGIONKEY from test_no_shard group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3]===

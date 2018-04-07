@@ -1,0 +1,3 @@
+===file:select/join_global.sql, id:79, sql:[(select * from test_global where id=2) union distinct (select * from global_table2 where id=2)]===
+dble:[((2L, 2L, 'test_2', 2L, 1523079504316L), (2L, 2L, 'test_2', 2L, 1523079504373L))]
+mysql:[((2L, 2L, 'test_2', 2L),)]

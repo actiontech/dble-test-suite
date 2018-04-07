@@ -1,18 +1,17 @@
 import time
 import os
 import logging
-import threading
+import re
 import commands
 from behave import *
 from hamcrest import *
 
-from lib.nodes import get_node, get_ssh
+from lib.nodes import get_node, get_ssh, get_sftp
 
 LOGGER = logging.getLogger('steps.install')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
-    threads = []
     for node in context.dbles:
         uninstall_dble_by_ip(context, node.ip)
 
@@ -188,6 +187,7 @@ def step_impl(context, ip):
 
 @Given('Check and clear zookeeper stored data in all dble nodes')
 def check_and_clear_zk(context):
+    context.zk_retry=0
     for node in context.dbles:
         check_zk_status(context, node.ip)
         clear_zk_data(context, node.ip)
@@ -197,6 +197,11 @@ def check_zk_status(context, ip):
     cmd = "{0}/bin/zkServer.sh status".format(context.dble_test_config['zookeeper']['home'])
     rc, sto, ste = ssh_client.exec_command(cmd)
     LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
+    if context.zk_retry < 3 and re.search("Error contacting service", sto, re.I):
+        context.zk_retry = context.zk_retry+1
+        cmd = "{0}/bin/zkServer.sh start".format(context.dble_test_config['zookeeper']['home'])
+        rc, sto, ste = ssh_client.exec_command(cmd)
+        check_zk_status(context, ip)
     assert_that(str(sto), contains_string("Mode"))
 
 def clear_zk_data(context, ip):
