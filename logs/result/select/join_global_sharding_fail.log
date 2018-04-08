@@ -1,0 +1,4 @@
+===file:select/join_global_sharding.sql, id:79, sql:[(select * from a_test where id=2) union distinct (select * from test_global where id=2)]===
+dble:[None]
+mysql:[((2L, 2L, 'test_2', 2L),)]
+[13:38:38.077888]dble err :(1222, 'The used SELECT statements have a different number of columns')

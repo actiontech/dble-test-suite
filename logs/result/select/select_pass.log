@@ -1,0 +1,289 @@
+===file:select/select.sql, id:1, sql:[drop table if exists test_shard]===
+===file:select/select.sql, id:2, sql:[CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8]===
+===file:select/select.sql, id:3, sql:[insert into test_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)]===
+===file:select/select.sql, id:4, sql:[insert into test_shard(id,k,pad) values(19,19,19)]===
+===file:select/select.sql, id:5, sql:[drop table if exists testdb.tb_test]===
+===file:select/select.sql, id:11, sql:[select 1+1]===
+===file:select/select.sql, id:12, sql:[SELECT ABS(2)]===
+===file:select/select.sql, id:13, sql:[select * from test_shard]===
+===file:select/select.sql, id:14, sql:[select avg(pad) from test_shard]===
+===file:select/select.sql, id:15, sql:[select BIT_AND(pad) from test_shard]===
+===file:select/select.sql, id:16, sql:[select BIT_OR(pad) from test_shard]===
+===file:select/select.sql, id:17, sql:[select BIT_XOR(pad) from test_shard]===
+===file:select/select.sql, id:18, sql:[select count(pad) from test_shard]===
+===file:select/select.sql, id:19, sql:[select count(distinct pad) from test_shard]===
+===file:select/select.sql, id:20, sql:[select group_concat(pad) from test_shard]===
+===file:select/select.sql, id:21, sql:[select max(pad) from test_shard]===
+===file:select/select.sql, id:22, sql:[select min(pad) from test_shard]===
+===file:select/select.sql, id:23, sql:[select std(pad) from test_shard]===
+===file:select/select.sql, id:24, sql:[select stddev(pad) from test_shard]===
+===file:select/select.sql, id:25, sql:[select stddev_pop(pad) from test_shard]===
+===file:select/select.sql, id:26, sql:[select stddev_samp(pad) from test_shard]===
+===file:select/select.sql, id:27, sql:[select sum(pad) from test_shard]===
+===file:select/select.sql, id:28, sql:[select var_pop(pad) from test_shard]===
+===file:select/select.sql, id:29, sql:[select var_samp(pad) from test_shard]===
+===file:select/select.sql, id:30, sql:[select variance(pad) from test_shard]===
+===file:select/select.sql, id:31, sql:[select test_shard.pad from test_shard]===
+===file:select/select.sql, id:32, sql:[select pad t1 from test_shard]===
+===file:select/select.sql, id:33, sql:[select pad as t1 from test_shard]===
+===file:select/select.sql, id:34, sql:[select test_shard.pad as t1 from test_shard]===
+===file:select/select.sql, id:35, sql:[select test_shard.pad t1 from test_shard]===
+===file:select/select.sql, id:36, sql:[select k,pad from test_shard]===
+===file:select/select.sql, id:37, sql:[select !1 from test_shard;]===
+===file:select/select.sql, id:38, sql:[select !id from test_shard;]===
+===file:select/select.sql, id:40, sql:[select id=1 from test_shard;]===
+===file:select/select.sql, id:41, sql:[select 1=id from test_shard;]===
+===file:select/select.sql, id:42, sql:[select id=BIT_COUNT(29) from test_shard;]===
+===file:select/select.sql, id:47, sql:[select 1+1 from dual]===
+===file:select/select.sql, id:48, sql:[select * from test_shard]===
+===file:select/select.sql, id:49, sql:[select * from test_shard t1]===
+===file:select/select.sql, id:50, sql:[select * from test_shard as t1]===
+===file:select/select.sql, id:51, sql:[select * from mytest.test_shard]===
+===file:select/select.sql, id:56, sql:[select * from test_shard where pad<10]===
+===file:select/select.sql, id:57, sql:[select * from test_shard where id>(SELECT ABS(2)) order by id]===
+===file:select/select.sql, id:58, sql:[select * from test_shard t1 where t1.pad<5]===
+===file:select/select.sql, id:59, sql:[select * from test_shard where 1;]===
+===file:select/select.sql, id:60, sql:[select * from test_shard where now();]===
+===file:select/select.sql, id:61, sql:[select * from test_shard where id;]===
+===file:select/select.sql, id:62, sql:[select * from test_shard where (select pad from test_shard where id>3 limit 1);]===
+===file:select/select.sql, id:63, sql:[select * from test_shard where !id;]===
+===file:select/select.sql, id:64, sql:[select * from test_shard where 1=id;]===
+===file:select/select.sql, id:68, sql:[select avg(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:69, sql:[select BIT_AND(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:70, sql:[select BIT_OR(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:71, sql:[select BIT_XOR(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:72, sql:[select count(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:73, sql:[select count(distinct pad) from test_shard group by pad]===
+===file:select/select.sql, id:74, sql:[select group_concat(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:75, sql:[select max(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:76, sql:[select min(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:77, sql:[select std(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:78, sql:[select stddev(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:79, sql:[select stddev_pop(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:80, sql:[select stddev_samp(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:81, sql:[select sum(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:82, sql:[select var_pop(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:83, sql:[select var_samp(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:84, sql:[select variance(id),pad from test_shard group by pad]===
+===file:select/select.sql, id:85, sql:[select sum(id) from test_shard a group by a.pad]===
+===file:select/select.sql, id:86, sql:[select id ,pad from test_shard group by id]===
+===file:select/select.sql, id:87, sql:[drop table if exists mytest_auto_test1]===
+===file:select/select.sql, id:88, sql:[create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select.sql, id:89, sql:[insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4)]===
+===file:select/select.sql, id:90, sql:[select count(*) from mytest_auto_test1 group by R_REGIONKEY]===
+===file:select/select.sql, id:91, sql:[select * from test_shard group by id desc]===
+===file:select/select.sql, id:92, sql:[select * from test_shard group by id asc]===
+===file:select/select.sql, id:93, sql:[select pad,count(id) t from test_shard group by pad having t>1]===
+===file:select/select.sql, id:94, sql:[select pad,count(id) t from test_shard group by pad limit 1]===
+===file:select/select.sql, id:95, sql:[select pad,count(id) t from test_shard group by pad order by pad]===
+===file:select/select.sql, id:101, sql:[select id,pad from test_shard having pad=(select min(id) from test_shard)]===
+===file:select/select.sql, id:102, sql:[select pad,count(*) a from test_shard group by pad having a>1]===
+===file:select/select.sql, id:103, sql:[select id,pad from test_shard having pad<6]===
+===file:select/select.sql, id:107, sql:[select * from test_shard order by null]===
+===file:select/select.sql, id:108, sql:[select * from test_shard order by id desc]===
+===file:select/select.sql, id:109, sql:[select * from test_shard order by id asc]===
+===file:select/select.sql, id:110, sql:[select id t,pad from test_shard order by t]===
+===file:select/select.sql, id:111, sql:[select id,pad from test_shard order by pad]===
+===file:select/select.sql, id:112, sql:[select id,pad from test_shard a order by a.id]===
+===file:select/select.sql, id:113, sql:[select id,pad from test_shard a order by a.pad]===
+===file:select/select.sql, id:117, sql:[select * from test_shard order by id limit 1,3]===
+===file:select/select.sql, id:118, sql:[select * from test_shard order by id limit 3]===
+===file:select/select.sql, id:119, sql:[select * from test_shard order by id limit 3 offset 1]===
+===file:select/select.sql, id:123, sql:[select all * from test_shard]===
+===file:select/select.sql, id:124, sql:[select distinct pad from test_shard]===
+===file:select/select.sql, id:125, sql:[select Distinctrow * from test_shard]===
+===file:select/select.sql, id:126, sql:[select distinct pad,id from test_shard order by id]===
+===file:select/select.sql, id:127, sql:[select distinct pad,id from test_shard where pad>2 order by id]===
+===file:select/select.sql, id:128, sql:[select distinct pad,id from test_shard group by id,pad]===
+===file:select/select.sql, id:129, sql:[select count(distinct id),pad from test_shard group by pad]===
+===file:select/select.sql, id:130, sql:[select distinct SQL_BIG_RESULT pad from test_shard]===
+===file:select/select.sql, id:131, sql:[select distinct SQL_BIG_RESULT pad from test_shard order by pad]===
+===file:select/select.sql, id:132, sql:[select distinctrow SQL_BIG_RESULT * from test_shard]===
+===file:select/select.sql, id:133, sql:[select distinctrow SQL_BIG_RESULT * from test_shard order by id]===
+===file:select/select.sql, id:134, sql:[select SQL_BIG_RESULT count(*),pad from test_shard group by pad]===
+===file:select/select.sql, id:135, sql:[select distinct SQL_SMALL_RESULT pad from test_shard]===
+===file:select/select.sql, id:136, sql:[select distinct SQL_SMALL_RESULT pad from test_shard order by pad]===
+===file:select/select.sql, id:137, sql:[select distinctrow SQL_SMALL_RESULT * from test_shard]===
+===file:select/select.sql, id:138, sql:[select distinctrow SQL_SMALL_RESULT * from test_shard order by id]===
+===file:select/select.sql, id:139, sql:[select SQL_SMALL_RESULT count(*),pad from test_shard group by pad]===
+===file:select/select.sql, id:140, sql:[select SQL_BUFFER_RESULT * from test_shard]===
+===file:select/select.sql, id:141, sql:[select SQL_BUFFER_RESULT * from test_shard order by id]===
+===file:select/select.sql, id:142, sql:[select straight_join * from test_shard]===
+===file:select/select.sql, id:143, sql:[select straight_join * from test_shard order by id]===
+===file:select/select.sql, id:144, sql:[select sql_cache * from test_shard]===
+===file:select/select.sql, id:145, sql:[select sql_cache * from test_shard order by id]===
+===file:select/select.sql, id:146, sql:[select sql_no_cache * from test_shard]===
+===file:select/select.sql, id:147, sql:[select sql_no_cache * from test_shard order by id]===
+===file:select/select.sql, id:148, sql:[select SQL_CALC_FOUND_ROWS * from test_shard order by id]===
+===file:select/select.sql, id:149, sql:[select SQL_CALC_FOUND_ROWS * from test_shard]===
+===file:select/select.sql, id:153, sql:[select * from test_shard where id=1+1]===
+===file:select/select.sql, id:154, sql:[select * from test_shard where id=2*3]===
+===file:select/select.sql, id:155, sql:[select * from test_shard where id=9/3]===
+===file:select/select.sql, id:156, sql:[select * from test_shard where id=12 div 4]===
+===file:select/select.sql, id:157, sql:[select * from test_shard where id=10-4]===
+===file:select/select.sql, id:158, sql:[select * from test_shard where id=1+2*3-9/3+12 div 4]===
+===file:select/select.sql, id:159, sql:[select * from test_shard where id=-3]===
+===file:select/select.sql, id:160, sql:[select * from test_shard where id=6|3]===
+===file:select/select.sql, id:161, sql:[select * from test_shard where id=2&3]===
+===file:select/select.sql, id:162, sql:[select * from test_shard where id=7^3]===
+===file:select/select.sql, id:163, sql:[select * from test_shard where id=1<<2]===
+===file:select/select.sql, id:164, sql:[select * from test_shard where id=4>>2]===
+===file:select/select.sql, id:165, sql:[select * from test_shard where id=5 & ~1]===
+===file:select/select.sql, id:166, sql:[select * from test_shard where id=BIT_COUNT(29)]===
+===file:select/select.sql, id:167, sql:[select * from test_shard where id>=1]===
+===file:select/select.sql, id:168, sql:[select * from test_shard where id<=3]===
+===file:select/select.sql, id:169, sql:[select * from test_shard where id<5]===
+===file:select/select.sql, id:170, sql:[select * from test_shard where id>6]===
+===file:select/select.sql, id:171, sql:[select * from test_shard where id!=7]===
+===file:select/select.sql, id:172, sql:[select * from test_shard where id between 2 and 4]===
+===file:select/select.sql, id:173, sql:[select * from test_shard where id not between 3 and 5]===
+===file:select/select.sql, id:174, sql:[select * from test_shard where id is true]===
+===file:select/select.sql, id:175, sql:[select * from test_shard where id is false]===
+===file:select/select.sql, id:176, sql:[select * from test_shard where id is unknown]===
+===file:select/select.sql, id:177, sql:[select * from test_shard where id is not true]===
+===file:select/select.sql, id:178, sql:[select * from test_shard where id is not false]===
+===file:select/select.sql, id:179, sql:[select * from test_shard where id is not unknown]===
+===file:select/select.sql, id:180, sql:[select * from test_shard where c is not null]===
+===file:select/select.sql, id:181, sql:[select * from test_shard where c is null]===
+===file:select/select.sql, id:182, sql:[select * from test_shard where c like '中']===
+===file:select/select.sql, id:183, sql:[select * from test_shard where c like '%3']===
+===file:select/select.sql, id:184, sql:[select * from test_shard where c like 'i%']===
+===file:select/select.sql, id:185, sql:[select * from test_shard where c like '$%$']===
+===file:select/select.sql, id:186, sql:[select * from test_shard where c like 'id_']===
+===file:select/select.sql, id:187, sql:[select * from test_shard where c like '_d3']===
+===file:select/select.sql, id:188, sql:[select * from test_shard where c like 'i_4']===
+===file:select/select.sql, id:189, sql:[select * from test_shard where c like '20\%']===
+===file:select/select.sql, id:190, sql:[select * from test_shard where c like 'a\_1']===
+===file:select/select.sql, id:191, sql:[select * from test_shard where c not like '中']===
+===file:select/select.sql, id:192, sql:[select * from test_shard where id<>2]===
+===file:select/select.sql, id:193, sql:[select * from test_shard where id <=>1]===
+===file:select/select.sql, id:194, sql:[select * from test_shard where 1 <=> 1]===
+===file:select/select.sql, id:195, sql:[select * from test_shard where NULL <=> NULL]===
+===file:select/select.sql, id:196, sql:[select * from test_shard where 1 <=> NULL]===
+===file:select/select.sql, id:197, sql:[select * from test_shard where id=@var1 := 1]===
+===file:select/select.sql, id:198, sql:[select * from test_shard where id=COALESCE(2,3)]===
+===file:select/select.sql, id:199, sql:[select * from test_shard where id=COALESCE(null,3)]===
+===file:select/select.sql, id:200, sql:[select * from test_shard where id=GREATEST(2,3,6.4,7,12)]===
+===file:select/select.sql, id:203, sql:[select * from test_shard where pad in(2,3,6.4,7,12)]===
+===file:select/select.sql, id:204, sql:[select * from test_shard where id not in(2,3)]===
+===file:select/select.sql, id:205, sql:[select * from test_shard where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)]===
+===file:select/select.sql, id:206, sql:[select * from test_shard where id=LEAST(23, 1, 15, 17, 30, 44, 200)]===
+===file:select/select.sql, id:207, sql:[select * from test_shard where id not in(2,3,6.4,7,12)]===
+===file:select/select.sql, id:208, sql:[select * from test_shard where pad=strcmp('test','test')]===
+===file:select/select.sql, id:209, sql:[select * from test_shard where pad=strcmp('test1','test')]===
+===file:select/select.sql, id:210, sql:[select * from test_shard where pad=strcmp('test','test1')]===
+===file:select/select.sql, id:211, sql:[select * from test_shard where c regexp '.*']===
+===file:select/select.sql, id:212, sql:[select * from test_shard where c regexp 'new\\*.\\*line']===
+===file:select/select.sql, id:213, sql:[select * from test_shard where c regexp 'A']===
+===file:select/select.sql, id:214, sql:[select * from test_shard where c regexp BINARY 'A']===
+===file:select/select.sql, id:215, sql:[select * from test_shard where c regexp '^[a-d]']===
+===file:select/select.sql, id:216, sql:[select * from test_shard where c not regexp '.*']===
+===file:select/select.sql, id:217, sql:[select * from test_shard where c rlike '^[a-d]']===
+===file:select/select.sql, id:218, sql:[select * from test_shard where 1 AND 1]===
+===file:select/select.sql, id:219, sql:[select * from test_shard where 1 AND 0]===
+===file:select/select.sql, id:220, sql:[select * from test_shard where 1 AND NULL]===
+===file:select/select.sql, id:221, sql:[select * from test_shard where 0 AND NULL]===
+===file:select/select.sql, id:222, sql:[select * from test_shard where NULL AND 0]===
+===file:select/select.sql, id:223, sql:[select * from test_shard where 1 && 1]===
+===file:select/select.sql, id:224, sql:[select * from test_shard where NOT 10]===
+===file:select/select.sql, id:225, sql:[select * from test_shard where NOT 0]===
+===file:select/select.sql, id:226, sql:[select * from test_shard where  NOT NULL]===
+===file:select/select.sql, id:227, sql:[select * from test_shard where  ! (1+1)]===
+===file:select/select.sql, id:228, sql:[select * from test_shard where  ! 1+1]===
+===file:select/select.sql, id:229, sql:[select * from test_shard where 1 OR 1]===
+===file:select/select.sql, id:230, sql:[select * from test_shard where 1 OR 0]===
+===file:select/select.sql, id:231, sql:[select * from test_shard where 0 OR 0]===
+===file:select/select.sql, id:232, sql:[select * from test_shard where 0 || NULL]===
+===file:select/select.sql, id:233, sql:[select * from test_shard where 1 || NULL]===
+===file:select/select.sql, id:234, sql:[select * from test_shard where 1 XOR 1]===
+===file:select/select.sql, id:235, sql:[select * from test_shard where 1 XOR 0]===
+===file:select/select.sql, id:236, sql:[select * from test_shard where 1 XOR NULL]===
+===file:select/select.sql, id:237, sql:[select * from test_shard where 1 XOR 1 XOR 1]===
+===file:select/select.sql, id:241, sql:[drop table if exists test_shard]===
+===file:select/select.sql, id:242, sql:[create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select.sql, id:243, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:select/select.sql, id:244, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:select/select.sql, id:245, sql:[insert into test_shard values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
+===file:select/select.sql, id:246, sql:[select count(*) from test_shard group by R_COMMENT,1+1]===
+===file:select/select.sql, id:247, sql:[select count(*) from test_shard group by R_COMMENT asc]===
+===file:select/select.sql, id:248, sql:[select count(*) from test_shard group by R_COMMENT desc]===
+===file:select/select.sql, id:249, sql:[select count(*) from test_shard group by 1+1]===
+===file:select/select.sql, id:250, sql:[select count(*) from test_shard group by R_COMMENT,R_NAME order by null]===
+===file:select/select.sql, id:251, sql:[select count(*) from test_shard group by R_COMMENT,R_NAME order by R_NAME asc]===
+===file:select/select.sql, id:252, sql:[select count(*) from test_shard group by 1+1,1*5 order by 2*2 asc]===
+===file:select/select.sql, id:253, sql:[select count(*) from test_shard group by R_COMMENT,R_NAME having count(*) order by 1+1]===
+===file:select/select.sql, id:254, sql:[select count(*) from test_shard group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2]===
+===file:select/select.sql, id:255, sql:[select count(*) from test_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 asc  limit 2 offset 2]===
+===file:select/select.sql, id:256, sql:[select count(*) from test_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2]===
+===file:select/select.sql, id:257, sql:[select R_comment,count(*) a from test_shard group by R_comment having a>1+1]===
+===file:select/select.sql, id:258, sql:[select R_comment,count(*) a from test_shard group by R_comment having count(*)>1+1]===
+===file:select/select.sql, id:259, sql:[select * from test_shard order by R_COMMENT+1 asc]===
+===file:select/select.sql, id:260, sql:[select * from test_shard order by R_COMMENT,1+1]===
+===file:select/select.sql, id:261, sql:[select * from test_shard order by id,R_COMMENT]===
+===file:select/select.sql, id:265, sql:[drop table if exists test_shard]===
+===file:select/select.sql, id:266, sql:[create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:select/select.sql, id:267, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:select/select.sql, id:268, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:select/select.sql, id:269, sql:[insert into test_shard values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
+===file:select/select.sql, id:270, sql:[select * from test_shard order by R_comment]===
+===file:select/select.sql, id:271, sql:[select * from test_shard where id =2 order by R_comment]===
+===file:select/select.sql, id:272, sql:[select count(*),R_COMMENT from test_shard group by R_comment]===
+===file:select/select.sql, id:273, sql:[select count(*),R_COMMENT from test_shard where id=2 group by R_comment]===
+===file:select/select.sql, id:274, sql:[select count(R_COMMENT) from test_shard]===
+===file:select/select.sql, id:275, sql:[select count(R_COMMENT) from test_shard where id=2]===
+===file:select/select.sql, id:276, sql:[select sum(R_COMMENT) from test_shard]===
+===file:select/select.sql, id:277, sql:[select sum(R_COMMENT) from test_shard where id=2]===
+===file:select/select.sql, id:278, sql:[select distinct R_COMMENT from test_shard]===
+===file:select/select.sql, id:279, sql:[select distinct R_COMMENT from test_shard where id=2]===
+===file:select/select.sql, id:280, sql:[select avg(R_REGIONKEY) from test_shard]===
+===file:select/select.sql, id:281, sql:[drop table if exists test_shard]===
+===file:select/select.sql, id:282, sql:[create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT date)]===
+===file:select/select.sql, id:283, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:select/select.sql, id:284, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:select/select.sql, id:285, sql:[insert into test_shard values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')]===
+===file:select/select.sql, id:286, sql:[select * from test_shard order by R_COMMENT]===
+===file:select/select.sql, id:287, sql:[select * from test_shard order by R_NAME]===
+===file:select/select.sql, id:288, sql:[select R_NAME,max(R_REGIONKEY) from test_shard group by R_name]===
+===file:select/select.sql, id:289, sql:[select * from test_shard limit 2,3]===
+===file:select/select.sql, id:290, sql:[select * from test_shard limit 1,1]===
+===file:select/select.sql, id:291, sql:[select * from test_shard limit 1,2]===
+===file:select/select.sql, id:292, sql:[select id,R_REGIONKEY from test_shard order by id,R_REGIONKEY limit 2,3]===
+===file:select/select.sql, id:293, sql:[select id,R_REGIONKEY from test_shard group by id,R_REGIONKEY limit 2,3]===
+===file:select/select.sql, id:294, sql:[select id,R_REGIONKEY from test_shard group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3]===
+===file:select/select.sql, id:298, sql:[drop table if exists test_shard;]===
+===file:select/select.sql, id:299, sql:[CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8;]===
+===file:select/select.sql, id:300, sql:[insert into test_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18);]===
+===file:select/select.sql, id:301, sql:[insert into test_shard(id,k,pad) values(19,19,19);]===
+===file:select/select.sql, id:302, sql:[select count(distinct pad),sum(distinct id) from test_shard group by pad;]===
+===file:select/select.sql, id:303, sql:[select count(distinct pad,k),sum(distinct id) from test_shard group by pad;]===
+===file:select/select.sql, id:304, sql:[select distinct pad from test_shard limit 4;]===
+===file:select/select.sql, id:305, sql:[select * from test_shard limit 2,3;]===
+===file:select/select.sql, id:306, sql:[select id,pad from test_shard order by id,pad limit 2,3;]===
+===file:select/select.sql, id:307, sql:[select id,pad from test_shard group by id,pad  order by id limit 2,3;]===
+===file:select/select.sql, id:308, sql:[select id,pad,sum(id) from test_shard group by id,pad  order by id,pad limit 2,3;]===
+===file:select/select.sql, id:312, sql:[drop table if exists test_shard]===
+===file:select/select.sql, id:313, sql:[CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`));]===
+===file:select/select.sql, id:314, sql:[insert into test_shard values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6);]===
+===file:select/select.sql, id:315, sql:[create index pad_index on test_shard(pad)]===
+===file:select/select.sql, id:318, sql:[select * from test_shard use index(k_1);]===
+===file:select/select.sql, id:319, sql:[select * from test_shard ignore index(k_1);]===
+===file:select/select.sql, id:320, sql:[select * from test_shard force index(k_1);]===
+===file:select/select.sql, id:321, sql:[select * from test_shard use index(pad_index,k_1);]===
+===file:select/select.sql, id:322, sql:[select * from test_shard ignore index(pad_index,k_1);]===
+===file:select/select.sql, id:323, sql:[select * from test_shard force index(pad_index,k_1);]===
+===file:select/select.sql, id:324, sql:[select * from test_shard use key for join(k_1);]===
+===file:select/select.sql, id:325, sql:[select * from test_shard ignore key for join(k_1);]===
+===file:select/select.sql, id:326, sql:[select * from test_shard force key for join(k_1);]===
+===file:select/select.sql, id:327, sql:[select * from test_shard use key for order by(k_1);]===
+===file:select/select.sql, id:328, sql:[select * from test_shard ignore key for order by(k_1);]===
+===file:select/select.sql, id:329, sql:[select * from test_shard force key for order by(k_1);]===
+===file:select/select.sql, id:330, sql:[select count(*) from test_shard use key for group by(k_1);]===
+===file:select/select.sql, id:331, sql:[select count(*) from test_shard ignore key  for group by(k_1);]===
+===file:select/select.sql, id:332, sql:[select count(*) from test_shard force key for group by(k_1);]===
+===file:select/select.sql, id:333, sql:[select * from test_shard use index for join(pad_index,k_1);]===
+===file:select/select.sql, id:334, sql:[select * from test_shard ignore index for join(pad_index,k_1);]===
+===file:select/select.sql, id:335, sql:[select * from test_shard force index for join(pad_index,k_1);]===
+===file:select/select.sql, id:336, sql:[select * from test_shard use key(k_1);]===
+===file:select/select.sql, id:337, sql:[select * from test_shard ignore key(k_1);]===
+===file:select/select.sql, id:338, sql:[select * from test_shard force key(k_1);]===
+===file:select/select.sql, id:343, sql:[select * from test_shard t ignore key(k_1) force index(pad_index);]===

@@ -1,0 +1,52 @@
+===file:syntax/sysfunction3.sql, id:2, sql:[SELECT GTID_SUBSET('3E11FA47-71CA-11E1-9E33-C80AA9429562:23','3E11FA47-71CA-11E1-9E33-C80AA9429562:21-57')]===
+===file:syntax/sysfunction3.sql, id:3, sql:[SELECT GTID_SUBTRACT('3E11FA47-71CA-11E1-9E33-C80AA9429562:21-57','3E11FA47-71CA-11E1-9E33-C80AA9429562:21')]===
+===file:syntax/sysfunction3.sql, id:5, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction3.sql, id:6, sql:[create table global_table1(a json, b int default 0)]===
+===file:syntax/sysfunction3.sql, id:7, sql:[insert into global_table1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Beglobal_table1y"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
+===file:syntax/sysfunction3.sql, id:11, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction3.sql, id:12, sql:[SELECT GET_LOCK('lock1',10)]===
+===file:syntax/sysfunction3.sql, id:13, sql:[SELECT RELEASE_LOCK('lock2')]===
+===file:syntax/sysfunction3.sql, id:14, sql:[SELECT INET_ATON('10.0.5.9')]===
+===file:syntax/sysfunction3.sql, id:15, sql:[SELECT INET_NTOA(167773449)]===
+===file:syntax/sysfunction3.sql, id:16, sql:[SELECT HEX(INET6_ATON(INET_NTOA(167773449)))]===
+===file:syntax/sysfunction3.sql, id:17, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction3.sql, id:18, sql:[select IS_FREE_LOCK('abc')]===
+===file:syntax/sysfunction3.sql, id:19, sql:[SELECT IS_IPV4('10.0.5.9'), IS_IPV4('10.0.5.256')]===
+===file:syntax/sysfunction3.sql, id:20, sql:[SELECT IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9'))]===
+===file:syntax/sysfunction3.sql, id:21, sql:[SELECT HEX(INET6_ATON('192.168.0.1'))]===
+===file:syntax/sysfunction3.sql, id:22, sql:[select IS_IPV4_COMPAT(INET6_ATON('::192.168.0.1'))]===
+===file:syntax/sysfunction3.sql, id:23, sql:[SELECT IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9'))]===
+===file:syntax/sysfunction3.sql, id:24, sql:[SELECT IS_IPV6('10.0.5.9'), IS_IPV6('::1')]===
+===file:syntax/sysfunction3.sql, id:25, sql:[select IS_USED_LOCK('abc')]===
+===file:syntax/sysfunction3.sql, id:26, sql:[SELECT NAME_CONST('myname', 14)]===
+===file:syntax/sysfunction3.sql, id:27, sql:[SELECT RELEASE_ALL_LOCKS()]===
+===file:syntax/sysfunction3.sql, id:28, sql:[SELECT SLEEP(1)]===
+===file:syntax/sysfunction3.sql, id:29, sql:[SELECT /*+ MAX_EXECUTION_TIME(1) */ SLEEP(1000)]===
+===file:syntax/sysfunction3.sql, id:30, sql:[SELECT UUID()]===
+===file:syntax/sysfunction3.sql, id:31, sql:[SELECT UUID_SHORT()]===
+===file:syntax/sysfunction3.sql, id:32, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction3.sql, id:33, sql:[create table global_table1(a int, b int, c int)]===
+===file:syntax/sysfunction3.sql, id:34, sql:[INSERT INTO global_table1 (a,b,c) VALUES (1,2,3),(4,5,6) ON DUPLICATE KEY UPDATE c=VALUES(a)+VALUES(b)]===
+===file:syntax/sysfunction3.sql, id:36, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction3.sql, id:37, sql:[create table global_table1 (id int, test_score int)]===
+===file:syntax/sysfunction3.sql, id:38, sql:[insert into global_table1 values(1,1),(2,2),(3,1),(4,8),(5,2)]===
+===file:syntax/sysfunction3.sql, id:39, sql:[SELECT id, AVG(test_score) FROM global_table1 GROUP BY id]===
+===file:syntax/sysfunction3.sql, id:40, sql:[SELECT id, AVG(distinct test_score) FROM global_table1 GROUP BY id]===
+===file:syntax/sysfunction3.sql, id:41, sql:[select count(distinct test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:42, sql:[select count(distinct id, test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:43, sql:[select id, group_concat(test_score) from global_table1 group by id]===
+===file:syntax/sysfunction3.sql, id:45, sql:[select bit_and(test_score) from global_table1 group by id]===
+===file:syntax/sysfunction3.sql, id:46, sql:[select bit_or(test_score) from global_table1 group by id]===
+===file:syntax/sysfunction3.sql, id:47, sql:[select bit_xor(test_score) from global_table1 group by id]===
+===file:syntax/sysfunction3.sql, id:48, sql:[select min(test_score), max(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:49, sql:[select std(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:50, sql:[select stddev(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:51, sql:[select stddev_pop(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:52, sql:[select stddev_samp(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:53, sql:[select sum(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:54, sql:[select sum(distinct test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:55, sql:[select var_pop(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:56, sql:[select var_samp(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:57, sql:[select variance(test_score) from global_table1]===
+===file:syntax/sysfunction3.sql, id:58, sql:[SELECT id, FLOOR(test_score/100) AS val from global_table1 group by val, id]===
+===file:syntax/sysfunction3.sql, id:59, sql:[drop table if exists global_table1]===

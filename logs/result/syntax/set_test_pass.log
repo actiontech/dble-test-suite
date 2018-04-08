@@ -1,0 +1,12 @@
+===file:syntax/set_test.sql, id:2, sql:[select @@insert_id]===
+===file:syntax/set_test.sql, id:3, sql:[drop table if exists mytest_global1]===
+===file:syntax/set_test.sql, id:4, sql:[create table mytest_global1(id int not null primary key auto_increment)]===
+===file:syntax/set_test.sql, id:5, sql:[set @@insert_id=10]===
+===file:syntax/set_test.sql, id:6, sql:[insert into mytest_global1 (id) values (null)]===
+===file:syntax/set_test.sql, id:7, sql:[select id from mytest_global1]===
+===file:syntax/set_test.sql, id:8, sql:[set @@session.insert_id=11]===
+===file:syntax/set_test.sql, id:9, sql:[insert into mytest_global1 (id) values (null)]===
+===file:syntax/set_test.sql, id:10, sql:[select id from mytest_global1]===
+===file:syntax/set_test.sql, id:11, sql:[set session insert_id=12]===
+===file:syntax/set_test.sql, id:12, sql:[insert into mytest_global1 (id) values (null)]===
+===file:syntax/set_test.sql, id:13, sql:[select id from mytest_global1]===

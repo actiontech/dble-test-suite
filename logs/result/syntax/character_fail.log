@@ -1,0 +1,67 @@
+  wqz===file:syntax/character.sql, id:14, sql:[select CONCAT(_ucs2 X'0041', _ucs2 X'0042')]===
+dble:[None]
+mysql:[(('AB',),)]
+[13:31:56.781924]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER X')
+===file:syntax/character.sql, id:17, sql:[create table t(c character(50) character set latin1) default charset=utf8]===
+dble:[None]
+mysql:[()]
+[13:31:56.915840]dble err :(1064, "syntax error, error in :'(50) character set latin1) default ',expect RPAREN, actual IDENTIFIER character")
+===file:syntax/character.sql, id:18, sql:[insert into t select user()]===
+dble:[None]
+mysql:[()]
+[13:31:56.964304]dble err :(1146, "Table 'db3.t' doesn't exist")
+===file:syntax/character.sql, id:19, sql:[insert into t values('汤姆')]===
+dble:[None]
+mysql:[()]
+[13:31:57.043523]dble err :(1146, "Table 'db3.t' doesn't exist")
+===file:syntax/character.sql, id:20, sql:[SELECT * FROM t WHERE c='汤姆']===
+dble:[None]
+mysql:[(('\xe6\xb1\xa4\xe5\xa7\x86',),)]
+[13:31:57.126031]dble err :(1146, "Table 'db3.t' doesn't exist")
+===file:syntax/character.sql, id:24, sql:[insert into t values('你')]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
+[13:31:57.281678]dble err :(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
+===file:syntax/character.sql, id:49, sql:[alter table t change c c national character varying(20)]===
+dble:[None]
+mysql:[()]
+[13:32:04.767842]dble err :(1064, "syntax error, error in :'onal character varying(20)',expect IDENTIFIER, actual IDENTIFIER character")
+===file:syntax/character.sql, id:57, sql:[insert into t values('a你')]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
+[13:32:05.174566]dble err :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
+===file:syntax/character.sql, id:58, sql:[insert into t values(_utf8'a你')]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
+[13:32:05.239017]dble err :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
+===file:syntax/character.sql, id:62, sql:[insert into t values('你')]===
+dble:[()]
+mysql:[None]
+mysql err:(1406, "Data too long for column 'c' at row 1")
+===file:syntax/character.sql, id:64, sql:[select * from t/* master */;]===
+dble:[(('??',),)]
+mysql:[()]
+===file:syntax/character.sql, id:68, sql:[select * from t/* master */;]===
+dble:[(('\xe6\xb5\xa3?',), ('e',), ('\xe6\x88\x91',))]
+mysql:[(('e',), ('\xe6\x88\x91',))]
+===file:syntax/character.sql, id:69, sql:[select * from t]===
+dble:[(('\xe6\xb5\xa3?',), ('e',), ('\xe6\x88\x91',))]
+mysql:[(('e',), ('\xe6\x88\x91',))]
+===file:syntax/character.sql, id:72, sql:[select * from t/* master */ ;]===
+dble:[(('??',), ('e',), ('?',), ('\xe4\xbb\x96',))]
+mysql:[(('e',), ('?',), ('\xe4\xbb\x96',))]
+===file:syntax/character.sql, id:75, sql:[select * from t/* master */;]===
+dble:[(('\xe4\xbd?',), ('e',), ('\xce\xd2',), ('???',), ('??',))]
+mysql:[(('e',), ('\xce\xd2',), ('???',), ('?',))]
+===file:syntax/character.sql, id:78, sql:[select * from t/* master */;]===
+dble:[(('??',), ('e',), ('?',), ('\xe4\xbb\x96',), ('??',), ('\xe5\xae\x83',))]
+mysql:[(('e',), ('?',), ('\xe4\xbb\x96',), ('?',), ('\xe5\xae\x83',))]
+===file:syntax/character.sql, id:81, sql:[select * from t/* master */;]===
+dble:[(('??',), ('e',), ('?',), ('???',), ('??',), ('???',), ('???a',))]
+mysql:[(('e',), ('?',), ('???',), ('?',), ('???',), ('???a',))]
+===file:syntax/character.sql, id:84, sql:[select * from t/* master */;]===
+dble:[(('??',), ('e',), ('?',), ('\xe4\xbb\x96',), ('??',), ('\xe5\xae\x83',), ('???a',), ('\xe4\xbb\x96a',))]
+mysql:[(('e',), ('?',), ('\xe4\xbb\x96',), ('?',), ('\xe5\xae\x83',), ('???a',), ('\xe4\xbb\x96a',))]

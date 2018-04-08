@@ -34,21 +34,21 @@ Feature:
     """
     Then excute admin cmd "reload @@config_all"
     Then execute sql
-        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
+        | user | passwd | conn   | toClose  | sql                                                         | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/   | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/   | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn2*/   | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn3*/   | success | mytest |
-        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn4*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn2*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn3*/ | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn4*/ | success | mytest |
 
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
     {"table":"string_hash_table","key":"id"}
     """
-     #test: data types in sharding_key
+    #test: data types in sharding_key
     #Then Test the data types supported by the sharding column in "hashString.sql"
     #test: non-uniform
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -65,17 +65,17 @@ Feature:
     """
     Then excute admin cmd "reload @@config_all"
     Then execute sql
-        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
+        | user | passwd | conn   | toClose  | sql                                                         | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/   | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/   | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn1*/   | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn2*/   | success | mytest |
-        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn3*/   | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn2*/ | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn3*/ | success | mytest |
     #clearn all conf
     Given delete the following xml segment
-      |file        | parent                                        | child                                  |
+      |file        | parent                                        | child                                                    |
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'string_hash_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'string_hash_func'}}  |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'string_hash_table'}}    |

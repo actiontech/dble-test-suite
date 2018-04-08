@@ -32,14 +32,14 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists enum_table                               | success | mytest |
         | test | 111111 | conn_0 | False    | create table enum_table(id int)                               | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(0)/*dest_node:dn1*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(1)/*dest_node:dn2*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(2)/*dest_node:dn3*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(3)/*dest_node:dn4*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(-1)                  | can't find any valid data node | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(4)                   | can't find any valid data node | mytest |
-        | test | 111111 | conn_0 | False    | insert into enum_table values(5)                   | can't find any valid data node | mytest |
-        | test | 111111 | conn_0 | True     | insert into enum_table values('aaa')               | Please check if the format satisfied | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (0)/*dest_node:dn1*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (1)/*dest_node:dn2*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (2)/*dest_node:dn3*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (3)/*dest_node:dn4*/  | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (-1)                  | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (4)                   | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (5)                   | can't find any valid data node | mytest |
+        | test | 111111 | conn_0 | True     | insert into enum_table values ('aaa')               | Please check if the format satisfied | mytest |
 
     #test: type:string default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"

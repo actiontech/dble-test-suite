@@ -1,0 +1,54 @@
+===file:syntax/set_names_character.sql, id:9, sql:[set names 'utf8';]===
+===file:syntax/set_names_character.sql, id:10, sql:[select @@character_set_client,@@character_set_connection,@@character_set_results;]===
+===file:syntax/set_names_character.sql, id:11, sql:[drop table if exists mytest_test1;]===
+===file:syntax/set_names_character.sql, id:12, sql:[create table mytest_test1(id int,data varchar(10));]===
+===file:syntax/set_names_character.sql, id:13, sql:[insert into mytest_test1 values (1,'测试1');]===
+===file:syntax/set_names_character.sql, id:14, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:15, sql:[set @@character_set_client='gbk';]===
+===file:syntax/set_names_character.sql, id:16, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:17, sql:[set @@character_set_results='gbk';]===
+===file:syntax/set_names_character.sql, id:18, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:19, sql:[select concat('123','测试2');]===
+===file:syntax/set_names_character.sql, id:24, sql:[set names 'utf8';]===
+===file:syntax/set_names_character.sql, id:25, sql:[select @@character_set_client,@@character_set_connection,@@character_set_results;]===
+===file:syntax/set_names_character.sql, id:26, sql:[drop table if exists mytest_test1;]===
+===file:syntax/set_names_character.sql, id:27, sql:[create table mytest_test1(id int,data varchar(10));]===
+===file:syntax/set_names_character.sql, id:29, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:30, sql:[set @@character_set_connection='gbk';]===
+===file:syntax/set_names_character.sql, id:32, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:33, sql:[set @@character_set_connection='ascii';]===
+===file:syntax/set_names_character.sql, id:34, sql:[insert into mytest_test1 values (3,'测试3');]===
+===file:syntax/set_names_character.sql, id:35, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:36, sql:[set @@character_set_connection='utf8';]===
+===file:syntax/set_names_character.sql, id:37, sql:[select @@character_set_connection;]===
+===file:syntax/set_names_character.sql, id:38, sql:[set @@character_set_client='gbk';]===
+===file:syntax/set_names_character.sql, id:39, sql:[select @@character_set_client;]===
+===file:syntax/set_names_character.sql, id:41, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:42, sql:[set @@character_set_client='utf8';]===
+===file:syntax/set_names_character.sql, id:43, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:44, sql:[set @@character_set_results='gbk';]===
+===file:syntax/set_names_character.sql, id:46, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:47, sql:[set @@character_set_results='utf8';]===
+===file:syntax/set_names_character.sql, id:48, sql:[set @@character_set_client='utf8';]===
+===file:syntax/set_names_character.sql, id:49, sql:[select @@character_set_client,@@character_set_connection,@@character_set_results;]===
+===file:syntax/set_names_character.sql, id:51, sql:[select * from mytest_test1;]===
+===file:syntax/set_names_character.sql, id:55, sql:[set character set ascii]===
+===file:syntax/set_names_character.sql, id:56, sql:[select @@character_set_client]===
+===file:syntax/set_names_character.sql, id:57, sql:[select @@character_set_results]===
+===file:syntax/set_names_character.sql, id:58, sql:[set character set DEFAULT]===
+===file:syntax/set_names_character.sql, id:59, sql:[select @@character_set_client]===
+===file:syntax/set_names_character.sql, id:60, sql:[select @@character_set_results]===
+===file:syntax/set_names_character.sql, id:61, sql:[set charset ascii]===
+===file:syntax/set_names_character.sql, id:62, sql:[select @@character_set_client]===
+===file:syntax/set_names_character.sql, id:63, sql:[select @@character_set_results]===
+===file:syntax/set_names_character.sql, id:64, sql:[set charset DEFAULT]===
+===file:syntax/set_names_character.sql, id:65, sql:[select @@character_set_client]===
+===file:syntax/set_names_character.sql, id:66, sql:[select @@character_set_results]===
+===file:syntax/set_names_character.sql, id:67, sql:[set names default]===
+===file:syntax/set_names_character.sql, id:68, sql:[select @@character_set_client]===
+===file:syntax/set_names_character.sql, id:69, sql:[select @@character_set_results]===
+===file:syntax/set_names_character.sql, id:70, sql:[select @@character_set_connection]===
+===file:syntax/set_names_character.sql, id:71, sql:[set names 'ascii' collate 'ascii_general_ci']===
+===file:syntax/set_names_character.sql, id:72, sql:[select @@character_set_client]===
+===file:syntax/set_names_character.sql, id:73, sql:[select @@character_set_results]===
+===file:syntax/set_names_character.sql, id:74, sql:[select @@character_set_connection]===

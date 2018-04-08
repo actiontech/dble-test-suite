@@ -1,0 +1,56 @@
+===file:syntax/set_user_var.sql, id:3, sql:[SET @t1=1, @t2=2, @t3:=4]===
+===file:syntax/set_user_var.sql, id:4, sql:[SELECT @t1, @t2, @t3, @t4 := @t1+@t2+@t3]===
+===file:syntax/set_user_var.sql, id:5, sql:[SET @v1 = X'41']===
+===file:syntax/set_user_var.sql, id:6, sql:[SET @v2 = X'41'+0]===
+===file:syntax/set_user_var.sql, id:7, sql:[SET @v3 = CAST(X'41' AS UNSIGNED)]===
+===file:syntax/set_user_var.sql, id:8, sql:[SELECT @v1, @v2, @v3]===
+===file:syntax/set_user_var.sql, id:9, sql:[SET @v1 = b'1000001']===
+===file:syntax/set_user_var.sql, id:10, sql:[SET @v2 = b'1000001'+0]===
+===file:syntax/set_user_var.sql, id:11, sql:[SET @v3 = CAST(b'1000001' AS UNSIGNED)]===
+===file:syntax/set_user_var.sql, id:12, sql:[SELECT @v1, @v2, @v3]===
+===file:syntax/set_user_var.sql, id:21, sql:[SELECT @@error_count / @@warning_count]===
+===file:syntax/set_user_var.sql, id:22, sql:[DROP TABLE IF EXISTS shop]===
+===file:syntax/set_user_var.sql, id:23, sql:[create table shop(article int(4), dealer varchar(10), price float(8,2))]===
+===file:syntax/set_user_var.sql, id:24, sql:[insert into shop values(1, 'D', 234.25),(2, 'D', 67.29),(3, 'D', 1.25),(4,'D',19.95)]===
+===file:syntax/set_user_var.sql, id:25, sql:[SELECT @min_price:=MIN(price),@max_price:=MAX(price) FROM shop]===
+===file:syntax/set_user_var.sql, id:27, sql:[SELECT (@aa:=article) AS a, (@aa+3) AS b FROM shop HAVING b=5]===
+===file:syntax/set_user_var.sql, id:29, sql:[insert into t1 values (10, 1),(10, 1),(11,1),(10, 1)]===
+===file:syntax/set_user_var.sql, id:31, sql:[insert into t2 values (10, 1),(11, 2),(10,2)]===
+===file:syntax/set_user_var.sql, id:33, sql:[insert into t3 values (12, 1),(11, 1),(10,11)]===
+===file:syntax/set_user_var.sql, id:34, sql:[(SELECT @vara:=a FROM t1 WHERE a=10 AND B=1) UNION (SELECT @varb:=B FROM t2 WHERE a=@vara AND B=2) UNION (SELECT a FROM t3 WHERE a=@vara+@varb AND B=1)]===
+===file:syntax/set_user_var.sql, id:35, sql:[SELECT REPEAT('a',1) UNION SELECT REPEAT('b',10)]===
+===file:syntax/set_user_var.sql, id:38, sql:[insert into table_member_comments values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello python', 1),(3, 20160822174314, 100, 'hello java', 1)]===
+===file:syntax/set_user_var.sql, id:39, sql:[insert into table_guest_comments values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello php', 1),(3, 20160822174314, 100, 'hello c++', 0)]===
+===file:syntax/set_user_var.sql, id:42, sql:[set @abc123=1]===
+===file:syntax/set_user_var.sql, id:43, sql:[set @123abc=2]===
+===file:syntax/set_user_var.sql, id:44, sql:[set @abc=3]===
+===file:syntax/set_user_var.sql, id:45, sql:[set @123=4]===
+===file:syntax/set_user_var.sql, id:48, sql:[set @_=7]===
+===file:syntax/set_user_var.sql, id:51, sql:[set @`-`=10]===
+===file:syntax/set_user_var.sql, id:52, sql:[set @uv:=11]===
+===file:syntax/set_user_var.sql, id:53, sql:[set @a:=1]===
+===file:syntax/set_user_var.sql, id:54, sql:[set @a:=@a+1]===
+===file:syntax/set_user_var.sql, id:63, sql:[SET SESSION sort_buffer_size = 1000000]===
+===file:syntax/set_user_var.sql, id:64, sql:[SET @@local.sort_buffer_size = 1000000]===
+===file:syntax/set_user_var.sql, id:65, sql:[SET sort_buffer_size = 1000000]===
+===file:syntax/set_user_var.sql, id:66, sql:[SET @@session.max_join_size=DEFAULT]===
+===file:syntax/set_user_var.sql, id:68, sql:[set character set ascii]===
+===file:syntax/set_user_var.sql, id:69, sql:[select @@character_set_client]===
+===file:syntax/set_user_var.sql, id:70, sql:[select @@character_set_results]===
+===file:syntax/set_user_var.sql, id:71, sql:[set character set DEFAULT]===
+===file:syntax/set_user_var.sql, id:72, sql:[select @@character_set_client]===
+===file:syntax/set_user_var.sql, id:73, sql:[select @@character_set_results]===
+===file:syntax/set_user_var.sql, id:74, sql:[set charset ascii]===
+===file:syntax/set_user_var.sql, id:75, sql:[select @@character_set_client]===
+===file:syntax/set_user_var.sql, id:76, sql:[select @@character_set_results]===
+===file:syntax/set_user_var.sql, id:77, sql:[set charset DEFAULT]===
+===file:syntax/set_user_var.sql, id:78, sql:[select @@character_set_client]===
+===file:syntax/set_user_var.sql, id:79, sql:[select @@character_set_results]===
+===file:syntax/set_user_var.sql, id:81, sql:[set names default]===
+===file:syntax/set_user_var.sql, id:82, sql:[select @@character_set_client]===
+===file:syntax/set_user_var.sql, id:83, sql:[select @@character_set_results]===
+===file:syntax/set_user_var.sql, id:84, sql:[select @@character_set_connection]===
+===file:syntax/set_user_var.sql, id:85, sql:[set names 'ascii' collate 'ascii_general_ci']===
+===file:syntax/set_user_var.sql, id:86, sql:[select @@character_set_client]===
+===file:syntax/set_user_var.sql, id:87, sql:[select @@character_set_results]===
+===file:syntax/set_user_var.sql, id:88, sql:[select @@character_set_connection]===

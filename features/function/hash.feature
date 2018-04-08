@@ -83,7 +83,7 @@ Feature:
         | test | 111111 | conn_0 | True     | insert into hash_table values(1000)/*dest_node:dn1*/  | success | mytest |
     #clearn all conf
     Given delete the following xml segment
-      |file        | parent                                        | child                                  |
+      |file        | parent                                        | child                                             |
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'hash_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'hash_func'}}  |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'hash_table'}}    |

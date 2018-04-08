@@ -1,24 +1,19 @@
 import time
 import os
 import logging
-import threading
+import re
 import commands
 from behave import *
 from hamcrest import *
 
-from lib.nodes import get_node, get_ssh
+from lib.nodes import get_node, get_ssh, get_sftp
 
 LOGGER = logging.getLogger('steps.install')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
-    threads = []
     for node in context.dbles:
-        threads.append(threading.Thread(target=uninstall_dble_by_ip, args=(context, node.ip)))
-    for t in threads:
-        t.start()
-    for t in threads:
-        t.join()
+        uninstall_dble_by_ip(context, node.ip)
 
 @When('uninstall dble by "{ip}" ')
 def uninstall_dble_by_ip(context, ip):
@@ -68,9 +63,9 @@ def install_dble_by_ip(context, ip):
     else:
         context.execute_steps(u'Given download dble')
         dble_packget = "{0}".format(context.dble_test_config['dble']['remote_packget'])
-    cmd = "cd {0} && rm -rf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
+    cmd = "cd {0} && sudo rm -rf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
     ssh_client.exec_command(cmd)
-    cmd = "cd {0} && cp -r {1} {2}".format(context.dble_test_config['share_path_docker'], dble_packget,
+    cmd = "cd {0} && sudo cp -r {1} {2}".format(context.dble_test_config['share_path_docker'], dble_packget,
                                            context.dble_test_config['dble_basepath'])
     ssh_client.exec_command(cmd)
     cmd = "cd {0} && tar xf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
@@ -192,6 +187,7 @@ def step_impl(context, ip):
 
 @Given('Check and clear zookeeper stored data in all dble nodes')
 def check_and_clear_zk(context):
+    context.zk_retry=0
     for node in context.dbles:
         check_zk_status(context, node.ip)
         clear_zk_data(context, node.ip)
@@ -201,6 +197,11 @@ def check_zk_status(context, ip):
     cmd = "{0}/bin/zkServer.sh status".format(context.dble_test_config['zookeeper']['home'])
     rc, sto, ste = ssh_client.exec_command(cmd)
     LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
+    if context.zk_retry < 3 and re.search("Error contacting service", sto, re.I):
+        context.zk_retry = context.zk_retry+1
+        cmd = "{0}/bin/zkServer.sh start".format(context.dble_test_config['zookeeper']['home'])
+        rc, sto, ste = ssh_client.exec_command(cmd)
+        check_zk_status(context, ip)
     assert_that(str(sto), contains_string("Mode"))
 
 def clear_zk_data(context, ip):
@@ -259,7 +260,7 @@ def restore_and_ensure_dble_uncluster(context):
         cmd = "cat {0} | grep 'loadZK*' | cut -d= -f2".format(conf_file)
         for node in context.dbles:
             stop_dble_in_hostname(context, node.host_name)
-            ssh_client = node.create_connection()
+            ssh_client = node.sshconn
             rc, sto, ste = ssh_client.exec_command(cmd)
             LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
             assert_that(ste, is_(""))
@@ -276,7 +277,7 @@ def restore_and_ensure_dble_uncluster(context):
 def check_zk_node_exists(context):
     cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
     for node in context.dbles:
-        ssh_client = node.create_connection()
+        ssh_client = node.sshconn
         rc, sto, ste = ssh_client.exec_zk_command(cmd)
         LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
         if "Node does not exist: /dble" not in sto:

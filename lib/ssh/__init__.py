@@ -2,7 +2,6 @@ import paramiko
 from lib.log import Logging
 
 class SSHClient(Logging):
-# class SSHClient():
     def __init__(self, host, user, password):
         super(SSHClient, self).__init__()
         self._host = host
@@ -50,7 +49,6 @@ class SSHClient(Logging):
 
 
 class SFTPClient(Logging):
-# class SFTPClient():
     def __init__(self, host, user, password, port=22):
         super(SFTPClient, self).__init__()
         self._host = host

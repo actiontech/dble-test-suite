@@ -1,0 +1,123 @@
+===file:syntax/data_types.sql, id:3, sql:[select _latin1'a string']===
+===file:syntax/data_types.sql, id:5, sql:[select _latin1'a string' COLLATE latin1_danish_ci]===
+===file:syntax/data_types.sql, id:6, sql:[select _utf8'a' ' ' 'string']===
+===file:syntax/data_types.sql, id:8, sql:[select 'a\'b', 'a\"b', 'a\0b', 'a\bb', 'a\nb', 'a\rb', 'a\tb', 'a\Zb', 'a\\b', 'a\%b', 'a\_b']===
+===file:syntax/data_types.sql, id:9, sql:[drop table if exists ta]===
+===file:syntax/data_types.sql, id:10, sql:[create table ta(id int(16) not null primary key auto_increment, b varchar(255))]===
+===file:syntax/data_types.sql, id:11, sql:[insert into ta values(1, 'a\'b')]===
+===file:syntax/data_types.sql, id:12, sql:[insert into ta values(2, 'a\"b')]===
+===file:syntax/data_types.sql, id:13, sql:[insert into ta values(3, 'a\0b')]===
+===file:syntax/data_types.sql, id:14, sql:[insert into ta values(4, 'a\bb')]===
+===file:syntax/data_types.sql, id:15, sql:[insert into ta values(5, 'a\nb')]===
+===file:syntax/data_types.sql, id:16, sql:[insert into ta values(6, 'a\rb')]===
+===file:syntax/data_types.sql, id:17, sql:[insert into ta values(7, 'a\tb')]===
+===file:syntax/data_types.sql, id:18, sql:[insert into ta values(8, 'a\Zb')]===
+===file:syntax/data_types.sql, id:19, sql:[insert into ta values(9, 'a\\b')]===
+===file:syntax/data_types.sql, id:20, sql:[insert into ta values(10, 'a\%b')]===
+===file:syntax/data_types.sql, id:21, sql:[insert into ta values(11, 'a\_b')]===
+===file:syntax/data_types.sql, id:22, sql:[select b from ta]===
+===file:syntax/data_types.sql, id:23, sql:[SELECT 'hello', '"hello"', '""hello""', 'hel''lo', '\'hello']===
+===file:syntax/data_types.sql, id:24, sql:[SELECT "hello", "'hello'", "''hello''", "hel""lo", "\"hello"]===
+===file:syntax/data_types.sql, id:25, sql:[SELECT 'This\nIs\nFour\nLines']===
+===file:syntax/data_types.sql, id:26, sql:[SELECT 'disappearing\ backslash']===
+===file:syntax/data_types.sql, id:28, sql:[select 1, .2, 3.4, -5, -.8, -6.78, +9, +.55, +9.10]===
+===file:syntax/data_types.sql, id:29, sql:[select 1.2E3, 1.2E-3, -1.2E3, -1.2E-3]===
+===file:syntax/data_types.sql, id:31, sql:[select DATE'2012^12^31']===
+===file:syntax/data_types.sql, id:32, sql:[select DATE '2012-12-31']===
+===file:syntax/data_types.sql, id:50, sql:[select DATE'20131231']===
+===file:syntax/data_types.sql, id:51, sql:[select DATE'00121231']===
+===file:syntax/data_types.sql, id:52, sql:[select DATE'121231']===
+===file:syntax/data_types.sql, id:53, sql:[select TIMESTAMP'2012-12-31 11:30:45']===
+===file:syntax/data_types.sql, id:54, sql:[select TIMESTAMP '2012^12^31 11+30+45']===
+===file:syntax/data_types.sql, id:55, sql:[select TIMESTAMP'2012/12/31 11*30*45']===
+===file:syntax/data_types.sql, id:56, sql:[select TIMESTAMP'2012@12@31 11^30^45']===
+===file:syntax/data_types.sql, id:57, sql:[select TIMESTAMP'20121231113045']===
+===file:syntax/data_types.sql, id:58, sql:[select TIMESTAMP'121231113045']===
+===file:syntax/data_types.sql, id:59, sql:[select TIME'0 10:11:12']===
+===file:syntax/data_types.sql, id:60, sql:[select TIME'34 10:11:12']===
+===file:syntax/data_types.sql, id:61, sql:[drop table if exists ta]===
+===file:syntax/data_types.sql, id:62, sql:[create table ta(id int(16) not null primary key auto_increment, b TIMESTAMP)]===
+===file:syntax/data_types.sql, id:63, sql:[insert into ta values(1, '2012-12-31 11:30:45')]===
+===file:syntax/data_types.sql, id:68, sql:[insert into ta values(6, '2012-2-1 2:3:4')]===
+===file:syntax/data_types.sql, id:79, sql:[insert into ta values(17, 19830905132800)]===
+===file:syntax/data_types.sql, id:80, sql:[insert into ta values(18, 830905132800)]===
+===file:syntax/data_types.sql, id:81, sql:[insert into ta values(19, 20160302)]===
+===file:syntax/data_types.sql, id:82, sql:[insert into ta values(20, 161214)]===
+===file:syntax/data_types.sql, id:83, sql:[select b from ta]===
+===file:syntax/data_types.sql, id:84, sql:[drop table if exists tb]===
+===file:syntax/data_types.sql, id:85, sql:[create table tb(id int(16) not null primary key auto_increment, b DATE)]===
+===file:syntax/data_types.sql, id:86, sql:[insert into tb values(1, '2012^12^31')]===
+===file:syntax/data_types.sql, id:98, sql:[insert into tb values(13, 371231)]===
+===file:syntax/data_types.sql, id:99, sql:[insert into tb values(14, 19121231)]===
+===file:syntax/data_types.sql, id:100, sql:[select b from tb]===
+===file:syntax/data_types.sql, id:101, sql:[drop table if exists tc]===
+===file:syntax/data_types.sql, id:102, sql:[create table tc(id int(16) not null primary key auto_increment, b TIME)]===
+===file:syntax/data_types.sql, id:103, sql:[insert into tc values(1, '0 10:11:12')]===
+===file:syntax/data_types.sql, id:104, sql:[insert into tc values(2, '34 10:11:12')]===
+===file:syntax/data_types.sql, id:105, sql:[insert into tc values(3, '34 10:11')]===
+===file:syntax/data_types.sql, id:106, sql:[insert into tc values(4, '34 10')]===
+===file:syntax/data_types.sql, id:107, sql:[insert into tc values(5, '10')]===
+===file:syntax/data_types.sql, id:108, sql:[insert into tc values(20, '0 10:11:12.100005')]===
+===file:syntax/data_types.sql, id:109, sql:[insert into tc values(21, '0 3:5:2')]===
+===file:syntax/data_types.sql, id:110, sql:[insert into tc values(22, '0 03:05:02')]===
+===file:syntax/data_types.sql, id:122, sql:[insert into tc values(17, 101112)]===
+===file:syntax/data_types.sql, id:123, sql:[insert into tc values(18, 1011)]===
+===file:syntax/data_types.sql, id:124, sql:[insert into tc values(19, 10)]===
+===file:syntax/data_types.sql, id:125, sql:[select b from tc]===
+===file:syntax/data_types.sql, id:127, sql:[select X'4D7953514C', x'4D7953514C', 0x4D7953514C]===
+===file:syntax/data_types.sql, id:128, sql:[select X'4d7953514c', x'4d7953514c', 0x4d7953514c]===
+===file:syntax/data_types.sql, id:129, sql:[select x'0a'+0, X'0a'+0, 0x0a+0]===
+===file:syntax/data_types.sql, id:130, sql:[select 0xa, 0x0a, x'0a', X'0a']===
+===file:syntax/data_types.sql, id:131, sql:[select 0x0A, x'0A', X'0A']===
+===file:syntax/data_types.sql, id:132, sql:[select x'41', X'41', 0x41]===
+===file:syntax/data_types.sql, id:133, sql:[select x'ac', X'AC', 0xAc]===
+===file:syntax/data_types.sql, id:134, sql:[select X'41', CAST(X'41' AS UNSIGNED)]===
+===file:syntax/data_types.sql, id:135, sql:[select X'41', CAST(x'41' AS UNSIGNED)]===
+===file:syntax/data_types.sql, id:136, sql:[select 0x41, CAST(0x41 AS UNSIGNED)]===
+===file:syntax/data_types.sql, id:137, sql:[select HEX('cat')]===
+===file:syntax/data_types.sql, id:139, sql:[select TRUE, True, true, trUe]===
+===file:syntax/data_types.sql, id:140, sql:[select FALSE, False, fAlSe, false]===
+===file:syntax/data_types.sql, id:141, sql:[select 0]===
+===file:syntax/data_types.sql, id:142, sql:[select 1]===
+===file:syntax/data_types.sql, id:143, sql:[drop table if exists ta]===
+===file:syntax/data_types.sql, id:144, sql:[create table ta(a int(16) not null primary key auto_increment, b BOOL)]===
+===file:syntax/data_types.sql, id:145, sql:[insert into ta values(1,TRUE)]===
+===file:syntax/data_types.sql, id:146, sql:[insert into ta values(2,True)]===
+===file:syntax/data_types.sql, id:147, sql:[insert into ta values(3,true)]===
+===file:syntax/data_types.sql, id:148, sql:[insert into ta values(4,trUe)]===
+===file:syntax/data_types.sql, id:149, sql:[insert into ta values(5,FALSE)]===
+===file:syntax/data_types.sql, id:150, sql:[insert into ta values(6,False)]===
+===file:syntax/data_types.sql, id:151, sql:[insert into ta values(7,fAlSe)]===
+===file:syntax/data_types.sql, id:152, sql:[insert into ta values(8,false)]===
+===file:syntax/data_types.sql, id:153, sql:[insert into ta values(9,0)]===
+===file:syntax/data_types.sql, id:154, sql:[insert into ta values(10,1)]===
+===file:syntax/data_types.sql, id:155, sql:[select b from ta]===
+===file:syntax/data_types.sql, id:157, sql:[SET @v1 = 0b1000001]===
+===file:syntax/data_types.sql, id:158, sql:[SET @v2 = CAST(0b1000001 AS UNSIGNED), @v3 = 0b1000001+0]===
+===file:syntax/data_types.sql, id:159, sql:[SELECT @v1, @v2, @v3]===
+===file:syntax/data_types.sql, id:160, sql:[SET @v1 = b'1000001']===
+===file:syntax/data_types.sql, id:161, sql:[SET @v2 = CAST(b'1000001' AS UNSIGNED), @v3 = b'1000001'+0]===
+===file:syntax/data_types.sql, id:162, sql:[SELECT @v1, @v2, @v3]===
+===file:syntax/data_types.sql, id:163, sql:[drop table if exists t]===
+===file:syntax/data_types.sql, id:164, sql:[create table t(b BIT(8))]===
+===file:syntax/data_types.sql, id:165, sql:[INSERT INTO t SET b = b'11111111']===
+===file:syntax/data_types.sql, id:166, sql:[INSERT INTO t SET b = b'00000000']===
+===file:syntax/data_types.sql, id:167, sql:[INSERT INTO t SET b = b'1010']===
+===file:syntax/data_types.sql, id:168, sql:[INSERT INTO t SET b = b'0101']===
+===file:syntax/data_types.sql, id:169, sql:[INSERT INTO t SET b = b'01010']===
+===file:syntax/data_types.sql, id:170, sql:[INSERT INTO t SET b = 0b11111111]===
+===file:syntax/data_types.sql, id:171, sql:[INSERT INTO t SET b = 0b00000000]===
+===file:syntax/data_types.sql, id:172, sql:[INSERT INTO t SET b = 0b1010]===
+===file:syntax/data_types.sql, id:173, sql:[INSERT INTO t SET b = 0b0101]===
+===file:syntax/data_types.sql, id:174, sql:[INSERT INTO t SET b = 0b01010]===
+===file:syntax/data_types.sql, id:175, sql:[SELECT b, b+0, BIN(b+0), OCT(b+0), HEX(b+0) FROM t]===
+===file:syntax/data_types.sql, id:177, sql:[select null]===
+===file:syntax/data_types.sql, id:178, sql:[select NULL]===
+===file:syntax/data_types.sql, id:182, sql:[select '\ba\bb\b']===
+===file:syntax/data_types.sql, id:183, sql:[select '\ta\tb\t']===
+===file:syntax/data_types.sql, id:184, sql:[select '\ra\rb\r']===
+===file:syntax/data_types.sql, id:185, sql:[select '\na\nb\n']===
+===file:syntax/data_types.sql, id:186, sql:[select '\fa\fb\f']===
+===file:syntax/data_types.sql, id:189, sql:[use mytest]===
+===file:syntax/data_types.sql, id:190, sql:[select 1]===
+===file:syntax/data_types.sql, id:191, sql:[drop table if EXISTS t]===

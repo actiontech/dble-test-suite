@@ -1,0 +1,25 @@
+===file:syntax/set_names_character.sql, id:28, sql:[insert into mytest_test1 values (1,'测试1');]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+[13:36:29.799284]dble err :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+===file:syntax/set_names_character.sql, id:31, sql:[insert into mytest_test1 values (2,'测试2');]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xB2\\xE2\\xCA\\xD42' for column 'data' at row 1")
+[13:36:30.036410]dble err :(1366, "Incorrect string value: '\\xB2\\xE2\\xCA\\xD42' for column 'data' at row 1")
+===file:syntax/set_names_character.sql, id:40, sql:[insert into mytest_test1 values (4,'测试4');]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE5\\xA8\\xB4\\xE5\\xAC\\xAD...' for column 'data' at row 1")
+[13:36:30.748885]dble err :(1366, "Incorrect string value: '\\xE5\\xA8\\xB4\\xE5\\xAC\\xAD...' for column 'data' at row 1")
+===file:syntax/set_names_character.sql, id:45, sql:[insert into mytest_test1 values (5,'测试5');]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+[13:36:31.143551]dble err :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+===file:syntax/set_names_character.sql, id:50, sql:[insert into mytest_test1 value (6,'测试6');]===
+dble:[None]
+mysql:[None]
+mysql err:(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+[13:36:31.537809]dble err :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
