@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
-  <component name="PublishConfigData">
+  <component name="PublishConfigData" autoUpload="On explicit save action">
     <serverData>
       <paths name="dble">
         <serverdata>
@@ -9,9 +9,13 @@
           </mappings>
           <excludedPaths>
             <excludedPath local="true" path="$PROJECT_DIR$/drivers" />
+            <excludedPath local="true" path="$PROJECT_DIR$/compose" />
+            <excludedPath local="true" path="$PROJECT_DIR$/conf" />
+            <excludedPath local="true" path="$PROJECT_DIR$/sqls" />
           </excludedPaths>
         </serverdata>
       </paths>
     </serverData>
+    <option name="myAutoUpload" value="ON_EXPLICIT_SAVE" />
   </component>
 </project>
