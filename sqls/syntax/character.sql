@@ -14,7 +14,7 @@ SELECT CONCAT(FORMAT(a, 4), b) FROM t1
 select CONCAT(_ucs2 X'0041', _ucs2 X'0042')
 #!share_conn
 drop table if exists t
-create table t(c character(50) character set latin1) default charset=utf8
+create table t(c varchar(50) character set latin1) default charset=utf8
 insert into t select user()
 insert into t values('汤姆')
 SELECT * FROM t WHERE c='汤姆'
@@ -56,32 +56,32 @@ create table t(c char(50))
 set names 'gbk'
 insert into t values('a你')
 insert into t values(_utf8'a你')
-select * from t/* master */;
+select * from t;
 select * from t
 alter table t modify c varchar(50) character set utf8
 insert into t values('你')
 #!share_conn_2
-select * from t/* master */;
+select * from t;
 set names 'utf8'
 insert into t values("e")
 insert into t values("我")
-select * from t/* master */;
+select * from t;
 select * from t
 #!share_conn_1
 insert into t values("他")
-select * from t/* master */ ;
+select * from t ;
 set character set 'gb2312'
 insert into t values("她")
-select * from t/* master */;
+select * from t;
 #!share_conn_2
 insert into t values("它")
-select * from t/* master */;
+select * from t;
 set character set 'ascii'
 insert into t values("它a")
-select * from t/* master */;
+select * from t;
 #!share_conn_1
 insert into t values("他a")
-select * from t/* master */;
+select * from t;
 truncate t
 set names utf8
 insert into t values("它");

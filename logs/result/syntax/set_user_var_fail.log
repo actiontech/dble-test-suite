@@ -1,60 +1,35 @@
 ===file:syntax/set_user_var.sql, id:26, sql:[SELECT * FROM shop WHERE price=@min_price OR price=@max_price]===
 dble:[()]
 mysql:[((1L, 'D', 234.25), (3L, 'D', 1.25))]
-===file:syntax/set_user_var.sql, id:28, sql:[create table t1(a int(4), B int(4))]===
+===file:syntax/set_user_var.sql, id:45, sql:[SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM table_member_comments WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM table_guest_comments WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC]===
 dble:[None]
-mysql:[None]
-mysql err:(1050, "Table 't1' already exists")
-[13:36:35.453866]dble err :(1050, "Table 't1' already exists")
-===file:syntax/set_user_var.sql, id:30, sql:[create table t2(a int(4), B int(4))]===
-dble:[None]
-mysql:[None]
-mysql err:(1050, "Table 't2' already exists")
-[13:36:35.611251]dble err :(1050, "Table 't2' already exists")
-===file:syntax/set_user_var.sql, id:32, sql:[create table t3(a int(4), B int(4))]===
-dble:[None]
-mysql:[None]
-mysql err:(1050, "Table 't3' already exists")
-[13:36:35.744442]dble err :(1050, "Table 't3' already exists")
-===file:syntax/set_user_var.sql, id:36, sql:[create table table_member_comments(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)]===
-dble:[None]
-mysql:[None]
-mysql err:(1050, "Table 'table_member_comments' already exists")
-[13:36:36.042544]dble err :(1050, "Table 'table_member_comments' already exists")
-===file:syntax/set_user_var.sql, id:37, sql:[create table table_guest_comments(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)]===
-dble:[None]
-mysql:[None]
-mysql err:(1050, "Table 'table_guest_comments' already exists")
-[13:36:36.121192]dble err :(1050, "Table 'table_guest_comments' already exists")
-===file:syntax/set_user_var.sql, id:40, sql:[SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM table_member_comments WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM table_guest_comments WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC]===
-dble:[None]
-mysql:[((99L, 100L, 'hello java'), (99L, 100L, 'hello c++'), (99L, 100L, 'hello python'))]
-[13:36:36.335068]dble err :(-1, 'error totally whack')
-===file:syntax/set_user_var.sql, id:46, sql:[set @$=5]===
+mysql:[((99L, 100L, 'hello c++'), (99L, 100L, 'hello java'), (99L, 100L, 'hello python'))]
+[14:27:23.562470]dble err :(-1, 'error totally whack')
+===file:syntax/set_user_var.sql, id:51, sql:[set @$=5]===
 dble:[None]
 mysql:[()]
-[13:36:36.705900]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
-===file:syntax/set_user_var.sql, id:47, sql:[set @.=6]===
+[14:27:23.909187]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
+===file:syntax/set_user_var.sql, id:52, sql:[set @.=6]===
 dble:[None]
 mysql:[()]
-[13:36:36.785239]dble err :(1064, 'java.sql.SQLSyntaxErrorException: error : @')
-===file:syntax/set_user_var.sql, id:49, sql:[set @.abc_123$=8]===
+[14:27:23.958329]dble err :(1064, 'java.sql.SQLSyntaxErrorException: error : @')
+===file:syntax/set_user_var.sql, id:54, sql:[set @.abc_123$=8]===
 dble:[None]
 mysql:[()]
-[13:36:36.946297]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
-===file:syntax/set_user_var.sql, id:55, sql:[set @b='str', @c=4.4, @d={d'2012@12@31'}]===
+[14:27:24.119828]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
+===file:syntax/set_user_var.sql, id:60, sql:[set @b='str', @c=4.4, @d={d'2012@12@31'}]===
 dble:[None]
 mysql:[()]
-[13:36:37.350387]dble err :(1064, 'java.sql.SQLSyntaxErrorException: ERROR. token : LBRACE, pos : 26')
-===file:syntax/set_user_var.sql, id:56, sql:[SELECT @abc123, @123abc, @row_format=1, @$ := @t1+@t2+@t3]===
+[14:27:24.519500]dble err :(1064, 'java.sql.SQLSyntaxErrorException: ERROR. token : LBRACE, pos : 26')
+===file:syntax/set_user_var.sql, id:61, sql:[SELECT @abc123, @123abc, @row_format=1, @$ := @t1+@t2+@t3]===
 dble:[None]
 mysql:[((None, None, None, None),)]
-[13:36:37.430845]dble err :(1064, "syntax error, error in :'=1, @$ := @t1+@t2+@t3',expect COLONEQ, actual COLONEQ $")
-===file:syntax/set_user_var.sql, id:58, sql:[set @cnt = (select 1);]===
+[14:27:24.601374]dble err :(1064, "syntax error, error in :'=1, @$ := @t1+@t2+@t3',expect COLONEQ, actual COLONEQ $")
+===file:syntax/set_user_var.sql, id:63, sql:[set @cnt = (select 1);]===
 dble:[None]
 mysql:[()]
-[13:36:37.511504]dble err :(-1, 'error totally whack')
-===file:syntax/set_user_var.sql, id:80, sql:[set @a=(select 'abc')]===
+[14:27:24.684836]dble err :(-1, 'error totally whack')
+===file:syntax/set_user_var.sql, id:85, sql:[set @a=(select 'abc')]===
 dble:[None]
 mysql:[()]
-[13:36:38.661477]dble err :(-1, 'error totally whack')
+[14:27:25.997816]dble err :(-1, 'error totally whack')

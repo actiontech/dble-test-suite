@@ -1,3 +1,7 @@
+===file:syntax/sysfunction2.sql, id:28, sql:[SELECT BINARY 'a' = 'A']===
+===file:syntax/sysfunction2.sql, id:29, sql:[select cast('a'='A' as binary)]===
+===file:syntax/sysfunction2.sql, id:30, sql:[SELECT CONCAT('hello you ',2)]===
+===file:syntax/sysfunction2.sql, id:31, sql:[SELECT _binary 'a' = 'A']===
 ===file:syntax/sysfunction2.sql, id:35, sql:[SET @xml = '<a><b>X</b><b>Y</b></a>']===
 ===file:syntax/sysfunction2.sql, id:36, sql:[SET @i =1, @j = 2]===
 ===file:syntax/sysfunction2.sql, id:37, sql:[SELECT @i, ExtractValue(@xml, '//b[$@i]')]===

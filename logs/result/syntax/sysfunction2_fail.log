@@ -1,8 +1,0 @@
-===file:syntax/sysfunction2.sql, id:31, sql:[SELECT BINARY 'a' = 'A'
-select cast('a'='A' as binary)
-SELECT CONCAT('hello you ',2)
-SELECT _binary 'a' = 'A']===
-dble:[None]
-mysql:[None]
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select cast('a'='A' as binary)\nSELECT CONCAT('hello you ',2)\nSELECT _binary 'a' ' at line 2")
-[13:37:19.712525]dble err :(1064, 'MultiQueries is not supported,use single query instead ')

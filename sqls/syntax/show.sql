@@ -11,17 +11,17 @@
  show full columns from aly_order from mytest
  show full columns from aly_order from mytest like 'o%'
  show full columns from aly_order from mytest where field like 'o%'
- show table status /*allow_diff*/
+ show table status
  show table status like 'aly_o%'
- show tables /*allow_diff*/
- show full tables /*allow_diff*/
- show tables from mytest /*allow_diff*/
- show tables in mytest /*allow_diff*/
- show full tables from mytest /*allow_diff*/
- show full tables in mytest /*allow_diff*/
+ show tables
+ show full tables
+ show tables from mytest
+ show tables in mytest
+ show full tables from mytest
+ show full tables in mytest
  show tables like 'aly_o%'
- show full tables from mytest like 'test%' /*allow_diff*/
- show full tables in mytest where table_type like 'base%' /*allow_diff*/
+ show full tables from mytest like 'test%'
+ show full tables in mytest where table_type like 'base%'
  create INDEX index_001 ON aly_test (ID)
  show index from aly_test
  show index in aly_test
@@ -41,13 +41,13 @@
  show create schema mytest
  show create schema if not exists mytest
  show create database if not exists mytest
- show databases /*allow_diff*/
- show schemas /*allow_diff*/
- show databases like 'mytest' /*allow_diff*/
+ show databases
+ show schemas
+ show databases like 'mytest'
  show schemas like 'mytest'
- show open tables /*allow_diff*/
- show open tables from mytest /*allow_diff*/
- show open tables in mytest /*allow_diff*/
- show open tables from mytest like 'aly_o%' /*allow_diff*/
+ show open tables
+ show open tables from mytest
+ show open tables in mytest
+ show open tables from mytest like 'aly_o%'
  drop table if exists aly_test
  drop table if exists aly_order

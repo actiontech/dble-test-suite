@@ -33,7 +33,6 @@ def step_impl(context):
         sql_file_name = context.sql_file
     else:
         group = context.sql_file.partition("/");
-        sql_file_name = group[len(group)-1]
         sql_file_name = group[2]
         subdir = subdir + group[0]
         if not os.path.exists(subdir):
@@ -52,38 +51,15 @@ def step_impl(context):
 
 def get_compare_conn(context, default_db="mytest"):
     m_ip = context.dble_test_config['compare_mysql']['ip']
+    m_port = context.dble_test_config['compare_mysql']['port']
     m_user = context.dble_test_config['mysql_user']
     m_passwd = context.dble_test_config['mysql_password']
-    m_port = 3306
 
     conn_mysql = DBUtil(m_ip, m_user, m_passwd, default_db, m_port, context)
     conn_dble = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'], context.dble_test_config['client_password'],
                        default_db, context.dble_test_config['client_port'], context)
 
     return conn_mysql, conn_dble
-
-def check_destroy_old_conn(context):
-    context.logger.info("try to close compare conn")
-    if hasattr(context, 'conn_uproxy') and context.conn_uproxy is not None:
-        destroyOldConn = True
-        for i in range(1, 10):
-            uproxy_conn_name = "share_conn_{0}".format(i)
-            mysql_conn_name = "{0}_mysql".format(uproxy_conn_name)
-            if hasattr(context, uproxy_conn_name):
-                conn_uproxy = getattr(context, uproxy_conn_name)
-                conn_mysql = getattr(context, mysql_conn_name)
-                if conn_uproxy == context.conn_uproxy:
-                    destroyOldConn = False
-                    context.logger.info("compare conn is in share_conn_\d+ mode, can't close")
-                    break
-
-        if destroyOldConn:
-            context.logger.info("compare conn can close")
-            context.conn_mysql.close()
-            context.conn_mysql = None
-
-            context.conn_uproxy.close()
-            context.conn_uproxy = None
 
 def destroy_share_n_conn(context):
     for i in range(1,10):
@@ -97,20 +73,30 @@ def destroy_share_n_conn(context):
             delattr(context, dble_conn_name)
             delattr(context, mysql_conn_name)
 
-def do_query(context, line_nu, sql, toClose, default_db="mytest"):
-    sql = sql.strip()
+def do_query(context, line_nu, sql, to_close, default_db="mytest"):
     result2 = None
     if len(sql)>0:
-        context.logger.info("==={0} {1} {2}===".format(context.sql_file,line_nu, sql))
+        sql = re.sub("(/*\s*uproxy_dest\s*:\s*)+slave(\d)", lambda x: x.group(1) + context.group1.slaves[int(x.group(2))-1], sql)
         get_log_linenu(context)
+
+        reset_autocommit = False
+        if sql.endswith("#!autocommit=False"):
+            reset_autocommit = True
+            sql = sql.replace("#!autocommit=False", "").strip()
+            context.conn_mysql.autocommit(False)
+            context.conn_dble.autocommit(False)
 
         result1, err1 = context.conn_mysql.query(sql)
         result2, err2 = context.conn_dble.query(sql)
 
+        if reset_autocommit:
+            context.conn_mysql.autocommit(True)
+            context.conn_dble.autocommit(True)
+
         context.logger.info("compare sql result:")
         compare_result(context, line_nu, sql, result1, result2, err1, err2)
-        context.logger.info("toClose value is : {0}".format(toClose))
-        if toClose:
+        context.logger.info("toClose is : {0}".format(to_close))
+        if to_close:
             context.conn_mysql.close()
             context.conn_dble.close()
             context.conn_mysql = None
@@ -247,14 +233,13 @@ def check_sql_dest(context,line_nu, sql):
 
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')
 def step_impl(context, filename):
-    context.sql_file=filename
+    context.sql_file = filename
     context.execute_steps(u'Given init read-write-split data')
 
     filepath = "sqls/{0}".format(filename)
     sql = ''
-    is_share_conn = False
     is_multiline = False
-
+    is_share_conn = False
     with open(filepath) as fp:
         lines = fp.readlines()
         total_lines = len(lines)
@@ -262,8 +247,6 @@ def step_impl(context, filename):
         default_db = "mytest"
         step_len = 1;
         next_line = lines[0].strip()
-        context.linenu = 0
-
         for idx in range(0, total_lines):
             if line_nu > idx: continue
             line = next_line
@@ -281,23 +264,32 @@ def step_impl(context, filename):
 
             is_next_line_milestone = (not is_next_line_exist) or next_line.startswith("#")
 
-            context.logger.info("********* {2} line {1}: {0} **********".format(line,line_nu,filename))
-
+            context.logger.info("********* {2} line {1}: {0} **********".format(line, line_nu, filename))
             if line.startswith('#'):
                 is_share_conn = False
-                if line.startswith('#!share_conn'):
-                    dble_conn_name = "share_conn"
-                    context.logger.info("********* {0} **********".format(dble_conn_name))
-                    mysql_conn_name = "{0}".format(dble_conn_name)
-                    conn_mysql, conn_dble = get_compare_conn(context, default_db)
-                    context.dble_conn_name = conn_dble
-                    context.mysql_conn_name = conn_mysql
-
-                    context.logger.info("********* {0},{1} **********".format(context.dble_conn_name,context.mysql_conn_name))
+                if line.find('#!share_conn') != -1:
+                    r = re.search('share_conn_?\d*', line)
+                    uproxy_conn_name = r.group()
+                    mysql_conn_name = "{0}_mysql".format(uproxy_conn_name)
+                    if not hasattr(context, uproxy_conn_name):
+                        conn_mysql, conn_dble = get_compare_conn(context, default_db)
+                        setattr(context, uproxy_conn_name, conn_dble)
+                        setattr(context, mysql_conn_name, conn_mysql)
                     is_share_conn = True
+
+                elif line.startswith('#!restart-mysql'):
+                    options = line.partition("::")[2].strip()
+                    context.execute_steps(
+                        u'Given restart mysql with options "{0}" and reconnect success'.format(options))
+                elif line.startswith('#!restart-uproxy'):
+                    options = line.partition("::")[2].strip()
+                    context.execute_steps(u"Given restart uproxy with options '{0}'".format(options))
 
                 if line.find('#!multiline') != -1:
                     is_multiline = True
+
+                if line.find("#end multiline") != -1 and len(sql) == 0:
+                    is_multiline = False
 
                 continue;
 
@@ -306,27 +298,27 @@ def step_impl(context, filename):
             else:
                 sql = line
 
-            context.logger.info("is_share_conn: {0}".format(is_share_conn))
-
-            if (not is_multiline or is_next_line_milestone) and len(sql)>0:
+            if (not is_multiline or is_next_line_milestone) and len(sql) > 0:
                 context.logger.info("is_share_conn: {0}".format(is_share_conn))
                 if is_share_conn:
-                    context.conn_mysql = context.mysql_conn_name
-                    context.conn_dble = context.dble_conn_name
-                    toClose = is_next_line_milestone and dble_conn_name == "share_conn"
-                    context.logger.info("toClose: {0}".format(toClose))
+                    context.conn_mysql = getattr(context, mysql_conn_name)
+                    context.conn_dble = getattr(context, uproxy_conn_name)
+                    # connection names such as share_conn_n is closed when a complete sql file is executed over
+                    # context.logger.info("is_next_line_milestone:{0}".format(is_next_line_milestone))
+                    # context.logger.info("uproxy_conn_name:{0}".format(uproxy_conn_name))
+                    to_close = is_next_line_milestone and uproxy_conn_name == "share_conn"
                 else:
                     context.conn_mysql, context.conn_dble = get_compare_conn(context, default_db)
-                    toClose = True
+                    to_close = True
+                do_query(context, line_nu, sql, to_close)
 
-                do_query(context, line_nu, sql, toClose, default_db)
+                if re.search(r'route', str(context.sql_file)):
+                    check_sql_dest(context, line_nu, sql)
 
-                # if sql_file include route,check_sql_dest
-                if re.search(r'route',str(context.sql_file)):
-                    check_sql_dest(context,line_nu,sql)
-                if is_share_conn and toClose:
-                    context.mysql_conn_name = ''
-                    context.dble_conn_name = ''
+                # This is just for #!share_conn connections
+                if is_share_conn and to_close:
+                    delattr(context, mysql_conn_name)
+                    delattr(context, uproxy_conn_name)
                 sql = ''
                 is_multiline = False
     destroy_share_n_conn(context)

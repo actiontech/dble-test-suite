@@ -25,6 +25,9 @@ insert into shop values(1, 'D', 234.25),(2, 'D', 67.29),(3, 'D', 1.25),(4,'D',19
 SELECT @min_price:=MIN(price),@max_price:=MAX(price) FROM shop
 SELECT * FROM shop WHERE price=@min_price OR price=@max_price
 SELECT (@aa:=article) AS a, (@aa+3) AS b FROM shop HAVING b=5
+drop table if exists t1
+drop table if exists t2
+drop table if exists t3
 create table t1(a int(4), B int(4))
 insert into t1 values (10, 1),(10, 1),(11,1),(10, 1)
 create table t2(a int(4), B int(4))
@@ -33,6 +36,8 @@ create table t3(a int(4), B int(4))
 insert into t3 values (12, 1),(11, 1),(10,11)
 (SELECT @vara:=a FROM t1 WHERE a=10 AND B=1) UNION (SELECT @varb:=B FROM t2 WHERE a=@vara AND B=2) UNION (SELECT a FROM t3 WHERE a=@vara+@varb AND B=1)
 SELECT REPEAT('a',1) UNION SELECT REPEAT('b',10)
+drop table if exists table_member_comments
+drop table if exists table_guest_comments
 create table table_member_comments(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)
 create table table_guest_comments(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)
 insert into table_member_comments values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello python', 1),(3, 20160822174314, 100, 'hello java', 1)
