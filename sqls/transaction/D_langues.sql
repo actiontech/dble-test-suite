@@ -749,66 +749,66 @@ select * from sbtest2 order by id
 #!share_conn
 delete from sbtest1
 insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use test
-delete from test1
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use testdb
+delete from tb_test
+insert into tb_test values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
-select a.*,b.* from test1 a,sbtest.sbtest1 b where a.pad=b.pad
-update test1 set c='test'
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
+select a.*,b.* from tb_test a,mytest.sbtest1 b where a.pad=b.pad
+update tb_test set c='test'
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
 commit
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
-use sbtest
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
+use mytest
 #************************************************
 #!share_conn
 delete from sbtest1
 insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use test
-delete from test1
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use testdb
+delete from tb_test
+insert into tb_test values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
-select a.*,b.* from test1 a,sbtest.sbtest1 b where a.pad=b.pad
-update test1 set c='test'
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
+select a.*,b.* from tb_test a,mytest.sbtest1 b where a.pad=b.pad
+update tb_test set c='test'
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
 rollback
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
-use sbtest
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
+use mytest
 #************************************************
 #!share_conn
 delete from sbtest1
 insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use test
-delete from test1
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use testdb
+delete from tb_test
+insert into tb_test values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
-update sbtest.sbtest1 set pad=200
-update test1 set c='test'
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
+update mytest.sbtest1 set pad=200
+update tb_test set c='test'
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
 commit
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
-use sbtest
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
+use mytest
 #************************************************
 #!share_conn
 delete from sbtest1
 insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use test
-delete from test1
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use testdb
+delete from tb_test
+insert into tb_test values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
-update sbtest.sbtest1 set pad=200
-update test1 set c='test'
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
+update mytest.sbtest1 set pad=200
+update tb_test set c='test'
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
 rollback
-select * from test1 order by id
-select * from sbtest.sbtest1 order by id
-use sbtest
+select * from tb_test order by id
+select * from mytest.sbtest1 order by id
+use mytest
 #**********************drop**************************
 #!share_conn
 begin
