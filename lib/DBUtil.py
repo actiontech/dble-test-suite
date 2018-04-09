@@ -1,5 +1,4 @@
 import MySQLdb
-from killthread import *
 
 class DBUtil:
     def __init__(self, strHost, strUser, strPassword, strDataBase, strPort, context):
@@ -47,13 +46,6 @@ class DBUtil:
         else:
             res = result
         return res, errMsg
-
-    def dropTable(self, table_name):
-        try:
-            self._context.logger.info("drop table if EXISTS {0}".format(table_name))
-            self.qeury('drop table if exists ' + table_name + ';')
-        except Exception, e:
-            print (e)
 
     def autocommit(self, isautocommit):
         self._conn.autocommit(isautocommit)

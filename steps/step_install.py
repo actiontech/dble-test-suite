@@ -173,17 +173,11 @@ def Log_debug(context, log_level, hostname):
         check_dble_installed(context, hostname)
 
 @Given('Restart dble in "{hostname}"')
-def step_impl(context, hostname):
+def restart_dble(context, hostname):
     stop_dble_in_hostname(context, hostname)
     start_dble_in_hostname(context, hostname)
     time.sleep(3)
     check_dble_installed(context, hostname)
-
-@Given('Restart dble by "{ip}"')
-def step_impl(context, ip):
-    for node in context.dbles:
-        if node.ip == ip:
-            context.execute_steps(u'Given Restart dble in "{0}"'.format(node.host_name))
 
 @Given('Check and clear zookeeper stored data in all dble nodes')
 def check_and_clear_zk(context):
@@ -291,3 +285,21 @@ def check_dble_status(context, hostname):
     if sto.find("dble-server is running"):
         return True
     return False
+
+@Given('Replace the existing configuration with the conf template directory')
+def replace_config(context, sourceCfgDir):
+    osCmd = 'rm -rf {0} && cp -r {0}_bk {0}'.format(context.dble_test_config['dble_base_conf'])
+    os.system(osCmd)
+
+    cmd = 'rm -rf {0}/dble/conf_*'.format(context.dble_test_config['dble_basepath'])
+    context.ssh_client.exec_command(cmd)
+    cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(context.dble_test_config['dble_basepath'])
+    context.ssh_client.exec_command(cmd)
+
+    files = os.listdir(sourceCfgDir)
+    for file in files:
+        local_file = "{0}/{1}".format(sourceCfgDir, file)
+        remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
+        context.ssh_sftp.sftp_put(remove_file, local_file)
+
+    restart_dble(context, context.dble_test_config['dble_host'])

@@ -1,15 +1,10 @@
-import ConfigParser
 import logging
 import os
 import sys
 
 from lib.nodes import get_ssh, get_sftp
 from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_nodes
-
-from behave.log_capture import capture
-from pprint import pformat
-
-from steps.step_reload import upload_and_replace_conf
+from steps.step_install import replace_config
 
 CONF_PATH = './conf'
 logger = logging.getLogger('environment')
@@ -62,6 +57,16 @@ def before_all(context):
         context.need_download = False
     else:
         context.need_download = True
+
+    try:
+        dble_conf = context.config.userdata.pop('dble_conf')
+    except KeyError:
+        raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
+    if dble_conf.lower() == "sql_cover":
+        replace_config(context, context.dble_test_config['dble_sql_conf'])
+    elif dble_conf.lower() == "template":
+        replace_config(context, context.dble_test_config['dble_base_conf'])
+
     logger.info('Exit hook <{0}>'.format('before_all'))
 
 def after_all(context):
@@ -86,15 +91,6 @@ def before_feature(context, feature):
     logger.info('Feature start: <{0}>'.format(feature.name))
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
-    try:
-        dble_conf = context.config.userdata.pop('dble_conf')
-    except KeyError:
-        raise KeyError('Not define test_config in behave -D sql_cover=XXX')
-    if dble_conf.lower() == "sql_cover":
-        context.execute_steps(u'Given Replace the existing configuration with the conf sql_cover directory')
-    elif dble_conf.lower() == "template":
-        context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
-
     logger.info('Exit hook befor_feature')
 
 def after_feature(context, feature):
@@ -121,7 +117,7 @@ def after_scenario(context, scenario):
             delattr(context, conn_name)
 
     if context.config.stop and scenario.status == "failed":
-        context.execute_steps(u'Given Replace the existing configuration with the conf template directory')
+        replace_config(context,  context.dble_test_config['dble_base_conf'])
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 

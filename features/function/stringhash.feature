@@ -70,8 +70,8 @@ Feature:
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
         | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/ | success | mytest |
         | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/ | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn1*/ | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn2*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn2*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn3*/ | success | mytest |
         | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn3*/ | success | mytest |
     #clearn all conf
     Given delete the following xml segment
