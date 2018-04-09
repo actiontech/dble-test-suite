@@ -1,4 +1,5 @@
 from lib.DBUtil import DBUtil
+from steps.step_reload import get_dble_conn
 
 coding= 'utf8'
 import json
@@ -221,107 +222,49 @@ def step_impl(context, seq_type, auto_table, auto_col, rows):
 
 @Then('Testing the global sequence can used in table')
 def step_impl(context):
-    text = json.loads(context.text)
-    LOGGER.info("text: {0}, text: {1}".format(text, type(text)))
-    key_value = {}
-    for item in text:
-        key_value[item['name']] = item['value']
-    LOGGER.info("sequnceHandlerType: {0}".format(key_value['sequnceHanderType']))
-    server_path = "{0}/dble/conf/server.xml".format(context.dble_test_config['dble_basepath'])
-    cmd = "cat {0} | grep -e 'sequnceHandlerType'".format(server_path)
-    rc, sto, ste = context.ssh_client.exec_command(cmd)
-    assert_that(str(sto), contains_string(str(key_value['sequnceHanderType'])))
-    if (not hasattr(context, "dble_conn")) or context.dble_conn is None:
-        context.dble_conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-           context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'], context)
-    context.dble_conn.dropTable(key_value['table'], context)
-    data_type = " "
-    if key_value['sequnceHanderType'] == "2" or key_value['sequnceHanderType'] == "3":
-        data_type = "bigint"
-    sql = "create table {0}({1} {2} primary key auto_increment, name varchar(20))".format(key_value['table'], key_value['auto_col'], data_type)
-    context.dble_conn.query(sql)
+    text = eval(context.text)
+    tb = text.get("table")
     gen = generate()
-    name = gen.rand_string(20)
-    sql = "insert into {0} values ('{1}')".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(errMes, is_(None))
-    sql = "select count(*) from {0}".format(key_value['table'])
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(int(result[0][0]), equal_to(1))
+    rand_str = gen.rand_string(20)
 
-    #test display specifird is not supported for auto_inc cplumns
-    sql = "insert into {0} ({1}, name) values (1,'{2}')".format(key_value['table'], key_value['auto_col'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(str(errMes), contains_string("In insert Syntax, you can't set value for Autoincrement column!"))
-    sql = "insert into {0} set {1} = 1, name = '{2}'".format(key_value['table'], key_value['auto_col'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(str(errMes), contains_string("In insert Syntax, you can't set value for Autoincrement column!"))
-    sql = "insert into {0} set name = '{1}'".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(errMes, is_(None))
+    context.execute_steps(u'''
+    Then execute sql
+        | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values({2})                                            | success           | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(id,name) values(1, {2})      | In insert Syntax, you can't set value for Autoincrement column| mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} set id=1, name={2}           | In insert Syntax, you can't set value for Autoincrement column| mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} set name={2}                 | success | mytest |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values({2})                  | please make sure your table structure has primaryKey| mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values({2})            | success | mytest |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} auto_increment, name varchar(20), primary key (id))| success | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values({2})                  | success | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values({2})            | success | mytest |
+        | test | 111111 | conn_0 | True    | insert into {0} set name={2}                 | success | mytest |
+    '''.format(tb, "bigint", rand_str))
 
-    #test No auto_inc keys are specified when building a table:
-    context.dble_conn.dropTable(key_value['table'], context)
-    sql = "create table {0}({1} {2}, name varchar(20))".format(key_value['table'], key_value['auto_col'], data_type)
-    context.dble_conn.query(sql)
-    sql = "insert into {0} values ('{1}')".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(str(errMes), contains_string("please make sure your table structure has primaryKey"))
-    sql = "insert into {0} (name) values ('{1}')".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(errMes, is_(None))
-    context.dble_conn.dropTable(key_value['table'], context)
-    sql = "create table {0}({1} {2} auto_increment, name varchar(20), primary key ({1}))".format(key_value['table'], key_value['auto_col'],
-                                                                                                 data_type)
-    context.dble_conn.query(sql)
-    sql = "insert into {0} values ('{1}')".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(errMes, is_(None))
-    sql = "insert into {0} (name) values ('{1}')".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(errMes, is_(None))
-    sql = "insert into {0} set name = '{1}' ".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(errMes, is_(None))
+    rand_str = gen.rand_string(20)
+    context.execute_steps(u"""
+    Then execute sql
+        | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | mytest |
+        | test | 111111 | conn_0 | True    | select count(*) from {0} having count(*) > 1 group by id | has{(0}) | mytest |
+    """.format(tb, "int", rand_str))
 
-    #test the auto_inc data type constraint
-    context.dble_conn.dropTable(key_value['table'], context)
-    if key_value['sequnceHanderType'] == "2" or key_value['sequnceHanderType'] == "3":
-        data_type = "int"
-    sql = "create table {0}({1} {2} primary key auto_increment, name varchar(20))".format(key_value['table'],
-                                                                                          key_value['auto_col'],
-                                                                                          data_type)
-    context.dble_conn.query(sql)
-    gen = generate()
-    name = gen.rand_string(20)
-    sql = "insert into {0} values ( '{1}')".format(key_value['table'], name)
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(str(errMes), contains_string("Out of range value for column"))
-
-    #test Global Sequence Uniqueness and uniform partch
-    context.dble_conn.dropTable(key_value['table'], context)
-    sql = "create table {0}({1} {2} primary key auto_increment, name varchar(20))".format(key_value['table'], key_value['auto_col'],
-                                                                                          data_type)
-    context.dble_conn.query(sql)
-    gen = generate()
-    sql = "insert into {0} values ('{1}'), ('{1}'), ('{1}')".format(key_value['table'], gen.rand_string(20))
-    context.dble_conn.query(sql)
-    sql = "select count(*) from {0} having count(*) > 1 group by {1};".format(key_value['table'], key_value['auto_col'])
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(result, is_(()))
-    for i in range(int(key_value['count'])):
-        sql = "insert into {0} values ('{1}')".format(key_value['table'], gen.rand_string(20))
-        context.dble_conn.execute_sql(sql)
-    sql = "select count(*) from {0} having count(*) > 1 group by {1};".format(key_value['table'], key_value['auto_col'])
-    result, errMes = context.dble_conn.query(sql)
-    assert_that(result, is_(()))
-
-    sql = "explain select * from {0}".format(key_value['table'])
-    result, errMes = context.dble_conn.query(sql)
+    dble_conn = get_dble_conn(context)
+    sql = "explain select * from {0}".format(tb)
+    result, errMes = dble_conn.query(sql)
     if type(result) == tuple:
         for i in range(len(result)):
             sql = "/*!dble:dataNode={0}*/select count(*) from {1}".format(result[i][0], key_value['table'])
-            res, err = context.dble_conn.query(sql)
+            res, err = dble_conn.query(sql)
             assert_that(int(res[0][0]), greater_than_or_equal_to(200))
 
 @Given('Add self-added table-node correspondence relationship:"{seq_conf_file}"')

@@ -32,9 +32,7 @@ Feature: Functional testing of global sequences
     Then excute admin cmd "reload @@config_all"
     Then Testing the global sequence can used in table
     """
-    [{"name":"sequnceHandlerType","value":2},
-    {"name":"table","value":"test_auto"},
-    {"name":"auto_col","value":"auto_col"}]
+    [{"sequnceHandlerType":2},{"table":"test_auto"}]
     """
 
   Scenario: Configuration test for local file mode

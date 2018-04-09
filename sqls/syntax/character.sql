@@ -49,7 +49,7 @@ select * from t
 alter table t change c c national character varying(20)
 insert into t values('你好2')
 select * from t
-#!restart-uproxy:: {"smp":1,"default_bconn_limit":2}
+#
 drop table if EXISTS  t
 create table t(c char(50))
 #!share_conn_1

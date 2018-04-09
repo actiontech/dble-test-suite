@@ -11,7 +11,6 @@
             <excludedPath local="true" path="$PROJECT_DIR$/drivers" />
             <excludedPath local="true" path="$PROJECT_DIR$/compose" />
             <excludedPath local="true" path="$PROJECT_DIR$/conf" />
-            <excludedPath local="true" path="$PROJECT_DIR$/sqls" />
           </excludedPaths>
         </serverdata>
       </paths>

@@ -281,7 +281,7 @@ def step_impl(context, filename):
                     options = line.partition("::")[2].strip()
                     context.execute_steps(
                         u'Given restart mysql with options "{0}" and reconnect success'.format(options))
-                elif line.startswith('#!restart-uproxy'):
+                elif line.startswith('#!restart-dble'):
                     options = line.partition("::")[2].strip()
                     context.execute_steps(u"Given restart uproxy with options '{0}'".format(options))
 
