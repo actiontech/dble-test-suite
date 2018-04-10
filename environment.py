@@ -121,15 +121,3 @@ def after_scenario(context, scenario):
         replace_config(context,  context.dble_test_config['dble_base_conf'])
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
-
-def before_step(context, step):
-    logger.info('-' * 30)
-    logger.info('Step start: <{0}>'.format(step.name))
-    pass
-    logger.info('Exit hook Step start <{0}>'.format(step.name))
-
-def after_step(context, step):
-    logger.info('Enter hook after_step')
-    pass
-    logger.info('Step end: <{0}>'.format(step.name))
-    logger.info('-' * 30)

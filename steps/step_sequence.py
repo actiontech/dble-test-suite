@@ -28,26 +28,29 @@ def step_impl(context):
         | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')| success | mytest |
     """.format(tb, "bigint", rand_str))
 
-    val = "('{0}')".format(gen.rand_string(20))
-    for i in range(100):
-        val = val + ",('{0}')".format(gen.rand_string(20))
+    sequnceHandlerType = text.get("sequnceHandlerType")
+    if "1" == sequnceHandlerType:
+        insertRow = 100
+        val = "('{0}')".format(gen.rand_string(20))
+        for i in range(insertRow):
+            val = val + ",('{0}')".format(gen.rand_string(20))
 
-    sql = "insert into {0} values ('{1}')".format(tb, gen.rand_string(20))
-    dble_conn.query(sql)
+        sql = "insert into {0} values ('{1}')".format(tb, gen.rand_string(20))
+        dble_conn.query(sql)
 
-    #check for no repeatable id
-    sql = "select count(*) from {0} having count(*) > 1 group by id;".format(tb)
-    result, errMes = dble_conn.query(sql)
-    assert_that(result, is_(()))
+        #check for no repeatable id, todo too little data is not able to capture the possible bug
+        sql = "select count(*) from {0} having count(*) > 1 group by id;".format(tb)
+        result, errMes = dble_conn.query(sql)
+        assert_that(result, is_(()))
 
-    #check for data distribution is reasonable
-    sql = "explain select * from {0}".format(tb)
-    result, errMes = dble_conn.query(sql)
-    if type(result) == tuple:
-        for i in range(len(result)):
-            sql = "/*!dble:dataNode={0}*/select count(*) from {1}".format(result[i][0], tb)
-            res, err = dble_conn.query(sql)
-            assert_that(int(res[0][0]), greater_than_or_equal_to(200))
+        #check for data distribution is reasonable
+        sql = "explain select * from {0}".format(tb)
+        result, errMes = dble_conn.query(sql)
+        if type(result) == tuple:
+            for i in range(len(result)):
+                sql = "/*!dble:dataNode={0}*/select count(*) from {1}".format(result[i][0], tb)
+                res, err = dble_conn.query(sql)
+                assert_that(int(res[0][0]), greater_than_or_equal_to(insertRow/4)) # 4 is default shardings
 
     context.execute_steps(u"""
     Then execute sql
@@ -64,13 +67,14 @@ def step_impl(context):
         | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(idd {1}, name varchar(20))  | success | mytest |
         | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | Unknown column 'ID' in 'field list' | mytest |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(idd {1} auto_increment, name varchar(20), primary key(idd))| success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
-        | test | 111111 | conn_0 | True    | insert into {0} set name='{2}'               | success | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey| mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | Unknown column 'ID' in 'field list' | mytest |
     """.format(tb, "bigint", rand_str))
 
+    #use int not bigint as global sequnce
     rand_str = gen.rand_string(20)
     context.execute_steps(u"""
     Then execute sql
@@ -78,13 +82,5 @@ def step_impl(context):
         | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
         | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | mytest |
+        | test | 111111 | conn_0 | True    | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | mytest |
     """.format(tb, "int", rand_str))
-
-    sql = "explain select * from {0}".format(tb)
-    result, errMes = dble_conn.query(sql)
-    if type(result) == tuple:
-        for i in range(len(result)):
-            sql = "/*!dble:dataNode={0}*/select count(*) from {1}".format(result[i][0], tb)
-            res, err = dble_conn.query(sql)
-            assert_that(int(res[0][0]), greater_than_or_equal_to(200))
