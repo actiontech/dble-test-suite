@@ -1,4 +1,5 @@
 Feature: #
+  @current
   Scenario: #test add schema/sharding_table/global_table schema+table+user
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
@@ -8,7 +9,7 @@ Feature: #
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                           | expect                             | db     |
         | test | 111111 | conn_0 | False    | create table if not exists test_table(id int) | success                            | mytest |
-        | test | 111111 | conn_0 | False    | show full tables                              | has{('test_table','GLOBAL TABLE')} | mytest |
+        | test | 111111 | conn_0 | False    | show full tables                              | has{('test_table','BASE TABLE')}   | mytest |
         | test | 111111 | conn_0 | False    | drop table test_table                         | success                            | mytest |
     Then excute admin cmd "rollback @@config"
     Given delete the following xml segment

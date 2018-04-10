@@ -49,12 +49,6 @@ def unistall_dble_by_hostname(context, hostname):
     node = get_node(context.dbles, hostname)
     uninstall_dble_by_ip(context, node.ip)
 
-@Given('install dble in all dble nodes')
-def install_dble_in_all_nodes(context):
-    for node in context.dbles:
-        install_dble_by_ip(context, node.ip)
-        update_dble_config(context, node.ip)
-
 def install_dble_by_ip(context, ip):
     ssh_client = get_ssh(context.dbles, ip)
     dble_packget = ""
@@ -72,10 +66,14 @@ def install_dble_by_ip(context, ip):
     ssh_client.exec_command(cmd)
 
 @Given('install dble in "{hostname}"')
-def install_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
-    install_dble_by_ip(context, node.ip)
-    update_dble_config(context, node.ip)
+def install_dble_in_host(context, hostname):
+    install_dble_by_ip(context, hostname)
+    replace_config(context, context.dble_test_config['dble_base_conf'], hostname)
+
+@Given('install dble in all dble nodes')
+def install_dble_in_all_nodes(context):
+    for node in context.dbles:
+        install_dble_in_host(context, node.ip)
 
 @Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
@@ -130,20 +128,6 @@ def download_dble(context):
                                                           context.dble_test_config['dble']['remote_packget'])
     str = os.popen(cmd).read()
     assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
-
-def update_dble_config(context, ip):
-    ssh_sftp_client = get_sftp(context.dbles, ip)
-    ssh_client = get_ssh(context.dbles, ip)
-    dble_conf_path = context.dble_test_config['dble_basepath'] + "/dble/conf"
-    cmd = "ls {0}".format(context.dble_test_config['dble_base_conf'])
-    str = commands.getoutput(cmd)
-    for file in str.split("\n"):
-        local_file = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], file)
-        remove_path = "{0}/{1}".format(dble_conf_path, file)
-        cmd = "cd {0}/conf && rm -rf {1}".format(context.dble_test_config['dble']['home'], file)
-        ssh_client.exec_command(cmd)
-        LOGGER.info("remove_path is {0}, local_file is {1}".format(remove_path, local_file))
-        ssh_sftp_client.sftp_put(remove_path, local_file)
 
 @Given('check dble is installed in "{hostname}"')
 def check_dble_installed(context, hostname):
@@ -287,19 +271,25 @@ def check_dble_status(context, hostname):
     return False
 
 @Given('Replace the existing configuration with the conf template directory')
-def replace_config(context, sourceCfgDir):
-    osCmd = 'rm -rf {0} && cp -r {0}_bk {0}'.format(context.dble_test_config['dble_base_conf'])
+def replace_config(context, sourceCfgDir, dest=None):
+    LOGGER.info("sour config dir: {0}".format(sourceCfgDir))
+    if dest is None:
+        dest = context.dble_test_config['dble_host']
+
+    node = get_node(context.dbles, dest)
+
+    osCmd = 'rm -rf {0} && cp -r {0}_bk {0}'.format(sourceCfgDir)
     os.system(osCmd)
 
     cmd = 'rm -rf {0}/dble/conf_*'.format(context.dble_test_config['dble_basepath'])
-    context.ssh_client.exec_command(cmd)
+    node.sshconn.exec_command(cmd)
     cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(context.dble_test_config['dble_basepath'])
-    context.ssh_client.exec_command(cmd)
+    node.sshconn.exec_command(cmd)
 
     files = os.listdir(sourceCfgDir)
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
-        context.ssh_sftp.sftp_put(remove_file, local_file)
+        node.sftp_conn.sftp_put(remove_file, local_file)
 
-    restart_dble(context, context.dble_test_config['dble_host'])
+    restart_dble(context, dest)

@@ -61,7 +61,7 @@ behave features/install_uninstall/install_dble_and_zk.feature
 behave -D dble_conf=sql_cover features/sql_cover/sql.feature  features/sql_cover/manager.feature
 
 #算法
-behave -D dble_conf=template features/function/date.feature features/function/enum.feature features/function/hash.feature features/function/patternrange.feature features/function/rangenumber.feature features/function/stringhash.feature
+behave -D dble_conf=template features/function/
 
 #配置
 behave -D dble_conf=template features/reload_conf/rule.feature features/reload_conf/schema.feature features/reload_conf/server.feature
@@ -71,5 +71,3 @@ behave -D dble_conf=template features/sequence/sequence.feature
 
 #安全性
 behave -D dble_conf=template features/safety/safety.feature
-
-#Q: stringhash.feature line 73, expect dn1, but dn2 in fact

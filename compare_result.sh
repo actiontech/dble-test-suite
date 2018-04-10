@@ -2,7 +2,7 @@
 generate_simple_cmp_file () {
 	files=$(ls $1| egrep -v "*_pass.log|balance")
 
-	cmp_dir="cmp_$1"
+	cmp_dir="cmp_result"
     if [ -d "$cmp_dir" ]; then
         rm -rf "$cmp_dir"
     fi

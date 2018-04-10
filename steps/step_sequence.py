@@ -21,27 +21,31 @@ def step_impl(context):
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                                           | success           | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                                          | success           | mytest |
         | test | 111111 | conn_0 | False   | insert into {0}(id,name) values(1, '{2}')    | In insert Syntax, you can't set value for Autoincrement column| mytest |
         | test | 111111 | conn_0 | False   | insert into {0} set id=1, name='{2}'         | In insert Syntax, you can't set value for Autoincrement column| mytest |
         | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')| Out of range value for column | mytest |
-        | test | 111111 | conn_0 | True    | select count(*) from {0} having count(*) > 1 group by id | has{(0}) | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')| success | mytest |
     """.format(tb, "bigint", rand_str))
 
-    for i in range(int(rows)):
-        sql = "insert into {0} values ('{1}')".format(tb, gen.rand_string(20))
-        dble_conn.query(sql)
+    val = "('{0}')".format(gen.rand_string(20))
+    for i in range(100):
+        val = val + ",('{0}')".format(gen.rand_string(20))
 
+    sql = "insert into {0} values ('{1}')".format(tb, gen.rand_string(20))
+    dble_conn.query(sql)
+
+    #check for no repeatable id
     sql = "select count(*) from {0} having count(*) > 1 group by id;".format(tb)
     result, errMes = dble_conn.query(sql)
     assert_that(result, is_(()))
 
+    #check for data distribution is reasonable
     sql = "explain select * from {0}".format(tb)
     result, errMes = dble_conn.query(sql)
     if type(result) == tuple:
         for i in range(len(result)):
-            sql = "/*!{0}:dataNode={1}*/select count(*) from {2}".format(context.mycat.item, result[i][0], tb)
+            sql = "/*!dble:dataNode={0}*/select count(*) from {1}".format(result[i][0], tb)
             res, err = dble_conn.query(sql)
             assert_that(int(res[0][0]), greater_than_or_equal_to(200))
 
@@ -75,7 +79,6 @@ def step_impl(context):
         | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
         | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | mytest |
         | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | mytest |
-        | test | 111111 | conn_0 | True    | select count(*) from {0} having count(*) > 1 group by id | has{(0}) | mytest |
     """.format(tb, "int", rand_str))
 
     sql = "explain select * from {0}".format(tb)

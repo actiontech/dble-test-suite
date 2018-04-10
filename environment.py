@@ -62,6 +62,7 @@ def before_all(context):
         dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
+
     if dble_conf.lower() == "sql_cover":
         replace_config(context, context.dble_test_config['dble_sql_conf'])
     elif dble_conf.lower() == "template":
