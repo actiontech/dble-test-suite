@@ -12,5 +12,5 @@ Feature: Functional testing of global sequences
     Given Restart dble in "dble-1"
     Then Testing the global sequence can used in table
     """
-    {"sequnceHandlerType":2,"table":"test_auto"}
+    {'sequnceHandlerType':2,'table':'test_auto'}
     """

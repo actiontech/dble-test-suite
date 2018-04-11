@@ -13,25 +13,7 @@ class Node(Logging):
         self._host_name = host_name
         self._mysql_port = mysql_port
         self._sshconn = None
-        self.sftp_connection = None
-
-    def create_connection(self):
-        if self.sshconn is None:
-            self.logger.debug('create ssh to ip: <{0}> host_name: <{1}>'.format(self.ip, self.host_name))
-            self.sshconn = SSHClient(self.ip, self._ssh_user, self.ssh_password)
-            self.sshconn.connect()
-
-        assert self.sshconn is not None, "get ssh to {0} fail".format(self._ip)
-        return self.sshconn
-
-    def get_sftp_connection(self):
-        if self.sftp_connection is None:
-            port = '22'
-            self.sftp_connection = SFTPClient(self.ip, self._ssh_user, self._ssh_password, int(port))
-            self.sftp_connection.sftp_connect()
-
-        assert self.sftp_connection is not None, "get sftp to {0} fail".format(self._ip)
-        return self.sftp_connection
+        self._sftp_conn = None
 
     @property
     def ip(self):
@@ -54,6 +36,20 @@ class Node(Logging):
     @sshconn.setter
     def sshconn(self, value):
         self._sshconn = value
+
+    @property
+    def sftp_conn(self):
+        if self._sftp_conn is None:
+            port = '22'
+            self._sftp_conn = SFTPClient(self.ip, self._ssh_user, self._ssh_password, int(port))
+            self._sftp_conn.sftp_connect()
+
+        assert self._sftp_conn is not None, "get sftp to {0} fail".format(self._ip)
+        return self._sftp_conn
+
+    @sftp_conn.setter
+    def sftp_conn(self, value):
+        self._sftp_conn = value
 
     @property
     def mysql_port(self):
@@ -88,5 +84,5 @@ def get_ssh(nodes, host):
 # get sftp by host or ip
 def get_sftp(nodes, host):
     node = get_node(nodes, host)
-    return node.get_sftp_connection()
+    return node.sftp_conn
 

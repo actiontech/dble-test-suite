@@ -68,7 +68,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
     Then excute admin cmd "reload @@config_all"
 
-  @current
   Scenario: #4 add/delete Firewall
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
@@ -100,8 +99,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     <firewall>
         <whitehost>
-            <host host="10.186.23.68" user="test,root"/>
-            <host host="172.100.9.253" user="test,root"/>
+            <host host="10.186.23.68" user="test,mnger,root"/>
+            <host host="172.100.9.253" user="test,mnger,root"/>
             <host host="127.0.0.1" user="root"/>
         </whitehost>
         <blacklist check="true">
@@ -110,16 +109,13 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </firewall>
     """
     Then excute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
-    """
-    Access denied for user 'mnger' with host '172.100.9.253'
-    """
     Given delete the following xml segment
       |file        | parent           | child                                   |
       |server.xml  | {'tag':'root'}   | {'tag':'firewall'}                      |
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'mnger'}}|
     Then excute admin cmd "reload @@config_all"
 
-  @skip
+  @current
   Scenario: #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """

@@ -5,10 +5,11 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
         Given clear dirty data yield by sql
 
         Examples:Types
-          | filename                                     |
-          | select/expression.sql                       |
+          | filename                           |
+          | syntax/sysfunction2.sql            |
 
 
-
+    Scenario: #3 compare new generated results is same with the standard ones
+        When compare results with the standard results
 
 

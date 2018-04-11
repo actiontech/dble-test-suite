@@ -98,7 +98,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             elif hasObj or hasnotObj:
                 if hasObj:
                     expectRS=hasObj.group(1)
-                    # context.logger.info("debug expectRS:{0}".format(expectRS))
+                    context.logger.info("expect resultset:{0}, real res:{1}".format(eval(expectRS), res))
                     hasResultSet(res, expectRS, True)
                 if hasnotObj:
                     notExpectRS=hasnotObj.group(1)

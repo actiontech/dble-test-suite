@@ -47,8 +47,8 @@ def exec_admin_cmd(context, adminsql, user="", passwd=""):
 
     context.execute_steps(u"""
     Then execute admin sql
-        | user    | passwd | conn   | toClose | sql      | expect   | db |
-        | {0}     | {1}    | conn_0 | True    | {2}      | {3}      |    |
+        | user    | passwd | conn    | toClose | sql      | expect   | db |
+        | {0}     | {1}    | new     | True    | {2}      | {3}      |    |
     """.format(user, passwd, adminsql, expect))
 
     # conn, error = get_admin_conn(context, user, passwd)

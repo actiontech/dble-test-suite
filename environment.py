@@ -62,6 +62,7 @@ def before_all(context):
         dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
+
     if dble_conf.lower() == "sql_cover":
         replace_config(context, context.dble_test_config['dble_sql_conf'])
     elif dble_conf.lower() == "template":
@@ -120,15 +121,3 @@ def after_scenario(context, scenario):
         replace_config(context,  context.dble_test_config['dble_base_conf'])
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
-
-def before_step(context, step):
-    logger.info('-' * 30)
-    logger.info('Step start: <{0}>'.format(step.name))
-    pass
-    logger.info('Exit hook Step start <{0}>'.format(step.name))
-
-def after_step(context, step):
-    logger.info('Enter hook after_step')
-    pass
-    logger.info('Step end: <{0}>'.format(step.name))
-    logger.info('-' * 30)

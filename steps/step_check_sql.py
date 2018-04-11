@@ -346,8 +346,8 @@ def connect_test(context, ip, user, passwd, port):
 
 @Given('clear dirty data yield by sql')
 def step_impl(context):
-    rmCmd = "rm -rf /tmp/outfile*.txt /tmp/dumpfile.txt"
     pass
+    # rmCmd = "rm -rf /tmp/outfile*.txt /tmp/dumpfile.txt"
     # hosts = [context.mysql.ip]
     #
     # for host in hosts:
@@ -357,4 +357,9 @@ def step_impl(context):
     #     ssh.close_ssh()
 
 
-
+@When('compare results with the standard results')
+def step_impl(context):
+    import subprocess
+    exit_code = subprocess.call(["bash" ,"compare_result.sh"])
+    assert_that(exit_code, equal_to(0), "result is different with standard")
+    context.logger.info("read write split pass")
