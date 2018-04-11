@@ -33,7 +33,7 @@ select * from a_test ignore index for join(pad_index,k_1)
 select * from a_test force index for join(pad_index,k_1)
 select * from a_test use key(k_1)
 select * from a_test ignore key(k_1)
-select * from a_test force key(k_1)#
+select * from a_test force key(k_1)
 select * from a_test t use key(k_1) use index(pad_index) use index()
 select * from a_test t ignore key(k_1) use index(pad_index) use index()
 select * from a_test t ignore key(k_1) ignore index(pad_index) use index()
