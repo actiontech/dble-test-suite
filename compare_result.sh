@@ -10,14 +10,14 @@ generate_simple_cmp_file () {
             mkdir "$cmp_dir/$s"
             subfiles=$(ls "$1/$s"| grep -E -v *_pass.log)
             for ss in $subfiles; do
-                echo "$1/$s/$ss"
-                echo "$cmp_dir/$s/$ss"
+#                echo "$1/$s/$ss"
+#                echo "$cmp_dir/$s/$ss"
                 grep '===file:' "$1/$s/$ss" > "$cmp_dir/$s/$ss"
                 grep '===id:' "$1/$s/$ss" > "$cmp_dir/$s/$ss"
             done
 		else
-		    echo "$1/$s/$ss"
-            echo "$cmp_dir/$s/$ss"
+#		    echo "$1/$s/$ss"
+#            echo "$cmp_dir/$s/$ss"
             grep '===file:' "$1/$s" > "$cmp_dir/$s"
             grep '===id:' "$1/$s" > "$cmp_dir/$s"
         fi
