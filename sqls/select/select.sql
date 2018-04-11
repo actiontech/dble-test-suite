@@ -36,11 +36,11 @@ select test_shard.pad t1 from test_shard
 select k,pad from test_shard
 select !1 from test_shard;
 select !id from test_shard;
-#select !(select pad from sbtest2 where id=1) from test_shard;
+select !(select pad from sbtest2 where id=1) from test_shard;
 select id=1 from test_shard;
 select 1=id from test_shard;
 select id=BIT_COUNT(29) from test_shard;
-#select pad=(select pad from sbtest2 where id=1) from test_shard;
+select pad=(select pad from sbtest2 where id=1) from test_shard;
 #
 #from table_references
 #
@@ -93,8 +93,7 @@ select * from test_shard group by id asc
 select pad,count(id) t from test_shard group by pad having t>1
 select pad,count(id) t from test_shard group by pad limit 1
 select pad,count(id) t from test_shard group by pad order by pad
-#########################unsupport now ##########################
-##select pad,count(id) t from test_shard group by pad with rollup
+select pad,count(id) t from test_shard group by pad with rollup
 #
 #having
 #
@@ -198,8 +197,7 @@ select * from test_shard where id=@var1 := 1
 select * from test_shard where id=COALESCE(2,3)
 select * from test_shard where id=COALESCE(null,3)
 select * from test_shard where id=GREATEST(2,3,6.4,7,12)
-#####################UNsupport now######################
-##select * from test_shard where id in(2,3,6.4,7,12)
+select * from test_shard where id in(2,3,6.4,7,12)
 select * from test_shard where pad in(2,3,6.4,7,12)
 select * from test_shard where id not in(2,3)
 select * from test_shard where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)

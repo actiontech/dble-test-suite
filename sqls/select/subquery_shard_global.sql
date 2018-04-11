@@ -29,7 +29,7 @@ select count(*) from (select pad,count(*) a from a_test group by pad) a;
 select * from a_test where pad<(select pad from test_global where id=3);
 select * from a_test having pad<(select pad from test_global where id=3);
 select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global where pad>3) b where a.t_id=b.o_id;
-#select id,name,(select count(*) from test_global) count from a_test;
+select id,name,(select count(*) from test_global) count from a_test;
 select * from a_test where pad like (select pad from test_global where id=3);
 select id,pad from a_test where pad>(select pad from a_test where id=2);
 select id,pad from a_test where pad<(select pad from a_test where id=2);
