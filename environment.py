@@ -16,7 +16,7 @@ def init_log(context):
     context.logger=logging.getLogger('{0}'.format("dble"))
     context.logger.setLevel(logging.INFO)
     formatter=logging.Formatter('[%(asctime)s %(filename)s L:%(lineno)d %(levelname)s] %(message)s','%H:%M:%S')
-    context.log_file = "./logs/log/{1}.log".format("result","dble")
+    context.log_file = "./logs/log/{0}.log".format("dble")
     file_handler=logging.FileHandler(context.log_file)
     file_handler.setFormatter(formatter)
     context.logger.addHandler(file_handler)
@@ -44,10 +44,6 @@ def before_all(context):
 
     context.ssh_client = get_ssh(context.dbles, context.dble_test_config['dble_host'])
     context.ssh_sftp = get_sftp(context.dbles, context.dble_test_config['dble_host'])
-
-    #clean last result
-    osCmd= 'rm -rf {0} && mkdir {0}'.format(context.dble_test_config['result']['dir'])
-    os.system(osCmd)
 
     steps_dir = "{0}/steps".format(os.getcwd())
     sys.path.append(steps_dir)
@@ -93,6 +89,11 @@ def before_feature(context, feature):
     if "log_debug" in feature.tags:
         context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
     logger.info('Exit hook befor_feature')
+
+    if "clean_result_log" in feature.tags:
+        # clean last result
+        osCmd = 'rm -rf {0} && mkdir {0}'.format(context.dble_test_config['result']['dir'])
+        os.system(osCmd)
 
 def after_feature(context, feature):
     logger.info('Enter hook after_feature')
