@@ -1,36 +1,36 @@
 ===file:select/reference_global_noshard.sql, id:14, sql:[select * from test_global t use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:39:01.197194]dble err :(1064, 'error RPAREN index')
+[16:56:23.993110]dble err :(1064, 'error RPAREN index')
 ===file:select/reference_global_noshard.sql, id:15, sql:[select * from test_global t use key()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:39:01.279637]dble err :(1064, 'error RPAREN key')
+[16:56:24.075322]dble err :(1064, 'error RPAREN key')
 ===file:select/reference_global_noshard.sql, id:37, sql:[select * from test_global t use key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:39:03.003560]dble err :(1064, 'error INDEX index')
+[16:56:25.868086]dble err :(1064, 'error INDEX index')
 ===file:select/reference_global_noshard.sql, id:38, sql:[select * from test_global t ignore key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:39:03.072846]dble err :(1064, 'error INDEX index')
+[16:56:25.952210]dble err :(1064, 'error INDEX index')
 ===file:select/reference_global_noshard.sql, id:39, sql:[select * from test_global t ignore key(k_1) ignore index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:39:03.138505]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
+[16:56:26.036840]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
 ===file:select/reference_global_noshard.sql, id:40, sql:[select * from test_global t force key(k_1) force index(pad_index)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:39:03.204100]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
+[16:56:26.118154]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
 ===file:select/reference_global_noshard.sql, id:56, sql:[select * from test_global union all select * from a_manager union all select * from a_order_no_shard]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L), (1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$manager$4', 4L), (5L, 5L, 'manager...5', 6L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L))]
-[13:39:03.847941]dble err :(1222, 'The used SELECT statements have a different number of columns')
+[16:56:26.829709]dble err :(1222, 'The used SELECT statements have a different number of columns')
 ===file:select/reference_global_noshard.sql, id:57, sql:[select * from test_global union distinct select * from a_manager union distinct select * from a_order_no_shard]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L), (1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$manager$4', 4L), (5L, 5L, 'manager...5', 6L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L))]
-[13:39:03.930446]dble err :(1222, 'The used SELECT statements have a different number of columns')
+[16:56:26.912533]dble err :(1222, 'The used SELECT statements have a different number of columns')
 ===file:select/reference_global_noshard.sql, id:60, sql:[(select * from test_global where pad=1) union (select * from a_order_no_shard where pad=1) order by id limit 10]===
 dble:[None]
 mysql:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L))]
-[13:39:04.115972]dble err :(1222, 'The used SELECT statements have a different number of columns')
+[16:56:27.099039]dble err :(1222, 'The used SELECT statements have a different number of columns')

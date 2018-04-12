@@ -3,6 +3,8 @@
 ===file:select/select_no_sharding.sql, id:3, sql:[insert into test_no_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)]===
 ===file:select/select_no_sharding.sql, id:4, sql:[insert into test_no_shard(id,k,pad) values(19,19,19)]===
 ===file:select/select_no_sharding.sql, id:5, sql:[drop table if exists testdb.tb_test]===
+===file:select/select_no_sharding.sql, id:6, sql:[CREATE TABLE testdb.tb_test(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8]===
+===file:select/select_no_sharding.sql, id:7, sql:[insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15)]===
 ===file:select/select_no_sharding.sql, id:11, sql:[select 1+1]===
 ===file:select/select_no_sharding.sql, id:12, sql:[SELECT ABS(2)]===
 ===file:select/select_no_sharding.sql, id:13, sql:[select * from test_no_shard]===
@@ -34,6 +36,7 @@
 ===file:select/select_no_sharding.sql, id:42, sql:[select * from test_no_shard t1]===
 ===file:select/select_no_sharding.sql, id:43, sql:[select * from test_no_shard as t1]===
 ===file:select/select_no_sharding.sql, id:44, sql:[select * from mytest.test_no_shard]===
+===file:select/select_no_sharding.sql, id:45, sql:[select * from testdb.tb_test]===
 ===file:select/select_no_sharding.sql, id:49, sql:[select * from test_no_shard where pad<10]===
 ===file:select/select_no_sharding.sql, id:50, sql:[select * from test_no_shard where id>(SELECT ABS(2)) order by id]===
 ===file:select/select_no_sharding.sql, id:51, sql:[select * from test_no_shard t1 where t1.pad<5]===

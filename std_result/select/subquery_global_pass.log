@@ -26,31 +26,33 @@
 ===file:select/subquery_global.sql, id:29, sql:[select * from test_global where pad<(select pad from global_table3 where id=3);]===
 ===file:select/subquery_global.sql, id:30, sql:[select * from test_global having pad<(select pad from global_table3 where id=3);]===
 ===file:select/subquery_global.sql, id:31, sql:[select a.id,b.id,b.pad,a.t_id from test_global a,(select * from global_table3 where pad>3) b where a.t_id=b.o_id;]===
-===file:select/subquery_global.sql, id:35, sql:[select id,pad from test_global where pad>(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:36, sql:[select id,pad from test_global where pad<(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:37, sql:[select id,pad from test_global where pad=(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:38, sql:[select id,pad from test_global where pad>=(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:39, sql:[select id,pad from test_global where pad<=(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:40, sql:[select id,pad from test_global where pad<>(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:41, sql:[select id,pad from test_global where pad !=(select pad from test_global where id=2);]===
-===file:select/subquery_global.sql, id:42, sql:[select * from test_global where exists(select * from test_global where pad>1);]===
-===file:select/subquery_global.sql, id:43, sql:[select * from test_global where not exists(select * from test_global where pad>1);]===
-===file:select/subquery_global.sql, id:44, sql:[select * from test_global where pad not in(select id from test_global where pad>1);]===
-===file:select/subquery_global.sql, id:45, sql:[select * from test_global where pad in(select id from test_global where pad>1);]===
-===file:select/subquery_global.sql, id:46, sql:[select * from test_global where pad=some(select id from test_global where pad>1);]===
-===file:select/subquery_global.sql, id:47, sql:[select * from test_global where pad=any(select id from test_global where pad>1);]===
-===file:select/subquery_global.sql, id:48, sql:[select * from test_global where pad !=any(select id from test_global where pad=3);]===
-===file:select/subquery_global.sql, id:49, sql:[select a.id,b.id,b.pad,a.t_id from (select test_global.id,test_global.pad,test_global.t_id from test_global join global_table3 where test_global.pad=global_table3.pad ) a,(select global_table2.id,global_table2.pad from test_global join global_table2 where test_global.pad=global_table2.pad) b where a.pad=b.pad;]===
-===file:select/subquery_global.sql, id:50, sql:[select * from test_global where pad>(select pad from test_global where pad=2);]===
-===file:select/subquery_global.sql, id:51, sql:[select * from test_global,(select * from test_global where id>3 union select * from global_table3 where id<2) a where a.id >3 and test_global.pad=a.pad;]===
-===file:select/subquery_global.sql, id:52, sql:[select count(*) from (select * from test_global where pad=(select pad from global_table3 where id=1)) a;]===
-===file:select/subquery_global.sql, id:56, sql:[select (select name from test_global limit 1)]===
-===file:select/subquery_global.sql, id:57, sql:[select * from test_global where 'test_2'=(select name from global_table3 where id=2)]===
-===file:select/subquery_global.sql, id:58, sql:[select * from test_global where 5=(select count(*) from global_table3)]===
-===file:select/subquery_global.sql, id:59, sql:[select * from test_global where 'test_2' like(select name from global_table3 where id=2)]===
-===file:select/subquery_global.sql, id:60, sql:[select * from test_global where 2 >any(select id from test_global where pad>1)]===
-===file:select/subquery_global.sql, id:61, sql:[select * from test_global where 2 in(select id from test_global where pad>1)]===
-===file:select/subquery_global.sql, id:62, sql:[select * from test_global where 2<>some(select id from test_global where pad>1)]===
-===file:select/subquery_global.sql, id:63, sql:[select * from test_global where 2>all(select id from test_global where pad<1)]===
-===file:select/subquery_global.sql, id:69, sql:[select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from test_global)as tb where co1>1]===
-===file:select/subquery_global.sql, id:70, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from test_global group by pad) as t1]===
+===file:select/subquery_global.sql, id:32, sql:[select id,name,(select count(*) from global_table3) count from test_global;]===
+===file:select/subquery_global.sql, id:33, sql:[select * from test_global where pad like (select pad from global_table3 where id=3);]===
+===file:select/subquery_global.sql, id:34, sql:[select id,pad from test_global where pad>(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:35, sql:[select id,pad from test_global where pad<(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:36, sql:[select id,pad from test_global where pad=(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:37, sql:[select id,pad from test_global where pad>=(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:38, sql:[select id,pad from test_global where pad<=(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:39, sql:[select id,pad from test_global where pad<>(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:40, sql:[select id,pad from test_global where pad !=(select pad from test_global where id=2);]===
+===file:select/subquery_global.sql, id:41, sql:[select * from test_global where exists(select * from test_global where pad>1);]===
+===file:select/subquery_global.sql, id:42, sql:[select * from test_global where not exists(select * from test_global where pad>1);]===
+===file:select/subquery_global.sql, id:43, sql:[select * from test_global where pad not in(select id from test_global where pad>1);]===
+===file:select/subquery_global.sql, id:44, sql:[select * from test_global where pad in(select id from test_global where pad>1);]===
+===file:select/subquery_global.sql, id:45, sql:[select * from test_global where pad=some(select id from test_global where pad>1);]===
+===file:select/subquery_global.sql, id:46, sql:[select * from test_global where pad=any(select id from test_global where pad>1);]===
+===file:select/subquery_global.sql, id:47, sql:[select * from test_global where pad !=any(select id from test_global where pad=3);]===
+===file:select/subquery_global.sql, id:48, sql:[select a.id,b.id,b.pad,a.t_id from (select test_global.id,test_global.pad,test_global.t_id from test_global join global_table3 where test_global.pad=global_table3.pad ) a,(select global_table2.id,global_table2.pad from test_global join global_table2 where test_global.pad=global_table2.pad) b where a.pad=b.pad;]===
+===file:select/subquery_global.sql, id:49, sql:[select * from test_global where pad>(select pad from test_global where pad=2);]===
+===file:select/subquery_global.sql, id:50, sql:[select * from test_global,(select * from test_global where id>3 union select * from global_table3 where id<2) a where a.id >3 and test_global.pad=a.pad;]===
+===file:select/subquery_global.sql, id:51, sql:[select count(*) from (select * from test_global where pad=(select pad from global_table3 where id=1)) a;]===
+===file:select/subquery_global.sql, id:55, sql:[select (select name from test_global limit 1)]===
+===file:select/subquery_global.sql, id:56, sql:[select * from test_global where 'test_2'=(select name from global_table3 where id=2)]===
+===file:select/subquery_global.sql, id:57, sql:[select * from test_global where 5=(select count(*) from global_table3)]===
+===file:select/subquery_global.sql, id:58, sql:[select * from test_global where 'test_2' like(select name from global_table3 where id=2)]===
+===file:select/subquery_global.sql, id:59, sql:[select * from test_global where 2 >any(select id from test_global where pad>1)]===
+===file:select/subquery_global.sql, id:60, sql:[select * from test_global where 2 in(select id from test_global where pad>1)]===
+===file:select/subquery_global.sql, id:61, sql:[select * from test_global where 2<>some(select id from test_global where pad>1)]===
+===file:select/subquery_global.sql, id:62, sql:[select * from test_global where 2>all(select id from test_global where pad<1)]===
+===file:select/subquery_global.sql, id:68, sql:[select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from test_global)as tb where co1>1]===
+===file:select/subquery_global.sql, id:69, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from test_global group by pad) as t1]===

@@ -1,37 +1,44 @@
-===file:select/subquery.sql, id:27, sql:[select upper(select name from a_test limit 1),id from a_order ;]===
-dble:[(('$TEST$4', 4L), ('$TEST$4', 2L), ('$TEST$4', 3L), ('$TEST$4', 1L), ('$TEST$4', 5L))]
-mysql:[None]
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'select name from a_test limit 1),id from a_order' at line 1")
-===file:select/subquery.sql, id:72, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id));]===
+===file:select/subquery.sql, id:69, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id));]===
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
-[13:41:29.734996]dble err :(1105, 'Correlated Sub Queries is not supported ')
-===file:select/subquery.sql, id:73, sql:[select * from a_test where (id,pad)=(select id,pad from a_order limit 1);]===
+[16:58:55.361915]dble err :(1105, 'Correlated Sub Queries is not supported ')
+===file:select/subquery.sql, id:70, sql:[select * from a_test where (id,pad)=(select id,pad from a_order limit 1);]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[13:41:29.821346]dble err :(1064, 'Row Subqueries is not supported')
-===file:select/subquery.sql, id:74, sql:[select * from a_test where row(id,pad)=(select id,pad from a_order limit 1);]===
+[16:58:55.450014]dble err :(1064, 'Row Subqueries is not supported')
+===file:select/subquery.sql, id:71, sql:[select * from a_test where row(id,pad)=(select id,pad from a_order limit 1);]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[13:41:29.907414]dble err :(1241, 'Operand should contain 1 column(s)')
-===file:select/subquery.sql, id:75, sql:[select id,name,pad from a_test where (id,pad)in(select id,pad from a_order);]===
+[16:58:55.537425]dble err :(1241, 'Operand should contain 1 column(s)')
+===file:select/subquery.sql, id:72, sql:[select id,name,pad from a_test where (id,pad)in(select id,pad from a_order);]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
-[13:41:29.996679]dble err :(1064, 'Row Subqueries is not supported')
-===file:select/subquery.sql, id:76, sql:[select id,name,pad from a_test where (1,1)in(select id,pad from a_order);]===
+[16:58:55.623607]dble err :(1064, 'Row Subqueries is not supported')
+===file:select/subquery.sql, id:73, sql:[select id,name,pad from a_test where (1,1)in(select id,pad from a_order);]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
-[13:41:30.084605]dble err :(1064, 'Row Subqueries is not supported')
-===file:select/subquery.sql, id:77, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id));]===
+[16:58:55.708562]dble err :(1064, 'Row Subqueries is not supported')
+===file:select/subquery.sql, id:74, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id));]===
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
-[13:41:30.171801]dble err :(1105, 'Correlated Sub Queries is not supported ')
-===file:select/subquery.sql, id:87, sql:[select pad,count(id) t from sbetst1 group by pad having t>1 order by id;]===
+[16:58:55.793668]dble err :(1105, 'Correlated Sub Queries is not supported ')
+===file:select/subquery.sql, id:122, sql:[select * from a_test where (id,pad)=(select id,pad from a_order limit 1)]===
 dble:[None]
-mysql:[None]
-mysql err:(1146, "Table 'mytest.sbetst1' doesn't exist")
-[13:41:30.658367]dble err :(1146, "Table 'db3.sbetst1' doesn't exist")
-===file:select/subquery.sql, id:131, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id))]===
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
+[16:58:58.566496]dble err :(1064, 'Row Subqueries is not supported')
+===file:select/subquery.sql, id:123, sql:[select * from a_test where row(id,pad)=(select id,pad from a_order limit 1)]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
+[16:58:58.672507]dble err :(1241, 'Operand should contain 1 column(s)')
+===file:select/subquery.sql, id:124, sql:[select id,name,pad from a_test where (id,pad)in(select id,pad from a_order)]===
+dble:[None]
+mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
+[16:58:58.752690]dble err :(1064, 'Row Subqueries is not supported')
+===file:select/subquery.sql, id:125, sql:[select id,name,pad from a_test where (1,1)in(select id,pad from a_order)]===
+dble:[None]
+mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
+[16:58:58.834759]dble err :(1064, 'Row Subqueries is not supported')
+===file:select/subquery.sql, id:126, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id))]===
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
-[13:41:32.585484]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[16:58:58.917170]dble err :(1105, 'Correlated Sub Queries is not supported ')
