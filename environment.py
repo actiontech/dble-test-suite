@@ -90,11 +90,6 @@ def before_feature(context, feature):
         context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
     logger.info('Exit hook befor_feature')
 
-    if "clean_result_log" in feature.tags:
-        # clean last result
-        osCmd = 'rm -rf {0} && mkdir {0}'.format(context.dble_test_config['result']['dir'])
-        os.system(osCmd)
-
 def after_feature(context, feature):
     logger.info('Enter hook after_feature')
     if "log_debug" in feature.tags:
