@@ -25,6 +25,7 @@
 ===file:select/subquery_shard_global.sql, id:29, sql:[select * from a_test where pad<(select pad from test_global where id=3);]===
 ===file:select/subquery_shard_global.sql, id:30, sql:[select * from a_test having pad<(select pad from test_global where id=3);]===
 ===file:select/subquery_shard_global.sql, id:31, sql:[select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global where pad>3) b where a.t_id=b.o_id;]===
+===file:select/subquery_shard_global.sql, id:32, sql:[select id,name,(select count(*) from test_global) count from a_test;]===
 ===file:select/subquery_shard_global.sql, id:33, sql:[select * from a_test where pad like (select pad from test_global where id=3);]===
 ===file:select/subquery_shard_global.sql, id:34, sql:[select id,pad from a_test where pad>(select pad from a_test where id=2);]===
 ===file:select/subquery_shard_global.sql, id:35, sql:[select id,pad from a_test where pad<(select pad from a_test where id=2);]===

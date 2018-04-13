@@ -1,27 +1,27 @@
 ===file:select/reference_global.sql, id:14, sql:[select * from test_global t use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:38:57.115414]dble err :(1064, 'error RPAREN index')
+[16:56:19.910415]dble err :(1064, 'error RPAREN index')
 ===file:select/reference_global.sql, id:15, sql:[select * from test_global t use key()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:38:57.197538]dble err :(1064, 'error RPAREN key')
+[16:56:19.992822]dble err :(1064, 'error RPAREN key')
 ===file:select/reference_global.sql, id:37, sql:[select * from test_global t use key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:38:59.033529]dble err :(1064, 'error INDEX index')
+[16:56:21.823788]dble err :(1064, 'error INDEX index')
 ===file:select/reference_global.sql, id:38, sql:[select * from test_global t ignore key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:38:59.116300]dble err :(1064, 'error INDEX index')
+[16:56:21.906900]dble err :(1064, 'error INDEX index')
 ===file:select/reference_global.sql, id:39, sql:[select * from test_global t ignore key(k_1) ignore index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:38:59.198772]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
+[16:56:21.988784]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
 ===file:select/reference_global.sql, id:40, sql:[select * from test_global t force key(k_1) force index(pad_index)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[13:38:59.281034]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
+[16:56:22.071214]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
 ===file:select/reference_global.sql, id:57, sql:[select * from test_global union distinct select * from global_table3 union distinct select * from global_table2]===
-dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1523079536893L), (2L, 2L, 'test_2', 2L, 1523079536893L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 1523079536893L), (4L, 4L, '$test$4', 3L, 1523079536893L), (5L, 5L, 'test...5', 1L, 1523079536893L), (6L, 6L, 'test6', 6L, 1523079536893L), (1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1523079537007L), (2L, 2L, 'test_2', 2L, 1523079537007L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 1523079537007L), (4L, 4L, '$manager$4', 4L, 1523079537007L), (5L, 5L, 'manager...5', 6L, 1523079537007L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1523079536951L), (2L, 2L, 'test_2', 2L, 1523079536951L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 1523079536951L), (4L, 4L, '$order$4', 4L, 1523079536951L), (5L, 5L, 'order...5', 1L, 1523079536951L))]
+dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1523523379687L), (2L, 2L, 'test_2', 2L, 1523523379687L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 1523523379687L), (4L, 4L, '$test$4', 3L, 1523523379687L), (5L, 5L, 'test...5', 1L, 1523523379687L), (6L, 6L, 'test6', 6L, 1523523379687L), (1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1523523379802L), (2L, 2L, 'test_2', 2L, 1523523379802L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 1523523379802L), (4L, 4L, '$manager$4', 4L, 1523523379802L), (5L, 5L, 'manager...5', 6L, 1523523379802L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1523523379744L), (2L, 2L, 'test_2', 2L, 1523523379744L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 1523523379744L), (4L, 4L, '$order$4', 4L, 1523523379744L), (5L, 5L, 'order...5', 1L, 1523523379744L))]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L), (1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$manager$4', 4L), (5L, 5L, 'manager...5', 6L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L))]

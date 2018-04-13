@@ -240,3 +240,5 @@
 ===file:select/select_global_old.sql, id:247, sql:[select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY=(select min(C_CUSTKEY) from global_table2)]===
 ===file:select/select_global_old.sql, id:248, sql:[select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY) from global_table2)]===
 ===file:select/select_global_old.sql, id:249, sql:[select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY)+1 from global_table2)]===
+===file:select/select_global_old.sql, id:252, sql:[select count(*) from global_table1 as a where a.id <> all(select id from global_table2)]===
+===file:select/select_global_old.sql, id:253, sql:[select count(*) from global_table1 as a where 56000< all(select id from global_table2)]===

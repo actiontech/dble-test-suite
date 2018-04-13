@@ -28,7 +28,7 @@
 ===file:select/reference_no_er.sql, id:33, sql:[select * from a_test force index for join(pad_index,k_1)]===
 ===file:select/reference_no_er.sql, id:34, sql:[select * from a_test use key(k_1)]===
 ===file:select/reference_no_er.sql, id:35, sql:[select * from a_test ignore key(k_1)]===
-===file:select/reference_no_er.sql, id:36, sql:[select * from a_test force key(k_1)#]===
+===file:select/reference_no_er.sql, id:36, sql:[select * from a_test force key(k_1)]===
 ===file:select/reference_no_er.sql, id:41, sql:[select * from a_test t ignore key(k_1) force index(pad_index)]===
 ===file:select/reference_no_er.sql, id:42, sql:[select id,pad,name from (select * from a_test where pad>2) as a]===
 ===file:select/reference_no_er.sql, id:43, sql:[select * from a_test a,a_two b]===
