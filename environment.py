@@ -8,7 +8,6 @@ from steps.step_install import replace_config
 
 CONF_PATH = './conf'
 logger = logging.getLogger('environment')
-root = logging.getLogger('root')
 
 class MyCls(object):pass
 
