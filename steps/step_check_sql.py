@@ -6,7 +6,7 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
-from lib.nodes import *
+from lib.Node import *
 
 def get_log_linenu(context):
     logpath = get_full_log_path(context)

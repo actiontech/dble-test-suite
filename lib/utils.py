@@ -5,10 +5,11 @@ import time
 import logging
 
 from logging import config
-from lib.nodes import Node
 
 from functools import wraps
 from pprint import pformat
+
+from lib.Node import Node
 
 
 def log_it(func):

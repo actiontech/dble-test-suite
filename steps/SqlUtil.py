@@ -9,7 +9,7 @@ from hamcrest import *
 
 from lib.DBUtil import DBUtil
 from lib.XMLUtil import get_node_attr_by_kv
-from lib.nodes import get_node
+from lib.Node import get_node
 
 def get_sql(type):
     if type == "read":
@@ -163,7 +163,7 @@ def turn_on_general_log(context, shardings, user, passwd):
         assert err is None, "get general log file fail for {0}".format(err[1])
 
         general_log_file = res[0][1]
-        rc, sto, ste = node.sshconn.exec_command('rm -rf {0}'.format(general_log_file))
+        rc, sto, ste = node.ssh_conn.exec_command('rm -rf {0}'.format(general_log_file))
         assert len(ste)==0, "rm general_log_file fail for {0}".format(ste)
 
         res, err = conn.query("set global general_log=on")
@@ -195,7 +195,7 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
 
         general_log_file = res[0][1]
 
-        rc, sto, ste = node.sshconn.exec_command('grep -i -F -n "{0}" {1}'.format(sql_glog[1], general_log_file))
+        rc, sto, ste = node.ssh_conn.exec_command('grep -i -F -n "{0}" {1}'.format(sql_glog[1], general_log_file))
         assert len(ste)==0, "grep sql in general_log_file fail for {0}".format(ste)
         assert len(sto)>0, "can not found the sql general log in expect sharding node"
 

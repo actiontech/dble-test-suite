@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 
-from lib.nodes import get_ssh, get_sftp
+from lib.Node import get_ssh, get_sftp
 from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_nodes
 from steps.step_install import replace_config
 
@@ -70,12 +70,12 @@ def after_all(context):
 
     for node in context.dbles:
         logger.debug('close ssh connection to <{0}>'.format(node.ip))
-        if node.sshconn:
-            node.sshconn.close()
+        if node.ssh_conn:
+            node.ssh_conn.close()
     for node in context.mysqls:
         logger.debug('close ssh connection to <{0}>'.format(node.ip))
-        if node.sshconn:
-            node.sshconn.close()
+        if node.ssh_conn:
+            node.ssh_conn.close()
 
     logger.info('Exit hook <{0}>'.format('after_all'))
     logger.info('*' * 30)

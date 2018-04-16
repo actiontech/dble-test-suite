@@ -6,7 +6,7 @@ import commands
 from behave import *
 from hamcrest import *
 
-from lib.nodes import get_node, get_ssh, get_sftp
+from lib.Node import get_node, get_ssh
 
 LOGGER = logging.getLogger('steps.install')
 
@@ -238,7 +238,7 @@ def restore_and_ensure_dble_uncluster(context):
         cmd = "cat {0} | grep 'loadZK*' | cut -d= -f2".format(conf_file)
         for node in context.dbles:
             stop_dble_in_hostname(context, node.host_name)
-            ssh_client = node.sshconn
+            ssh_client = node.ssh_conn
             rc, sto, ste = ssh_client.exec_command(cmd)
             LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
             assert_that(ste, is_(""))
@@ -255,7 +255,7 @@ def restore_and_ensure_dble_uncluster(context):
 def check_zk_node_exists(context):
     cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
     for node in context.dbles:
-        ssh_client = node.sshconn
+        ssh_client = node.ssh_conn
         rc, sto, ste = ssh_client.exec_zk_command(cmd)
         LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
         if "Node does not exist: /dble" not in sto:
@@ -282,9 +282,9 @@ def replace_config(context, sourceCfgDir, dest=None):
     os.system(osCmd)
 
     cmd = 'rm -rf {0}/dble/conf_*'.format(context.dble_test_config['dble_basepath'])
-    node.sshconn.exec_command(cmd)
+    node.ssh_conn.exec_command(cmd)
     cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(context.dble_test_config['dble_basepath'])
-    node.sshconn.exec_command(cmd)
+    node.ssh_conn.exec_command(cmd)
 
     files = os.listdir(sourceCfgDir)
     for file in files:

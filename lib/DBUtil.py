@@ -17,6 +17,7 @@ class DBUtil:
             context.logger.debug("create connect err: {0}".format(errMsg))
             raise
 
+    # @chooseThread
     def query(self, sql):
         try:
             cursor = self._conn.cursor()
