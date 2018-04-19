@@ -4,7 +4,7 @@ import sys
 
 from lib.Node import get_ssh, get_sftp
 from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_nodes
-from steps.step_install import replace_config
+from steps.step_install import replace_config, set_dbles_log_level, restart_dbles
 
 CONF_PATH = './conf'
 logger = logging.getLogger('environment')
@@ -37,8 +37,12 @@ def before_all(context):
         setattr(context, name, values)
 
     parsed = load_yaml_config(context.dble_test_config['docker_compose_path'])
-    #get dble all nodes
-    context.dbles = get_nodes(context, parsed, "dble")
+
+    if context.config.userdata["is_cluster"].lower() == "true":
+        context.dbles = get_nodes(context, parsed, "dble")
+    else:
+        context.dbles = get_nodes(context, parsed, "dble-1")
+
     context.mysqls = get_nodes(context, parsed, "mysql")
 
     context.ssh_client = get_ssh(context.dbles, context.dble_test_config['dble_host'])
@@ -58,10 +62,14 @@ def before_all(context):
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
 
+    set_dbles_log_level(context, context.dbles, 'debug')
+
     if dble_conf.lower() == "sql_cover":
         replace_config(context, context.dble_test_config['dble_sql_conf'])
     elif dble_conf.lower() == "template":
         replace_config(context, context.dble_test_config['dble_base_conf'])
+
+    restart_dbles(context, context.dbles)
 
     logger.info('Exit hook <{0}>'.format('before_all'))
 
@@ -77,22 +85,15 @@ def after_all(context):
         if node.ssh_conn:
             node.ssh_conn.close()
 
-    logger.info('Exit hook <{0}>'.format('after_all'))
     logger.info('*' * 30)
-    logger.info('*       DBLE TEST END        *')
+    logger.info('*       Exit hook after_all， DBLE TEST END        *')
     logger.info('*' * 30)
 
 def before_feature(context, feature):
     logger.info('*' * 30)
     logger.info('Feature start: <{0}>'.format(feature.name))
-    if "log_debug" in feature.tags:
-        context.execute_steps(u'Given Set the log level to "debug" and restart server in "dble-1"')
-    logger.info('Exit hook befor_feature')
 
 def after_feature(context, feature):
-    logger.info('Enter hook after_feature')
-    if "log_debug" in feature.tags:
-        context.execute_steps(u'Given Reset the Log level and restart server')
     logger.info('Feature end: <{0}>'.format(feature.name))
     logger.info('*' * 30)
 

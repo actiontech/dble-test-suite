@@ -17,7 +17,8 @@ def clean_dble_in_all_nodes(context):
 
 @When('uninstall dble by "{ip}" ')
 def uninstall_dble_by_ip(context, ip):
-    ssh_client = get_ssh(context.dbles, ip)
+    node = get_node(context.dbles, ip)
+    ssh_client = node.ssh_conn
     cmd_status = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
     rc, sto, ste = ssh_client.exec_command(cmd_status)
     if len(sto) == 0:
@@ -38,11 +39,11 @@ def uninstall_dble_by_ip(context, ip):
             else:
                 assert_that(False, "stop dble fialure")
 
-    cmd = "cd {0} && rm -rf {1}".format(context.dble_test_config['dble_basepath'], "dble")
+    cmd = "cd {0} && rm -rf dble".format(context.dble_test_config['dble_basepath'])
     ssh_client.exec_command(cmd)
-    zknode = check_zk_node_exists(context)
+    zknode = is_zk_exists_in_node(context, node)
     if zknode:
-        check_and_clear_zk(context)
+        clear_zk_in_node(context, node)
 
 @given('uninstall dble in "{hostname}"')
 def unistall_dble_by_hostname(context, hostname):
@@ -77,7 +78,11 @@ def install_dble_in_all_nodes(context):
 
 @Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
-    ssh_client = get_ssh(context.dbles, hostname)
+    node = get_node(context.dbles, hostname)
+    start_dble_in_node(context, node)
+
+def start_dble_in_node(context, node):
+    ssh_client = node.ssh_conn
     cmd = "cd {0} && (./dble/bin/dble start)".format(context.dble_test_config['dble_basepath'])
     ssh_client.exec_command(cmd)
     context.retry = 0
@@ -87,7 +92,6 @@ def check_dble_started(context, ssh_client):
     time.sleep(5)
     cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
     rc, sto, ste = ssh_client.exec_command(cmd)
-    LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
     if len(sto) == 0:
         if context.retry < 5:
             context.retry = context.retry+1
@@ -99,7 +103,11 @@ def check_dble_started(context, ssh_client):
 
 @Then('stop dble in "{hostname}"')
 def stop_dble_in_hostname(context, hostname):
-    ssh_client = get_ssh(context.dbles, hostname)
+    node = get_node(context.dbles, hostname)
+    stop_dble_in_node(context, node)
+
+def stop_dble_in_node(context, node):
+    ssh_client = node.ssh_conn
     cmd = "cd {0} && (./dble/bin/dble stop)".format(context.dble_test_config['dble_basepath'])
     ssh_client.exec_command(cmd)
     time.sleep(3)
@@ -129,63 +137,90 @@ def download_dble(context):
     str = os.popen(cmd).read()
     assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
 
-@Given('check dble is installed in "{hostname}"')
-def check_dble_installed(context, hostname):
-    ssh_client = get_ssh(context.dbles, hostname)
+def check_dble_running_in_node(context, node):
+    ssh_client = node.ssh_conn
     cmd = "sh {0}/dble/bin/dble status".format(context.dble_test_config['dble_basepath'])
     rc, sto, ste = ssh_client.exec_command(cmd)
     if sto.find("dble-server is running") != -1:
         return True
     return False
 
-@Given('Set the log level to "{log_level}" and restart server in "{hostname}"')
-def Log_debug(context, log_level, hostname):
-    ssh_client = get_ssh(context.dbles, hostname)
+def set_dbles_log_level(context, nodes, log_level):
+    for node in nodes:
+        set_dble_log_level(context, node, log_level)
+
+def set_dble_log_level(context, node, log_level):
+    ssh_client = node.ssh_conn
     str_awk = "awk 'FS=\" \" {print $2}'"
     cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(context.dble_test_config['dble_basepath'], str_awk)
     rc, sto, ste = ssh_client.exec_command(cmd)
-    LOGGER.info("rc: {0}; sto: {1}; ste: {2}".format(rc, sto, ste))
+
     if log_level in sto:
-        pass
+        LOGGER.info("dble log level is already: {0}, do nothing!".format(log_level))
+        return False
     else:
         log = '{0}/dble/conf/log4j2.xml'.format(context.dble_test_config['dble_basepath'])
         cmd = "sed -i 's/{0}/{1}/g' {2} ".format(sto[1:-1], log_level, log)
         ssh_client.exec_command(cmd)
+        return True
+
+@Given('Set the log level to "{log_level}" and restart server in "{hostname}"')
+def Log_debug(context, log_level, hostname):
+    node = get_node(context.dbles, hostname)
+    is_log_level_changed = set_dble_log_level(context, node, log_level)
+
+    if is_log_level_changed:
         cmd = "cd {0} && (./dble/bin/dble restart)".format(context.dble_test_config['dble_basepath'])
-        ssh_client.exec_command(cmd)
+        node.ssh_conn.exec_command(cmd)
         time.sleep(3)
-        check_dble_installed(context, hostname)
+        check_dble_running_in_node(context, node)
 
 @Given('Restart dble in "{hostname}"')
-def restart_dble(context, hostname):
-    stop_dble_in_hostname(context, hostname)
-    start_dble_in_hostname(context, hostname)
-    time.sleep(3)
-    check_dble_installed(context, hostname)
+def step_impl(context, hostname):
+    node = get_node(context.dbles, hostname)
+    restart_dble(context, node)
 
+def restart_dbles(context, nodes):
+    for node in nodes:
+        restart_dble(context, node)
+
+def restart_dble(context, node):
+    stop_dble_in_node(context, node)
+    start_dble_in_node(context, node)
+    time.sleep(3)
+    check_dble_running_in_node(context, node)
+
+# todo:refactor
 @Given('Check and clear zookeeper stored data in all dble nodes')
 def check_and_clear_zk(context):
-    context.zk_retry=0
     for node in context.dbles:
-        check_zk_status(context, node.ip)
-        clear_zk_data(context, node.ip)
+        clear_zk_in_node(context, node)
 
-def check_zk_status(context, ip):
-    ssh_client = get_ssh(context.dbles, ip)
+def clear_zk_in_node(context, node):
+    context.zk_retry=0
+
+    start_zk_service(context, node)
+    clear_zk_data(context, node)
+
+def start_zk_service(context, node):
+    ssh_client = node.ssh_conn
     cmd = "{0}/bin/zkServer.sh status".format(context.dble_test_config['zookeeper']['home'])
     rc, sto, ste = ssh_client.exec_command(cmd)
     LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
-    if context.zk_retry < 3 and re.search("Error contacting service", sto, re.I):
+    if context.zk_retry < 5 and re.search("Error contacting service", sto, re.I):
         context.zk_retry = context.zk_retry+1
         cmd = "{0}/bin/zkServer.sh start".format(context.dble_test_config['zookeeper']['home'])
         rc, sto, ste = ssh_client.exec_command(cmd)
-        check_zk_status(context, ip)
+        time.sleep(3)
+        start_zk_service(context, node)
     assert_that(str(sto), contains_string("Mode"))
 
-def clear_zk_data(context, ip):
-    ssh_client = get_ssh(context.dbles, ip)
+def clear_zk_data(context, node):
+    ssh_client = node.ssh_conn
+
     cmd = "{0}/bin/zkCli.sh rmr /dble".format(context.dble_test_config['zookeeper']['home'])
     ssh_client.exec_command(cmd)
+
     cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
     rc, sto, ste = ssh_client.exec_zk_command(cmd)
     LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
@@ -196,7 +231,7 @@ def config_zk_in_dble_nodes(context):
     for node in context.dbles:
         stop_dble_in_hostname(context, node.host_name)
         conf_zk_in_dble_by_hostname(context, node.host_name)
-    check_and_clear_zk(context)
+        clear_zk_in_node(context, node)
     order_start_all_dble(context)
 
 def order_start_all_dble(context):
@@ -252,6 +287,7 @@ def restore_and_ensure_dble_uncluster(context):
         check_and_clear_zk(context)
     start_dble_in_hostname(context, "dble-1")
 
+# todo: refactor
 def check_zk_node_exists(context):
     cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
     for node in context.dbles:
@@ -262,6 +298,14 @@ def check_zk_node_exists(context):
             return True
     return False
 
+def is_zk_exists_in_node(context, node):
+    cmd = "{0}/bin/zkCli.sh ls /dble".format(context.dble_test_config['zookeeper']['home'])
+
+    rc, sto, ste = node.ssh_conn.exec_zk_command(cmd)
+    LOGGER.info("rc: {0}, sto: {1}, ste: {2}".format(rc, sto, ste))
+    isExist =  "Node does not exist: /dble" not in sto
+    return isExist
+
 def check_dble_status(context, hostname):
     ssh_client = get_ssh(context.dbles, hostname)
     cmd = "cd {0} && (./dble/bin/dble status)".format(context.dble_test_config['dble_basepath'])
@@ -270,7 +314,6 @@ def check_dble_status(context, hostname):
         return True
     return False
 
-@Given('Replace the existing configuration with the conf template directory')
 def replace_config(context, sourceCfgDir, dest=None):
     LOGGER.info("sour config dir: {0}".format(sourceCfgDir))
     if dest is None:
@@ -291,5 +334,3 @@ def replace_config(context, sourceCfgDir, dest=None):
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
         node.sftp_conn.sftp_put(remove_file, local_file)
-
-    restart_dble(context, dest)
