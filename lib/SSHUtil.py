@@ -18,7 +18,6 @@ class SSHClient(Logging):
         self._ssh.connect(self._host, port=22, username=self._user, password=self._password, timeout=60)
 
     def exec_command(self, command, timeout=60):
-        self.logger.info('<{0}>: Execute command: <{1}>'.format(self._host, command))
         stdin, stdout, stderr = self._ssh.exec_command(command, timeout=timeout)
         rc = stdout.channel.recv_exit_status()
         sto = stdout.read().strip('\n')
@@ -26,19 +25,6 @@ class SSHClient(Logging):
         self.logger.debug('<{0}>: Execute command: <{1}> '
                           'Return code <{2}>, Stdout: <{3}>, Stderr <{4}>'.format(self._host, command, rc, sto, ste))
         return rc, sto, ste
-
-    def exec_zk_command(self, command, timeout=60):
-        self.logger.info('<{0}>: Execute command: <{1}>'.format(self._host, command))
-        stdin, stdout, stderr = self._ssh.exec_command(command, timeout=timeout)
-        rc = stdout.channel.recv_exit_status()
-        sto = stdout.read().splitlines()
-        ste = stderr.read().strip('\n')
-        st = ""
-        if ste == " ":
-            for i in range(len(sto)):
-                if sto[i].startswith("WatchedEvent state:"):
-                    st = st + sto[i+1] + "\n"
-        return rc, st, ste
 
     def open_sftp(self):
         self.logger.info('<{0}>: open sftp'.format(self._host))

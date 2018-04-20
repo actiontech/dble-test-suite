@@ -96,6 +96,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             if expect == "success":
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
             elif hasObj or hasnotObj:
+                assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
                     context.logger.info("expect resultset:{0}, real res:{1}".format(eval(expectRS), res))

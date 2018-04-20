@@ -11,14 +11,6 @@ mysql 5.7.13 / replication by gtid
 #jdk-8u121-linux-x64.rpm, after decompression: mysql-5.7.13-linux-glibc2.5-x86_64, zookeeper-3.4.9
 > bash en_dble.sh //initialize the inner containers
 
-#use behave do test
-#install from ftp
-behave -D tar_local=false -D test_config=dble_auto_test.yaml features/install_uninstall/install_base.feature
-
-#install from local
-behave -D tar_local=true -D test_config=dble_auto_test.yaml features/install_uninstall/install_base.feature
-
-
 #use drivers do test:
 A. connector/c
 #covers mysql interface_test
@@ -48,23 +40,31 @@ Step3:cd drivers/java 执行
 3, jdk-8u121 in dble resides node
 4, easy_install python-yaml in behave resides node
 
-#通过ftp包解压安装到所有节点，启动"dble-1"
-behave features/install_uninstall/install_dble.feature
+# use behave do test
+# -D tar_local={true|false}, default false
+# -D test_config={auto_dble_test.yaml}
+# -D reinstall=true is a must for install related features
 
-#更新dble
-behave features/install_uninstall/update_dble.feature
+#集群到单节点
+behave -Dreinstall=true features/install_uninstall/install_base.feature
+
+#通过ftp包安装单节点并启动
+behave -Dreinstall=true features/install_uninstall/install_dble.feature
+
+#更新dble单节点
+behave -Dreinstall=true features/install_uninstall/update_dble.feature
 
 #通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
-behave features/install_uninstall/install_dble_and_zk.feature
+behave -Dreinstall=true features/install_uninstall/install_dble_and_zk.feature
 
 #sql覆盖 #maofei
-behave -D dble_conf=sql_cover features/sql_cover/sql.feature  features/sql_cover/manager.feature
+behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature
 
 #算法
 behave -D dble_conf=template features/function/
 
 #配置
-behave -D dble_conf=template features/reload_conf/rule.feature features/reload_conf/schema.feature features/reload_conf/server.feature
+behave -D dble_conf=template features/reload_conf/
 
 #全局序列(本地文件)
 behave -D dble_conf=template features/sequence/sequence.feature

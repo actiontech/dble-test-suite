@@ -30,9 +30,10 @@ def before_all(context):
     logger.info('*       DBLE TEST START       *')
     logger.info('*' * 30)
     logger.info('Enter hook before_all')
-    test_config = "./conf/auto_dble_test.yaml"
 
-    parsed = load_yaml_config(test_config)
+    test_config = context.config.userdata["test_config"].lower() #"./conf/auto_dble_test.yaml"
+
+    parsed = load_yaml_config("./conf/"+test_config)
     for name, values in parsed.iteritems():
         setattr(context, name, values)
 
@@ -52,24 +53,25 @@ def before_all(context):
     sys.path.append(steps_dir)
     init_log(context)
 
-    if context.config.userdata["tar_local"].lower() == "true":
-        context.need_download = False
-    else:
-        context.need_download = True
-
     try:
         dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
 
-    set_dbles_log_level(context, context.dbles, 'debug')
+    reinstall = context.config.userdata["reinstall"].lower() == "true"
+    if reinstall:
+        if context.config.userdata["tar_local"].lower() == "true":
+            context.need_download = False
+        else:
+            context.need_download = True
+    else:
+        if dble_conf.lower() == "sql_cover":
+            replace_config(context, context.dble_test_config['dble_sql_conf'])
+        elif dble_conf.lower() == "template":
+            replace_config(context, context.dble_test_config['dble_base_conf'])
 
-    if dble_conf.lower() == "sql_cover":
-        replace_config(context, context.dble_test_config['dble_sql_conf'])
-    elif dble_conf.lower() == "template":
-        replace_config(context, context.dble_test_config['dble_base_conf'])
-
-    restart_dbles(context, context.dbles)
+        set_dbles_log_level(context, context.dbles, 'debug')
+        restart_dbles(context, context.dbles)
 
     logger.info('Exit hook <{0}>'.format('before_all'))
 
@@ -77,11 +79,9 @@ def after_all(context):
     logger.info('Enter hook <{0}>'.format('after_all'))
 
     for node in context.dbles:
-        logger.debug('close ssh connection to <{0}>'.format(node.ip))
         if node.ssh_conn:
             node.ssh_conn.close()
     for node in context.mysqls:
-        logger.debug('close ssh connection to <{0}>'.format(node.ip))
         if node.ssh_conn:
             node.ssh_conn.close()
 
