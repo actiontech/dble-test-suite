@@ -2,11 +2,9 @@
 # @Time    : 2018/4/13 PM6:17
 # @Author  : zhaohongjie@actionsky.com
 
-#At present, the multi-thread query only works for 2 thread, one is main, the other is session2
-import Queue
+#At present, the multi-thread query only works for 2 thread
 import logging
 from threading import Thread
-from time import sleep
 
 logger = logging.getLogger("sqls")
 class MyThread(Thread):
@@ -29,3 +27,8 @@ class MyThread(Thread):
                 sql_item['err'] = err
                 self._sql_res_queue.put(sql_item)
                 self._sql_queue.task_done()
+            elif self.current_thd_idx[0] == -1:
+                logger.info("try to exit from sql thread!")
+                return
+            else:
+                logger.info("self.current_thd_idx[0]: {0}".format(self.current_thd_idx[0]))

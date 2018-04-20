@@ -370,20 +370,20 @@ def step_impl(context, filename):
                     is_sql_thread_end = False
                     tmp = next_line
                     tmp_line_nu = line_nu + 1
-                    context.logger.info("zhj debug1, tmp:{0}, tmp_line_nu:{1}".format(tmp, tmp_line_nu))
+                    # context.logger.info("zhj debug1, tmp:{0}, tmp_line_nu:{1}".format(tmp, tmp_line_nu))
                     while tmp.startswith("#"):
                         if tmp_line_nu < total_lines:
-                            context.logger.info("zhj debug2")
+                            # context.logger.info("zhj debug2")
                             if tmp.startswith("#!sql_thread_"):
-                                context.logger.info("zhj debug3")
+                                # context.logger.info("zhj debug3")
                                 is_sql_thread_end = True
                                 break
                             else:
                                 tmp = lines[tmp_line_nu]
                                 tmp_line_nu += 1
-                                context.logger.info("zhj debug4, tmp:{0}".format(tmp))
+                                # context.logger.info("zhj debug4, tmp:{0}".format(tmp))
                         else:
-                            context.logger.info("zhj debug5")
+                            # context.logger.info("zhj debug5")
                             is_sql_thread_end = True
                             break
                     context.logger.info("is_sql_thread_end: {0}".format(is_sql_thread_end))
@@ -478,6 +478,7 @@ def do_query_in_thread(context, dble_thread_tag, interval=5):
         assert False, "sql queue: {0} is expected, but none".format(mysql_thd_tag)
 
     get_log_linenu(context)
+
     prelen = len("sql_thread_")
     current_thread_tag.insert(0,dble_thread_tag[prelen:])
     current_thread_tag.insert(1, mysql_thd_tag[prelen:])
@@ -512,7 +513,14 @@ def do_query_in_thread(context, dble_thread_tag, interval=5):
         sql_threads[mysql_thd_tag] = thd_mysql
         thd_mysql.start()
 
-    sleep(sql_queue_size * interval)
+    max_wait_time = sql_queue_size * interval
+    time_passed=0
+    while time_passed < max_wait_time:
+        time_passed += interval
+        if dble_sql_res_queue.qsize() <  sql_queue_size or mysql_sql_res_queue.qsize() < sql_queue_size:
+            sleep(interval)
+        else:
+            break
 
     if last_sql_queue_size > 0:
         context.logger.info("last_sql_queue_size > 0, last queue is blocked!")
@@ -555,15 +563,20 @@ def deal_result(context, dble_sql_res_queue, mysql_sql_res_queue):
         compare_result(context, line, sql, mysql_result, dble_result, mysql_err, dble_err)
 
 def destroy_sub_threads(context):
+    context.logger.info("destroy sql threads")
     global sql_threads
     global sql_res_queues
+    global current_thread_tag
 
+    current_thread_tag.insert(0, -1)
     if sql_threads is not None:
         for thread_tag in sql_threads:
             thd = sql_threads.get(thread_tag, None)
             if thd is not None:
+                context.logger.info("sql threads to join:{0}".format(thread_tag))
                 thd.join()
         sql_threads.clear()
 
+    context.logger.info("all sql threads join over!")
     if sql_res_queues is not None:
         sql_res_queues.clear()
