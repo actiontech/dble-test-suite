@@ -48,6 +48,8 @@ def get_read_dest_cmd(context):
 @Given('init read-write-split data')
 def step_impl(context):
     subdir = context.dble_test_config['result']['dir'] + "/"
+    if not os.path.exists(subdir):
+        os.makedirs(subdir)
     if context.sql_file.find("/") == -1:
         sql_file_name = context.sql_file
     else:
@@ -511,6 +513,7 @@ def do_query_in_thread(context, dble_thread_tag, interval=5):
         time_passed += interval
         if dble_sql_res_queue.qsize() <  sql_queue_size or mysql_sql_res_queue.qsize() < sql_queue_size:
             sleep(interval)
+            context.logger.info("timepassed:{0}, try sleep {1}s to wait sql execute".format(time_passed, interval))
         else:
             break
 
@@ -551,7 +554,7 @@ def deal_result(context, dble_sql_res_queue, mysql_sql_res_queue):
         line = mysql_item.get("line")
         sql = mysql_item.get("sql")
 
-        context.logger.info("compare cross thread sql result:")
+        context.logger.info("compare cross thread of line:{0} sql: {1}:".format(line, sql))
         compare_result(context, line, sql, mysql_result, dble_result, mysql_err, dble_err)
 
 def destroy_sub_threads(context):

@@ -12,6 +12,7 @@ class DBUtil:
         try:
             self._conn = MySQLdb.connect(host=strHost, user=strUser, passwd=str(strPassword), db=strDataBase, port=strPort,
                                          autocommit=True)
+            self._cursor = self._conn.cursor()
         except MySQLdb.Error, e:
             errMsg = e.args
             context.logger.debug("create connect err: {0}".format(errMsg))
@@ -19,15 +20,14 @@ class DBUtil:
 
     def query(self, sql):
         try:
-            cursor = self._conn.cursor()
             result = None
             errMsg = None
             self._context.logger.info("execute sql:{0} in {1}:{2}".format(sql[0:500], self._host, self._port))
-            cursor.execute(sql)
+            self._cursor.execute(sql)
             result = []
             while True:
-                result.append(cursor.fetchall())
-                if cursor.nextset() is None: break
+                result.append(self._cursor.fetchall())
+                if self._cursor.nextset() is None: break
         except MySQLdb.Error,e:
             errMsg = e.args
         finally:
