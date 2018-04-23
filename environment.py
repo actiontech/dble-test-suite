@@ -38,7 +38,6 @@ def before_all(context):
         setattr(context, name, values)
 
     parsed = load_yaml_config(context.dble_test_config['docker_compose_path'])
-
     if context.config.userdata["is_cluster"].lower() == "true":
         context.dbles = get_nodes(context, parsed, "dble")
     else:
@@ -52,13 +51,13 @@ def before_all(context):
     steps_dir = "{0}/steps".format(os.getcwd())
     sys.path.append(steps_dir)
     init_log(context)
-
     try:
         dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
 
     reinstall = context.config.userdata["reinstall"].lower() == "true"
+    context.logger.info("need to reinstall dble: {0}".format(reinstall))
     if reinstall:
         if context.config.userdata["tar_local"].lower() == "true":
             context.need_download = False

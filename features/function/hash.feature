@@ -14,7 +14,7 @@ Feature:
             <property name="partitionLength">721</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all" get the following output
     """
     Sum(count[i]*length[i]) must be less than 2880
     """
@@ -30,7 +30,7 @@ Feature:
     """
         <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | mytest |
@@ -61,7 +61,7 @@ Feature:
     """
         <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | mytest |
@@ -87,4 +87,4 @@ Feature:
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'hash_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'hash_func'}}  |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'hash_table'}}    |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"

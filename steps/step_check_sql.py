@@ -147,7 +147,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
         else:
             result1 = sorted(tuple(dble_result))
             result2 = sorted(tuple(mysql_result))
-        isResultSame = len(result1) == len(result2) or dble_result == mysql_result or (isNoErr and isAllowDiff)
+        isResultSame = (len(result1) == len(result2) and dble_result == mysql_result) or (isNoErr and isAllowDiff)
 
     dble_re = "dble:[" + str(dble_result) + "]\n"
     mysql_re = "mysql:[" + str(mysql_result) + "]\n"
@@ -160,8 +160,8 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
         if isNoErr:
             with open(context.cur_pass_log, 'a') as fpT:
                 fpT.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(id, sql, context.sql_file))
+                fpT.writelines(dble_re)
                 if isAllowDiff:
-                    fpT.writelines(dble_re)
                     fpT.writelines(mysql_re)
             context.logger.info("mysql_err == null && dble_err == null")
         else:
@@ -431,10 +431,9 @@ def connect_test(context, ip, user, passwd, port):
                 isSuccess = True
                 conn.close()
 
-        context.execute_steps(u'Given sleep "60" seconds')
+        sleep(20)
 
     assert_that(isSuccess, "can not connect to {0} after 5 minutes wait".format(ip))
-
 
 @Given('clear dirty data yield by sql')
 def step_impl(context):

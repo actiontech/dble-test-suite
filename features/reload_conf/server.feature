@@ -8,7 +8,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="schemas">mytest</property>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
@@ -22,7 +22,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="usingDecrypt">1</property>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
@@ -35,8 +35,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="manager">true</property>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
-    Then excute admin cmd "show @@version" with user "test_user" passwd "test_password"
+    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
   Scenario: #3 add/delete privilege
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -61,12 +61,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </privileges>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
     Given delete the following xml segment
       |file        | parent           | child                                        |
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #4 add/delete Firewall
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
@@ -84,7 +84,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="manager">true</property>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -94,7 +94,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </whitehost>
     </firewall>
     """
-    Then excute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
+    Then execute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -108,12 +108,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </blacklist>
     </firewall>
     """
-    Then excute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
+    Then execute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
     Given delete the following xml segment
       |file        | parent           | child                                   |
       |server.xml  | {'tag':'root'}   | {'tag':'firewall'}                      |
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'mnger'}}|
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   @current
   Scenario: #5
@@ -176,7 +176,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </system>
     """
     Given Restart dble in "dble-1"
-    Then excute admin cmd "show @@sysparam" get the following output
+    Then execute admin cmd "show @@sysparam" get the following output
     """
     has{('managerPort','9066','Manager connection port. The default number is 9066')}
     """

@@ -62,4 +62,4 @@ dble_test_config:
     port: 3306
 
   result:
-    dir: logs/result
+    dir: sql_cover_log/result

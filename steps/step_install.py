@@ -6,6 +6,7 @@ from behave import *
 from hamcrest import *
 
 from lib.Node import get_node, get_ssh
+from steps.step_check_sql import connect_test
 
 LOGGER = logging.getLogger('steps.install')
 
@@ -171,6 +172,11 @@ def restart_dble(context, node):
     time.sleep(3)
     check_dble_running_in_node(context, node)
 
+    user = context.dble_test_config['manager_user']
+    passwd = str(context.dble_test_config['manager_password'])
+    port = context.dble_test_config['manager_port']
+    connect_test(context, node.ip, user, passwd, port)
+
 @Given('Restart dble in "{hostname}"')
 def step_impl(context, hostname):
     node = get_node(context.dbles, hostname)
@@ -261,7 +267,7 @@ def replace_config(context, sourceCfgDir):
         replace_config_in_node(context,sourceCfgDir,node)
 
 def replace_config_in_node(context, sourceCfgDir, node):
-    LOGGER.info("sour config dir: {0}".format(sourceCfgDir))
+    LOGGER.info("source config dir: {0}".format(sourceCfgDir))
 
     osCmd = 'rm -rf {0} && cp -r {0}_bk {0}'.format(sourceCfgDir)
     os.system(osCmd)

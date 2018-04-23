@@ -16,7 +16,6 @@ class Node(Logging):
         self._ssh_conn = None
         self._sftp_conn = None
 
-        self.logger.debug('create ssh to ip: <{0}> host_name: <{1}>'.format(self.ip, self.host_name))
         self._ssh_conn = SSHClient(self.ip, self._ssh_user, self._ssh_password)
         self._ssh_conn.connect()
         assert self._ssh_conn is not None, "get ssh to {0} fail".format(self._ip)

@@ -27,7 +27,7 @@ generate_simple_cmp_file () {
 rm -rf cmp_result && mkdir cmp_result
 rm -rf cmp_std_result && mkdir cmp_std_result
 generate_simple_cmp_file std_result cmp_std_result
-generate_simple_cmp_file logs/result cmp_result
+generate_simple_cmp_file sql_cover_log/result cmp_result
 
 res=`diff -qr cmp_std_result cmp_result`
 if [ ${#res} -gt 0 ]; then

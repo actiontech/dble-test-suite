@@ -15,7 +15,7 @@ Feature:
             <property name="sPartionDay">10</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all" get the following output
     """
     The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NullPointerException
     """
@@ -34,7 +34,7 @@ Feature:
     """
         <table name="date_table" dataNode="dn1,dn2,dn3,dn4" rule="date_rule" />
     """
-    Then excute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all" get the following output
     """
     please make sure table datanode size = function partition size
     """
@@ -50,7 +50,7 @@ Feature:
             <property name="defaultNode">3</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
@@ -73,7 +73,7 @@ Feature:
             <property name="sPartionDay">10</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
@@ -96,7 +96,7 @@ Feature:
             <property name="defaultNode">3</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
@@ -118,7 +118,7 @@ Feature:
             <property name="sPartionDay">10</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
@@ -145,4 +145,4 @@ Feature:
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'date_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'date_func'}}  |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'date_table'}}    |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"

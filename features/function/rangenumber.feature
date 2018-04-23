@@ -26,7 +26,7 @@ Feature:
     501-755=2
     756-1000=3
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | mytest |
@@ -55,7 +55,7 @@ Feature:
             <property name="patternValue">1000</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | mytest |
@@ -80,4 +80,4 @@ Feature:
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'patternrange_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'patternrange_table'}}    |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"

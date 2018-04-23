@@ -52,7 +52,7 @@ Feature:# multi-tenancy, user-Permission
         <property name="schemas">mytestD</property>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
     #Standalone database: A tenant a database
     Then execute sql
@@ -89,7 +89,7 @@ Feature:# multi-tenancy, user-Permission
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testB'}}      |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testC'}}      |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testD'}}      |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #2 test user Permission
     #single control: only readonly
@@ -105,7 +105,7 @@ Feature:# multi-tenancy, user-Permission
         <property name="readOnly">true</property>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then execute sql
         | user         | passwd        | conn   | toClose | sql                                   | expect            | db     |
         | test         | 111111        | conn_0 | False   | drop table if exists readonly_table   | success           | mytest |
@@ -122,7 +122,7 @@ Feature:# multi-tenancy, user-Permission
       |file        | parent                                      | child                                              |
       |server.xml  | {'tag':'root'}                              | {'tag':'user','kv_map':{'name':'test_readonly'}}   |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}} | {'tag':'table','kv_map':{'name':'readonly_table'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #3 config user Permission
     #single control: only schema level permission
@@ -175,7 +175,7 @@ Feature:# multi-tenancy, user-Permission
         </privileges>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
     #single control: only schema level permission
     Then Test only schema level permission feature
@@ -195,7 +195,7 @@ Feature:# multi-tenancy, user-Permission
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testD'}}      |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testE'}}      |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'testF'}}      |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #6 config user Permission
     #mixture control: readonly + schema
@@ -226,7 +226,7 @@ Feature:# multi-tenancy, user-Permission
         </privileges>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
     Then Test config readonly and schema permission feature
     """
@@ -240,7 +240,7 @@ Feature:# multi-tenancy, user-Permission
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema1'}} |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema2'}} |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema3'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #4 test user Permission
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -274,7 +274,7 @@ Feature:# multi-tenancy, user-Permission
         </privileges>
     </user>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Then Test config schema and table permission feature
     """
     [{"user":"schema_table1","password":"schema_table1","schema":"mytest","schema_dml":"1111","single_table":"schema_permission","tables_config":
@@ -302,4 +302,4 @@ Feature:# multi-tenancy, user-Permission
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'schema_table1'}} |
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'schema_table2'}} |
       |schema.xml  | {'tag':'schema','kv_map':{'name':'mytest'}} | {'tag':'table','kv_map':{'name':'schema_permission'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"

@@ -33,9 +33,9 @@ def get_admin_conn(context, user="", passwd=""):
         err = e.args
     return conn, err
 
-@Then('excute admin cmd "{adminsql}"')
-@Then('excute admin cmd "{adminsql}" get the following output')
-@Then('excute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
+@Then('execute admin cmd "{adminsql}"')
+@Then('execute admin cmd "{adminsql}" get the following output')
+@Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
 def exec_admin_cmd(context, adminsql, user="", passwd=""):
     if len(user.strip()) == 0:
         user = context.dble_test_config['manager_user']

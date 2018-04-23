@@ -14,7 +14,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
             </rule>
         </tableRule>
     """
-    Then excute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all" get the following output
     """
     Reload config failure
     """
@@ -27,14 +27,14 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
             </rule>
         </tableRule>
     """
-    Then excute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all" get the following output
     """
     Reload config failure
     """
     Given delete the following xml segment
       |file        | parent                 | child                                            |
       |rule.xml    | {'tag':'root'}         | {'tag':'tableRule','kv_map':{'name':'add_rule'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #2 add/edit/drop HASH function
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -48,12 +48,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
             <property name="partitionLength">400,200</property>
         </function>
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Given delete the following xml segment
       |file        | parent                 | child                                             |
       |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func1'}} |
       |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func2'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #3 add/edit/drop NumberRange function
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -75,12 +75,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     501-1000=2
     1001-5000=3
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Given delete the following xml segment
       |file        | parent                 | child                                             |
       |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func1'}} |
       |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func2'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #4 add/drop Enum function
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -103,8 +103,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     8=2
     9=3
     """
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
     Given delete the following xml segment
       |file        | parent                 | child                                             |
       |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'add_rule'}} |
-    Then excute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config_all"
