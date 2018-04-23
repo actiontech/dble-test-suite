@@ -14,8 +14,6 @@ def clean_dble_in_all_nodes(context):
     for node in context.dbles:
         uninstall_dble_in_node(context, node)
 
-    config_cluster_disable(context)
-
 def uninstall_dble_in_node(context, node):
     ssh_client = node.ssh_conn
     cmd_status = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
@@ -224,16 +222,6 @@ def config_zk_in_dble_nodes(context):
         conf_zk_in_node(context, node)
 
     restart_zk_service(context)
-
-def config_cluster_disable(context):
-    for node in context.dbles:
-        ssh_client = node.ssh_conn
-        conf_file = "{0}/dble/conf/myid.properties".format(context.dble_test_config['dble_basepath'])
-
-        myid = node.host_name.split("-")[1]
-        cmd = "sed -i 's/cluster=.*/cluster=false/g' {0}".format(myid, conf_file)
-        rc, sto, ste = ssh_client.exec_command(cmd)
-        assert_that(ste, is_(""))
 
 def conf_zk_in_node(context, node):
     ssh_client = node.ssh_conn
