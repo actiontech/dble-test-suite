@@ -135,19 +135,12 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
     isAllowDiff = d is not None
     isNoErr = err1 is None and err2 is None
 
-    isResultSame = isNoErr and isAllowDiff
-
     if type(dble_result) == tuple and type(mysql_result) == tuple:
-        if (sql.find('order by') != -1) or (sql.find('group by') != -1):
-            context.logger.info("~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{0}".format(sql))
-            context.logger.info("dble:{0}".format(dble_result))
-            context.logger.info("mysql:{0}".format(mysql_result))
-            result1 = tuple(dble_result)
-            result2 = tuple(mysql_result)
-        else:
-            result1 = sorted(tuple(dble_result))
-            result2 = sorted(tuple(mysql_result))
-        isResultSame = (len(result1) == len(result2) and dble_result == mysql_result) or (isNoErr and isAllowDiff)
+        if (sql.find('order by') == -1) and (sql.find('group by') == -1):
+            dble_result = sorted(dble_result)
+            mysql_result = sorted(mysql_result)
+
+    isResultSame = dble_result==mysql_result or (isNoErr and isAllowDiff)
 
     dble_re = "dble:[" + str(dble_result) + "]\n"
     mysql_re = "mysql:[" + str(mysql_result) + "]\n"
@@ -579,3 +572,6 @@ def destroy_sub_threads(context):
     context.logger.info("all sql threads join over!")
     if sql_res_queues is not None:
         sql_res_queues.clear()
+
+    while len(current_thread_tag)>0:
+        current_thread_tag.pop()
