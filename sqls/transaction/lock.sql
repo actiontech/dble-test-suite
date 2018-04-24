@@ -11,7 +11,7 @@ insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6
 begin;
 select * from sbtest1 order by id lock in share mode;
 #!sql_thread_2
-set @@session.innodb_lock_wait_timeout=100;
+set @@session.innodb_lock_wait_timeout=10000;
 SET @@session.autocommit = ON;
 begin;
 select * from sbtest1 order by id lock in share mode;
@@ -60,11 +60,11 @@ begin;
 select * from sbtest1 order by id lock in share mode;
 #!sql_thread_2
 begin;
-update sbtest1 set pad=22 where id=1;/*hang*/
+update sbtest1 set pad=22 where id=1/*zhj1*/;
 #!sql_thread_1
-rollback ;
+rollback /*zhj2*/;
 #!sql_thread_2
-update sbtest1 set pad=22 where id=2;
+update sbtest1 set pad=22 where id=2/*zhj3*/;
 select * from sbtest1 order by id;
 commit;
 select * from sbtest1 order by id;

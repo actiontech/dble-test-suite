@@ -244,9 +244,11 @@ def config_zk_in_dble_nodes(context):
 def conf_zk_in_node(context, node):
     ssh_client = node.ssh_conn
     conf_file = "{0}/dble/conf/myid.properties".format(context.dble_test_config['dble_basepath'])
+    zk_server_ip=context.dble_test_config['zookeeper']['ip']
+    zk_server_port=context.dble_test_config['zookeeper']['port']
 
     myid = node.host_name.split("-")[1]
-    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress=127.0.0.1/g' -e 's/port=.*/port=2181/g' -e '/^myid/d' -e '$a myid={0}' {1}".format(myid, conf_file)
+    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}/g' -e 's/port=.*/port={3}/g' -e 's/myid=.*/myid={0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""))
 

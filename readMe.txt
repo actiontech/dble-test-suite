@@ -71,3 +71,27 @@ behave -D dble_conf=template features/sequence/sequence.feature
 
 #安全性
 behave -D dble_conf=template features/safety/safety.feature
+
+=========================zk 使用说明=======================
+1, dble/conf/myid.properties配置：
+#set false if not use cluster ucore/zk
+cluster=zk
+#client info
+ipAddress=127.0.0.1
+port=2181
+#cluster namespace, please use the same one in one cluster
+clusterId=cluster-1
+#it must be different for every node in cluster
+2, zookeeper/conf/zoo.cfg配置:
+tickTime=2000
+initLimit=10
+syncLimit=5
+clientPort=2181
+dataDir=/opt/zookeeper/data
+dataLoginDir=/opt/zookeeper/logs
+server.1=dble-1:2888:3888
+server.2=dble-2:2888:3888
+server.3=dble-3:2888:3888
+3, under zookeeper/data, create myid file, content:
+2
+4,start all zk servers by "zkServer.sh start"
