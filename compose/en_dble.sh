@@ -53,8 +53,10 @@ for((i=0; i<3; i=i+1)); do
     echo "add some user and database in ${mysql_install[$i]}"
     if [[ ${mysql_install[$i]} == "mysql" ]]; then
         docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database mytest\" "
+        docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database testdb\" "
+        docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database tpccdb\" "
     fi
-    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create user 'test'@'%' identified by 'test'\" "
+    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create user 'test'@'%' identified by '111111'\" "
 		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
 		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db1\" "
 		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db2\" "

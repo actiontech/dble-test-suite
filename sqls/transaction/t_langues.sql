@@ -497,8 +497,7 @@ update sbtest1 set pad=10
 rollback
 select * from sbtest1 order by id
 set @@session.autocommit=1
-drop table if exists sbtest1
-#***********************read write*************************
+#***********************read write*************单节点************commit*****************
 #!share_conn
 delete from sbtest1
 start transaction read write
@@ -516,7 +515,7 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************单节点************ROLLBACK *****************
 #!share_conn
 delete from sbtest1
 start transaction read write
@@ -533,7 +532,7 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************2节点************commit*****************
 #!share_conn
 delete from sbtest1
 start transaction read write
@@ -550,7 +549,7 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************2节点************ROLLBACK *****************
 #!share_conn
 delete from sbtest1
 start transaction read write
@@ -567,7 +566,7 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************3节点************COMMIT *****************
 #!share_conn
 delete from sbtest1
 start transaction read write
@@ -584,12 +583,12 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************3节点************ROLLBACK *****************
 #!share_conn
 delete from sbtest1
 start transaction read write
 select * from sbtest1 order by id
-insert into sbtest1 values(1,1,1,1),(2,2,2,2,(3,3,3,3)
+insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
 #!session 2
 start transaction read write
 select * from sbtest1 order by id
@@ -601,7 +600,7 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************4节点************COMMIT *****************
 #!share_conn
 delete from sbtest1
 start transaction read write
@@ -618,12 +617,12 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
-#************************************************
+#***********************read write*************4节点************ROLLBACK *****************
 #!share_conn
 delete from sbtest1
 start transaction read write
 select * from sbtest1 order by id
-insert into sbtest1 values(1,1,1,1),(2,2,2,2,(3,3,3,3),(4,4,4,4)
+insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
 #!session 2
 start transaction read write
 select * from sbtest1 order by id
