@@ -28,6 +28,8 @@ dble_test_config:
   zookeeper:
     remote_path:
     home: /opt/zookeeper
+    port: 2181
+    ip: 127.0.0.1
 
   mysql:
     '5.7':

@@ -194,19 +194,26 @@ def start_zk_services(context):
         start_zk_service(context, node)
 
 def start_zk_service(context, node):
+    ssh_client = node.ssh_conn
+    cmd_start = "{0}/bin/zkServer.sh start".format(context.dble_test_config['zookeeper']['home'])
+    rc, sto, ste = ssh_client.exec_command(cmd_start)
+    assert_that(sto, contains_string("STARTED"))
+
+# zk cluster must start all,there are waiting between them, then check status
+def check_zk_status(context, node):
     if not hasattr(context, "zk_retry"):
         setattr(context, "zk_retry", 0)
-    ssh_client = node.ssh_conn
+
     cmd_status = "{0}/bin/zkServer.sh status".format(context.dble_test_config['zookeeper']['home'])
-    cmd_start = "{0}/bin/zkServer.sh start".format(context.dble_test_config['zookeeper']['home'])
-    ssh_client.exec_command(cmd_start)
-    time.sleep(3)
-    rc, sto, ste = ssh_client.exec_command(cmd_status)
-    zk_not_running = re.search("Error contacting service", sto, re.I)
-    if zk_not_running and context.zk_retry < 5:
+    rc, sto, ste = node.ssh_conn.exec_command(cmd_status)
+    zk_running = re.search("Mode", sto, re.I)
+
+    if not zk_running and context.zk_retry < 3:
         context.zk_retry = context.zk_retry + 1
-        start_zk_service(context, node)
-    assert_that(sto, contains_string("Mode"))
+        time.sleep(3)
+        check_zk_status(context, node)
+    else:
+        assert_that(sto, contains_string("Mode"))
 
 def stop_zk_service(context, node):
     ssh_client = node.ssh_conn
@@ -215,12 +222,17 @@ def stop_zk_service(context, node):
     stop_success = "no zookeeper to stop" in sto or "... STOPPED" in sto
     assert stop_success, "stop zkServer fail for: {0}".format(ste)
 
+    cmd = "ps aux | grep zkServer"
+
 def restart_zk_service(context):
     for node in context.dbles:
         stop_zk_service(context, node)
 
     for node in context.dbles:
         start_zk_service(context, node)
+
+    for node in context.dbles:
+        check_zk_status(context, node)
 
 @Given('config zookeeper cluster in all dble nodes')
 def config_zk_in_dble_nodes(context):
@@ -234,7 +246,7 @@ def conf_zk_in_node(context, node):
     conf_file = "{0}/dble/conf/myid.properties".format(context.dble_test_config['dble_basepath'])
 
     myid = node.host_name.split("-")[1]
-    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e '/^myid/d' -e '$a myid={0}' {1}".format(myid, conf_file)
+    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress=127.0.0.1/g' -e 's/port=.*/port=2181/g' -e '/^myid/d' -e '$a myid={0}' {1}".format(myid, conf_file)
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""))
 
