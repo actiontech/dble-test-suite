@@ -126,14 +126,6 @@ def download_dble(context):
     str = os.popen(cmd).read()
     assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
 
-def check_dble_running_in_node(context, node):
-    ssh_client = node.ssh_conn
-    cmd = "sh {0}/dble/bin/dble status".format(context.dble_test_config['dble_basepath'])
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    if sto.find("dble-server is running") != -1:
-        return True
-    return False
-
 def set_dbles_log_level(context, nodes, log_level):
     for node in nodes:
         set_dble_log_level(context, node, log_level)
@@ -169,8 +161,6 @@ def restart_dbles(context, nodes):
 def restart_dble(context, node):
     stop_dble_in_node(context, node)
     start_dble_in_node(context, node)
-    time.sleep(3)
-    check_dble_running_in_node(context, node)
 
     user = context.dble_test_config['manager_user']
     passwd = str(context.dble_test_config['manager_password'])
@@ -252,29 +242,23 @@ def conf_zk_in_node(context, node):
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""))
 
-@given('change zk cluster to single mode')
-def dble_cluster_to_single(context):
+def disable_cluster_config_in_node(context, node):
     conf_file = "{0}/dble/conf/myid.properties".format(context.dble_test_config['dble_basepath'])
     cmd = "sed -i 's/cluster=.*/cluster=false/g' {0}".format(conf_file)
+
+    ssh_client = node.ssh_conn
+    rc, sto, ste = ssh_client.exec_command(cmd)
+    assert_that(ste, is_(""))
+
+@given('change zk cluster to single mode')
+def dble_cluster_to_single(context):
     for node in context.dbles:
         stop_dble_in_node(context, node)
-
-        ssh_client = node.ssh_conn
-        rc, sto, ste = ssh_client.exec_command(cmd)
-        assert_that(ste, is_(""))
-
+        disable_cluster_config_in_node(context, node)
         stop_zk_service(context, node)
 
     LOGGER.info("Start only the Dble service on the node dble-1")
     start_dble_in_hostname(context, "dble-1")
-
-def check_dble_status(context, hostname):
-    ssh_client = get_ssh(context.dbles, hostname)
-    cmd = "cd {0} && (./dble/bin/dble status)".format(context.dble_test_config['dble_basepath'])
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    if sto.find("dble-server is running"):
-        return True
-    return False
 
 def replace_config(context, sourceCfgDir):
     for node in context.dbles:

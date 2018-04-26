@@ -421,14 +421,15 @@ def connect_test(context, ip, user, passwd, port):
             conn = None
         finally:
             max_try -= 1
-            if max_try == 0 and conn is None: break
+            if max_try < 0 and conn is None: break
             if conn is not None:
                 isSuccess = True
                 conn.close()
+                break
 
-        sleep(20)
+        sleep(5)
 
-    assert_that(isSuccess, "can not connect to {0} after 5 minutes wait".format(ip))
+    assert_that(isSuccess, "can not connect to {0} after {1} seconds wait".format(ip, 5*max_try))
 
 @Given('clear dirty data yield by sql')
 def step_impl(context):
