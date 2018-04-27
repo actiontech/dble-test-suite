@@ -126,3 +126,5 @@ select id,name,pad from a_test where (1,1)in(select id,pad from a_order)
 SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from a_test)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from a_test group by pad) as t1
+select * from a_test order by (select pad from a_order limit 1)/*hang*/;
+#select * from a_test order by (select pad from a_order limit 1);/*hang*/  #case for issue 13,waiting for fix
