@@ -421,14 +421,15 @@ def connect_test(context, ip, user, passwd, port):
             conn = None
         finally:
             max_try -= 1
-            if max_try == 0 and conn is None: break
+            if max_try < 0 and conn is None: break
             if conn is not None:
                 isSuccess = True
                 conn.close()
+                break
 
-        sleep(20)
+        sleep(5)
 
-    assert_that(isSuccess, "can not connect to {0} after 5 minutes wait".format(ip))
+    assert_that(isSuccess, "can not connect to {0} after {1} seconds wait".format(ip, 5*max_try))
 
 @Given('clear dirty data yield by sql')
 def step_impl(context):
@@ -509,19 +510,33 @@ def do_query_in_thread(context, dble_thread_tag, interval=5):
 
     max_wait_time = sql_queue_size * interval
     time_passed=0
+    time_step = 2
     while time_passed < max_wait_time:
-        time_passed += interval
+        time_passed += time_step
         if dble_sql_res_queue.qsize() <  sql_queue_size or mysql_sql_res_queue.qsize() < sql_queue_size:
-            sleep(interval)
-            context.logger.info("timepassed:{0}, try sleep {1}s to wait sql execute".format(time_passed, interval))
+            sleep(time_step)
+            context.logger.info("timepassed:{0}, try sleep {1}s to wait sql execute".format(time_passed, time_step))
         else:
             break
 
     if last_sql_queue_size > 0:
         context.logger.info("last_sql_queue_size > 0, last queue is blocked!")
+        blocked_sql_num = last_sql_queue_size - last_dble_sql_res_queue.qsize()
+        max_wait_time = blocked_sql_num*interval
+        time_passed = 0
+        time_step = 2
+        while time_passed < max_wait_time:
+            time_passed += time_step
+            if last_dble_sql_res_queue.qsize() < last_sql_queue_size or last_mysql_sql_res_queue.qsize() < last_sql_queue_size:
+                sleep(time_step)
+                context.logger.info("timepassed:{0}, try sleep {1}s to wait blocked sql execute".format(time_passed, time_step))
+            else:
+                break
+
         if last_sql_queue_size == last_dble_sql_res_queue.qsize() and last_dble_sql_res_queue.qsize() == last_mysql_sql_res_queue.qsize():
             deal_result(context, last_dble_sql_res_queue, last_mysql_sql_res_queue)
         else:
+            context.logger.info("current session sqls are all executed, but the last session still unfinished!")
             destroy_sub_threads(context)
             assert False, "current session sqls are all executed, but the last session still unfinished!"
 

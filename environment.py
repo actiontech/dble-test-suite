@@ -4,7 +4,7 @@ import sys
 
 from lib.Node import get_ssh, get_sftp
 from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_nodes
-from steps.step_install import replace_config, set_dbles_log_level, restart_dbles
+from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node
 
 CONF_PATH = './conf'
 logger = logging.getLogger('environment')
@@ -38,7 +38,8 @@ def before_all(context):
         setattr(context, name, values)
 
     parsed = load_yaml_config(context.dble_test_config['docker_compose_path'])
-    if context.config.userdata["is_cluster"].lower() == "true":
+    context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
+    if context.is_cluster:
         context.dbles = get_nodes(context, parsed, "dble")
     else:
         context.dbles = get_nodes(context, parsed, "dble-1")
@@ -68,6 +69,10 @@ def before_all(context):
             replace_config(context, context.dble_test_config['dble_sql_conf'])
         elif dble_conf.lower() == "template":
             replace_config(context, context.dble_test_config['dble_base_conf'])
+
+        if not context.is_cluster:
+            for node in context.dbles:
+                disable_cluster_config_in_node(context, node)
 
         set_dbles_log_level(context, context.dbles, 'debug')
         restart_dbles(context, context.dbles)
