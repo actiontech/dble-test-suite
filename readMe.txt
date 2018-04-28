@@ -92,6 +92,11 @@ dataLoginDir=/opt/zookeeper/logs
 server.1=dble-1:2888:3888
 server.2=dble-2:2888:3888
 server.3=dble-3:2888:3888
-3, under zookeeper/data, create myid file, content:
+3, under zookeeper/data, create myid file, content eg:
 2
-4,start all zk servers by "zkServer.sh start"
+4,start all zk servers by "zkServer.sh start" before view status with 'zkServer.sh status'
+
+#todo:
+2会话并发交替
+1, block确认
+2, hang后超时多久连接重建

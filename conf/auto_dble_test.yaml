@@ -22,7 +22,8 @@ dble_test_config:
   dble:
     remote_packget: actiontech-dble.tar.gz
     local_packget: Action_Mycat-0.3.5-DEV-20170413102308-linux.tar.gz
-    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.0/
+    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.1/
+#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.0/
 #    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
     home: /opt/dble
   zookeeper:

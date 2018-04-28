@@ -348,3 +348,7 @@ SELECT NAME_CONST('myname', 14) union select id from  test_shard
 SELECT RELEASE_ALL_LOCKS() union select id from  test_shard
 SELECT SLEEP(1) union select id from  test_shard
 SELECT UUid() union select id from  test_shard
+
+#!share_conn
+select id from  test_shard union SELECT OLD_PASSWORD('mypass')
+select id from  test_shard union SELECT SHA('abc')
