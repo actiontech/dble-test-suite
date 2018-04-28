@@ -22,8 +22,8 @@ select a.id,b.id,b.pad,a.t_id from a_test a,(select * from a_order where pad>3) 
 select * from (select a_order.pad from a_test left join a_order on a_test.pad=a_order.pad) a;
 select * from (select * from a_test union select * from a_order) a where a.id >3;
 select id,pad from a_test where pad=(select min(id) from a_order);
-select (select name from a_test limit 1);
-select (select name from a_test limit 1),id from a_order ;
+select (select name from a_test order by id limit 1);
+select (select name from a_test order by id limit 1),id from a_order ;
 select upper('test'),id from a_order ;
 select id,pad,name from (select * from a_test where pad>2) a where id<5;
 select pad,count(*) from (select * from a_test where pad>2) a group by pad;

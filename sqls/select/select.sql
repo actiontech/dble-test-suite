@@ -17,7 +17,7 @@ select BIT_OR(pad) from test_shard
 select BIT_XOR(pad) from test_shard
 select count(pad) from test_shard
 select count(distinct pad) from test_shard
-select group_concat(pad) from test_shard
+select group_concat(pad) from test_shard group by pad
 select max(pad) from test_shard
 select min(pad) from test_shard
 select std(pad) from test_shard

@@ -60,11 +60,11 @@ begin;
 select * from sbtest1 order by id lock in share mode;
 #!sql_thread_2
 begin;
-update sbtest1 set pad=22 where id=1/*zhj1*/;
+update sbtest1 set pad=22 where id=1;
 #!sql_thread_1
-rollback /*zhj2*/;
+rollback;
 #!sql_thread_2
-update sbtest1 set pad=22 where id=2/*zhj3*/;
+update sbtest1 set pad=22 where id=2;
 select * from sbtest1 order by id;
 commit;
 select * from sbtest1 order by id;
@@ -98,7 +98,7 @@ select * from sbtest1 a,(select * from sbtest2 lock in share mode)b where a.pad=
 #!sql_thread_2
 begin;
 update sbtest1 set pad=22 where id=1;
-update sbtest2 set pad=22 where id=1;/*hang*/
+update sbtest2 set pad=22 where id=1;
 #!sql_thread_1
 rollback;
 #!sql_thread_2
@@ -171,7 +171,9 @@ select * from sbtest1 order by id;
 #*****************for update********* subquery ***********commit***********
 #!sql_thread_1
 delete from sbtest1;
+delete from sbtest2;
 insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6);
+insert into sbtest2 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6);
 begin;
 select * from sbtest1 a,(select * from sbtest2 for update)b where a.pad=b.pad order by a.id;
 #!sql_thread_2
@@ -188,7 +190,9 @@ select * from sbtest1 order by id;
 #*****************for update********* subquery ***********rollback***********
 #!sql_thread_1
 delete from sbtest1;
+delete from sbtest2;
 insert into sbtest1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6);
+insert into sbtest2 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6);
 begin;
 select * from sbtest1 a,(select * from sbtest2 for update)b where a.pad=b.pad order by a.id;
 #!sql_thread_2
