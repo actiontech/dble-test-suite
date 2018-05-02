@@ -63,4 +63,7 @@ DROP INDEX inx_id ON aly_test
 CREATE INDEX inx_id USING HASH ON aly_test (id)
 SHOW INDEX FROM aly_test
 INSERT INTO aly_test VALUES (4,'ddd')
+DROP INDEX inx_id ON aly_test
+CREATE INDEX inx_id ON aly_test (id) comment '测试'
+SHOW INDEX FROM aly_test
 DROP TABLE IF EXISTS aly_test

@@ -33,3 +33,16 @@ Feature: #
       |file        | parent                                       | child                                          |
       |schema.xml  |{'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'test_table'}}  |
     Then execute admin cmd "reload @@config_all"
+
+  Scenario: #test almost empty schema.xml
+    # test no dataNode in schema.xml
+    Given delete the following xml segment
+      |file        | parent                                       | child                                          |
+      |schema.xml  |{'tag':'root'}                              | {'tag':'schema'}  |
+      |schema.xml  |{'tag':'root'}                              | {'tag':'dataNode'}  |
+    Then execute admin cmd "reload @@config_all"
+    #test nothing in schema.xml
+    Given delete the following xml segment
+      |file        | parent                                       | child                                          |
+      |schema.xml  |{'tag':'root'}                              | {'tag':'dataHost'}  |
+    Then execute admin cmd "reload @@config_all"

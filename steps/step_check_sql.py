@@ -138,7 +138,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
     isNoErr = err1 is None and err2 is None
 
     if type(dble_result) == tuple and type(mysql_result) == tuple:
-        if (sql.find('order by') == -1) and (sql.find('group by') == -1):
+        if (sql.find('order by') == -1):
             dble_result = sorted(dble_result)
             mysql_result = sorted(mysql_result)
 
