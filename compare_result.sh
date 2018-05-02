@@ -31,8 +31,7 @@ generate_simple_cmp_file sql_cover_log/result cmp_result
 
 res=`diff -qr cmp_std_result cmp_result`
 if [ ${#res} -gt 0 ]; then
-    echo "Oop! result is different with the standard one"
-    echo 'try "diff -qr cmp_std_result cmp_result" to see the differences'
+    echo "Oop! result is different with the standard one, try 'diff -qr cmp_std_result cmp_result' to see the differences"
     exit 1
 else
     echo "pass"
