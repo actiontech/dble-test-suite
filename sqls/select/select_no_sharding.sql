@@ -234,7 +234,7 @@ select count(*) from test_no_shard group by R_COMMENT asc
 select count(*) from test_no_shard group by R_COMMENT desc
 select count(*) from test_no_shard group by 1+1
 select count(*) from test_no_shard group by R_COMMENT,R_NAME order by null
-select count(*) from test_no_shard group by R_COMMENT,R_NAME order by R_NAME asc
+select count(*) al from test_no_shard group by R_COMMENT,R_NAME order by al asc
 select count(*) from test_no_shard group by 1+1,1*5 order by 2*2 asc
 select count(*) from test_no_shard group by R_COMMENT,R_NAME having count(*) order by 1+1
 select count(*) from test_no_shard group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2

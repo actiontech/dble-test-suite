@@ -10,7 +10,7 @@ insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(
 #
 select 1+1
 SELECT ABS(2)
-select * from test_global
+select id,k,c,pad from test_global
 select avg(pad) from test_global 
 select BIT_AND(pad) from test_global 
 select BIT_OR(pad) from test_global 
@@ -38,17 +38,17 @@ select k,pad from test_global
 #from table_references
 #
 select 1+1 from dual
-select * from test_global
-select * from test_global t1
-select * from test_global as t1
-select * from mytest.test_global
+select id,k,c,pad from test_global
+select id,k,c,pad from test_global t1
+select id,k,c,pad from test_global as t1
+select id,k,c,pad from mytest.test_global
 select * from testdb.tb_test
 #
 #where
 #
-select * from test_global where pad<10
-select * from test_global where id>(SELECT ABS(2)) order by id
-select * from test_global t1 where t1.pad<5
+select id,k,c,pad from test_global where pad<10
+select id,k,c,pad from test_global where id>(SELECT ABS(2)) order by id
+select id,k,c,pad from test_global t1 where t1.pad<5
 #
 #group by
 #
@@ -75,8 +75,8 @@ drop table if exists mytest_auto_test1
 create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50))
 insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4)
 select count(*) from mytest_auto_test1 group by R_REGIONKEY
-select * from test_global group by id desc
-select * from test_global group by id asc
+select id,k,c,pad from test_global group by id desc
+select id,k,c,pad from test_global group by id asc
 select pad,count(id) t from test_global group by pad having t>1
 select pad,count(id) t from test_global group by pad limit 1
 select pad,count(id) t from test_global group by pad order by pad
@@ -90,9 +90,9 @@ select id,pad from test_global having pad<6
 #
 #order by
 #
-select * from test_global order by null
-select * from test_global order by id desc
-select * from test_global order by id asc
+select id,k,c,pad from test_global order by null
+select id,k,c,pad from test_global order by id desc
+select id,k,c,pad from test_global order by id asc
 select id t,pad from test_global order by t
 select id,pad from test_global order by pad
 select id,pad from test_global a order by a.id
@@ -100,127 +100,127 @@ select id,pad from test_global a order by a.pad
 #
 #limit
 #
-select * from test_global order by id limit 1,3
+select id,k,c,pad from test_global order by id limit 1,3
 prepare select_table from 'select * from test_global order by id limit ?'
-select * from test_global order by id limit 3
-select * from test_global order by id limit 3 offset 1
+select id,k,c,pad from test_global order by id limit 3
+select id,k,c,pad from test_global order by id limit 3 offset 1
 #
 #select + keyword
 #
-select all * from test_global
+select all id,k,c,pad from test_global
 select distinct pad from test_global
-select Distinctrow * from test_global
+select id,k,c,Distinctrow pad from test_global
 select distinct pad,id from test_global order by id
 select distinct pad,id from test_global where pad>2 order by id
 select distinct pad,id from test_global group by id,pad
 select count(distinct id),pad from test_global group by pad
 select distinct SQL_BIG_RESULT pad from test_global
 select distinct SQL_BIG_RESULT pad from test_global order by pad
-select distinctrow SQL_BIG_RESULT * from test_global
-select distinctrow SQL_BIG_RESULT * from test_global order by id
+select distinctrow SQL_BIG_RESULT pad from test_global
+select distinctrow SQL_BIG_RESULT pad from test_global order by pad
 select SQL_BIG_RESULT count(*),pad from test_global group by pad
 select distinct SQL_SMALL_RESULT pad from test_global
 select distinct SQL_SMALL_RESULT pad from test_global order by pad
-select distinctrow SQL_SMALL_RESULT * from test_global
-select distinctrow SQL_SMALL_RESULT * from test_global order by id
+select distinctrow SQL_SMALL_RESULT pad from test_global
+select distinctrow SQL_SMALL_RESULT pad from test_global order by id
 select SQL_SMALL_RESULT count(*),pad from test_global group by pad
-select SQL_BUFFER_RESULT * from test_global
-select SQL_BUFFER_RESULT * from test_global order by id
-select straight_join * from test_global
-select straight_join * from test_global order by id
-select sql_cache * from test_global
-select sql_cache * from test_global order by id
-select sql_no_cache * from test_global
-select sql_no_cache * from test_global order by id
-select SQL_CALC_FOUND_ROWS * from test_global order by id
-select SQL_CALC_FOUND_ROWS * from test_global
+select SQL_BUFFER_RESULT pad from test_global
+select SQL_BUFFER_RESULT pad from test_global order by id
+select straight_join pad from test_global
+select straight_join pad from test_global order by id
+select sql_cache pad from test_global
+select sql_cache pad from test_global order by id
+select sql_no_cache pad from test_global
+select sql_no_cache pad from test_global order by id
+select SQL_CALC_FOUND_ROWS pad from test_global order by id
+select SQL_CALC_FOUND_ROWS pad from test_global
 #
 #Operator
 #
-select * from test_global where id=1+1
-select * from test_global where id=2*3
-select * from test_global where id=9/3
-select * from test_global where id=12 div 4
-select * from test_global where id=10-4
-select * from test_global where id=1+2*3-9/3+12 div 4
-select * from test_global where id=-3
-select * from test_global where id=6|3
-select * from test_global where id=2&3
-select * from test_global where id=7^3
-select * from test_global where id=1<<2
-select * from test_global where id=4>>2
-select * from test_global where id=5 & ~1
-select * from test_global where id=BIT_COUNT(29)
-select * from test_global where id>=1
-select * from test_global where id<=3
-select * from test_global where id<5
-select * from test_global where id>6
-select * from test_global where id!=7
-select * from test_global where id between 2 and 4
-select * from test_global where id not between 3 and 5
-select * from test_global where id is true
-select * from test_global where id is false
-select * from test_global where id is unknown
-select * from test_global where id is not true
-select * from test_global where id is not false
-select * from test_global where id is not unknown
-select * from test_global where c is not null
-select * from test_global where c is null
-select * from test_global where c like '中'
-select * from test_global where c like '%3'
-select * from test_global where c like 'i%'
-select * from test_global where c like '$%$'
-select * from test_global where c like 'id_'
-select * from test_global where c like '_d3'
-select * from test_global where c like 'i_4'
-select * from test_global where c like '20\%'
-select * from test_global where c like 'a\_1'
-select * from test_global where c not like '中'
-select * from test_global where id<>2
-select * from test_global where id <=>1
-select * from test_global where 1 <=> 1
-select * from test_global where NULL <=> NULL
-select * from test_global where 1 <=> NULL
-select * from test_global where id=@var1 := 1
-select * from test_global where id=COALESCE(2,3)
-select * from test_global where id=COALESCE(null,3)
-select * from test_global where id=GREATEST(2,3,6.4,7,12)
-select * from test_global where id in(2,3,6.4,7,12)
-select * from test_global where pad in(2,3,6.4,7,12)
-select * from test_global where id not in(2,3)
-select * from test_global where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)
-select * from test_global where id=LEAST(23, 1, 15, 17, 30, 44, 200)
-select * from test_global where id not in(2,3,6.4,7,12)
-select * from test_global where pad=strcmp('test','test')
-select * from test_global where pad=strcmp('test1','test')
-select * from test_global where pad=strcmp('test','test1')
-select * from test_global where c regexp '.*'
-select * from test_global where c regexp 'new\\*.\\*line'
-select * from test_global where c regexp 'A'
-select * from test_global where c regexp BINARY 'A'
-select * from test_global where c regexp '^[a-d]'
-select * from test_global where c not regexp '.*'
-select * from test_global where c rlike '^[a-d]'
-select * from test_global where 1 AND 1
-select * from test_global where 1 AND 0
-select * from test_global where 1 AND NULL
-select * from test_global where 0 AND NULL
-select * from test_global where NULL AND 0
-select * from test_global where 1 && 1
-select * from test_global where NOT 10
-select * from test_global where NOT 0
-select * from test_global where  NOT NULL
-select * from test_global where  ! (1+1)
-select * from test_global where  ! 1+1
-select * from test_global where 1 OR 1
-select * from test_global where 1 OR 0
-select * from test_global where 0 OR 0
-select * from test_global where 0 || NULL
-select * from test_global where 1 || NULL
-select * from test_global where 1 XOR 1
-select * from test_global where 1 XOR 0
-select * from test_global where 1 XOR NULL
-select * from test_global where 1 XOR 1 XOR 1
+select id,k,c,pad from test_global where id=1+1
+select id,k,c,pad from test_global where id=2*3
+select id,k,c,pad from test_global where id=9/3
+select id,k,c,pad from test_global where id=12 div 4
+select id,k,c,pad from test_global where id=10-4
+select id,k,c,pad from test_global where id=1+2*3-9/3+12 div 4
+select id,k,c,pad from test_global where id=-3
+select id,k,c,pad from test_global where id=6|3
+select id,k,c,pad from test_global where id=2&3
+select id,k,c,pad from test_global where id=7^3
+select id,k,c,pad from test_global where id=1<<2
+select id,k,c,pad from test_global where id=4>>2
+select id,k,c,pad from test_global where id=5 & ~1
+select id,k,c,pad from test_global where id=BIT_COUNT(29)
+select id,k,c,pad from test_global where id>=1
+select id,k,c,pad from test_global where id<=3
+select id,k,c,pad from test_global where id<5
+select id,k,c,pad from test_global where id>6
+select id,k,c,pad from test_global where id!=7
+select id,k,c,pad from test_global where id between 2 and 4
+select id,k,c,pad from test_global where id not between 3 and 5
+select id,k,c,pad from test_global where id is true
+select id,k,c,pad from test_global where id is false
+select id,k,c,pad from test_global where id is unknown
+select id,k,c,pad from test_global where id is not true
+select id,k,c,pad from test_global where id is not false
+select id,k,c,pad from test_global where id is not unknown
+select id,k,c,pad from test_global where c is not null
+select id,k,c,pad from test_global where c is null
+select id,k,c,pad from test_global where c like '中'
+select id,k,c,pad from test_global where c like '%3'
+select id,k,c,pad from test_global where c like 'i%'
+select id,k,c,pad from test_global where c like '$%$'
+select id,k,c,pad from test_global where c like 'id_'
+select id,k,c,pad from test_global where c like '_d3'
+select id,k,c,pad from test_global where c like 'i_4'
+select id,k,c,pad from test_global where c like '20\%'
+select id,k,c,pad from test_global where c like 'a\_1'
+select id,k,c,pad from test_global where c not like '中'
+select id,k,c,pad from test_global where id<>2
+select id,k,c,pad from test_global where id <=>1
+select id,k,c,pad from test_global where 1 <=> 1
+select id,k,c,pad from test_global where NULL <=> NULL
+select id,k,c,pad from test_global where 1 <=> NULL
+select id,k,c,pad from test_global where id=@var1 := 1
+select id,k,c,pad from test_global where id=COALESCE(2,3)
+select id,k,c,pad from test_global where id=COALESCE(null,3)
+select id,k,c,pad from test_global where id=GREATEST(2,3,6.4,7,12)
+select id,k,c,pad from test_global where id in(2,3,6.4,7,12)
+select id,k,c,pad from test_global where pad in(2,3,6.4,7,12)
+select id,k,c,pad from test_global where id not in(2,3)
+select id,k,c,pad from test_global where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)
+select id,k,c,pad from test_global where id=LEAST(23, 1, 15, 17, 30, 44, 200)
+select id,k,c,pad from test_global where id not in(2,3,6.4,7,12)
+select id,k,c,pad from test_global where pad=strcmp('test','test')
+select id,k,c,pad from test_global where pad=strcmp('test1','test')
+select id,k,c,pad from test_global where pad=strcmp('test','test1')
+select id,k,c,pad from test_global where c regexp '.id,k,c,pad'
+select id,k,c,pad from test_global where c regexp 'new\\id,k,c,pad.\\id,k,c,padline'
+select id,k,c,pad from test_global where c regexp 'A'
+select id,k,c,pad from test_global where c regexp BINARY 'A'
+select id,k,c,pad from test_global where c regexp '^[a-d]'
+select id,k,c,pad from test_global where c not regexp '.id,k,c,pad'
+select id,k,c,pad from test_global where c rlike '^[a-d]'
+select id,k,c,pad from test_global where 1 AND 1
+select id,k,c,pad from test_global where 1 AND 0
+select id,k,c,pad from test_global where 1 AND NULL
+select id,k,c,pad from test_global where 0 AND NULL
+select id,k,c,pad from test_global where NULL AND 0
+select id,k,c,pad from test_global where 1 && 1
+select id,k,c,pad from test_global where NOT 10
+select id,k,c,pad from test_global where NOT 0
+select id,k,c,pad from test_global where  NOT NULL
+select id,k,c,pad from test_global where  ! (1+1)
+select id,k,c,pad from test_global where  ! 1+1
+select id,k,c,pad from test_global where 1 OR 1
+select id,k,c,pad from test_global where 1 OR 0
+select id,k,c,pad from test_global where 0 OR 0
+select id,k,c,pad from test_global where 0 || NULL
+select id,k,c,pad from test_global where 1 || NULL
+select id,k,c,pad from test_global where 1 XOR 1
+select id,k,c,pad from test_global where 1 XOR 0
+select id,k,c,pad from test_global where 1 XOR NULL
+select id,k,c,pad from test_global where 1 XOR 1 XOR 1
 #
 #clauses(order by/group by/having)
 #
@@ -234,7 +234,7 @@ select count(*) from test_global group by R_COMMENT asc
 select count(*) from test_global group by R_COMMENT desc
 select count(*) from test_global group by 1+1
 select count(*) from test_global group by R_COMMENT,R_NAME order by null
-select count(*) from test_global group by R_COMMENT,R_NAME order by R_NAME asc
+select count(*) al from test_global group by R_COMMENT,R_NAME order by al asc
 select count(*) from test_global group by 1+1,1*5 order by 2*2 asc
 select count(*) from test_global group by R_COMMENT,R_NAME having count(*) order by 1+1
 select count(*) from test_global group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2
@@ -242,9 +242,9 @@ select count(*) from test_global where id<8 group by R_COMMENT,R_NAME having cou
 select count(*) from test_global where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2
 select R_comment,count(*) a from test_global group by R_comment having a>1+1
 select R_comment,count(*) a from test_global group by R_comment having count(*)>1+1
-select * from test_global order by R_COMMENT+1 asc
-select * from test_global order by R_COMMENT,1+1
-select * from test_global order by id,R_COMMENT
+select id,k,c,pad from test_global order by R_COMMENT+1 asc
+select id,k,c,pad from test_global order by R_COMMENT,1+1
+select id,k,c,pad from test_global order by id,R_COMMENT
 #
 #special_scene(null,Accuracy)
 #
@@ -253,8 +253,8 @@ create table test_global (id int(11) primary key,R_REGIONKEY float,R_NAME varcha
 insert into test_global (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')
 insert into test_global (id,R_REGIONKEY,R_NAME) values (2,1, 'a')
 insert into test_global values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')
-select * from test_global order by R_comment
-select * from test_global where id =2 order by R_comment
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global order by R_comment
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global where id =2 order by R_comment
 select count(*),R_COMMENT from test_global group by R_comment
 select count(*),R_COMMENT from test_global where id=2 group by R_comment
 select count(R_COMMENT) from test_global
@@ -269,12 +269,12 @@ create table test_global (id int(11) primary key,R_REGIONKEY float,R_NAME varcha
 insert into test_global (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')
 insert into test_global (id,R_REGIONKEY,R_NAME) values (2,1, 'a')
 insert into test_global values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')
-select * from test_global order by R_COMMENT
-select * from test_global order by R_NAME
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global order by R_COMMENT
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global order by R_NAME
 select R_NAME,max(R_REGIONKEY) from test_global group by R_name
-select * from test_global limit 2,3
-select * from test_global limit 1,1
-select * from test_global limit 1,2
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global limit 2,3
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global limit 1,1
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global limit 1,2
 select id,R_REGIONKEY from test_global order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_global group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_global group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3

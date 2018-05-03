@@ -11,52 +11,52 @@ insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'tes
 insert into a_order_no_shard values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
 insert into a_manager values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
 create index pad_index on test_global(pad)
-select * from test_global t use index()
-select * from test_global t use key()
-select * from test_global use index(k_1)
-select * from test_global ignore index(k_1)
-select * from test_global force index(k_1)
-select * from test_global use index(pad_index,k_1)
-select * from test_global ignore index(pad_index,k_1)
-select * from test_global force index(pad_index,k_1)
-select * from test_global use key for join(k_1)
-select * from test_global ignore key for join(k_1)
-select * from test_global force key for join(k_1)
-select * from test_global use key for order by(k_1)
-select * from test_global ignore key for order by(k_1)
-select * from test_global force key for order by(k_1)
+select id,t_id,name,pad from test_global t use index()
+select id,t_id,name,pad from test_global t use key()
+select id,t_id,name,pad from test_global use index(k_1)
+select id,t_id,name,pad from test_global ignore index(k_1)
+select id,t_id,name,pad from test_global force index(k_1)
+select id,t_id,name,pad from test_global use index(pad_index,k_1)
+select id,t_id,name,pad from test_global ignore index(pad_index,k_1)
+select id,t_id,name,pad from test_global force index(pad_index,k_1)
+select id,t_id,name,pad from test_global use key for join(k_1)
+select id,t_id,name,pad from test_global ignore key for join(k_1)
+select id,t_id,name,pad from test_global force key for join(k_1)
+select id,t_id,name,pad from test_global use key for order by(k_1) order by t_id
+select id,t_id,name,pad from test_global ignore key for order by(k_1)
+select id,t_id,name,pad from test_global force key for order by(k_1) order by t_id
 select count(*) from test_global use key for group by(k_1)
 select count(*) from test_global ignore key  for group by(k_1)
 select count(*) from test_global force key for group by(k_1)
-select * from test_global use index for join(pad_index,k_1)
-select * from test_global ignore index for join(pad_index,k_1)
-select * from test_global force index for join(pad_index,k_1)
-select * from test_global use key(k_1)
-select * from test_global ignore key(k_1)
-select * from test_global force key(k_1)
-select * from test_global t use key(k_1) use index(pad_index) use index()
-select * from test_global t ignore key(k_1) use index(pad_index) use index()
-select * from test_global t ignore key(k_1) ignore index(pad_index) use index()
-select * from test_global t force key(k_1) force index(pad_index)
-select * from test_global t ignore key(k_1) force index(pad_index)
+select id,t_id,name,pad from test_global use index for join(pad_index,k_1)
+select id,t_id,name,pad from test_global ignore index for join(pad_index,k_1)
+select id,t_id,name,pad from test_global force index for join(pad_index,k_1)
+select id,t_id,name,pad from test_global use key(k_1)
+select id,t_id,name,pad from test_global ignore key(k_1)
+select id,t_id,name,pad from test_global force key(k_1)
+select id,t_id,name,pad from test_global t use key(k_1) use index(pad_index) use index()
+select id,t_id,name,pad from test_global t ignore key(k_1) use index(pad_index) use index()
+select id,t_id,name,pad from test_global t ignore key(k_1) ignore index(pad_index) use index()
+select id,t_id,name,pad from test_global t force key(k_1) force index(pad_index)
+select id,t_id,name,pad from test_global t ignore key(k_1) force index(pad_index)
 select id,pad,name from (select * from test_global where pad>2) as a
-select * from test_global a,a_order_no_shard b
-select * from (select * from test_global where id<3) a,(select * from a_order_no_shard where id>3) b
+select a.id,a.t_id,b.o_id,b.name from test_global a,a_order_no_shard b
+select a.id,a.t_id,b.o_id,b.name from (select * from test_global where id<3) a,(select * from a_order_no_shard where id>3) b
 select a.id,b.id,b.pad,a.t_id from test_global a,(select a_manager.id,a_manager.pad from test_global join a_manager where test_global.pad=a_manager.pad) b,(select * from a_order_no_shard where id>3) c where a.pad=b.pad and c.pad=b.pad
 #
 #join table
 #
-select * from test_global a join a_order_no_shard as b order by a.id,b.id
-select * from test_global a inner join a_order_no_shard b order by a.id,b.id
-select * from test_global a cross join a_order_no_shard b order by a.id,b.id
+select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from test_global a join a_order_no_shard as b order by a.id,b.id
+select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from test_global a inner join a_order_no_shard b order by a.id,b.id
+select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from test_global a cross join a_order_no_shard b order by a.id,b.id
 select a.id,a.name,a.pad,b.name from test_global a straight_join a_order_no_shard b on a.pad=b.pad
 #
 #SELECT ... UNION [ALL | DISTINCT] SELECT ... [UNION [ALL | DISTINCT] SELECT ...]
 #
-select * from test_global union all select * from a_manager union all select * from a_order_no_shard
-select * from test_global union distinct select * from a_manager union distinct select * from a_order_no_shard
-(select name from test_global where pad=1 order by id limit 10) union all (select name from a_order_no_shard where pad=1 order by id limit 10)
-(select name from test_global where pad=1 order by id limit 10) union distinct (select name from a_order_no_shard where pad=1 order by id limit 10)
-(select * from test_global where pad=1) union (select * from a_order_no_shard where pad=1) order by id limit 10
+select a.id,a.t_id,a.name,a.pad from test_global a union all select b.id,b.m_id,b.name,b.pad from a_manager b union all select c.id,c.o_id,c.name,c.pad from a_order_no_shard c
+select a.id,a.t_id,a.name,a.pad from test_global a union distinct select b.id,b.m_id,b.name,b.pad from a_manager b union distinct select c.id,c.o_id,c.name,c.pad from a_order_no_shard c
+(select name from test_global where pad=1 order by id limit 10) union all (select name from a_order_no_shard where pad=1 order by id limit 10) order by name
+(select name from test_global where pad=1 order by id limit 10) union distinct (select name from a_order_no_shard where pad=1 order by id limit 10) order by name
+(select a.id,a.t_id,a.name,a.pad from test_global a where pad=1) union (select c.id,c.o_id,c.name,c.pad from a_order_no_shard c where pad=1) order by id limit 10
 (select name as sort_a from test_global where pad=1) union (select name from a_order_no_shard where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from test_global where pad=1) union (select name,pad from a_order_no_shard where pad=1) order by sort_a,pad limit 10

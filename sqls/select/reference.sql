@@ -22,9 +22,9 @@ select * from a_test force index(pad_index,k_1)
 select * from a_test use key for join(k_1)
 select * from a_test ignore key for join(k_1)
 select * from a_test force key for join(k_1)
-select * from a_test use key for order by(k_1)
+select * from a_test use key for order by(k_1) order by t_id
 select * from a_test ignore key for order by(k_1)
-select * from a_test force key for order by(k_1)
+select * from a_test force key for order by(k_1) order by t_id
 select count(*) from a_test use key for group by(k_1)
 select count(*) from a_test ignore key  for group by(k_1)
 select count(*) from a_test force key for group by(k_1)
