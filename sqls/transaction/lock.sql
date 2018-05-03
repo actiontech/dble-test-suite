@@ -79,7 +79,7 @@ select * from sbtest1 a,(select * from sbtest2 lock in share mode)b where a.pad=
 #!sql_thread_2
 begin;
 update sbtest1 set pad=22 where id=1;
-update sbtest2 set pad=22 where id=1;/*hang*/
+update sbtest2 set pad=22 where id=1/*hang*/;
 #!sql_thread_1
 commit;
 #!sql_thread_2
@@ -98,7 +98,7 @@ select * from sbtest1 a,(select * from sbtest2 lock in share mode)b where a.pad=
 #!sql_thread_2
 begin;
 update sbtest1 set pad=22 where id=1;
-update sbtest2 set pad=22 where id=1;
+update sbtest2 set pad=22 where id=1/*hang*/;
 #!sql_thread_1
 rollback;
 #!sql_thread_2
@@ -114,7 +114,7 @@ begin;
 select * from sbtest1 order by id for update;
 #!sql_thread_2
 begin;
-select * from sbtest1 for update;/*hang*/
+select * from sbtest1 for update/*hang*/;
 #!sql_thread_1
 commit;
 #!sql_thread_2
@@ -129,7 +129,7 @@ begin;
 select * from sbtest1 order by id for update;
 #!sql_thread_2
 begin;
-select * from sbtest1 for update;/*hang*/
+select * from sbtest1 for update/*hang*/;
 #!sql_thread_1
 rollback ;
 #!sql_thread_2
@@ -144,7 +144,7 @@ begin;
 select * from sbtest1 order by id for update;
 #!sql_thread_2
 begin;
-update sbtest1 set pad=22 where id=1;/*hang*/
+update sbtest1 set pad=22 where id=1/*hang*/;
 #!sql_thread_1
 commit;
 #!sql_thread_2
@@ -160,7 +160,7 @@ begin;
 select * from sbtest1 order by id for update;
 #!sql_thread_2
 begin;
-update sbtest1 set pad=22 where id=1;/*hang*/
+update sbtest1 set pad=22 where id=1/*hang*/;
 #!sql_thread_1
 rollback;
 #!sql_thread_2
@@ -179,7 +179,7 @@ select * from sbtest1 a,(select * from sbtest2 for update)b where a.pad=b.pad or
 #!sql_thread_2
 begin;
 update sbtest1 set pad=22 where id=1;
-update sbtest2 set pad=22 where id=1;/*hang*/
+update sbtest2 set pad=22 where id=1/*hang*/;
 #!sql_thread_1
 commit
 #!sql_thread_2
@@ -198,7 +198,7 @@ select * from sbtest1 a,(select * from sbtest2 for update)b where a.pad=b.pad or
 #!sql_thread_2
 begin;
 update sbtest1 set pad=22 where id=1;
-update sbtest2 set pad=22 where id=1;/*hang*/
+update sbtest2 set pad=22 where id=1/*hang*/;
 #!sql_thread_1
 rollback
 #!sql_thread_2

@@ -93,6 +93,11 @@ def check_dble_started(context, ssh_client):
     else:
         LOGGER.info("start dble success !!!")
 
+@Given("stop all dbles")
+def stop_dbles(context):
+    for node in context.dbles:
+        stop_dble_in_node(context, node)
+
 @Then('stop dble in "{hostname}"')
 def stop_dble_in_hostname(context, hostname):
     node = get_node(context.dbles, hostname)
@@ -154,9 +159,11 @@ def restart_dbles(context, nodes):
     for node in nodes:
         restart_dble(context, node)
 
+    LOGGER.debug("zhj debug 1")
     if len(nodes) > 1:
         config_zk_in_dble_nodes(context)
         restart_zk_service(context)
+    LOGGER.debug("zhj debug 2")
 
 def restart_dble(context, node):
     stop_dble_in_node(context, node)

@@ -429,6 +429,7 @@ def connect_test(context, ip, user, passwd, port):
 
         sleep(5)
 
+    context.logger.info("create connection to dble 9066 success")
     assert_that(isSuccess, "can not connect to {0} after {1} seconds wait".format(ip, 5*max_try))
 
 @Given('clear dirty data yield by sql')
