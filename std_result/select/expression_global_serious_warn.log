@@ -1,0 +1,75 @@
+===file:select/expression_global.sql, id:65, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from (select * from test_global)a]===
+mysql err:(1054, "Unknown column 'test_global.id' in 'field list'")
+dble err[05:27:35.507114] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:97, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11')]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT ' at line 1")
+dble err[05:27:37.566102] :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER test_global')
+===file:select/expression_global.sql, id:98, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(b'01' test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11') from test_global]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT ' at line 1")
+dble err[05:27:37.617536] :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER test_global')
+===file:select/expression_global.sql, id:99, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11')]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT ' at line 1")
+dble err[05:27:37.665871] :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER test_global')
+===file:select/expression_global.sql, id:100, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(0b01 test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11') from test_global]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT ' at line 1")
+dble err[05:27:37.749511] :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER test_global')
+===file:select/expression_global.sql, id:135, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001' not in (select R_NAME from test_global where id =1)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:39.740449] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:136, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001'  in (select R_NAME from test_global where id =18)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:39.821876] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:137, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01  in (select R_NAME from test_global where id =18)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:39.902926] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:142, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.255157] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:143, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (1,2,3))]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.337370] :(1064, 'NullPointerException')
+===file:select/expression_global.sql, id:146, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) like (select '%A%') escape (select '%')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.585435] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:147, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not like (select '%A%') escape (select '%')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.666810] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:155, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=> (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.077327] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:156, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true = (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.159354] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:157, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.239647] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:158, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (1,2,3)))]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.322117] :(1064, 'NullPointerException')
+===file:select/expression_global.sql, id:159, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=(select HEX(R_bit) not like (select 2) from test_global limit 1)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.405158] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:160, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false <(select HEX(R_bit) like (select 1) from test_global limit 1)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.485426] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:161, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false <> (select HEX(R_bit) from test_global where HEX(R_bit)  not regexp '^A' limit 1 )]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.569047] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:162, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true != (select HEX(R_bit) from test_global where HEX(R_bit) regexp '^A' limit 1 )]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.620843] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:172, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))or(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.196393] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:173, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))||(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.277399] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:174, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))XOR(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.358271] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:175, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))and(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.440421] :(-1, 'error totally whack')
+===file:select/expression_global.sql, id:176, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.521412] :(-1, 'error totally whack')
