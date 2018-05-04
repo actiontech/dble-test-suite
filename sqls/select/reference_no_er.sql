@@ -55,8 +55,8 @@ select a.id,a.name,a.pad,b.name from a_test a straight_join a_two b on a.pad=b.p
 #
 select * from a_test union all select * from a_three union all select * from a_two
 select * from a_test union distinct select * from a_three union distinct select * from a_two
-(select name from a_test where pad=1 order by id limit 10) union all (select name from a_two where pad=1 order by id limit 10)
-(select name from a_test where pad=1 order by id limit 10) union distinct (select name from a_two where pad=1 order by id limit 10)
+(select name from a_test where pad=1 order by id limit 10) union all (select name from a_two where pad=1 order by id limit 10) order by name
+(select name from a_test where pad=1 order by id limit 10) union distinct (select name from a_two where pad=1 order by id limit 10) order by name
 (select * from a_test where pad=1) union (select * from a_two where pad=1) order by id limit 10
 (select name as sort_a from a_test where pad=1) union (select name from a_two where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from a_test where pad=1) union (select name,pad from a_two where pad=1) order by sort_a,pad limit 10

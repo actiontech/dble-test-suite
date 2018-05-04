@@ -46,3 +46,40 @@ Feature: #
       |file        | parent                                       | child                                          |
       |schema.xml  |{'tag':'root'}                              | {'tag':'dataHost'}  |
     Then execute admin cmd "reload @@config_all"
+    #add datahost
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1" writeType="0">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+
+	    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1" writeType="0">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+
+    """
+    #add datanode
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
+	    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
+	    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
+
+
+    """
+    #add schema
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+	    </schema>
+
+
+    """
+    Then execute admin cmd "reload @@config_all"

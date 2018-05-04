@@ -1,0 +1,12 @@
+===file:select/select_global.sql, id:112, sql:[select id,k,c,Distinctrow pad from test_global]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Distinctrow pad from test_global' at line 1")
+dble err[05:29:32.344539] :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Distinctrow AS pad\nFROM test_global\nLIMIT 100' at line 1")
+===file:select/select_global.sql, id:245, sql:[select id,k,c,pad from test_global order by R_COMMENT+1 asc]===
+mysql err:(1054, "Unknown column 'k' in 'field list'")
+dble err[05:29:45.179703] :(-1, 'error totally whack')
+===file:select/select_global.sql, id:246, sql:[select id,k,c,pad from test_global order by R_COMMENT,1+1]===
+mysql err:(1054, "Unknown column 'k' in 'field list'")
+dble err[05:29:45.267700] :(-1, 'error totally whack')
+===file:select/select_global.sql, id:247, sql:[select id,k,c,pad from test_global order by id,R_COMMENT]===
+mysql err:(1054, "Unknown column 'k' in 'field list'")
+dble err[05:29:45.355132] :(-1, 'error totally whack')

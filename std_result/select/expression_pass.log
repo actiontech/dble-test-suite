@@ -1,154 +1,204 @@
 ===file:select/expression.sql, id:4, sql:[drop table if exists test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:5, sql:[create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))DEFAULT CHARSET=UTF8]===
+dble:[[]]
 ===file:select/expression.sql, id:6, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string','test001'),(3,3, 'another string','test003'),(2,2, 'a\nstring','test002'),(4,4, '中','test004'),(5,5, 'a\'string\'','test005'),(6,6, 'a\""string\""','test006'),(7,7, 'a\bstring','test007'),(8,8, 'a\nstring','test008'),(9,9, 'a\rstring','test009'),(10,10, 'a\tstring','test010'),(11,11, 'a\zstring','test011'),(12,12, 'a\\string','test012'),(13,13, 'a\%string','test013'),(14,14, 'a\_string','test014'),(15,15, 'MySQL','test015'),(16,16, 'binary','test016'),(65,16, 'binary','test016'),(17,12345678901234567890123.4567890,17,17),(18,18, 'A','test018'),(19,19, '','test019')]===
+dble:[[]]
 ===file:select/expression.sql, id:7, sql:[select * from test_shard where R_NAME='a string']===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:8, sql:[select id,'a  string' from test_shard]===
+dble:[[(1L, 'a  string'), (2L, 'a  string'), (3L, 'a  string'), (4L, 'a  string'), (5L, 'a  string'), (6L, 'a  string'), (7L, 'a  string'), (8L, 'a  string'), (9L, 'a  string'), (10L, 'a  string'), (11L, 'a  string'), (12L, 'a  string'), (13L, 'a  string'), (14L, 'a  string'), (15L, 'a  string'), (16L, 'a  string'), (17L, 'a  string'), (18L, 'a  string'), (19L, 'a  string'), (65L, 'a  string')]]
 ===file:select/expression.sql, id:9, sql:[select * from test_shard where R_NAME="another string"]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression.sql, id:10, sql:[select id,"another string" from test_shard]===
+dble:[[(1L, 'another string'), (2L, 'another string'), (3L, 'another string'), (4L, 'another string'), (5L, 'another string'), (6L, 'another string'), (7L, 'another string'), (8L, 'another string'), (9L, 'another string'), (10L, 'another string'), (11L, 'another string'), (12L, 'another string'), (13L, 'another string'), (14L, 'another string'), (15L, 'another string'), (16L, 'another string'), (17L, 'another string'), (18L, 'another string'), (19L, 'another string'), (65L, 'another string')]]
 ===file:select/expression.sql, id:11, sql:[select * from test_shard where R_NAME='a' ' ' 'string']===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:12, sql:[select id,'a' ' ' 'string' from test_shard]===
+dble:[[(1L, 'a string'), (2L, 'a string'), (3L, 'a string'), (4L, 'a string'), (5L, 'a string'), (6L, 'a string'), (7L, 'a string'), (8L, 'a string'), (9L, 'a string'), (10L, 'a string'), (11L, 'a string'), (12L, 'a string'), (13L, 'a string'), (14L, 'a string'), (15L, 'a string'), (16L, 'a string'), (17L, 'a string'), (18L, 'a string'), (19L, 'a string'), (65L, 'a string')]]
 ===file:select/expression.sql, id:13, sql:[select * from test_shard where R_NAME=_utf8'中']===
+dble:[[]]
 ===file:select/expression.sql, id:15, sql:[select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci]===
+dble:[[]]
 ===file:select/expression.sql, id:17, sql:[select * from test_shard where R_NAME='a\'string\'']===
-===file:select/expression.sql, id:18, sql:[select id,'\'string\'',R_NAME from test_shard]===
+dble:[[(5L, 5.0, "a'string'", 'test005')]]
 ===file:select/expression.sql, id:19, sql:[select * from test_shard where R_NAME='a\"string\"']===
-===file:select/expression.sql, id:20, sql:[select id,'\"string\"',R_NAME from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:21, sql:[select * from test_shard where R_NAME='a\bstring']===
-===file:select/expression.sql, id:22, sql:[select id,'\b',R_NAME from test_shard]===
+dble:[[(7L, 7.0, 'a\x08string', 'test007')]]
 ===file:select/expression.sql, id:23, sql:[select * from test_shard where R_NAME='a\nstring']===
-===file:select/expression.sql, id:24, sql:[select id,'\n',R_NAME from test_shard]===
+dble:[[(2L, 2.0, 'a\nstring', 'test002'), (8L, 8.0, 'a\nstring', 'test008')]]
 ===file:select/expression.sql, id:25, sql:[select * from test_shard where R_NAME='a\rstring']===
-===file:select/expression.sql, id:26, sql:[select id,'\r',R_NAME from test_shard]===
+dble:[[(9L, 9.0, 'a\rstring', 'test009')]]
 ===file:select/expression.sql, id:27, sql:[select * from test_shard where R_NAME='a\tstring']===
-===file:select/expression.sql, id:28, sql:[select id,'\t',R_NAME from test_shard]===
+dble:[[(10L, 10.0, 'a\tstring', 'test010')]]
 ===file:select/expression.sql, id:29, sql:[select * from test_shard where R_NAME='a\zstring']===
-===file:select/expression.sql, id:30, sql:[select id,'\z',R_NAME from test_shard]===
+dble:[[(11L, 11.0, 'azstring', 'test011')]]
 ===file:select/expression.sql, id:31, sql:[select * from test_shard where R_NAME='a\\string']===
-===file:select/expression.sql, id:32, sql:[select id,'\\',R_NAME from test_shard]===
-===file:select/expression.sql, id:33, sql:[select * from test_shard where R_NAME='a\%string']===
-===file:select/expression.sql, id:34, sql:[select id,'\%',R_NAME from test_shard]===
-===file:select/expression.sql, id:35, sql:[select * from test_shard where R_NAME='a\_string']===
-===file:select/expression.sql, id:36, sql:[select id,'\_',R_NAME from test_shard]===
+dble:[[(12L, 12.0, 'a\\string', 'test012')]]
 ===file:select/expression.sql, id:37, sql:[select * from test_shard where R_NAME=(select X'4D7953514C')]===
-===file:select/expression.sql, id:38, sql:[select *,X'4D7953514C' from test_shard]===
+dble:[[(15L, 15.0, 'MySQL', 'test015')]]
 ===file:select/expression.sql, id:39, sql:[select * from test_shard where R_NAME=(select CHARSET(X'4D7953514C'))]===
+dble:[[(16L, 16.0, 'binary', 'test016'), (65L, 16.0, 'binary', 'test016')]]
 ===file:select/expression.sql, id:40, sql:[select * from test_shard where id=(select X'41'+0)]===
+dble:[[(65L, 16.0, 'binary', 'test016')]]
 ===file:select/expression.sql, id:41, sql:[select id,R_REGIONKEY+0 from test_shard]===
+dble:[[(1L, 1.0), (2L, 2.0), (3L, 3.0), (4L, 4.0), (5L, 5.0), (6L, 6.0), (7L, 7.0), (8L, 8.0), (9L, 9.0), (10L, 10.0), (11L, 11.0), (12L, 12.0), (13L, 13.0), (14L, 14.0), (15L, 15.0), (16L, 16.0), (17L, 1.2345679377913908e+22), (18L, 18.0), (19L, 19.0), (65L, 16.0)]]
 ===file:select/expression.sql, id:42, sql:[select * from test_shard where R_NAME=(SELECT CHARSET(b''))]===
-===file:select/expression.sql, id:43, sql:[select *,b'' from test_shard]===
+dble:[[(16L, 16.0, 'binary', 'test016'), (65L, 16.0, 'binary', 'test016')]]
 ===file:select/expression.sql, id:47, sql:[select * from test_shard where R_NAME=B'1000001']===
+dble:[[(18L, 18.0, 'A', 'test018')]]
 ===file:select/expression.sql, id:48, sql:[select * from test_shard where id=(select true)]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:49, sql:[select true from test_shard]===
+dble:[[(1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,)]]
 ===file:select/expression.sql, id:50, sql:[select TRUE from test_shard]===
+dble:[[(1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,)]]
 ===file:select/expression.sql, id:51, sql:[select false from test_shard]===
+dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,)]]
 ===file:select/expression.sql, id:52, sql:[select FALSE from test_shard]===
-===file:select/expression.sql, id:53, sql:[select R_NAME from test_shard]===
-===file:select/expression.sql, id:54, sql:[select test_shard.R_NAME from test_shard]===
-===file:select/expression.sql, id:55, sql:[select mytest.test_shard.R_NAME from test_shard]===
-===file:select/expression.sql, id:56, sql:[select R_NAME as a from test_shard]===
-===file:select/expression.sql, id:57, sql:[select R_NAME a from test_shard]===
+dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,)]]
 ===file:select/expression.sql, id:59, sql:[SELECT @@global.sql_mode]===
+dble:[[('STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',)]]
 ===file:select/expression.sql, id:60, sql:[select * from test_shard where id=1||id=3]===
+dble:[[(1L, 1.0, 'a string', 'test001'), (3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression.sql, id:61, sql:[select * from test_shard where +id=1]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:63, sql:[select * from test_shard where !id=1]===
-===file:select/expression.sql, id:64, sql:[select * from test_shard where ~(id=1)]===
-===file:select/expression.sql, id:65, sql:[select * from test_shard where !(id=10)]===
+dble:[[]]
 ===file:select/expression.sql, id:66, sql:[select * from test_shard where binary id=1]===
-===file:select/expression.sql, id:67, sql:[select * from (select * from test_shard)a]===
-===file:select/expression.sql, id:68, sql:[select * from test_shard where exists(select * from test_shard where id>1)]===
-===file:select/expression.sql, id:69, sql:[select R_name name from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:70, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
+dble:[[(datetime.date(2018, 4, 3),)]]
 ===file:select/expression.sql, id:71, sql:[select * from test_shard where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
+dble:[[]]
 ===file:select/expression.sql, id:75, sql:[select * from test_shard where id= (b'01' | B'11')]===
-===file:select/expression.sql, id:76, sql:[select *,(b'01' | B'11') from test_shard]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression.sql, id:77, sql:[select * from test_shard where id= (0b01 | B'11')]===
-===file:select/expression.sql, id:78, sql:[select *,(0b01 | B'11') from test_shard]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression.sql, id:79, sql:[select * from test_shard where id= (b'01' & B'11')]===
-===file:select/expression.sql, id:80, sql:[select *,(b'01' & B'11') from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:81, sql:[select * from test_shard where id= (0b01 & B'11')]===
-===file:select/expression.sql, id:82, sql:[select *,(0b01 & B'11') from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:83, sql:[select * from test_shard where id= (b'01' << B'11')]===
-===file:select/expression.sql, id:84, sql:[select *,(b'01' << B'11') from test_shard]===
+dble:[[(8L, 8.0, 'a\nstring', 'test008')]]
 ===file:select/expression.sql, id:85, sql:[select * from test_shard where id= (0b01 << B'11')]===
-===file:select/expression.sql, id:86, sql:[select *,(0b01 << B'11') from test_shard]===
+dble:[[(8L, 8.0, 'a\nstring', 'test008')]]
 ===file:select/expression.sql, id:87, sql:[select * from test_shard where id= (b'01' >> B'11')]===
-===file:select/expression.sql, id:88, sql:[select *,(b'01' >> B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:89, sql:[select * from test_shard where id= (0b01 >> B'11')]===
-===file:select/expression.sql, id:90, sql:[select *,(0b01 >> B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:91, sql:[select * from test_shard where id= (b'01' + B'11')]===
-===file:select/expression.sql, id:92, sql:[select *,(b'01' + B'11') from test_shard]===
+dble:[[(4L, 4.0, '\xe4\xb8\xad', 'test004')]]
 ===file:select/expression.sql, id:93, sql:[select * from test_shard where id= (0b01 + B'11')]===
-===file:select/expression.sql, id:94, sql:[select *,(0b01 + B'11') from test_shard]===
+dble:[[(4L, 4.0, '\xe4\xb8\xad', 'test004')]]
 ===file:select/expression.sql, id:95, sql:[select * from test_shard where id= (b'01' - B'11')]===
-===file:select/expression.sql, id:96, sql:[select *,(b'01' - B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:97, sql:[select * from test_shard where id= (0b01 - B'11')]===
-===file:select/expression.sql, id:98, sql:[select *,(0b01 - B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:99, sql:[select * from test_shard where id= (b'01' * B'11')]===
-===file:select/expression.sql, id:100, sql:[select *,(b'01' * B'11') from test_shard]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression.sql, id:101, sql:[select * from test_shard where id= (0b01 * B'11')]===
-===file:select/expression.sql, id:102, sql:[select *,(0b01 * B'11') from test_shard]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression.sql, id:103, sql:[select * from test_shard where id= (b'01' / B'11')]===
-===file:select/expression.sql, id:104, sql:[select *,(b'01' / B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:105, sql:[select * from test_shard where id= (0b01 / B'11')]===
-===file:select/expression.sql, id:106, sql:[select *,(0b01 / B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:107, sql:[select * from test_shard where id= (b'01' div B'11')]===
-===file:select/expression.sql, id:108, sql:[select *,(b'01' div B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:109, sql:[select * from test_shard where id= (0b01 div B'11')]===
-===file:select/expression.sql, id:110, sql:[select *,(0b01 div B'11') from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:111, sql:[select * from test_shard where id= (b'01' mod B'11')]===
-===file:select/expression.sql, id:112, sql:[select *,(b'01' mod B'11') from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:113, sql:[select * from test_shard where id= (0b01 mod B'11')]===
-===file:select/expression.sql, id:114, sql:[select *,(0b01 mod B'11') from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:115, sql:[select * from test_shard where id= (b'01' % B'11')]===
-===file:select/expression.sql, id:116, sql:[select *,(b'01' % B'11') from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:117, sql:[select * from test_shard where id= (0b01 % B'11')]===
-===file:select/expression.sql, id:118, sql:[select *,(0b01 % B'11') from test_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:119, sql:[select * from test_shard where id= (b'01' ^ B'11')]===
-===file:select/expression.sql, id:120, sql:[select *,(b'01' ^ B'11') from test_shard]===
+dble:[[(2L, 2.0, 'a\nstring', 'test002')]]
 ===file:select/expression.sql, id:121, sql:[select * from test_shard where id= (0b01 ^ B'11')]===
-===file:select/expression.sql, id:122, sql:[select *,(0b01 ^ B'11') from test_shard]===
+dble:[[(2L, 2.0, 'a\nstring', 'test002')]]
 ===file:select/expression.sql, id:123, sql:[select * from test_shard where id= (b'01' + interval 30 day)]===
-===file:select/expression.sql, id:124, sql:[select *,(b'01' + interval 30 day) from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:125, sql:[select * from test_shard where id= (0b01 + interval 1 year)]===
-===file:select/expression.sql, id:126, sql:[select *,(0b01 + interval 1 year) from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:127, sql:[select * from test_shard where id= (b'01' - interval 30 day)]===
-===file:select/expression.sql, id:128, sql:[select *,(b'01' - interval 30 day) from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:129, sql:[select * from test_shard where id= (0b01 - interval 1 year)]===
-===file:select/expression.sql, id:130, sql:[select *,(0b01 - interval 1 year) from test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:134, sql:[drop table if exists test_shard]===
+dble:[[]]
 ===file:select/expression.sql, id:135, sql:[create table test_shard (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
 ===file:select/expression.sql, id:136, sql:[insert into test_shard (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')]===
+dble:[[]]
 ===file:select/expression.sql, id:138, sql:[select * from test_shard where b'1000001'  in (select R_NAME from test_shard where id =18)]===
+dble:[[]]
 ===file:select/expression.sql, id:139, sql:[select * from test_shard where 0b01  in (select R_NAME from test_shard where id =18)]===
+dble:[[]]
 ===file:select/expression.sql, id:140, sql:[select * from test_shard where b'01' not in (1,'string')]===
+dble:[[]]
 ===file:select/expression.sql, id:141, sql:[select * from test_shard where b'01' not in (10,'string')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:142, sql:[select * from test_shard where 0b01 in (1,'string')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:143, sql:[select * from test_shard where 0b01 in (10,'string')]===
+dble:[[]]
 ===file:select/expression.sql, id:144, sql:[select * from test_shard where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:146, sql:[select HEX(R_bit) not like (select 1) from test_shard]===
+dble:[[(0L,), (1L,), (1L,), (1L,)]]
 ===file:select/expression.sql, id:147, sql:[select HEX(R_bit) like (select 1) from test_shard]===
+dble:[[(0L,), (0L,), (0L,), (1L,)]]
 ===file:select/expression.sql, id:148, sql:[select * from test_shard where HEX(R_bit) like (select '%A%') escape (select '%')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:149, sql:[select * from test_shard where HEX(R_bit) not like (select '%A%') escape (select '%')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
 ===file:select/expression.sql, id:150, sql:[select * from test_shard where HEX(R_bit)  not regexp '^A']===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
 ===file:select/expression.sql, id:151, sql:[select * from test_shard where HEX(R_bit)  regexp '^A']===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:155, sql:[select * from test_shard where true is not null]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:156, sql:[select * from test_shard where false is null]===
+dble:[[]]
 ===file:select/expression.sql, id:157, sql:[select * from test_shard where true <=> (HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:158, sql:[select * from test_shard where true = (HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:159, sql:[select * from test_shard where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:162, sql:[select * from test_shard where false <> (select HEX(R_bit) from test_shard where HEX(R_bit)  not regexp '^A' limit 1 )]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:163, sql:[select * from test_shard where true != (select HEX(R_bit) from test_shard where HEX(R_bit) regexp '^A' limit 1 )]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:164, sql:[select * from test_shard where true is not true]===
+dble:[[]]
 ===file:select/expression.sql, id:165, sql:[select * from test_shard where !(true is not true)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:166, sql:[select * from test_shard where false is false]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:167, sql:[select * from test_shard where !(false is false)]===
+dble:[[]]
 ===file:select/expression.sql, id:168, sql:[select * from test_shard where true is unknown]===
+dble:[[]]
 ===file:select/expression.sql, id:169, sql:[select * from test_shard where !(true is unknown)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:173, sql:[select * from test_shard where (HEX(R_bit) like (select 1))or(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:174, sql:[select * from test_shard where (HEX(R_bit) like (select 1))||(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:175, sql:[select * from test_shard where (HEX(R_bit) like (select 1))XOR(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:176, sql:[select * from test_shard where (HEX(R_bit) not like (select 1))and(HEX(R_bit) regexp '^A')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:177, sql:[select * from test_shard where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:178, sql:[select * from test_shard where not(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
 ===file:select/expression.sql, id:179, sql:[select * from test_shard where !(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
 ===file:select/expression.sql, id:180, sql:[drop table if exists test_shard]===
+dble:[[]]

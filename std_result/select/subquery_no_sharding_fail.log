@@ -1,0 +1,3 @@
+===file:select/subquery_no_sharding.sql, id:55, sql:[select (select name from a_test_no_shard limit 1)]===
+dble:[[(1L,)]]
+mysql:[[('test\xe4\xb8\xadid\xe4\xb8\xba1',)]]

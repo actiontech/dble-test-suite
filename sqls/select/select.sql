@@ -5,6 +5,9 @@ insert into test_shard(id,k,pad) values(19,19,19)
 drop table if exists testdb.tb_test
 CREATE TABLE testdb.tb_test(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8
 insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15)
+drop table if exists sbtest2
+CREATE TABLE sbtest2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
+insert into sbtest2 values(1,1,'sb2_1',1),(2,2,'sb2_2',2),(3,3,'sb2_3',3),(4,4,'sb2_4',4),(5,5,'sb2_5',1),(6,6,'sb2_6',2),(7,7,'sb2_7',3),(8,8,'$sb2_8$',4)
 #
 #select select_expr
 #
@@ -284,9 +287,9 @@ insert into test_shard values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'
 select * from test_shard order by R_COMMENT
 select * from test_shard order by R_NAME
 select R_NAME,max(R_REGIONKEY) from test_shard group by R_name
-select * from test_shard limit 2,3
-select * from test_shard limit 1,1
-select * from test_shard limit 1,2
+select * from test_shard order by id limit 2,3
+select * from test_shard order by id limit 1,1
+select * from test_shard order by id limit 1,2
 select id,R_REGIONKEY from test_shard order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_shard group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_shard group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3
@@ -299,43 +302,8 @@ insert into test_shard values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4
 insert into test_shard(id,k,pad) values(19,19,19);
 select count(distinct pad),sum(distinct id) from test_shard group by pad;
 select count(distinct pad,k),sum(distinct id) from test_shard group by pad;
-select distinct pad from test_shard limit 4;
-select * from test_shard limit 2,3;
+select distinct pad from test_shard order by id limit 4;
+select * from test_shard order by id limit 2,3;
 select id,pad from test_shard order by id,pad limit 2,3;
 select id,pad from test_shard group by id,pad  order by id limit 2,3;
 select id,pad,sum(id) from test_shard group by id,pad  order by id,pad limit 2,3;
-#
-# table_factor
-#
-drop table if exists test_shard
-CREATE TABLE test_shard(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`));
-insert into test_shard values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6);
-create index pad_index on test_shard(pad)
-select * from test_shard t use index();
-select * from test_shard t use key();
-select * from test_shard use index(k_1);
-select * from test_shard ignore index(k_1);
-select * from test_shard force index(k_1);
-select * from test_shard use index(pad_index,k_1);
-select * from test_shard ignore index(pad_index,k_1);
-select * from test_shard force index(pad_index,k_1);
-select * from test_shard use key for join(k_1);
-select * from test_shard ignore key for join(k_1);
-select * from test_shard force key for join(k_1);
-select * from test_shard use key for order by(k_1);
-select * from test_shard ignore key for order by(k_1);
-select * from test_shard force key for order by(k_1);
-select count(*) from test_shard use key for group by(k_1);
-select count(*) from test_shard ignore key  for group by(k_1);
-select count(*) from test_shard force key for group by(k_1);
-select * from test_shard use index for join(pad_index,k_1);
-select * from test_shard ignore index for join(pad_index,k_1);
-select * from test_shard force index for join(pad_index,k_1);
-select * from test_shard use key(k_1);
-select * from test_shard ignore key(k_1);
-select * from test_shard force key(k_1);
-select * from test_shard t use key(k_1) use index(pad_index) use index();
-select * from test_shard t ignore key(k_1) use index(pad_index) use index();
-select * from test_shard t ignore key(k_1) ignore index(pad_index) use index();
-select * from test_shard t force key(k_1) force index(pad_index) ;
-select * from test_shard t ignore key(k_1) force index(pad_index);

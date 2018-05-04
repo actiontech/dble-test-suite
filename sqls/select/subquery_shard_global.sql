@@ -12,15 +12,15 @@ insert into test_global values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'or
 insert into a_manager values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
 select a.id,b.id,b.pad,a.t_id from a_test a,(select all * from test_global) b where a.t_id=b.o_id;
 select a.id,b.id,b.pad,a.t_id from a_test a,(select distinct * from test_global) b where a.t_id=b.o_id;
-select * from (select * from test_global a group by a.id) a;
+select a.id,a.o_id,a.name,a.pad from (select * from test_global a group by a.id) a;
 select * from (select pad,count(*) from test_global a group by pad) a;
 select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global having pad>3) b where a.t_id=b.o_id;
 select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global where pad>3 order by id) b where a.t_id=b.o_id;
-select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global order by id limit 3) b where a.t_id=b.o_id;
-select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global order by id limit 3) b where a.t_id=b.o_id limit 2;
+select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global order by id limit 3) b where a.t_id=b.o_id order by a.id;
+select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global order by id limit 3) b where a.t_id=b.o_id order by a.id limit 2;
 select a.id,b.id,b.pad,a.t_id from a_test a,(select * from test_global where pad>3) b where a.t_id=b.o_id;
 select * from (select test_global.pad from a_test left join test_global on a_test.pad=test_global.pad) a;
-select * from (select * from a_test union select * from test_global) a where a.id >3;
+select * from (select * from a_test union select id,o_id,name,pad from test_global) a where a.id >3;
 select id,pad from a_test where pad=(select min(id) from test_global);
 select id,pad,name from (select * from a_test where pad>2) a where id<5;
 select pad,count(*) from (select * from a_test where pad>2) a group by pad;
@@ -47,7 +47,7 @@ select * from a_test where pad=any(select id from a_test where pad>1);
 select * from a_test where pad !=any(select id from a_test where pad=3);
 select a.id,b.id,b.pad,a.t_id from (select a_test.id,a_test.pad,a_test.t_id from a_test join test_global where a_test.pad=test_global.pad ) a,(select a_manager.id,a_manager.pad from a_test join a_manager where a_test.pad=a_manager.pad) b where a.pad=b.pad;
 select * from a_test where pad>(select pad from a_test where pad=2);
-select * from a_test,(select * from a_test where id>3 union select * from test_global where id<2) a where a.id >3 and a_test.pad=a.pad;
+select * from a_test,(select * from a_test where id>3 union select id,o_id,name,pad from test_global where id<2) a where a.id >3 and a_test.pad=a.pad;
 select count(*) from (select * from a_test where pad=(select pad from test_global where id=1)) a;
 #
 #Second supplement

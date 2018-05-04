@@ -1,0 +1,48 @@
+===file:select/expression_global.sql, id:138, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (1,'string')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:39.987238] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:139, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (10,'string')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.037289] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:140, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (1,'string')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.089136] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:141, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (10,'string')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.171976] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:148, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  not regexp '^A']===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.748913] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:149, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  regexp '^A']===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.829921] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:153, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not null]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.912979] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:154, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false is null]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:40.995818] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:163, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not true]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.703684] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:164, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is not true)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.784960] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:165, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false is false]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.867050] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:166, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(false is false)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:41.949629] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:167, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true is unknown]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.032501] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:168, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is unknown)]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.113737] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:177, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where not(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.604643] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+===file:select/expression_global.sql, id:178, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(HEX(R_bit) regexp '^A')]===
+mysql err:(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")
+dble err[05:27:42.687580] :(1054, "Unknown column 'test_global.R_REGIONKEY' in 'field list'")

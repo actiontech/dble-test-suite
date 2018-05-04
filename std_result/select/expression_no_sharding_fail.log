@@ -1,12 +1,12 @@
 ===file:select/expression_no_sharding.sql, id:44, sql:[select * from test_no_shard where R_NAME=_latin1 b'1000001']===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[16:55:29.517479]dble err :(1064, "syntax error, error in :'tin1 b'1000001'',expect IDENTIFIER, actual IDENTIFIER b")
+[05:27:45.686682]dble err :(1064, "syntax error, error in :'tin1 b'1000001'',expect IDENTIFIER, actual IDENTIFIER b")
 ===file:select/expression_no_sharding.sql, id:45, sql:[select * from test_no_shard where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci]===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[16:55:29.597503]dble err :(1064, "syntax error, error in :'utf8 0b1000001 COLLATE utf8_danish_',expect LITERAL_INT, actual LITERAL_INT _utf8")
+[05:27:45.768519]dble err :(1064, "syntax error, error in :'utf8 0b1000001 COLLATE utf8_danish_',expect LITERAL_INT, actual LITERAL_INT _utf8")
 ===file:select/expression_no_sharding.sql, id:46, sql:[select *,_latin1 b'1000001' from test_no_shard]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 'A'), (2L, 2.0, 'a\nstring', 'test002', 'A'), (3L, 3.0, 'another string', 'test003', 'A'), (4L, 4.0, '\xe4\xb8\xad', 'test004', 'A'), (5L, 5.0, "a'string'", 'test005', 'A'), (6L, 6.0, 'a""string""', 'test006', 'A'), (7L, 7.0, 'a\x08string', 'test007', 'A'), (8L, 8.0, 'a\nstring', 'test008', 'A'), (9L, 9.0, 'a\rstring', 'test009', 'A'), (10L, 10.0, 'a\tstring', 'test010', 'A'), (11L, 11.0, 'azstring', 'test011', 'A'), (12L, 12.0, 'a\\string', 'test012', 'A'), (13L, 13.0, 'a\\%string', 'test013', 'A'), (14L, 14.0, 'a\\_string', 'test014', 'A'), (15L, 15.0, 'MySQL', 'test015', 'A'), (16L, 16.0, 'binary', 'test016', 'A'), (17L, 1.23457e+22, '17', '17', 'A'), (18L, 18.0, 'A', 'test018', 'A'), (19L, 19.0, '', 'test019', 'A'), (65L, 16.0, 'binary', 'test016', 'A'))]
-[16:55:29.677567]dble err :(1064, "syntax error, error in :'tin1 b'1000001' from test_no_shard',expect LITERAL_CHARS, actual LITERAL_CHARS 1000001")
+[05:27:45.848808]dble err :(1064, "syntax error, error in :'tin1 b'1000001' from test_no_shard',expect LITERAL_CHARS, actual LITERAL_CHARS 1000001")
