@@ -1,23 +1,13 @@
-#environment
-python 2.7.10
-behave 1.2.5
-mysql 5.7.13 / replication by gtid
 
-#env prepare eg:
-> cd compose
-> mv docker-compose-agent.yml docker-compose.yml
-> sudo docker-compose up -d --force-recreate //create inner containers
-#Create /opt/auto_build directory to store various installation packages
-#jdk-8u121-linux-x64.rpm, after decompression: mysql-5.7.13-linux-glibc2.5-x86_64, zookeeper-3.4.9
-> bash en_dble.sh //initialize the inner containers
+一、环境搭建参考：compose/README.txt
 
-#use drivers do test:
-A. connector/c
-#covers mysql interface_test
-#step1:编译drivers/c_mysql_api/c_mysql_api.c文件, generate c_mysql_api.o：
+二、对connector/c中接口的支持度测试
+#step1:编译drivers/c_mysql_api/c_mysql_api.c文件, 生成 c_mysql_api.o：
 gcc c_mysql_api.c -o c_mysql_api.o -I/opt/mysql-5.7.13-linux-glibc2.5-x86_64/include -L/opt/mysql-5.7.13-linux-glibc2.5-x86_64/lib -lmysqlclient
+#step2:运行
+./c_mysql_api.o
 
-B. connector/j
+三、对connector/j中接口及sql的支持度测试
 #环境(already configured in agent docker)：
 #java version "1.8.0_111"
 #Java(TM) SE Runtime Environment (build 1.8.0_111-b14)
@@ -34,13 +24,8 @@ Step3:cd drivers/java 执行
     java -jar interface_test.jar | tee output.log 2>&1
 	如果打印调试信息：java -jar interface_test.jar debug| tee output.log 2>&1
 
-环境依赖：
-1，mysql 5.7.13
-2, zookeeper 3.4.9
-3, jdk-8u121 in dble resides node
-4, easy_install python-yaml in behave resides node
-
-# use behave do test
+四、使用MySQLdb驱动测试dble对sql的支持对（use behave)
+# behave 自定义命令行参数说明：
 # -D tar_local={true|false}, default false
 # -D test_config={auto_dble_test.yaml}
 # -D reinstall=true is a must for install related features
@@ -57,7 +42,7 @@ behave -Dreinstall=true features/install_uninstall/update_dble.feature
 #通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
 behave -Dreinstall=true features/install_uninstall/install_dble_and_zk.feature
 
-#sql覆盖 #maofei
+#sql覆盖
 behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature
 
 #算法

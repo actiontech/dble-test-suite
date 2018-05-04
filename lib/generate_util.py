@@ -1,6 +1,5 @@
 import string
 import random
-import datetime
 import time
 
 class generate():
@@ -8,8 +7,7 @@ class generate():
         pass
 
     def rand_string(self,length):
-        return ''.join(random.choice(
-            string.ascii_lowercase + string.ascii_uppercase + string.digits)
+        return ''.join(random.choice(string.ascii_lowercase + string.ascii_uppercase + string.digits)
                        for i in range(length)
                        )
 

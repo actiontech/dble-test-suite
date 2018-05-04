@@ -4,16 +4,16 @@ mysql_install=("mysql" "mysql-master1" "mysql-master2" "mysql-slave1" "mysql-sla
 dble_install=("dble-1" "dble-2" "dble-3")
 count=${#mysql_install[@]}
 
-cp -r ./install_mysql.sh /opt/auto_build
+cp ./install_mysql.sh /opt/auto_build
+cp ./sources/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz /opt/auto_build/
+
 for(( i=0;i<count;i=i+1 ));
 do
 	echo "install mysql in ${mysql_install[$i]} start"
 	docker exec ${mysql_install[$i]} bash /init_assets/install_mysql.sh $i
 	echo "install mysql in ${mysql_install[$i]} finished"
-    docker exec ${mysql_install[$i]} sh -c "yum install -y openssh-server" \
-    && docker exec ${mysql_install[$i]} sh -c "sed -i '$ a UseDNS no \nGSSAPIAuthentication no ' /etc/ssh/sshd_config" \
-    && docker exec ${mysql_install[$i]} sh -c "echo 'sshpass' | passwd root --stdin" \
-    && docker exec ${mysql_install[$i]} sh -c "yum install -y net-tools"
+    docker exec ${mysql_install[$i]} sh -c "sed -i '$ a UseDNS no \nGSSAPIAuthentication no ' /etc/ssh/sshd_config" \
+    docker exec ${mysql_install[$i]} sh -c "echo 'sshpass' | passwd root --stdin"
     docker exec ${mysql_install[$i]} /etc/init.d/sshd restart
 done
 
@@ -64,19 +64,14 @@ for((i=0; i<3; i=i+1)); do
 		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db4\" "
 done
 
-cp -r ./install_jdk.sh /opt/auto_build
-cp -r ./install_zookeeper.sh /opt/auto_build
+cp ./install_jdk.sh /opt/auto_build
+cp ./install_zookeeper.sh /opt/auto_build
+cp ./sources/jdk-8u121-linux-x64.tar.gz /opt/auto_build/
+cp ./sources/zookeeper-3.4.9.tar.gz /opt/auto_build/
+
 for((i=0; i<3; i=i+1)); do
-    echo "install jdk in ${dble_install[$i]}"
     docker exec ${dble_install[$i]} bash /init_assets/install_jdk.sh $i
     echo "install jdk in ${mysql_install[$i]} finished"
     docker exec ${dble_install[$i]} bash /init_assets/install_zookeeper.sh $i
-    docker exec ${dble_install[$i]} sh /opt/zookeeper/bin/zkServer.sh start
     echo "install zookeeper in ${dble_install[$i]} finished"
 done
-
-
-
-
-
-
