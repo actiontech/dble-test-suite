@@ -8,4 +8,5 @@
   ./en_dble.sh
 
 3, easy_install python-yaml in behave resides node
+  easy_install python-yaml
 4, behave 1.2.5
