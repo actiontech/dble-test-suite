@@ -1,3 +1,0 @@
-===file:select/subquery.sql, id:69, sql:[SELECT pad FROM a_test AS x WHERE x.id = (SELECT pad FROM a_order AS y WHERE x.id = (SELECTs pad FROM a_manager WHERE y.id = a_manager.id));]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'pad FROM a_manager WHERE y.id = a_manager.id))' at line 1")
-dble err[05:31:27.642143] :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER pad')

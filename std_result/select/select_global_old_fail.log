@@ -1,14 +1,14 @@
 ===file:select/select_global_old.sql, id:85, sql:[SELECT distinct * FROM global_table1 WHERE ID IN ( SELECT ID FROM global_table1 WHERE ID >0)]===
-dble:[[(201L, 'Mazojys', 'Fxoj', 'Finance', 7800L, 1525339788079L), (202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L, 1525339788079L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L, 1525339788079L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L, 1525339788079L), (205L, 'Jssme', 'Bdnaa', 'Development', 75000L, 1525339788079L), (206L, 'Dnnaao', 'Errllov', 'Development', 55000L, 1525339788079L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L, 1525339788079L)]]
+dble:[[(201L, 'Mazojys', 'Fxoj', 'Finance', 7800L, 1525686796823L), (202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L, 1525686796823L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L, 1525686796823L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L, 1525686796823L), (205L, 'Jssme', 'Bdnaa', 'Development', 75000L, 1525686796823L), (206L, 'Dnnaao', 'Errllov', 'Development', 55000L, 1525686796823L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L, 1525686796823L)]]
 mysql:[[(201L, 'Mazojys', 'Fxoj', 'Finance', 7800L), (202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L), (205L, 'Jssme', 'Bdnaa', 'Development', 75000L), (206L, 'Dnnaao', 'Errllov', 'Development', 55000L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L)]]
 ===file:select/select_global_old.sql, id:126, sql:[select count(*) from global_table1 where MYDATE between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')]===
 dble:[None]
 mysql:[((2L,),)]
-[05:29:58.356489]dble err :(1064, 'NullPointerException')
+[05:53:31.776931]dble err :(1064, 'NullPointerException')
 ===file:select/select_global_old.sql, id:127, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT count(*) from global_table1 where mydate between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')]===
 dble:[None]
 mysql:[((2L,),)]
-[05:29:58.427493]dble err :(1064, 'NullPointerException')
+[05:53:31.887099]dble err :(1064, 'NullPointerException')
 ===file:select/select_global_old.sql, id:166, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 1, O_ORDERKEY desc]===
 dble:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005'))]
 mysql:[(('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_132', 'ORDERKEY_005'))]
@@ -21,44 +21,48 @@ mysql:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUST
 ===file:select/select_global_old.sql, id:210, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[05:30:04.622927]dble err :(-1, 'error totally whack')
+[05:53:40.130714]dble err :(-1, 'error totally whack')
 ===file:select/select_global_old.sql, id:211, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[05:30:04.712968]dble err :(-1, 'error totally whack')
+[05:53:40.236538]dble err :(-1, 'error totally whack')
 ===file:select/select_global_old.sql, id:220, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[05:30:05.295478]dble err :(-1, 'error totally whack')
+[05:53:41.014757]dble err :(-1, 'error totally whack')
 ===file:select/select_global_old.sql, id:221, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from global_table2) order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[05:30:05.386000]dble err :(-1, 'error totally whack')
+[05:53:41.123562]dble err :(-1, 'error totally whack')
+===file:select/select_global_old.sql, id:250, sql:[select count(*) from global_table2 as a where a.c_CUSTKEY=(select max(C_CUSTKEY) from global_table1 where C_CUSTKEY=a.C_CUSTKEY)]===
+dble:[None]
+mysql:[((1L,),)]
+[05:53:43.922943]dble err :(1105, 'Correlated Sub Queries is not supported ')
 ===file:select/select_global_old.sql, id:251, sql:[select C_CUSTKEY  from global_table2 as a where (select count(*) from global_table1 where O_CUSTKEY=a.C_CUSTKEY)=2]===
 dble:[None]
 mysql:[(('CUSTKEY_003',),)]
-[05:30:07.542178]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[05:53:44.056994]dble err :(1105, 'Correlated Sub Queries is not supported ')
 ===file:select/select_global_old.sql, id:254, sql:[select count(*) from global_table2 as a where 2>all(select count(*) from global_table1 where O_CUSTKEY=C_CUSTKEY)]===
 dble:[None]
 mysql:[((6L,),)]
-[05:30:07.752925]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[05:53:44.357422]dble err :(1105, 'Correlated Sub Queries is not supported ')
 ===file:select/select_global_old.sql, id:255, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from global_table1 a where (a.O_ORDERKEY,O_CUSTKEY)=(select c_ORDERKEY,c_CUSTKEY from global_table2 where c_name='yanglu')]===
 dble:[None]
 mysql:[((6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L),)]
-[05:30:07.844220]dble err :(1064, 'Row Subqueries is not supported')
+[05:53:44.453354]dble err :(1064, 'Row Subqueries is not supported')
 ===file:select/select_global_old.sql, id:256, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from global_table1 a where (a.O_ORDERKEY,a.O_CUSTKEY) in (select c_ORDERKEY,c_CUSTKEY from global_table2) order by id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE]===
 dble:[None]
 mysql:[((1L, 'CUSTKEY_003', 'ORDERKEY_001', 200000L), (4L, 'CUSTKEY_111', 'ORDERKEY_004', 500L), (5L, 'CUSTKEY_132', 'ORDERKEY_005', 100L), (6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L), (7L, 'CUSTKEY_980', 'ORDERKEY_007', 12000L), (10L, 'CUSTKEY_333', 'ORDERKEY_010', 88888888L), (11L, 'CUSTKEY_012', 'ORDERKEY_011', 323456L))]
-[05:30:07.932161]dble err :(1064, 'Row Subqueries is not supported')
+[05:53:44.547126]dble err :(1064, 'Row Subqueries is not supported')
 ===file:select/select_global_old.sql, id:257, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from global_table1 a where exists(select * from global_table2 where a.O_CUSTKEY=global_table2.C_CUSTKEY)]===
 dble:[None]
 mysql:[((1L, 'CUSTKEY_003', 'ORDERKEY_001', 200000L), (2L, 'CUSTKEY_003', 'ORDERKEY_002', 100000L), (4L, 'CUSTKEY_111', 'ORDERKEY_004', 500L), (5L, 'CUSTKEY_132', 'ORDERKEY_005', 100L), (6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L), (7L, 'CUSTKEY_980', 'ORDERKEY_007', 12000L), (10L, 'CUSTKEY_333', 'ORDERKEY_010', 88888888L), (11L, 'CUSTKEY_012', 'ORDERKEY_011', 323456L))]
-[05:30:08.021709]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[05:53:44.643657]dble err :(1105, 'Correlated Sub Queries is not supported ')
 ===file:select/select_global_old.sql, id:258, sql:[select distinct O_ORDERKEY,O_CUSTKEY from global_table1 a where exists(select * from global_table2 where a.O_CUSTKEY=global_table2.C_CUSTKEY)]===
 dble:[None]
 mysql:[(('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003'), ('ORDERKEY_011', 'CUSTKEY_012'), ('ORDERKEY_004', 'CUSTKEY_111'), ('ORDERKEY_005', 'CUSTKEY_132'), ('ORDERKEY_010', 'CUSTKEY_333'), ('ORDERKEY_006', 'CUSTKEY_420'), ('ORDERKEY_007', 'CUSTKEY_980'))]
-[05:30:08.111143]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[05:53:44.768626]dble err :(1105, 'Correlated Sub Queries is not supported ')
 ===file:select/select_global_old.sql, id:259, sql:[select count(*) from global_table1 a where not exists(select * from global_table2 where a.O_CUSTKEY=global_table2.C_CUSTKEY)]===
 dble:[None]
 mysql:[((0L,),)]
-[05:30:08.201527]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[05:53:44.866997]dble err :(1105, 'Correlated Sub Queries is not supported ')

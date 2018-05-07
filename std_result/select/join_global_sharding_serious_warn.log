@@ -1,3 +1,0 @@
-===file:select/join_global_sharding.sql, id:33, sql:[select a_test_no_shard.id,a_test_no_shard.t_id,a_test_no_shard.name,a_test_no_shard.pad,test_global.id,test_global.o_id,test_global.name,test_global.pad from a_test straight_join test_global order by a_test.id,test_global.id]===
-mysql err:(1054, "Unknown column 'a_test_no_shard.id' in 'field list'")
-dble err[05:28:14.935716] :(-1, 'error totally whack')

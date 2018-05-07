@@ -1,8 +1,9 @@
-===file:syntax/sysfunction3.sql, id:9, sql:[select any_value(a), max(b) from global_table1 group by(b)]===
-dble:[None]
-mysql:[(('{"id": "2", "name": "Wilma"}', 2L), ('{"id": "3", "name": "Barney"}', 3L))]
-[13:37:26.955812]dble err :(1003, 'Invalid ordinal:245')
-===file:syntax/sysfunction3.sql, id:10, sql:[UPDATE global_table1 SET b = DEFAULT(b)+1 WHERE b < 100]===
-dble:[None]
-mysql:[()]
-[13:37:27.009422]dble err :(2013, 'Lost connection to MySQL server during query')
+===file:syntax/sysfunction3.sql, id:27, sql:[SELECT RELEASE_ALL_LOCKS()]===
+dble:[[(1L,)]]
+mysql:[[(0L,)]]
+===file:syntax/sysfunction3.sql, id:30, sql:[SELECT UUID()]===
+dble:[[('fa8580e3-51db-11e8-98c1-0242ac640905',)]]
+mysql:[[('fa8545fd-51db-11e8-b54e-0242ac640904',)]]
+===file:syntax/sysfunction3.sql, id:31, sql:[SELECT UUID_SHORT()]===
+dble:[[(241749017334120458L,)]]
+mysql:[[(169691461195923466L,)]]

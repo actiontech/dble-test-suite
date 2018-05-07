@@ -1,6 +1,3 @@
 ===file:select/select_join_sharding.sql, id:181, sql:[select Department,avg(age) avg_age,sum(Salary) sum_salary from enum_patch_integer a right join aly_test b on a.id=b.ID and b.Department in ('Finance','Development') and b.Salary >500 and b.Salary<70000 group by Department order by a.id;]===
 dble:[(('Development', Decimal('16.0000'), Decimal('179000')), ('Finance', Decimal('66.2500'), Decimal('172600')))]
 mysql:[(('Finance', Decimal('66.2500'), Decimal('172600')), ('Development', Decimal('16.0000'), Decimal('179000')))]
-===file:select/select_join_sharding.sql, id:432, sql:[SELECT Department,count(age) as min_age,avg(salary) sum_salary  FROM (SELECT a.id,name,age,Department,salary FROM enum_patch_integer a left join aly_test b on a.id=b.ID where salary >=500 and age <=150 order by Department DESC) AS Actions GROUP BY Department ORDER BY salary ASC;]===
-dble:[(('Development', 3L, Decimal('59666.6667')), ('Finance', 4L, Decimal('43150.0000')))]
-mysql:[(('Finance', 4L, Decimal('43150.0000')), ('Development', 3L, Decimal('59666.6667')))]

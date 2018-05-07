@@ -1,6 +1,0 @@
-===file:select/select_global_old.sql, id:240, sql:[select sum(O_TOTALPRICEFR) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
-mysql err:(1054, "Unknown column 'O_TOTALPRICEFR' in 'field list'")
-dble err[05:30:06.667880] :(-1, 'error totally whack')
-===file:select/select_global_old.sql, id:250, sql:[select count(*) from global_table2 as a where a.O_CUSTKEY=(select max(C_CUSTKEY) from global_table1 where C_CUSTKEY=a.C_CUSTKEY)]===
-mysql err:(1054, "Unknown column 'a.O_CUSTKEY' in 'where clause'")
-dble err[05:30:07.450714] :(1105, 'Correlated Sub Queries is not supported ')
