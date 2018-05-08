@@ -1,3 +1,4 @@
+from lib.Node import get_node
 from steps.step_reload import get_dble_conn
 
 coding= 'utf8'
@@ -84,3 +85,10 @@ def step_impl(context):
         | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | mytest |
         | test | 111111 | conn_0 | True    | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | mytest |
     """.format(tb, "int", rand_str))
+
+# Given('append "{line}" in {seq_file}')
+# def step_impl(context, line, seq_file):
+#     node = get_node(context, "dble-1")
+#     log = '{0}/dble/conf/log4j2.xml'.format(context.dble_test_config['dble_basepath'])
+#     cmd = "sed -i '$a {0} {1}' {2} ".format(line, seq_file)
+#     node.ssh_conn.exec_command(cmd)

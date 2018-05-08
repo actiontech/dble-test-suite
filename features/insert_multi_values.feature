@@ -3,11 +3,7 @@ Feature:  insert into values (),(),()... to verify the max rows can be inserted
     Scenario:
         Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
         """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="fixed_string_rule" />
-        """
-        Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
-        """
-        <property name="sequnceHandlerType">0</property>
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="fixed_string_rule" />
         """
         Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
         """
@@ -23,6 +19,7 @@ Feature:  insert into values (),(),()... to verify the max rows can be inserted
             <property name="hashSlice">0:4</property>
         </function>
         """
+        Then execute admin cmd "reload @@config_all"
         Given create table for insert
-        Then insert "100" rows at one time
+        Then insert "5000" rows at one time
 

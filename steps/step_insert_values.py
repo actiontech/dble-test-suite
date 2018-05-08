@@ -13,7 +13,7 @@ def step_impl(context):
     sql = "drop table if exists test_table"
     do_exec_sql(context, ip, "test", "111111", "mytest", port, sql, False, "conn_0", "success")
 
-    sql="""CREATE TABLE `sbtest1` (
+    sql="""CREATE TABLE `test_table` (
         `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
         `k` int(10) unsigned NOT NULL DEFAULT '0',
         `c` char(10) NOT NULL DEFAULT '',
@@ -31,11 +31,11 @@ def step_impl(context, num):
     for i in range(1, value_nu):
         c_str = gen.rand_string(10)
         pad_str = gen.rand_string(60)
-        sql += "({0}, {0}, {1}, {2}),".format(i, c_str, pad_str)
+        sql += "({0}, {0}, '{1}', '{2}'),".format(i, c_str, pad_str)
 
     c_str = gen.rand_string(10)
     pad_str = gen.rand_string(60)
-    sql += "({0}, {0}, {1}, {2})".format(i+1, c_str, pad_str)
+    sql += "({0}, {0}, '{1}', '{2}')".format(i+1, c_str, pad_str)
 
     ip = context.dble_test_config['dble_host']
     port = context.dble_test_config['client_port']
