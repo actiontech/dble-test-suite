@@ -1,0 +1,636 @@
+===file:syntax/insert_value.sql, id:476, sql:[insert into aly_test values (3,199)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.460318] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:477, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.519711] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:478, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.609712] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:479, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.699860] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:480, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.791213] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:481, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.881800] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:482, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:25.971641] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:483, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.059122] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:484, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.149166] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:485, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.238524] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:486, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.328323] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:487, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.416540] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:488, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.506891] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:489, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.598261] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:490, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.690300] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:491, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.780104] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:492, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.870859] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:493, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:26.961815] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:494, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:27.050866] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:495, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
+dble err[05:45:27.141190] :(1406, "Data too long for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:496, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_5_columns' at row 1")
+dble err[05:45:27.229067] :(1264, "Out of range value for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:497, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_5_columns' at row 1")
+dble err[05:45:27.319602] :(1264, "Out of range value for column 'bit_5_columns' at row 1")
+===file:syntax/insert_value.sql, id:505, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:27.802438] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:506, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:27.891412] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:507, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:27.979810] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:508, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.069849] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:509, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.158865] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:510, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.248626] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:511, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.339279] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:512, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.428705] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:513, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.518055] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:514, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.607373] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:515, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.698546] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:516, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.792221] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:517, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.882555] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:518, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:28.977097] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:519, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:29.068872] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:520, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:29.158598] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:521, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:29.247272] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:522, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:29.335579] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:523, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
+dble err[05:45:29.425020] :(1406, "Data too long for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:524, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_8_columns' at row 1")
+dble err[05:45:29.515353] :(1264, "Out of range value for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:525, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_8_columns' at row 1")
+dble err[05:45:29.606888] :(1264, "Out of range value for column 'bit_8_columns' at row 1")
+===file:syntax/insert_value.sql, id:542, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:30.835751] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:543, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:30.925583] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:544, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.017153] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:545, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.107354] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:546, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.196426] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:547, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.285408] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:548, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.375071] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:549, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.464496] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:550, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.555496] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:551, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
+dble err[05:45:31.644668] :(1406, "Data too long for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:552, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_16_columns' at row 1")
+dble err[05:45:31.733661] :(1264, "Out of range value for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:553, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_16_columns' at row 1")
+dble err[05:45:31.822516] :(1264, "Out of range value for column 'bit_16_columns' at row 1")
+===file:syntax/insert_value.sql, id:572, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.070458] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:573, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.158936] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:574, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.217375] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:575, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.307500] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:576, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.399596] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:577, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.489626] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:578, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.587155] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:579, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
+dble err[05:45:33.676427] :(1406, "Data too long for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:580, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_24_columns' at row 1")
+dble err[05:45:33.766540] :(1264, "Out of range value for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:581, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_24_columns' at row 1")
+dble err[05:45:33.855291] :(1264, "Out of range value for column 'bit_24_columns' at row 1")
+===file:syntax/insert_value.sql, id:602, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
+dble err[05:45:35.338876] :(1406, "Data too long for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:603, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
+dble err[05:45:35.411069] :(1406, "Data too long for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:604, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
+dble err[05:45:35.481432] :(1406, "Data too long for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:605, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
+dble err[05:45:35.552034] :(1406, "Data too long for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:606, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
+dble err[05:45:35.622697] :(1406, "Data too long for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:607, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
+dble err[05:45:35.695820] :(1406, "Data too long for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:608, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_29_columns' at row 1")
+dble err[05:45:35.768323] :(1264, "Out of range value for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:609, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_29_columns' at row 1")
+dble err[05:45:35.839833] :(1264, "Out of range value for column 'bit_29_columns' at row 1")
+===file:syntax/insert_value.sql, id:632, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
+dble err[05:45:44.752518] :(1406, "Data too long for column 'bit_32_columns' at row 1")
+===file:syntax/insert_value.sql, id:633, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
+dble err[05:45:44.842320] :(1406, "Data too long for column 'bit_32_columns' at row 1")
+===file:syntax/insert_value.sql, id:634, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
+dble err[05:45:44.934298] :(1406, "Data too long for column 'bit_32_columns' at row 1")
+===file:syntax/insert_value.sql, id:635, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
+dble err[05:45:45.027168] :(1406, "Data too long for column 'bit_32_columns' at row 1")
+===file:syntax/insert_value.sql, id:636, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_32_columns' at row 1")
+dble err[05:45:45.119623] :(1264, "Out of range value for column 'bit_32_columns' at row 1")
+===file:syntax/insert_value.sql, id:637, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_32_columns' at row 1")
+dble err[05:45:45.211018] :(1264, "Out of range value for column 'bit_32_columns' at row 1")
+===file:syntax/insert_value.sql, id:644, sql:[insert into aly_test values (3,199)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:45.756324] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:645, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:45.846848] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:646, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:45.937007] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:647, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.028660] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:648, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.121407] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:649, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.213254] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:650, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.304038] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:651, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.393490] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:652, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.484887] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:653, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.575051] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:654, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.663562] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:655, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.752950] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:656, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.842567] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:657, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:46.933816] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:658, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:47.022580] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:659, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:47.111264] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:660, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:47.200777] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:661, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:47.288530] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:662, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:47.379534] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:663, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
+dble err[05:45:47.468534] :(1406, "Data too long for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:664, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_40_columns' at row 1")
+dble err[05:45:47.558722] :(1264, "Out of range value for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:665, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_40_columns' at row 1")
+dble err[05:45:47.648298] :(1264, "Out of range value for column 'bit_40_columns' at row 1")
+===file:syntax/insert_value.sql, id:672, sql:[insert into aly_test values (3,199)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.071935] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:673, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.163047] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:674, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.252726] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:675, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.345007] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:676, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.435630] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:677, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.526157] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:678, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.616754] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:679, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.706703] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:680, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.797976] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:681, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.889318] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:682, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:48.979069] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:683, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.069800] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:684, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.159321] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:685, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.249827] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:686, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.339039] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:687, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.429686] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:688, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.519547] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:689, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.609094] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:690, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.699163] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:691, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
+dble err[05:45:49.788596] :(1406, "Data too long for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:692, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_48_columns' at row 1")
+dble err[05:45:49.881133] :(1264, "Out of range value for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:693, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_48_columns' at row 1")
+dble err[05:45:49.970885] :(1264, "Out of range value for column 'bit_48_columns' at row 1")
+===file:syntax/insert_value.sql, id:700, sql:[insert into aly_test values (3,199)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:50.656566] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:701, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:50.746124] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:702, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:50.835458] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:703, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:50.926058] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:704, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.015616] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:705, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.105451] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:706, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.196059] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:707, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.286713] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:708, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.377545] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:709, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.467154] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:710, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.558721] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:711, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.650555] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:712, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.741257] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:713, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.830687] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:714, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:51.922598] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:715, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:52.012796] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:716, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:52.102652] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:717, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:52.192897] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:718, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:52.283070] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:719, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
+dble err[05:45:52.372190] :(1406, "Data too long for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:720, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_56_columns' at row 1")
+dble err[05:45:52.462351] :(1264, "Out of range value for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:721, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_56_columns' at row 1")
+dble err[05:45:52.552238] :(1264, "Out of range value for column 'bit_56_columns' at row 1")
+===file:syntax/insert_value.sql, id:728, sql:[insert into aly_test values (3,199)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:52.962558] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:729, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.052503] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:730, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.142026] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:731, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.231508] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:732, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.324423] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:733, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.382734] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:734, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.442524] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:735, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.501912] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:736, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.593510] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:737, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.683328] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:738, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.774958] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:739, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.865851] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:740, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:53.957187] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:741, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.045599] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:742, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.135856] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:743, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.225863] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:744, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.314168] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:745, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.403442] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:746, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.491659] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:747, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
+dble err[05:45:54.582476] :(1406, "Data too long for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:748, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_59_columns' at row 1")
+dble err[05:45:54.673520] :(1264, "Out of range value for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:749, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_59_columns' at row 1")
+dble err[05:45:54.763931] :(1264, "Out of range value for column 'bit_59_columns' at row 1")
+===file:syntax/insert_value.sql, id:756, sql:[insert into aly_test values (3,199)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.176908] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:757, sql:[insert into aly_test values (4,299)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.267579] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:758, sql:[insert into aly_test values (5,399)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.359014] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:759, sql:[insert into aly_test values (6,599)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.420143] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:760, sql:[insert into aly_test values (7,731)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.510226] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:761, sql:[insert into aly_test values (8,1023)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.599808] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:762, sql:[insert into aly_test values (9,1024)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.688911] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:763, sql:[insert into aly_test values (10,2110)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.777850] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:764, sql:[insert into aly_test values (11,3305)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.866725] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:765, sql:[insert into aly_test values (12,33333)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:55.956388] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:766, sql:[insert into aly_test values (13,333333)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.047561] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:767, sql:[insert into aly_test values (14,3333333)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.138508] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:768, sql:[insert into aly_test values (15,33333333)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.230620] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:769, sql:[insert into aly_test values (16,333333333)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.318860] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:770, sql:[insert into aly_test values (17,999999999)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.413135] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:771, sql:[insert into aly_test values (18,3333333333)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.507025] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:772, sql:[insert into aly_test values (19,99999999999)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.598054] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:773, sql:[insert into aly_test values (20,999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.688042] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:774, sql:[insert into aly_test values (21,9999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.778984] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:775, sql:[insert into aly_test values (22,99999999999999)]===
+mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
+dble err[05:45:56.871262] :(1406, "Data too long for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:776, sql:[insert into aly_test values (23,18446744073709552046)]===
+mysql err:(1264, "Out of range value for column 'bit_64_columns' at row 1")
+dble err[05:45:56.960982] :(1264, "Out of range value for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:777, sql:[insert into aly_test values (24,99999999999999999999999)]===
+mysql err:(1264, "Out of range value for column 'bit_64_columns' at row 1")
+dble err[05:45:57.059177] :(1264, "Out of range value for column 'bit_64_columns' at row 1")
+===file:syntax/insert_value.sql, id:785, sql:[insert into aly_test values (4,'')]===
+mysql err:(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
+dble err[05:46:05.355062] :(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
+===file:syntax/insert_value.sql, id:795, sql:[insert into aly_test values (4,107)]===
+mysql err:(1264, "Out of range value for column 'year4_columns' at row 1")
+dble err[05:46:05.947301] :(1264, "Out of range value for column 'year4_columns' at row 1")
+===file:syntax/insert_value.sql, id:796, sql:[insert into aly_test values (5,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
+dble err[05:46:06.037172] :(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
+===file:syntax/insert_value.sql, id:815, sql:[insert into aly_test values (3,'9999-12-31 23:59:59.999999')]===
+mysql err:(1441, 'Datetime function: datetime field overflow')
+dble err[05:46:07.255553] :(1441, 'Datetime function: datetime field overflow')
+===file:syntax/insert_value.sql, id:818, sql:[insert into aly_test values (6,'')]===
+mysql err:(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
+dble err[05:46:07.468074] :(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
+===file:syntax/insert_value.sql, id:828, sql:[insert into aly_test values (4,'')]===
+mysql err:(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
+dble err[05:46:08.078028] :(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
+===file:syntax/insert_value.sql, id:839, sql:[insert into aly_test values (5,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
+dble err[05:46:08.819758] :(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
+===file:syntax/insert_value.sql, id:847, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
+dble err[05:46:09.293931] :(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
+===file:syntax/insert_value.sql, id:857, sql:[insert into aly_test values (5,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
+dble err[05:46:09.894482] :(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
+===file:syntax/insert_value.sql, id:865, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
+dble err[05:46:10.366125] :(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
+===file:syntax/insert_value.sql, id:873, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
+dble err[05:46:10.850212] :(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
+===file:syntax/insert_value.sql, id:881, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
+dble err[05:46:11.338453] :(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
+===file:syntax/insert_value.sql, id:890, sql:[insert into aly_test values (4,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
+dble err[05:46:11.888039] :(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
+===file:syntax/insert_value.sql, id:898, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
+dble err[05:46:12.361111] :(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
+===file:syntax/insert_value.sql, id:907, sql:[insert into aly_test values (4,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
+dble err[05:46:12.912822] :(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
+===file:syntax/insert_value.sql, id:915, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
+dble err[05:46:13.390113] :(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
+===file:syntax/insert_value.sql, id:925, sql:[insert into aly_test values (5,'')]===
+mysql err:(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
+dble err[05:46:14.012582] :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
+===file:syntax/insert_value.sql, id:933, sql:[insert into aly_test values (3,'')]===
+mysql err:(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
+dble err[05:46:14.496490] :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
+===file:syntax/insert_value.sql, id:943, sql:[insert into aly_test values (5,'')]===
+mysql err:(1265, "Data truncated for column 'float_columns' at row 1")
+dble err[05:46:15.081913] :(1265, "Data truncated for column 'float_columns' at row 1")
+===file:syntax/insert_value.sql, id:951, sql:[insert into aly_test values (3,'')]===
+mysql err:(1265, "Data truncated for column 'float_columns' at row 1")
+dble err[05:46:15.576645] :(1265, "Data truncated for column 'float_columns' at row 1")
+===file:syntax/insert_value.sql, id:961, sql:[insert into aly_test values (5,'')]===
+mysql err:(1265, "Data truncated for column 'double_columns' at row 1")
+dble err[05:46:16.162781] :(1265, "Data truncated for column 'double_columns' at row 1")
+===file:syntax/insert_value.sql, id:969, sql:[insert into aly_test values (3,'')]===
+mysql err:(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
+dble err[05:46:16.645291] :(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
+===file:syntax/insert_value.sql, id:978, sql:[insert into aly_test values (4,'')]===
+mysql err:(1265, "Data truncated for column 'enum_columns' at row 1")
+dble err[05:46:17.239856] :(1265, "Data truncated for column 'enum_columns' at row 1")

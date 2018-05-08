@@ -1,3 +1,0 @@
-===file:select/join.sql, id:117, sql:[select * from a_test a left join (select * from a_order where pad>2 order by id) b on a.pad=b.pad order by a_test.id;]===
-mysql err:(1054, "Unknown column 'a_test.id' in 'order clause'")
-dble err[05:27:59.775810] :(-1, 'error totally whack')

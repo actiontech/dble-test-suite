@@ -30,7 +30,7 @@ select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from (select * from a_t
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from (select * from a_test where pad>2) a join (select * from test_global where pad>2) b order by a.id,b.id
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from a_test a join (select * from test_global where pad>2) b on a.id<b.id and a.pad=b.pad order by a.id,b.id
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from a_test a join (select * from test_global where pad>2) b  using(pad) order by a.id,b.id
-select a_test_no_shard.id,a_test_no_shard.t_id,a_test_no_shard.name,a_test_no_shard.pad,test_global.id,test_global.o_id,test_global.name,test_global.pad from a_test straight_join test_global order by a_test.id,test_global.id
+select a_test.id,a_test.t_id,a_test.name,a_test.pad,test_global.id,test_global.o_id,test_global.name,test_global.pad from a_test straight_join test_global order by a_test.id,test_global.id
 select a.id,a.name,a.pad,b.name from a_test a straight_join test_global b order by a.id,b.id
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from a_test a straight_join (select * from test_global where pad>0) b order by a.id,b.id
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from (select * from a_test where pad>0) a straight_join (select * from test_global where pad>0) b order by a.id,b.id

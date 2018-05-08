@@ -114,7 +114,7 @@ select * from a_test a left join a_order b on a.pad=b.pad where a.t_id=b.o_id;
 #group by/order by
 #
 select  count(*) from a_test a left join a_order b on a.pad=b.pad group by b.pad;
-select * from a_test a left join (select * from a_order where pad>2 order by id) b on a.pad=b.pad order by a_test.id;
+select * from a_test a left join (select * from a_order where pad>2 order by id) b on a.pad=b.pad order by a.id;
 select * from a_test a left join (select pad,count(*) from a_order group by pad) b on a.pad=b.pad;
 #
 #union

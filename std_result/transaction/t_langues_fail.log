@@ -1,11 +1,11 @@
 ===file:transaction/t_langues.sql, id:103, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:45.621920]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:10.255618]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:115, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:46.429232]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:11.372685]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:120, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L),)]
 mysql:[()]
@@ -15,11 +15,11 @@ mysql:[()]
 ===file:transaction/t_langues.sql, id:127, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:47.161010]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:12.505227]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:139, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:47.839262]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:13.622156]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:144, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 mysql:[()]
@@ -29,11 +29,11 @@ mysql:[()]
 ===file:transaction/t_langues.sql, id:151, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:48.541685]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:14.692033]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:163, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:49.248112]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:15.751291]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:168, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 mysql:[()]
@@ -43,11 +43,11 @@ mysql:[()]
 ===file:transaction/t_langues.sql, id:175, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:50.221070]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:16.874616]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:187, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[22:49:50.882106]dble err :(1064, 'TODO : IDENTIFIER work')
+[06:03:17.949698]dble err :(1064, 'TODO : IDENTIFIER work')
 ===file:transaction/t_langues.sql, id:192, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 mysql:[()]
@@ -57,11 +57,11 @@ mysql:[()]
 ===file:transaction/t_langues.sql, id:503, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:10.491419]dble err :(1003, 'Unsupported statement')
+[06:03:51.242096]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:508, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:10.788757]dble err :(1003, 'Unsupported statement')
+[06:03:51.694911]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:509, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L),)]
 mysql:[()]
@@ -74,26 +74,26 @@ mysql:[((5L, 5L, '5', 5L),)]
 ===file:transaction/t_langues.sql, id:521, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:11.356547]dble err :(1003, 'Unsupported statement')
+[06:03:52.644677]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:525, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:11.575756]dble err :(1003, 'Unsupported statement')
+[06:03:52.976055]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:526, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L),)]
 mysql:[()]
 ===file:transaction/t_langues.sql, id:530, sql:[insert into sbtest1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[22:50:11.880433]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+[06:03:53.439936]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:transaction/t_langues.sql, id:538, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:12.204056]dble err :(1003, 'Unsupported statement')
+[06:03:53.988701]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:542, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:12.456778]dble err :(1003, 'Unsupported statement')
+[06:03:54.324415]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:543, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 mysql:[()]
@@ -106,18 +106,18 @@ mysql:[((5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:transaction/t_langues.sql, id:555, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:13.039308]dble err :(1003, 'Unsupported statement')
+[06:03:55.276568]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:559, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:13.263696]dble err :(1003, 'Unsupported statement')
+[06:03:55.604283]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:560, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 mysql:[()]
 ===file:transaction/t_langues.sql, id:564, sql:[insert into sbtest1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[22:50:13.540198]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+[06:03:56.036147]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:transaction/t_langues.sql, id:565, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
@@ -127,11 +127,11 @@ mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:transaction/t_langues.sql, id:572, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:13.868968]dble err :(1003, 'Unsupported statement')
+[06:03:56.581859]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:576, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:14.097754]dble err :(1003, 'Unsupported statement')
+[06:03:56.931090]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:577, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 mysql:[()]
@@ -144,18 +144,18 @@ mysql:[((5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 ===file:transaction/t_langues.sql, id:589, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:14.719377]dble err :(1003, 'Unsupported statement')
+[06:03:57.903030]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:593, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:23.227280]dble err :(1003, 'Unsupported statement')
+[06:03:58.239576]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:594, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 mysql:[()]
 ===file:transaction/t_langues.sql, id:598, sql:[insert into sbtest1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[22:50:23.509294]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+[06:03:58.666441]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:transaction/t_langues.sql, id:599, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
@@ -165,11 +165,11 @@ mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7
 ===file:transaction/t_langues.sql, id:606, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:23.809646]dble err :(1003, 'Unsupported statement')
+[06:03:59.201905]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:610, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:23.995875]dble err :(1003, 'Unsupported statement')
+[06:03:59.538951]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:611, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 mysql:[()]
@@ -182,18 +182,18 @@ mysql:[((5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8
 ===file:transaction/t_langues.sql, id:623, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:24.608094]dble err :(1003, 'Unsupported statement')
+[06:04:00.461088]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:627, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[22:50:24.831891]dble err :(1003, 'Unsupported statement')
+[06:04:00.795518]dble err :(1003, 'Unsupported statement')
 ===file:transaction/t_langues.sql, id:628, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 mysql:[()]
 ===file:transaction/t_langues.sql, id:632, sql:[insert into sbtest1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[22:50:25.115725]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+[06:04:01.225600]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:transaction/t_langues.sql, id:633, sql:[select * from sbtest1 order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
 mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]

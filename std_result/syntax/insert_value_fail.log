@@ -1,1660 +1,600 @@
 ===file:syntax/insert_value.sql, id:26, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:15.969016]dble err :(1064, 'syntax error')
+[05:44:53.406272]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:52, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:17.833123]dble err :(1064, 'syntax error')
+[05:44:55.570954]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:78, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:19.630191]dble err :(1064, 'syntax error')
+[05:44:57.311022]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:104, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:21.477320]dble err :(1064, 'syntax error')
+[05:44:59.025182]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:130, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:23.274510]dble err :(1064, 'syntax error')
+[05:45:00.797304]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:156, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:25.030111]dble err :(1064, 'syntax error')
+[05:45:02.480572]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:182, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:26.840558]dble err :(1064, 'syntax error')
+[05:45:04.080488]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:208, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:28.513858]dble err :(1064, 'syntax error')
+[05:45:05.719436]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:234, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:30.161687]dble err :(1064, 'syntax error')
+[05:45:07.383722]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:260, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:31.941183]dble err :(1064, 'syntax error')
+[05:45:09.015725]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:286, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:33.776136]dble err :(1064, 'syntax error')
+[05:45:10.684209]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:312, sql:[insert into aly_test values (21,"""")]===
 dble:[None]
 mysql:[()]
-[13:34:35.578108]dble err :(1064, 'syntax error')
+[05:45:12.332235]dble err :(1064, 'syntax error')
 ===file:syntax/insert_value.sql, id:317, sql:[insert into aly_test values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:35.857514]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:12.843199]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:318, sql:[insert into aly_test values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:35.938239]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
+[05:45:12.951068]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
 ===file:syntax/insert_value.sql, id:319, sql:[insert into aly_test values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.018964]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
+[05:45:12.993666]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
 ===file:syntax/insert_value.sql, id:320, sql:[insert into aly_test values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.099450]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
+[05:45:13.091326]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
 ===file:syntax/insert_value.sql, id:321, sql:[insert into aly_test values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.181098]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:13.146326]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:322, sql:[insert into aly_test values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.264142]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:13.223382]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:323, sql:[insert into aly_test values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.345316]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
+[05:45:13.299005]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
 ===file:syntax/insert_value.sql, id:324, sql:[insert into aly_test values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.426004]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
+[05:45:13.368141]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
 ===file:syntax/insert_value.sql, id:325, sql:[insert into aly_test values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.506669]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:13.470918]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:326, sql:[insert into aly_test values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.588942]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
+[05:45:13.512735]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
 ===file:syntax/insert_value.sql, id:327, sql:[insert into aly_test values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.670528]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
+[05:45:13.588954]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
 ===file:syntax/insert_value.sql, id:328, sql:[insert into aly_test values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.751219]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:13.664003]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:329, sql:[insert into aly_test values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.864490]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
+[05:45:13.736619]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
 ===file:syntax/insert_value.sql, id:330, sql:[insert into aly_test values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.884863]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:13.808530]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:331, sql:[insert into aly_test values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:36.965614]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:13.879000]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:332, sql:[insert into aly_test values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.047574]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:13.977901]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:333, sql:[insert into aly_test values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.097182]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.021614]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:334, sql:[insert into aly_test values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.177190]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.093203]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:335, sql:[insert into aly_test values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.257832]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.165803]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:336, sql:[insert into aly_test values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.338280]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.236420]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:337, sql:[insert into aly_test values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.418561]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.349957]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:338, sql:[insert into aly_test values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.501630]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
+[05:45:14.406729]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
 ===file:syntax/insert_value.sql, id:339, sql:[insert into aly_test values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.582976]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.468856]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:343, sql:[insert into aly_test values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.778485]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:14.881155]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:344, sql:[insert into aly_test values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.858863]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
+[05:45:14.956106]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
 ===file:syntax/insert_value.sql, id:345, sql:[insert into aly_test values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:37.939238]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
+[05:45:15.057718]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
 ===file:syntax/insert_value.sql, id:346, sql:[insert into aly_test values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.019750]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
+[05:45:15.130078]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
 ===file:syntax/insert_value.sql, id:347, sql:[insert into aly_test values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.101723]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:15.270051]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:348, sql:[insert into aly_test values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.182165]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:15.315194]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:349, sql:[insert into aly_test values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.262385]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
+[05:45:15.388056]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
 ===file:syntax/insert_value.sql, id:350, sql:[insert into aly_test values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.342202]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
+[05:45:15.462838]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
 ===file:syntax/insert_value.sql, id:351, sql:[insert into aly_test values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.424873]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:15.542282]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:352, sql:[insert into aly_test values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.478818]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
+[05:45:15.615638]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
 ===file:syntax/insert_value.sql, id:353, sql:[insert into aly_test values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.528818]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
+[05:45:15.690925]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
 ===file:syntax/insert_value.sql, id:354, sql:[insert into aly_test values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.609486]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:15.764889]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:355, sql:[insert into aly_test values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.691179]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
+[05:45:15.846130]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
 ===file:syntax/insert_value.sql, id:356, sql:[insert into aly_test values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.771765]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:15.923157]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:357, sql:[insert into aly_test values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.852853]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.000870]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:358, sql:[insert into aly_test values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:38.933693]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.129033]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:359, sql:[insert into aly_test values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.016098]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.234642]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:360, sql:[insert into aly_test values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.095998]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.325961]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:361, sql:[insert into aly_test values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.176784]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.386084]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:362, sql:[insert into aly_test values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.256461]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.449994]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:363, sql:[insert into aly_test values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.337865]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.524969]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:364, sql:[insert into aly_test values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.418649]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
+[05:45:16.704283]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
 ===file:syntax/insert_value.sql, id:365, sql:[insert into aly_test values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.500066]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:16.753000]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:369, sql:[insert into aly_test values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.672240]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:17.067656]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:370, sql:[insert into aly_test values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.751003]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
+[05:45:17.218836]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
 ===file:syntax/insert_value.sql, id:371, sql:[insert into aly_test values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.832736]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
+[05:45:17.259129]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
 ===file:syntax/insert_value.sql, id:372, sql:[insert into aly_test values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.914307]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
+[05:45:17.354718]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
 ===file:syntax/insert_value.sql, id:373, sql:[insert into aly_test values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:39.994518]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:17.405803]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:374, sql:[insert into aly_test values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.078433]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:17.483157]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:375, sql:[insert into aly_test values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.128622]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
+[05:45:17.567689]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
 ===file:syntax/insert_value.sql, id:376, sql:[insert into aly_test values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.208994]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
+[05:45:17.641163]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
 ===file:syntax/insert_value.sql, id:377, sql:[insert into aly_test values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.289828]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:17.727929]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:378, sql:[insert into aly_test values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.368627]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
+[05:45:17.795689]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
 ===file:syntax/insert_value.sql, id:379, sql:[insert into aly_test values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.449982]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
+[05:45:17.859416]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
 ===file:syntax/insert_value.sql, id:380, sql:[insert into aly_test values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.531403]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:17.917214]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:381, sql:[insert into aly_test values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.613538]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
+[05:45:18.007819]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
 ===file:syntax/insert_value.sql, id:382, sql:[insert into aly_test values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.696294]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.098270]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:383, sql:[insert into aly_test values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.776588]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.239683]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:384, sql:[insert into aly_test values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.859293]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.266750]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:385, sql:[insert into aly_test values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:40.940032]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.456054]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:386, sql:[insert into aly_test values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.023323]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.484811]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:387, sql:[insert into aly_test values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.103145]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.547137]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:388, sql:[insert into aly_test values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.183166]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.608779]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:389, sql:[insert into aly_test values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.263814]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.667407]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:390, sql:[insert into aly_test values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.343638]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
+[05:45:18.760047]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
 ===file:syntax/insert_value.sql, id:391, sql:[insert into aly_test values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.424016]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:18.819567]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:395, sql:[insert into aly_test values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.627564]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:19.021385]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:396, sql:[insert into aly_test values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.707094]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
+[05:45:19.120499]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
 ===file:syntax/insert_value.sql, id:397, sql:[insert into aly_test values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.787507]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
+[05:45:19.182804]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
 ===file:syntax/insert_value.sql, id:398, sql:[insert into aly_test values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.836668]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
+[05:45:19.320389]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
 ===file:syntax/insert_value.sql, id:399, sql:[insert into aly_test values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.918020]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:19.350233]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:400, sql:[insert into aly_test values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:41.998633]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:19.517310]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:401, sql:[insert into aly_test values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.079841]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
+[05:45:19.551756]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
 ===file:syntax/insert_value.sql, id:402, sql:[insert into aly_test values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.162271]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
+[05:45:19.613503]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
 ===file:syntax/insert_value.sql, id:403, sql:[insert into aly_test values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.241576]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:19.704383]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:404, sql:[insert into aly_test values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.322158]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
+[05:45:19.794156]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
 ===file:syntax/insert_value.sql, id:405, sql:[insert into aly_test values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.402759]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
+[05:45:19.912204]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
 ===file:syntax/insert_value.sql, id:406, sql:[insert into aly_test values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.483530]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:19.946519]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:407, sql:[insert into aly_test values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.565383]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
+[05:45:20.043253]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
 ===file:syntax/insert_value.sql, id:408, sql:[insert into aly_test values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.645563]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.132266]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:409, sql:[insert into aly_test values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.723502]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.180491]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:410, sql:[insert into aly_test values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.803893]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.244828]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:411, sql:[insert into aly_test values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.885856]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.303330]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:412, sql:[insert into aly_test values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:42.966761]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.391728]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:413, sql:[insert into aly_test values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.046686]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.483096]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:414, sql:[insert into aly_test values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.131003]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.704720]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:415, sql:[insert into aly_test values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.178421]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.733720]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:416, sql:[insert into aly_test values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.258514]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
+[05:45:20.791364]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
 ===file:syntax/insert_value.sql, id:417, sql:[insert into aly_test values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.339299]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:20.881166]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:421, sql:[insert into aly_test values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.531818]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:21.168170]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:422, sql:[insert into aly_test values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.613810]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
+[05:45:21.195738]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
 ===file:syntax/insert_value.sql, id:423, sql:[insert into aly_test values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.694754]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
+[05:45:21.296505]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
 ===file:syntax/insert_value.sql, id:424, sql:[insert into aly_test values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.774378]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
+[05:45:21.355406]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
 ===file:syntax/insert_value.sql, id:425, sql:[insert into aly_test values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.855233]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:21.491707]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:426, sql:[insert into aly_test values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:43.936489]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:21.519106]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:427, sql:[insert into aly_test values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.016783]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
+[05:45:21.893025]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
 ===file:syntax/insert_value.sql, id:428, sql:[insert into aly_test values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.096593]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
+[05:45:21.988563]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
 ===file:syntax/insert_value.sql, id:429, sql:[insert into aly_test values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.176452]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:22.024037]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:430, sql:[insert into aly_test values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.255542]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
+[05:45:22.083247]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
 ===file:syntax/insert_value.sql, id:431, sql:[insert into aly_test values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.335019]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
+[05:45:22.172130]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
 ===file:syntax/insert_value.sql, id:432, sql:[insert into aly_test values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.414521]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:22.201662]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:433, sql:[insert into aly_test values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.494998]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
+[05:45:22.293161]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
 ===file:syntax/insert_value.sql, id:434, sql:[insert into aly_test values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.578514]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.384663]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:435, sql:[insert into aly_test values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.629153]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.475203]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:436, sql:[insert into aly_test values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.710258]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.575707]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:437, sql:[insert into aly_test values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.789369]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.637309]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:438, sql:[insert into aly_test values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.874293]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.696673]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:439, sql:[insert into aly_test values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:44.923302]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.851222]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:440, sql:[insert into aly_test values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.004143]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.883727]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:441, sql:[insert into aly_test values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.084797]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:22.943173]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:442, sql:[insert into aly_test values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.167318]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
+[05:45:23.013050]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
 ===file:syntax/insert_value.sql, id:443, sql:[insert into aly_test values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.264367]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:23.114838]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:447, sql:[insert into aly_test values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.439305]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:23.268320]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:448, sql:[insert into aly_test values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.530603]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
+[05:45:23.360029]dble err :(1064, 'ERROR. token : RPAREN, pos : 53')
 ===file:syntax/insert_value.sql, id:449, sql:[insert into aly_test values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.596856]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
+[05:45:23.453162]dble err :(1064, 'ERROR. token : RPAREN, pos : 54')
 ===file:syntax/insert_value.sql, id:450, sql:[insert into aly_test values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.664088]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
+[05:45:23.585925]dble err :(1064, 'ERROR. token : RPAREN, pos : 59')
 ===file:syntax/insert_value.sql, id:451, sql:[insert into aly_test values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.732286]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:23.623554]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:452, sql:[insert into aly_test values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.794146]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
+[05:45:23.776391]dble err :(1064, 'ERROR. token : RPAREN, pos : 79')
 ===file:syntax/insert_value.sql, id:453, sql:[insert into aly_test values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.865127]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
+[05:45:23.808835]dble err :(1064, 'ERROR. token : RPAREN, pos : 107')
 ===file:syntax/insert_value.sql, id:454, sql:[insert into aly_test values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.931383]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
+[05:45:23.866686]dble err :(1064, 'ERROR. token : RPAREN, pos : 63')
 ===file:syntax/insert_value.sql, id:455, sql:[insert into aly_test values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:45.999278]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:23.975525]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:456, sql:[insert into aly_test values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.070287]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
+[05:45:24.019762]dble err :(1064, 'ERROR. token : RPAREN, pos : 71')
 ===file:syntax/insert_value.sql, id:457, sql:[insert into aly_test values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.135412]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
+[05:45:24.079171]dble err :(1064, 'ERROR. token : RPAREN, pos : 128')
 ===file:syntax/insert_value.sql, id:458, sql:[insert into aly_test values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.202179]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
+[05:45:24.199561]dble err :(1064, 'ERROR. token : RPAREN, pos : 61')
 ===file:syntax/insert_value.sql, id:459, sql:[insert into aly_test values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.265399]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
+[05:45:24.240152]dble err :(1064, 'ERROR. token : RPAREN, pos : 64')
 ===file:syntax/insert_value.sql, id:460, sql:[insert into aly_test values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.327022]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.297116]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:461, sql:[insert into aly_test values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.388329]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.387454]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:462, sql:[insert into aly_test values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.450757]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.477757]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:463, sql:[insert into aly_test values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.504778]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.554261]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:464, sql:[insert into aly_test values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.585737]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.596457]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:465, sql:[insert into aly_test values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.667140]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.715121]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:466, sql:[insert into aly_test values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.747889]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.759761]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:467, sql:[insert into aly_test values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.826736]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
+[05:45:24.819631]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
 ===file:syntax/insert_value.sql, id:468, sql:[insert into aly_test values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.905933]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
+[05:45:24.880053]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_ALIAS ')
 ===file:syntax/insert_value.sql, id:469, sql:[insert into aly_test values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[13:34:46.986671]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')
-===file:syntax/insert_value.sql, id:476, sql:[insert into aly_test values (3,199)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.436386]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:477, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.516010]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:478, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.596146]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:479, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.675210]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:480, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.755365]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:481, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.836457]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:482, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.915868]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:483, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:47.995469]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:484, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.076460]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:485, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.156729]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:486, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.236547]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:487, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.317242]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:488, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.397289]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:489, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.477232]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:490, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.558696]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:491, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.640923]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:492, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.720599]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:493, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.799414]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:494, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.879652]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:495, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_5_columns' at row 1")
-[13:34:48.961306]dble err :(1406, "Data too long for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:496, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_5_columns' at row 1")
-[13:34:49.041032]dble err :(1264, "Out of range value for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:497, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_5_columns' at row 1")
-[13:34:49.120602]dble err :(1264, "Out of range value for column 'bit_5_columns' at row 1")
-===file:syntax/insert_value.sql, id:505, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:49.581315]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:506, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:49.660738]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:507, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:49.740139]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:508, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:49.819572]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:509, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:49.899249]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:510, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:49.981385]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:511, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.061391]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:512, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.142259]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:513, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.222689]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:514, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.302211]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:515, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.383153]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:516, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.464643]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:517, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.543947]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:518, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.623989]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:519, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.703324]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:520, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.782652]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:521, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.864260]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:522, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:50.946893]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:523, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_8_columns' at row 1")
-[13:34:51.027428]dble err :(1406, "Data too long for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:524, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_8_columns' at row 1")
-[13:34:51.106247]dble err :(1264, "Out of range value for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:525, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_8_columns' at row 1")
-[13:34:51.185811]dble err :(1264, "Out of range value for column 'bit_8_columns' at row 1")
-===file:syntax/insert_value.sql, id:542, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.303980]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:543, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.382704]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:544, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.462318]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:545, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.545616]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:546, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.591602]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:547, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.671401]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:548, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.751006]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:549, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.831018]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:550, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.910008]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:551, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_16_columns' at row 1")
-[13:34:52.989128]dble err :(1406, "Data too long for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:552, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_16_columns' at row 1")
-[13:34:53.069768]dble err :(1264, "Out of range value for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:553, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_16_columns' at row 1")
-[13:34:53.148945]dble err :(1264, "Out of range value for column 'bit_16_columns' at row 1")
-===file:syntax/insert_value.sql, id:572, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.427578]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:573, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.485290]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:574, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.566796]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:575, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.647357]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:576, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.728533]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:577, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.808614]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:578, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.888066]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:579, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_24_columns' at row 1")
-[13:34:54.967832]dble err :(1406, "Data too long for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:580, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_24_columns' at row 1")
-[13:34:55.047648]dble err :(1264, "Out of range value for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:581, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_24_columns' at row 1")
-[13:34:55.128999]dble err :(1264, "Out of range value for column 'bit_24_columns' at row 1")
-===file:syntax/insert_value.sql, id:602, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
-[13:34:56.460531]dble err :(1406, "Data too long for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:603, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
-[13:34:56.540672]dble err :(1406, "Data too long for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:604, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
-[13:34:56.620081]dble err :(1406, "Data too long for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:605, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
-[13:34:56.698857]dble err :(1406, "Data too long for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:606, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
-[13:34:56.778326]dble err :(1406, "Data too long for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:607, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_29_columns' at row 1")
-[13:34:56.859597]dble err :(1406, "Data too long for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:608, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_29_columns' at row 1")
-[13:34:56.945193]dble err :(1264, "Out of range value for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:609, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_29_columns' at row 1")
-[13:34:57.027816]dble err :(1264, "Out of range value for column 'bit_29_columns' at row 1")
-===file:syntax/insert_value.sql, id:632, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
-[13:34:58.594812]dble err :(1406, "Data too long for column 'bit_32_columns' at row 1")
-===file:syntax/insert_value.sql, id:633, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
-[13:34:58.673838]dble err :(1406, "Data too long for column 'bit_32_columns' at row 1")
-===file:syntax/insert_value.sql, id:634, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
-[13:34:58.753345]dble err :(1406, "Data too long for column 'bit_32_columns' at row 1")
-===file:syntax/insert_value.sql, id:635, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_32_columns' at row 1")
-[13:34:58.832012]dble err :(1406, "Data too long for column 'bit_32_columns' at row 1")
-===file:syntax/insert_value.sql, id:636, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_32_columns' at row 1")
-[13:34:58.913173]dble err :(1264, "Out of range value for column 'bit_32_columns' at row 1")
-===file:syntax/insert_value.sql, id:637, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_32_columns' at row 1")
-[13:34:58.994963]dble err :(1264, "Out of range value for column 'bit_32_columns' at row 1")
-===file:syntax/insert_value.sql, id:644, sql:[insert into aly_test values (3,199)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.404423]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:645, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.483745]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:646, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.565146]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:647, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.645243]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:648, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.725265]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:649, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.804739]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:650, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.883957]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:651, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:34:59.963759]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:652, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.043274]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:653, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.123232]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:654, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.202997]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:655, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.281393]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:656, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.361653]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:657, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.441910]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:658, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.522323]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:659, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.604771]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:660, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.684927]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:661, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.765658]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:662, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.845214]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:663, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_40_columns' at row 1")
-[13:35:00.925902]dble err :(1406, "Data too long for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:664, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_40_columns' at row 1")
-[13:35:01.006095]dble err :(1264, "Out of range value for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:665, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_40_columns' at row 1")
-[13:35:01.086430]dble err :(1264, "Out of range value for column 'bit_40_columns' at row 1")
-===file:syntax/insert_value.sql, id:672, sql:[insert into aly_test values (3,199)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.512134]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:673, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.586637]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:674, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.653386]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:675, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.716463]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:676, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.812728]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:677, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.906910]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:678, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:01.970643]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:679, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.071953]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:680, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.136271]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:681, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.200462]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:682, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.261330]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:683, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.322943]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:684, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.386850]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:685, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.449479]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:686, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.512926]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:687, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.566881]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:688, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.647236]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:689, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.726696]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:690, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.806199]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:691, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_48_columns' at row 1")
-[13:35:02.886732]dble err :(1406, "Data too long for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:692, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_48_columns' at row 1")
-[13:35:02.966303]dble err :(1264, "Out of range value for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:693, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_48_columns' at row 1")
-[13:35:03.046037]dble err :(1264, "Out of range value for column 'bit_48_columns' at row 1")
-===file:syntax/insert_value.sql, id:700, sql:[insert into aly_test values (3,199)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.488789]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:701, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.570170]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:702, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.650252]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:703, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.729399]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:704, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.808126]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:705, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.888789]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:706, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:03.970428]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:707, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.050254]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:708, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.132393]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:709, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.212931]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:710, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.292594]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:711, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.371777]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:712, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.451787]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:713, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.532949]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:714, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.613539]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:715, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.693549]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:716, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.773170]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:717, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.853516]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:718, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:04.933434]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:719, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_56_columns' at row 1")
-[13:35:05.013019]dble err :(1406, "Data too long for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:720, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_56_columns' at row 1")
-[13:35:05.092768]dble err :(1264, "Out of range value for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:721, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_56_columns' at row 1")
-[13:35:05.173312]dble err :(1264, "Out of range value for column 'bit_56_columns' at row 1")
-===file:syntax/insert_value.sql, id:728, sql:[insert into aly_test values (3,199)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:05.579382]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:729, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:05.658267]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:730, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:05.737450]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:731, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:05.818711]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:732, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:05.867123]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:733, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:05.947363]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:734, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.027864]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:735, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.107931]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:736, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.187950]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:737, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.268140]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:738, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.347244]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:739, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.427398]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:740, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.508272]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:741, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.588411]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:742, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.668184]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:743, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.747294]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:744, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.826811]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:745, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.904911]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:746, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:06.983825]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:747, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_59_columns' at row 1")
-[13:35:07.063801]dble err :(1406, "Data too long for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:748, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_59_columns' at row 1")
-[13:35:07.147796]dble err :(1264, "Out of range value for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:749, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_59_columns' at row 1")
-[13:35:07.227592]dble err :(1264, "Out of range value for column 'bit_59_columns' at row 1")
-===file:syntax/insert_value.sql, id:756, sql:[insert into aly_test values (3,199)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:07.643647]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:757, sql:[insert into aly_test values (4,299)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:07.722150]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:758, sql:[insert into aly_test values (5,399)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:07.801440]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:759, sql:[insert into aly_test values (6,599)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:07.882068]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:760, sql:[insert into aly_test values (7,731)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:07.961263]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:761, sql:[insert into aly_test values (8,1023)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.040894]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:762, sql:[insert into aly_test values (9,1024)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.119701]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:763, sql:[insert into aly_test values (10,2110)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.198457]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:764, sql:[insert into aly_test values (11,3305)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.278075]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:765, sql:[insert into aly_test values (12,33333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.357193]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:766, sql:[insert into aly_test values (13,333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.437222]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:767, sql:[insert into aly_test values (14,3333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.517521]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:768, sql:[insert into aly_test values (15,33333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.567874]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:769, sql:[insert into aly_test values (16,333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.647517]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:770, sql:[insert into aly_test values (17,999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.727490]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:771, sql:[insert into aly_test values (18,3333333333)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.807581]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:772, sql:[insert into aly_test values (19,99999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.886792]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:773, sql:[insert into aly_test values (20,999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:08.965300]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:774, sql:[insert into aly_test values (21,9999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:09.043917]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:775, sql:[insert into aly_test values (22,99999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1406, "Data too long for column 'bit_64_columns' at row 1")
-[13:35:09.124074]dble err :(1406, "Data too long for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:776, sql:[insert into aly_test values (23,18446744073709552046)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_64_columns' at row 1")
-[13:35:09.204683]dble err :(1264, "Out of range value for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:777, sql:[insert into aly_test values (24,99999999999999999999999)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'bit_64_columns' at row 1")
-[13:35:09.285175]dble err :(1264, "Out of range value for column 'bit_64_columns' at row 1")
-===file:syntax/insert_value.sql, id:785, sql:[insert into aly_test values (4,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
-[13:35:09.718365]dble err :(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
-===file:syntax/insert_value.sql, id:795, sql:[insert into aly_test values (4,107)]===
-dble:[None]
-mysql:[None]
-mysql err:(1264, "Out of range value for column 'year4_columns' at row 1")
-[13:35:10.374162]dble err :(1264, "Out of range value for column 'year4_columns' at row 1")
-===file:syntax/insert_value.sql, id:796, sql:[insert into aly_test values (5,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
-[13:35:10.455249]dble err :(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
-===file:syntax/insert_value.sql, id:815, sql:[insert into aly_test values (3,'9999-12-31 23:59:59.999999')]===
-dble:[None]
-mysql:[None]
-mysql err:(1441, 'Datetime function: datetime field overflow')
-[13:35:11.631584]dble err :(1441, 'Datetime function: datetime field overflow')
-===file:syntax/insert_value.sql, id:818, sql:[insert into aly_test values (6,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
-[13:35:11.878135]dble err :(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
-===file:syntax/insert_value.sql, id:828, sql:[insert into aly_test values (4,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
-[13:35:12.570388]dble err :(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
-===file:syntax/insert_value.sql, id:839, sql:[insert into aly_test values (5,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
-[13:35:13.276980]dble err :(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
-===file:syntax/insert_value.sql, id:847, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
-[13:35:13.766129]dble err :(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
-===file:syntax/insert_value.sql, id:857, sql:[insert into aly_test values (5,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
-[13:35:14.392744]dble err :(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
-===file:syntax/insert_value.sql, id:865, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
-[13:35:14.876201]dble err :(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
-===file:syntax/insert_value.sql, id:873, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
-[13:35:15.407460]dble err :(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
-===file:syntax/insert_value.sql, id:881, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
-[13:35:15.928865]dble err :(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
-===file:syntax/insert_value.sql, id:890, sql:[insert into aly_test values (4,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
-[13:35:16.461431]dble err :(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
-===file:syntax/insert_value.sql, id:898, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
-[13:35:16.955778]dble err :(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
-===file:syntax/insert_value.sql, id:907, sql:[insert into aly_test values (4,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
-[13:35:17.520418]dble err :(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
-===file:syntax/insert_value.sql, id:915, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
-[13:35:18.009350]dble err :(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
-===file:syntax/insert_value.sql, id:925, sql:[insert into aly_test values (5,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
-[13:35:18.619079]dble err :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
-===file:syntax/insert_value.sql, id:933, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
-[13:35:19.102819]dble err :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
-===file:syntax/insert_value.sql, id:943, sql:[insert into aly_test values (5,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1265, "Data truncated for column 'float_columns' at row 1")
-[13:35:19.751619]dble err :(1265, "Data truncated for column 'float_columns' at row 1")
-===file:syntax/insert_value.sql, id:951, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1265, "Data truncated for column 'float_columns' at row 1")
-[13:35:20.176762]dble err :(1265, "Data truncated for column 'float_columns' at row 1")
-===file:syntax/insert_value.sql, id:961, sql:[insert into aly_test values (5,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1265, "Data truncated for column 'double_columns' at row 1")
-[13:35:20.831157]dble err :(1265, "Data truncated for column 'double_columns' at row 1")
-===file:syntax/insert_value.sql, id:969, sql:[insert into aly_test values (3,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
-[13:35:21.320790]dble err :(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
-===file:syntax/insert_value.sql, id:978, sql:[insert into aly_test values (4,'')]===
-dble:[None]
-mysql:[None]
-mysql err:(1265, "Data truncated for column 'enum_columns' at row 1")
-[13:35:21.867798]dble err :(1265, "Data truncated for column 'enum_columns' at row 1")
+[05:45:24.938823]dble err :(1064, 'ERROR. token : RPAREN, pos : 55')

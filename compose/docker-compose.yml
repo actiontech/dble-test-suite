@@ -106,35 +106,3 @@ services:
               ipv4_address: 172.100.9.6
         dns: 114.114.114.114
         working_dir: /opt
-    mysql-slave1:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
-        container_name: mysql-slave1
-        hostname: mysql-slave1
-        privileged: true
-        stdin_open: true
-        tty: true
-        volumes:
-            - /opt/auto_build:/init_assets
-        ports:
-            - "7147:3306"
-        networks:
-            net:
-              ipv4_address: 172.100.9.7
-        dns: 114.114.114.114
-        working_dir: /opt
-    mysql-slave2:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
-        container_name: mysql-slave2
-        hostname: mysql-slave2
-        privileged: true
-        stdin_open: true
-        tty: true
-        volumes:
-            - /opt/auto_build:/init_assets
-        ports:
-            - "7148:3306"
-        networks:
-            net:
-              ipv4_address: 172.100.9.8
-        dns: 114.114.114.114
-        working_dir: /opt

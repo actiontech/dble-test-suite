@@ -310,6 +310,10 @@ dble:[[(20L, 2L, Decimal('40'), Decimal('20.0000')), (22L, 1L, Decimal('22'), De
 dble:[((100L, 'Samantha', 32L, '844-02-2300'), (101L, 'Adrian', 30L, '241-73-7704'), (102L, 'Yetta', 30L, '541-34-5383'), (103L, 'Kylan', 31L, '033-23-8472'), (609L, 'Roary', 39L, '386-93-6018'), (1600L, 'Lacota', 30L, '968-14-6413'), (1601L, 'Paki', 34L, '288-12-6431'), (1605L, 'Trevor', 33L, '911-86-1180'))]
 ===file:select/select_sharding.sql, id:159, sql:[select age,count(age) as count_age from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age]===
 dble:[[(20L, 3L), (21L, 1L), (22L, 1L), (23L, 1L), (24L, 1L), (29L, 1L)]]
+===file:select/select_sharding.sql, id:160, sql:[select id,age,count(age) as age_count from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID]===
+dble:[((100L, 22L, 1L), (101L, 20L, 3L), (103L, 21L, 1L), (609L, 29L, 1L), (1601L, 24L, 1L), (1605L, 23L, 1L))]
+===file:select/select_sharding.sql, id:161, sql:[select id,age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID]===
+dble:[((100L, 22L, 1L, Decimal('22'), Decimal('22.0000')), (101L, 20L, 3L, Decimal('60'), Decimal('20.0000')), (103L, 21L, 1L, Decimal('21'), Decimal('21.0000')), (609L, 29L, 1L, Decimal('29'), Decimal('29.0000')), (1601L, 24L, 1L, Decimal('24'), Decimal('24.0000')), (1605L, 23L, 1L, Decimal('23'), Decimal('23.0000')))]
 ===file:select/select_sharding.sql, id:162, sql:[drop table if exists aly_test]===
 dble:[[]]
 ===file:select/select_sharding.sql, id:163, sql:[create table aly_test(id int(6) NOT NULL ,productID int(11),saleNum int,postion varchar(100),total_price decimal(10,2),person varchar(100),primary key(id)) ENGINE=InnoDB]===

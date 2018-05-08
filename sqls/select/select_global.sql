@@ -109,7 +109,7 @@ select id,k,c,pad from test_global order by id limit 3 offset 1
 #
 select all id,k,c,pad from test_global
 select distinct pad from test_global
-select id,k,c,Distinctrow pad from test_global
+select Distinctrow pad,id,k,c from test_global
 select distinct pad,id from test_global order by id
 select distinct pad,id from test_global where pad>2 order by id
 select distinct pad,id from test_global group by id,pad
@@ -242,9 +242,9 @@ select count(*) from test_global where id<8 group by R_COMMENT,R_NAME having cou
 select count(*) from test_global where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2
 select R_comment,count(*) a from test_global group by R_comment having a>1+1
 select R_comment,count(*) a from test_global group by R_comment having count(*)>1+1
-select id,k,c,pad from test_global order by R_COMMENT+1 asc
-select id,k,c,pad from test_global order by R_COMMENT,1+1
-select id,k,c,pad from test_global order by id,R_COMMENT
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global order by R_COMMENT+1 asc
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global order by R_COMMENT,1+1
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global order by id,R_COMMENT
 #
 #special_scene(null,Accuracy)
 #

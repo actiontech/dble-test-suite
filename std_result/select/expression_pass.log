@@ -69,7 +69,7 @@ dble:[[]]
 ===file:select/expression.sql, id:66, sql:[select * from test_shard where binary id=1]===
 dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:70, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 4, 3),)]]
+dble:[[(datetime.date(2018, 4, 7),)]]
 ===file:select/expression.sql, id:71, sql:[select * from test_shard where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:select/expression.sql, id:75, sql:[select * from test_shard where id= (b'01' | B'11')]===

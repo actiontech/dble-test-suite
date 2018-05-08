@@ -1,0 +1,21 @@
+===file:syntax/create_table_definition_syntax.sql, id:258, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+mysql:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/create_table_definition_syntax.sql, id:262, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+mysql:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/create_table_definition_syntax.sql, id:266, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 1L, 'id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+mysql:[[('aly_test', 1L, 'id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/create_table_definition_syntax.sql, id:273, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+mysql:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/create_table_definition_syntax.sql, id:277, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+mysql:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/create_table_definition_syntax.sql, id:404, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 0L, 'id_pk', 1L, 'id', 'A', 0L, None, None, '', 'BTREE', '', '')]]
+mysql:[[('aly_test', 0L, 'id_pk', 1L, 'id', 'A', 1L, None, None, '', 'BTREE', '', '')]]
+===file:syntax/create_table_definition_syntax.sql, id:432, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 0L, 'id_pk', 1L, 'id', 'A', 0L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'id_index', 1L, 'id', 'A', 0L, None, None, '', 'BTREE', '', '')]]
+mysql:[[('aly_test', 0L, 'id_pk', 1L, 'id', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'id_index', 1L, 'id', 'A', 1L, None, None, '', 'BTREE', '', '')]]
