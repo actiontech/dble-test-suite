@@ -1,0 +1,357 @@
+===file:syntax/create_table_type.sql, id:5, sql:[INSERT INTO aly_test VALUES (2,2)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:42:49.582904] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:10, sql:[INSERT INTO aly_test VALUES (1,01010)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:42:49.935009] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:18, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-129)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:50.328674] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:19, sql:[INSERT INTO aly_test ( id,data) VALUES (2,128)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:50.414591] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:20, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-129),(222,-128),(222,0),(222,127),(222,128)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:50.497614] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:29, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:51.108765] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:30, sql:[INSERT INTO aly_test ( id,data) VALUES (2,256)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:51.193673] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:31, sql:[INSERT INTO aly_test ( id,data) VALUES (111,-1),(112,0),(113,256)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:51.250485] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:40, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,-10000)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:51.838863] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:50, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,-10000)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:52.506385] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:62, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-32769)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:53.111861] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:63, sql:[INSERT INTO aly_test ( id,data) VALUES (2,32768)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:53.197774] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:64, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-32769),(222,-32768),(222,0),(222,32767),(222,32768)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:53.283301] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:73, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:53.849222] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:74, sql:[INSERT INTO aly_test ( id,data) VALUES (2,65536)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:53.933478] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:75, sql:[INSERT INTO aly_test ( id,data) VALUES (111,-1),(112,0),(113,65536)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:54.021760] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:84, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,-65536)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:54.630129] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:94, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,-65536)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:55.322077] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:106, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-8388609)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:55.936743] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:108, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-8388609),(222,-8388608),(222,0),(222,8388607),(222,8388608)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:56.086712] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:117, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:56.723026] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:118, sql:[INSERT INTO aly_test ( id,data) VALUES (2,16777216)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:56.810690] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:119, sql:[INSERT INTO aly_test ( id,data) VALUES (111,-1),(112,0),(113,16777216)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:56.865655] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:128, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,16777216)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:57.431164] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:138, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,16777216)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:58.034732] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:150, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-2147483649)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:58.625375] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:151, sql:[INSERT INTO aly_test ( id,data) VALUES (2,2147483648)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:58.709030] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:152, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-2147483649),(222,-2147483648),(222,0),(222,2147483647),(222,2147483648)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:58.793932] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:161, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:59.376143] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:162, sql:[INSERT INTO aly_test ( id,data) VALUES (2,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:59.427782] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:163, sql:[INSERT INTO aly_test ( id,data) VALUES (111,-1),(112,0),(113,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:42:59.523304] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:172, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,-10000)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:00.367980] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:182, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:01.344494] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:183, sql:[INSERT INTO aly_test ( id,data) VALUES (2,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:01.408274] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:184, sql:[INSERT INTO aly_test ( id,data) VALUES (3,-1),(4,0),(5,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:01.481077] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:195, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-2147483649)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:02.218620] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:196, sql:[INSERT INTO aly_test ( id,data) VALUES (2,2147483648)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:02.288784] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:197, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-2147483649),(222,-2147483648),(222,0),(222,2147483647),(222,2147483648)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:02.352981] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:206, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:03.135591] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:207, sql:[INSERT INTO aly_test ( id,data) VALUES (2,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:03.200533] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:208, sql:[INSERT INTO aly_test ( id,data) VALUES (111,-1),(112,0),(113,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:03.274649] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:217, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,-10000)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:04.051976] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:227, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:04.902442] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:228, sql:[INSERT INTO aly_test ( id,data) VALUES (2,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:04.956262] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:229, sql:[INSERT INTO aly_test ( id,data) VALUES (3,-1),(4,0),(5,4294967296)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:05.055512] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:240, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-9223372036854775809)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:05.693160] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:241, sql:[INSERT INTO aly_test ( id,data) VALUES (2,9223372036854775808)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:05.746145] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:242, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-9223372036854775809),(222,-9223372036854775808),(222,0),(222,9223372036854775807),(222,9223372036854775808)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:05.831471] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:251, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:06.520561] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:252, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:06.605657] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:253, sql:[INSERT INTO aly_test ( id,data) VALUES (111,-1),(112,0),(113,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:06.703910] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:262, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,18446744073709551615)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:07.285650] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:272, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1),(2,18446744073709551615)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:07.983382] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:285, sql:[INSERT INTO aly_test ( id,data) VALUES (2,1234567890123456789012345678901234567890.1234567890)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:08.751943] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:286, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.1234567890123),(222,0),(222,1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.12345678901234)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:08.840377] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:296, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:09.470726] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:301, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:09.827325] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:306, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:10.148981] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:311, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:10.527694] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:316, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:10.879155] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:321, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:11.221316] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:340, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:12.527843] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:345, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:12.844598] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:351, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:13.234949] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:357, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:13.665814] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:363, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:14.109585] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:369, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:14.549892] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:377, sql:[INSERT INTO aly_test ( id,data) VALUES (1111,-1234567890123456789012345678901234567890.1234567890123),(1112,0),(1113,1234567890123456789012345678901234567890.1234567890123)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:15.015748] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:388, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:15.735536] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:389, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616),(3,0)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:15.851130] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:393, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:16.115646] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:399, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:16.553279] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:405, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:16.986385] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:411, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:17.428159] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:417, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:17.900247] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:425, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'a')]===
+mysql err:(1366, "Incorrect decimal value: 'a' for column 'data' at row 1")
+dble err[05:43:18.290991] :(1366, "Incorrect decimal value: 'a' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:426, sql:[INSERT INTO aly_test ( id,data) VALUES (2,1234567890123456789012345678901234567890123456789012345678901234567)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:18.375765] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:428, sql:[INSERT INTO aly_test ( id,data) VALUES (222,-1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.1234567890123),(222,0),(222,1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.12345678901234)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:18.520666] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:429, sql:[INSERT INTO aly_test ( id,data) VALUES (1111,-12345678901234567890123.4567890),(1112,0),(1113,12345678901234567890123.4567890)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:18.627566] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:440, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:19.336494] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:441, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616),(3,0)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:19.447556] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:446, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:19.794069] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:452, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:20.250032] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:458, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:20.662073] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:464, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:21.115858] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:470, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:21.557859] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:478, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'a')]===
+mysql err:(1265, "Data truncated for column 'data' at row 1")
+dble err[05:43:22.022309] :(1265, "Data truncated for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:493, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:23.344114] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:499, sql:[INSERT INTO aly_test ( id,data) VALUES (2,18446744073709551616)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:23.906458] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:505, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:24.572786] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:511, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:25.239962] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:517, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:25.762930] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:523, sql:[INSERT INTO aly_test ( id,data) VALUES (1,-1)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:26.324127] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:532, sql:[INSERT INTO aly_test ( id,data) VALUES (2,10)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:27.041561] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:534, sql:[INSERT INTO aly_test ( id,data) VALUES (3,'aaaaaaaaaaaa,aaaaaaaaaaaa_aaaaaaaaa%%aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*aa')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:27.221050] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:540, sql:[INSERT INTO aly_test ( id,data) VALUES (2,10)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:27.964308] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:546, sql:[INSERT INTO aly_test ( id,data) VALUES (1,123456)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:28.373832] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:547, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcdef')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:28.463214] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:564, sql:[INSERT INTO aly_test ( id,data) VALUES (1,123456)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:29.446054] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:565, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcdef')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:29.535398] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:566, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcde')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:29.622166] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:570, sql:[INSERT INTO aly_test ( id,data) VALUES (1,123456)]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:29.913119] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:571, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcdef')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:29.999833] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:572, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcde')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:30.086724] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:577, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaabcdefg')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:30.455703] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:583, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaabcdefg')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:30.882394] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:591, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'201411-11')]===
+mysql err:(1292, "Incorrect date value: '201411-11' for column 'data' at row 1")
+dble err[05:43:31.298357] :(1292, "Incorrect date value: '201411-11' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:596, sql:[INSERT INTO aly_test ( id,data) VALUES (6,'aaaa-01-01')]===
+mysql err:(1292, "Incorrect date value: 'aaaa-01-01' for column 'data' at row 1")
+dble err[05:43:31.625843] :(1292, "Incorrect date value: 'aaaa-01-01' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:599, sql:[INSERT INTO aly_test ( id,data) VALUES (9,'10000-01-01')]===
+mysql err:(1292, "Incorrect date value: '10000-01-01' for column 'data' at row 1")
+dble err[05:43:31.825523] :(1292, "Incorrect date value: '10000-01-01' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:600, sql:[INSERT INTO aly_test ( id,data) VALUES (10,'9999-01-100')]===
+mysql err:(1292, "Incorrect date value: '9999-01-100' for column 'data' at row 1")
+dble err[05:43:31.911705] :(1292, "Incorrect date value: '9999-01-100' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:603, sql:[INSERT INTO aly_test( id,date) VALUES (13,'20170201')]===
+mysql err:(1054, "Unknown column 'date' in 'field list'")
+dble err[05:43:32.115517] :(1054, "Unknown column 'date' in 'field list'")
+===file:syntax/create_table_type.sql, id:604, sql:[INSERT INTO aly_test( id,date) VALUES (14,'170202')]===
+mysql err:(1054, "Unknown column 'date' in 'field list'")
+dble err[05:43:32.201217] :(1054, "Unknown column 'date' in 'field list'")
+===file:syntax/create_table_type.sql, id:611, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'201411-11')]===
+mysql err:(1292, "Incorrect time value: '201411-11' for column 'data' at row 1")
+dble err[05:43:32.603407] :(1292, "Incorrect time value: '201411-11' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:627, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'1970-01-01 00:00:01'),(2,'2038-01-19 03:14:07')]===
+mysql err:(1292, "Incorrect datetime value: '1970-01-01 00:00:01' for column 'data' at row 1")
+dble err[05:43:33.514483] :(1292, "Incorrect datetime value: '1970-01-01 00:00:01' for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:646, sql:[INSERT INTO aly_test ( id,data) VALUES (1,1900)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:34.539592] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:647, sql:[INSERT INTO aly_test ( id,data) VALUES (2,2156)]===
+mysql err:(1264, "Out of range value for column 'data' at row 1")
+dble err[05:43:34.625512] :(1264, "Out of range value for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:648, sql:[INSERT INTO aly_test ( id,data) VALUES (3,'2038-01-19 03:14:07')]===
+mysql err:(1265, "Data truncated for column 'data' at row 1")
+dble err[05:43:34.711781] :(1265, "Data truncated for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:661, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcdef')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:35.487579] :(1406, "Data too long for column 'data' at row 1")
+===file:syntax/create_table_type.sql, id:669, sql:[INSERT INTO aly_test ( id,data) VALUES (1,'abcdef')]===
+mysql err:(1406, "Data too long for column 'data' at row 1")
+dble err[05:43:35.898207] :(1406, "Data too long for column 'data' at row 1")
