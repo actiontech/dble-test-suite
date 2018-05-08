@@ -13,13 +13,13 @@ generate_simple_cmp_file () {
 #                echo "$1/$s/$ss"
 #                echo "$cmp_dir/$s/$ss"
                 grep '===file:' "$1/$s/$ss" > "$cmp_dir/$s/$ss"
-                grep '===id:' "$1/$s/$ss" > "$cmp_dir/$s/$ss"
+                grep '===id:' "$1/$s/$ss" >> "$cmp_dir/$s/$ss"
             done
 		else
 #		    echo "$1/$s/$ss"
 #            echo "$cmp_dir/$s/$ss"
             grep '===file:' "$1/$s" > "$cmp_dir/$s"
-            grep '===id:' "$1/$s" > "$cmp_dir/$s"
+            grep '===id:' "$1/$s" >> "$cmp_dir/$s"
         fi
     done
 }
@@ -27,7 +27,7 @@ generate_simple_cmp_file () {
 rm -rf cmp_result && mkdir cmp_result
 rm -rf cmp_std_result && mkdir cmp_std_result
 generate_simple_cmp_file std_result cmp_std_result
-generate_simple_cmp_file sql_cover_log/result cmp_result
+generate_simple_cmp_file sql_cover_log cmp_result
 
 res=`diff -qr cmp_std_result cmp_result`
 if [ ${#res} -gt 0 ]; then
