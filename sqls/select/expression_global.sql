@@ -62,10 +62,10 @@ select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_C
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where ~id=1
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !id=1
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where binary id=1
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from (select * from test_global)a
+select a.id,a.R_REGIONKEY,a.R_NAME,a.R_COMMENT from (select * from test_global)a
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where exists(select * from test_global where id>1)
 select R_name name from test_global
-select DATE_SUB(CURDATE(),INTERVAL 30 DAY) 
+select DATE_SUB(CURDATE(),INTERVAL 30 DAY)
 select * from test_global where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13
 #
 #bit_expr
@@ -94,10 +94,10 @@ select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_C
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(b'01' - B'11') from test_global
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 - B'11')
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(0b01 - B'11') from test_global
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(b'01' test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11') from test_global
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(0b01 test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT B'11') from test_global
+select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' * B'11')
+select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(b'01' * B'11') from test_global
+select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 * B'11')
+select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(0b01 * B'11') from test_global
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' / B'11')
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT,(b'01' / B'11') from test_global
 select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 / B'11')
@@ -132,47 +132,47 @@ select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_C
 drop table if exists test_global
 create table test_global (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))
 insert into test_global (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001' not in (select R_NAME from test_global where id =1)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001'  in (select R_NAME from test_global where id =18)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01  in (select R_NAME from test_global where id =18)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (1,'string')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (10,'string')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (1,'string')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (10,'string')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (1,2,3))
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001' not in (select R_NAME from test_global where id =1)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001'  in (select R_NAME from test_global where id =18)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01  in (select R_NAME from test_global where id =18)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (1,'string')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (10,'string')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (1,'string')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (10,'string')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (1,2,3))
 select HEX(R_bit) not like (select 1) from test_global
 select HEX(R_bit) like (select 1) from test_global
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) like (select '%A%') escape (select '%') 
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not like (select '%A%') escape (select '%') 
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  not regexp '^A' 
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  regexp '^A' 
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) like (select '%A%') escape (select '%')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not like (select '%A%') escape (select '%')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  not regexp '^A'
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  regexp '^A'
 #
 #boolean_primary
 #
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not null
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false is null
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=> (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true = (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (1,2,3)))
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=(select HEX(R_bit) not like (select 2) from test_global limit 1)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false <(select HEX(R_bit) like (select 1) from test_global limit 1)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false <> (select HEX(R_bit) from test_global where HEX(R_bit)  not regexp '^A' limit 1 )
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true != (select HEX(R_bit) from test_global where HEX(R_bit) regexp '^A' limit 1 )
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not true
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is not true)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where false is false
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(false is false)
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where true is unknown
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is unknown)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not null
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false is null
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=> (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true = (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (1,2,3)))
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=(select HEX(R_bit) not like (select 2) from test_global limit 1)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false <(select HEX(R_bit) like (select 1) from test_global limit 1)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false <> (select HEX(R_bit) from test_global where HEX(R_bit)  not regexp '^A' limit 1 )
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true != (select HEX(R_bit) from test_global where HEX(R_bit) regexp '^A' limit 1 )
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not true
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is not true)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false is false
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(false is false)
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true is unknown
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is unknown)
 #
 #expr
 #
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))or(HEX(R_bit) regexp '^A')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))||(HEX(R_bit) regexp '^A')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))XOR(HEX(R_bit) regexp '^A')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))and(HEX(R_bit) regexp '^A')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where not(HEX(R_bit) regexp '^A')
-select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where !(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))or(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))||(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))XOR(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))and(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where not(HEX(R_bit) regexp '^A')
+select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(HEX(R_bit) regexp '^A')

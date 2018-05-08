@@ -1,0 +1,6 @@
+===file:syntax/reserved_words.sql, id:970, sql:[show index from aly_test]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'primary', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'change', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+mysql:[[('aly_test', 0L, 'PRIMARY', 1L, 'primary', 'A', 3L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'change', 1L, 'id', 'A', 3L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/reserved_words.sql, id:972, sql:[show index from aly_test]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'primary', 'A', 0L, None, None, '', 'BTREE', '', '')]]
+mysql:[[('aly_test', 0L, 'PRIMARY', 1L, 'primary', 'A', 3L, None, None, '', 'BTREE', '', '')]]

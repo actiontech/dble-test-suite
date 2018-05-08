@@ -456,6 +456,8 @@ dble:[[(Decimal('100'), 'CUSTKEY_132', 1L), (Decimal('231'), 'CUSTKEY_420', 1L),
 dble:[[(Decimal('100'), 'CUSTKEY_132', 1L), (Decimal('231'), 'CUSTKEY_420', 1L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L)]]
 ===file:select/select_global_old.sql, id:239, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
 dble:[[(Decimal('100'), 'CUSTKEY_132', 1L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L)]]
+===file:select/select_global_old.sql, id:240, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===
+dble:[[(Decimal('100'), 'CUSTKEY_132', 1L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L)]]
 ===file:select/select_global_old.sql, id:241, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use index for order by (ORDERS_FK1) ignore index for group by (ORDERS_FK1) where O_CUSTKEY between 1 and 50 group by o_custkey]===
 dble:[()]
 ===file:select/select_global_old.sql, id:242, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 as a use index for group by (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey]===

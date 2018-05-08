@@ -12,7 +12,7 @@ insert into global_table3 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'
 insert into global_table2 values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
 select a.id,b.id,b.pad,a.t_id from test_global a,(select all * from global_table3) b where a.t_id=b.o_id;
 select a.id,b.id,b.pad,a.t_id from test_global a,(select distinct * from global_table3) b where a.t_id=b.o_id;
-select id,t_id,name,pad from (select * from global_table3 a group by a.id) a;
+select id,o_id,name,pad from (select * from global_table3 a group by a.id) a;
 select * from (select pad,count(*) from global_table3 a group by pad) a;
 select a.id,b.id,b.pad,a.t_id from test_global a,(select * from global_table3 having pad>3) b where a.t_id=b.o_id;
 select a.id,b.id,b.pad,a.t_id from test_global a,(select * from global_table3 where pad>3 order by id) b where a.t_id=b.o_id;

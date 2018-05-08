@@ -1,6 +1,6 @@
 #!/bin/bash
 #mainly: config mysqld, config 1m2s replication, create some mysqld users for testing
-mysql_install=("mysql" "mysql-master1" "mysql-master2" "mysql-slave1" "mysql-slave2" "dble-1" "dble-2" "dble-3")
+mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3")
 dble_install=("dble-1" "dble-2" "dble-3")
 count=${#mysql_install[@]}
 
@@ -19,7 +19,7 @@ done
 
 sleep 10s
 
-for(( i=1;i<8;i=i+1 ));
+for(( i=1;i<count;i=i+1 ));
 do
 	temp=\'$(docker exec "${mysql_install[$i]}" sh -c "cat /etc/hosts | grep '${mysql_install[$i]}'|xargs echo")\'
 	for(( j=0;j<3;j=j+1));
@@ -39,7 +39,7 @@ for((i=2; i<3; i=i+1)); do
 		&& /usr/local/mysql/support-files/mysql.server restart"
 done
 sleep 60s
-for((i=3; i<5; i=i+1)); do
+for((i=4; i<6; i=i+1)); do
 	echo "set and start slave ${mysql_install[$i]}"
 	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/support-files/mysql.server restart \
 	&& mysql -uroot -e \"change master to master_host='172.100.9.6', \

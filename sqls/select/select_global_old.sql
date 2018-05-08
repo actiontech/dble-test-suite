@@ -237,7 +237,7 @@ select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFE
  select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use key (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_800' group by o_custkey
  select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use key (ORDERS_FK1) ignore index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_800' group by o_custkey
  select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
-select sum(O_TOTALPRICEFR) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
+ select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 ignore key (ORDERS_FK1) force index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
  select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 use index for order by (ORDERS_FK1) ignore index for group by (ORDERS_FK1) where O_CUSTKEY between 1 and 50 group by o_custkey
  select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 as a use index for group by (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
  select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 a use index for join (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
@@ -247,7 +247,7 @@ select sum(O_TOTALPRICEFR) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from globa
  select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY=(select min(C_CUSTKEY) from global_table2)
  select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY) from global_table2)
  select O_ORDERKEY,O_CUSTKEY from global_table1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY)+1 from global_table2)
-select count(*) from global_table2 as a where a.O_CUSTKEY=(select max(C_CUSTKEY) from global_table1 where C_CUSTKEY=a.C_CUSTKEY)
+select count(*) from global_table2 as a where a.c_CUSTKEY=(select max(C_CUSTKEY) from global_table1 where C_CUSTKEY=a.C_CUSTKEY)
 select C_CUSTKEY  from global_table2 as a where (select count(*) from global_table1 where O_CUSTKEY=a.C_CUSTKEY)=2
 select count(*) from global_table1 as a where a.id <> all(select id from global_table2)
 select count(*) from global_table1 as a where 56000< all(select id from global_table2)

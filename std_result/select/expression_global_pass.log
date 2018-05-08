@@ -69,7 +69,7 @@ dble:[[]]
 ===file:select/expression_global.sql, id:64, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where binary id=1]===
 dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression_global.sql, id:68, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 4, 3),)]]
+dble:[[(datetime.date(2018, 4, 7),)]]
 ===file:select/expression_global.sql, id:69, sql:[select * from test_global where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:select/expression_global.sql, id:73, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' | B'11')]===
@@ -96,6 +96,10 @@ dble:[[(4L, 4.0, '\xe4\xb8\xad', 'test004')]]
 dble:[[]]
 ===file:select/expression_global.sql, id:95, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 - B'11')]===
 dble:[[]]
+===file:select/expression_global.sql, id:97, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' * B'11')]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
+===file:select/expression_global.sql, id:99, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 * B'11')]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
 ===file:select/expression_global.sql, id:101, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' / B'11')]===
 dble:[[]]
 ===file:select/expression_global.sql, id:103, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (0b01 / B'11')]===
@@ -130,7 +134,73 @@ dble:[[]]
 dble:[[]]
 ===file:select/expression_global.sql, id:134, sql:[insert into test_global (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')]===
 dble:[[]]
+===file:select/expression_global.sql, id:136, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'1000001'  in (select R_NAME from test_global where id =18)]===
+dble:[[]]
+===file:select/expression_global.sql, id:137, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01  in (select R_NAME from test_global where id =18)]===
+dble:[[]]
+===file:select/expression_global.sql, id:138, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (1,'string')]===
+dble:[[]]
+===file:select/expression_global.sql, id:139, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where b'01' not in (10,'string')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:140, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (1,'string')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:141, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where 0b01 in (10,'string')]===
+dble:[[]]
+===file:select/expression_global.sql, id:142, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test_global where HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression_global.sql, id:144, sql:[select HEX(R_bit) not like (select 1) from test_global]===
 dble:[[(0L,), (1L,), (1L,), (1L,)]]
 ===file:select/expression_global.sql, id:145, sql:[select HEX(R_bit) like (select 1) from test_global]===
 dble:[[(0L,), (0L,), (0L,), (1L,)]]
+===file:select/expression_global.sql, id:146, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) like (select '%A%') escape (select '%')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:147, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit) not like (select '%A%') escape (select '%')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:select/expression_global.sql, id:148, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  not regexp '^A']===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:select/expression_global.sql, id:149, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where HEX(R_bit)  regexp '^A']===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:153, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not null]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:154, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false is null]===
+dble:[[]]
+===file:select/expression_global.sql, id:155, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=> (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:156, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true = (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:157, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_global where id <4))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:159, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true <=(select HEX(R_bit) not like (select 2) from test_global limit 1)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:160, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false <(select HEX(R_bit) like (select 1) from test_global limit 1)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:161, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false <> (select HEX(R_bit) from test_global where HEX(R_bit)  not regexp '^A' limit 1 )]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:162, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true != (select HEX(R_bit) from test_global where HEX(R_bit) regexp '^A' limit 1 )]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:163, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true is not true]===
+dble:[[]]
+===file:select/expression_global.sql, id:164, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is not true)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:165, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where false is false]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:166, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(false is false)]===
+dble:[[]]
+===file:select/expression_global.sql, id:167, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where true is unknown]===
+dble:[[]]
+===file:select/expression_global.sql, id:168, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(true is unknown)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:172, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))or(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:173, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))||(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:174, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) like (select 1))XOR(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:175, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))and(HEX(R_bit) regexp '^A')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:176, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression_global.sql, id:177, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where not(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:select/expression_global.sql, id:178, sql:[select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]

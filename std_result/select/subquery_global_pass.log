@@ -20,6 +20,8 @@ dble:[[]]
 dble:[[(1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L), (4L, 4L, 4L, 4L), (5L, 5L, 1L, 5L)]]
 ===file:select/subquery_global.sql, id:14, sql:[select a.id,b.id,b.pad,a.t_id from test_global a,(select distinct * from global_table3) b where a.t_id=b.o_id;]===
 dble:[[(1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L), (4L, 4L, 4L, 4L), (5L, 5L, 1L, 5L)]]
+===file:select/subquery_global.sql, id:15, sql:[select id,o_id,name,pad from (select * from global_table3 a group by a.id) a;]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L)]]
 ===file:select/subquery_global.sql, id:16, sql:[select * from (select pad,count(*) from global_table3 a group by pad) a;]===
 dble:[[(1L, 2L), (2L, 1L), (3L, 1L), (4L, 1L)]]
 ===file:select/subquery_global.sql, id:17, sql:[select a.id,b.id,b.pad,a.t_id from test_global a,(select * from global_table3 having pad>3) b where a.t_id=b.o_id;]===

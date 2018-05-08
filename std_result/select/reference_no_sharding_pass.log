@@ -86,6 +86,8 @@ dble:[[(1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'order\xe4\x
 dble:[(('test\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('order...5',))]
 ===file:select/reference_no_sharding.sql, id:59, sql:[(select name from a_test_no_shard where pad=1 order by id limit 10) union distinct (select name from a_order_no_shard where pad=1 order by id limit 10)]===
 dble:[(('test\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('order...5',))]
+===file:select/reference_no_sharding.sql, id:60, sql:[(select * from a_test_no_shard where pad=1) union (select * from a_order_no_shard where pad=1) order by id limit 10]===
+dble:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L))]
 ===file:select/reference_no_sharding.sql, id:61, sql:[(select name as sort_a from a_test_no_shard where pad=1) union (select name from a_order_no_shard where pad=1) order by sort_a limit 10]===
 dble:[(('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('test\xe4\xb8\xadid\xe4\xb8\xba1',))]
 ===file:select/reference_no_sharding.sql, id:62, sql:[(select name as sort_a,pad from a_test_no_shard where pad=1) union (select name,pad from a_order_no_shard where pad=1) order by sort_a,pad limit 10]===

@@ -7,7 +7,7 @@
   chmod +x en_dble.sh
   ./en_dble.sh
 
-4, 使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
+3, 使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
     yum -y install epel-release
     pip install --upgrade pip
 
