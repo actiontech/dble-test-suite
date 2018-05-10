@@ -158,7 +158,7 @@ select * from test_shard where true <=> (HEX(R_bit) not in (select HEX(R_bit) fr
 select * from test_shard where true = (HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))
 select * from test_shard where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))
 select * from test_shard where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (1,2,3)))
-select * from test_shard where false <(select HEX(R_bit) like (select 1) from test_shard limit 1)
+select * from test_shard where false <(select HEX(R_bit) like (select 1) a from test_shard order by a limit 1)
 select * from test_shard where false <> (select HEX(R_bit) from test_shard where HEX(R_bit)  not regexp '^A' limit 1 )
 select * from test_shard where true != (select HEX(R_bit) from test_shard where HEX(R_bit) regexp '^A' limit 1 )
 select * from test_shard where true is not true

@@ -58,7 +58,7 @@ mysql:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('
 ===file:select/expression.sql, id:58, sql:[SELECT (@aa:=id) AS a, (@aa+3) AS b FROM test_shard]===
 dble:[None]
 mysql:[((1L, 4.0), (2L, 5.0), (3L, 6.0), (4L, 7.0), (5L, 8.0), (6L, 9.0), (7L, 10.0), (8L, 11.0), (9L, 12.0), (10L, 13.0), (11L, 14.0), (12L, 15.0), (13L, 16.0), (14L, 17.0), (15L, 18.0), (16L, 19.0), (17L, 20.0), (18L, 21.0), (19L, 22.0), (65L, 68.0))]
-[05:50:04.552233]dble err :(1064, 'not support assignment')
+[01:52:42.421859]dble err :(1064, 'not support assignment')
 ===file:select/expression.sql, id:62, sql:[select * from test_shard where ~id=1]===
 dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a%string', 'test013'), (14L, 14.0, 'a_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
 mysql:[[]]
@@ -167,11 +167,8 @@ mysql:[[]]
 ===file:select/expression.sql, id:145, sql:[select * from test_shard where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (1,2,3))]===
 dble:[None]
 mysql:[()]
-[05:50:11.326162]dble err :(1064, 'NullPointerException')
+[01:52:56.261543]dble err :(1064, 'NullPointerException')
 ===file:select/expression.sql, id:160, sql:[select * from test_shard where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (1,2,3)))]===
 dble:[None]
 mysql:[((1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001'))]
-[05:50:12.333035]dble err :(1064, 'NullPointerException')
-===file:select/expression.sql, id:161, sql:[select * from test_shard where false <(select HEX(R_bit) like (select 1) from test_shard limit 1)]===
-dble:[[]]
-mysql:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+[01:52:57.267039]dble err :(1064, 'NullPointerException')

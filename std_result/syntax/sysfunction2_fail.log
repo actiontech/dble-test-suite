@@ -5,8 +5,8 @@ mysql:[[(1L, 'X')]]
 dble:[[(2L, 'y')]]
 mysql:[[(2L, 'Y')]]
 ===file:syntax/sysfunction2.sql, id:76, sql:[SELECT CONNECTION_ID()]===
-dble:[[(2252L,)]]
-mysql:[[(100726L,)]]
+dble:[[(2476L,)]]
+mysql:[[(135874L,)]]
 ===file:syntax/sysfunction2.sql, id:77, sql:[SELECT CURRENT_USER()]===
 dble:[[('test@172.100.9.253',)]]
 mysql:[[('test@%',)]]

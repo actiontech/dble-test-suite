@@ -1,4 +1,4 @@
 ===file:syntax/data_types.sql, id:179, sql:[select \N]===
 dble:[None]
 mysql:[((None,),)]
-[05:44:06.550229]dble err :(1064, 'ERROR. token : ERROR, pos : 8')
+[01:46:40.785483]dble err :(1064, 'ERROR. token : ERROR, pos : 8')

@@ -13,7 +13,7 @@
  show full columns from aly_order from mytest where field like 'o%'
  show table status
  show table status like 'aly_o%'
- show tables
+ show tables/*allow_diff*/
  show full tables
  show tables from mytest
  show tables in mytest

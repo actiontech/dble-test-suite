@@ -362,6 +362,8 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/create_table_definition_syntax.sql, id:276, sql:[INSERT INTO aly_test VALUES (1,1,'aaa')]===
 dble:[[]]
+===file:syntax/create_table_definition_syntax.sql, id:277, sql:[SHOW index FROM aly_test]===
+dble:[[('aly_test', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:syntax/create_table_definition_syntax.sql, id:285, sql:[DROP TABLE IF EXISTS  aly_test]===
 dble:[[]]
 ===file:syntax/create_table_definition_syntax.sql, id:286, sql:[CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE (id))]===

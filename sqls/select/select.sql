@@ -106,13 +106,13 @@ select id,pad from test_shard having pad<6
 #
 #order by
 #
-select * from test_shard order by null
+select * from test_shard order by null/*allow_diff_sequence*/
 select * from test_shard order by id desc
 select * from test_shard order by id asc
 select id t,pad from test_shard order by t
-select id,pad from test_shard order by pad
+select id,pad from test_shard order by pad/*allow_diff_sequence*/
 select id,pad from test_shard a order by a.id
-select id,pad from test_shard a order by a.pad
+select id,pad from test_shard a order by a.pad/*allow_diff_sequence*/
 #
 #limit
 #
@@ -248,17 +248,17 @@ select count(*) from test_shard group by R_COMMENT,1+1
 select count(*) from test_shard group by R_COMMENT asc
 select count(*) from test_shard group by R_COMMENT desc
 select count(*) from test_shard group by 1+1
-select count(*) from test_shard group by R_COMMENT,R_NAME order by null
-select count(*) from test_shard group by R_COMMENT,R_NAME order by R_NAME asc
-select count(*) from test_shard group by 1+1,1*5 order by 2*2 asc
-select count(*) from test_shard group by R_COMMENT,R_NAME having count(*) order by 1+1
-select count(*) from test_shard group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2
-select count(*) from test_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 asc  limit 2 offset 2
-select count(*) from test_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2
+select count(*) from test_shard group by R_COMMENT,R_NAME order by null/*allow_diff_sequence*/
+select count(*) from test_shard group by R_COMMENT,R_NAME order by R_NAME asc/*allow_diff_sequence*/
+select count(*) from test_shard group by 1+1,1*5 order by 2*2 asc/*allow_diff_sequence*/
+select count(*) from test_shard group by R_COMMENT,R_NAME having count(*) order by 1+1/*allow_diff_sequence*/
+select count(*) from test_shard group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2/*allow_diff_sequence*/
+select count(*) from test_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 asc  limit 2 offset 2/*allow_diff_sequence*/
+select count(*) from test_shard where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2/*allow_diff_sequence*/
 select R_comment,count(*) a from test_shard group by R_comment having a>1+1
 select R_comment,count(*) a from test_shard group by R_comment having count(*)>1+1
-select * from test_shard order by R_COMMENT+1 asc
-select * from test_shard order by R_COMMENT,1+1
+select * from test_shard order by R_COMMENT+1 asc/*allow_diff_sequence*/
+select * from test_shard order by R_COMMENT,1+1/*allow_diff_sequence*/
 select * from test_shard order by id,R_COMMENT
 #
 #special_scene(col_name contains null,Accuracy)
@@ -268,7 +268,7 @@ create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar
 insert into test_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')
 insert into test_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')
 insert into test_shard values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')
-select * from test_shard order by R_comment
+select * from test_shard order by R_comment/*allow_diff_sequence*/
 select * from test_shard where id =2 order by R_comment
 select count(*),R_COMMENT from test_shard group by R_comment
 select count(*),R_COMMENT from test_shard where id=2 group by R_comment
@@ -284,8 +284,8 @@ create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar
 insert into test_shard (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')
 insert into test_shard (id,R_REGIONKEY,R_NAME) values (2,1, 'a')
 insert into test_shard values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')
-select * from test_shard order by R_COMMENT
-select * from test_shard order by R_NAME
+select * from test_shard order by R_COMMENT/*allow_diff_sequence*/
+select * from test_shard order by R_NAME/*allow_diff_sequence*/
 select R_NAME,max(R_REGIONKEY) from test_shard group by R_name
 select * from test_shard order by id limit 2,3
 select * from test_shard order by id limit 1,1

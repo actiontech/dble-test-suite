@@ -1,27 +1,27 @@
 ===file:select/reference_global.sql, id:14, sql:[select id,t_id,name,pad from test_global t use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[05:51:49.329508]dble err :(1064, 'error RPAREN index')
+[01:54:23.664624]dble err :(1064, 'error RPAREN index')
 ===file:select/reference_global.sql, id:15, sql:[select id,t_id,name,pad from test_global t use key()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[05:51:49.432527]dble err :(1064, 'error RPAREN key')
+[01:54:23.768440]dble err :(1064, 'error RPAREN key')
 ===file:select/reference_global.sql, id:37, sql:[select id,t_id,name,pad from test_global t use key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[05:51:51.669061]dble err :(1064, 'error INDEX index')
+[01:54:25.974630]dble err :(1064, 'error INDEX index')
 ===file:select/reference_global.sql, id:38, sql:[select id,t_id,name,pad from test_global t ignore key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[05:51:51.764773]dble err :(1064, 'error INDEX index')
+[01:54:26.078310]dble err :(1064, 'error INDEX index')
 ===file:select/reference_global.sql, id:39, sql:[select id,t_id,name,pad from test_global t ignore key(k_1) ignore index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[05:51:51.860973]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
+[01:54:26.184894]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
 ===file:select/reference_global.sql, id:40, sql:[select id,t_id,name,pad from test_global t force key(k_1) force index(pad_index)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[05:51:51.948279]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
+[01:54:26.288929]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
 ===file:select/reference_global.sql, id:60, sql:[(select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from global_table2 c where c.pad=1) order by id limit 10]===
 dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L))]
 mysql:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L))]

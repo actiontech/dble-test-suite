@@ -41,7 +41,7 @@ dble:[[(21L,)]]
 ===file:syntax/sysfunction2.sql, id:60, sql:[select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')]===
 dble:[[('\xff\xe5a,\xf0\xc90eF',)]]
 ===file:syntax/sysfunction2.sql, id:61, sql:[SELECT ENCRYPT('hello')]===
-dble:[[('k7pHAswNspXcA',)]]
+dble:[[('7YSohLeGDQ0h6',)]]
 ===file:syntax/sysfunction2.sql, id:62, sql:[SELECT ENCRYPT('hello','abc')]===
 dble:[[('abl0JrMf6tlhw',)]]
 ===file:syntax/sysfunction2.sql, id:63, sql:[SELECT MD5('testing')]===
@@ -81,7 +81,7 @@ dble:[[(0L,)]]
 ===file:syntax/sysfunction2.sql, id:239, sql:[SELECT JSON_ARRAY_APPEND('["a", ["b", "c"], "d"]', '$[1]', 1)]===
 dble:[[('["a", ["b", "c", 1], "d"]',)]]
 ===file:syntax/sysfunction2.sql, id:240, sql:[SELECT JSON_ARRAY(1, "abc", NULL, TRUE, CURTIME())]===
-dble:[[('[1, "abc", null, true, "17:49:38.000000"]',)]]
+dble:[[('[1, "abc", null, true, "13:52:15.000000"]',)]]
 ===file:syntax/sysfunction2.sql, id:241, sql:[SELECT JSON_ARRAY_INSERT('["a", ["b", "c"], "d"]', '$[100]', 'x')]===
 dble:[[('["a", ["b", "c"], "d", "x"]',)]]
 ===file:syntax/sysfunction2.sql, id:242, sql:[SELECT JSON_INSERT('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===

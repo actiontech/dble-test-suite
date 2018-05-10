@@ -28,6 +28,8 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/set_user_var.sql, id:25, sql:[SELECT @min_price:=MIN(price),@max_price:=MAX(price) FROM shop]===
 dble:[[(1.25, 234.25)]]
+===file:syntax/set_user_var.sql, id:26, sql:[SELECT * FROM shop WHERE price=@min_price OR price=@max_price]===
+dble:[[(1L, 'D', 234.25), (3L, 'D', 1.25)]]
 ===file:syntax/set_user_var.sql, id:27, sql:[SELECT (@aa:=article) AS a, (@aa+3) AS b FROM shop HAVING b=5]===
 dble:[[]]
 ===file:syntax/set_user_var.sql, id:28, sql:[drop table if exists t1]===
