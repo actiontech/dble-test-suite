@@ -1,7 +1,7 @@
 ===file:syntax/character.sql, id:14, sql:[select CONCAT(_ucs2 X'0041', _ucs2 X'0042')]===
 dble:[None]
 mysql:[(('AB',),)]
-[05:41:48.681086]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER X')
+[01:44:26.273004]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER X')
 ===file:syntax/character.sql, id:32, sql:[SELECT HEX('à\n'), HEX(_latin1'à\n')]===
 dble:[[('C33F0A', 'C33F0A')]]
 mysql:[[('C3A00A', 'C3A00A')]]
@@ -20,7 +20,7 @@ mysql:[[('hello?',)]]
 ===file:syntax/character.sql, id:49, sql:[alter table t change c c national character varying(20)]===
 dble:[None]
 mysql:[()]
-[05:42:01.878833]dble err :(1064, "syntax error, error in :'onal character varying(20)',expect IDENTIFIER, actual IDENTIFIER character")
+[01:44:34.228543]dble err :(1064, "syntax error, error in :'onal character varying(20)',expect IDENTIFIER, actual IDENTIFIER character")
 ===file:syntax/character.sql, id:62, sql:[insert into t values('你')]===
 dble:[()]
 mysql:[None]

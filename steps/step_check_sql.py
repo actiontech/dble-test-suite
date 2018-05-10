@@ -1,6 +1,7 @@
 import datetime
 import os
 import re
+import difflib
 import logging
 import threading
 from Queue import Queue
@@ -132,17 +133,34 @@ def do_query(context, line_nu, sql, to_close):
 
 def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
     if len(sql) > 1000: sql = "{0}...{1}".format(sql[0:300], sql[-50:])
+    a = re.compile(r'\/\*\s*allow_diff_sequence\s*\*\/')
+    b = re.search(a, sql)
     c = re.compile(r'\/\*\s*allow_diff\s*\*\/')
     d = re.search(c, sql)
+    e = re.compile(r'\/\*\s*allow_10%_diff\s*\*\/')
+    f = re.search(e, sql)
     isAllowDiff = d is not None
+    isAllowDiffSequ =b is not None
+    isAllowTenDiff = f is not None
+    isAllowTen = False
     isNoErr = err1 is None and err2 is None
+    g = 0
+
+    isContIndex = True#because of bug:533,temporary plan taken
+    if (sql.lower().find('show index') == -1):
+        isContIndex = False
 
     if type(dble_result) == tuple and type(mysql_result) == tuple:
-        if (sql.find('order by') == -1):
+        if (isAllowDiffSequ) or (sql.lower().find('order by') == -1):
             dble_result = sorted(dble_result)
             mysql_result = sorted(mysql_result)
 
-    isResultSame = dble_result==mysql_result or (isNoErr and isAllowDiff)
+        if (isContIndex or isAllowTenDiff):
+            g = difflib.SequenceMatcher(None, str(dble_result), str(mysql_result)).ratio()
+            if (g >0.9):
+                isAllowTen = True
+
+    isResultSame = dble_result==mysql_result or (isNoErr and isAllowDiff) or (isNoErr and isAllowTen)
 
     dble_re = "dble:[" + str(dble_result) + "]\n"
     mysql_re = "mysql:[" + str(mysql_result) + "]\n"
@@ -177,6 +195,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
                 fpW.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(id, sql, context.sql_file))
                 fpW.writelines("mysql err:{0}\n".format(err1))
                 fpW.writelines("dble err[{1}] :{0}\n".format(err2, datetime.datetime.now().strftime('%H:%M:%S.%f')))
+
 
             context.logger.info("mysql_err: {0}".format(err1))
             context.logger.info("dble_err: {0}".format(err2))

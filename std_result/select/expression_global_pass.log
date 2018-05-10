@@ -69,7 +69,7 @@ dble:[[]]
 ===file:select/expression_global.sql, id:64, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where binary id=1]===
 dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression_global.sql, id:68, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 4, 7),)]]
+dble:[[(datetime.date(2018, 4, 9),)]]
 ===file:select/expression_global.sql, id:69, sql:[select * from test_global where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:select/expression_global.sql, id:73, sql:[select test_global.id,test_global.R_REGIONKEY,test_global.R_NAME,test_global.R_COMMENT from test_global where id= (b'01' | B'11')]===

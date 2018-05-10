@@ -130,8 +130,8 @@ select SQL_NO_CACHE ID,name from aly_test where ID between 100 and 1500
 select SQL_CALC_FOUND_ROWS ID,name from aly_test where ID between 100 and 1500
 select Concat(name,',',mobile) as a from aly_test where ID between 480 and 550
 select id,name,mobile,brithday,Email from aly_test group by name order by ID asc
-select id,name,mobile as phone,brithday,Email from aly_test group by name order by ID,phone
-select distinct id, name,mobile,brithday,Email from aly_test group by name order by ID asc
+#select id,name,mobile as phone,brithday,Email from aly_test group by name order by ID,phone
+#select distinct id, name,mobile,brithday,Email from aly_test group by name order by ID asc
 select name,mobile,brithday,Email from aly_test order by name asc limit 480,600
 select distinct name from aly_test order by name asc
 select all id,name,mobile,brithday,Email from aly_test group by name order by ID asc
@@ -154,10 +154,10 @@ select ID,name,count(age) as age from aly_test where id in (600,1600) group by a
 select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (600,601,602,603,1600) group by age
 select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (600,601,602,603,1600,100) group by age
 select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ID
-select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ages
-select ID,name,count(age) as age from aly_test where id in (109,609,1109,1609,2609,100,600,1100,2600,3800,4000,4300)
+select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ages/*allow_diff_sequence*/
+#select ID,name,count(age) as age from aly_test where id in (109,609,1109,1609,2609,100,600,1100,2600,3800,4000,4300)
 select age,count(age) as count_age from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age
-select id,age,count(age) as age_count from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID
+select id,age,count(age) as age_count from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID/*allow_diff_sequence*/
 select id,age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID
 drop table if exists aly_test
 create table aly_test(id int(6) NOT NULL ,productID int(11),saleNum int,postion varchar(100),total_price decimal(10,2),person varchar(100),primary key(id)) ENGINE=InnoDB
@@ -220,15 +220,15 @@ select person from aly_test where id like '1%' order by person limit 100
 select person from aly_test where id not like '2%' order by person limit 100
 select person from aly_test where postion  like 'm%' order by person
 select id,person from aly_test where postion  like 'm%' order by id
-select id,person,saleNum from aly_test where postion  like 'm%' order by person,saleNum
-select id,person,saleNum from aly_test where postion  like 'm%' order by person,saleNum desc
+select id,person,saleNum from aly_test where postion  like 'm%' order by person,saleNum/*allow_diff_sequence*/
+select id,person,saleNum from aly_test where postion  like 'm%' order by person,saleNum desc/*allow_diff_sequence*/
 select postion from aly_test where person in (null) order by postion
 select postion,saleNum from aly_test where person in (null) order by postion desc,saleNum
 select postion from aly_test where id in (1,2,3,4,5) order by postion
 select postion from aly_test where id in (1,2,3,4,5) order by postion desc
 select id,saleNum,postion from aly_test where id in (1,2,3,4,5) order by postion, saleNum
 select postion from aly_test where id not in (1,2,3,4,5) order by postion limit 100
-select id,saleNum,postion from aly_test where id not in (1,2,3,4,5) order by postion, saleNum limit 100
+select id,saleNum,postion from aly_test where id not in (1,2,3,4,5) order by postion, saleNum limit 100/*allow_diff_sequence*/
 select postion from aly_test where person in ('aaa','bbb','ccc') order by postion limit 100
 select postion from aly_test where person not in ('aaa','bbb','ccc') order by postion limit 100
 select person from aly_test where id between 1 and 4 order by person
@@ -242,12 +242,12 @@ select person from aly_test where id is not null and id > 1 and person in ('aaa'
 select person from aly_test where ( id is not null and id > 1) or person in ('aaa','bbb') order by person limit 100
 select person from aly_test group by person order by person
 select person from aly_test group by person order by person desc
-select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc limit 100
+select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc limit 100/*allow_diff_sequence*/
 select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc,total_price limit 100
 select id,productID,saleNum,postion,total_price,person from aly_test group by id order by person desc,total_price limit 100
 select person,sum(saleNum) from aly_test group by person order by person
 select person,max(saleNum) from aly_test group by person order by person
-select person,max(saleNum) MAX_SALE from aly_test group by person order by max_sale
+select person,max(saleNum) MAX_SALE from aly_test group by person order by max_sale/*allow_diff_sequence*/
 select person,min(saleNum) from aly_test group by person
 select person,avg(total_price) from aly_test group by person
 select person, max(saleNum) MAX from aly_test group by person

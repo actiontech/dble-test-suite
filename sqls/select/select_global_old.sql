@@ -82,7 +82,7 @@ select id,FirstName,lastname,department,salary from global_table1 where (Salary 
 select id,FirstName,lastname,department,salary from global_table1 where FirstName like 'J%'
 select count(*) FROM global_table1 WHERE Salary is null or FirstName not like '%M%'
 SELECT id,FirstName,lastname,department,salary FROM global_table1  WHERE ID IN (SELECT ID FROM global_table1 WHERE ID >0)
-SELECT distinct * FROM global_table1 WHERE ID IN ( SELECT ID FROM global_table1 WHERE ID >0)
+SELECT distinct salary,id,FirstName,lastname,department FROM global_table1 WHERE ID IN ( SELECT ID FROM global_table1 WHERE ID >0)
 select id,FirstName,lastname,department,salary from global_table1 where FirstName in ('Mazojys','Syllauu','Tyoysww')
 select id,FirstName,lastname,department,salary from global_table1 where Salary between 40000 and 50000
 select sum(salary) from global_table1 where department = 'Finance'
@@ -163,9 +163,9 @@ select C_NAME from global_table2 where  C_NAME  like concat('%','en','%')
 select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132'
 (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY) union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY)
 select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY
-select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 1, O_ORDERKEY desc
+select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 1, O_ORDERKEY desc/*allow_diff_sequence*/
 select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 2,1
-(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_330') union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_420') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY<'CUSTKEY_200') order by 2,1
+(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_330') union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_420') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY<'CUSTKEY_200') order by 2,1/*allow_diff_sequence*/
 (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') order by O_ORDERKEY
 (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY limit 5) union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_980' order by O_ORDERKEY limit 5)
 (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') order by O_ORDERKEY limit 5
