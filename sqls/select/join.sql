@@ -125,10 +125,10 @@ select * from a_test union distinct select * from a_order
 select * from a_test union (select * from a_order)
 (select * from a_test) union (select * from a_order)
 select * from a_test union select * from a_order
-(select * from a_test order by id)union select * from a_order
-select * from a_test union (select * from a_order order by id)
-select * from a_test union select * from a_order order by id
-(select * from a_test) union (select * from a_order) order by id
+(select * from a_test order by id)union select * from a_order/*allow_diff_sequence*/
+select * from a_test union (select * from a_order order by id)/*allow_diff_sequence*/
+select * from a_test union select * from a_order order by id/*allow_diff_sequence*/
+(select * from a_test) union (select * from a_order) order by name
 (select pad from a_test) union distinct (select pad from a_order)
 select distinct a.pad from a_test a,a_order b where a.pad=b.pad
 (select * from a_test where id=2) union distinct (select * from a_order where id=2)
@@ -140,7 +140,7 @@ select * from a_test union all select * from a_manager union all select * from a
 select * from a_test union distinct select * from a_manager union distinct select * from a_order
 (select name from a_test where pad=1 order by id limit 10) union all (select name from a_order where pad=1 order by id limit 10)/*allow_diff_sequence*/
 (select name from a_test where pad=1 order by id limit 10) union distinct (select name from a_order where pad=1 order by id limit 10)/*allow_diff_sequence*/
-(select * from a_test where pad=1) union (select * from a_order where pad=1) order by id limit 10
+(select * from a_test where pad=1) union (select * from a_order where pad=1) order by name limit 10
 (select name as sort_a from a_test where pad=1) union (select name from a_order where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from a_test where pad=1) union (select name,pad from a_order where pad=1) order by sort_a,pad limit 10
 select 1 union select 1

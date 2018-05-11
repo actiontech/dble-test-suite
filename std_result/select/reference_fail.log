@@ -1,27 +1,24 @@
 ===file:select/reference.sql, id:14, sql:[select * from a_test t use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:54:19.030141]dble err :(1064, 'error RPAREN index')
+[03:25:24.633974]dble err :(1064, 'error RPAREN index')
 ===file:select/reference.sql, id:15, sql:[select * from a_test t use key()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:54:19.132312]dble err :(1064, 'error RPAREN key')
+[03:25:24.738597]dble err :(1064, 'error RPAREN key')
 ===file:select/reference.sql, id:37, sql:[select * from a_test t use key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:54:21.092601]dble err :(1064, 'error INDEX index')
+[03:25:26.804371]dble err :(1064, 'error INDEX index')
 ===file:select/reference.sql, id:38, sql:[select * from a_test t ignore key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:54:21.195200]dble err :(1064, 'error INDEX index')
+[03:25:26.906411]dble err :(1064, 'error INDEX index')
 ===file:select/reference.sql, id:39, sql:[select * from a_test t ignore key(k_1) ignore index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:54:21.297574]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
+[03:25:27.009371]dble err :(1064, "syntax error, error in :'k_1) ignore index(pad_index) use in',expect IDENTIFIER, actual IDENTIFIER ignore")
 ===file:select/reference.sql, id:40, sql:[select * from a_test t force key(k_1) force index(pad_index)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:54:21.402847]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
-===file:select/reference.sql, id:59, sql:[(select * from a_test where pad=1) union (select * from a_order where pad=1) order by id limit 10]===
-dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L), (5L, 5L, 'order...5', 1L))]
-mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L))]
+[03:25:27.113457]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")

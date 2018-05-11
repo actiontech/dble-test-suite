@@ -114,6 +114,9 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/sysfunction1.sql, id:63, sql:[SELECT @var1 := 1, @var2]===
 dble:[[(1L, None)]]
+===file:syntax/sysfunction1.sql, id:64, sql:[SELECT @var1, @var2 := @var1/*allow_diff*/]===
+dble:[[(None, None)]]
+mysql:[[(None, None)]]
 ===file:syntax/sysfunction1.sql, id:67, sql:[SELECT 2 BETWEEN 1 AND 3, 4 BETWEEN 1 AND 3]===
 dble:[[(1L, 0L)]]
 ===file:syntax/sysfunction1.sql, id:68, sql:[SELECT GREATEST(2,0)]===
@@ -220,6 +223,15 @@ dble:[[(None,)]]
 dble:[[(1L,)]]
 ===file:syntax/sysfunction1.sql, id:120, sql:[SELECT 1 XOR NULL]===
 dble:[[(None,)]]
+===file:syntax/sysfunction1.sql, id:122, sql:[SELECT @var1 := 1, @var2/*allow_diff*/]===
+dble:[[(1L, None)]]
+mysql:[[(1L, None)]]
+===file:syntax/sysfunction1.sql, id:123, sql:[SELECT @var1, @var2 := @var1/*allow_diff*/]===
+dble:[[(None, None)]]
+mysql:[[(None, None)]]
+===file:syntax/sysfunction1.sql, id:124, sql:[SELECT @var1, @var2/*allow_diff*/]===
+dble:[[(1L, None)]]
+mysql:[[(None, None)]]
 ===file:syntax/sysfunction1.sql, id:126, sql:[drop table if exists global_table1]===
 dble:[[]]
 ===file:syntax/sysfunction1.sql, id:127, sql:[create table global_table1(id int)]===
@@ -228,6 +240,12 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/sysfunction1.sql, id:129, sql:[UPDATE global_table1 SET id = 2 WHERE id = @var1:= 1]===
 dble:[[]]
+===file:syntax/sysfunction1.sql, id:130, sql:[SELECT @var1 := 1, @var2/*allow_diff*/]===
+dble:[[(1L, None)]]
+mysql:[[(1L, None)]]
+===file:syntax/sysfunction1.sql, id:131, sql:[SELECT @var1, @var2 := @var1/*allow_diff*/]===
+dble:[[(None, None)]]
+mysql:[[(None, None)]]
 ===file:syntax/sysfunction1.sql, id:133, sql:[drop table if exists global_table1]===
 dble:[[]]
 ===file:syntax/sysfunction1.sql, id:134, sql:[CREATE TABLE global_table1(vbin1 VARBINARY(32), vbin2 VARBINARY(32))]===
@@ -521,43 +539,43 @@ dble:[[(None,)]]
 ===file:syntax/sysfunction1.sql, id:316, sql:[SELECT CONVERT_TZ('2004-01-01 12:00:00','+00:00','+10:00')]===
 dble:[[(datetime.datetime(2004, 1, 1, 22, 0),)]]
 ===file:syntax/sysfunction1.sql, id:317, sql:[SELECT CURDATE()]===
-dble:[[(datetime.date(2018, 5, 9),)]]
+dble:[[(datetime.date(2018, 5, 11),)]]
 ===file:syntax/sysfunction1.sql, id:318, sql:[SELECT CURDATE() + 0]===
-dble:[[(20180509L,)]]
+dble:[[(20180511L,)]]
 ===file:syntax/sysfunction1.sql, id:319, sql:[SELECT CURRENT_DATE]===
-dble:[[(datetime.date(2018, 5, 9),)]]
+dble:[[(datetime.date(2018, 5, 11),)]]
 ===file:syntax/sysfunction1.sql, id:320, sql:[SELECT CURRENT_DATE()]===
-dble:[[(datetime.date(2018, 5, 9),)]]
+dble:[[(datetime.date(2018, 5, 11),)]]
 ===file:syntax/sysfunction1.sql, id:321, sql:[SELECT CURRENT_TIME /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 49910),)]]
-mysql:[[(datetime.timedelta(0, 49910),)]]
+dble:[[(datetime.timedelta(0, 55348),)]]
+mysql:[[(datetime.timedelta(0, 55348),)]]
 ===file:syntax/sysfunction1.sql, id:322, sql:[SELECT CURRENT_TIME() /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 49910),)]]
-mysql:[[(datetime.timedelta(0, 49910),)]]
+dble:[[(datetime.timedelta(0, 55348),)]]
+mysql:[[(datetime.timedelta(0, 55348),)]]
 ===file:syntax/sysfunction1.sql, id:323, sql:[SELECT CURTIME() /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 49910),)]]
-mysql:[[(datetime.timedelta(0, 49910),)]]
+dble:[[(datetime.timedelta(0, 55348),)]]
+mysql:[[(datetime.timedelta(0, 55348),)]]
 ===file:syntax/sysfunction1.sql, id:324, sql:[SELECT CURRENT_TIMESTAMP /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:325, sql:[SELECT CURRENT_TIMESTAMP() /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:326, sql:[SELECT NOW() /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:327, sql:[SELECT LOCALTIME /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:328, sql:[SELECT LOCALTIME() /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 50),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:329, sql:[SELECT LOCALTIMESTAMP /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 51),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 51),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:330, sql:[SELECT LOCALTIMESTAMP() /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 51),)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 51),)]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 29),)]]
 ===file:syntax/sysfunction1.sql, id:331, sql:[SELECT DATE('2003-12-31 01:02:03')]===
 dble:[[(datetime.date(2003, 12, 31),)]]
 ===file:syntax/sysfunction1.sql, id:332, sql:[SELECT DATEDIFF('2007-12-31 23:59:59','2007-12-30')]===
@@ -635,7 +653,7 @@ dble:[[(datetime.datetime(2015, 11, 14, 0, 8, 1),)]]
 ===file:syntax/sysfunction1.sql, id:368, sql:[SELECT FROM_UNIXTIME(1447430881) + 0]===
 dble:[[(20151114000801L,)]]
 ===file:syntax/sysfunction1.sql, id:369, sql:[SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x')]===
-dble:[[('2018 9th May 01:51:54 2018',)]]
+dble:[[('2018 11th May 03:22:32 2018',)]]
 ===file:syntax/sysfunction1.sql, id:370, sql:[SELECT DATE_FORMAT('2003-10-03',GET_FORMAT(DATE,'EUR'))]===
 dble:[[('03.10.2003',)]]
 ===file:syntax/sysfunction1.sql, id:371, sql:[SELECT STR_TO_DATE('10.31.2003',GET_FORMAT(DATE,'USA'))]===
@@ -659,11 +677,11 @@ dble:[[(2L,)]]
 ===file:syntax/sysfunction1.sql, id:380, sql:[SELECT MONTHNAME('2008-02-03')]===
 dble:[[('February',)]]
 ===file:syntax/sysfunction1.sql, id:381, sql:[SELECT NOW(), SLEEP(2), NOW() /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 51, 58), 0L, datetime.datetime(2018, 5, 9, 13, 51, 58))]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 51, 56), 0L, datetime.datetime(2018, 5, 9, 13, 51, 56))]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 36), 0L, datetime.datetime(2018, 5, 11, 15, 22, 36))]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 34), 0L, datetime.datetime(2018, 5, 11, 15, 22, 34))]]
 ===file:syntax/sysfunction1.sql, id:382, sql:[SELECT SYSDATE(), SLEEP(2), SYSDATE() /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 13, 52, 2), 0L, datetime.datetime(2018, 5, 9, 13, 52, 4))]]
-mysql:[[(datetime.datetime(2018, 5, 9, 13, 52), 0L, datetime.datetime(2018, 5, 9, 13, 52, 2))]]
+dble:[[(datetime.datetime(2018, 5, 11, 15, 22, 40), 0L, datetime.datetime(2018, 5, 11, 15, 22, 42))]]
+mysql:[[(datetime.datetime(2018, 5, 11, 15, 22, 38), 0L, datetime.datetime(2018, 5, 11, 15, 22, 40))]]
 ===file:syntax/sysfunction1.sql, id:383, sql:[SELECT PERIOD_ADD(200801,2)]===
 dble:[[(200803L,)]]
 ===file:syntax/sysfunction1.sql, id:384, sql:[SELECT PERIOD_DIFF(200802,200703)]===
@@ -709,15 +727,15 @@ dble:[[(62966505600L,)]]
 ===file:syntax/sysfunction1.sql, id:404, sql:[SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19')]===
 dble:[[(1447381219L,)]]
 ===file:syntax/sysfunction1.sql, id:405, sql:[SELECT UNIX_TIMESTAMP()]===
-dble:[[(1525845126L,)]]
+dble:[[(1526023364L,)]]
 ===file:syntax/sysfunction1.sql, id:406, sql:[SELECT UTC_DATE(), UTC_DATE() + 0]===
-dble:[[(datetime.date(2018, 5, 9), 20180509L)]]
+dble:[[(datetime.date(2018, 5, 11), 20180511L)]]
 ===file:syntax/sysfunction1.sql, id:407, sql:[SELECT UTC_TIME(), UTC_TIME() + 0 /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 21126), 55206L)]]
-mysql:[[(datetime.timedelta(0, 21126), 55206L)]]
+dble:[[(datetime.timedelta(0, 26564), 72244L)]]
+mysql:[[(datetime.timedelta(0, 26564), 72244L)]]
 ===file:syntax/sysfunction1.sql, id:408, sql:[SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0 /*allow_diff*/]===
-dble:[[(datetime.datetime(2018, 5, 9, 5, 52, 6), 20180509055206L)]]
-mysql:[[(datetime.datetime(2018, 5, 9, 5, 52, 6), 20180509055206L)]]
+dble:[[(datetime.datetime(2018, 5, 11, 7, 22, 44), 20180511072244L)]]
+mysql:[[(datetime.datetime(2018, 5, 11, 7, 22, 44), 20180511072244L)]]
 ===file:syntax/sysfunction1.sql, id:409, sql:[SELECT WEEK('2008-02-20')]===
 dble:[[(7L,)]]
 ===file:syntax/sysfunction1.sql, id:410, sql:[SELECT WEEK('2008-12-31',1)]===

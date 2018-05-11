@@ -147,7 +147,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
     g = 0
 
     isContIndex = True#because of bug:533,temporary plan taken
-    if (sql.lower().find('show index') == -1):
+    if (sql.lower().find('show index') == -1) and (sql.lower().find('show keys') == -1):
         isContIndex = False
 
     if type(dble_result) == tuple and type(mysql_result) == tuple:

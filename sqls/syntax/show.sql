@@ -11,9 +11,9 @@
  show full columns from aly_order from mytest
  show full columns from aly_order from mytest like 'o%'
  show full columns from aly_order from mytest where field like 'o%'
- show table status
- show table status like 'aly_o%'
- show tables/*allow_diff*/
+ show table status/*allow_diff*/
+ show table status like 'aly_o%'/*allow_diff*/
+ show tables
  show full tables
  show tables from mytest
  show tables in mytest

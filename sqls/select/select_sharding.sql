@@ -149,16 +149,16 @@ select ID,name,age+10 as ages,IDcard from aly_test where id in (100,109) order b
 select ID,name,age+10 as ages,IDcard from aly_test where id in (1100,109) order by ages
 select ID,name,count(age) from aly_test where id in (600,1600) order by ID
 select ID,name,count(age) as age from aly_test where id in (600,1600)
-select ID,name,count(age) as age from aly_test where id in (600,1600) group by age
-select ID,name,count(age) as age from aly_test where id in (600,1600) group by age order by ID
+select count(age) as age from aly_test where id in (600,1600) group by age
+select count(age) as age from aly_test where id in (600,1600) group by age order by age
 select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (600,601,602,603,1600) group by age
 select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (600,601,602,603,1600,100) group by age
 select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ID
 select ID,name,age+10 as ages,IDcard from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) order by ages/*allow_diff_sequence*/
 #select ID,name,count(age) as age from aly_test where id in (109,609,1109,1609,2609,100,600,1100,2600,3800,4000,4300)
 select age,count(age) as count_age from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age
-select id,age,count(age) as age_count from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID/*allow_diff_sequence*/
-select id,age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (1,100,102,101,103,609,1600,1601,1605) group by age order by ID
+select age,count(age) as age_count from aly_test where id in (1,100,102,101,103,609,1600,1601,1605) group by age order by age
+select age,count(age) as count_age,sum(age) total_age, avg(age) avg1 from aly_test where ID in (1,100,102,101,103,609,1600,1601,1605) group by age order by age
 drop table if exists aly_test
 create table aly_test(id int(6) NOT NULL ,productID int(11),saleNum int,postion varchar(100),total_price decimal(10,2),person varchar(100),primary key(id)) ENGINE=InnoDB
 INSERT INTO aly_test VALUES (0,100,1175,'Moldova',144.51,'aaa'),(1,220,1008,'Suriname',105.09,'ccc'),(2,340,1021,'Panama',118.19,'fff'),(3,460,1167,'Malawi',126.67,'bbb'),(4,580,1039,'Canada',103.75,'ddd'),(5,700,1005,'Suriname',108.03,'ccc'),(6,820,1004,'Canada',111.77,'ddd'),(7,940,1081,'Panama',103.92,'fff'),(8,1060,1189,'Panama',131.31,'fff'),(9,1180,1170,'Suriname',135.27,'ccc'),(10,1300,1026,'Malawi',125.06,'bbb'),(11,1420,1088,'Canada',127.20,'ddd'),(12,1540,1082,'Panama',117.38,'fff'),(13,1660,1081,'Malawi',138.86,'bbb'),(14,1780,1178,'Malawi',117.99,'bbb'),(15,1900,1013,'Canada',129.03,'ddd'),(16,2020,1068,'Moldova',123.73,'aaa'),(17,2140,1019,'Suriname',108.06,'ccc'),(18,2260,1008,'Moldova',114.01,'aaa'),(19,2380,1141,'Malawi',138.24,'bbb'),(20,2500,1057,'Moldova',113.57,'aaa'),(21,2620,1005,'Uganda',148.70,'eee'),(22,2740,1059,'Uganda',133.49,'eee'),(23,2860,1126,'Moldova',148.81,'aaa'),(24,2980,1021,'Canada',140.00,'ddd'),(25,3100,1100,'Malawi',144.57,'bbb'),(26,3220,1069,'Uganda',102.76,'eee'),(27,3340,1061,'Suriname',119.64,'ccc'),(28,3460,1100,'Suriname',106.34,'ccc'),(29,3580,1161,'Canada',121.93,'ddd'),(30,3700,1085,'Canada',118.46,'ddd'),(31,3820,1014,'Uganda',135.63,'eee'),(32,3940,1056,'Suriname',141.47,'ccc'),(33,4060,1003,'Uganda',121.23,'eee'),(34,4180,1191,'Panama',117.25,'fff'),(35,4300,1069,'Uganda',148.81,'eee'),(36,4420,1094,'Uganda',141.06,'eee'),(37,4540,1113,'Suriname',127.04,'ccc'),(38,4660,1073,'Malawi',147.26,'bbb'),(39,4780,1005,'Canada',112.84,'ddd'),(40,4900,1001,'Malawi',132.18,'bbb'),(41,5020,1025,'Moldova',123.64,'aaa'),(42,5140,1027,'Moldova',139.98,'aaa'),(43,5260,1120,'Panama',122.14,'fff'),(44,5380,1174,'Malawi',134.27,'bbb'),(45,5500,1090,'Uganda',130.96,'eee'),(46,5620,1194,'Malawi',135.28,'bbb'),(47,5740,1067,'Malawi',120.69,'bbb'),(48,5860,1175,'Suriname',115.42,'ccc'),(49,5980,1027,'Moldova',111.35,'aaa')
@@ -243,7 +243,7 @@ select person from aly_test where ( id is not null and id > 1) or person in ('aa
 select person from aly_test group by person order by person
 select person from aly_test group by person order by person desc
 select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc limit 100/*allow_diff_sequence*/
-select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc,total_price limit 100
+select id,productID,saleNum,postion,total_price,person from aly_test group by id order by saleNum desc,total_price limit 100/*allow_diff_sequence*/
 select id,productID,saleNum,postion,total_price,person from aly_test group by id order by person desc,total_price limit 100
 select person,sum(saleNum) from aly_test group by person order by person
 select person,max(saleNum) from aly_test group by person order by person
