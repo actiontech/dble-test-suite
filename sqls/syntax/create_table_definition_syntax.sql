@@ -255,22 +255,22 @@ SHOW CREATE TABLE aly_test
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id USING HASH (id))
 INSERT INTO aly_test VALUES (1,1,'aaa')
-SHOW index FROM aly_test/*allow_diff*/
+SHOW index FROM aly_test
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id USING BTREE (id))
 INSERT INTO aly_test VALUES (1,1,'aaa')
-SHOW index FROM aly_test/*allow_diff*/
+SHOW index FROM aly_test
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX USING BTREE (id))
 INSERT INTO aly_test VALUES (1,1,'aaa')
-SHOW index FROM aly_test/*allow_diff*/
+SHOW index FROM aly_test
 #
 #INDEX [index_name] [index_type] (col_name,...) [index_option] ...
 #index_option:not SUPPORTED; exclude: USING {HASH|BTREE}
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id) USING BTREE)
 INSERT INTO aly_test VALUES (1,1,'aaa')
-SHOW index FROM aly_test/*allow_diff*/
+SHOW index FROM aly_test
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id) USING HASH)
 INSERT INTO aly_test VALUES (1,1,'aaa')
@@ -401,7 +401,7 @@ SHOW CREATE TABLE aly_test
 DROP TABLE IF EXISTS aly_test
 CREATE TABLE aly_test ( id int(11) NOT NULL ,CONSTRAINT id_pk UNIQUE KEY (id))
 INSERT INTO aly_test VALUES (1)
-SHOW index FROM aly_test/*allow_diff*/
+SHOW index FROM aly_test
 DROP TABLE IF EXISTS aly_test
 CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE KEY unique_id USING HASH(id,detail ))
 INSERT INTO aly_test VALUES (1,'aaa')
@@ -429,7 +429,7 @@ SHOW CREATE TABLE aly_test
 DROP TABLE IF EXISTS aly_test
 CREATE TABLE aly_test ( id int(11) NOT NULL ,INDEX id_index (id) USING HASH,CONSTRAINT id_pk UNIQUE KEY (id) )
 INSERT INTO aly_test VALUES (1)
-SHOW index FROM aly_test/*allow_diff*/
+SHOW index FROM aly_test
 #
 #
 #{FULLTEXT|SPATIAL} [INDEX|KEY] [index_name] (index_col_name,...)

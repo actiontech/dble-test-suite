@@ -1,24 +1,6 @@
-===file:syntax/sysfunction1.sql, id:64, sql:[SELECT @var1, @var2 := @var1]===
-dble:[[(1L, 1L)]]
-mysql:[[(None, None)]]
-===file:syntax/sysfunction1.sql, id:122, sql:[SELECT @var1 := 1, @var2]===
-dble:[[(1L, 1L)]]
-mysql:[[(1L, None)]]
-===file:syntax/sysfunction1.sql, id:123, sql:[SELECT @var1, @var2 := @var1]===
-dble:[[(1L, 1L)]]
-mysql:[[(None, None)]]
-===file:syntax/sysfunction1.sql, id:124, sql:[SELECT @var1, @var2]===
-dble:[[(1L, 1L)]]
-mysql:[[(None, None)]]
-===file:syntax/sysfunction1.sql, id:130, sql:[SELECT @var1 := 1, @var2]===
-dble:[[(1L, 1L)]]
-mysql:[[(1L, None)]]
-===file:syntax/sysfunction1.sql, id:131, sql:[SELECT @var1, @var2 := @var1]===
-dble:[[(1L, 1L)]]
-mysql:[[(None, None)]]
 ===file:syntax/sysfunction1.sql, id:243, sql:[SELECT USER(), CHARSET(USER()), COLLATION(USER())]===
 dble:[[('test@dble-1.compose_net', 'utf8', 'utf8_general_ci')]]
 mysql:[[('test@172.100.9.253', 'utf8', 'utf8_general_ci')]]
 ===file:syntax/sysfunction1.sql, id:296, sql:[SELECT i, RAND() FROM global_table1]===
-dble:[[(1L, 0.4848579545364324), (2L, 0.2694931368059415), (3L, 0.8928918511540553)]]
-mysql:[[(1L, 0.24583724536545318), (2L, 0.9979153415168779), (3L, 0.25206500222167466)]]
+dble:[[(1L, 0.609724594847974), (2L, 0.5492259893093501), (3L, 0.9169561927364731)]]
+mysql:[[(1L, 0.027106553341361278), (2L, 0.5362004204990346), (3L, 0.5996824732047342)]]

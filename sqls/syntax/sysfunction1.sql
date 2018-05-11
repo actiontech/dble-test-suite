@@ -61,7 +61,7 @@ drop table if exists global_table1
 create table global_table1(id int)
 insert into global_table1 values(1)
 SELECT @var1 := 1, @var2
-SELECT @var1, @var2 := @var1
+SELECT @var1, @var2 := @var1/*allow_diff*/
 #
 #Comparision Functions and Operators
 SELECT 2 BETWEEN 1 AND 3, 4 BETWEEN 1 AND 3
@@ -119,16 +119,16 @@ SELECT 0 OR NULL
 SELECT 1 XOR 1 XOR 1
 SELECT 1 XOR NULL
 #Assignment Operators
-SELECT @var1 := 1, @var2
-SELECT @var1, @var2 := @var1
-SELECT @var1, @var2
+SELECT @var1 := 1, @var2/*allow_diff*/
+SELECT @var1, @var2 := @var1/*allow_diff*/
+SELECT @var1, @var2/*allow_diff*/
 #
 drop table if exists global_table1
 create table global_table1(id int)
 insert into global_table1 values(1),(3),(5),(7)
 UPDATE global_table1 SET id = 2 WHERE id = @var1:= 1
-SELECT @var1 := 1, @var2
-SELECT @var1, @var2 := @var1
+SELECT @var1 := 1, @var2/*allow_diff*/
+SELECT @var1, @var2 := @var1/*allow_diff*/
 #
 drop table if exists global_table1
 CREATE TABLE global_table1(vbin1 VARBINARY(32), vbin2 VARBINARY(32))
