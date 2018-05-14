@@ -22,6 +22,3 @@ mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L),
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
 [01:54:39.279454]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
-===file:select/reference_global_noshard.sql, id:60, sql:[(select a.id,a.t_id,a.name,a.pad from test_global a where pad=1) union (select c.id,c.o_id,c.name,c.pad from a_order_no_shard c where pad=1) order by id limit 10]===
-dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L), (5L, 5L, 'order...5', 1L))]
-mysql:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L))]
