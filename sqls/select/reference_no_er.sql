@@ -60,3 +60,9 @@ select * from a_test union distinct select * from a_three union distinct select 
 (select * from a_test where pad=1) union (select * from a_two where pad=1) order by name limit 10
 (select name as sort_a from a_test where pad=1) union (select name from a_two where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from a_test where pad=1) union (select name,pad from a_two where pad=1) order by sort_a,pad limit 10
+#
+#clear tables
+#
+drop table if exists a_test
+drop table if exists a_two
+drop table if exists a_three

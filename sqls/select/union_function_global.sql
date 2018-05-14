@@ -348,3 +348,7 @@ SELECT NAME_CONST('myname', 14) union select id from test_global
 SELECT RELEASE_ALL_LOCKS() union select id from test_global
 SELECT SLEEP(1) union select id from test_global
 SELECT UUid() union select id from test_global
+#
+#clear tables
+#
+drop table if exists test_global

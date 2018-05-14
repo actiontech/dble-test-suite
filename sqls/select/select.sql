@@ -307,3 +307,10 @@ select * from test_shard order by id limit 2,3;
 select id,pad from test_shard order by id,pad limit 2,3;
 select id,pad from test_shard group by id,pad  order by id limit 2,3;
 select id,pad,sum(id) from test_shard group by id,pad  order by id,pad limit 2,3;
+#
+#clear tables
+#
+drop table if exists test_shard
+drop table if exists testdb.tb_test
+drop table if exists sbtest2
+drop table if exists mytest_auto_test1

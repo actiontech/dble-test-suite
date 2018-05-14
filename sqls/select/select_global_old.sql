@@ -257,3 +257,8 @@ select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from global_table1 a where (a.O_ORDE
 select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from global_table1 a where exists(select * from global_table2 where a.O_CUSTKEY=global_table2.C_CUSTKEY)
 select distinct O_ORDERKEY,O_CUSTKEY from global_table1 a where exists(select * from global_table2 where a.O_CUSTKEY=global_table2.C_CUSTKEY)
 select count(*) from global_table1 a where not exists(select * from global_table2 where a.O_CUSTKEY=global_table2.C_CUSTKEY)
+#
+#clear tables
+#
+drop table if exists global_table1
+drop table if exists global_table2

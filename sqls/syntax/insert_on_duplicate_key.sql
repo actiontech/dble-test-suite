@@ -177,4 +177,9 @@ INSERT INTO test_no_shard set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='
 SELECT * FROM test_no_shard
 insert ignore into test_no_shard set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='new'
 SELECT * FROM test_no_shard
+#
+#clear tables
+#
 DROP TABLE if exists test_no_shard
+DROP TABLE if exists global_table1
+DROP TABLE if exists aly_test

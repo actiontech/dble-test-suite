@@ -128,7 +128,7 @@ select * from a_test union select * from a_order
 (select * from a_test order by id)union select * from a_order/*allow_diff_sequence*/
 select * from a_test union (select * from a_order order by id)/*allow_diff_sequence*/
 select * from a_test union select * from a_order order by id/*allow_diff_sequence*/
-(select * from a_test) union (select * from a_order) order by name
+(select * from a_test) union (select * from a_order) order by name/*allow_diff_sequence*/
 (select pad from a_test) union distinct (select pad from a_order)
 select distinct a.pad from a_test a,a_order b where a.pad=b.pad
 (select * from a_test where id=2) union distinct (select * from a_order where id=2)
@@ -151,6 +151,9 @@ select * from a_manager,(select * from a_test where id>3 union select * from a_o
 #more than two tables join
 #
 select a.id,b.id,c.pad from a_test a,a_order b,a_manager c where a.id=b.id and a.id=c.pad
+#
+#clear tables
+#
 drop table if exists a_test
 drop table if exists a_order
 drop table if exists a_manager

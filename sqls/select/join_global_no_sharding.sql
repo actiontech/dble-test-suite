@@ -81,3 +81,9 @@ select distinct a.pad from a_test_no_shard a,test_global b where a.pad=b.pad
 select distinct b.pad,a.pad from a_test_no_shard a,(select * from test_global where pad=1) b where a.t_id=b.o_id
 select count(distinct pad,name),avg(distinct t_id) from a_test_no_shard
 select count(distinct id),sum(distinct name) from a_test_no_shard where id=3 or id=7
+#
+#clear tables
+#
+drop table if exists a_test_no_shard
+drop table if exists test_global
+drop table if exists a_manager

@@ -56,14 +56,7 @@ select var_pop(test_score) from global_table1
 select var_samp(test_score) from global_table1 
 select variance(test_score) from global_table1 
 SELECT id, FLOOR(test_score/100) AS val from global_table1 group by val, id
- drop table if exists global_table1
-
-
-
-
-
-
-
-
-
-
+#
+#clear tables
+#
+drop table if exists global_table1

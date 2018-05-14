@@ -41,5 +41,8 @@ truncate aly_order
 insert into aly_order values (100,999,'test','test')
 select * from aly_order
 truncate aly_order
+#
+#clear tables
+#
 drop table if exists aly_order
 drop table if exists aly_test

@@ -289,4 +289,9 @@ SELECT JSON_MERGE('1', 'true')
 SELECT JSON_OBJECT('id', 87, 'name', 'carrot')
 SELECT JSON_QUOTE('null'), JSON_QUOTE('"null"')
 SELECT JSON_VALID('hello'), JSON_VALID('"hello"')
+#
+#clear tables
+#
 drop table if exists aly_test
+drop table if exists global_table1
+drop table if exists normal_table1

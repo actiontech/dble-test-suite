@@ -60,3 +60,9 @@ select a.id,a.t_id,a.name,a.pad from test_global a union distinct select b.id,b.
 (select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from global_table2 c where c.pad=1) order by id limit 10
 (select name as sort_a from test_global where pad=1) union (select name from global_table2 where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from test_global where pad=1) union (select name,pad from global_table2 where pad=1) order by sort_a,pad limit 10
+#
+#clear tables
+#
+drop table if exists test_global
+drop table if exists global_table2
+drop table if exists global_table3
