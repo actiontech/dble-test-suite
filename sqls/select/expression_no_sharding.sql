@@ -176,3 +176,7 @@ select * from test_no_shard where (HEX(R_bit) not like (select 1))and(HEX(R_bit)
 select * from test_no_shard where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')
 select * from test_no_shard where not(HEX(R_bit) regexp '^A')
 select * from test_no_shard where !(HEX(R_bit) regexp '^A')
+#
+#clear tables
+#
+drop table if exists test__no_shard

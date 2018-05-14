@@ -278,3 +278,9 @@ select * from test_no_shard limit 1,2
 select id,R_REGIONKEY from test_no_shard order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_no_shard group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_no_shard group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3
+#
+#clear tables
+#
+drop table if exists test_no_shard
+drop table if exists mytest_auto_test1
+drop table if exists testdb.tb_test

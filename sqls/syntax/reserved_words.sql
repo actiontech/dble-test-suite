@@ -969,7 +969,10 @@ insert into aly_test(id,`change`,`primary`) values (1,'test001',11),(2,'test002'
 create index `change` on aly_test(id)
 show index from aly_test
 drop index `change` on aly_test
-show index from aly_test 
+show index from aly_test
+#
+#clear tables
+#
 drop table if exists aly_test
 
 

@@ -348,3 +348,7 @@ SELECT NAME_CONST('myname', 14) union select id from  test_no_shard
 SELECT RELEASE_ALL_LOCKS() union select id from  test_no_shard
 SELECT SLEEP(1) union select id from  test_no_shard
 SELECT UUid() union select id from  test_no_shard
+#
+#clear tables
+#
+drop table if exists  test_no_shard

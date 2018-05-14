@@ -444,4 +444,8 @@ SELECT name,age,salary,department FROM enum_patch_integer a,aly_test b where a.i
 SELECT name,age,salary,department FROM enum_patch_integer a inner join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
 SELECT name,age,salary,department FROM enum_patch_integer a left join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
 SELECT name,age,salary,department FROM enum_patch_integer a right join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
-
+#
+#clear tables
+#
+drop table if exists aly_test
+drop table if exists enum_patch_integer

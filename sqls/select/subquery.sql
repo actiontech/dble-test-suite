@@ -104,3 +104,10 @@ select a.pad,b.pad,count(*) from (select pad,count(id) t from a_test group by pa
 #
 #select * from a_test order by (select pad from a_order limit 1)/*hang*/
 #select * from a_test order by (select pad from a_order limit 1)/*hang*/  #case for issue 13,waiting for fix
+#
+#clear tables
+#
+drop table if exists a_test
+drop table if exists a_order
+drop table if exists a_manager
+drop table if exists test_shard

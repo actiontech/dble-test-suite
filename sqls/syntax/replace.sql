@@ -167,3 +167,10 @@ insert into test_no_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'test',
 insert into test (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')
 replace into test_no_shard(id,R_REGIONKEY,R_NAME) select id,R_REGIONKEY,R_COMMENT from test
 select * from test_no_shard
+#
+#clear tables
+#
+drop table if exists test_no_shard
+drop table if exists test
+drop table if exists global_table1
+drop table if exists aly_test

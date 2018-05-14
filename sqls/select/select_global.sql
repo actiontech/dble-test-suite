@@ -278,3 +278,9 @@ select id,R_REGIONKEY,R_NAME,R_COMMENT from test_global limit 1,2
 select id,R_REGIONKEY from test_global order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_global group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test_global group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3
+#
+#clear tables
+#
+drop table if exists test_global
+drop table if exists testdb.tb_test
+drop table if exists mytest_auto_test1

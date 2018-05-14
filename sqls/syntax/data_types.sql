@@ -188,4 +188,10 @@ select '\fa\fb\f'
 #!share_conn
 use mytest
 select 1
+#
+#clear tables
+#
 drop table if EXISTS t
+drop table if exists ta
+drop table if exists tc
+drop table if exists tb

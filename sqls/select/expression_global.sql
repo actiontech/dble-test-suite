@@ -176,3 +176,7 @@ select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT
 select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')
 select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where not(HEX(R_bit) regexp '^A')
 select test_global.id,test_global.R_bit,test_global.R_NAME,test_global.R_COMMENT from test_global where !(HEX(R_bit) regexp '^A')
+#
+#clear tables
+#
+drop table if exists test_global

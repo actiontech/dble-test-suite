@@ -978,3 +978,7 @@ insert into aly_test values (3,NULL)
 insert into aly_test values (4,'')
 #============set_columns table insert sql=====================
 #not supported
+#
+#clear tables
+#
+drop table if exists aly_test

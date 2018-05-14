@@ -91,3 +91,13 @@ set names 'ascii' collate 'ascii_general_ci'
 select @@character_set_client
 select @@character_set_results
 select @@character_set_connection
+#
+#clear tables
+#
+drop table if exists t1
+drop table if exists t2
+drop table if exists t3
+drop table if exists table_member_comments
+drop table if exists table_guest_comments
+DROP TABLE IF EXISTS shop
+DROP TABLE IF EXISTS aly_test

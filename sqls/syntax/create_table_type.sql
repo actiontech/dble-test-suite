@@ -884,5 +884,8 @@ SHOW CREATE TABLE aly_test
 DROP TABLE aly_test
 CREATE TABLE aly_test(id int, data varchar(50) character set gb18030)
 SHOW CREATE TABLE aly_test
+#
+#clear tables
+#
 DROP TABLE IF EXISTS aly_test
 
