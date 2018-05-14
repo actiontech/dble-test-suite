@@ -5,9 +5,9 @@
  insert into aly_order (ID,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE) values (1,'ORDERKEY_001','CUSTKEY_003',200000,'20141022'),(2,'ORDERKEY_002','CUSTKEY_003',100000,'19920501'),(4,'ORDERKEY_004','CUSTKEY_111',500,'20080105'),(5,'ORDERKEY_005','CUSTKEY_132',100,'19920628'),(10,'ORDERKEY_010','CUSTKEY_333',88888888,'19920720'),(11,'ORDERKEY_011','CUSTKEY_012',323456,'19920822'),(7,'ORDERKEY_007','CUSTKEY_980',12000,'19920910'),(6,'ORDERKEY_006','CUSTKEY_420',231,'19921111')
  insert into aly_test (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(3,3,'Northern','test003'),(2,2,'Western','test002'),(4,4,'Southern','test004')
 show columns from aly_order
-show columns in aly_order
+#show columns in aly_order
 show columns from aly_order from mytest
-show columns in aly_order from mytest
+#show columns in aly_order from mytest
  show full columns from aly_order from mytest
  show full columns from aly_order from mytest like 'o%'
  show full columns from aly_order from mytest where field like 'o%'
