@@ -57,7 +57,7 @@ select a.id,a.t_id,a.name,a.pad from test_global a union all select b.id,b.m_id,
 select a.id,a.t_id,a.name,a.pad from test_global a union distinct select b.id,b.m_id,b.name,b.pad from a_manager b union distinct select c.id,c.o_id,c.name,c.pad from a_order_no_shard c
 (select name from test_global where pad=1 order by id limit 10) union all (select name from a_order_no_shard where pad=1 order by id limit 10) order by name
 (select name from test_global where pad=1 order by id limit 10) union distinct (select name from a_order_no_shard where pad=1 order by id limit 10) order by name
-(select a.id,a.t_id,a.name,a.pad from test_global a where pad=1) union (select c.id,c.o_id,c.name,c.pad from a_order_no_shard c where pad=1) order by id limit 10
+(select a.id,a.t_id,a.name,a.pad from test_global a where pad=1) union (select c.id,c.o_id,c.name,c.pad from a_order_no_shard c where pad=1) order by name limit 10
 (select name as sort_a from test_global where pad=1) union (select name from a_order_no_shard where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from test_global where pad=1) union (select name,pad from a_order_no_shard where pad=1) order by sort_a,pad limit 10
 #
