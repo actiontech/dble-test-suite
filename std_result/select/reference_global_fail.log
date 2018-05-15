@@ -22,12 +22,3 @@ mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L),
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
 [01:54:26.288929]dble err :(1064, "syntax error, error in :'k_1) force index(pad_index)',expect IDENTIFIER, actual IDENTIFIER force")
-===file:select/reference_global.sql, id:60, sql:[(select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from global_table2 c where c.pad=1) order by id limit 10]===
-dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L))]
-mysql:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L))]
-===file:select/reference_global.sql, id:61, sql:[(select name as sort_a from test_global where pad=1) union (select name from global_table2 where pad=1) order by sort_a limit 10]===
-dble:[(('test\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('order...5',))]
-mysql:[(('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('test\xe4\xb8\xadid\xe4\xb8\xba1',))]
-===file:select/reference_global.sql, id:62, sql:[(select name as sort_a,pad from test_global where pad=1) union (select name,pad from global_table2 where pad=1) order by sort_a,pad limit 10]===
-dble:[(('test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), ('test...5', 1L), ('order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), ('order...5', 1L))]
-mysql:[(('order...5', 1L), ('order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), ('test...5', 1L), ('test\xe4\xb8\xadid\xe4\xb8\xba1', 1L))]
