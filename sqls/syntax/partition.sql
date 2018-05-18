@@ -20,3 +20,7 @@ create table test_shard(id int,name varchar(8)) partition by list (id) partition
 drop table test_shard;
 create table test_shard(id int,purchased date) partition by list (id) partitions 2 subpartition by hash(id) subpartitions 2 (partition p0 values in (1,2,3,4,5)(subpartition sp0,subpartition sp1),partition p1 values in (6,7,8,9,10)(subpartition sp2,subpartition sp3));
 drop table test_shard;
+#
+#clear tables
+#
+drop table if exists test_shard

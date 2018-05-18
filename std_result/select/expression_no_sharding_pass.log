@@ -121,7 +121,7 @@ dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L,
 ===file:select/expression_no_sharding.sql, id:67, sql:[select R_name name from test_no_shard]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
 ===file:select/expression_no_sharding.sql, id:68, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 4, 7),)]]
+dble:[[(datetime.date(2018, 4, 9),)]]
 ===file:select/expression_no_sharding.sql, id:69, sql:[select * from test_no_shard where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:select/expression_no_sharding.sql, id:73, sql:[select * from test_no_shard where id= (b'01' | B'11')]===

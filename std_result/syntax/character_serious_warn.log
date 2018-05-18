@@ -1,6 +1,6 @@
 ===file:syntax/character.sql, id:57, sql:[insert into t values('a你')]===
 mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
-dble err[05:42:02.249113] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
+dble err[01:44:34.620833] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
 ===file:syntax/character.sql, id:58, sql:[insert into t values(_utf8'a你')]===
 mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
-dble err[05:42:02.328637] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
+dble err[01:44:34.700552] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")

@@ -729,6 +729,9 @@ set @@wait_timeout=10
 select @@wait_timeout
 set session wait_timeout=28800
 select @@wait_timeout
-
+#
+#clear tables
+#
+drop table if exists mytest_global1
 
 

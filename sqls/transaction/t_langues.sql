@@ -634,3 +634,7 @@ select * from sbtest1 order by id
 #!session 2
 commit
 select * from sbtest1 order by id
+#
+#clear tables
+#
+drop table if exists sbtest1

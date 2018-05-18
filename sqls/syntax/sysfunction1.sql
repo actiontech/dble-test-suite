@@ -61,7 +61,7 @@ drop table if exists global_table1
 create table global_table1(id int)
 insert into global_table1 values(1)
 SELECT @var1 := 1, @var2
-SELECT @var1, @var2 := @var1
+SELECT @var1, @var2 := @var1/*allow_diff*/
 #
 #Comparision Functions and Operators
 SELECT 2 BETWEEN 1 AND 3, 4 BETWEEN 1 AND 3
@@ -119,16 +119,16 @@ SELECT 0 OR NULL
 SELECT 1 XOR 1 XOR 1
 SELECT 1 XOR NULL
 #Assignment Operators
-SELECT @var1 := 1, @var2
-SELECT @var1, @var2 := @var1
-SELECT @var1, @var2
+SELECT @var1 := 1, @var2/*allow_diff*/
+SELECT @var1, @var2 := @var1/*allow_diff*/
+SELECT @var1, @var2/*allow_diff*/
 #
 drop table if exists global_table1
 create table global_table1(id int)
 insert into global_table1 values(1),(3),(5),(7)
 UPDATE global_table1 SET id = 2 WHERE id = @var1:= 1
-SELECT @var1 := 1, @var2
-SELECT @var1, @var2 := @var1
+SELECT @var1 := 1, @var2/*allow_diff*/
+SELECT @var1, @var2 := @var1/*allow_diff*/
 #
 drop table if exists global_table1
 CREATE TABLE global_table1(vbin1 VARBINARY(32), vbin2 VARBINARY(32))
@@ -366,7 +366,7 @@ SELECT EXTRACT(MICROSECOND FROM '2003-01-02 10:30:00.000123')
 SELECT FROM_DAYS(730669)
 SELECT FROM_UNIXTIME(1447430881)
 SELECT FROM_UNIXTIME(1447430881) + 0
-SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x')
+SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x')/*allow_10%_diff*/
 SELECT DATE_FORMAT('2003-10-03',GET_FORMAT(DATE,'EUR'))
 SELECT STR_TO_DATE('10.31.2003',GET_FORMAT(DATE,'USA'))
 SELECT HOUR('10:05:03')
@@ -402,7 +402,7 @@ SELECT TIME_TO_SEC('22:23:00')
 SELECT TO_DAYS(950501)
 SELECT TO_SECONDS(950501)
 SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19')
-SELECT UNIX_TIMESTAMP()
+SELECT UNIX_TIMESTAMP()/*allow_10%_diff*/
 SELECT UTC_DATE(), UTC_DATE() + 0
 SELECT UTC_TIME(), UTC_TIME() + 0 /*allow_diff*/
 SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0 /*allow_diff*/
@@ -412,3 +412,7 @@ SELECT WEEKDAY('2008-02-03 22:23:00')
 SELECT WEEKOFYEAR('2008-02-20')
 SELECT YEAR('1987-01-01')
 SELECT YEARWEEK('1987-01-01')
+#
+#clear tables
+#
+drop table if exists global_table1

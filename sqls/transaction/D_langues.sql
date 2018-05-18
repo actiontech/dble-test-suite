@@ -827,5 +827,9 @@ rollback
 select * from sbtest1 order by id
 CREATE TABLE sbtest1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))
 select * from sbtest1 order by id
+#
+#clear tables
+#
 drop table if exists sbtest1
 drop table if exists sbtest2
+drop table if exists testdb.tb_test

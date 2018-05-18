@@ -96,3 +96,8 @@ select * FROM t
 insert into t values("我");
 select * FROM t
 drop table t;
+#
+#clear tables
+#
+drop table if EXISTS  t1
+drop table if exists t

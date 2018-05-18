@@ -94,4 +94,8 @@ CREATE TABLE normal_table1 (id int(11),R_REGIONKEY int(11) primary key,R_NAME va
 INSERT INTO normal_table1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')
 DELETE FROM normal_table1 ORDER BY id ASC LIMIT 1
 SELECT * FROM normal_table1
+#
+#clear tables
+#
 DROP TABLE IF EXISTS normal_table1
+DROP TABLE IF EXISTS aly_test

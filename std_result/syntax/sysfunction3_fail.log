@@ -2,8 +2,8 @@
 dble:[[(1L,)]]
 mysql:[[(0L,)]]
 ===file:syntax/sysfunction3.sql, id:30, sql:[SELECT UUID()]===
-dble:[[('fa8580e3-51db-11e8-98c1-0242ac640905',)]]
-mysql:[[('fa8545fd-51db-11e8-b54e-0242ac640904',)]]
+dble:[[('2567946c-534d-11e8-98c1-0242ac640905',)]]
+mysql:[[('25675d7f-534d-11e8-b54e-0242ac640904',)]]
 ===file:syntax/sysfunction3.sql, id:31, sql:[SELECT UUID_SHORT()]===
-dble:[[(241749017334120458L,)]]
-mysql:[[(169691461195923466L,)]]
+dble:[[(241749017334120462L,)]]
+mysql:[[(169691461195923470L,)]]

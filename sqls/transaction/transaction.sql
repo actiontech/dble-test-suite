@@ -479,4 +479,7 @@ commit
 select * from test_shard order by id
 commit
 select * from test_shard order by id
+#
+#clear tables
+#
 drop table if exists test_shard
