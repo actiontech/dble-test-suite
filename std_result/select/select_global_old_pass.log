@@ -166,6 +166,8 @@ dble:[[(202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L), (205L, 'Jssme', 'Bdnaa', 'D
 dble:[[(5L,)]]
 ===file:select/select_global_old.sql, id:84, sql:[SELECT id,FirstName,lastname,department,salary FROM global_table1  WHERE ID IN (SELECT ID FROM global_table1 WHERE ID >0)]===
 dble:[[(201L, 'Mazojys', 'Fxoj', 'Finance', 7800L), (202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L), (205L, 'Jssme', 'Bdnaa', 'Development', 75000L), (206L, 'Dnnaao', 'Errllov', 'Development', 55000L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L)]]
+===file:select/select_global_old.sql, id:85, sql:[SELECT distinct salary,id,FirstName,lastname,department FROM global_table1 WHERE ID IN ( SELECT ID FROM global_table1 WHERE ID >0)]===
+dble:[[(7800L, 201L, 'Mazojys', 'Fxoj', 'Finance'), (45800L, 202L, 'Jozzh', 'Lnanyo', 'Finance'), (49000L, 207L, 'Tyoysww', 'Osk', 'Development'), (55000L, 206L, 'Dnnaao', 'Errllov', 'Development'), (57000L, 203L, 'Syllauu', 'Dfaafk', 'Finance'), (62000L, 204L, 'Gecrrcc', 'Srlkrt', 'Finance'), (75000L, 205L, 'Jssme', 'Bdnaa', 'Development')]]
 ===file:select/select_global_old.sql, id:86, sql:[select id,FirstName,lastname,department,salary from global_table1 where FirstName in ('Mazojys','Syllauu','Tyoysww')]===
 dble:[[(201L, 'Mazojys', 'Fxoj', 'Finance', 7800L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L)]]
 ===file:select/select_global_old.sql, id:87, sql:[select id,FirstName,lastname,department,salary from global_table1 where Salary between 40000 and 50000]===
@@ -322,8 +324,12 @@ dble:[[('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTK
 dble:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005'))]
 ===file:select/select_global_old.sql, id:165, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY]===
 dble:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005'))]
+===file:select/select_global_old.sql, id:166, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 1, O_ORDERKEY desc/*allow_diff_sequence*/]===
+dble:[[('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005')]]
 ===file:select/select_global_old.sql, id:167, sql:[select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132' order by 2,1]===
 dble:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005'))]
+===file:select/select_global_old.sql, id:168, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_330') union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_420') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY<'CUSTKEY_200') order by 2,1/*allow_diff_sequence*/]===
+dble:[[('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_012', 'ORDERKEY_011'), ('CUSTKEY_111', 'ORDERKEY_004'), ('CUSTKEY_132', 'ORDERKEY_005'), ('CUSTKEY_420', 'ORDERKEY_006')]]
 ===file:select/select_global_old.sql, id:169, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') union (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') order by O_ORDERKEY]===
 dble:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005'))]
 ===file:select/select_global_old.sql, id:170, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY limit 5) union all (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_980' order by O_ORDERKEY limit 5)]===

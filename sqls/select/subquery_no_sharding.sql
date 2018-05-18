@@ -67,3 +67,9 @@ select id,name,pad from a_test_no_shard where (1,1)in(select id,pad from a_order
 SELECT pad FROM a_test_no_shard AS x WHERE x.id = (SELECT pad FROM a_order_no_shard AS y WHERE x.id = (SELECT pad FROM a_manager_no_shard WHERE y.id = a_manager_no_shard.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from a_test_no_shard)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from a_test_no_shard group by pad) as t1
+#
+#clear tables
+#
+drop table if exists a_test_no_shard
+drop table if exists a_order_no_shard
+drop table if exists a_manager_no_shard

@@ -67,3 +67,9 @@ select id,name,pad from test_global where (1,1)in(select id,pad from a_order_no_
 SELECT pad FROM test_global AS x WHERE x.id = (SELECT pad FROM a_order_no_shard AS y WHERE x.id = (SELECT pad FROM a_manager WHERE y.id = a_manager.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from test_global)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from test_global group by pad) as t1
+#
+#clear tables
+#
+drop table if exists test_global
+drop table if exists a_order_no_shard
+drop table if exists a_manager

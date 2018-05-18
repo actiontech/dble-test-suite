@@ -367,4 +367,10 @@ ALTER TABLE global_table1 MODIFY R_REGIONKEY BIGINT UNSIGNED NOT NULL DEFAULT 10
 DESC global_table1 /* allow_diff */
 ALTER TABLE global_table1 MODIFY COLUMN R_COMMENT BIGINT UNSIGNED UNIQUE DEFAULT 1 COMMENT 'my column2' AFTER R_REGIONKEY
 DESC global_table1 /* allow_diff */
+#
+#clear tables
+#
+DROP TABLE IF EXISTS aly_order
 DROP TABLE IF EXISTS global_table1
+DROP TABLE IF EXISTS aly_test
+DROP TABLE IF EXISTS normal_table

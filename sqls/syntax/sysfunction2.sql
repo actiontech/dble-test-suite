@@ -237,7 +237,7 @@ SELECT VERSION()
 ##case8::JSON Function
 #SELECT JSON_APPEND('["a", ["b", "c"], "d"]', '$[1]', 1)
 SELECT JSON_ARRAY_APPEND('["a", ["b", "c"], "d"]', '$[1]', 1)
-SELECT JSON_ARRAY(1, "abc", NULL, TRUE, CURTIME())
+SELECT JSON_ARRAY(1, "abc", NULL, TRUE, CURTIME())/*allow_10%_diff*/
 SELECT JSON_ARRAY_INSERT('["a", ["b", "c"], "d"]', '$[100]', 'x')
 SELECT JSON_INSERT('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')
 SELECT JSON_MERGE('[1 ,2]', '[true ,false]')
@@ -289,4 +289,9 @@ SELECT JSON_MERGE('1', 'true')
 SELECT JSON_OBJECT('id', 87, 'name', 'carrot')
 SELECT JSON_QUOTE('null'), JSON_QUOTE('"null"')
 SELECT JSON_VALID('hello'), JSON_VALID('"hello"')
+#
+#clear tables
+#
 drop table if exists aly_test
+drop table if exists global_table1
+drop table if exists normal_table1

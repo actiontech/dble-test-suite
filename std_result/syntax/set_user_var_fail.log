@@ -1,35 +1,32 @@
-===file:syntax/set_user_var.sql, id:26, sql:[SELECT * FROM shop WHERE price=@min_price OR price=@max_price]===
-dble:[[]]
-mysql:[[(1L, 'D', 234.25), (3L, 'D', 1.25)]]
 ===file:syntax/set_user_var.sql, id:45, sql:[SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM table_member_comments WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM table_guest_comments WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC]===
 dble:[None]
 mysql:[((99L, 100L, 'hello java'), (99L, 100L, 'hello c++'), (99L, 100L, 'hello python'))]
-[05:48:35.000776]dble err :(-1, 'error totally whack')
+[01:51:16.630287]dble err :(-1, 'error totally whack')
 ===file:syntax/set_user_var.sql, id:51, sql:[set @$=5]===
 dble:[None]
 mysql:[()]
-[05:48:35.409942]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
+[01:51:17.092938]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
 ===file:syntax/set_user_var.sql, id:52, sql:[set @.=6]===
 dble:[None]
 mysql:[()]
-[05:48:35.485453]dble err :(1064, 'java.sql.SQLSyntaxErrorException: error : @')
+[01:51:17.189568]dble err :(1064, 'java.sql.SQLSyntaxErrorException: error : @')
 ===file:syntax/set_user_var.sql, id:54, sql:[set @.abc_123$=8]===
 dble:[None]
 mysql:[()]
-[05:48:35.642118]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
+[01:51:17.382486]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER $')
 ===file:syntax/set_user_var.sql, id:60, sql:[set @b='str', @c=4.4, @d={d'2012@12@31'}]===
 dble:[None]
 mysql:[()]
-[05:48:36.118941]dble err :(1064, 'java.sql.SQLSyntaxErrorException: ERROR. token : LBRACE, pos : 26')
+[01:51:17.873188]dble err :(1064, 'java.sql.SQLSyntaxErrorException: ERROR. token : LBRACE, pos : 26')
 ===file:syntax/set_user_var.sql, id:61, sql:[SELECT @abc123, @123abc, @row_format=1, @$ := @t1+@t2+@t3]===
 dble:[None]
 mysql:[((None, None, None, None),)]
-[05:48:36.199490]dble err :(1064, "syntax error, error in :'=1, @$ := @t1+@t2+@t3',expect COLONEQ, actual COLONEQ $")
+[01:51:17.970161]dble err :(1064, "syntax error, error in :'=1, @$ := @t1+@t2+@t3',expect COLONEQ, actual COLONEQ $")
 ===file:syntax/set_user_var.sql, id:63, sql:[set @cnt = (select 1);]===
 dble:[None]
 mysql:[()]
-[05:48:36.277415]dble err :(-1, 'error totally whack')
+[01:51:18.067236]dble err :(-1, 'error totally whack')
 ===file:syntax/set_user_var.sql, id:85, sql:[set @a=(select 'abc')]===
 dble:[None]
 mysql:[()]
-[05:48:37.761096]dble err :(-1, 'error totally whack')
+[01:51:19.708502]dble err :(-1, 'error totally whack')

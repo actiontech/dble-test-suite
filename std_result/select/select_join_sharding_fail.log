@@ -1,3 +1,0 @@
-===file:select/select_join_sharding.sql, id:181, sql:[select Department,avg(age) avg_age,sum(Salary) sum_salary from enum_patch_integer a right join aly_test b on a.id=b.ID and b.Department in ('Finance','Development') and b.Salary >500 and b.Salary<70000 group by Department order by a.id;]===
-dble:[(('Development', Decimal('16.0000'), Decimal('179000')), ('Finance', Decimal('66.2500'), Decimal('172600')))]
-mysql:[(('Finance', Decimal('66.2500'), Decimal('172600')), ('Development', Decimal('16.0000'), Decimal('179000')))]

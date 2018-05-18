@@ -598,3 +598,7 @@ DROP TABLE aly_test
 CREATE TABLE aly_test( id int(11) NOT NULL ,PRIMARY KEY (id)) STATS_SAMPLE_PAGES = 100
 INSERT INTO aly_test VALUES (1)
 SHOW CREATE TABLE  aly_test
+#
+#clear tables
+#
+DROP TABLE IF EXISTS aly_test

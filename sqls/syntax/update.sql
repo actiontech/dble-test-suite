@@ -95,4 +95,8 @@ UPDATE global_table1 SET R_REGIONKEY=R_REGIONKEY+10 WHERE R_REGIONKEY>=2 order b
 SELECT id FROM global_table1
 DELETE FROM global_table1
 INSERT INTO global_table1 (id,R_REGIONKEY,R_NAME,R_COMMENT) VALUES (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')
+#
+#clear tables
+#
 DROP TABLE IF EXISTS global_table1
+DROP TABLE IF EXISTS aly_test

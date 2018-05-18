@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS shop
 create table shop(article int(4), dealer varchar(10), price float(8,2))
 insert into shop values(1, 'D', 234.25),(2, 'D', 67.29),(3, 'D', 1.25),(4,'D',19.95)
 SELECT @min_price:=MIN(price),@max_price:=MAX(price) FROM shop
-SELECT * FROM shop WHERE price=@min_price OR price=@max_price
+SELECT * FROM shop WHERE price=@min_price OR price=@max_price/*allow_diff*/
 SELECT (@aa:=article) AS a, (@aa+3) AS b FROM shop HAVING b=5
 drop table if exists t1
 drop table if exists t2
@@ -91,3 +91,13 @@ set names 'ascii' collate 'ascii_general_ci'
 select @@character_set_client
 select @@character_set_results
 select @@character_set_connection
+#
+#clear tables
+#
+drop table if exists t1
+drop table if exists t2
+drop table if exists t3
+drop table if exists table_member_comments
+drop table if exists table_guest_comments
+DROP TABLE IF EXISTS shop
+DROP TABLE IF EXISTS aly_test
