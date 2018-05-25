@@ -9,6 +9,7 @@
 
 3, 使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
     yum -y install epel-release
+    (if pip: command not found, yum install -y python-pip)
     pip install --upgrade pip
 
     pip install git+https://github.com/behave/behave@v1.2.5
@@ -19,8 +20,21 @@
     pip install PyHamcrest
 
     #module: MySQLdb
+    centos6:
     yum install python-devel
     pip install mysql-devel
+    centos7:
+    yum install python-devel mysql-devel
+    pip install MySQL-python
 
     #module: lxml
     pip install lxml
+
+    验证MySQLdb安装成功，进入python交互模式成功执行:
+    import MySQLdb
+    conn=MySQLdb.connect('127.0.0.1', 'test','111111','',3306)
+    cur=conn.cursor()
+    cur.execute('select 1')
+    cur.fetchall()
+    cur.close()
+    conn.close()

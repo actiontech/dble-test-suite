@@ -16,15 +16,6 @@ class Node(Logging):
         self._ssh_conn = None
         self._sftp_conn = None
 
-        self._ssh_conn = SSHClient(self.ip, self._ssh_user, self._ssh_password)
-        self._ssh_conn.connect()
-        assert self._ssh_conn is not None, "get ssh to {0} fail".format(self._ip)
-
-        port = '22'
-        self._sftp_conn = SFTPClient(self.ip, self._ssh_user, self._ssh_password, int(port))
-        self._sftp_conn.sftp_connect()
-        assert self._sftp_conn is not None, "get sftp to {0} fail".format(self._ip)
-
     @property
     def ip(self):
         return self._ip
@@ -35,6 +26,11 @@ class Node(Logging):
 
     @property
     def ssh_conn(self):
+        if self._ssh_conn is None:
+            self._ssh_conn = SSHClient(self.ip, self._ssh_user, self._ssh_password)
+            self._ssh_conn.connect()
+
+            assert self._ssh_conn is not None, "get ssh to {0} fail".format(self._ip)
         return self._ssh_conn
 
     @ssh_conn.setter
@@ -43,6 +39,11 @@ class Node(Logging):
 
     @property
     def sftp_conn(self):
+        if self._sftp_conn is None:
+            port = '22'
+            self._sftp_conn = SFTPClient(self.ip, self._ssh_user, self._ssh_password, int(port))
+            self._sftp_conn.sftp_connect()
+            assert self._sftp_conn is not None, "get sftp to {0} fail".format(self._ip)
         return self._sftp_conn
 
     @sftp_conn.setter
