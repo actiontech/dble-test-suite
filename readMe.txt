@@ -24,14 +24,14 @@ Step3:cd drivers/java 执行
     java -jar interface_test.jar | tee output.log 2>&1
 	如果打印调试信息：java -jar interface_test.jar debug| tee output.log 2>&1
 
-四、使用MySQLdb驱动测试dble对sql的支持对（use behave)
+四、使用MySQLdb驱动测试dble对sql的支持度（use behave)
 # behave 自定义命令行参数说明：
-# -D tar_local={true|false}, default false
+# -D tar_local={true|false}, default false, change in behave.ini as you need
 # -D test_config={auto_dble_test.yaml}
-# -D reinstall=true is a must for install related features
+# -D reinstall=true, default false, true is a must for install related features
 
 #集群到单节点
-behave -Dreinstall=true features/install_uninstall/install_base.feature
+behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_base.feature
 
 #通过ftp包安装单节点并启动
 behave -Dreinstall=true features/install_uninstall/install_dble.feature
@@ -40,7 +40,7 @@ behave -Dreinstall=true features/install_uninstall/install_dble.feature
 behave -Dreinstall=true features/install_uninstall/update_dble.feature
 
 #通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
-behave -Dreinstall=true features/install_uninstall/install_dble_and_zk.feature
+behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
 
 #sql覆盖
 behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature

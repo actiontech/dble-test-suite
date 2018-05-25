@@ -117,7 +117,14 @@ def after_scenario(context, scenario):
             conn.close()
             delattr(context, conn_name)
 
-    if context.config.stop and scenario.status == "failed":
+    if not (context.config.stop and scenario.status == "failed"):
         replace_config(context,  context.dble_test_config['dble_base_conf'])
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
+def before_step(context, step):
+    logger.info('*' * 30)
+    logger.info('step start: <{0}>'.format(step.name))
+
+def after_step(context, step):
+    logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
+    logger.info('*' * 30)
