@@ -25,7 +25,7 @@ sudo yum-config-manager --enable docker-ce-test
 7,verify installation:docker --version
 8,如果磁盘空间／var/lib/docker不够用，使用其他盘的方式：
 首先停掉Docker服务：
-systemctl restart docker
+systemctl stop docker
 然后移动整个/var/lib/docker目录到目的路径：
 mv /var/lib/docker /root/data/docker
 ln -s /root/data/docker /var/lib/docker

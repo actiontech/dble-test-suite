@@ -12,9 +12,12 @@ do
 	echo "install mysql in ${mysql_install[$i]} start"
 	docker exec ${mysql_install[$i]} bash /init_assets/install_mysql.sh $i
 	echo "install mysql in ${mysql_install[$i]} finished"
+
+#	if container is centos6
     docker exec ${mysql_install[$i]} sh -c "sed -i '$ a UseDNS no \nGSSAPIAuthentication no ' /etc/ssh/sshd_config" \
     docker exec ${mysql_install[$i]} sh -c "echo 'sshpass' | passwd root --stdin"
-    docker exec ${mysql_install[$i]} /etc/init.d/sshd restart
+    docker exec ${mysql_install[$i]} /usr/sbin/sshd restart
+#    end if centos6
 done
 
 sleep 10s

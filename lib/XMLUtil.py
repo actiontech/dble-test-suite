@@ -58,7 +58,7 @@ def get_parent_nodes_from_dic(tree, parentNode):
     return parentNodes
 
 def get_xml_from_str(str):
-    return ET.fromstring("<tmproot>" + str + "</tmproot>")
+    return ET.fromstring("<tmproot>" + str + "\n</tmproot>")
 
 def add_child_in_text(file, parentNode, childNodeInText):
     '''file:指定的xml文件的一个节点添加子节点
