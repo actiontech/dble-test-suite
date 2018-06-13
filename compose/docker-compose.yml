@@ -8,7 +8,7 @@ networks:
                   gateway: 172.100.9.253
 services:
     dble-1:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
+        image: docker-registry:5000/actiontech/centos7-mysqlsandbox
         container_name: dble-1
         hostname: dble-1
         privileged: true
@@ -25,7 +25,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     dble-2:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
+        image: docker-registry:5000/actiontech/centos7-mysqlsandbox
         container_name: dble-2
         hostname: dble-2
         privileged: true
@@ -42,7 +42,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     dble-3:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
+        image: docker-registry:5000/actiontech/centos7-mysqlsandbox
         container_name: dble-3
         hostname: dble-3
         privileged: true
@@ -59,7 +59,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
+        image: docker-registry:5000/actiontech/centos7-mysqlsandbox
         container_name: mysql
         hostname: mysql
         privileged: true
@@ -75,7 +75,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql-master1:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
+        image: docker-registry:5000/actiontech/centos7-mysqlsandbox
         container_name: mysql-master1
         hostname: mysql-master1
         privileged: true
@@ -91,7 +91,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql-master2:
-        image: docker-registry:5000/actiontech/balm-runtime-centos6
+        image: docker-registry:5000/actiontech/centos7-mysqlsandbox
         container_name: mysql-master2
         hostname: mysql-master2
         privileged: true
