@@ -30,11 +30,11 @@ no
 
 * **steps：**    
     step1.  xx
-* **expected result：**  
+* **expect result：**  
     1.  xx
 * **real result：**  
     1.  xx
-* **supplement：**  
+* **supplements：**  
     1.  xx
 
 
