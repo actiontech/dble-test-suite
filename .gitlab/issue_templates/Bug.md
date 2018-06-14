@@ -1,8 +1,8 @@
 * **dble version：** x.x 
 * **ucore version：** x.x 
-* **environment ：**  
+* **preconditions ：**  
 no
-* **config：**  
+* **configs：**  
 **schema.xml**  
 
 ```
@@ -27,11 +27,11 @@ no
 
 ```
 
-* **operation：**    
+* **steps：**    
     step1.  xx
 * **expected result：**  
     1.  xx
-* **actual result：**  
+* **real result：**  
     1.  xx
 * **supplement：**  
     1.  xx
