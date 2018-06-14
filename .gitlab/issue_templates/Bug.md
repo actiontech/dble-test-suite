@@ -1,6 +1,7 @@
-* **dble version：**  
-* **ucore version：** 
-* **precondition：**  
+* **dble version：** x.x 
+* **ucore version：** x.x 
+* **environment ：**  
+
 * **config：**  
 **schema.xml**  
 
