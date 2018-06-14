@@ -2,7 +2,7 @@
 * **ucore version：** 
 * **precondition：**  
 * **config：**  
-* **schema.xml**  
+**schema.xml**  
 
 ```
 <?xml version='1.0' encoding='utf-8'?>
