@@ -2,7 +2,8 @@
 * **ucore version：** x.x 
 * **preconditions ：**  
 no
-* **configs：**  
+* **configs：** 
+
 **schema.xml**  
 
 ```
