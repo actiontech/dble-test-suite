@@ -1,15 +1,15 @@
 * **dble version：**  
 * **ucore version：** 
 * **precondition：**  
-* **config：** 
-schema.xml
+* **config：**  
+* **schema.xml：**  
 
 ```
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE dble:schema SYSTEM "schema.dtd"><dble:schema xmlns:dble="http://dble.cloud/">
 
 ```
-rule.xml
+* **rule.xml**  
 
 ```
 <?xml version='1.0' encoding='utf-8'?>
@@ -17,7 +17,7 @@ rule.xml
 
 ```
 
-server.xml
+* **server.xml**  
 ```
 <?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE dble:server SYSTEM "server.dtd"><dble:server xmlns:dble="http://dble.cloud/">
