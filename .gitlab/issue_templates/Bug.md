@@ -20,7 +20,6 @@ server.xml
 <!DOCTYPE dble:server SYSTEM "server.dtd"><dble:server xmlns:dble="http://dble.cloud/">
 
 ```
-
 * **operation：**    
     step1.  xx
 * **expected result：**  
