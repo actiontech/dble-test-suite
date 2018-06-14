@@ -1,5 +1,4 @@
-* **dble version：** x.x 
-* **ucore version：** x.x 
+* **dble version：**  
 * **preconditions ：**  
 no
 * **configs：** 
@@ -29,13 +28,13 @@ no
 ```
 
 * **steps：**    
-    step1.  xx
+    step1.  
 * **expect result：**  
-    1.  xx
+    1.
 * **real result：**  
-    1.  xx
+    1.
 * **supplements：**  
-    1.  xx
+    1.
 
 
 /label ~BUG 
