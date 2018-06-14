@@ -1,17 +1,18 @@
-* **组件信息：**  
-* **前置条件：**  
-    1.  环境：centos7
-    2.  组件：
-    3.  其他：
-* **操作步骤：**    
+* **dble version：**  
+* **ucore version：** 
+* **precondition：**  
+* **config：** 
+```
+no config
+```
+* **operation：**    
+    step1.  xx
+* **expected result：**  
     1.  xx
-* **预期结果：**  
+* **actual result：**  
     1.  xx
-* **实际结果：**  
+* **supplement：**  
     1.  xx
-* **补充说明：**  
-    1.  xx
-* **截图：**    
- 
+
 
 /label ~BUG 
