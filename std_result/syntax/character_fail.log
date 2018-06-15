@@ -17,10 +17,6 @@ mysql:[[('hello\xc4\xe3',)]]
 ===file:syntax/character.sql, id:43, sql:[SELECT _utf8'hello你']===
 dble:[[('hello\xe4\xbd\xa0',)]]
 mysql:[[('hello?',)]]
-===file:syntax/character.sql, id:49, sql:[alter table t change c c national character varying(20)]===
-dble:[None]
-mysql:[()]
-[01:44:34.228543]dble err :(1064, "syntax error, error in :'onal character varying(20)',expect IDENTIFIER, actual IDENTIFIER character")
 ===file:syntax/character.sql, id:62, sql:[insert into t values('你')]===
 dble:[()]
 mysql:[None]

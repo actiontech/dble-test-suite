@@ -1,7 +1,0 @@
-===file:syntax/create_index.sql, id:67, sql:[CREATE INDEX inx_id ON aly_test (id) comment '测试']===
-dble:[None]
-mysql:[()]
-[01:44:41.089624]dble err :(1064, "syntax error, error in :'(id) comment '\xe6\xb5\x8b\xe8\xaf\x95'',expect ON, actual LITERAL_CHARS \xe6\xb5\x8b\xe8\xaf\x95")
-===file:syntax/create_index.sql, id:68, sql:[SHOW INDEX FROM aly_test]===
-dble:[[]]
-mysql:[[('aly_test', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '\xe6\xb5\x8b\xe8\xaf\x95')]]
