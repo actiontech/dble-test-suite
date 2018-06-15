@@ -108,7 +108,7 @@ def delete_child_node(file, kv_child, kv_parent):
         tagNodes = tree.findall(parentTag)
         parentNodes = get_node_by_keyvalue(tagNodes, kv_parent.get("kv_map"))
 
-    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to insert child node".format(kv_parent.get("tag"), file)
+    assert len(parentNodes)>0, "cant not find parent tag:{0} in file {1} to delete child node".format(kv_parent.get("tag"), file)
 
     for node in parentNodes:
         children = node.findall(kv_child.get("tag"))
@@ -167,10 +167,11 @@ if __name__ == "__main__":
         """
         add_child_in_text('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map":{}}, seg)
     elif command == "schema":
-        seg="""
-        <table name="date_table" dataNode="dn1,dn2,dn3,dn4" rule="date_rule" />
-        """
-        add_child_in_text('dble_conf/conf_template/schema.xml', {"tag": "schema", "kv_map":{"name": "mytest"}}, seg)
+        fullpath = "/root/dble/dble_conf/conf_template/schema.xml"
+        kv_parent  = eval("{'tag':'root'}")
+        kv_child = eval("{'tag':'dataNode','kv_map':{'name':'dn2'}}")
+
+        delete_child_node(fullpath, kv_child, kv_parent)
     elif command == "server":
         seg = """
       <firewall>

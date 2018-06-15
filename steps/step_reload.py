@@ -13,9 +13,9 @@ from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, 
 
 LOGGER = logging.getLogger('steps.reload')
 
-def get_dble_conn(context):
+def get_dble_conn(context, default_db="mytest"):
     conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-                         context.dble_test_config['client_password'], "mytest", context.dble_test_config['client_port'],
+                         context.dble_test_config['client_password'], default_db, context.dble_test_config['client_port'],
                          context)
     return conn
 

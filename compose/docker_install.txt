@@ -37,7 +37,7 @@ install reference: https://docs.docker.com/compose/install/#install-compose
 2,sudo chmod +x /usr/local/bin/docker-compose
 3,verify installation: docker-compose --version
 
-===============install docker container============================
+===============create docker container============================
 #docker-registry is the hostname used in docker-compose.yaml
 echo "10.186.18.20 docker-registry" >> /etc/hosts
 echo '{ "insecure-registries":["docker-registry:5000"] }'>>/etc/docker/daemon.json

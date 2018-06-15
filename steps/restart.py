@@ -58,7 +58,10 @@ def stop_mysql(context, hostName):
     # if mysqld already stopped,do not stop it again
     if status_out.find("MySQL running") != -1:
         stop_cd, stop_out,stop_err = ssh.exec_command(cmd_stop)
-        assert_that(stop_out, contains_string("Shutting down MySQL.. SUCCESS"), "stop mysql in host:{0} err".format(hostName))
+        success_p = "Shutting down MySQL.*?SUCCESS"
+        obj = re.search(success_p, stop_out)
+        isSuccess = obj is not None
+        assert isSuccess, "stop mysql in host:{0} err:{1}".format(hostName, err)
     else:
         context.logger.info("status_re: {0} , over".format(status_out))
 
