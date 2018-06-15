@@ -13,6 +13,7 @@ from hamcrest import *
 from lib.DBUtil import DBUtil
 from lib.Node import *
 from lib.SqlThread import MyThread
+from steps.step_reload import get_dble_conn
 
 global sql_queues
 global sql_threads
@@ -79,12 +80,9 @@ def get_compare_conn(context, default_db="mytest"):
     m_passwd = context.dble_test_config['mysql_password']
 
     conn_mysql = DBUtil(m_ip, m_user, m_passwd, default_db, m_port, context)
-    conn_dble = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-                       context.dble_test_config['client_password'],
-                       default_db, context.dble_test_config['client_port'], context)
+    conn_dble = get_dble_conn(context, default_db)
 
     return conn_mysql, conn_dble
-
 
 def destroy_share_n_conn(context):
     for i in range(1, 10):
