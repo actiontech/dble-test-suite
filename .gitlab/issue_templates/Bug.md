@@ -1,17 +1,40 @@
-* **组件信息：**  
-* **前置条件：**  
-    1.  环境：centos7
-    2.  组件：
-    3.  其他：
-* **操作步骤：**    
-    1.  xx
-* **预期结果：**  
-    1.  xx
-* **实际结果：**  
-    1.  xx
-* **补充说明：**  
-    1.  xx
-* **截图：**    
- 
+* **dble version：**  
+* **preconditions ：**  
+no
+* **configs：** 
+
+**schema.xml**  
+
+```
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:schema SYSTEM "schema.dtd"><dble:schema xmlns:dble="http://dble.cloud/">
+
+```
+
+**rule.xml**  
+
+```
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:rule SYSTEM "rule.dtd"><dble:rule xmlns:dble="http://dble.cloud/">
+
+```
+
+**server.xml**  
+
+```
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:server SYSTEM "server.dtd"><dble:server xmlns:dble="http://dble.cloud/">
+
+```
+
+* **steps：**    
+    step1.  
+* **expect result：**  
+    1.
+* **real result：**  
+    1.
+* **supplements：**  
+    1.
+
 
 /label ~BUG 
