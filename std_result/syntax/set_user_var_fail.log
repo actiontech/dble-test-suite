@@ -18,10 +18,6 @@ mysql:[()]
 dble:[None]
 mysql:[()]
 [01:51:17.873188]dble err :(1064, 'java.sql.SQLSyntaxErrorException: ERROR. token : LBRACE, pos : 26')
-===file:syntax/set_user_var.sql, id:61, sql:[SELECT @abc123, @123abc, @row_format=1, @$ := @t1+@t2+@t3]===
-dble:[None]
-mysql:[((None, None, None, None),)]
-[01:51:17.970161]dble err :(1064, "syntax error, error in :'=1, @$ := @t1+@t2+@t3',expect COLONEQ, actual COLONEQ $")
 ===file:syntax/set_user_var.sql, id:63, sql:[set @cnt = (select 1);]===
 dble:[None]
 mysql:[()]
