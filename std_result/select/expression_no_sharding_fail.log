@@ -1,2 +1,0 @@
-===file:select/expression_no_sharding.sql, id:143, sql:[select * from test_no_shard where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_no_shard where HEX(R_bit) not in (1,2,3))]===
-===file:select/expression_no_sharding.sql, id:158, sql:[select * from test_no_shard where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_no_shard where HEX(R_bit) not in (1,2,3)))]===

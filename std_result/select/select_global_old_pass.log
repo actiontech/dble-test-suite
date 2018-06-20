@@ -15,9 +15,9 @@ dble:[[('Dnnaao', 'Errllov', 0L), ('Gecrrcc', 'Srlkrt', 0L), ('Jozzh', 'Lnanyo',
 ===file:select/select_global_old.sql, id:8, sql:[select id,FirstName,lastname,department,salary from global_table1 where Salary >'40000' and Salary <'70000' and Department ='Finance']===
 dble:[[(202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L)]]
 ===file:select/select_global_old.sql, id:9, sql:[SELECT count(*), Department  FROM (SELECT * FROM global_table1 ORDER BY FirstName DESC) AS Actions GROUP BY Department ORDER BY ID DESC]===
-dble:[[(3L, 'Development'), (4L, 'Finance')]]
+dble:[((3L, 'Development'), (4L, 'Finance'))]
 ===file:select/select_global_old.sql, id:10, sql:[SELECT id,FirstName,lastname,department,salary FROM global_table1 ORDER BY FIELD( ID, 203, 207,206)]===
-dble:[[(201L, 'Mazojys', 'Fxoj', 'Finance', 7800L), (202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L), (205L, 'Jssme', 'Bdnaa', 'Development', 75000L), (206L, 'Dnnaao', 'Errllov', 'Development', 55000L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L)]]
+dble:[((201L, 'Mazojys', 'Fxoj', 'Finance', 7800L), (202L, 'Jozzh', 'Lnanyo', 'Finance', 45800L), (204L, 'Gecrrcc', 'Srlkrt', 'Finance', 62000L), (205L, 'Jssme', 'Bdnaa', 'Development', 75000L), (203L, 'Syllauu', 'Dfaafk', 'Finance', 57000L), (207L, 'Tyoysww', 'Osk', 'Development', 49000L), (206L, 'Dnnaao', 'Errllov', 'Development', 55000L))]
 ===file:select/select_global_old.sql, id:11, sql:[SELECT Department, COUNT(ID) FROM global_table1 GROUP BY Department HAVING COUNT(ID)>3]===
 dble:[[('Finance', 4L)]]
 ===file:select/select_global_old.sql, id:12, sql:[select id,FirstName,lastname,department,salary from global_table1 order by ID ASC]===
@@ -248,6 +248,10 @@ dble:[(('CUSTKEY_333', 'A'), ('CUSTKEY_003', 'C'), ('CUSTKEY_012', 'C'), ('CUSTK
 dble:[[(Decimal('89225175'), 6L)]]
 ===file:select/select_global_old.sql, id:125, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE from global_table1 where id=1]===
 dble:[[(1L, 'ORDERKEY_001', 'CUSTKEY_003', 200000L, datetime.date(2014, 10, 22))]]
+===file:select/select_global_old.sql, id:126, sql:[select count(*) from global_table1 where MYDATE between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')]===
+dble:[[(2L,)]]
+===file:select/select_global_old.sql, id:127, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT count(*) from global_table1 where mydate between concat(date_format('1992-05-01','%Y-%m'),'-00') and concat(date_format(date_add('1992-05-01',interval 2 month),'%Y-%m'),'-00')]===
+dble:[[(2L,)]]
 ===file:select/select_global_old.sql, id:128, sql:[select id,sum(O_TOTALPRICE) from global_table1 where id>1 and id<50 group by  id]===
 dble:[[(2L, Decimal('100000')), (4L, Decimal('500')), (5L, Decimal('100')), (6L, Decimal('231')), (7L, Decimal('12000')), (10L, Decimal('88888888')), (11L, Decimal('323456'))]]
 ===file:select/select_global_old.sql, id:129, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE id,sum(O_TOTALPRICE) from global_table1 where id>1 and id<50 group by  id]===
@@ -486,3 +490,7 @@ dble:[[('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003'), ('ORDER
 dble:[[(3L,)]]
 ===file:select/select_global_old.sql, id:253, sql:[select count(*) from global_table1 as a where 56000< all(select id from global_table2)]===
 dble:[[(0L,)]]
+===file:select/select_global_old.sql, id:263, sql:[drop table if exists global_table1]===
+dble:[[]]
+===file:select/select_global_old.sql, id:264, sql:[drop table if exists global_table2]===
+dble:[[]]
