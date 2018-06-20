@@ -29,11 +29,12 @@ def do_admin_query(context, line_nu, sql):
         if(isNoErr):
             with open(context.cur_pass_log, 'a') as fpT:
                 fpT.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(line_nu, sql, context.sql_file))
-                fpT.writelines(result)
+                context.logger.info("result is: {0}".format(result))
+                fpT.writelines(str(result))
         else:
             with open(context.cur_fail_log, 'a') as fpF:
                 fpF.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(line_nu, sql, context.sql_file))
-                fpF.writelines(result)
+                fpF.writelines(str(result))
                 fpF.writelines(err)
 
     return result
@@ -42,16 +43,17 @@ def do_admin_query(context, line_nu, sql):
 def step_impl(context, filename):
     context.sql_file = filename
     context.execute_steps(u'Given init read-write-split data')
-    filepath = "sqls/{0}".format(filename)
+    filepath = "sqls/manager/{0}".format(filename)
     sql = ''
     line_nu = 0
     if (not hasattr(context, "conn_mycat")) or context.conn_mycat is None:
-        context.conn_admin = get_admin_conn(context)
+        context.conn_admin, err = get_admin_conn(context)
+        assert err is None, "create admin conn err: {0}".format(err)
+
 
     with open(filepath) as fp:
         lines = fp.readlines()
         context.linenu = 0
-        toClose = False
         for line in lines:
             line_nu += 1
             context.logger.info("**************************************************")
@@ -59,7 +61,7 @@ def step_impl(context, filename):
                 context.logger.info("jump comment line, conntions to exec sql next")
                 continue
             sql = sql + line.strip() + "\n"
-            do_admin_query(context, line_nu, sql, toClose)
+            do_admin_query(context, line_nu, sql)
 
             sql = ''
 

@@ -74,16 +74,25 @@ def add_child_in_xml(file, parentNode, childNodeRoot):
 
     parentNodes = get_parent_nodes_from_dic(tree, parentNode)
 
-    prevTag = parentNode.get("prev")
+    prevTag = parentNode.get("prev", None)
+    childIdx = parentNode.get("childIdx", None)
     #add child nodes, delete the same name ones if exists
+    idx = childIdx
     for node in parentNodes:
-        if prevTag:
+        if childIdx is None and prevTag is not None:
             prevNodes = node.findall(prevTag)
             idx = len(prevNodes)
+        k=0
         for child in childNodeRoot:
             del_node_by_name(node, child)
-            if not prevTag: idx = get_Insert_Idx(node, child)
+            if prevTag is None and childIdx is None:
+                idx = get_Insert_Idx(node, child)
+                if idx==0:
+                    idx = k
+                    # print("idx1:", idx, child.tag)
+            # print("idx2:", idx, child.tag)
             node.insert(idx,child)
+            k=k+idx+1
 
     doctype=""
     if file.find('rule.xml') > -1:
@@ -140,12 +149,12 @@ def del_node_by_name(node, child):
 
 def get_Insert_Idx(node, child):
     existsChildren = node.findall(child.tag)
-    idx = 0
+    idx = -1
     for tagChild in existsChildren:
         tmp = node.index(tagChild)
         if tmp > idx: idx = tmp
 
-    if idx > 0: idx = idx+1
+    idx = idx+1
     return idx
 
 if __name__ == "__main__":
@@ -167,11 +176,13 @@ if __name__ == "__main__":
         """
         add_child_in_text('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map":{}}, seg)
     elif command == "schema":
-        fullpath = "/root/dble/dble_conf/conf_template/schema.xml"
-        kv_parent  = eval("{'tag':'root'}")
-        kv_child = eval("{'tag':'dataNode','kv_map':{'name':'dn2'}}")
+        seg = """
+        <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111" weight="" usingDecrypt=""/>
+        """
 
-        delete_child_node(fullpath, kv_child, kv_parent)
+        fullpath = "dble_conf/conf_template/schema.xml"
+
+        add_child_in_text(fullpath, {'tag':'dataHost','kv_map':{'name':'dh2'}, 'childIdx':1}, seg)
     elif command == "server":
         seg = """
       <firewall>

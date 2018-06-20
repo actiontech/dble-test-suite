@@ -28,7 +28,7 @@ def get_admin_conn(context, user="", passwd=""):
     conn = None
     err = None
     try:
-        conn = DBUtil(context.dble_test_config['dble_host'], user, passwd, "mytest", context.dble_test_config['manager_port'],context)
+        conn = DBUtil(context.dble_test_config['dble_host'], user, passwd, "", context.dble_test_config['manager_port'],context)
     except MySQLdb.Error, e:
         err = e.args
     return conn, err

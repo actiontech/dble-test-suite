@@ -1,6 +1,5 @@
 Feature: #
-  @current
-  Scenario: #test add schema/sharding_table/global_table schema+table+user
+  Scenario: #1 test add schema/sharding_table/global_table schema+table+user
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" type="global" />
@@ -16,7 +15,7 @@ Feature: #
       |file        | parent                                       | child                                           |
       |schema.xml  |{'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'test_table'}}  |
 
-  Scenario: #test add/drop child table
+  Scenario: #2 test add/drop child table
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" >
@@ -34,52 +33,87 @@ Feature: #
       |schema.xml  |{'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'test_table'}}  |
     Then execute admin cmd "reload @@config_all"
 
-  Scenario: #test almost empty schema.xml
-    # test no dataNode in schema.xml
+  @current
+  Scenario: #3 schema.xml stable test
+    #3.1 schema.xml with least content,  dble starts, reload @@config_all success, manager sql success
     Given delete the following xml segment
-      |file        | parent                                       | child                                          |
-      |schema.xml  |{'tag':'root'}                              | {'tag':'schema'}  |
-      |schema.xml  |{'tag':'root'}                              | {'tag':'dataNode'}  |
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+      |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
-    #test nothing in schema.xml
-    Given delete the following xml segment
-      |file        | parent                                       | child                                          |
-      |schema.xml  |{'tag':'root'}                              | {'tag':'dataHost'}  |
+    Given Restart dble in "dble-1"
+#    Then execute sql in "manager.sql" to check manager work fine
     Then execute admin cmd "reload @@config_all"
-    #add datahost
+
+    #3.2 schema.xml contains stopped mysqld, start the mysqld, delete the mysqld
+    Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-	    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1" writeType="0">
+    	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn3" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
 	    </dataHost>
-
-	    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1" writeType="0">
-		    <heartbeat>select user()</heartbeat>
-		    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-		    </writeHost>
-	    </dataHost>
-
     """
-    #add datanode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+#    todo: dble should start up even datahost is down, wait dev to fix
+    Then execute admin cmd "reload @@config_all" get the following output
     """
-	    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-	    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-	    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-	    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-	    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
-
-
+    Reload config failure
     """
-    #add schema
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given start mysql in host "mysql-master1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
-	    <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
-		    <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
-	    </schema>
-
-
+        <user name="test">
+            <property name="password">111111</property>
+            <property name="schemas">mytest</property>
+        </user>
     """
     Then execute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql      | expect   | db     |
+        | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+      |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
+    Then execute admin cmd "reload @@config_all"
+
+    #3.3 add mysqld with only heartbeat, no readhost or writehost
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    	<schema dataNode="dn2" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn2,dn4" name="test2" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh2" database="db1" name="dn2" />
+	    <dataNode dataHost="dh2" database="db2" name="dn4" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh2" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+	    </dataHost>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+        <user name="test">
+            <property name="password">111111</property>
+            <property name="schemas">mytest</property>
+        </user>
+    """
+    Then execute admin cmd "reload @@config_all"
+
+    #3.4 add mysqld with only readhost, no writehost, then delete
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'dh2'}, 'childIdx':1}" in "schema.xml"
+    """
+        <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111" weight="" usingDecrypt=""/>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql      | expect   | db     |
+        | test | 111111 | conn_0 | True     | select 2 | success  | mytest |

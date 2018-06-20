@@ -40,7 +40,8 @@ Feature:
         | test | 111111 | conn_0 | False    | insert into hash_table values(0)/*dest_node:dn1*/     | success | mytest |
         | test | 111111 | conn_0 | False    | insert into hash_table values(1)/*dest_node:dn2*/     | success | mytest |
         | test | 111111 | conn_0 | False    | insert into hash_table values(2)/*dest_node:dn3*/     | success | mytest |
-        | test | 111111 | conn_0 | True     | insert into hash_table values(3)/*dest_node:dn4*/     | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(3)/*dest_node:dn4*/     | success | mytest |
+        | test | 111111 | conn_0 | True     | insert into hash_table values(4)/*dest_node:dn1*/     | success | mytest |
 
      #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
