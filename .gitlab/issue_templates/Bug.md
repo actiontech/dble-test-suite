@@ -6,24 +6,18 @@ no
 **schema.xml**  
 
 ```
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE dble:schema SYSTEM "schema.dtd"><dble:schema xmlns:dble="http://dble.cloud/">
 
 ```
 
 **rule.xml**  
 
 ```
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE dble:rule SYSTEM "rule.dtd"><dble:rule xmlns:dble="http://dble.cloud/">
 
 ```
 
 **server.xml**  
 
 ```
-<?xml version='1.0' encoding='utf-8'?>
-<!DOCTYPE dble:server SYSTEM "server.dtd"><dble:server xmlns:dble="http://dble.cloud/">
 
 ```
 
