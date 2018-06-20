@@ -78,6 +78,12 @@ dble:[[(1L, 1.0), (2L, 2.0), (3L, 3.0), (4L, 4.0), (5L, 5.0), (6L, 6.0), (7L, 7.
 dble:[[(16L, 16.0, 'binary', 'test016'), (65L, 16.0, 'binary', 'test016')]]
 ===file:select/expression_no_sharding.sql, id:43, sql:[select *,b'' from test_no_shard]===
 dble:[[(1L, 1.0, 'a string', 'test001', ''), (2L, 2.0, 'a\nstring', 'test002', ''), (3L, 3.0, 'another string', 'test003', ''), (4L, 4.0, '\xe4\xb8\xad', 'test004', ''), (5L, 5.0, "a'string'", 'test005', ''), (6L, 6.0, 'a""string""', 'test006', ''), (7L, 7.0, 'a\x08string', 'test007', ''), (8L, 8.0, 'a\nstring', 'test008', ''), (9L, 9.0, 'a\rstring', 'test009', ''), (10L, 10.0, 'a\tstring', 'test010', ''), (11L, 11.0, 'azstring', 'test011', ''), (12L, 12.0, 'a\\string', 'test012', ''), (13L, 13.0, 'a\\%string', 'test013', ''), (14L, 14.0, 'a\\_string', 'test014', ''), (15L, 15.0, 'MySQL', 'test015', ''), (16L, 16.0, 'binary', 'test016', ''), (17L, 1.23457e+22, '17', '17', ''), (18L, 18.0, 'A', 'test018', ''), (19L, 19.0, '', 'test019', ''), (65L, 16.0, 'binary', 'test016', '')]]
+===file:select/expression_no_sharding.sql, id:44, sql:[select * from test_no_shard where R_NAME=_latin1 b'1000001']===
+dble:[[(18L, 18.0, 'A', 'test018')]]
+===file:select/expression_no_sharding.sql, id:45, sql:[select * from test_no_shard where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci]===
+dble:[[(18L, 18.0, 'A', 'test018')]]
+===file:select/expression_no_sharding.sql, id:46, sql:[select *,_latin1 b'1000001' from test_no_shard]===
+dble:[[(1L, 1.0, 'a string', 'test001', 'A'), (2L, 2.0, 'a\nstring', 'test002', 'A'), (3L, 3.0, 'another string', 'test003', 'A'), (4L, 4.0, '\xe4\xb8\xad', 'test004', 'A'), (5L, 5.0, "a'string'", 'test005', 'A'), (6L, 6.0, 'a""string""', 'test006', 'A'), (7L, 7.0, 'a\x08string', 'test007', 'A'), (8L, 8.0, 'a\nstring', 'test008', 'A'), (9L, 9.0, 'a\rstring', 'test009', 'A'), (10L, 10.0, 'a\tstring', 'test010', 'A'), (11L, 11.0, 'azstring', 'test011', 'A'), (12L, 12.0, 'a\\string', 'test012', 'A'), (13L, 13.0, 'a\\%string', 'test013', 'A'), (14L, 14.0, 'a\\_string', 'test014', 'A'), (15L, 15.0, 'MySQL', 'test015', 'A'), (16L, 16.0, 'binary', 'test016', 'A'), (17L, 1.23457e+22, '17', '17', 'A'), (18L, 18.0, 'A', 'test018', 'A'), (19L, 19.0, '', 'test019', 'A'), (65L, 16.0, 'binary', 'test016', 'A')]]
 ===file:select/expression_no_sharding.sql, id:47, sql:[select * from test_no_shard where R_NAME=B'1000001']===
 dble:[[(18L, 18.0, 'A', 'test018')]]
 ===file:select/expression_no_sharding.sql, id:48, sql:[select * from test_no_shard where id=(select true)]===
@@ -121,7 +127,7 @@ dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L,
 ===file:select/expression_no_sharding.sql, id:67, sql:[select R_name name from test_no_shard]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
 ===file:select/expression_no_sharding.sql, id:68, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 4, 9),)]]
+dble:[[(datetime.date(2018, 5, 21),)]]
 ===file:select/expression_no_sharding.sql, id:69, sql:[select * from test_no_shard where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:select/expression_no_sharding.sql, id:73, sql:[select * from test_no_shard where id= (b'01' | B'11')]===
@@ -318,3 +324,5 @@ dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
 ===file:select/expression_no_sharding.sql, id:178, sql:[select * from test_no_shard where !(HEX(R_bit) regexp '^A')]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:select/expression_no_sharding.sql, id:182, sql:[drop table if exists test__no_shard]===
+dble:[[]]

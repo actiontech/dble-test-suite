@@ -69,7 +69,7 @@ dble:[[]]
 ===file:select/expression.sql, id:66, sql:[select * from test_shard where binary id=1]===
 dble:[[(1L, 1.0, 'a string', 'test001')]]
 ===file:select/expression.sql, id:70, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 4, 9),)]]
+dble:[[(datetime.date(2018, 5, 21),)]]
 ===file:select/expression.sql, id:71, sql:[select * from test_shard where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:select/expression.sql, id:75, sql:[select * from test_shard where id= (b'01' | B'11')]===
@@ -148,6 +148,8 @@ dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\
 dble:[[]]
 ===file:select/expression.sql, id:144, sql:[select * from test_shard where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression.sql, id:145, sql:[select * from test_shard where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (1,2,3))]===
+dble:[[]]
 ===file:select/expression.sql, id:146, sql:[select HEX(R_bit) not like (select 1) from test_shard]===
 dble:[[(0L,), (1L,), (1L,), (1L,)]]
 ===file:select/expression.sql, id:147, sql:[select HEX(R_bit) like (select 1) from test_shard]===
@@ -170,6 +172,10 @@ dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:159, sql:[select * from test_shard where true >= (HEX(R_bit) not in (select HEX(R_bit) from test_shard where id <4))]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression.sql, id:160, sql:[select * from test_shard where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test_shard where HEX(R_bit) not in (1,2,3)))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:select/expression.sql, id:161, sql:[select * from test_shard where false <(select HEX(R_bit) like (select 1) a from test_shard order by a limit 1)]===
+dble:[()]
 ===file:select/expression.sql, id:162, sql:[select * from test_shard where false <> (select HEX(R_bit) from test_shard where HEX(R_bit)  not regexp '^A' limit 1 )]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:select/expression.sql, id:163, sql:[select * from test_shard where true != (select HEX(R_bit) from test_shard where HEX(R_bit) regexp '^A' limit 1 )]===
@@ -200,5 +206,5 @@ dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
 ===file:select/expression.sql, id:179, sql:[select * from test_shard where !(HEX(R_bit) regexp '^A')]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
-===file:select/expression.sql, id:180, sql:[drop table if exists test_shard]===
+===file:select/expression.sql, id:183, sql:[drop table if exists test_shard]===
 dble:[[]]
