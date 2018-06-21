@@ -148,7 +148,7 @@ public class ExecSQLAndCompare {
 						toClose = true;
 					}
 					System.out.println("debug:do query, is_share_conn:"+is_share_conn+",toClose:"+toClose);
-					do_query(line_nu, sql, toClose);
+					do_admin_query(line_nu, sql, toClose);
 					if (is_share_conn && toClose){
 						share_conns_mysql.remove(mysql_conn_name);
 						share_conns_test.remove(test_conn_name);
@@ -279,7 +279,7 @@ public class ExecSQLAndCompare {
 		}
 	}
 
-	private void do_query(int line_nu, String sql, Boolean toClose) {
+	private void do_admin_query(int line_nu, String sql, Boolean toClose) {
 //		sql = sql.replaceFirst("(/*\\s*uproxy_dest\\s*:\\s*)+slave1",
 //				"$1 " + Config.Host_Slave1 + ":" + Config.MYSQL_PORT);
 

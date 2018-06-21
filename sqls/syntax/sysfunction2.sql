@@ -58,7 +58,7 @@ SELECT 4 >> 2
 SELECT AES_DECRYPT('text',UNHEX('F3229A0B371ED2D9441B830D21A390C3'))
 SELECT LENGTH(COMPRESS(REPEAT('a',1000)))
 select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')
-SELECT ENCRYPT('hello')
+SELECT ENCRYPT('hello')/*allow_diff*/
 SELECT ENCRYPT('hello','abc')
 SELECT MD5('testing')
 SELECT PASSWORD('mypass')
