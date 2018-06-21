@@ -43,7 +43,7 @@ def do_admin_query(context, line_nu, sql):
 def step_impl(context, filename):
     context.sql_file = filename
     context.execute_steps(u'Given init read-write-split data')
-    filepath = "sqls/manager/{0}".format(filename)
+    filepath = "sqls/{0}".format(filename)
     sql = ''
     line_nu = 0
     if (not hasattr(context, "conn_mycat")) or context.conn_mycat is None:

@@ -44,7 +44,7 @@ Feature: #
       |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1"
-#    Then execute sql in "manager.sql" to check manager work fine
+#    Then execute sql in "manager/manager.sql" to check manager work fine
     Then execute admin cmd "reload @@config_all"
 
     #3.2 schema.xml contains stopped mysqld, start the mysqld, delete the mysqld
