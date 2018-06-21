@@ -52,7 +52,7 @@ select count(*) from (select * from a_test where pad=(select pad from a_order_no
 #
 #Second supplement
 #
-select (select name from a_test limit 1)
+select (select name from a_test order by name limit 1)
 select * from a_test where 'test_2'=(select name from a_order_no_shard where id=2)
 select * from a_test where 5=(select count(*) from a_order_no_shard)
 select * from a_test where 'test_2' like(select name from a_order_no_shard where id=2)
