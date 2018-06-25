@@ -24,9 +24,8 @@ def do_admin_query(context, line_nu, sql):
         context.logger.info("admin sql err:{1}".format(result, err))
 
         if len(sql) > 1000:sql = "{0}...{1}".format(sql[0:300], sql[-50:])
-        isNoErr = err is None
 
-        if(isNoErr):
+        if err is None:
             with open(context.cur_pass_log, 'a') as fpT:
                 fpT.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(line_nu, sql, context.sql_file))
                 context.logger.info("result is: {0}".format(result))
@@ -35,7 +34,7 @@ def do_admin_query(context, line_nu, sql):
             with open(context.cur_fail_log, 'a') as fpF:
                 fpF.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(line_nu, sql, context.sql_file))
                 fpF.writelines(str(result))
-                fpF.writelines(err)
+                fpF.writelines(str(err))
 
     return result
 
