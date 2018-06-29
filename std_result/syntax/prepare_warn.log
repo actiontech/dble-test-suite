@@ -1,0 +1,9 @@
+===file:syntax/prepare.sql, id:19, sql:[alter table test_shard drop index R_NAME]===
+mysql err:(1091, "Can't DROP 'R_NAME'; check that column/key exists")
+dble err[05:10:56.145589] :(1091, "Can't DROP 'R_NAME'; check that column/key exists")
+===file:syntax/prepare.sql, id:24, sql:[alter table test_shard drop index R_NAME]===
+mysql err:(1091, "Can't DROP 'R_NAME'; check that column/key exists")
+dble err[05:10:57.130262] :(1091, "Can't DROP 'R_NAME'; check that column/key exists")
+===file:syntax/prepare.sql, id:29, sql:[alter table test_shard drop primary key]===
+mysql err:(1091, "Can't DROP 'PRIMARY'; check that column/key exists")
+dble err[05:10:58.127763] :(1091, "Can't DROP 'PRIMARY'; check that column/key exists")
