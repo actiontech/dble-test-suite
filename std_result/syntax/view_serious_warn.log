@@ -1,18 +1,18 @@
 ===file:syntax/view.sql, id:5, sql:[create view view_test as select 1*4]===
 mysql err:(1050, "Table 'view_test' already exists")
-dble err[02:18:40.748543] :(1999, "Table 'view_test' already exists")
+dble err[05:18:59.026157] :(1999, "Table 'view_test' already exists")
 ===file:syntax/view.sql, id:92, sql:[select * from view_test1/*table doesn't exist*/]===
 mysql err:(1146, "Table 'mytest.view_test1' doesn't exist")
-dble err[02:19:13.021517] :(1146, "Table 'db3.view_test1' doesn't exist")
+dble err[05:19:17.563054] :(1146, "Table 'db3.view_test1' doesn't exist")
 ===file:syntax/view.sql, id:100, sql:[select * from view_test/*table doesn't exist*/]===
 mysql err:(1146, "Table 'mytest.view_test' doesn't exist")
-dble err[02:19:18.707688] :(1146, "Table 'db3.view_test' doesn't exist")
+dble err[05:19:17.964101] :(1146, "Table 'db3.view_test' doesn't exist")
 ===file:syntax/view.sql, id:104, sql:[select * from view_test/*table doesn't exist*/]===
 mysql err:(1146, "Table 'mytest.view_test' doesn't exist")
-dble err[02:19:20.091834] :(1146, "Table 'db3.view_test' doesn't exist")
+dble err[05:19:18.800471] :(1146, "Table 'db3.view_test' doesn't exist")
 ===file:syntax/view.sql, id:116, sql:[select * from view_test]===
 mysql err:(1356, "View 'mytest.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[02:19:23.492668] :(1003, "Unknown column 'test_shard.R_NAME' in 'field list'")
+dble err[05:19:20.906430] :(1003, "Unknown column 'test_shard.R_NAME' in 'field list'")
 ===file:syntax/view.sql, id:120, sql:[select * from view_test]===
 mysql err:(1356, "View 'mytest.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[02:19:24.904068] :(1003, "Unknown column 'test_shard.R_NAME' in 'field list'")
+dble err[05:19:21.792916] :(1003, "Unknown column 'test_shard.R_NAME' in 'field list'")
