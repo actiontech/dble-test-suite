@@ -117,3 +117,28 @@ Feature: #
     Then execute sql
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
+
+  Scenario: #4 schema.xml only contain partial content
+    #4.1 schema.xml only has dataNodes,  dble starts successful,
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    # todo : dble should start only with <dataNode>
+    Given Restart dble in "dble-1"
+    """
+    Restart dble failure
+    """
+    ##4.2 schema.xml only has <dataHost>,  dble starts successful
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+    """
+    Given Restart dble in "dble-1"
