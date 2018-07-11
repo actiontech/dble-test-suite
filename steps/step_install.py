@@ -78,7 +78,7 @@ def check_dble_started(context, ssh_client):
             context.retry = context.retry+1
             check_dble_started(context, ssh_client)
         else:
-            assert_that(False, "start dble service fail in 25 seconds!")
+             assert_that(False, "start dble service fail in 25 seconds!")
     else:
         LOGGER.info("start dble success !!!")
 
@@ -178,7 +178,10 @@ def restart_dble(context, node):
 @Given('Restart dble in "{hostname}"')
 def step_impl(context, hostname):
     node = get_node(context.dbles, hostname)
-    restart_dble(context, node)
+    if context.text:
+        assert_that(context.text, contains_string("Restart dble failure"))
+    else:
+        restart_dble(context, node)
 
 @Then('start dble in order')
 def start_dble_in_order(context):
