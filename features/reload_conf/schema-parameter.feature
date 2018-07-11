@@ -53,3 +53,37 @@ Feature: #
         | test | 111111 | conn_0 | False    | drop table if exists test2_table          | success             | mytest |
         | test | 111111 | conn_0 | False    | create table test2_table(id int)          | success             | mytest |
         | test | 111111 | conn_0 | True    | show full tables                              | has{('test_table','BASE TABLE')}   | mytest |
+
+  Scenario:# dataNode has no related databases
+     Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+    	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn3" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+      """
+    Given start mysql in host "mysql-master1"
+    Then execute sql in mysql
+        | user | passwd | conn   | toClose  | sql                                           | expect              | db     |
+        | test | 111111 | conn_0 | False    | drop database if exists db1         | success             |  |
+        | test | 111111 | conn_0 | False    | drop database if exists db2         | success             |  |
+        | test | 111111 | conn_0 | False    | drop database if exists db3         | success             |  |
+        | test | 111111 | conn_0 | False    | drop database if exists db4         | success             |  |
+    Given Restart dble in "dble-1"
+    Then execute sql in mysql
+        | user | passwd | conn   | toClose  | sql                                           | expect              | db     |
+        | test | 111111 | conn_0 | False    | create database if not exists db1         | success             |  |
+        | test | 111111 | conn_0 | False    | create database if not exists db2         | success             |  |
+        | test | 111111 | conn_0 | False    | create database if not exists db3         | success             |  |
+        | test | 111111 | conn_0 | False    | create database if not exists db4         | success             |  |

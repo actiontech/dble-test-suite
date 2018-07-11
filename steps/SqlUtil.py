@@ -23,6 +23,10 @@ def get_sql(type):
 def step_impl(context):
     exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['client_port'])
 
+@Then('execute sql in mysql')
+def step_impl(context):
+    exec_sql(context, context.dble_test_config['mysql_host'], context.dble_test_config['mysql_port'])
+
 @Then('execute admin sql')
 def execute_admin_sql(context):
     exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['manager_port'])

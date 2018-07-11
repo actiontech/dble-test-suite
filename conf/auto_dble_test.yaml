@@ -19,6 +19,8 @@ dble_test_config:
   manager_password: 111111
   manager_port: 9066
   dble_host: 172.100.9.1
+  mysql_host: 172.100.9.5
+  mysql_port: 3306
 
   dble:
     remote_packet: actiontech-dble.tar.gz
