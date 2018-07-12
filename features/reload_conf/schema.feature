@@ -129,6 +129,7 @@ Feature: #
     """
     Restart dble failure
     """
+
     ##4.2 schema.xml only has <dataHost>,  dble starts successful
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -142,3 +143,29 @@ Feature: #
 	    </dataHost>
     """
     Given Restart dble in "dble-1"
+
+  Scenario:# when configuration file contains illegal label<test/>
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn3" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+	    <test>
+	    </test>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload config failure
+    """
