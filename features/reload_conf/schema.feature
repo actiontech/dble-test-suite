@@ -169,3 +169,76 @@ Feature: #
     """
     Reload config failure
     """
+  Scenario: # test when <dataNode> with "$" and the label closure
+    #1.when <dataNode> wirh "$"
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+    	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "Reload @@config_all"
+    Then execute sql
+     | user | passwd | conn   | toClose  | sql                                           | expect                             | db     |
+     | test | 111111 | conn_0 | False    | drop table if exists test                 | success                            | mytest |
+     | test | 111111 | conn_0 | False    | create table test(id int)                 | success                            | mytest |
+
+     #2.when <readHost> closure is <readHost></readHost>
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+    	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		         <readHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+		         </readHost>
+		    </writeHost>
+	    </dataHost>
+    """
+    #todo: reload should success
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload config failure
+    """
+    #2.when <readHost> put outside <wirteHost>
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+    	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+		    <readHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test"/>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload config failure
+    """
