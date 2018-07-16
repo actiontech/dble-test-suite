@@ -146,19 +146,21 @@ def hasResultSet(res, expectRS, bHas):
 
 def matchResultSet(context,res,expect,num):
     subRes_list = []
-    if isinstance(res,tuple):
-        for i in range(len(res)):
-            strip =  re.sub('\s','',str(res[i]))
-            subRes = re.split(r'[;,\s]',strip)
-            partOfSubRes = subRes[0:num]
-            partOfExpect = expect[0:num]
-            context.logger.info("partOfSubRes:{0} length{1}".format((partOfSubRes),len(partOfSubRes)))
-            context.logger.info("partOfExpect:{0} length{1}".format((partOfExpect), len(partOfExpect)))
-            if partOfSubRes == partOfExpect:
-                subRes_list.append(partOfSubRes)
+    tmp = []
+    partOfExpect = expect[0:num]
+    if not isinstance(res[0], tuple):
+        context.logger.info("if not{0}".format(type(res)))
+        tmp.append(res)
     else:
-        partOfSubRes = res[0:num]
-        if partOfSubRes == expect:
+        context.logger.info("else{0}".format(type(res)))
+        tmp = res
+    for i in range(len(tmp)):
+        strip =  re.sub('\s','',str(tmp[i]))
+        subRes = re.split(r'[;,\s]',strip)
+        partOfSubRes = subRes[0:num]
+        context.logger.info("partOfSubRes:{0} length{1}".format((partOfSubRes),len(partOfSubRes)))
+        context.logger.info("partOfExpect:{0} length{1}".format((partOfExpect), len(partOfExpect)))
+        if cmp(partOfSubRes,partOfExpect)==0:
             subRes_list.append(partOfSubRes)
 
     context.logger.info("expect subRes_list:{0}".format(subRes_list))
