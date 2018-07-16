@@ -78,7 +78,7 @@ def check_dble_started(context, ssh_client):
             context.retry = context.retry+1
             check_dble_started(context, ssh_client)
         else:
-             assert_that(False, "start dble service fail in 25 seconds!")
+            assert_that(False, "start dble service fail in 25 seconds!")
     else:
         LOGGER.info("start dble success !!!")
 
@@ -169,6 +169,7 @@ def restart_dbles(context, nodes):
 def restart_dble(context, node):
     stop_dble_in_node(context, node)
     start_dble_in_node(context, node)
+
 
     user = context.dble_test_config['manager_user']
     passwd = str(context.dble_test_config['manager_password'])

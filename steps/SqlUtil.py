@@ -11,6 +11,7 @@ from lib.DBUtil import DBUtil
 from lib.XMLUtil import get_node_attr_by_kv
 from lib.Node import get_node
 
+
 def get_sql(type):
     if type == "read":
         sql="select 1 "
@@ -97,10 +98,11 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             hasObj = re.search(r"has\{(.*?)\}", expect, re.I)
             hasnotObj = re.search(r"hasnot\{(.*?)\}", expect, re.I)
             lengthObj = re.search(r"length\{(.*?)\}", expect, re.I)
+            matchObj = re.search(r"match\{(.*?)\}",expect,re.I)
 
             if expect == "success":
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
-            elif hasObj or hasnotObj or lengthObj:
+            elif hasObj or hasnotObj or lengthObj or matchObj:
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
@@ -114,6 +116,12 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                     expectRS = lengthObj.group(1)
                     context.logger.info("expect resultset:{0}, real res:{1}".format(eval(expectRS), len(res)))
                     assert_that(len(res),equal_to(eval(expectRS)))
+                if matchObj:
+                    match_Obj = matchObj.group(1)
+                    context.logger.info("expect match_obj:{0}".format(match_Obj))
+                    match_Obj_Split = re.split(r'[;,\s]', match_Obj.encode('ascii'))
+                    context.logger.info("expect match_Obj_Split:{0}".format(match_Obj_Split))
+                    matchResultSet(context,res, match_Obj_Split,len(match_Obj_Split)-1)
             else:
                 assert_that(err, not None, "Err is None, expect:{0}".format(expect))
                 assert_that(err[1], contains_string(expect), "expect text: {0}".format(expect))
@@ -135,6 +143,26 @@ def hasResultSet(res, expectRS, bHas):
     else:#for single query resultset
         real = res.__contains__(resExpect)
         assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
+
+def matchResultSet(context,res,expect,num):
+    subRes_list = []
+    if isinstance(res,tuple):
+        for i in range(len(res)):
+            strip =  re.sub('\s','',str(res[i]))
+            subRes = re.split(r'[;,\s]',strip)
+            partOfSubRes = subRes[0:num]
+            partOfExpect = expect[0:num]
+            context.logger.info("partOfSubRes:{0} length{1}".format((partOfSubRes),len(partOfSubRes)))
+            context.logger.info("partOfExpect:{0} length{1}".format((partOfExpect), len(partOfExpect)))
+            if partOfSubRes == partOfExpect:
+                subRes_list.append(partOfSubRes)
+    else:
+        partOfSubRes = res[0:num]
+        if partOfSubRes == expect:
+            subRes_list.append(partOfSubRes)
+
+    context.logger.info("expect subRes_list:{0}".format(subRes_list))
+    assert_that(subRes_list,not None)
 
 # the expext resultset must wholely in the same tuple of the mult-res list
 # for example: res=[((1,2)),((3,4))], expect=((2,3)) shuold return False

@@ -119,3 +119,25 @@ Feature: #
     Then execute admin sql
         | user | passwd | conn   | toClose  | sql                            | expect                             | db     |
         | root | 111111 | conn_0 | False    | show @@backend               | length{(3)}   |  |
+
+  Scenario: # test cache related parameter "primaryKey"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
+    """
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="hash-two" />
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
+        | test | 111111 | conn_0 | False    |drop table if exists test_table                                   | success       | mytest |
+        | test | 111111 | conn_0 | False    |create table test_table(id int primary key,name varchar(20)) |success        | mytest |
+        | test | 111111 | conn_0 | False    |insert into test_table values(1,'test1'),(2,'test2')           | success      | mytest |
+        | test | 111111 | conn_0 | True     |select * from test_table where name = 'test1'                   | success       | mytest |
+    Then execute admin sql
+        | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
+        | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}| |
+    Then execute sql
+        | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
+        | test | 111111 | conn_0 | True     |select * from test_table where id =1                       | success       | mytest |
+    Then execute admin sql
+        | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
+        | root | 111111 | conn_0 | True     | show @@cache               | match{('TableID2DataNodeCache.`mytest`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |

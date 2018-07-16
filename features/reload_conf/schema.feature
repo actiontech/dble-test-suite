@@ -9,7 +9,7 @@ Feature: #
         | user | passwd | conn   | toClose  | sql                                           | expect                             | db     |
         | test | 111111 | conn_0 | False    | create table if not exists test_table(id int) | success                            | mytest |
         | test | 111111 | conn_0 | False    | show full tables                              | has{('test_table','BASE TABLE')}   | mytest |
-        | test | 111111 | conn_0 | False    | drop table test_table                         | success                            | mytest |
+        | test | 111111 | conn_0 | True    | drop table test_table                         | success                            | mytest |
     Then execute admin cmd "rollback @@config"
     Given delete the following xml segment
       |file        | parent                                       | child                                           |
@@ -192,7 +192,7 @@ Feature: #
     Then execute sql
      | user | passwd | conn   | toClose  | sql                                           | expect                             | db     |
      | test | 111111 | conn_0 | False    | drop table if exists test                 | success                            | mytest |
-     | test | 111111 | conn_0 | False    | create table test(id int)                 | success                            | mytest |
+     | test | 111111 | conn_0 | True    | create table test(id int)                 | success                            | mytest |
 
      #2.when <readHost> closure is <readHost></readHost>
     Given delete the following xml segment
