@@ -149,10 +149,8 @@ def matchResultSet(context,res,expect,num):
     tmp = []
     partOfExpect = expect[0:num]
     if not isinstance(res[0], tuple):
-        context.logger.info("if not{0}".format(type(res)))
         tmp.append(res)
     else:
-        context.logger.info("else{0}".format(type(res)))
         tmp = res
     for i in range(len(tmp)):
         strip =  re.sub('\s','',str(tmp[i]))
