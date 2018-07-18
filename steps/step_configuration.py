@@ -1,5 +1,6 @@
 import logging
 import re
+
 import MySQLdb
 
 from behave import *
@@ -43,7 +44,9 @@ def create_conn(context,num):
         err = e.args
     finally:
         if err is not None:
-            context.logger.info("get or create conn: got err:{0}".format(err))
-            context.logger.info("create minCon is {0}".format(i))
+            context.logger.info("create conn: got err:{0}".format(err))
+            context.logger.info("create maxCon is {0}".format(i))
 
             assert_that(context.text,contains_string("can't create connections more than maxCon"))
+    for conn in conns:
+        conn.close()

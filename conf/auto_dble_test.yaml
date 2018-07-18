@@ -62,11 +62,11 @@ dble_test_config:
       mysql_db: db2
 
   mysql_slave1:
-    ip: 172.100.9.7
+    ip: 172.100.9.2
     port: 3306
 
   mysql_slave2:
-    ip: 172.100.9.8
+    ip: 172.100.9.3
     port: 3306
 
   result:
