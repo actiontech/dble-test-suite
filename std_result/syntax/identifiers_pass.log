@@ -1,0 +1,24 @@
+===file:syntax/identifiers.sql, id:1, sql:[drop table if exists aly_test_1_2]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:2, sql:[create table aly_test_1_2 (id int, data varchar(50))]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:5, sql:[insert into aly_test_1_2 (id,data) values(1,'a')]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:6, sql:[insert into aly_test_1_2 set id = 2,data='b']===
+dble:[[]]
+===file:syntax/identifiers.sql, id:9, sql:[replace into aly_test_1_2 values (3, 'c')]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:10, sql:[replace into aly_test_1_2 set id = 4, data='d']===
+dble:[[]]
+===file:syntax/identifiers.sql, id:13, sql:[select * from aly_test_1_2 order by id limit 4]===
+dble:[((1L, 'a'), (2L, 'b'), (3L, 'c'), (4L, 'd'))]
+===file:syntax/identifiers.sql, id:14, sql:[select id,data from aly_test_1_2 order by id limit 4]===
+dble:[((1L, 'a'), (2L, 'b'), (3L, 'c'), (4L, 'd'))]
+===file:syntax/identifiers.sql, id:17, sql:[update aly_test_1_2 set data = 'aa' where id =1]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:20, sql:[lock tables aly_test_1_2 read]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:21, sql:[unlock tables]===
+dble:[[]]
+===file:syntax/identifiers.sql, id:24, sql:[drop table if exists aly_test_1_2]===
+dble:[[]]
