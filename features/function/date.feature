@@ -55,6 +55,7 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
         | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values(null)/*dest_node:dn4*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
@@ -78,6 +79,7 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
         | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values(null)                           | can't find any valid data node | mytest |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | mytest |

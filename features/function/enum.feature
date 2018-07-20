@@ -32,6 +32,7 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists enum_table                               | success | mytest |
         | test | 111111 | conn_0 | False    | create table enum_table(id int)                               | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values (null)              | can't find any valid data node | mytest |
         | test | 111111 | conn_0 | False    | insert into enum_table values (0)/*dest_node:dn1*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into enum_table values (1)/*dest_node:dn2*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into enum_table values (2)/*dest_node:dn3*/  | success | mytest |
@@ -65,6 +66,7 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists enum_table                               | success | mytest |
         | test | 111111 | conn_0 | False    | create table enum_table(id varchar(10))                       | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into enum_table values(null)/*dest_node:dn4*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into enum_table values(0)/*dest_node:dn4*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into enum_table values(1)/*dest_node:dn2*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into enum_table values(2)/*dest_node:dn3*/  | success | mytest |

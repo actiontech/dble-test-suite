@@ -31,6 +31,7 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table patternrange_table(id int)                      | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into patternrange_table values(null)/*dest_node:dn4*/   | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(-1)/*dest_node:dn4*/   | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(0)/*dest_node:dn1*/    | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(255)/*dest_node:dn1*/  | success | mytest |
@@ -69,6 +70,7 @@ Feature:
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(756)/*dest_node:dn4*/  | success | mytest |
         | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)/*dest_node:dn1*/ | success | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(1001)/*dest_node:dn1*/ | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into patternrange_table values(null)                  | can't find any valid data node | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(-1)                    | can't find any valid data node | mytest |
         | test | 111111 | conn_0 | True     | insert into patternrange_table values(-2)                    | can't find any valid data node | mytest |
 
