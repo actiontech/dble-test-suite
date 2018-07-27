@@ -29,6 +29,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | syntax/update_syntax.sql                  |
           | syntax/prepare.sql                        |
           | syntax/view.sql                           |
+          | bugs/bug.sql                              |
 
     Scenario Outline:#2 check read-write-split work fine and slaves load balance
         Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
