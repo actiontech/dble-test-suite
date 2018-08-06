@@ -61,6 +61,7 @@ Feature: #
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
 	    </dataHost>
+<<<<<<< HEAD
     """
 #    todo: dble should start up even datahost is down, wait dev to fix
     Then execute admin cmd "reload @@config_all" get the following output
