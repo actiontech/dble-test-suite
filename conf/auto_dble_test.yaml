@@ -28,8 +28,8 @@ dble_test_config:
 #    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.1/
 #    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.0/
 #    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.06.0/
-    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.07.0/
-#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
+#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.07.0/
+    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
     home: /opt/dble
   zookeeper:
     remote_path:
