@@ -215,3 +215,20 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     has{('managerPort','9066','Manager connection port. The default number is 9066')}
     """
+
+  Scenario: #edit manager user name or password
+    Given delete the following xml segment
+      |file        | parent           | child              |
+      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <user name="root_test">
+          <property name="password">123</property>
+          <property name="manager">true</property>
+     </user>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | root_test    | 123 | conn_0 | True    | select 1 | success | mytest |
