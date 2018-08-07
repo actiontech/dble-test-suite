@@ -1,11 +1,13 @@
 Feature: Verify that the Reload @@config_all is effective for server.xml
 
   Scenario: #1 add/delete client user
+     #1.1  client user with illegal label
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
         <property name="password">test_password</property>
         <property name="schemas">mytest</property>
+        <property name="test">0</property>
     </user>
     """
     Then execute admin cmd "reload @@config_all"
@@ -13,6 +15,33 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
+       #1.2 client user with readonly
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <user name="test_user2">
+        <property name="password">test_password</property>
+        <property name="schemas">mytest</property>
+        <property name="readOnly">true</property>
+     </user>
+    """
+    Given Restart dble in "dble-1"
+    Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | test_user2    | test_password | conn_0 | False    | select 1 | success | mytest |
+        | test_user2   | test_password | conn_0 | True    | drop table if exists test_table | User READ ONLY | mytest |
+
+     #1.3client user with  schema which does not exist
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <user name="test_user3">
+        <property name="password">test_password</property>
+        <property name="schemas">testdb</property>
+     </user>
+    """
+    Given Restart dble in "dble-1"
+     """
+      Restart dble failure
+     """
   Scenario: #test usingDecrypt
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -26,6 +55,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
+
+  Scenario: # server.xml only contains <user>
+    Given delete the following xml segment
+      |file        | parent           | child                                        |
+      |server.xml  | {'tag':'root'}   | {'tag':'system'} |
+    Given Restart dble in "dble-1"
 
   Scenario: #2 add/delete manager user
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
