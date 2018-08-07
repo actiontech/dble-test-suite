@@ -61,7 +61,6 @@ Feature: #
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
 	    </dataHost>
-<<<<<<< HEAD
     """
 #    todo: dble should start up even datahost is down, wait dev to fix
     Then execute admin cmd "reload @@config_all" get the following output
@@ -96,8 +95,9 @@ Feature: #
 	    </schema>
 	    <dataNode dataHost="dh2" database="db1" name="dn2" />
 	    <dataNode dataHost="dh2" database="db2" name="dn4" />
-	    <dataHost balance="0" maxCon="100" minCon="10" name="dh2" slaveThreshold="100" switchType="-1">
+	    <dataHost balance="1" maxCon="100" minCon="10" name="dh2" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true"></writeHost>
 	    </dataHost>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -110,9 +110,9 @@ Feature: #
     Then execute admin cmd "reload @@config_all"
 
     #3.4 add mysqld with only readhost, no writehost, then delete
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'dh2'}, 'childIdx':1}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}, 'childIdx':1}" in "schema.xml"
     """
-        <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111" weight="" usingDecrypt=""/>
+        <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql
