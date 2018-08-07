@@ -150,6 +150,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'mnger'}}|
     Then execute admin cmd "reload @@config_all"
 
+
   @current
   Scenario: #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -232,3 +233,25 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | root_test    | 123 | conn_0 | True    | select 1 | success | mytest |
+
+  Scenario:#function of whitehost
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    """
+    <firewall>
+        <whitehost>
+            <host host="127.0.0.1" user="root,test"/>
+        </whitehost>
+    </firewall>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <user name="test_user">
+        <property name="password">111111</property>
+        <property name="schemas">mytest</property>
+    </user>
+    """
+    Then execute admin cmd "show @@version" with user "root" passwd "111111"
+    Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | test   | 111111 | conn_0 | True    | select 1 |success | mytest |
+        | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
