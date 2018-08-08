@@ -99,3 +99,23 @@ mysql:[[(None, 'UNION RESULT', '<union1,2>', None, 'ALL', None, None, None, None
 ===file:bugs/bug.sql, id:64, sql:[explain (select 1 from test_shard)union(select 2)/*allow_diff*/]===
 dble:[[('distinct.1', 'DISTINCT', 'union_all.1'), ('dn1.0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn2.0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn3.0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn4.0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn5.0', 'BASE SQL', 'SELECT 2'), ('merge.1', 'MERGE', 'dn1.0; dn2.0; dn3.0; dn4.0'), ('merge.2', 'MERGE', 'dn5.0'), ('shuffle_field.1', 'SHUFFLE_FIELD', 'merge.1'), ('shuffle_field.2', 'SHUFFLE_FIELD', 'distinct.1'), ('union_all.1', 'UNION_ALL', 'shuffle_field.1; merge.2')]]
 mysql:[[(None, 'UNION RESULT', '<union1,2>', None, 'ALL', None, None, None, None, None, None, 'Using temporary'), (1L, 'PRIMARY', 'test_shard', None, 'index', None, 'PRIMARY', '4', None, 18L, 100.0, 'Using index'), (2L, 'UNION', None, None, None, None, None, None, None, None, None, 'No tables used')]]
+===file:bugs/bug.sql, id:66, sql:[drop table if exists test_global;]===
+dble:[[]]
+===file:bugs/bug.sql, id:67, sql:[drop table if exists global_table2;]===
+dble:[[]]
+===file:bugs/bug.sql, id:68, sql:[CREATE TABLE test_global(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(1
+20) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8;]===
+dble:[[]]
+===file:bugs/bug.sql, id:69, sql:[CREATE TABLE global_table2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char
+(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8;]===
+dble:[[]]
+===file:bugs/bug.sql, id:70, sql:[insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,
+'test...5',1),(6,6,'test6',6);]===
+dble:[[]]
+===file:bugs/bug.sql, id:71, sql:[insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),
+(5,5,'order...5',1);]===
+dble:[[]]
+===file:bugs/bug.sql, id:72, sql:[(select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from glo
+bal_table2 c where c.pad=1) order by id limit 2;]===
+dble:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L))]
+
