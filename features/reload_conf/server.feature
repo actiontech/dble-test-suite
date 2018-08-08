@@ -255,3 +255,86 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test   | 111111 | conn_0 | True    | select 1 |success | mytest |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
+
+  Scenario:# function of blacklist
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    """
+    <firewall>
+        <blacklist check="true">
+                <property name="conditionDoubleConstAllow">false</property>
+                <property name="conditionAndAlwayFalseAllow">false</property>
+                 <property name="conditionAndAlwayTrueAllow">false</property>
+                 <property name="constArithmeticAllow">false</property>
+                 <property name="alterTableAllow">false</property>
+                 <property name="commitAllow">false</property>
+                 <property name="deleteAllow">false</property>
+                 <property name="dropTableAllow">false</property>
+                 <property name="insertAllow">false</property>
+                 <property name="intersectAllow">false</property>
+                 <property name="lockTableAllow">false</property>
+                 <property name="minusAllow">false</property>
+                 <property name="callAllow">false</property>
+                 <property name="replaceAllow">false</property>
+                 <property name="setAllow">false</property>
+                 <property name="describeAllow">false</property>
+                 <property name="limitZeroAllow">false</property>
+                 <property name="conditionOpXorAllow">false</property>
+                 <property name="conditionOpBitwseAllow">false</property>
+                 <property name="startTransactionAllow">false</property>
+                 <property name="truncateAllow">false</property>
+                 <property name="updateAllow">false</property>
+                 <property name="useAllow">false</property>
+                 <property name="blockAllow">false</property>
+                 <property name="deleteWhereNoneCheck">false</property>
+                 <property name="updateWhereNoneCheck">false</property>
+        </blacklist>
+    </firewall>
+    """
+  Then execute admin cmd "reload @@config_all"
+  Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |success | mytest |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table2(id int) |success | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where 1 = 1 and 2 = 1; |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where id = 567 and 1!= 1 |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where id = 567 and 1 = 1 |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where id = 2-1 |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | alter table test_table add name varchar(20)   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | commit   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | delete from test_table where id =1   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | drop table test_table   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | insert test_table values(1)   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | intersect    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | lock tables test_table read  |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | minus    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | call test_table    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | replace into test_table(id)values (2)  |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | set xa =1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | describe test_table    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table limit 0    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where id = 1^1   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where id = 1&1     |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | start transation    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | truncate table test_table    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | update test_table set id =10 where id =1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | use mytest    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | BEGIN select * from suntest;END;   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | delete from test_table    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | update test_table set id =10   |error totally whack | mytest |
+ #
+  Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    """
+    <firewall>
+        <blacklist check="true">
+                <property name="selelctAllow">false</property>
+                <property name="createTableAllow">false</property>
+                <property name="showAllow">false</property>
+        </blacklist>
+    </firewall>
+    """
+  Then execute admin cmd "reload @@config_all"
+  Then execute sql
+        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table where 1 = 1 and 2 = 1; |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
