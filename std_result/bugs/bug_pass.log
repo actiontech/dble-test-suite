@@ -146,9 +146,9 @@ dble:[((None, 2L, 'test_shard 1_1'), (None, 3L, 'test_shard 1_1'))]
 dble:[((None, 2L), (None, 3L))]
 ===file:bugs/bug.sql, id:87, sql:[select * from test_shard a join test_global as b on a.id=b.id order by b.id]===
 dble:[()]
-===file:bugs/bug.sql, id:88, sql:[select * from test_shard a join test_global as b on a.id=b.id order by b.id]===
+===file:bugs/bug.sql, id:88, sql:[select * from test_shard a inner join test_global as b on a.id=b.id order by b.id]===
 dble:[()]
-===file:bugs/bug.sql, id:89, sql:[select * from test_shard a join test_global as b on a.id=b.id order by b.id]===
+===file:bugs/bug.sql, id:89, sql:[select * from test_shard a cross join test_global as b on a.id=b.id order by b.id]===
 dble:[()]
 ===file:bugs/bug.sql, id:90, sql:[select * from test_shard a straight_join (select * from test_global where c>0) b on a.id<b.id]===
 dble:[[]]

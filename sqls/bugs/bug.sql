@@ -85,8 +85,8 @@ select * from test_shard order by id limit 1,1
 select * from test_shard order by id limit 1,2
 select id,c from test_shard group by id,c order by id,c limit 1,2
 select * from test_shard a join test_global as b on a.id=b.id order by b.id
-select * from test_shard a join test_global as b on a.id=b.id order by b.id
-select * from test_shard a join test_global as b on a.id=b.id order by b.id
+select * from test_shard a inner join test_global as b on a.id=b.id order by b.id
+select * from test_shard a cross join test_global as b on a.id=b.id order by b.id
 select * from test_shard a straight_join (select * from test_global where c>0) b on a.id<b.id
 select * from test_shard a left join (select * from test_global where c>2) b on a.id=b.id
 select * from test_shard a right join (select * from test_global where c>2) b on a.id=b.id
