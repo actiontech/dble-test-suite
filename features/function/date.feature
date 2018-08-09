@@ -17,7 +17,7 @@ Feature:
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    The reason is com.actiontech.dble.config.util.ConfigException: java.lang.NullPointerException
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: java.lang.RuntimeException: sBeginDate is supported not null
     """
 
     #test: sBegin < sEndDate-nodes*sPartition+1
