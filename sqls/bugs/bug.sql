@@ -70,3 +70,34 @@ CREATE TABLE global_table2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigne
 insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6);
 insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1);
 (select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from global_table2 c where c.pad=1) order by id limit 2;
+#github issue 567
+drop table if exists test_shard
+drop table if exists test_global
+create table test_shard(id int,c int,name varchar(20))
+create table test_global(id int,c int,name varchar(20))
+insert into test_global values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
+insert into test_shard values(null,1,'test_shard_1'),(null,2,'test_shard_2'),(null,3,'test_shard_3')
+insert into test_shard set id=null,c=4,name='test_shard_4'
+select * from test_shard
+update test_shard set name = 'test_shard 1_1' where id is null;
+select * from test_shard order by id;
+select * from test_shard order by id limit 1,1
+select * from test_shard order by id limit 1,2
+select id,c from test_shard group by id,c order by id,c limit 1,2
+select * from test_shard a join test_global as b on a.id=b.id order by b.id
+select * from test_shard a join test_global as b on a.id=b.id order by b.id
+select * from test_shard a join test_global as b on a.id=b.id order by b.id
+select * from test_shard a straight_join (select * from test_global where c>0) b on a.id<b.id
+select * from test_shard a left join (select * from test_global where c>2) b on a.id=b.id
+select * from test_shard a right join (select * from test_global where c>2) b on a.id=b.id
+select * from (select * from test_shard where id>1) a natural left join (select * from test_global where id>3) b order by a.id,b.id
+select * from (select * from test_shard where id>1) a natural right join (select * from test_global where id>3) b order by a.id,b.id
+select * from (select * from test_shard where id>1) a natural left outer join (select * from test_global where id>3) b order by a.id,b.id
+select * from (select * from test_shard where id>1) a natural right outer join (select * from test_global where id>3) b order by a.id,b.id
+(select name from test_shard where id=null order by id) union all (select name from test_global where id=1 order by id)
+(select name from test_shard where id=null order by id) union distinct (select name from test_global where id=1 order by id)
+(select * from test_shard where id=null) union (select * from test_global where id=1) order by name
+(select name as sort_a from test_shard where id=null) union (select name from test_global where id=1)
+(select name as sort_a,c from test_shard where id=null) union (select name,c from test_global where id=1) order by sort_a,c
+drop table if exists test_shard
+drop table if exists test_global

@@ -118,4 +118,64 @@ dble:[[]]
 ===file:bugs/bug.sql, id:72, sql:[(select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from glo
 bal_table2 c where c.pad=1) order by id limit 2;]===
 dble:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L))]
+===file:bugs/bug.sql, id:74, sql:[drop table if exists test_shard]===
+dble:[[]]
+===file:bugs/bug.sql, id:75, sql:[drop table if exists test_global]===
+dble:[[]]
+===file:bugs/bug.sql, id:76, sql:[create table test_shard(id int,c int,name varchar(20))]===
+dble:[[]]
+===file:bugs/bug.sql, id:77, sql:[create table test_global(id int,c int,name varchar(20))]===
+dble:[[]]
+===file:bugs/bug.sql, id:78, sql:[insert into test_global values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')]===
+dble:[[]]
+===file:bugs/bug.sql, id:79, sql:[insert into test_shard values(null,1,'test_shard_1'),(null,2,'test_shard_2'),(null,3,'test_shard_3')]===
+dble:[[]]
+===file:bugs/bug.sql, id:80, sql:[insert into test_shard set id=null,c=4,name='test_shard_4']===
+dble:[[]]
+===file:bugs/bug.sql, id:81, sql:[select * from test_shard]===
+dble:[[(None, 1L, 'test_shard_1'), (None, 2L, 'test_shard_2'), (None, 3L, 'test_shard_3'), (None, 4L, 'test_shard_4')]]
+===file:bugs/bug.sql, id:82, sql:[update test_shard set name = 'test_shard 1_1' where id is null;]===
+dble:[[]]
+===file:bugs/bug.sql, id:83, sql:[select * from test_shard order by id;]===
+dble:[((None, 1L, 'test_shard 1_1'), (None, 2L, 'test_shard 1_1'), (None, 3L, 'test_shard 1_1'), (None, 4L, 'test_shard 1_1'))]
+===file:bugs/bug.sql, id:84, sql:[select * from test_shard order by id limit 1,1]===
+dble:[((None, 2L, 'test_shard 1_1'),)]
+===file:bugs/bug.sql, id:85, sql:[select * from test_shard order by id limit 1,2]===
+dble:[((None, 2L, 'test_shard 1_1'), (None, 3L, 'test_shard 1_1'))]
+===file:bugs/bug.sql, id:86, sql:[select id,c from test_shard group by id,c order by id,c limit 1,2]===
+dble:[((None, 2L), (None, 3L))]
+===file:bugs/bug.sql, id:87, sql:[select * from test_shard a join test_global as b on a.id=b.id order by b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:88, sql:[select * from test_shard a join test_global as b on a.id=b.id order by b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:89, sql:[select * from test_shard a join test_global as b on a.id=b.id order by b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:90, sql:[select * from test_shard a straight_join (select * from test_global where c>0) b on a.id<b.id]===
+dble:[[]]
+===file:bugs/bug.sql, id:91, sql:[select * from test_shard a left join (select * from test_global where c>2) b on a.id=b.id]===
+dble:[[(None, 1L, 'test_shard 1_1', None, None, None), (None, 2L, 'test_shard 1_1', None, None, None), (None, 3L, 'test_shard 1_1', None, None, None), (None, 4L, 'test_shard 1_1', None, None, None)]]
+===file:bugs/bug.sql, id:92, sql:[select * from test_shard a right join (select * from test_global where c>2) b on a.id=b.id]===
+dble:[[]]
+===file:bugs/bug.sql, id:93, sql:[select * from (select * from test_shard where id>1) a natural left join (select * from test_global where id>3) b order by a.id,b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:94, sql:[select * from (select * from test_shard where id>1) a natural right join (select * from test_global where id>3) b order by a.id,b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:95, sql:[select * from (select * from test_shard where id>1) a natural left outer join (select * from test_global where id>3) b order by a.id,b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:96, sql:[select * from (select * from test_shard where id>1) a natural right outer join (select * from test_global where id>3) b order by a.id,b.id]===
+dble:[()]
+===file:bugs/bug.sql, id:97, sql:[(select name from test_shard where id=null order by id) union all (select name from test_global where id=1 order by id)]===
+dble:[(('test_global_1',),)]
+===file:bugs/bug.sql, id:98, sql:[(select name from test_shard where id=null order by id) union distinct (select name from test_global where id=1 order by id)]===
+dble:[(('test_global_1',),)]
+===file:bugs/bug.sql, id:99, sql:[(select * from test_shard where id=null) union (select * from test_global where id=1) order by name]===
+dble:[((1L, 1L, 'test_global_1'),)]
+===file:bugs/bug.sql, id:100, sql:[(select name as sort_a from test_shard where id=null) union (select name from test_global where id=1)]===
+dble:[[('test_global_1',)]]
+===file:bugs/bug.sql, id:101, sql:[(select name as sort_a,c from test_shard where id=null) union (select name,c from test_global where id=1) order by sort_a,c]===
+dble:[(('test_global_1', 1L),)]
+===file:bugs/bug.sql, id:102, sql:[drop table if exists test_shard]===
+dble:[[]]
+===file:bugs/bug.sql, id:103, sql:[drop table if exists test_global]===
+dble:[[]]
 
