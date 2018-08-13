@@ -13,6 +13,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | syntax/create_table_type.sql              |
           | syntax/data_types.sql                     |
           | syntax/delete.sql                         |
+          | syntax/identifiers.sql                         |
           | syntax/insert_on_duplicate_key.sql        |
           | syntax/insert_syntax.sql                  |
           | syntax/insert_value.sql                   |

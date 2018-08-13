@@ -1,6 +1,3 @@
-===file:select/select_global_old.sql, id:172, sql:[(select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_132') union DISTINCT (select O_CUSTKEY,O_ORDERKEY from global_table1 a where O_CUSTKEY ='CUSTKEY_003') order by O_ORDERKEY limit 5]===
-dble:[(('CUSTKEY_132', 'ORDERKEY_005'), ('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'))]
-mysql:[(('CUSTKEY_003', 'ORDERKEY_001'), ('CUSTKEY_003', 'ORDERKEY_002'), ('CUSTKEY_132', 'ORDERKEY_005'))]
 ===file:select/select_global_old.sql, id:210, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from global_table1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from global_table2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]

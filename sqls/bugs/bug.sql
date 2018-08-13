@@ -88,7 +88,7 @@ select * from test_shard a join test_global as b on a.id=b.id order by b.id
 select * from test_shard a inner join test_global as b on a.id=b.id order by b.id
 select * from test_shard a cross join test_global as b on a.id=b.id order by b.id
 select * from test_shard a straight_join (select * from test_global where c>0) b on a.id<b.id
-select * from test_shard a left join (select * from test_global where c>2) b on a.id=b.id
+select a.id,a.c from test_shard a left join (select * from test_global where c>2) b on a.id=b.id
 select * from test_shard a right join (select * from test_global where c>2) b on a.id=b.id
 select * from (select * from test_shard where id>1) a natural left join (select * from test_global where id>3) b order by a.id,b.id
 select * from (select * from test_shard where id>1) a natural right join (select * from test_global where id>3) b order by a.id,b.id
@@ -96,7 +96,7 @@ select * from (select * from test_shard where id>1) a natural left outer join (s
 select * from (select * from test_shard where id>1) a natural right outer join (select * from test_global where id>3) b order by a.id,b.id
 (select name from test_shard where id=null order by id) union all (select name from test_global where id=1 order by id)
 (select name from test_shard where id=null order by id) union distinct (select name from test_global where id=1 order by id)
-(select * from test_shard where id=null) union (select * from test_global where id=1) order by name
+(select a.name,a.c from test_shard a  where id=null) union (select b.name,b.c from test_global b  where id=1) order by name;
 (select name as sort_a from test_shard where id=null) union (select name from test_global where id=1)
 (select name as sort_a,c from test_shard where id=null) union (select name,c from test_global where id=1) order by sort_a,c
 drop table if exists test_shard
