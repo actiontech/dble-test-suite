@@ -32,6 +32,12 @@ def step_impl(context):
 def execute_admin_sql(context):
     exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['manager_port'])
 
+@Then('execute sql in node2')
+def execute_admin_sql(context):
+    exec_sql(context, context.dble_test_config['node2_host'], context.dble_test_config['mysql_port'])
+
+
+
 def exec_sql(context, ip, port):
     '''
     if row["sql"] is none, just create connection
@@ -48,12 +54,26 @@ def exec_sql(context, ip, port):
         elif sql == "default_write":
             sql = get_sql("write")
 
-        conn_type = row["conn"]
-        expect = row["expect"]
-        db = row["db"]
-        if db is None: db = ''
+        if sql == "batch_insert":
+            for i in range(1, 100):
+                id = str(i)
+                inspection_num = 'NJ' + str(100000 + i)
+                car_id = i
+                table_name = 'test'
 
-        do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
+                sql = 'insert into '+ table_name + ' (id,name) values(' + id + ', "' + inspection_num + '");'
+                conn_type = row["conn"]
+                expect = row["expect"]
+                db = row["db"]
+                if db is None: db = ''
+                do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
+                            expect=expect)
+        else:
+            conn_type = row["conn"]
+            expect = row["expect"]
+            db = row["db"]
+            if db is None: db = ''
+            do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
 def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
         conn = None
@@ -92,6 +112,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if need_check_sharding:
                     check_for_dest_sharding(context, sql, shardings, user, passwd)
 
+                context.logger.info("to close111111111111111111 {0} ".format( bClose))
                 if bClose:
                     conn.close()
 
@@ -141,6 +162,7 @@ def hasResultSet(res, expectRS, bHas):
             real = findFromMultiRes(res, subResExpect)
             assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
     else:#for single query resultset
+
         real = res.__contains__(resExpect)
         assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
 

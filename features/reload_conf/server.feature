@@ -290,8 +290,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </blacklist>
     </firewall>
     """
-  Then execute admin cmd "reload @@config_all"
-  Then execute sql
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |success | mytest |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table2(id int) |success | mytest |
@@ -322,7 +322,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | delete from test_table    |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | update test_table set id =10   |error totally whack | mytest |
  #
-  Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
         <blacklist check="true">
@@ -332,9 +332,118 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </blacklist>
     </firewall>
     """
-  Then execute admin cmd "reload @@config_all"
-  Then execute sql
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | select * from test_table where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
+
+  Scenario: #test user maxCon
+    Given delete the following xml segment
+      |file        | parent           | child              |
+      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+      <user name="root">
+        <property name="password">111111</property>
+        <property name="manager">true</property>
+        <property name="maxCon">2</property>
+      </user>
+      <user name="test">
+        <property name="password">123</property>
+        <property name="schemas">mytest</property>
+         <property name="maxCon">1</property>
+      </user>
+      <user name="action">
+        <property name="password">action</property>
+        <property name="schemas">mytest</property>
+        <property name="readOnly">true</property>
+        <property name="maxCon">1</property>
+      </user>
+    """
+    Given Restart dble in "dble-1"
+    Then execute sql
+        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | test         | 123       | conn_0 | False    | select 1 | success | mytest |
+        | test         | 123       | new    | False    | select 1 | Access denied for user 'test',too many connections for this user | mytest |
+        | action       | action    | conn_1 | False    | select 1 | success | mytest |
+        | action       | action    | new    | False    | select 1 | Access denied for user 'action',too many connections for this user | mytest |
+    Then execute admin sql
+        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
+        | root         | 111111    | conn_3 |False    | show @@version | success | mytest |
+        | root         | 111111    | new | False    | show @@version | Access denied for user 'root',too many connections for this user | mytest |
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+      <user name="root">
+        <property name="password">111111</property>
+        <property name="manager">true</property>
+      </user>
+      <user name="test">
+        <property name="password">123</property>
+        <property name="schemas">mytest</property>
+         <property name="maxCon">0</property>
+      </user>
+      <user name="action">
+        <property name="password">action</property>
+        <property name="schemas">mytest</property>
+        <property name="readOnly">true</property>
+        <property name="maxCon">0</property>
+      </user>
+    """
+    Given Restart dble in "dble-1"
+    Then execute sql
+        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | test         | 123       | conn_4 | False    | select 1 | success | mytest |
+        | test         | 123       | conn_5 | False    | select 1 | success | mytest |
+        | action       | action    | conn_6 | False    | select 1 | success | mytest |
+        | action       | action    | conn_7| False    | select 1 | success | mytest |
+
+  Scenario: #test system maxCon
+    Given delete the following xml segment
+      |file        | parent           | child              |
+      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <system>
+          <property name="defaultSqlParser">druidparser</property>
+		   <property name="useGlobleTableCheck">1</property>
+		   <property name="processors">1</property>
+          <property name="processorExecutor">1</property>
+          <property name="maxCon">1</property>
+     </system>
+
+     <user name="root">
+          <property name="password">111111</property>
+          <property name="manager">true</property>
+     </user>
+     <user name="test">
+          <property name="password">123</property>
+          <property name="schemas">mytest</property>
+          <property name="maxCon">1</property>
+     </user>
+     <user name="action">
+          <property name="password">action</property>
+          <property name="schemas">mytest</property>
+          <property name="readOnly">true</property>
+          <property name="maxCon">1</property>
+     </user>
+
+    """
+    Given Restart dble in "dble-1"
+    Then execute sql
+        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | test         | 123       | conn_0 | False    | select 1 | success | mytest |
+        | test         | 123       | new    | False    | select 1 | too many connections for this user | mytest |
+        | action       | action   | conn_1 | False    | select 1 | too many connections for dble server | mytest |
+    Then execute admin sql
+        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
+
+
+
+
