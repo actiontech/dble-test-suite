@@ -266,8 +266,7 @@ Feature: #
     Reload config failure
     """
 
-Feature:
- Scenario: # test create physical database
+  Scenario: # test create physical database
      Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
