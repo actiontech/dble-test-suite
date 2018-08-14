@@ -1,4 +1,0 @@
-===file:bugs/bug.sql, id:90, sql:[select * from test_shard a straight_join (select * from test_global where c>0) b on a.id<b.id]===
-dble:[None]
-mysql:[()]
-[21:55:03.955353]dble err :(1003, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.id < b.id where 1=1' at line 1")
