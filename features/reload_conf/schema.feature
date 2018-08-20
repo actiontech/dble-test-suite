@@ -671,14 +671,18 @@ Feature: #
 	    <dataNode dataHost="dh1" database="db2" name="dn2" />
 	    <dataNode dataHost="dh1" database="db3" name="dn3" />
 	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="1" tempReadHostAvailable="1" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
 		    </writeHost>
 	    </dataHost>
     """
-    Then execute admin cmd "reload @@config_all" get the following output
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="dataNodeHeartbeatPeriod">1000</property>
+    """
+    Given Restart dble in "dble-1"
     Given stop mysql in host "mysql-master2"
     Then execute sql in slave1
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
@@ -691,5 +695,37 @@ Feature: #
     Then execute sql in slave1
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} |  |
+    Given start mysql in host "mysql-master2"
+
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="dataNodeHeartbeatPeriod">1000</property>
+    """
+    Given Restart dble in "dble-1"
+    Given stop mysql in host "mysql-master2"
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |
+    | test  | 111111    | conn_0 | True    | select name from test;   | error totally whack | mytest  |
     Given start mysql in host "mysql-master2"
 
