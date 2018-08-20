@@ -11,6 +11,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </user>
     """
     Then execute admin cmd "reload @@config_all"
+
     Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
