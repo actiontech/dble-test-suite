@@ -219,20 +219,19 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
 
   Scenario: #edit manager user name or password
     Given delete the following xml segment
-      |file        | parent           | child              |
-      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
+        |file        | parent           | child              |
+        |server.xml  | {'tag':'root'}   | {'tag':'user'} |
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+      """
+       <user name="root_test">
+           <property name="password">123</property>
+           <property name="manager">true</property>
+       </user>
      """
-     <user name="root_test">
-          <property name="password">123</property>
-          <property name="manager">true</property>
-     </user>
-    """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | root_test    | 123 | conn_0 | True    | select 1 | success | mytest |
+    Then execute admin cmd "show @@version" with user "root_test" passwd "123"
+
 
   Scenario:#function of whitehost
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
@@ -250,6 +249,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="schemas">mytest</property>
     </user>
     """
+    Given Restart dble in "dble-1"
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Then execute sql
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
