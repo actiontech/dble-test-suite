@@ -728,4 +728,15 @@ Feature: #
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |
     | test  | 111111    | conn_0 | True    | select name from test;   | error totally whack | mytest  |
     Given start mysql in host "mysql-master2"
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    Then execute sql in slave2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+
+
 
