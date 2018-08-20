@@ -238,7 +238,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     <firewall>
         <whitehost>
-            <host host="127.0.0.1" user="root,test"/>
+            <host host="172.100.9.253" user="root,test"/>
         </whitehost>
     </firewall>
     """
