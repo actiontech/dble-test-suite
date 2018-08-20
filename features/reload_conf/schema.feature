@@ -420,3 +420,321 @@ Feature: #
         | user | passwd | conn   | toClose  | sql                              | expect           | db    |
         | test | 111111 | conn_0 | True     | show databases like 'da00'    |  has{('da00',)} |       |
         | test | 111111 | conn_0 | True     | show databases like 'da01'    |  has{('da01',)} |       |
+
+  Scenario: #test balance
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute sql
+    | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
+    | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|1000 |
+    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|1000 |
+    | test | 111111 | conn_0 | True    | batch_insert                                    | success | mytest |test|1000 |
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
+    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} | db1 |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,)} | db1 |
+
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="1" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
+    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} | db1 |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(1000L,)} | db1 |
+
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="2" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
+    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
+
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="3" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in slave2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
+    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} |  |
+    Then execute sql in slave2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
+
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="3" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
+              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="2"/>
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in slave2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
+    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} |  |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{333} |  |
+    Then execute sql in slave2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{666} |  |
+
+     Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="dataNodeHeartbeatPeriod">1000</property>
+    """
+    Given Restart dble in "dble-1"
+    Given stop mysql in host "mysql-master2"
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
+    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} |  |
+    Given start mysql in host "mysql-master2"
+
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn2" />
+	    <dataNode dataHost="dh1" database="db3" name="dn3" />
+	    <dataNode dataHost="dh1" database="db4" name="dn4" />
+	    <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+		    </writeHost>
+	    </dataHost>
+    """
+     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="dataNodeHeartbeatPeriod">1000</property>
+    """
+    Given Restart dble in "dble-1"
+    Given stop mysql in host "mysql-master2"
+    Then execute sql
+    | user  | passwd    | conn   | toClose | sql               | expect  | db       |
+    | test  | 111111    | conn_0 | True    | select name from test;   | error totally whack | mytest  |
+    Given start mysql in host "mysql-master2"
+    Then execute sql in node2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    Then execute sql in slave1
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    Then execute sql in slave2
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+
+
+

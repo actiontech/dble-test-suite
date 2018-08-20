@@ -101,3 +101,8 @@ select * from (select * from test_shard where id>1) a natural right outer join (
 (select name as sort_a,c from test_shard where id=null) union (select name,c from test_global where id=1) order by sort_a,c
 drop table if exists test_shard
 drop table if exists test_global
+#github issue 624
+drop table if exists test_shard;
+CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+ select count(*) from test_shard where id = (select * from test_shard where id =1);
+drop table if exists test_shard;

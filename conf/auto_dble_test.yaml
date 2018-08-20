@@ -21,6 +21,8 @@ dble_test_config:
   dble_host: 172.100.9.1
   mysql_host: 172.100.9.5
   node2_host: 172.100.9.6
+  salve1_host: 172.100.9.2
+  salve2_host: 172.100.9.3
   mysql_port: 3306
 
   dble:

@@ -36,7 +36,13 @@ def execute_admin_sql(context):
 def execute_admin_sql(context):
     exec_sql(context, context.dble_test_config['node2_host'], context.dble_test_config['mysql_port'])
 
+@Then('execute sql in slave1')
+def execute_admin_sql(context):
+    exec_sql(context, context.dble_test_config['salve1_host'], context.dble_test_config['mysql_port'])
 
+@Then('execute sql in slave2')
+def execute_admin_sql(context):
+    exec_sql(context, context.dble_test_config['salve2_host'], context.dble_test_config['mysql_port'])
 
 def exec_sql(context, ip, port):
     '''
@@ -54,25 +60,30 @@ def exec_sql(context, ip, port):
         elif sql == "default_write":
             sql = get_sql("write")
 
-        if sql == "batch_insert":
-            for i in range(1, 100):
-                id = str(i)
-                inspection_num = 'NJ' + str(100000 + i)
-                car_id = i
-                table_name = 'test'
+        conn_type = row["conn"]
+        expect = row["expect"]
+        db = row["db"]
+        if db is None: db = ''
 
-                sql = 'insert into '+ table_name + ' (id,name) values(' + id + ', "' + inspection_num + '");'
-                conn_type = row["conn"]
-                expect = row["expect"]
-                db = row["db"]
-                if db is None: db = ''
+        if sql == "batch_insert":
+            table_name = row["tb"]
+            end = int(row["count"])
+            context.logger.info("1111111111111111111111111111111111the count is {0}".format(end))
+            for i in range(1, end):
+                inspection_num = 'NJ' + str(100000 + i)
+                id == int(i)
+                sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name,i,inspection_num))
+                do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
+                            expect=expect)
+        elif sql =="batch_select":
+            table_name = row["tb"]
+            end = int(row["count"])
+            for i in range(1, end):
+                id == int(i)
+                sql = ("select name from {0} where id ={1};".format(table_name,i))
                 do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
                             expect=expect)
         else:
-            conn_type = row["conn"]
-            expect = row["expect"]
-            db = row["db"]
-            if db is None: db = ''
             do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
 def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
@@ -112,7 +123,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if need_check_sharding:
                     check_for_dest_sharding(context, sql, shardings, user, passwd)
 
-                context.logger.info("to close111111111111111111 {0} ".format( bClose))
+
                 if bClose:
                     conn.close()
 
@@ -120,10 +131,11 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             hasnotObj = re.search(r"hasnot\{(.*?)\}", expect, re.I)
             lengthObj = re.search(r"length\{(.*?)\}", expect, re.I)
             matchObj = re.search(r"match\{(.*?)\}",expect,re.I)
+            isBalance = re.search(r"balance\{(.*?)\}",expect, re.I)
 
             if expect == "success":
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
-            elif hasObj or hasnotObj or lengthObj or matchObj:
+            elif hasObj or hasnotObj or lengthObj or matchObj or isBalance:
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
@@ -143,6 +155,9 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                     match_Obj_Split = re.split(r'[;,\s]', match_Obj.encode('ascii'))
                     context.logger.info("expect match_Obj_Split:{0}".format(match_Obj_Split))
                     matchResultSet(context,res, match_Obj_Split,len(match_Obj_Split)-1)
+                if isBalance:
+                    bal_num = isBalance.group(1)
+                    balance(context,res,int(bal_num))
             else:
                 assert_that(err, not None, "Err is None, expect:{0}".format(expect))
                 assert_that(err[1], contains_string(expect), "expect text: {0}".format(expect))
@@ -230,6 +245,20 @@ def turn_on_general_log(context, shardings, user, passwd):
         assert err is None, "set general log on fail for {0}".format(err[1])
 
         conn.close()
+
+def balance(context, expectRS, bHas): #Float a value up and down
+
+    re_num = int (re.sub("\D","",str(expectRS[0])))
+
+    a = abs(re_num - bHas)
+    b = bHas *0.2
+    if(a < b):
+        rs = True
+    else:
+        rs = False
+    assert rs == True, "expect {0} in resultset {1}".format(expectRS, bHas)
+
+
 
 #at present , it works only for insert
 def check_for_dest_sharding(context, sql, shardings, user, passwd):
