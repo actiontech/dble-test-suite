@@ -106,3 +106,20 @@ drop table if exists test_shard;
 CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
  select count(*) from test_shard where id = (select * from test_shard where id =1);
 drop table if exists test_shard;
+#github issue 651
+drop table if exists a_test
+drop table if exists a_order
+create table a_test(id int primary key,name varchar(10))
+create table a_order(id int primary key,name varchar(10))
+insert into a_test values(1,'actiontech')
+insert into a_order values(1,'actiontech')
+select `A`.* FROM (select a_test.id,a_order.name from a_order, a_test where  a_test.id = a_order.id) `A` where `A`.id = 99 order by `A`.id
+#github issue 126
+drop table if exists test_shard
+create table test_shard(id int,c int,name varchar(20))
+insert into test_shard values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
+update test_shard set name ='test' wher id=1
+delete from test_shard wher id=2
+select * from test_shard wher id=3
+select * from test_shard where id=3 orde by id
+drop table if exists test_shard;
