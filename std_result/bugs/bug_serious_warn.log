@@ -1,0 +1,12 @@
+===file:bugs/bug.sql, id:132, sql:[update test_shard set name ='test' wher id=1]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'wher id=1' at line 1")
+dble err[05:51:51.209883] :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+===file:bugs/bug.sql, id:133, sql:[delete from test_shard wher id=2]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'wher id=2' at line 1")
+dble err[05:51:51.371630] :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+===file:bugs/bug.sql, id:134, sql:[select * from test_shard wher id=3]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'id=3' at line 1")
+dble err[05:51:51.535233] :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+===file:bugs/bug.sql, id:135, sql:[select * from test_shard where id=3 orde by id]===
+mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'orde by id' at line 1")
+dble err[05:51:51.696353] :(1064, 'sql syntax error, no terminated. IDENTIFIER')
