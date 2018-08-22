@@ -130,9 +130,9 @@ def upload_and_replace_conf(context, filename):
 
 def get_encrypt(context, string):
     cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
-    context.logger.info('zhj debug cmd:{0}'.format(cmd))
+    context.logger.debug('zhj debug cmd:{0}'.format(cmd))
 
     rc, sto, ste = context.ssh_client.exec_command(cmd)
-    context.logger.info("zhj debug2 sto:{0}, ste:{1}".format(sto.split('\n')[1], ste))
-    LOGGER.info("zhj debug sto: {0}, ste:{1}".format(sto.split('\n')[1], ste))
+    context.logger.debug("zhj debug2 sto:{0}, ste:{1}".format(sto.split('\n')[1], ste))
+    LOGGER.debug("zhj debug sto: {0}, ste:{1}".format(sto.split('\n')[1], ste))
     return sto.split('\n')[1]

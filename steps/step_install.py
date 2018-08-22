@@ -157,11 +157,9 @@ def restart_dbles(context, nodes):
     for node in nodes:
         restart_dble(context, node)
 
-    LOGGER.debug("zhj debug 1")
     if len(nodes) > 1:
         config_zk_in_dble_nodes(context)
         restart_zk_service(context)
-    LOGGER.debug("zhj debug 2")
 
 def restart_dble(context, node):
     stop_dble_in_node(context, node)

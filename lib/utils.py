@@ -11,10 +11,9 @@ from pprint import pformat
 
 from lib.Node import Node
 
+logger = logging.getLogger('lib')
 
 def log_it(func):
-    logger = logging.getLogger('lib')
-
     @wraps(func)
     def logged_function(*args, **kwargs):
         logger.info('Start function: <{0}>'.format(func.__name__))
@@ -79,23 +78,24 @@ def get_nodes(context , flag):
 
     if flag=="dble":
         ip = context.cfg_dble[flag]["ip"]
-        host_name = context.cfg_dble[flag]["hostname"]
-        node = Node(ip, ssh_user, ssh_password, host_name, context.cfg_dble["client_port"])
+        hostname = context.cfg_dble[flag]["hostname"]
+        node = Node(ip, ssh_user, ssh_password, hostname, context.cfg_dble["client_port"])
         nodes.append(node)
     elif flag == "dble_cluster":
         for _, childNode in context.cfg_dble[flag].iteritems():
-            host_name = childNode["hostname"]
+            hostname = childNode["hostname"]
             ip = childNode["ip"]
-            node = Node(ip, ssh_user, ssh_password, host_name, context.cfg_dble["client_port"])
+            node = Node(ip, ssh_user, ssh_password, hostname, context.cfg_dble["client_port"])
             nodes.append(node)
     elif flag == "mysqls":
         for k, v in context.cfg_mysql.iteritems():
-            if hasattr(v, "master1"):#for mysql groups
+            if isinstance(v, dict) and v.has_key("master1"):#for mysql groups
                 for ck, cv in context.cfg_mysql[k].iteritems():
                     ip = cv["ip"]
-                    host_name = cv["hostname"]
+                    hostname = cv["hostname"]
                     port = cv["port"]
-                    node = Node(ip, ssh_user, ssh_password, host_name, port)
+                    logger.debug("**********mysql ip:{0}, hostname: {1}, port: {2}".format(ip, hostname, port))
+                    node = Node(ip, ssh_user, ssh_password, hostname, port)
                     nodes.append(node)
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
