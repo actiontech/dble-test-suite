@@ -35,7 +35,7 @@ def get_log_linenu(context):
 
 
 def get_full_log_path(context):
-    logpath = "{0}/dble/logs/dble.log".format(context.dble_test_config['dble_basepath'])
+    logpath = "{0}/dble/logs/dble.log".format(context.cfg_dble['install_dir'])
     context.logger.info("log path: {0}".format(logpath))
     return logpath
 
@@ -49,7 +49,7 @@ def get_read_dest_cmd(context):
 
 @Given('init read-write-split data')
 def step_impl(context):
-    subdir = context.dble_test_config['result']['dir'] + "/"
+    subdir = context.cfg_dble['sql_cover_log'] + "/"
     if not os.path.exists(subdir):
         os.makedirs(subdir)
     if context.sql_file.find("/") == -1:
@@ -74,10 +74,10 @@ def step_impl(context):
 
 
 def get_compare_conn(context, default_db="mytest"):
-    m_ip = context.dble_test_config['compare_mysql']['ip']
-    m_port = context.dble_test_config['compare_mysql']['port']
-    m_user = context.dble_test_config['mysql_user']
-    m_passwd = context.dble_test_config['mysql_password']
+    m_ip = context.cfg_mysql['compare_mysql']['master1']['ip']
+    m_port = context.cfg_mysql['compare_mysql']['master1']['port']
+    m_user = context.cfg_mysql['user']
+    m_passwd = context.cfg_mysql['password']
 
     conn_mysql = DBUtil(m_ip, m_user, m_passwd, default_db, m_port, context)
     conn_dble = get_dble_conn(context, default_db)

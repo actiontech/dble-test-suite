@@ -22,27 +22,27 @@ def get_sql(type):
 
 @Then('execute sql')
 def step_impl(context):
-    exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['client_port'])
+    exec_sql(context, context.cfg_dble['dble']['ip'], context.cfg_dble['client_port'])
 
 @Then('execute sql in mysql')
 def step_impl(context):
-    exec_sql(context, context.dble_test_config['mysql_host'], context.dble_test_config['mysql_port'])
+    exec_sql(context, context.cfg_mysql['group1']['master1']['ip'], context.cfg_mysql['group1']['master1']['port'])
 
 @Then('execute admin sql')
 def execute_admin_sql(context):
-    exec_sql(context, context.dble_test_config['dble_host'], context.dble_test_config['manager_port'])
+    exec_sql(context, context.cfg_dble['dble']['ip'], context.cfg_dble['manager_port'])
 
 @Then('execute sql in node2')
 def execute_admin_sql(context):
-    exec_sql(context, context.dble_test_config['node2_host'], context.dble_test_config['mysql_port'])
+    exec_sql(context, context.cfg_mysql['group2']['master1']['ip'], context.cfg_mysql['group2']['master1']['port'])
 
 @Then('execute sql in slave1')
 def execute_admin_sql(context):
-    exec_sql(context, context.dble_test_config['salve1_host'], context.dble_test_config['mysql_port'])
+    exec_sql(context, context.cfg_mysql['group2']['slave1']['ip'], context.cfg_mysql['group2']['slave1']['port'])
 
 @Then('execute sql in slave2')
 def execute_admin_sql(context):
-    exec_sql(context, context.dble_test_config['salve2_host'], context.dble_test_config['mysql_port'])
+    exec_sql(context, context.cfg_mysql['group2']['slave2']['ip'], context.cfg_mysql['group2']['slave2']['port'])
 
 def exec_sql(context, ip, port):
     '''

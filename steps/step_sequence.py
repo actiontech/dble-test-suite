@@ -89,6 +89,6 @@ def step_impl(context):
 # Given('append "{line}" in {seq_file}')
 # def step_impl(context, line, seq_file):
 #     node = get_node(context, "dble-1")
-#     log = '{0}/dble/conf/log4j2.xml'.format(context.dble_test_config['dble_basepath'])
+#     log = '{0}/dble/conf/log4j2.xml'.format(context.cfg_dble['install_dir'])
 #     cmd = "sed -i '$a {0} {1}' {2} ".format(line, seq_file)
 #     node.ssh_conn.exec_command(cmd)

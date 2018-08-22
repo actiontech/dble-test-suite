@@ -1,76 +1,67 @@
-dble_test_config:
+cfg_sys:
   docker_compose_path: ./compose/docker-compose.yml
   share_path_agent: /opt/auto_build
   share_path_docker: /init_assets
   ssh_user: root
   ssh_password: sshpass
-  mysql_user: test
-  mysql_password: 111111
-  mysql_install_path: /usr/local/mysql
-  dble_basepath: /opt
-  dble_base_conf: dble_conf/conf_template
-  dble_sql_conf: dble_conf/sql_cover/dble
-  ftp_user: ftp
-  ftp_password: ftp
+cfg_dble:
+  install_dir: /opt
+  base_conf: dble_conf/conf_template
+  sql_conf: dble_conf/sql_cover/dble
   client_user: test
   client_password: 111111
   client_port: 8066
   manager_user: root
   manager_password: 111111
   manager_port: 9066
-  dble_host: 172.100.9.1
-  mysql_host: 172.100.9.5
-  node2_host: 172.100.9.6
-  salve1_host: 172.100.9.2
-  salve2_host: 172.100.9.3
-  mysql_port: 3306
-
   dble:
-    remote_packet: actiontech-dble.tar.gz
-    local_packget: Action_Mycat-0.3.5-DEV-20170413102308-linux.tar.gz
-#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.1/
-#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.0/
-#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.06.0/
-#    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.07.0/
-    remote_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
-    home: /opt/dble
-  zookeeper:
-    remote_path:
-    home: /opt/zookeeper
-    port: 2181
-    ip: 127.0.0.1
-
-  mysql:
-    '5.7':
-      remote_path: ftp://ftp:ftp@10.186.18.25/mysql-tarball/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz
-
+    ip: 172.100.9.1
+    hostname: dble-1
+  dble_cluster:
+    dble-1:
+      ip: 172.100.9.1
+      hostname: dble-1
+    dble-2:
+      ip: 172.100.9.2
+      hostname: dble-2
+    dble-3:
+      ip: 172.100.9.3
+      hostname: dble-3
+  packet_name: actiontech-dble.tar.gz
+#    ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.1/
+#    ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.02.0/
+#    ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.06.0/
+#    ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.07.0/
+  ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
+  sql_cover_log: sql_cover_log
+cfg_mysql:
+  user: test
+  password: 111111
+  install_path: /usr/local/mysql
+  group1:
+    master1:
+      ip: 172.100.9.5
+      port: 3306
+      hostname: mysql-master1
+  group2:
+    master1:
+      ip: 172.100.9.6
+      port: 3306
+      hostname: mysql-master2
+    slave1:
+      ip: 172.100.9.2
+      port: 3306
+      hostname: dble-2
+    slave2:
+      ip: 172.100.9.3
+      port: 3306
+      hostname: dble-3
   compare_mysql:
-    ip: 172.100.9.4
-    port: 3306
-
-  mysql_master1:
-    ip: 172.100.9.5
-    port: 3306
-    dnode1:
-      mysql_db: db1
-    dnode3:
-      mysql_db: db2
-
-  mysql_master2:
-    ip: 172.100.9.6
-    port: 3306
-    dnode2:
-      mysql_db: db1
-    dnode4:
-      mysql_db: db2
-
-  mysql_slave1:
-    ip: 172.100.9.2
-    port: 3306
-
-  mysql_slave2:
-    ip: 172.100.9.3
-    port: 3306
-
-  result:
-    dir: sql_cover_log
+    master1:
+      ip: 172.100.9.4
+      port: 3306
+      hostname: mysql
+cfg_zookeeper:
+  home: /opt/zookeeper
+  port: 2181
+  ip: 127.0.0.1

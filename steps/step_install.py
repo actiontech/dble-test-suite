@@ -19,7 +19,7 @@ def uninstall_dble_in_node(context, node):
     dble_installed = stop_dble_in_node(context, node)
 
     if dble_installed:
-        cmd = "cd {0} && rm -rf dble".format(context.dble_test_config['dble_basepath'])
+        cmd = "cd {0} && rm -rf dble".format(context.cfg_dble['install_dir'])
         node.ssh_conn.exec_command(cmd)
 
 @given('uninstall dble in "{hostname}"')
@@ -29,23 +29,20 @@ def unistall_dble_by_hostname(context, hostname):
 
 def install_dble_in_node(context, node):
     ssh_client =node.ssh_conn
-    dble_packget = ""
     if context.need_download:
         context.execute_steps(u'Given download dble')
-        dble_packget = "{0}".format(context.dble_test_config['dble']['remote_packet'])
-    else:
-        dble_packget = "{0}".format(context.dble_test_config['dble']['local_packget'])
+    dble_packget = "{0}".format(context.cfg_dble['packet_name'])
 
-    cmd = "cd {0} && rm -rf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
+    cmd = "cd {0} && rm -rf {1}".format(context.cfg_dble['install_dir'], dble_packget)
     ssh_client.exec_command(cmd)
 
-    cmd = "cd {0} && cp -r {1} {2}".format(context.dble_test_config['share_path_docker'], dble_packget,
-                                           context.dble_test_config['dble_basepath'])
+    cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packget,
+                                           context.cfg_dble['install_dir'])
     ssh_client.exec_command(cmd)
-    cmd = "cd {0} && tar xf {1}".format(context.dble_test_config['dble_basepath'], dble_packget)
+    cmd = "cd {0} && tar xf {1}".format(context.cfg_dble['install_dir'], dble_packget)
     ssh_client.exec_command(cmd)
 
-    replace_config_in_node(context, context.dble_test_config['dble_base_conf'], node)
+    replace_config_in_node(context, context.cfg_dble['base_conf'], node)
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
@@ -64,7 +61,7 @@ def start_dble_in_hostname(context, hostname):
 
 def start_dble_in_node(context, node):
     ssh_client = node.ssh_conn
-    cmd = "cd {0} && (./dble/bin/dble start)".format(context.dble_test_config['dble_basepath'])
+    cmd = "cd {0} && (./dble/bin/dble start)".format(context.cfg_dble['install_dir'])
     ssh_client.exec_command(cmd)
     context.retry = 0
     check_dble_started(context, ssh_client)
@@ -94,7 +91,7 @@ def stop_dble_in_hostname(context, hostname):
 
 def stop_dble_in_node(context, node):
     ssh_client = node.ssh_conn
-    dble_install_path = context.dble_test_config['dble_basepath']
+    dble_install_path = context.cfg_dble['install_dir']
     dble_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_exist:
@@ -116,19 +113,19 @@ def check_dble_exist(ssh_client, dble_install_path):
 @Given('download dble')
 def download_dble(context):
     LOGGER.info("delete local dble packet")
-    dir_rpm = "{0}/{1}".format(context.dble_test_config['share_path_agent'],
-                               context.dble_test_config['dble']['remote_packet'])
-    ftp_url = "{0}{1}".format(context.dble_test_config['dble']['remote_path'],
-                              context.dble_test_config['dble']['remote_packet'])
-    cmd = 'rm -rf {0}'.format(dir_rpm)
+    rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_agent'],
+                               context.cfg_dble['packet_name'])
+    rpm_ftp_url = "{0}{1}".format(context.cfg_dble['ftp_path'],
+                              context.cfg_dble['packet_name'])
+    cmd = 'rm -rf {0}'.format(rpm_local_path)
     os.system(cmd)
 
-    cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.dble_test_config['share_path_agent'],
-                                                                    ftp_url)
+    cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_agent'],
+                                                                    rpm_ftp_url)
     os.popen(cmd)
 
-    cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.dble_test_config['share_path_agent'],
-                                                          context.dble_test_config['dble']['remote_packet'])
+    cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_agent'],
+                                                          context.cfg_dble['packet_name'])
     str = os.popen(cmd).read()
     assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
 
@@ -139,14 +136,14 @@ def set_dbles_log_level(context, nodes, log_level):
 def set_dble_log_level(context, node, log_level):
     ssh_client = node.ssh_conn
     str_awk = "awk 'FS=\" \" {print $2}'"
-    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(context.dble_test_config['dble_basepath'], str_awk)
+    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(context.cfg_dble['install_dir'], str_awk)
     rc, sto, ste = ssh_client.exec_command(cmd)
 
     if log_level in sto:
         LOGGER.info("dble log level is already: {0}, do nothing!".format(log_level))
         return False
     else:
-        log = '{0}/dble/conf/log4j2.xml'.format(context.dble_test_config['dble_basepath'])
+        log = '{0}/dble/conf/log4j2.xml'.format(context.cfg_dble['install_dir'])
         cmd = "sed -i 's/{0}/{1}/g' {2} ".format(sto[1:-1], log_level, log)
         ssh_client.exec_command(cmd)
         return True
@@ -171,9 +168,9 @@ def restart_dble(context, node):
     start_dble_in_node(context, node)
 
 
-    user = context.dble_test_config['manager_user']
-    passwd = str(context.dble_test_config['manager_password'])
-    port = context.dble_test_config['manager_port']
+    user = context.cfg_dble['manager_user']
+    passwd = str(context.cfg_dble['manager_password'])
+    port = context.cfg_dble['manager_port']
     connect_test(context, node.ip, user, passwd, port)
 
 @Given('Restart dble in "{hostname}"')
@@ -197,7 +194,7 @@ def start_zk_services(context):
 
 def start_zk_service(context, node):
     ssh_client = node.ssh_conn
-    cmd_start = "{0}/bin/zkServer.sh start".format(context.dble_test_config['zookeeper']['home'])
+    cmd_start = "{0}/bin/zkServer.sh start".format(context.cfg_zookeeper['home'])
     rc, sto, ste = ssh_client.exec_command(cmd_start)
     assert_that(sto, contains_string("STARTED"))
 
@@ -206,7 +203,7 @@ def check_zk_status(context, node):
     if not hasattr(context, "zk_retry"):
         setattr(context, "zk_retry", 0)
 
-    cmd_status = "{0}/bin/zkServer.sh status".format(context.dble_test_config['zookeeper']['home'])
+    cmd_status = "{0}/bin/zkServer.sh status".format(context.cfg_zookeeper['home'])
     rc, sto, ste = node.ssh_conn.exec_command(cmd_status)
     zk_running = re.search("Mode", sto, re.I)
 
@@ -219,7 +216,7 @@ def check_zk_status(context, node):
 
 def stop_zk_service(context, node):
     ssh_client = node.ssh_conn
-    cmd = "{0}/bin/zkServer.sh stop".format(context.dble_test_config['zookeeper']['home'])
+    cmd = "{0}/bin/zkServer.sh stop".format(context.cfg_zookeeper['home'])
     rc, sto, ste = ssh_client.exec_command(cmd)
     stop_success = "no zookeeper to stop" in sto or "... STOPPED" in sto
     assert stop_success, "stop zkServer fail for: {0}".format(ste)
@@ -243,9 +240,9 @@ def config_zk_in_dble_nodes(context):
 
 def conf_zk_in_node(context, node):
     ssh_client = node.ssh_conn
-    conf_file = "{0}/dble/conf/myid.properties".format(context.dble_test_config['dble_basepath'])
-    zk_server_ip=context.dble_test_config['zookeeper']['ip']
-    zk_server_port=context.dble_test_config['zookeeper']['port']
+    conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
+    zk_server_ip=context.cfg_zookeeper['ip']
+    zk_server_port=context.cfg_zookeeper['port']
 
     myid = node.host_name.split("-")[1]
     cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}/g' -e 's/port=.*/port={3}/g' -e 's/myid=.*/myid={0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
@@ -253,7 +250,7 @@ def conf_zk_in_node(context, node):
     assert_that(ste, is_(""))
 
 def disable_cluster_config_in_node(context, node):
-    conf_file = "{0}/dble/conf/myid.properties".format(context.dble_test_config['dble_basepath'])
+    conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
     cmd = "sed -i 's/cluster=.*/cluster=false/g' {0}".format(conf_file)
 
     ssh_client = node.ssh_conn
@@ -281,11 +278,11 @@ def replace_config_in_node(context, sourceCfgDir, node):
     os.system(osCmd)
 
     ssh_client = node.ssh_conn
-    dble_install_path = context.dble_test_config['dble_basepath']
+    dble_install_path = context.cfg_dble['install_dir']
     dble_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_exist:
-        cmd = 'rm -rf {0}/dble/conf_*'.format(context.dble_test_config['dble_basepath'])
+        cmd = 'rm -rf {0}/dble/conf_*'.format(context.cfg_dble['install_dir'])
         ssh_client.exec_command(cmd)
 
     cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(dble_install_path)
@@ -294,5 +291,5 @@ def replace_config_in_node(context, sourceCfgDir, node):
     files = os.listdir(sourceCfgDir)
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
-        remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], file)
+        remove_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
         node.sftp_conn.sftp_put(remove_file, local_file)

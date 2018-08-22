@@ -14,21 +14,21 @@ from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, 
 LOGGER = logging.getLogger('steps.reload')
 
 def get_dble_conn(context, default_db="mytest"):
-    conn = DBUtil(context.dble_test_config['dble_host'], context.dble_test_config['client_user'],
-                         context.dble_test_config['client_password'], default_db, context.dble_test_config['client_port'],
+    conn = DBUtil(context.cfg_dble['dble']['ip'], context.cfg_dble['client_user'],
+                         context.cfg_dble['client_password'], default_db, context.cfg_dble['client_port'],
                          context)
     return conn
 
 def get_admin_conn(context, user="", passwd=""):
     if len(user.strip()) == 0:
-        user = context.dble_test_config['manager_user']
+        user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
-        passwd = str(context.dble_test_config['manager_password'])
+        passwd = str(context.cfg_dble['manager_password'])
 
     conn = None
     err = None
     try:
-        conn = DBUtil(context.dble_test_config['dble_host'], user, passwd, "", context.dble_test_config['manager_port'],context)
+        conn = DBUtil(context.cfg_dble['dble']['ip'], user, passwd, "", context.cfg_dble['manager_port'],context)
     except MySQLdb.Error, e:
         err = e.args
     return conn, err
@@ -38,9 +38,9 @@ def get_admin_conn(context, user="", passwd=""):
 @Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
 def exec_admin_cmd(context, adminsql, user="", passwd=""):
     if len(user.strip()) == 0:
-        user = context.dble_test_config['manager_user']
+        user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
-        passwd = str(context.dble_test_config['manager_password'])
+        passwd = str(context.cfg_dble['manager_password'])
 
     if context.text: expect = context.text
     else: expect = "success"
@@ -50,18 +50,6 @@ def exec_admin_cmd(context, adminsql, user="", passwd=""):
         | user    | passwd | conn    | toClose | sql      | expect   | db |
         | {0}     | {1}    | new     | True    | {2}      | {3}      |    |
     """.format(user, passwd, adminsql, expect))
-
-    # conn, error = get_admin_conn(context, user, passwd)
-    # if conn:
-    #     result, error = conn.query(adminsql)
-    # if error is not None:
-    #     assert_that(context.text is not None, "expect success, but get err:{0}".format(error[1]))
-    #     assert_that(str(error[1]), contains_string(context.text.strip()))
-    # else:
-    #     assert_that(context.text is None, 'expect "{0}" fail with err: {1}, but success'.format(adminsql, context.text))
-    #
-    # if conn:
-    #     conn.close()
 
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):
@@ -114,7 +102,7 @@ def delete_xml_segment(context):
 
 @When('Add some data in "{mapFile}"')
 def add_file(context,mapFile):
-    remove_txt = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'], mapFile)
+    remove_txt = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
     text = str(context.text)
     cmd = "echo '{0}' > {1}".format(text, remove_txt)
     rc, sto, re = context.ssh_client.exec_command(cmd)
@@ -132,16 +120,16 @@ def check_sys_property(context, cmd, name, text):
     assert_that(flag, has_string('succeed'))
 
 def get_abs_path(context, file):
-    path = "{0}/{1}".format(context.dble_test_config['dble_base_conf'], file)
+    path = "{0}/{1}".format(context.cfg_dble['base_conf'], file)
     return path
 
 def upload_and_replace_conf(context, filename):
     local_file = get_abs_path(context, filename)
-    remove_file = "{0}/dble/conf/{1}".format(context.dble_test_config['dble_basepath'],filename)
+    remove_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'],filename)
     context.ssh_sftp.sftp_put(remove_file,local_file)
 
 def get_encrypt(context, string):
-    cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.dble_test_config['dble_basepath'], string)
+    cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
     context.logger.info('zhj debug cmd:{0}'.format(cmd))
 
     rc, sto, ste = context.ssh_client.exec_command(cmd)

@@ -7,8 +7,8 @@ from steps.SqlUtil import do_exec_sql
 
 @Given('create table for insert')
 def step_impl(context):
-    ip = context.dble_test_config['dble_host']
-    port = context.dble_test_config['client_port']
+    ip = context.cfg_dble['dble']['ip']
+    port = context.cfg_dble['client_port']
 
     sql = "drop table if exists test_table"
     do_exec_sql(context, ip, "test", "111111", "mytest", port, sql, False, "conn_0", "success")
@@ -37,7 +37,7 @@ def step_impl(context, num):
     pad_str = gen.rand_string(60)
     sql += "({0}, {0}, '{1}', '{2}')".format(i+1, c_str, pad_str)
 
-    ip = context.dble_test_config['dble_host']
-    port = context.dble_test_config['client_port']
+    ip = context.cfg_dble['dble']['ip']
+    port = context.cfg_dble['client_port']
     do_exec_sql(context, ip, "test", "111111", "mytest", port, sql, True, "conn_0", "success")
 

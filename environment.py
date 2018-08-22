@@ -33,21 +33,21 @@ def before_all(context):
 
     test_config = context.config.userdata["test_config"].lower() #"./conf/auto_dble_test.yaml"
 
+    #convert auto_dble_test.yaml attr to context attr
     parsed = load_yaml_config("./conf/"+test_config)
     for name, values in parsed.iteritems():
         setattr(context, name, values)
 
-    parsed = load_yaml_config(context.dble_test_config['docker_compose_path'])
     context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
     if context.is_cluster:
-        context.dbles = get_nodes(context, parsed, "dble")
+        context.dbles = get_nodes(context, "dble_cluster")
     else:
-        context.dbles = get_nodes(context, parsed, "dble-1")
+        context.dbles = get_nodes(context, "dble")
 
-    context.mysqls = get_nodes(context, parsed, "mysql")
+    context.mysqls = get_nodes(context, "mysqls")
 
-    context.ssh_client = get_ssh(context.dbles, context.dble_test_config['dble_host'])
-    context.ssh_sftp = get_sftp(context.dbles, context.dble_test_config['dble_host'])
+    context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])
+    context.ssh_sftp = get_sftp(context.dbles, context.cfg_dble['dble']['ip'])
 
     steps_dir = "{0}/steps".format(os.getcwd())
     sys.path.append(steps_dir)
@@ -66,9 +66,9 @@ def before_all(context):
             context.need_download = True
     else:
         if dble_conf.lower() == "sql_cover":
-            replace_config(context, context.dble_test_config['dble_sql_conf'])
+            replace_config(context, context.cfg_dble['sql_conf'])
         elif dble_conf.lower() == "template":
-            replace_config(context, context.dble_test_config['dble_base_conf'])
+            replace_config(context, context.cfg_dble['base_conf'])
 
         if not context.is_cluster:
             for node in context.dbles:
@@ -118,7 +118,7 @@ def after_scenario(context, scenario):
             delattr(context, conn_name)
 
     if not (context.config.stop and scenario.status == "failed"):
-        replace_config(context,  context.dble_test_config['dble_base_conf'])
+        replace_config(context,  context.cfg_dble['base_conf'])
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 def before_step(context, step):
