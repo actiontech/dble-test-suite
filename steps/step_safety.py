@@ -16,8 +16,8 @@ LOGGER = logging.getLogger('steps.safety')
 def test_schema_permission(context):
     dble_conn = get_dble_conn(context)
     for item in context.table:
-        test_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'], item['schema'],
-                           context.dble_test_config['client_port'], context)
+        test_conn = DBUtil(context.cfg_dble['dble']['ip'], item['user'], item['password'], item['schema'],
+                           context.cfg_dble['client_port'], context)
         sql = "drop table if exists {0}".format(item['table'])
         test_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(item['table'])
@@ -75,8 +75,8 @@ def test_readonly_schema(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)
     for item in text:
-        test_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'], item['schema'],
-                           context.dble_test_config['client_port'], context)
+        test_conn = DBUtil(context.cfg_dble['dble']['ip'], item['user'], item['password'], item['schema'],
+                           context.cfg_dble['client_port'], context)
         sql = "drop table if exists {0}".format(item['table'])
         dble_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(item['table'])
@@ -126,8 +126,8 @@ def test_schema_table(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)
     for item in text:
-        test_conn = DBUtil(context.dble_test_config['dble_host'], item['user'], item['password'], item['schema'],
-                           context.dble_test_config['client_port'], context)
+        test_conn = DBUtil(context.cfg_dble['dble']['ip'], item['user'], item['password'], item['schema'],
+                           context.cfg_dble['client_port'], context)
         sql = "drop table if exists {0}".format(item['single_table'])
         test_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(item['single_table'])

@@ -44,7 +44,6 @@ Feature: #
       |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1"
-#    Then execute sql in "manager/manager.sql" to check manager work fine
     Then execute admin cmd "reload @@config_all"
 
     #3.2 schema.xml contains stopped mysqld, start the mysqld, delete the mysqld
@@ -62,7 +61,6 @@ Feature: #
 		    </writeHost>
 	    </dataHost>
     """
-#    todo: dble should start up even datahost is down, wait dev to fix
     Then execute admin cmd "reload @@config_all" get the following output
     """
     Reload config failure
@@ -87,7 +85,7 @@ Feature: #
       |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
 
-    #3.3 add mysqld with only heartbeat, no readhost or writehost
+    #3.3 add mysqld with only heartbeat, no readhost
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     	<schema dataNode="dn2" name="mytest" sqlMaxLimit="100">
@@ -109,7 +107,7 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
 
-    #3.4 add mysqld with only readhost, no writehost, then delete
+    #3.4 add readhost for writehost only
     Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}, 'childIdx':1}" in "schema.xml"
     """
         <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111"/>

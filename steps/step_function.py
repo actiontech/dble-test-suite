@@ -32,8 +32,8 @@ def create_node_conn(context):
     port = 3306
     node_conn = {}
     for node in datanode.keys():
-        user = context.dble_test_config['mysql_user']
-        password = context.dble_test_config['mysql_password']
+        user = context.cfg_mysql['user']
+        password = context.cfg_mysql['password']
         host = datanode[node].split('/')[0]
         db = datanode[node].split('/')[1]
         LOGGER.info("{0} create, host:{1}, db:{2}".format(node, host, db))

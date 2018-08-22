@@ -22,7 +22,7 @@ def step_impl(context,key, options):
 
 @Given('restart mysql "{key}" with options "{options}"')
 def restart_mysql(context, key, options):
-    mysql_path = "{0}/support-files/mysql.server".format(context.dble_test_config['mysql_install_path'])
+    mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
 
     cgroup = getattr(context, context.cgroup)
     # cell format: [ip, msb_dir, start/stop/status index in the msb_dir:master or single is 0 while slaves 1+]
@@ -47,7 +47,7 @@ def restart_mysql(context, key, options):
 
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
-    mysql_path = "{0}/support-files/mysql.server".format(context.dble_test_config['mysql_install_path'])
+    mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
 
     cmd_status = "{0} status".format(mysql_path)
     cmd_stop = "{0} stop".format(mysql_path)
@@ -68,7 +68,7 @@ def stop_mysql(context, hostName):
 @Given('start mysql in host "{host}"')
 @Given('start mysql in host "{host}" with options "{options}"')
 def start_mysql(context, host):
-    mysql_path = "{0}/support-files/mysql.server".format(context.dble_test_config['mysql_install_path'])
+    mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
 
     cmd_start = "{0} start".format(mysql_path)
     node = get_node(context.mysqls, host)
