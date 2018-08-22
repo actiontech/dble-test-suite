@@ -73,6 +73,8 @@ insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'
 #github issue 567
 drop table if exists test_shard
 drop table if exists test_global
+drop table if exists enum_patch_string
+drop table if exists date_patch
 create table test_shard(id int,c int,name varchar(20))
 create table test_global(id int,c int,name varchar(20))
 create table enum_patch_string(id varchar(20) ,name varchar(20))
@@ -112,10 +114,12 @@ delete from enum_patch_string where id is null
 delete from date_patch where id is null
 drop table if exists test_shard
 drop table if exists test_global
+drop table if exists enum_patch_string
+drop table if exists date_patch
 #github issue 624
 drop table if exists test_shard;
 CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
- select count(*) from test_shard where id = (select * from test_shard where id =1);
+ select count(*) from test_shard where id = (select id from test_shard where id =1);
 drop table if exists test_shard;
 #github issue 651
 drop table if exists a_test
