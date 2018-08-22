@@ -1,3 +1,0 @@
-===file:bugs/bug.sql, id:107, sql:[select count(*) from test_shard where id = (select * from test_shard where id =1);]===
-mysql err:(1241, 'Operand should contain 1 column(s)')
-dble err[06:12:17.767800] :(1241, 'Operand should contain 1 column(s)')

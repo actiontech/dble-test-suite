@@ -1,7 +1,7 @@
 ===file:syntax/character.sql, id:14, sql:[select CONCAT(_ucs2 X'0041', _ucs2 X'0042')]===
 dble:[None]
 mysql:[(('AB',),)]
-[01:44:26.273004]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER X')
+[01:42:08.362415]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER X')
 ===file:syntax/character.sql, id:32, sql:[SELECT HEX('à\n'), HEX(_latin1'à\n')]===
 dble:[[('C33F0A', 'C33F0A')]]
 mysql:[[('C3A00A', 'C3A00A')]]
@@ -17,6 +17,10 @@ mysql:[[('hello\xc4\xe3',)]]
 ===file:syntax/character.sql, id:43, sql:[SELECT _utf8'hello你']===
 dble:[[('hello\xe4\xbd\xa0',)]]
 mysql:[[('hello?',)]]
+===file:syntax/character.sql, id:49, sql:[alter table t change c c national character varying(20)]===
+dble:[None]
+mysql:[()]
+[01:42:16.403159]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:syntax/character.sql, id:62, sql:[insert into t values('你')]===
 dble:[()]
 mysql:[None]

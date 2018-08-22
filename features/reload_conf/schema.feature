@@ -421,6 +421,54 @@ Feature: #
         | test | 111111 | conn_0 | True     | show databases like 'da00'    |  has{('da00',)} |       |
         | test | 111111 | conn_0 | True     | show databases like 'da01'    |  has{('da01',)} |       |
 
+
+  Scenario: # github issue 598+636
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    	 <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+	    </schema>
+
+	    <dataNode dataHost="172.100.9.5" database="da1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="da1" name="dn2" />
+	    <dataNode dataHost="172.100.9.5" database="da2" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="da2" name="dn4" />
+	    <dataNode dataHost="172.100.9.5" database="da3" name="dn5" />
+
+	    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+
+	    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute sql in mysql
+        | user | passwd | conn   | toClose  | sql                            | expect   | db     |
+        | test | 111111 | conn_0 | True     | drop database if exists da1 | success  |         |
+        | test | 111111 | conn_0 | True     | drop database if exists da2 | success  |         |
+        | test | 111111 | conn_0 | True     | drop database if exists da3 | success  |         |
+    Then execute sql in node2
+        | user | passwd | conn   | toClose  | sql                            | expect   | db     |
+        | test | 111111 | conn_0 | True     | drop database if exists da1 | success  |         |
+        | test | 111111 | conn_0 | True     | drop database if exists da2 | success  |         |
+    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin sql
+        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | root         | 111111    | conn_0 | True    | show @@version | success | mytest |
+    Then execute sql
+        | user | passwd | conn   | toClose | sql                             | expect   | db      |
+        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | ConnectionException  | mytest |
+
   Scenario: #test balance
     Given delete the following xml segment
       |file        | parent          | child               |
