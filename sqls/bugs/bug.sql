@@ -74,22 +74,22 @@ insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'
 drop table if exists test_shard
 drop table if exists test_global
 drop table if exists enum_patch_string
-drop table if exists date_patch
+drop table if exists date_patch_default
 create table test_shard(id int,c int,name varchar(20))
 create table test_global(id int,c int,name varchar(20))
 create table enum_patch_string(id varchar(20) ,name varchar(20))
-create table date_patch(id Date,name varchar(20))
+create table date_patch_default(id Date,name varchar(20))
 insert into test_global values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
 insert into test_shard values(null,1,'test_shard_1'),(null,2,'test_shard_2'),(null,3,'test_shard_3')
 insert into test_shard set id=null,c=4,name='test_shard_4'
 insert into enum_patch_string values(null,'enum_patch_string1'),('aaa','enum_patch_string2')
-insert into date_patch values(null,'date_patch1'),('2018-08-21','date_patch2')
+insert into date_patch_default values(null,'date_patch1'),('2018-08-21','date_patch2')
 update test_shard set name = 'test_shard 1_1' where id is null;
 update enum_patch_string set name='enum_patch_string1_1' where id is null
-update date_patch set name='date_patch1_1' where id is null
+update date_patch_default set name='date_patch1_1' where id is null
 select * from test_shard where id is null
 select * from enum_patch_string where id is null
-select * from date_patch where id is null
+select * from date_patch_default where id is null
 select * from test_shard order by id;
 select * from test_shard order by id limit 1,1
 select * from test_shard order by id limit 1,2
@@ -111,11 +111,11 @@ select * from (select * from test_shard where id>1) a natural right outer join (
 (select name as sort_a,c from test_shard where id=null) union (select name,c from test_global where id=1) order by sort_a,c
 delete from test_shard where id is null
 delete from enum_patch_string where id is null
-delete from date_patch where id is null
+delete from date_patch_default where id is null
 drop table if exists test_shard
 drop table if exists test_global
 drop table if exists enum_patch_string
-drop table if exists date_patch
+drop table if exists date_patch_default
 #github issue 624
 drop table if exists test_shard;
 CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
