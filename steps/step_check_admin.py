@@ -46,9 +46,7 @@ def step_impl(context, filename):
     sql = ''
     line_nu = 0
     if (not hasattr(context, "conn_mycat")) or context.conn_mycat is None:
-        context.conn_admin, err = get_admin_conn(context)
-        assert err is None, "create admin conn err: {0}".format(err)
-
+        context.conn_admin = get_admin_conn(context)
 
     with open(filepath) as fp:
         lines = fp.readlines()
