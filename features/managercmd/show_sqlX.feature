@@ -13,7 +13,7 @@ Feature: #
 	</system>
     """
     Given Restart dble in "dble-1"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                            | expect     | db     |
         | test | 111111 | conn_0 | False    | drop table if exists ta        | success    | mytest |
         | test | 111111 | conn_0 | False    | create table ta(id int,k varchar(1500))    | success    | mytest |
