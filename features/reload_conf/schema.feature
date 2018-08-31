@@ -502,7 +502,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
@@ -513,7 +513,7 @@ Feature: #
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} | db1 |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,)} | db1 |
 
@@ -544,7 +544,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
@@ -555,7 +555,7 @@ Feature: #
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} | db1 |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(1000L,)} | db1 |
 
@@ -586,7 +586,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
@@ -597,7 +597,7 @@ Feature: #
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
@@ -629,12 +629,12 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-3"
+    Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
@@ -645,10 +645,10 @@ Feature: #
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} |  |
-    Then execute sql in "dble-3"
+    Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
@@ -680,12 +680,12 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-3"
+    Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
@@ -696,10 +696,10 @@ Feature: #
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} |  |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{333} |  |
-    Then execute sql in "dble-3"
+    Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{666} |  |
 
@@ -730,7 +730,7 @@ Feature: #
     """
     Given Restart dble in "dble-1"
     Given stop mysql in host "mysql-master2"
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
@@ -738,7 +738,7 @@ Feature: #
     Then execute sql in "dble-1"use"test"
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} |  |
     Given start mysql in host "mysql-master2"
@@ -777,10 +777,10 @@ Feature: #
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
-    Then execute sql in "dble-2"
+    Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
-    Then execute sql in "dble-3"
+    Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
 

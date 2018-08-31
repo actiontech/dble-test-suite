@@ -51,11 +51,11 @@ cfg_mysql:
     slave1:
       ip: 172.100.9.2
       port: 3306
-      hostname: dble-2
+      hostname: mysql-slave1
     slave2:
       ip: 172.100.9.3
       port: 3306
-      hostname: dble-3
+      hostname: mysql-slave2
   compare_mysql:
     master1:
       ip: 172.100.9.4
