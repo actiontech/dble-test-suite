@@ -55,7 +55,7 @@ Feature:# multi-tenancy, user-Permission
     Then execute admin cmd "reload @@config_all"
 
     #Standalone database: A tenant a database
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                   | expect            | db     |
         | testA| testA  | conn_0 | False    | show databases                        | has{('mytestA',)},hasnot{('mytestB',)}  |        |
         | testA| testA  | conn_0 | False    | use mytestB                           | Access denied for user |   |
