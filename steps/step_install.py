@@ -166,7 +166,7 @@ def restart_dble(context, node):
     stop_dble_in_node(context, node)
     start_dble_in_node(context, node)
 
-    if not hasattr(context,text) :
+    if not hasattr(context,"text") :
         user = context.cfg_dble['manager_user']
         passwd = str(context.cfg_dble['manager_password'])
         port = context.cfg_dble['manager_port']
