@@ -3,6 +3,7 @@ import os
 import logging
 import re
 from behave import *
+from behave.textutil import text
 from hamcrest import *
 
 from lib.Node import get_node, get_ssh
