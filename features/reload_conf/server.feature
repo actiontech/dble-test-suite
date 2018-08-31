@@ -41,7 +41,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Given Restart dble in "dble-1"
      """
-      Restart dble failure
+      start dble service fail in 25 seconds!
      """
   Scenario: #test usingDecrypt
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -52,6 +52,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="usingDecrypt">1</property>
     </user>
     """
+    Given Restart dble in "dble-1"
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1"use"test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |

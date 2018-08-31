@@ -88,7 +88,7 @@ Feature: #
         | test | 111111 | conn_0 | False    | create database if not exists db3         | success             |  |
         | test | 111111 | conn_0 | False    | create database if not exists db4         | success             |  |
 
-  Scenario:# test parameters "maxCon" "minCon"
+  Scenario:# test parameters "maxCon"
     # test connctions can't more than maxCon
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -114,11 +114,6 @@ Feature: #
     """
     can't create connections more than maxCon
     """
-    # test connctions can't less than minCon
-    Given Restart dble in "dble-1"
-    Then execute sql in "dble-1"use"admin"
-        | user | passwd | conn   | toClose  | sql                            | expect                             | db     |
-        | root | 111111 | conn_0 | False    | show @@backend               | length{(3)}   |  |
 
   Scenario: # test cache related parameter "primaryKey"
     #1 set primaryKey=id and the primary key of test_table is also id

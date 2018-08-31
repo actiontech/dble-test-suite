@@ -126,7 +126,7 @@ Feature: #
     # todo : dble should start only with <dataNode>
     Given Restart dble in "dble-1"
     """
-    Restart dble failure
+    start dble service fail in 25 seconds!
     """
 
     ##4.2 schema.xml only has <dataHost>,  dble starts successful
