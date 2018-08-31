@@ -18,7 +18,7 @@ def step_impl(context):
     dble_conn = get_dble_conn(context)
 
     context.execute_steps(u"""
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
@@ -54,7 +54,7 @@ def step_impl(context):
                 assert_that(int(res[0][0]), greater_than_or_equal_to(insertRow/4)) # 4 is default shardings
 
     context.execute_steps(u"""
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success | mytest |
@@ -78,7 +78,7 @@ def step_impl(context):
     #use int not bigint as global sequnce
     rand_str = gen.rand_string(20)
     context.execute_steps(u"""
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
