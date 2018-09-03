@@ -23,6 +23,7 @@ def init_log(context):
     context.config.setup_logging()
 
 def before_all(context):
+    context.dble_status = "success"
     context.current_log = init_log_directory()
     setup_logging(os.path.join(CONF_PATH, 'logging.yaml'))
     logger.debug('Setup logging configfile=<{0}>'.format(os.path.join(CONF_PATH, 'logging.yaml')))

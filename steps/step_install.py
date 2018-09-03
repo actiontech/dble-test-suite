@@ -71,13 +71,12 @@ def check_dble_started(context, ssh_client):
     time.sleep(5)
     cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
     rc, sto, ste = ssh_client.exec_command(cmd)
-    context.dble_status="success"
     if len(sto) == 0:
         if context.retry < 5:
             context.retry = context.retry+1
             check_dble_started(context, ssh_client)
         else:
-            assert_that(False,"start dble service fail in 25 seconds!")
+            assert_that(context.text,contains_string("start dble service fail in 25 seconds!"))
             context.dble_status = "fail"
     else:
         LOGGER.info("start dble success !!!")
@@ -168,7 +167,7 @@ def restart_dble(context, node):
     stop_dble_in_node(context, node)
     start_dble_in_node(context, node)
 
-    if context.dble_status=="success":
+    if context.dble_status == "success":
         user = context.cfg_dble['manager_user']
         passwd = str(context.cfg_dble['manager_password'])
         port = context.cfg_dble['manager_port']
