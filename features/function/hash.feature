@@ -31,7 +31,7 @@ Feature:
         <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | mytest |
         | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | mytest |
@@ -64,7 +64,7 @@ Feature:
         <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | mytest |
         | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | mytest |

@@ -7,7 +7,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
 
         Examples:Types
           | filename                           |
-          | test.sql               |
+          | bugs/bug.sql               |
 
     Scenario: #3 compare new generated results is same with the standard ones
         When compare results with the standard results

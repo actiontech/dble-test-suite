@@ -11,7 +11,7 @@ Feature: #
       </schema>
      """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                    | expect      | db     |
         | test | 111111 | conn_0 | False    | drop table if exists test_table                  | success | mytest |
         | test | 111111 | conn_0 | False    | create table test_table(id int)   | success     | mytest |
@@ -45,7 +45,7 @@ Feature: #
         <table name="test_table,test2_table" dataNode="dn1,dn2,dn3,dn4" type="global" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                           | expect              | db     |
         | test | 111111 | conn_0 | False    | drop table if exists test_table          | success             | mytest |
         | test | 111111 | conn_0 | False    | create table test_table(id int)          | success             | mytest |
@@ -74,21 +74,21 @@ Feature: #
 	    </dataHost>
       """
     Given start mysql in host "mysql-master1"
-    Then execute sql in mysql
+    Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                                           | expect              | db     |
         | test | 111111 | conn_0 | False    | drop database if exists db1         | success             |  |
         | test | 111111 | conn_0 | False    | drop database if exists db2         | success             |  |
         | test | 111111 | conn_0 | False    | drop database if exists db3         | success             |  |
         | test | 111111 | conn_0 | False    | drop database if exists db4         | success             |  |
     Given Restart dble in "dble-1"
-    Then execute sql in mysql
+    Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                                           | expect              | db     |
         | test | 111111 | conn_0 | False    | create database if not exists db1         | success             |  |
         | test | 111111 | conn_0 | False    | create database if not exists db2         | success             |  |
         | test | 111111 | conn_0 | False    | create database if not exists db3         | success             |  |
         | test | 111111 | conn_0 | False    | create database if not exists db4         | success             |  |
 
-  Scenario:# test parameters "maxCon" "minCon"
+  Scenario:# test parameters "maxCon"
     # test connctions can't more than maxCon
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -114,11 +114,6 @@ Feature: #
     """
     can't create connections more than maxCon
     """
-    # test connctions can't less than minCon
-    Given Restart dble in "dble-1"
-    Then execute admin sql
-        | user | passwd | conn   | toClose  | sql                            | expect                             | db     |
-        | root | 111111 | conn_0 | False    | show @@backend               | length{(3)}   |  |
 
   Scenario: # test cache related parameter "primaryKey"
     #1 set primaryKey=id and the primary key of test_table is also id
@@ -127,19 +122,19 @@ Feature: #
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
         | test | 111111 | conn_0 | False    |drop table if exists test_table                                   | success       | mytest |
         | test | 111111 | conn_0 | False    |create table test_table(id int primary key,name varchar(20)) |success        | mytest |
         | test | 111111 | conn_0 | False    |insert into test_table values(1,'test1'),(2,'test2')           | success      | mytest |
         | test | 111111 | conn_0 | True     |select * from test_table where name = 'test1'                   | success       | mytest |
-    Then execute admin sql
+    Then execute sql in "dble-1"use"admin"
         | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
         | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}| |
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
         | test | 111111 | conn_0 | True     |select * from test_table where id =1                       | success       | mytest |
-    Then execute admin sql
+    Then execute sql in "dble-1"use"admin"
         | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
         | root | 111111 | conn_0 | True     | show @@cache               | match{('TableID2DataNodeCache.`mytest`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
@@ -149,9 +144,9 @@ Feature: #
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="name" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
         | test | 111111 | conn_0 | True     |select * from test_table where id=1                   | success       | mytest |
-    Then execute admin sql
+    Then execute sql in "dble-1"use"admin"
         | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
         | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}| |

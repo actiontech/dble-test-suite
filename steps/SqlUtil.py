@@ -20,29 +20,22 @@ def get_sql(type):
 
     return sql
 
-@Then('execute sql')
-def step_impl(context):
-    exec_sql(context, context.cfg_dble['dble']['ip'], context.cfg_dble['client_port'])
+@Then('execute sql in "{hostname}"')
+@Then('execute sql in "{hostname}"use"{user}"')
+def step_impl(context,hostname, user=""):
+    if len(user.strip()) == 0:
+        node = get_node(context.mysqls, hostname)
+        ip = node._ip
+        port = node._mysql_port
+    else:
+        node = get_node(context.dbles, hostname)
+        ip = node._ip
+        if user == 'admin':
+            port = context.cfg_dble['manager_port']
+        else:
+            port = context.cfg_dble['client_port']
+    exec_sql(context, ip, port)
 
-@Then('execute sql in mysql')
-def step_impl(context):
-    exec_sql(context, context.cfg_mysql['group1']['master1']['ip'], context.cfg_mysql['group1']['master1']['port'])
-
-@Then('execute admin sql')
-def execute_admin_sql(context):
-    exec_sql(context, context.cfg_dble['dble']['ip'], context.cfg_dble['manager_port'])
-
-@Then('execute sql in node2')
-def execute_admin_sql(context):
-    exec_sql(context, context.cfg_mysql['group2']['master1']['ip'], context.cfg_mysql['group2']['master1']['port'])
-
-@Then('execute sql in slave1')
-def execute_admin_sql(context):
-    exec_sql(context, context.cfg_mysql['group2']['slave1']['ip'], context.cfg_mysql['group2']['slave1']['port'])
-
-@Then('execute sql in slave2')
-def execute_admin_sql(context):
-    exec_sql(context, context.cfg_mysql['group2']['slave2']['ip'], context.cfg_mysql['group2']['slave2']['port'])
 
 def exec_sql(context, ip, port):
     '''

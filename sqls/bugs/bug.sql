@@ -63,34 +63,34 @@ insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string'
 explain(select 1 from test_shard)union(select 2)/*allow_diff*/
 explain (select 1 from test_shard)union(select 2)/*allow_diff*/
 #github issue #535
-drop table if exists test_global;
-drop table if exists global_table2;
-CREATE TABLE test_global(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8;
-CREATE TABLE global_table2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8;
-insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6);
-insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1);
-(select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from global_table2 c where c.pad=1) order by name limit 2;
+drop table if exists test_global
+drop table if exists global_table2
+CREATE TABLE test_global(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
+CREATE TABLE global_table2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8
+insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
+insert into global_table2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
+(select a.id,a.t_id,a.name,a.pad from test_global a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from global_table2 c where c.pad=1) order by name limit 2
 #github issue 567
 drop table if exists test_shard
 drop table if exists test_global
 drop table if exists enum_patch_string
-drop table if exists date_patch
+drop table if exists date_patch_default
 create table test_shard(id int,c int,name varchar(20))
 create table test_global(id int,c int,name varchar(20))
 create table enum_patch_string(id varchar(20) ,name varchar(20))
-create table date_patch(id Date,name varchar(20))
+create table date_patch_default(id Date,name varchar(20))
 insert into test_global values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
 insert into test_shard values(null,1,'test_shard_1'),(null,2,'test_shard_2'),(null,3,'test_shard_3')
 insert into test_shard set id=null,c=4,name='test_shard_4'
 insert into enum_patch_string values(null,'enum_patch_string1'),('aaa','enum_patch_string2')
-insert into date_patch values(null,'date_patch1'),('2018-08-21','date_patch2')
-update test_shard set name = 'test_shard 1_1' where id is null;
+insert into date_patch_default values(null,'date_patch1'),('2018-08-21','date_patch2')
+update test_shard set name = 'test_shard 1_1' where id is null
 update enum_patch_string set name='enum_patch_string1_1' where id is null
-update date_patch set name='date_patch1_1' where id is null
+update date_patch_default set name='date_patch1_1' where id is null
 select * from test_shard where id is null
 select * from enum_patch_string where id is null
-select * from date_patch where id is null
-select * from test_shard order by id;
+select * from date_patch_default where id is null
+select * from test_shard order by id
 select * from test_shard order by id limit 1,1
 select * from test_shard order by id limit 1,2
 select id,c from test_shard group by id,c order by id,c limit 1,2
@@ -106,21 +106,21 @@ select * from (select * from test_shard where id>1) a natural left outer join (s
 select * from (select * from test_shard where id>1) a natural right outer join (select * from test_global where id>3) b order by a.id,b.id
 (select name from test_shard where id=null order by id) union all (select name from test_global where id=1 order by id)
 (select name from test_shard where id=null order by id) union distinct (select name from test_global where id=1 order by id)
-(select a.name,a.c from test_shard a  where id=null) union (select b.name,b.c from test_global b  where id=1) order by name;
+(select a.name,a.c from test_shard a  where id=null) union (select b.name,b.c from test_global b  where id=1) order by name
 (select name as sort_a from test_shard where id=null) union (select name from test_global where id=1)
 (select name as sort_a,c from test_shard where id=null) union (select name,c from test_global where id=1) order by sort_a,c
 delete from test_shard where id is null
 delete from enum_patch_string where id is null
-delete from date_patch where id is null
+delete from date_patch_default where id is null
 drop table if exists test_shard
 drop table if exists test_global
 drop table if exists enum_patch_string
-drop table if exists date_patch
+drop table if exists date_patch_default
 #github issue 624
-drop table if exists test_shard;
-CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8;
- select count(*) from test_shard where id = (select id from test_shard where id =1);
-drop table if exists test_shard;
+drop table if exists test_shard
+CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8
+ select count(*) from test_shard where id = (select id from test_shard where id =1)
+drop table if exists test_shard
 #github issue 651
 drop table if exists a_test
 drop table if exists a_order
@@ -137,4 +137,20 @@ update test_shard set name ='test' wher id=1
 delete from test_shard wher id=2
 select * from test_shard wher id=3
 select * from test_shard where id=3 orde by id
-drop table if exists test_shard;
+drop table if exists test_shard
+#github issue 666
+drop table if exists a_test
+CREATE TABLE a_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
+insert into a_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
+select id a,t_id b,name c,pad d from (select * from a_test union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
+select id,t_id,name,pad from a_test union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id
+drop table if exists test_global
+CREATE TABLE test_global(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
+insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
+select id a,t_id b,name c,pad d from (select id,t_id,name,pad from test_global union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
+select id,t_id,name,pad from test_global union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id
+drop table if exists a_test_no_shard
+CREATE TABLE a_test_no_shard(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
+insert into a_test_no_shard values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
+select id a,t_id b,name c,pad d from (select * from a_test_no_shard union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
+select id,t_id,name,pad from a_test_no_shard union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id

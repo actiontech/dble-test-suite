@@ -33,7 +33,7 @@ Feature:
         <table name="string_hash_table" dataNode="dn1,dn2,dn3,dn4" rule="string_hash_rule" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                         | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
@@ -65,7 +65,7 @@ Feature:
         <table name="string_hash_table" dataNode="dn1,dn2,dn3" rule="string_hash_rule" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                         | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | mytest |
