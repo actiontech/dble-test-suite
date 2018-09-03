@@ -231,7 +231,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
            <property name="manager">true</property>
        </user>
      """
-    Given Restart dble in "dble-1"
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root_test" passwd "123"
 
