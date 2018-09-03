@@ -214,6 +214,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </system>
     """
     Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1"
     Then execute admin cmd "show @@sysparam" get the following output
     """
     has{('managerPort','9066','Manager connection port. The default number is 9066')}
