@@ -15,7 +15,7 @@ chown -R mysql:mysql .
 yum -y install libaio
 yum -y install dos2unix
 
-echo "configoure my.cnf!"
+echo "configure my.cnf!"
 sed -i '/mysqld_safe/,+2d' /etc/my.cnf
 sed -i -e '$a [client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n' -e "/\[mysqld\]/a server-id=$(($1+2)) \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables=\"*\" \ngtid-mode=on \nenforce_gtid_consistency=on" /etc/my.cnf
 

@@ -26,12 +26,11 @@ def get_admin_conn(context, user="", passwd=""):
         passwd = str(context.cfg_dble['manager_password'])
 
     conn = None
-    err = None
     try:
         conn = DBUtil(context.cfg_dble['dble']['ip'], user, passwd, "", context.cfg_dble['manager_port'],context)
     except MySQLdb.Error, e:
-        err = e.args
-    return conn, err
+        assert False, "create manager conn meets error:{0}".format(e.args)
+    return conn
 
 @Then('execute admin cmd "{adminsql}"')
 @Then('execute admin cmd "{adminsql}" get the following output')
@@ -50,6 +49,12 @@ def exec_admin_cmd(context, adminsql, user="", passwd=""):
         | user    | passwd | conn    | toClose | sql      | expect   | db |
         | {0}     | {1}    | new     | True    | {2}      | {3}      |    |
     """.format(user, passwd, adminsql, expect))
+@Then('get resultset of admin cmd "{adminsql}" named "{rs_name}"')
+def step_impl(context, adminsql, rs_name):
+    manager_conn = get_admin_conn(context)
+    result, error = manager_conn.query(adminsql)
+    assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
+    setattr(context, rs_name, result)
 
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):
