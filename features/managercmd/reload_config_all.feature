@@ -37,7 +37,6 @@ Feature: #base function test, not including all cases in testlink
       |PORT                 | 4            |
       |LOACL_TCP_PORT       | 5            |
       |CLOSED               | 9            |
-      |SCHEMA               | 12           |
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
 
@@ -65,7 +64,7 @@ Feature: #base function test, not including all cases in testlink
       | test | 111111 | conn_0 | False    | drop table if exists test_shard       | success    | mytest |
       | test | 111111 | conn_0 | False    | create table test_shard(id int)       | success    | mytest |
       | test | 111111 | conn_0 | False    | begin                                 | success    | mytest |
-      | test | 111111 | conn_0 | False    | insert into ta values(1),(2),(3),(4)  | success    | mytest |
+      | test | 111111 | conn_0 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | mytest |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="5" name="host1" switchType="2" slaveThreshold="100">
@@ -96,14 +95,13 @@ Feature: #base function test, not including all cases in testlink
       |PORT                 | 4            |
       |LOACL_TCP_PORT       | 5            |
       |CLOSED               | 9            |
-      |SCHEMA               | 12           |
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
     #3 reload @@config_all -r, donot do diff, rebuild backend conn, skip in use backend conn
     Then execute admin cmd "reload @@config_all -r"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_F"
     Then check resultsets "backend_rs_F" does not including resultset "backend_rs_E" in following columns
-      |column            | index |
+      |column            | column_index |
       |ID                | 1     |
       |MYSQLID           | 2     |
       |HOST              | 3     |
@@ -145,20 +143,19 @@ Feature: #base function test, not including all cases in testlink
       |PORT                 | 4            |
       |LOACL_TCP_PORT       | 5            |
       |CLOSED               | 9            |
-      |SCHEMA               | 12           |
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
     Given start mysql in host "mysql-master2"
     Then execute sql
       | user | passwd | conn   | toClose  | sql                            | expect     | db     |
-      | test | 111111 | conn_0 | False    | drop table if exists test_shard       | success    | mytest |
-      | test | 111111 | conn_0 | False    | create table test_shard(id int)       | success    | mytest |
-      | test | 111111 | conn_0 | False    | begin                                 | success    | mytest |
-      | test | 111111 | conn_0 | False    | insert into ta values(1),(2),(3),(4)  | success    | mytest |
+      | test | 111111 | conn_1 | False    | drop table if exists test_shard       | success    | mytest |
+      | test | 111111 | conn_1 | False    | create table test_shard(id int)       | success    | mytest |
+      | test | 111111 | conn_1 | False    | begin                                 | success    | mytest |
+      | test | 111111 | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | mytest |
     Then execute admin cmd "reload @@config_all -r -f -s"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_I"
     Then check resultsets "backend_rs_I" does not including resultset "backend_rs_H" in following columns
-      |column            | index |
+      |column            | column_index |
       |ID                | 1     |
       |MYSQLID           | 2     |
       |HOST              | 3     |

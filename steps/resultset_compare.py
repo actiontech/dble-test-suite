@@ -26,7 +26,7 @@ def step_impl(context, rs_parent_name, rs_child_name):
         for row_parent in rs_parent:
             for row_idx in context.table:
                 idx = int(row_idx['column_index'])
-                isFound = row_parent[idx] == row_child[idx]
+                isFound = str(row_parent[idx]) == str(row_child[idx])
                 if not isFound: break
             if isFound: break
         assert isFound, "expect {0} row {1} found in {2}".format(rs_child_name, row_child, rs_parent_name)
@@ -67,7 +67,7 @@ def step_impl(context, rs_name):
         for row in context.table:
             idx = int(row["column_index"])
             val = row["value"]
-            isFound = val == rs_row[idx]
+            isFound = str(val) == str(rs_row[idx])
             if not isFound: break
         if isFound: break
     assert isFound, "expect line not found in resultset {0}".format(rs_name)
