@@ -170,6 +170,7 @@ def restart_dble(context, node):
         user = context.cfg_dble['manager_user']
         passwd = str(context.cfg_dble['manager_password'])
         port = context.cfg_dble['manager_port']
+        LOGGER.info("############################manager_user:{0}".format(user))
         connect_test(context, node.ip, user, passwd, port)
 
 @Given('Restart dble in "{hostname}"')
