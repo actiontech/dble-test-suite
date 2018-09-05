@@ -84,3 +84,12 @@ def test_use_limit(context):
     assert_that(str(errMes[1]), contains_string("bad insert sql, sharding column/joinKey:ID not provided"))
 
     conn.query(drop_sql)
+
+@Then('get query plan and make sure it is optimized')
+def step_impl(context):
+    for row in context.table:
+        sql = row["query"]
+        conn = get_dble_conn(context)
+        res,err = conn.query(sql)
+        assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute plan seems not optimized, the plan:{1}".format(sql,res)
+
