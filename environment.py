@@ -23,7 +23,6 @@ def init_log(context):
     context.config.setup_logging()
 
 def before_all(context):
-    context.dble_status = "success"
     context.current_log = init_log_directory()
     setup_logging(os.path.join(CONF_PATH, 'logging.yaml'))
     logger.debug('Setup logging configfile=<{0}>'.format(os.path.join(CONF_PATH, 'logging.yaml')))
@@ -45,6 +44,7 @@ def before_all(context):
     else:
         context.dbles = get_nodes(context, "dble")
 
+    context.dble_status = "success"
     context.mysqls = get_nodes(context, "mysqls")
 
     context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])

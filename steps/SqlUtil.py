@@ -3,6 +3,7 @@
 # @Author  : zhaohongjie@actionsky.com
 
 import re
+
 import MySQLdb
 from behave import *
 from hamcrest import *
@@ -10,6 +11,7 @@ from hamcrest import *
 from lib.DBUtil import DBUtil
 from lib.XMLUtil import get_node_attr_by_kv
 from lib.Node import get_node
+
 
 
 def get_sql(type):
@@ -132,6 +134,8 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
+                    context.logger.info("expectRS type is :{0}".format(isinstance(eval(expectRS), tuple)))
+                    context.logger.info("res type is :{0}".format(isinstance(res, tuple)))
                     context.logger.info("expect resultset:{0}, real res:{1}".format(eval(expectRS), res))
                     hasResultSet(res, expectRS, True)
                 if hasnotObj:
@@ -164,14 +168,18 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
 
 def hasResultSet(res, expectRS, bHas):
     resExpect = eval(expectRS)
+    real = False
     if isinstance(resExpect, list):#for multi-resultset
         for subResExpect in resExpect:
             assert isinstance(res, list), "expect mult-resultset, but real not"
             real = findFromMultiRes(res, subResExpect)
             assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
     else:#for single query resultset
-
-        real = res.__contains__(resExpect)
+        if len(resExpect) == len(res):
+            if cmp(sorted(list(resExpect)),sorted(list(res)))==0:
+                real = True
+        else:
+            real = res.__contains__(resExpect)
         assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
 
 def matchResultSet(context,res,expect,num):
