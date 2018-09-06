@@ -307,13 +307,13 @@ Feature: #
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                          | expect          | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da1' | has{('da1',)}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da2' | has{('da2',)}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da3' | has{('da3',)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da1' | has{(('da1',),)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da2' | has{(('da2',),)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da3' | has{(('da3',),)}  |         |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                           | expect           | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da1'  |  has{('da1',)}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da2'  |  has{('da2',)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da1'  |  has{(('da1',),)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da2'  |  has{(('da2',),)}  |         |
    Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -356,23 +356,23 @@ Feature: #
     Then execute admin cmd "create database @@dataNode ='dn1,dn2'"
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                           | expect          | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da11' | has{('da11',)} |        |
+        | test | 111111 | conn_0 | True     | show databases like 'da11' | has{(('da11',),)} |        |
         | test | 111111 | conn_0 | True     | show databases like 'da21' | length{(0)}    |         |
         | test | 111111 | conn_0 | True     | show databases like 'da31' | length{(0)}    |         |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                              | expect           | db    |
-        | test | 111111 | conn_0 | True     | show databases like 'da11'    |  has{('da11',)} |       |
+        | test | 111111 | conn_0 | True     | show databases like 'da11'    |  has{(('da11',),)} |       |
         | test | 111111 | conn_0 | True     | show databases like 'da21'  |  length{(0)}    |       |
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                          | expect          | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da1' | has{('da1',)}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da2' | has{('da2',)}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da3' | has{('da3',)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da1' | has{(('da1',),)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da2' | has{(('da2',),)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da3' | has{(('da3',),)}  |         |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                           | expect           | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da1'  |  has{('da1',)}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da2'  |  has{('da2',)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da1'  |  has{(('da1',),)}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da2'  |  has{(('da2',),)}  |         |
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -413,13 +413,13 @@ Feature: #
     Then execute admin cmd "create database @@dataNode ='dn10,dn11,dn20,dn21'"
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                           | expect          | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da00' | has{('da00',)} |        |
-        | test | 111111 | conn_0 | True     | show databases like 'da01' | has{('da01',)} |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da00' | has{(('da00',),)} |        |
+        | test | 111111 | conn_0 | True     | show databases like 'da01' | has{(('da01',),)} |         |
         | test | 111111 | conn_0 | True     | show databases like 'da31' | length{(0)}    |         |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                              | expect           | db    |
-        | test | 111111 | conn_0 | True     | show databases like 'da00'    |  has{('da00',)} |       |
-        | test | 111111 | conn_0 | True     | show databases like 'da01'    |  has{('da01',)} |       |
+        | test | 111111 | conn_0 | True     | show databases like 'da00'    |  has{(('da00',),)} |       |
+        | test | 111111 | conn_0 | True     | show databases like 'da01'    |  has{(('da01',),)} |       |
 
 
   Scenario: # github issue 598+636
@@ -512,10 +512,10 @@ Feature: #
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} | db1 |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{((1000L,),)} | db1 |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,)} | db1 |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{((0L,),)} | db1 |
 
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -554,10 +554,10 @@ Feature: #
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} | db1 |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{((0L,),)} | db1 |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(1000L,)} | db1 |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{((1000L,),)} | db1 |
 
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -644,7 +644,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{((0L,),)} |  |
     Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
@@ -695,7 +695,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,)} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{((0L,),)} |  |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{333} |  |
@@ -740,7 +740,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,)} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{((1000L,),)} |  |
     Given start mysql in host "mysql-master2"
 
     Given delete the following xml segment
