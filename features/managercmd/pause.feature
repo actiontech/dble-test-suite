@@ -31,6 +31,7 @@ Feature:
       Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
         | test | 111111 | conn_0 | True     | select * from test                          | wait for backend dataNode timeout                   |   mytest  |
+        | test | 111111 | conn_0 | True     | select * from test                          | execute{(1)}                   |   mytest  |
       Then execute sql in "dble-1"use"admin"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
         | root | 111111 | conn_0 | True     |resume                                                | success |         |
@@ -55,16 +56,19 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
         | root | 111111 | conn_0 | False    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1        |success|         |
         | root | 111111 | conn_0 | False    | show @@pause                                                | has{('dn1',), ('dn2',),('dn3',),('dn4',)} |         |
-        | root | 111111 | conn_0 | True    | resume      |success|         |
+        | root | 111111 | conn_0 | True     | resume      |success|         |
 
       #2.2 verify "queue"
       Then execute sql in "dble-1"use"admin"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | root | 111111 | conn_0 | True    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1       | success|         |
+        | root | 111111 | conn_0 | True    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=5       | success|         |
       Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | test | 111111 | new | False    | select * from test                          | wait for backend dataNode timeout                  |  mytest       |
-        | test | 111111 | new | True     | select * from test                          | wait for backend dataNode timeout           |  mytest       |
+        | test | 111111 | conn_0 | True    | select * from test                          | execute{(5)}                  |  mytest       |
+      Given create "1" front connections exec "10" seconds
+      Then execute sql in "dble-1"use"test"
+        | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
+        | test | 111111 | new | True    | select * from test                          | The node is pausing, wait list is full                  |  mytest       |
       Then execute sql in "dble-1"use"admin"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | root | 111111 | conn_0 | True    | resume      |success|         |
+        | root | 111111 | new | True    | resume       | success|         |

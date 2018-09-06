@@ -1,15 +1,18 @@
 import logging
-import re
+import time
 
 import MySQLdb
 
 from behave import *
 from hamcrest import *
+
+from steps.step_thread import MyThread
 from step_reload import get_admin_conn, get_dble_conn
 from lib.generate_util import *
 
 LOGGER = logging.getLogger('steps.install')
 
+my_thread={}
 
 @Then('get limited results')
 def get_limit_result(context):
@@ -50,3 +53,19 @@ def create_conn(context,num):
             assert_that(context.text,contains_string("can't create connections more than maxCon"))
     for conn in conns:
         conn.close()
+
+@Given('create "{num}" front connections exec "{sql_time}" seconds')
+def step_impl(context, num,sql_time):
+    nu = int(num)
+    for i in range(nu):
+        connName = "conn_"+str(i)
+        context.logger.info("***debug, conn name: {0}, i:{1}".format(connName, i))
+        conn = get_dble_conn(context)
+        sql = "select * from test"
+
+        long_sql_thread = MyThread(context, conn, sql, True)
+        thd_name = "sql_thread_"+connName
+        my_thread[thd_name] = long_sql_thread
+        context.logger.info("create thread: {0}".format(thd_name))
+        setattr(context, connName, conn)
+        long_sql_thread.start()
