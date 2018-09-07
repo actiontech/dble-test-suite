@@ -64,7 +64,5 @@ def step_impl(context, num, sql):
 
         long_sql_thread = MyThread(context, conn, sql, True)
         thd_name = "sql_thread_"+connName
-        my_thread[thd_name] = long_sql_thread
         context.logger.info("create thread: {0}".format(thd_name))
-        setattr(context, connName, conn)
         long_sql_thread.start()
