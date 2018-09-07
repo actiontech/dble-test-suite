@@ -59,7 +59,7 @@ Feature: #base function test, not including all cases in testlink
       | HOST        | 172.100.9.6 | 3            |
       | PORT        | 3306        | 4            |
     #1.3 backend conn in use will not be dropped even the writehost was removed
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
       | user | passwd | conn   | toClose  | sql                            | expect     | db     |
       | test | 111111 | conn_0 | False    | drop table if exists test_shard       | success    | mytest |
       | test | 111111 | conn_0 | False    | create table test_shard(id int)       | success    | mytest |
@@ -146,7 +146,7 @@ Feature: #base function test, not including all cases in testlink
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
     Given start mysql in host "mysql-master2"
-    Then execute sql
+    Then execute sql in "dble-1"use"test"
       | user | passwd | conn   | toClose  | sql                            | expect     | db     |
       | test | 111111 | conn_1 | False    | drop table if exists test_shard       | success    | mytest |
       | test | 111111 | conn_1 | False    | create table test_shard(id int)       | success    | mytest |
