@@ -65,7 +65,7 @@ Feature:
       Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
         | test | 111111 | conn_0 | True    | select * from test                          | execute{(5)}                  |  mytest       |
-      Given create "1" front connections exec "10" seconds
+      Given create "1" front connections executing "select * from test"
       Then execute sql in "dble-1"use"test"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
         | test | 111111 | new | True    | select * from test                          | The node is pausing, wait list is full                  |  mytest       |

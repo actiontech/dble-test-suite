@@ -54,14 +54,13 @@ def create_conn(context,num):
     for conn in conns:
         conn.close()
 
-@Given('create "{num}" front connections exec "{sql_time}" seconds')
-def step_impl(context, num,sql_time):
+@Given('create "{num}" front connections executing "{sql}"')
+def step_impl(context, num, sql):
     nu = int(num)
     for i in range(nu):
         connName = "conn_"+str(i)
         context.logger.info("***debug, conn name: {0}, i:{1}".format(connName, i))
         conn = get_dble_conn(context)
-        sql = "select * from test"
 
         long_sql_thread = MyThread(context, conn, sql, True)
         thd_name = "sql_thread_"+connName

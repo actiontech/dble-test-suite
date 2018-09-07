@@ -185,7 +185,7 @@ def hasResultSet(res, expectRS, bHas):
             real = findFromMultiRes(res, subResExpect)
             assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
     else:#for single query resultset
-        if len(resExpect) == len(res):
+        if  type(resExpect[0])==type(res[0]) and len(resExpect) == len(res):
             if cmp(sorted(list(resExpect)),sorted(list(res)))==0:
                 real = True
         else:
