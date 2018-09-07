@@ -1,5 +1,5 @@
 import threading 
-class MyThread(threading.Thread): #The timer class is derived from the class threading.Thread
+class DbleThread(threading.Thread): #The timer class is derived from the class threading.Thread
     def __init__(self, context, conn, sql, toClose):
         threading.Thread.__init__(self) 
         self.thread_stop = False

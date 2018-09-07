@@ -6,7 +6,7 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
-from steps.step_thread import MyThread
+from step_thread import DbleThread
 from step_reload import get_admin_conn, get_dble_conn
 from lib.generate_util import *
 
@@ -62,7 +62,7 @@ def step_impl(context, num, sql):
         context.logger.info("***debug, conn name: {0}, i:{1}".format(connName, i))
         conn = get_dble_conn(context)
 
-        long_sql_thread = MyThread(context, conn, sql, True)
+        long_sql_thread = DbleThread(context, conn, sql, True)
         thd_name = "sql_thread_"+connName
         context.logger.info("create thread: {0}".format(thd_name))
         long_sql_thread.start()
