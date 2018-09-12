@@ -69,7 +69,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | select/subquery_shard_global.sql            |
           | select/subquery_shard_noshard.sql           |
 
-    @current
+
     Scenario Outline:#3 check read-write-split work fine and slaves load balance transaction
         Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
         Given clear dirty data yield by sql
@@ -81,6 +81,35 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | transaction/t_langues.sql                 |
           | transaction/transaction.sql               |
 
+    Scenario Outline:check sql statement "load data [local] infile ..." work fine#4
+        Given create local and server file "test1.txt" and fill with text
+        """
+        """
+        Given create local and server file "test2.txt" and fill with text
+        """
+
+        """
+#      todo,bbb need to replace with chinese in later version
+        Given create local and server file "test3.txt" and fill with text
+        """
+        1,aaa,0,000,3.1415,20180905121530
+        2,bbb,1,111,-3.1415,20180905121530
+        3,$%'";:@#^&*_+-=|\<.>/?`~,5,1010,0.0010,20180905
+        """
+        Given create local and server file "test4.txt" and fill with text
+        """
+        3,$%'";:@#^&*_+-=|\<.>/?`~,5,1010,0.0010,20180905
+        """
+        Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
+        Given clear dirty data yield by sql
+#        Given remove local and server file "test1.txt"
+#        Given remove local and server file "test2.txt"
+#        Given remove local and server file "test3.txt"
+#        Given remove local and server file "test4.txt"
+
+        Examples:Types
+          | filename                                    |
+          | syntax/loaddata.sql                         |
 
     Scenario: #3 compare new generated results is same with the standard ones
         When compare results with the standard results
