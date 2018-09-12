@@ -2,8 +2,6 @@ import datetime
 import os
 import re
 import difflib
-import logging
-import threading
 from Queue import Queue
 from time import sleep
 
@@ -11,7 +9,6 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
-from lib.Node import *
 from lib.SqlThread import MyThread
 from steps.step_reload import get_dble_conn
 

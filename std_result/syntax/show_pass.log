@@ -10,36 +10,69 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/show.sql, id:6, sql:[insert into aly_test (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(3,3,'Northern','test003'),(2,2,'Western','test002'),(4,4,'Southern','test004')]===
 dble:[[]]
+===file:syntax/show.sql, id:7, sql:[show columns from aly_order]===
+dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('MYDATE', 'date', 'YES', '', None, ''), ('O_CUSTKEY', 'varchar(20)', 'YES', '', None, ''), ('O_ORDERKEY', 'varchar(20)', 'NO', 'PRI', None, ''), ('O_TOTALPRICE', 'int(20)', 'YES', '', None, '')]]
+===file:syntax/show.sql, id:9, sql:[show columns from aly_order from mytest]===
+dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('MYDATE', 'date', 'YES', '', None, ''), ('O_CUSTKEY', 'varchar(20)', 'YES', '', None, ''), ('O_ORDERKEY', 'varchar(20)', 'NO', 'PRI', None, ''), ('O_TOTALPRICE', 'int(20)', 'YES', '', None, '')]]
 ===file:syntax/show.sql, id:11, sql:[show full columns from aly_order from mytest]===
 dble:[[('ID', 'int(11)', None, 'YES', '', None, '', 'select,insert,update,references', ''), ('MYDATE', 'date', None, 'YES', '', None, '', 'select,insert,update,references', ''), ('O_CUSTKEY', 'varchar(20)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('O_ORDERKEY', 'varchar(20)', 'latin1_swedish_ci', 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('O_TOTALPRICE', 'int(20)', None, 'YES', '', None, '', 'select,insert,update,references', '')]]
 ===file:syntax/show.sql, id:12, sql:[show full columns from aly_order from mytest like 'o%']===
 dble:[[('O_CUSTKEY', 'varchar(20)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('O_ORDERKEY', 'varchar(20)', 'latin1_swedish_ci', 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('O_TOTALPRICE', 'int(20)', None, 'YES', '', None, '', 'select,insert,update,references', '')]]
 ===file:syntax/show.sql, id:13, sql:[show full columns from aly_order from mytest where field like 'o%']===
 dble:[[('O_CUSTKEY', 'varchar(20)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('O_ORDERKEY', 'varchar(20)', 'latin1_swedish_ci', 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('O_TOTALPRICE', 'int(20)', None, 'YES', '', None, '', 'select,insert,update,references', '')]]
-===file:syntax/show.sql, id:16, sql:[show tables/*allow_diff*/]===
-dble:[[('a_manager',), ('a_order',), ('a_test',), ('a_three',), ('aly_order',), ('aly_test',), ('enum_patch_integer',), ('global_table1',), ('global_table2',), ('mytest_auto_test1',), ('sbtest1',), ('sbtest2',), ('tb_test',), ('test_global',)]]
-mysql:[[('a_manager',), ('a_manager_no_shard',), ('a_order',), ('a_order_no_shard',), ('a_test',), ('a_test_no_shard',), ('a_three',), ('a_two',), ('aly_order',), ('aly_test',), ('enum_patch_integer',), ('global_table1',), ('global_table2',), ('global_table3',), ('mytest_auto_test1',), ('mytest_global1',), ('mytest_test1',), ('sbtest1',), ('sbtest2',), ('shop',), ('t1',), ('t2',), ('t3',), ('ta',), ('table_guest_comments',), ('table_member_comments',), ('tb',), ('tc',), ('test',), ('test_global',), ('test_no_shard',)]]
+===file:syntax/show.sql, id:14, sql:[show table status/*allow_diff*/]===
+dble:[[('aly_order', 'InnoDB', 10L, 'Dynamic', 1L, 16384L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', ''), ('aly_test', 'InnoDB', 10L, 'Dynamic', 1L, 16384L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('aly_order', 'InnoDB', 10L, 'Dynamic', 8L, 2048L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', ''), ('aly_test', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', '')]]
+===file:syntax/show.sql, id:15, sql:[show table status like 'aly_o%'/*allow_diff*/]===
+dble:[[('aly_order', 'InnoDB', 10L, 'Dynamic', 2L, 8192L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('aly_order', 'InnoDB', 10L, 'Dynamic', 8L, 2048L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', '')]]
+===file:syntax/show.sql, id:16, sql:[show tables]===
+dble:[[('aly_order',), ('aly_test',)]]
 ===file:syntax/show.sql, id:17, sql:[show full tables]===
-dble:[[('a_manager', 'BASE TABLE'), ('a_manager_no_shard', 'BASE TABLE'), ('a_order', 'BASE TABLE'), ('a_order_no_shard', 'BASE TABLE'), ('a_test', 'BASE TABLE'), ('a_test_no_shard', 'BASE TABLE'), ('a_three', 'BASE TABLE'), ('a_two', 'BASE TABLE'), ('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE'), ('enum_patch_integer', 'BASE TABLE'), ('global_table1', 'BASE TABLE'), ('global_table2', 'BASE TABLE'), ('global_table3', 'BASE TABLE'), ('mytest_auto_test1', 'BASE TABLE'), ('mytest_global1', 'BASE TABLE'), ('mytest_test1', 'BASE TABLE'), ('sbtest1', 'BASE TABLE'), ('sbtest2', 'BASE TABLE'), ('shop', 'BASE TABLE'), ('t1', 'BASE TABLE'), ('t2', 'BASE TABLE'), ('t3', 'BASE TABLE'), ('ta', 'BASE TABLE'), ('table_guest_comments', 'BASE TABLE'), ('table_member_comments', 'BASE TABLE'), ('tb', 'BASE TABLE'), ('tc', 'BASE TABLE'), ('test', 'BASE TABLE'), ('test_global', 'BASE TABLE'), ('test_no_shard', 'BASE TABLE')]]
+dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:18, sql:[show tables from mytest]===
-dble:[[('a_manager',), ('a_manager_no_shard',), ('a_order',), ('a_order_no_shard',), ('a_test',), ('a_test_no_shard',), ('a_three',), ('a_two',), ('aly_order',), ('aly_test',), ('enum_patch_integer',), ('global_table1',), ('global_table2',), ('global_table3',), ('mytest_auto_test1',), ('mytest_global1',), ('mytest_test1',), ('sbtest1',), ('sbtest2',), ('shop',), ('t1',), ('t2',), ('t3',), ('ta',), ('table_guest_comments',), ('table_member_comments',), ('tb',), ('tc',), ('test',), ('test_global',), ('test_no_shard',)]]
+dble:[[('aly_order',), ('aly_test',)]]
 ===file:syntax/show.sql, id:19, sql:[show tables in mytest]===
-dble:[[('a_manager',), ('a_manager_no_shard',), ('a_order',), ('a_order_no_shard',), ('a_test',), ('a_test_no_shard',), ('a_three',), ('a_two',), ('aly_order',), ('aly_test',), ('enum_patch_integer',), ('global_table1',), ('global_table2',), ('global_table3',), ('mytest_auto_test1',), ('mytest_global1',), ('mytest_test1',), ('sbtest1',), ('sbtest2',), ('shop',), ('t1',), ('t2',), ('t3',), ('ta',), ('table_guest_comments',), ('table_member_comments',), ('tb',), ('tc',), ('test',), ('test_global',), ('test_no_shard',)]]
+dble:[[('aly_order',), ('aly_test',)]]
 ===file:syntax/show.sql, id:20, sql:[show full tables from mytest]===
-dble:[[('a_manager', 'BASE TABLE'), ('a_manager_no_shard', 'BASE TABLE'), ('a_order', 'BASE TABLE'), ('a_order_no_shard', 'BASE TABLE'), ('a_test', 'BASE TABLE'), ('a_test_no_shard', 'BASE TABLE'), ('a_three', 'BASE TABLE'), ('a_two', 'BASE TABLE'), ('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE'), ('enum_patch_integer', 'BASE TABLE'), ('global_table1', 'BASE TABLE'), ('global_table2', 'BASE TABLE'), ('global_table3', 'BASE TABLE'), ('mytest_auto_test1', 'BASE TABLE'), ('mytest_global1', 'BASE TABLE'), ('mytest_test1', 'BASE TABLE'), ('sbtest1', 'BASE TABLE'), ('sbtest2', 'BASE TABLE'), ('shop', 'BASE TABLE'), ('t1', 'BASE TABLE'), ('t2', 'BASE TABLE'), ('t3', 'BASE TABLE'), ('ta', 'BASE TABLE'), ('table_guest_comments', 'BASE TABLE'), ('table_member_comments', 'BASE TABLE'), ('tb', 'BASE TABLE'), ('tc', 'BASE TABLE'), ('test', 'BASE TABLE'), ('test_global', 'BASE TABLE'), ('test_no_shard', 'BASE TABLE')]]
+dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:21, sql:[show full tables in mytest]===
-dble:[[('a_manager', 'BASE TABLE'), ('a_manager_no_shard', 'BASE TABLE'), ('a_order', 'BASE TABLE'), ('a_order_no_shard', 'BASE TABLE'), ('a_test', 'BASE TABLE'), ('a_test_no_shard', 'BASE TABLE'), ('a_three', 'BASE TABLE'), ('a_two', 'BASE TABLE'), ('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE'), ('enum_patch_integer', 'BASE TABLE'), ('global_table1', 'BASE TABLE'), ('global_table2', 'BASE TABLE'), ('global_table3', 'BASE TABLE'), ('mytest_auto_test1', 'BASE TABLE'), ('mytest_global1', 'BASE TABLE'), ('mytest_test1', 'BASE TABLE'), ('sbtest1', 'BASE TABLE'), ('sbtest2', 'BASE TABLE'), ('shop', 'BASE TABLE'), ('t1', 'BASE TABLE'), ('t2', 'BASE TABLE'), ('t3', 'BASE TABLE'), ('ta', 'BASE TABLE'), ('table_guest_comments', 'BASE TABLE'), ('table_member_comments', 'BASE TABLE'), ('tb', 'BASE TABLE'), ('tc', 'BASE TABLE'), ('test', 'BASE TABLE'), ('test_global', 'BASE TABLE'), ('test_no_shard', 'BASE TABLE')]]
+dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:22, sql:[show tables like 'aly_o%']===
 dble:[[('aly_order',)]]
-===file:syntax/show.sql, id:23, sql:[show full tables from mytest like 'test%']===
-dble:[[('test', 'BASE TABLE'), ('test_global', 'BASE TABLE'), ('test_no_shard', 'BASE TABLE')]]
+===file:syntax/show.sql, id:23, sql:[show full tables from mytest like 'aly%']===
+dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:24, sql:[show full tables in mytest where table_type like 'base%']===
-dble:[[('a_manager', 'BASE TABLE'), ('a_manager_no_shard', 'BASE TABLE'), ('a_order', 'BASE TABLE'), ('a_order_no_shard', 'BASE TABLE'), ('a_test', 'BASE TABLE'), ('a_test_no_shard', 'BASE TABLE'), ('a_three', 'BASE TABLE'), ('a_two', 'BASE TABLE'), ('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE'), ('enum_patch_integer', 'BASE TABLE'), ('global_table1', 'BASE TABLE'), ('global_table2', 'BASE TABLE'), ('global_table3', 'BASE TABLE'), ('mytest_auto_test1', 'BASE TABLE'), ('mytest_global1', 'BASE TABLE'), ('mytest_test1', 'BASE TABLE'), ('sbtest1', 'BASE TABLE'), ('sbtest2', 'BASE TABLE'), ('shop', 'BASE TABLE'), ('t1', 'BASE TABLE'), ('t2', 'BASE TABLE'), ('t3', 'BASE TABLE'), ('ta', 'BASE TABLE'), ('table_guest_comments', 'BASE TABLE'), ('table_member_comments', 'BASE TABLE'), ('tb', 'BASE TABLE'), ('tc', 'BASE TABLE'), ('test', 'BASE TABLE'), ('test_global', 'BASE TABLE'), ('test_no_shard', 'BASE TABLE')]]
+dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:25, sql:[create INDEX index_001 ON aly_test (ID)]===
 dble:[[]]
+===file:syntax/show.sql, id:26, sql:[show index from aly_test]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:27, sql:[show index in aly_test]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:28, sql:[show index from aly_test from mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:29, sql:[show index in aly_test in mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:30, sql:[show index in aly_test from mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:31, sql:[show index from aly_test in mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:32, sql:[show keys from aly_test]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:33, sql:[show keys in aly_test]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:34, sql:[show keys from aly_test from mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:35, sql:[show keys from aly_test in mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:36, sql:[show keys in aly_test in mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:syntax/show.sql, id:37, sql:[show keys in aly_test from mytest]===
+dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:syntax/show.sql, id:38, sql:[drop index index_001 on aly_test]===
 dble:[[]]
-===file:syntax/show.sql, id:52, sql:[drop table if exists aly_test]===
+===file:syntax/show.sql, id:55, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:syntax/show.sql, id:53, sql:[drop table if exists aly_order]===
+===file:syntax/show.sql, id:56, sql:[drop table if exists aly_order]===
 dble:[[]]

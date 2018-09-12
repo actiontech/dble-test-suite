@@ -1,8 +1,11 @@
+##!/usr/bin/python2.7
+# -*- coding: utf-8 -*-
 import sys
 import logging
-import json
+import os
 
 from lib.DBUtil import DBUtil
+from lib.Node import get_sftp,get_ssh
 
 sys.path.append("..")
 from behave import *
@@ -84,3 +87,47 @@ def test_use_limit(context):
     assert_that(str(errMes[1]), contains_string("bad insert sql, sharding column/joinKey:ID not provided"))
 
     conn.query(drop_sql)
+
+@Then('get query plan and make sure it is optimized')
+def step_impl(context):
+    for row in context.table:
+        sql = row["query"]
+        conn = get_dble_conn(context)
+        res,err = conn.query(sql)
+        assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute plan seems not optimized, the plan:{1}".format(sql,res)
+
+@Given('create local and server file "{filename}" and fill with text')
+def step_impl(context, filename):
+    LOGGER.info("*** zhj debug context.text:{0}".format(context.text))
+
+    # remove old file in behave resides server
+    if os.path.exists(filename):
+        os.remove(filename)
+
+    with open(filename, 'w') as fp:
+        fp.write(context.text)
+
+    # cp file to dble
+    remove_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
+    context.ssh_sftp.sftp_put(remove_file,filename)
+
+    # create file in compare mysql
+    remove_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
+    compare_mysql_sftp = get_sftp(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
+    compare_mysql_sftp.sftp_put(remove_file, filename)
+
+@Given('remove local and server file "{filename}"')
+def step_impl(context, filename):
+    # remove file in behave resides server
+    if os.path.exists(filename):
+        os.remove(filename)
+
+    # remove file in dble
+    cmd = "rm -rf {0}".format(filename)
+    rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    assert len(stderr)==0, "rm file in dble fail for {0}".format(stderr)
+
+    # remove file in compare mysql
+    dble_node_ssh = get_ssh(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
+    rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
+    assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)

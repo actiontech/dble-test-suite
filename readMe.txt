@@ -42,7 +42,7 @@ behave -Dreinstall=true features/install_uninstall/update_dble.feature
 #通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
 behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
 
-#sql覆盖, manual do rf `-rf sql_cover_log` if not running by ci
+#sql覆盖, manual do rf -rf sql_cover_log if not running by ci
 behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature
 
 #算法
