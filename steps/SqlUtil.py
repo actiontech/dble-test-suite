@@ -23,7 +23,7 @@ def get_sql(type):
     return sql
 
 @Then('execute sql in "{hostname}"')
-@Then('execute sql in "{hostname}"use"{user}"')
+@Then('execute sql in "{hostname}" use "{user}"')
 def step_impl(context,hostname, user=""):
     if len(user.strip()) == 0:
         node = get_node(context.mysqls, hostname)

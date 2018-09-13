@@ -154,9 +154,11 @@ CREATE TABLE a_test_no_shard(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsig
 insert into a_test_no_shard values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
 select id a,t_id b,name c,pad d from (select * from a_test_no_shard union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
 select id,t_id,name,pad from a_test_no_shard union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id
-#github issue #678 #671
-drop table if exists bams_flow_log
-create table bams_flow_log (id int,busidate char(20),zoneno char(20),brno int,tellerno int);
-SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM BAMS_FLOW_LOG F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T;
-SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM BAMS_FLOW_LOG F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T;
-drop table if exists bams_flow_log
+#github issue 681
+drop table if exists a_two
+drop table if exists a_three
+create table a_two(id int, aa int)
+create table a_three(id int, bb int);
+insert into a_two values(1,123);
+insert into a_three values(2,111),(2,123),(2,NULL);
+select * from a_two a,a_three b where a.aa = b.bb;

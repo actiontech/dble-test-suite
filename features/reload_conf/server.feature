@@ -12,7 +12,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Then execute admin cmd "reload @@config_all"
 
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
@@ -26,7 +26,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
      </user>
     """
     Given Restart dble in "dble-1"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user2    | test_password | conn_0 | False    | select 1 | success | mytest |
         | test_user2   | test_password | conn_0 | True    | drop table if exists test_table | User READ ONLY | mytest |
@@ -54,7 +54,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Given Restart dble in "dble-1"
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
@@ -253,7 +253,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Given Restart dble in "dble-1"
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test   | 111111 | conn_0 | True    | select 1 |success | mytest |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
@@ -293,7 +293,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </firewall>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |success | mytest |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table2(id int) |success | mytest |
@@ -335,7 +335,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </firewall>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | select * from test_table where 1 = 1 and 2 = 1; |error totally whack | mytest |
@@ -366,13 +366,13 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       </user>
     """
     Given Restart dble in "dble-1"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | test         | 123       | conn_0 | False    | select 1 | success | mytest |
         | test         | 123       | new    | False    | select 1 | Access denied for user 'test',too many connections for this user | mytest |
         | action       | action    | conn_1 | False    | select 1 | success | mytest |
         | action       | action    | new    | False    | select 1 | Access denied for user 'action',too many connections for this user | mytest |
-    Then execute sql in "dble-1"use"admin"
+    Then execute sql in "dble-1" use "admin"
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
         | root         | 111111    | conn_3 |False    | show @@version | success | mytest |
@@ -397,7 +397,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       </user>
     """
     Given Restart dble in "dble-1"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | test         | 123       | conn_4 | False    | select 1 | success | mytest |
         | test         | 123       | conn_5 | False    | select 1 | success | mytest |
@@ -437,12 +437,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
 
     """
     Given Restart dble in "dble-1"
-    Then execute sql in "dble-1"use"test"
+    Then execute sql in "dble-1" use "test"
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | test         | 123       | conn_0 | False    | select 1 | success | mytest |
         | test         | 123       | new    | False    | select 1 | too many connections for this user | mytest |
         | action       | action   | conn_1 | False    | select 1 | too many connections for dble server | mytest |
-    Then execute sql in "dble-1"use"admin"
+    Then execute sql in "dble-1" use "admin"
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
 
