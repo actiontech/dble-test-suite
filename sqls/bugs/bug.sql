@@ -58,7 +58,7 @@ select 1 union select id from test_global
 select id from test_global union SELECT 1
 #github issue 537
 drop table if exists test_shard
-create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))
+create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))DEFAULT CHARSET=UTF8
 insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string','test001'),(3,3, 'another string','test003'),(2,2, 'a\nstring','test002'),(4,4, '中','test004'),(5,5, 'a\'string\'','test005'),(6,6, 'a\""string\""','test006'),(7,7, 'a\bstring','test007'),(8,8, 'a\nstring','test008'),(9,9, 'a\rstring','test009'),(10,10, 'a\tstring','test010'),(11,11, 'a\zstring','test011'),(12,12, 'a\\string','test012'),(13,13, 'a\%string','test013'),(14,14, 'a\_string','test014'),(15,15, 'MySQL','test015'),(16,16, 'binary','test016'),(65,16, 'binary','test016'),(17,12345678901234567890123.4567890,17,17),(18,18, 'A','test018'),(19,19, '','test019')
 explain(select 1 from test_shard)union(select 2)/*allow_diff*/
 explain (select 1 from test_shard)union(select 2)/*allow_diff*/
@@ -162,3 +162,9 @@ create table a_three(id int, bb int);
 insert into a_two values(1,123);
 insert into a_three values(2,111),(2,123),(2,NULL);
 select * from a_two a,a_three b where a.aa = b.bb;
+#github issue #678 #671
+drop table if exists bams_flow_log
+create table bams_flow_log (id int,busidate char(20),zoneno char(20),brno int,tellerno int);
+SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM BAMS_FLOW_LOG F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T;
+SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM BAMS_FLOW_LOG F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T;
+drop table if exists bams_flow_log
