@@ -1,16 +1,16 @@
-Feature: #
+Feature: #show @@sql, show @@sql.resultset
   Scenario: #1 show @@sql.resultset
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
-		<table dataNode="dn1,dn2,dn3,dn4" name="ta" rule="hash-three" />
-	</schema>
-	"""
+        <table dataNode="dn1,dn2,dn3" name="ta" rule="hash-three" />
+    </schema>
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
-		<property name="maxResultSet">1024</property>
-	</system>
+	    <property name="maxResultSet">1024</property>
+    </system>
     """
     Given Restart dble in "dble-1"
     Then execute sql in "dble-1" use "test"
@@ -23,10 +23,12 @@ Feature: #
         | test | 111111 | conn_0 | True     | update ta set k="c" where id=3   | success    | mytest |
         | test | 111111 | conn_0 | True     | select * from ta               | success    | mytest |
         | test | 111111 | conn_0 | True     | select * from ta limit 1       | success    | mytest |
+        | test | 111111 | conn_0 | True     | select * from ta where id=2    | success    | mytest |
         | test | 111111 | conn_0 | True     | delete from ta where id=1      | success    | mytest |
         | test | 111111 | conn_0 | True     | alter table ta drop column k   | success    | mytest |
-    Then execute admin cmd "show @@sql.resultset" and get result
+    Then execute admin cmd "show @@sql" and get result
         | ID   | USER | SQL                                        |
+        |    1 | test | delete from ta where id=1                  |
         |    1 | test | delete from ta where id=1                  |
         |    2 | test | SELECT * FROM ta LIMIT 1                   |
         |    3 | test | SELECT * FROM ta LIMIT 100                 |

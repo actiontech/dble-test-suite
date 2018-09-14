@@ -8,27 +8,27 @@ count=${#mysql_install[@]}
 #restart all mysqlds
 for((i=0; i<count; i=i+1)); do
 	echo "restart mysql and delete none-sys dbs in ${mysql_install[$i]}"
-	sudo docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/support-files/mysql.server restart" \
-	&& sudo docker cp deleteDb.sql "${mysql_install[$i]}:/" \
+	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/support-files/mysql.server restart" \
+	&& docker cp deleteDb.sql "${mysql_install[$i]}:/" \
 	&& sleep 5s \
-	&& sudo docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 < /deleteDb.sql"
+	&& docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 < /deleteDb.sql"
 done
 
 echo "reset master ${mysql_install[2]}"
-sudo docker exec ${mysql_install[2]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master;\" "
+docker exec ${mysql_install[2]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master;\" "
 
 sleep 60s
 
 #i=4 stands for mysql slave in dble-2, i=5 stands for mysql slave in dble-3
 for((i=4; i<6; i=i+1)); do
 	echo "reset slave ${mysql_install[$i]}"
-	sudo docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"stop slave; reset slave; change master to master_auto_position=1\" "
-	sudo docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master; set global gtid_purged='';\" "
+	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"stop slave; reset slave; change master to master_auto_position=1\" "
+	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master; set global gtid_purged='';\" "
 done
 
 for((i=4; i<6; i=i+1)); do
 	echo "start slave ${mysql_install[$i]}"
-	sudo docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"start slave;\" "
+	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"start slave;\" "
 done
 
 echo "create database in compare mysql"
