@@ -23,17 +23,19 @@ Feature: #
         | test | 111111 | conn_0 | True     | update ta set k="c" where id=3   | success    | mytest |
         | test | 111111 | conn_0 | True     | select * from ta               | success    | mytest |
         | test | 111111 | conn_0 | True     | select * from ta limit 1       | success    | mytest |
+        | test | 111111 | conn_0 | True     | select * from ta where id=2    | success    | mytest |
         | test | 111111 | conn_0 | True     | delete from ta where id=1      | success    | mytest |
         | test | 111111 | conn_0 | True     | alter table ta drop column k   | success    | mytest |
     Then execute admin cmd "show @@sql.resultset" and get result
         | ID   | USER | SQL                                        |
         |    1 | test | delete from ta where id=1                  |
-        |    2 | test | SELECT * FROM ta LIMIT 1                   |
-        |    3 | test | SELECT * FROM ta LIMIT 100                 |
-        |    4 | test | update ta set k="c" where id=3             |
-        |    5 | test | insert into ta value(3, repeat('c', 100))  |
-        |    6 | test | insert into ta value(2, repeat('b', 1500)) |
-        |    7 | test | insert into ta value(1, repeat('a', 1100)) |
+        |    2 | test | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
+        |    3 | test | SELECT * FROM ta LIMIT 1                   |
+        |    4 | test | SELECT * FROM ta LIMIT 100                 |
+        |    5 | test | update ta set k="c" where id=3             |
+        |    6 | test | insert into ta value(3, repeat('c', 100))  |
+        |    7 | test | insert into ta value(2, repeat('b', 1500)) |
+        |    8 | test | insert into ta value(1, repeat('a', 1100)) |
 
     Then execute admin cmd "show @@sql.resultset" and get result
         | ID   | USER | FREQUENCY | SQL                      | RESULTSET_SIZE |
