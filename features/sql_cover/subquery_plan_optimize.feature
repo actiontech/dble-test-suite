@@ -9,7 +9,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         <table name="table_b" dataNode="dn1,dn2" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                          | expect    | db     |
       | test | 111111 | conn_0 | False    | drop table if exists table_a | success   | mytest |
       | test | 111111 | conn_0 | False    | drop table if exists table_b | success   | mytest |
@@ -27,7 +27,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         <table name="table_b" dataNode="dn1,dn2" type="global" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                          | expect    | db     |
         | test | 111111 | conn_0 | False    | drop table if exists table_a | success   | mytest |
         | test | 111111 | conn_0 | False    | drop table if exists table_b | success   | mytest |

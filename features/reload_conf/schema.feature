@@ -5,7 +5,7 @@ Feature: #
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" type="global" />
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                           | expect                             | db     |
         | test | 111111 | conn_0 | False    | create table if not exists test_table(id int) | success                            | mytest |
         | test | 111111 | conn_0 | False    | show full tables                              | has{('test_table','BASE TABLE')}   | mytest |
@@ -74,7 +74,7 @@ Feature: #
         </user>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
     Given delete the following xml segment
@@ -113,7 +113,7 @@ Feature: #
         <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111"/>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
 
@@ -188,7 +188,7 @@ Feature: #
 	    </dataHost>
     """
     Then execute admin cmd "Reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                                           | expect                             | db     |
      | test | 111111 | conn_0 | False    | drop table if exists test                 | success                            | mytest |
      | test | 111111 | conn_0 | True    | create table test(id int)                 | success                            | mytest |
@@ -462,10 +462,10 @@ Feature: #
         | test | 111111 | conn_0 | True     | drop database if exists da1 | success  |         |
         | test | 111111 | conn_0 | True     | drop database if exists da2 | success  |         |
     Then execute admin cmd "reload @@config_all" get the following output
-    Then execute sql in "dble-1" use "admin"
+    Then execute sql in "dble-1" in "admin" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | root         | 111111    | conn_0 | True    | show @@version | success | mytest |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                             | expect   | db      |
         | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | ConnectionException  | mytest |
 
@@ -492,7 +492,7 @@ Feature: #
 	    </dataHost>
     """
     Then execute admin cmd "reload @@config_all" get the following output
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
     | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|1000 |
     | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|1000 |
@@ -507,7 +507,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
@@ -549,7 +549,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
@@ -591,7 +591,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
@@ -639,7 +639,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
@@ -690,7 +690,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-master2"
@@ -735,7 +735,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
     Then execute sql in "mysql-slave1"
@@ -770,7 +770,7 @@ Feature: #
     """
     Given Restart dble in "dble-1"
     Given stop mysql in host "mysql-master2"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |
     | test  | 111111    | conn_0 | True    | select name from test;   | error totally whack | mytest  |
     Given start mysql in host "mysql-master2"

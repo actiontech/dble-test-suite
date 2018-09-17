@@ -45,7 +45,7 @@ def exec_admin_cmd(context, adminsql, user="", passwd=""):
     else: expect = "success"
 
     context.execute_steps(u"""
-    Then execute sql in "dble-1" use "admin"
+    Then execute sql in "dble-1" in "admin" mode
         | user    | passwd | conn    | toClose | sql      | expect   | db |
         | {0}     | {1}    | new     | True    | {2}      | {3}      |    |
     """.format(user, passwd, adminsql, expect))

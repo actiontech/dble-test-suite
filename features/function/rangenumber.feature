@@ -27,7 +27,7 @@ Feature:
     756-1000=3
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table patternrange_table(id int)                      | success | mytest |
@@ -57,7 +57,7 @@ Feature:
         </function>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" use "test"
+    Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | mytest |
         | test | 111111 | conn_0 | False    | create table patternrange_table(id int)                      | success | mytest |
