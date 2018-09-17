@@ -29,13 +29,13 @@ Feature: #show @@sql, show @@sql.resultset
     Then execute admin cmd "show @@sql" and get result
         | ID   | USER | SQL                                        |
         |    1 | test | delete from ta where id=1                  |
-        |    1 | test | delete from ta where id=1                  |
-        |    2 | test | SELECT * FROM ta LIMIT 1                   |
-        |    3 | test | SELECT * FROM ta LIMIT 100                 |
-        |    4 | test | update ta set k="c" where id=3             |
-        |    5 | test | insert into ta value(3, repeat('c', 100))  |
-        |    6 | test | insert into ta value(2, repeat('b', 1500)) |
-        |    7 | test | insert into ta value(1, repeat('a', 1100)) |
+        |    2 | test | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
+        |    3 | test | SELECT * FROM ta LIMIT 1                   |
+        |    4 | test | SELECT * FROM ta LIMIT 100                 |
+        |    5 | test | update ta set k="c" where id=3             |
+        |    6 | test | insert into ta value(3, repeat('c', 100))  |
+        |    7 | test | insert into ta value(2, repeat('b', 1500)) |
+        |    8 | test | insert into ta value(1, repeat('a', 1100)) |
 
     Then execute admin cmd "show @@sql.resultset" and get result
         | ID   | USER | FREQUENCY | SQL                      | RESULTSET_SIZE |
