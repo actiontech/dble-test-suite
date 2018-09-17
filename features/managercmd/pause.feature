@@ -30,7 +30,7 @@ Feature:
         | root | 111111 | conn_0 | True    | show @@pause                                                | has{('dn1',), ('dn2',),('dn3',),('dn4',)} |         |
       Then execute sql in "dble-1" use "test"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | test | 111111 | conn_0 | True     | select * from test                          | wait for backend dataNode timeout                   |   mytest  |
+        | test | 111111 | conn_0 | True     | select * from test                          | waiting time exceeded wait_limit from pause dataNode                   |   mytest  |
         | test | 111111 | conn_0 | True     | select * from test                          | execute{(1)}                   |   mytest  |
       Then execute sql in "dble-1" use "admin"
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |

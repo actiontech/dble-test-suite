@@ -14,21 +14,7 @@ LOGGER = logging.getLogger('steps.install')
 
 my_thread={}
 
-@Then('get limited results')
-def get_limit_result(context):
-    num = int(context.text)
-    conn = get_dble_conn(context)
-
-    select_sql = "select * from test_table"
-    res, errMsg = conn.query(select_sql)
-    conn.close()
-
-    LOGGER.info("the length of limit result is:{0}".format(len(res)))
-
-    assert_that(len(res), equal_to(num))
-
-
-@Then('create "{num}" conn')
+@Then('create "{num}" conn and finally close all conn')
 def create_conn(context,num):
     num = int(num)
     conns = []

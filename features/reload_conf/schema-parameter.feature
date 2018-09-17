@@ -18,11 +18,9 @@ Feature: #
         | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success     | mytest |
         | test | 111111 | conn_0 | False    | drop table if exists default_table                  | success | mytest |
         | test | 111111 | conn_0 | False    | create table default_table(id int)                    | success | mytest |
-        | test | 111111 | conn_0 | True     | insert into default_table values(1)/*dest_node:dn5*/    | success | mytest |
-    Then get limited results
-    """
-    3
-    """
+        | test | 111111 | conn_0 | False    | insert into default_table values(1)/*dest_node:dn5*/    | success | mytest |
+        | test | 111111 | conn_0 | True     | select * from test_table    | length{(3)} | mytest |
+
     #1.2 test parameter "needAddLimit"
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -35,10 +33,10 @@ Feature: #
       </schema>
     """
     Then execute admin cmd "reload @@config_all"
-    Then get limited results
-    """
-    5
-    """
+    Then execute sql in "dble-1" use "test"
+    | user | passwd | conn   | toClose  | sql                                                    | expect      | db     |
+    | test | 111111 | conn_0 | True     | select * from test_table    | length{(5)} | mytest |
+
   Scenario:# when table name has multiple values
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
      """
@@ -109,8 +107,8 @@ Feature: #
 	    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
-    Then create "9" conn
-    Then create "10" conn
+    Then create "9" conn and finally close all conn
+    Then create "10" conn and finally close all conn
     """
     can't create connections more than maxCon
     """
