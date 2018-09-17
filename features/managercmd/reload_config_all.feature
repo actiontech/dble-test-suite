@@ -1,4 +1,4 @@
-Feature: #base function test, not including all cases in testlink
+Feature: reload @@config_all base test, not including all cases in testlink
   Scenario:
     #1 reload @@config_all, do diff, reserve in use backend conn
     #1.1 no writehost change, reload @@config_all does not rebuild backend connection pool
@@ -51,13 +51,11 @@ Feature: #base function test, not including all cases in testlink
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_C"
     Then check resultset "backend_rs_C" has not lines with following column values
-      | column      | value       | column_index |
-      | HOST        | 172.100.9.5 | 3            |
-      | PORT        | 3306        | 4            |
+      | HOST-3      | PORT-4       |
+      | 3306        | 172.100.9.5  |
     Then check resultset "backend_rs_C" has lines with following column values
-      | column      | value       | column_index |
-      | HOST        | 172.100.9.6 | 3            |
-      | PORT        | 3306        | 4            |
+      | PORT-4    | HOST-3      |
+      | 3306      | 172.100.9.6 |
     #1.3 backend conn in use will not be dropped even the writehost was removed
     Then execute sql in "dble-1" use "test"
       | user | passwd | conn   | toClose  | sql                            | expect     | db     |
@@ -76,16 +74,14 @@ Feature: #base function test, not including all cases in testlink
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_D"
     Then check resultset "backend_rs_D" has lines with following column values
-      | column      | value       | column_index |
-      | HOST        | 172.100.9.6 | 3            |
-      | PORT        | 3306        | 4            |
+      | PORT-4      | HOST-3      |
+      | 3306        | 172.100.9.6 |
     #2 reload @@config_all -f, kill in use backend conn, do diff
     Then execute admin cmd "reload @@config_all -f"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_E"
     Then check resultset "backend_rs_E" has not lines with following column values
-      | column      | value       | column_index |
-      | HOST        | 172.100.9.6 | 3            |
-      | PORT        | 3306        | 4            |
+      | HOST-3      | PORT-4       |
+      | 3306        | 172.100.9.6  |
     Then check resultsets "backend_rs_D" including resultset "backend_rs_E" in following columns
       |column               | column_index |
       |processor            | 0            |
@@ -131,9 +127,8 @@ Feature: #base function test, not including all cases in testlink
     Then execute admin cmd "reload @@config_all -s"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_H"
     Then check resultset "backend_rs_H" has not lines with following column values
-      | column      | value       | column_index |
-      | HOST        | 172.100.9.6 | 3            |
-      | PORT        | 3306        | 4            |
+      | HOST-3      | PORT-4       |
+      | 3306        | 172.100.9.6  |
     Then check resultsets "backend_rs_G" including resultset "backend_rs_H" in following columns
       |column               | column_index |
       |processor            | 0            |

@@ -47,27 +47,47 @@ def step_impl(context, rs_A_name, rs_B_name):
 #loop all rows confirm not exist, once exist, throw assertion error
 @Then('check resultset "{rs_name}" has not lines with following column values')
 def step_impl(context, rs_name):
+    # headings in form "columnName-columnIndex"
+    col_idx_list = []
+    for str in context.table.headings:
+        assert str.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
+        idx = int(str.split("-")[-1])
+        col_idx_list.append(idx)
+
     rs = getattr(context, rs_name)
-    for rs_row in rs:
+    for expect_row in context.table:
         isFound = False
-        for row in context.table:
-            idx = int(row["column_index"])
-            val = row["value"]
-            isFound = val == rs_row[idx]
-            if not isFound: break
-        assert not isFound, "expect {0} not in resultset of {1}".format(rs_row, rs_name)
+        for rs_row in rs:
+            for i in range(len(expect_row)):
+                expect_col = expect_row[i]
+                col_idx = col_idx_list[i]
+                real_col = rs_row[col_idx]
+                isFound = unicode(real_col) == unicode(expect_col)
+                if not isFound: break
+        assert not isFound, "expect line not in resultset {0}".format(rs_name)
+        context.logger.info("expect row:{0}, not found".format(expect_row))
 
 #once found expect, break loop
 @Then('check resultset "{rs_name}" has lines with following column values')
 def step_impl(context, rs_name):
+    # headings in form "columnName-columnIndex"
+    col_idx_list = []
+    for str in context.table.headings:
+        assert str.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
+        idx = int(str.split("-")[-1])
+        col_idx_list.append(idx)
+
     rs = getattr(context, rs_name)
-    isFound = False
-    for rs_row in rs:
+    for expect_row in context.table:
         isFound = False
-        for row in context.table:
-            idx = int(row["column_index"])
-            val = row["value"]
-            isFound = str(val) == str(rs_row[idx])
-            if not isFound: break
-        if isFound: break
-    assert isFound, "expect line not found in resultset {0}".format(rs_name)
+        for rs_row in rs:
+            for i in range(len(expect_row)):
+                expect_col = expect_row[i]
+                col_idx = col_idx_list[i]
+                real_col = rs_row[col_idx]
+                isFound = unicode(real_col) == unicode(expect_col)
+                context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
+                if not isFound: break
+            if isFound: break
+        assert isFound, "expect line not found in resultset {0}".format(rs_name)
+        context.logger.info("expect row:{0}, is found".format(expect_row))
