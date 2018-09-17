@@ -1,4 +1,5 @@
 Feature: #show @@sql, show @@sql.resultset
+  @skip
   Scenario: #1 show @@sql.resultset
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -36,7 +37,6 @@ Feature: #show @@sql, show @@sql.resultset
         |    5 | test | insert into ta value(3, repeat('c', 100))  |
         |    6 | test | insert into ta value(2, repeat('b', 1500)) |
         |    7 | test | insert into ta value(1, repeat('a', 1100)) |
-
     Then execute admin cmd "show @@sql.resultset" and get result
         | ID   | USER | FREQUENCY | SQL                      | RESULTSET_SIZE |
         |    1 | test |         1 | SELECT * FROM ta LIMIT ? |           2721 |
