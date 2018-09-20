@@ -169,12 +169,18 @@ Feature: # verify hint sql
         | test | 111111 | conn_0     | False    | set global general_log=on                                                                |success |    |
         | test | 111111 | conn_0     | False    | set global log_output='table'                                                           | success |    |
         | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
+      Then execute sql in "mysql-slave1"
+        | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
+        | test | 111111 | conn_0     | False    | set global general_log=on                                                                |success |    |
+        | test | 111111 | conn_0     | False    | set global log_output='table'                                                           | success |    |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0     | True    | /*!dble:db_type=master*/select * from test_table                                       | success | mytest |
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  = 'select * from test_table'     | length{(0)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  = 'select * from test_table'      | length{(2)} |   |
@@ -185,6 +191,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     |  select * from mysql.general_log where argument  = 'select * from test_table'    | length{(2)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  = 'select * from test_table'      | length{(0)} |   |
@@ -195,6 +202,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'     | length{(0)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(2)} |   |
@@ -208,7 +216,8 @@ Feature: # verify hint sql
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(0)} |   |
-        | test | 111111 | conn_0     | True    | truncate table mysql.general_log                                                        | success|    |
+        | test | 111111 | conn_0     | False    | set global log_output='file'                                                           | success |    |
+        | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
   Scenario: #3.2 type = dble_type  balance=2
     Given delete the following xml segment
@@ -241,12 +250,18 @@ Feature: # verify hint sql
         | test | 111111 | conn_0     | False    | set global general_log=on                                                                |success |    |
         | test | 111111 | conn_0     | False    | set global log_output='table'                                                           | success |    |
         | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
+      Then execute sql in "mysql-slave1"
+        | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
+        | test | 111111 | conn_0     | False    | set global general_log=on                                                                |success |    |
+        | test | 111111 | conn_0     | False    | set global log_output='table'                                                           | success |    |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0     | True    | /*!dble:db_type=master*/select * from test_table                                       | success | mytest |
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  = 'select * from test_table'     | length{(0)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  = 'select * from test_table'      | length{(2)} |   |
@@ -257,6 +272,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     |  select * from mysql.general_log where argument  = 'select * from test_table'    | length{(2)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  = 'select * from test_table'      | length{(0)} |   |
@@ -267,6 +283,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'     | length{(0)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(2)} |   |
@@ -280,7 +297,8 @@ Feature: # verify hint sql
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(0)} |   |
-        | test | 111111 | conn_0     | True    | truncate table mysql.general_log                                                        | success|    |
+        | test | 111111 | conn_0     | False    | set global log_output='file'                                                           | success |    |
+        | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
   Scenario: #3.3 type = dble_type  balance=3
     Given delete the following xml segment
@@ -288,7 +306,7 @@ Feature: # verify hint sql
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <schema name="mytest" >
          <table name="test_table" dataNode="dn2,dn4" rule="hash-two" />
@@ -302,7 +320,7 @@ Feature: # verify hint sql
 		       </writeHost>
 	   </dataHost>
     """
-    Given Restart dble in "dble-1"
+     Given Restart dble in "dble-1"
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists test_table                                                             | success | mytest |
@@ -313,12 +331,18 @@ Feature: # verify hint sql
         | test | 111111 | conn_0     | False    | set global general_log=on                                                                |success |    |
         | test | 111111 | conn_0     | False    | set global log_output='table'                                                           | success |    |
         | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
+      Then execute sql in "mysql-slave1"
+        | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
+        | test | 111111 | conn_0     | False    | set global general_log=on                                                                |success |    |
+        | test | 111111 | conn_0     | False    | set global log_output='table'                                                           | success |    |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0     | True    | /*!dble:db_type=master*/select * from test_table                                       | success | mytest |
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  = 'select * from test_table'     | length{(0)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  = 'select * from test_table'      | length{(2)} |   |
@@ -329,6 +353,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     |  select * from mysql.general_log where argument  = 'select * from test_table'    | length{(2)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  = 'select * from test_table'      | length{(0)} |   |
@@ -339,6 +364,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'     | length{(0)} |   |
+        | test | 111111 | conn_0     | True     | truncate table mysql.general_log                                                        | success|    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(2)} |   |
@@ -352,7 +378,6 @@ Feature: # verify hint sql
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(0)} |   |
-        | test | 111111 | conn_0     | False    | truncate table mysql.general_log                                                        | success|    |
         | test | 111111 | conn_0     | False    | set global log_output='file'                                                           | success |    |
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
