@@ -33,7 +33,7 @@ Feature: #
       |schema.xml  |{'tag':'schema','kv_map':{'name':'mytest'}}   | {'tag':'table','kv_map':{'name':'test_table'}}  |
     Then execute admin cmd "reload @@config_all"
 
-  @current
+  @smoke
   Scenario: #3 schema.xml stable test
     #3.1 schema.xml with least content,  dble starts, reload @@config_all success, manager sql success
     Given delete the following xml segment
@@ -44,18 +44,17 @@ Feature: #
       |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1"
-    Then execute admin cmd "reload @@config_all"
 
-    #3.2 schema.xml contains stopped mysqld, start the mysqld, delete the mysqld
+    #3.2 schema.xml contains only 1 stopped mysqld, reload @@config_all fail, start the mysqld, reload @@config_all success
     Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn3" name="test" type="global" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn3" />
-	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
@@ -85,15 +84,21 @@ Feature: #
       |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
 
-    #3.3 add mysqld with only heartbeat, no readhost
+  Scenario:  #3.3 add mysqld with disabled="true", no readhost, start success
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+      |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     	<schema dataNode="dn2" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn2,dn4" name="test2" type="global" />
 	    </schema>
-	    <dataNode dataHost="dh2" database="db1" name="dn2" />
-	    <dataNode dataHost="dh2" database="db2" name="dn4" />
-	    <dataHost balance="1" maxCon="100" minCon="10" name="dh2" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db1" name="dn2" />
+	    <dataNode dataHost="172.100.9.5" database="db2" name="dn4" />
+	    <dataHost balance="1" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true"></writeHost>
 	    </dataHost>
@@ -107,7 +112,7 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
 
-    #3.4 add readhost for writehost only
+    #3.4 add readhost for writehost in disabled state, execute select success with balance not 0
     Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}, 'childIdx':1}" in "schema.xml"
     """
         <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111"/>
@@ -116,6 +121,27 @@ Feature: #
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
+
+  @smoke
+  Scenario: #3.5 set dataHost balance=0 which readHost will not use, in such case, dble should check whether readhost connectable
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <dataHost maxCon="100" minCon="10" name="172.100.9.6" balance="0" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+                <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="222"/>
+            </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload config failure
+    """
+    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
+    """
+        <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="111111"/>
+    """
+    Then execute admin cmd "reload @@config_all"
 
   Scenario: #4 schema.xml only contain partial content
     #4.1 schema.xml only has dataNodes,  dble starts successful,
@@ -154,9 +180,9 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn3" name="test" type="global" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn3" />
-	    <dataHost balance="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
@@ -180,8 +206,8 @@ Feature: #
     	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2" name="test" type="global" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
-	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
@@ -204,8 +230,8 @@ Feature: #
     	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2" name="test" type="global" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
-	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		         <readHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
@@ -229,12 +255,12 @@ Feature: #
     	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2" name="test" type="global" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
-	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
-		    <readHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test"/>
+		    <readHost host="hostS1" password="111111" url="172.100.9.6:3306" user="test"/>
 	    </dataHost>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -252,8 +278,8 @@ Feature: #
     	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2" name="test" rule="sharding-test" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db$1-2" name="dn$1-2" />
-	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataNode dataHost="172.100.9.5" database="db$1-2" name="dn$1-2" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
@@ -480,11 +506,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -527,11 +553,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="1" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="1" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -569,11 +595,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="2" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -611,11 +637,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="3" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="3" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -662,11 +688,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="3" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="3" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
@@ -713,11 +739,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -753,11 +779,11 @@ Feature: #
 	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
 	    </schema>
-	    <dataNode dataHost="dh1" database="db1" name="dn1" />
-	    <dataNode dataHost="dh1" database="db2" name="dn2" />
-	    <dataNode dataHost="dh1" database="db3" name="dn3" />
-	    <dataNode dataHost="dh1" database="db4" name="dn4" />
-	    <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="1">
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+	    <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
