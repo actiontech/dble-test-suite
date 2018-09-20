@@ -295,34 +295,34 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |success | mytest |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table2(id int) |success | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where 1 = 1 and 2 = 1; |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where id = 567 and 1!= 1 |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where id = 567 and 1 = 1 |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where id = 2-1 |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | alter table test_table add name varchar(20)   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |success | mytest |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table_12(id int) |success | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 567 and 1!= 1 |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 567 and 1 = 1 |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 2-1 |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | alter table test_table_1 add name varchar(20)   |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | commit   |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | delete from test_table where id =1   |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | drop table test_table   |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | insert test_table values(1)   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | delete from test_table_1 where id =1   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | drop table test_table_1   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | insert test_table_1 values(1)   |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | intersect    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | lock tables test_table read  |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | lock tables test_table_1 read  |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | minus    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | call test_table    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | replace into test_table(id)values (2)  |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | call test_table_1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | replace into test_table_1(id)values (2)  |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | set xa =1    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | describe test_table    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table limit 0    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where id = 1^1   |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where id = 1&1     |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | describe test_table_1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 limit 0    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 1^1   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 1&1     |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | start transation    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | truncate table test_table    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | update test_table set id =10 where id =1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | truncate table test_table_1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | update test_table_1 set id =10 where id =1    |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | use mytest    |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | BEGIN select * from suntest;END;   |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | delete from test_table    |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | update test_table set id =10   |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | delete from test_table_1    |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | update test_table_1 set id =10   |error totally whack | mytest |
  #
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
@@ -337,8 +337,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table(id int) |error totally whack | mytest |
-        | test         | 111111 | conn_0 | False    | select * from test_table where 1 = 1 and 2 = 1; |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |error totally whack | mytest |
+        | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
   Scenario: #test user maxCon
