@@ -213,6 +213,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'     | length{(2)} |   |
+        | test | 111111 | conn_0     | True    | set global log_output='file'                                                           | success |    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(0)} |   |
@@ -294,6 +295,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'     | length{(2)} |   |
+        | test | 111111 | conn_0     | True    | set global log_output='file'                                                           | success |    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(0)} |   |
@@ -375,6 +377,7 @@ Feature: # verify hint sql
     Then execute sql in "mysql-slave1"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | True     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'     | length{(2)} |   |
+        | test | 111111 | conn_0     | True    | set global log_output='file'                                                           | success |    |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0    | False     | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%'      | length{(0)} |   |
@@ -404,4 +407,4 @@ Feature: # verify hint sql
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0     | False    | /*!dble:datanode=dn1*/call select_name                                            | has{[((2L, 'test_sp2'),)]} | mytest |
-        | test | 111111 | conn_0     | False    | /*!dble:sql=select id from test_shard where id =2*/call select_name          | has{[((2L, 'test_sp2'),)]} | mytest |
+        | test | 111111 | conn_0     | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name          | has{[((2L, 'test_sp2'),)]} | mytest |
