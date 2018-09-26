@@ -36,4 +36,4 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
     Then get query plan and make sure it is optimized
         |query | expect_result_count |
         |explain select * from table_a a, table_b b on a.id =b.id | 2 |
-        |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 9 |
+        |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 2 |

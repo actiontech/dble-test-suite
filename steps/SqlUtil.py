@@ -144,6 +144,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if hasnotObj:
                     notExpectRS=hasnotObj.group(1)
                     # context.logger.info("debug notExpectRS:{0}".format(notExpectRS))
+                    context.logger.info("not expect resultset:{0}, real res:{1}".format(eval(notExpectRS), res))
                     hasResultSet(res, notExpectRS, False)
                 if lengthObj:
                     expectRS = lengthObj.group(1)
