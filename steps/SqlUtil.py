@@ -263,7 +263,7 @@ def balance(context, expectRS, bHas): #Float a value up and down
     re_num = int (re.sub("\D","",str(expectRS[0])))
 
     a = abs(re_num - bHas)
-    b = bHas *0.2
+    b = bHas *0.05
     if(a < b):
         rs = True
     else:
