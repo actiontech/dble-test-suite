@@ -61,6 +61,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | select/select_join_sharding.sql             |
           | select/select_no_sharding.sql               |
           | select/select_sharding.sql                  |
+          | select/subquery_dev.sql                     |
           | select/subquery.sql                         |
           | select/subquery_global.sql                  |
           | select/subquery_global_noshard.sql          |
