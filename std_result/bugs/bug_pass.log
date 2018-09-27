@@ -28,11 +28,11 @@ dble:[((None, None, 2L, None), (1L, '1', 1L, '1'))]
 dble:[((1L, '1', 1L, '1'), (2L, None, None, None))]
 ===file:bugs/bug.sql, id:18, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:bugs/bug.sql, id:19, sql:[drop table if exists a_order]===
+===file:bugs/bug.sql, id:19, sql:[drop table if exists aly_order]===
 dble:[[]]
 ===file:bugs/bug.sql, id:20, sql:[create table aly_test(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))]===
 dble:[[]]
-===file:bugs/bug.sql, id:21, sql:[create table a_order(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))]===
+===file:bugs/bug.sql, id:21, sql:[create table aly_order(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))]===
 dble:[[]]
 ===file:bugs/bug.sql, id:37, sql:[SELECT COUNT(*) FROM (
 select test1.*
@@ -42,7 +42,7 @@ AND test1.RETCODE = '0'
 AND test1.OAPP != 'F-CLMS'
 UNION
 SELECT test2.*
-FROM mytest.a_order test2
+FROM mytest.aly_order test2
 WHERE test2.trancode = 'ATS000008QRYBUSSPTGIFTLIST'
 AND test2.RETCODE = '0'
 AND test2.OAPP != 'F-CLMS'
@@ -51,7 +51,7 @@ AND test2.OAPP != 'F-CLMS'
 dble:[[(0L,)]]
 ===file:bugs/bug.sql, id:40, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:bugs/bug.sql, id:41, sql:[drop table if exists a_order]===
+===file:bugs/bug.sql, id:41, sql:[drop table if exists aly_order]===
 dble:[[]]
 ===file:bugs/bug.sql, id:42, sql:[drop table if exists a_manager]===
 dble:[[]]
@@ -59,7 +59,7 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:44, sql:[create table aly_test(id int primary key,name varchar(10))]===
 dble:[[]]
-===file:bugs/bug.sql, id:45, sql:[create table a_order(id int primary key,name varchar(10))]===
+===file:bugs/bug.sql, id:45, sql:[create table aly_order(id int primary key,name varchar(10))]===
 dble:[[]]
 ===file:bugs/bug.sql, id:46, sql:[create table a_manager(id int primary key,name varchar(10))]===
 dble:[[]]
@@ -67,17 +67,17 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:48, sql:[insert into aly_test values(1,'actiontech')]===
 dble:[[]]
-===file:bugs/bug.sql, id:49, sql:[insert into a_order values(1,'actiontech')]===
+===file:bugs/bug.sql, id:49, sql:[insert into aly_order values(1,'actiontech')]===
 dble:[[]]
 ===file:bugs/bug.sql, id:50, sql:[insert into a_manager values(1,'actiontech')]===
 dble:[[]]
 ===file:bugs/bug.sql, id:51, sql:[insert into test_global values(1,'actiontech')]===
 dble:[[]]
-===file:bugs/bug.sql, id:52, sql:[select a.id,a.name from aly_test a join a_order b where a.id=b.id union  select id,name from a_manager]===
+===file:bugs/bug.sql, id:52, sql:[select a.id,a.name from aly_test a join aly_order b where a.id=b.id union  select id,name from a_manager]===
 dble:[[(1L, 'actiontech')]]
 ===file:bugs/bug.sql, id:53, sql:[select id,concat(id,'_',name)from aly_test union all select id,concat(id,'_',name)from aly_test]===
 dble:[[(1L, '1_actiontech'), (1L, '1_actiontech')]]
-===file:bugs/bug.sql, id:54, sql:[select a.id,concat(a.id,'_',a.name) from aly_test a join a_order b where a.id=b.id union  select id,concat(id,'_',name)from a_manager]===
+===file:bugs/bug.sql, id:54, sql:[select a.id,concat(a.id,'_',a.name) from aly_test a join aly_order b where a.id=b.id union  select id,concat(id,'_',name)from a_manager]===
 dble:[[(1L, '1_actiontech')]]
 ===file:bugs/bug.sql, id:55, sql:[select 1 union select id from aly_test]===
 dble:[[(1L,)]]
@@ -213,17 +213,17 @@ dble:[[(0L,)]]
 dble:[[]]
 ===file:bugs/bug.sql, id:125, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:bugs/bug.sql, id:126, sql:[drop table if exists a_order]===
+===file:bugs/bug.sql, id:126, sql:[drop table if exists aly_order]===
 dble:[[]]
 ===file:bugs/bug.sql, id:127, sql:[create table aly_test(id int primary key,name varchar(10))]===
 dble:[[]]
-===file:bugs/bug.sql, id:128, sql:[create table a_order(id int primary key,name varchar(10))]===
+===file:bugs/bug.sql, id:128, sql:[create table aly_order(id int primary key,name varchar(10))]===
 dble:[[]]
 ===file:bugs/bug.sql, id:129, sql:[insert into aly_test values(1,'actiontech')]===
 dble:[[]]
-===file:bugs/bug.sql, id:130, sql:[insert into a_order values(1,'actiontech')]===
+===file:bugs/bug.sql, id:130, sql:[insert into aly_order values(1,'actiontech')]===
 dble:[[]]
-===file:bugs/bug.sql, id:131, sql:[select `A`.* FROM (select aly_test.id,a_order.name from a_order, aly_test where  aly_test.id = a_order.id) `A` where `A`.id = 99 order by `A`.id]===
+===file:bugs/bug.sql, id:131, sql:[select `A`.* FROM (select aly_test.id,aly_order.name from aly_order, aly_test where  aly_test.id = aly_order.id) `A` where `A`.id = 99 order by `A`.id]===
 dble:[()]
 ===file:bugs/bug.sql, id:133, sql:[drop table if exists test_shard]===
 dble:[[]]

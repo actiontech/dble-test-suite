@@ -2,14 +2,6 @@
 <!DOCTYPE dble:schema SYSTEM "schema.dtd">
 <dble:schema xmlns:dble="http://dble.cloud/">
 	<schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
-		<!--mf test table -->
-    	<table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
-
-		<table name="a_order" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-		<table name="a_manager" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-
-		<table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="R_REGIONKEY" autoIncrement="true"/>
-		<table name="auto_table" primaryKey="id" autoIncrement="true" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
         <table name="a_two" primaryKey="id" dataNode="dn1,dn2" rule="hash-two" />
         <table name="a_three" primaryKey="id" dataNode="dn1,dn2,dn3" rule="hash-three" />
 		
@@ -37,20 +29,12 @@
 		<!-- 取模 -->
 		<table name="aly_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
 		<table name="aly_order" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+		<table name="a_manager" primaryKey="id" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+		<table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="R_REGIONKEY" autoIncrement="true"/>
+		<table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
 	</schema>
 	<schema name="testdb" sqlMaxLimit="100">
 		<table name="tb_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-		<table name="test_db" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-		<table name="test_db2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-		<table name="enum" dataNode="dn1,dn2,dn3,dn4" rule="enum_integer_rule"/>
-		<table name="ranges" dataNode="dn1,dn2,dn3,dn4" rule="range_rule" />
-		<table name="fixed" dataNode="dn1,dn2,dn3,dn4" rule="fixed_uniform_string_rule" />
-
-		<table name="global1" primaryKey="id" type="global" dataNode="dn1,dn2,dn3,dn4" />
-		<table name="global2" primaryKey="id" type="global" dataNode="dn1,dn2,dn3,dn4" />
-		<table name="normal1" dataNode="dn1" />
-		<table name="normal2" dataNode="dn3" />
-
 	</schema>
 
 	<dataNode name="dn1" dataHost="172.100.9.5" database="db1" />

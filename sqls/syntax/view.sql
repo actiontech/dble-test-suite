@@ -24,29 +24,29 @@ create view view_test as select sum(id) a,R_COMMENT from test_shard group by R_C
 select * from view_test
 drop view view_test
 drop table if exists aly_test
-drop table if exists a_order
+drop table if exists aly_order
 drop table if exists a_manager
 CREATE TABLE aly_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))
-CREATE TABLE a_order(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))
+CREATE TABLE aly_order(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))
 CREATE TABLE a_manager(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))
 insert into aly_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3)
-insert into a_order values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
-create view view_test as select aly_test.id,aly_test.name,a_order.pad from aly_test,a_order where aly_test.id=a_order.id
+insert into aly_order values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
+create view view_test as select aly_test.id,aly_test.name,aly_order.pad from aly_test,aly_order where aly_test.id=aly_order.id
 select * from view_test
 drop view view_test
-create view view_test as select aly_test.id,aly_test.name,a_order.pad,a_manager.m_id from aly_test,a_order,a_manager where aly_test.id=a_order.id and aly_test.pad=a_manager.pad
+create view view_test as select aly_test.id,aly_test.name,aly_order.pad,a_manager.m_id from aly_test,aly_order,a_manager where aly_test.id=aly_order.id and aly_test.pad=a_manager.pad
 select * from view_test
 drop view view_test
-create view view_test as select aly_test.id,aly_test.name,aly_test.pad,a_order.name as a_name from aly_test inner join a_order
+create view view_test as select aly_test.id,aly_test.name,aly_test.pad,aly_order.name as a_name from aly_test inner join aly_order
 select * from view_test
 drop view view_test
-create view view_test as select a.id,b.pad,a.t_id from aly_test a,(select all * from a_order) b where a.t_id=b.o_id
+create view view_test as select a.id,b.pad,a.t_id from aly_test a,(select all * from aly_order) b where a.t_id=b.o_id
 select * from view_test
 drop view view_test
-create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from aly_test a,(select all * from a_order) b where a.t_id=b.o_id
+create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from aly_test a,(select all * from aly_order) b where a.t_id=b.o_id
 select * from view_test
 drop view view_test
-create view view_test as select * from aly_test union select * from a_order
+create view view_test as select * from aly_test union select * from aly_order
 select * from view_test
 drop view view_test
 ####################################view grammar#######################
@@ -74,11 +74,11 @@ drop view view_test
 #create view view_test as select * from test_shard with local check option
 ######################alter view ###################################
 create or replace view view_test as select * from aly_test
-alter view view_test as select * from a_order
+alter view view_test as select * from aly_order
 select * from view_test
 drop view view_test
 create or replace view view_test as select * from aly_test
-alter view view_test(name) as select name from a_order
+alter view view_test(name) as select name from aly_order
 select * from view_test
 drop view view_test
 ########################drop view#################################
@@ -86,7 +86,7 @@ create view view_test as select * from aly_test
 select * from view_test
 drop view view_test
 create view view_test as select * from aly_test
-create view view_test1 as select * from a_order
+create view view_test1 as select * from aly_order
 select * from view_test
 drop view view_test,view_test1
 select * from view_test1/*table doesn't exist*/
@@ -104,10 +104,10 @@ drop view if exists view_test
 select * from view_test/*table doesn't exist*/
 ######################Related to select syntax################
 create view view_test as select * from aly_test
-select * from a_order a join view_test b where a.pad=b.pad
+select * from aly_order a join view_test b where a.pad=b.pad
 select count(*) from (select * from view_test) a
-select * from a_order union select * from view_test
-select * from a_order where id<(select count(*) from view_test)
+select * from aly_order union select * from view_test
+select * from aly_order where id<(select count(*) from view_test)
 drop view view_test
 ####################The features of distributed view###########
 create view view_test as select R_NAME from test_shard
@@ -124,5 +124,5 @@ drop table test_shard
 #clear tables
 #
 drop table if exists aly_test
-drop table if exists a_order
+drop table if exists aly_order
 drop table if exists a_manager

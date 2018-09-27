@@ -16,9 +16,9 @@ select * from test1 a right join test2 b on a.c_char =b.c_char order by a.id
 select * from test1 a left join test2 b on a.c_char =b.c_char order by a.id
 #case from gonghang
 drop table if exists aly_test
-drop table if exists a_order
+drop table if exists aly_order
 create table aly_test(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
-create table a_order(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
+create table aly_order(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
 #!multiline
 SELECT COUNT(*) FROM (
      select test1.*
@@ -30,7 +30,7 @@ SELECT COUNT(*) FROM (
      UNION
 
      SELECT test2.*
-     FROM mytest.a_order test2
+     FROM mytest.aly_order test2
      WHERE test2.trancode = 'ATS000008QRYBUSSPTGIFTLIST'
      AND test2.RETCODE = '0'
      AND test2.OAPP != 'F-CLMS'
@@ -38,20 +38,20 @@ SELECT COUNT(*) FROM (
 #end multiline
 #github issue 581
 drop table if exists aly_test
-drop table if exists a_order
+drop table if exists aly_order
 drop table if exists a_manager
 drop table if exists test_global
 create table aly_test(id int primary key,name varchar(10))
-create table a_order(id int primary key,name varchar(10))
+create table aly_order(id int primary key,name varchar(10))
 create table a_manager(id int primary key,name varchar(10))
 create table test_global(id int primary key,name varchar(10))
 insert into aly_test values(1,'actiontech')
-insert into a_order values(1,'actiontech')
+insert into aly_order values(1,'actiontech')
 insert into a_manager values(1,'actiontech')
 insert into test_global values(1,'actiontech')
-select a.id,a.name from aly_test a join a_order b where a.id=b.id union  select id,name from a_manager
+select a.id,a.name from aly_test a join aly_order b where a.id=b.id union  select id,name from a_manager
 select id,concat(id,'_',name)from aly_test union all select id,concat(id,'_',name)from aly_test
-select a.id,concat(a.id,'_',a.name) from aly_test a join a_order b where a.id=b.id union  select id,concat(id,'_',name)from a_manager
+select a.id,concat(a.id,'_',a.name) from aly_test a join aly_order b where a.id=b.id union  select id,concat(id,'_',name)from a_manager
 select 1 union select id from aly_test
 select id from aly_test union select 1
 select 1 union select id from test_global
@@ -123,12 +123,12 @@ CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_deci
 drop table if exists test_shard
 #github issue 651
 drop table if exists aly_test
-drop table if exists a_order
+drop table if exists aly_order
 create table aly_test(id int primary key,name varchar(10))
-create table a_order(id int primary key,name varchar(10))
+create table aly_order(id int primary key,name varchar(10))
 insert into aly_test values(1,'actiontech')
-insert into a_order values(1,'actiontech')
-select `A`.* FROM (select aly_test.id,a_order.name from a_order, aly_test where  aly_test.id = a_order.id) `A` where `A`.id = 99 order by `A`.id
+insert into aly_order values(1,'actiontech')
+select `A`.* FROM (select aly_test.id,aly_order.name from aly_order, aly_test where  aly_test.id = aly_order.id) `A` where `A`.id = 99 order by `A`.id
 #github issue 126
 drop table if exists test_shard
 create table test_shard(id int,c int,name varchar(20))
