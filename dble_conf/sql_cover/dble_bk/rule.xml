@@ -1,19 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dble:rule SYSTEM "rule.dtd">
 <dble:rule xmlns:dble="http://dble.cloud/">
-	
-	<tableRule name="fixed_uniform_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>fixed_uniform</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="fixed_nonuniform_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>fixed_nonuniform</algorithm>
-		</rule>
-	</tableRule>
 	<tableRule name="fixed_uniform_string_rule">
 		<rule>
 			<columns>id</columns>
@@ -42,12 +29,6 @@
 		<rule>
 			<columns>id</columns>
 			<algorithm>range</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="range_default_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>range_string</algorithm>
 		</rule>
 	</tableRule>
 	<tableRule name="date_rule">
@@ -89,7 +70,10 @@
         <property name="partitionCount">3</property>
         <property name="partitionLength">1</property>
     </function>
-
+	<function name="four-long" class="Hash">
+		<property name="partitionCount">4</property>
+		<property name="partitionLength">1</property>
+	</function>
 	<function name="fixed_uniform" class="Hash">
 		<property name="partitionCount">4</property>
 		<property name="partitionLength">256</property>
@@ -139,9 +123,6 @@
 		<property name="sEndDate">2017-01-9</property>
 		<property name="sPartionDay">10</property>
 		<property name="defaultNode">0</property>
-	</function>	
-	<function name="four-long" class="Hash">
-		<property name="partitionCount">4</property>
-		<property name="partitionLength">1</property>
-	</function>	
+	</function>
+
 </dble:rule>
