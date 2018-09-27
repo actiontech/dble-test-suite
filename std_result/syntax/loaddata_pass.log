@@ -1,32 +1,32 @@
-===file:syntax/loaddata.sql, id:2, sql:[drop table if exists a_test]===
+===file:syntax/loaddata.sql, id:2, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:3, sql:[create table a_test(id int, c1 char(20), c2 bool, c3 binary, c4 float,c5 datetime)ENGINE=InnoDB DEFAULT CHARSET=utf8]===
+===file:syntax/loaddata.sql, id:3, sql:[create table aly_test(id int, c1 char(20), c2 bool, c3 binary, c4 float,c5 datetime)ENGINE=InnoDB DEFAULT CHARSET=utf8]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:6, sql:[load data local infile "./test1.txt" into table a_test fields terminated by',' lines terminated by '\n']===
+===file:syntax/loaddata.sql, id:6, sql:[load data local infile "./test1.txt" into table aly_test fields terminated by',' lines terminated by '\n']===
 dble:[[]]
-===file:syntax/loaddata.sql, id:7, sql:[select * from a_test order by id]===
+===file:syntax/loaddata.sql, id:7, sql:[select * from aly_test order by id]===
 dble:[()]
-===file:syntax/loaddata.sql, id:8, sql:[truncate table a_test]===
+===file:syntax/loaddata.sql, id:8, sql:[truncate table aly_test]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:10, sql:[load data infile "./test1.txt" into table a_test fields terminated by',' lines terminated by '\n']===
+===file:syntax/loaddata.sql, id:10, sql:[load data infile "./test1.txt" into table aly_test fields terminated by',' lines terminated by '\n']===
 dble:[[]]
-===file:syntax/loaddata.sql, id:11, sql:[select * from a_test order by id]===
+===file:syntax/loaddata.sql, id:11, sql:[select * from aly_test order by id]===
 dble:[()]
-===file:syntax/loaddata.sql, id:12, sql:[truncate table a_test]===
+===file:syntax/loaddata.sql, id:12, sql:[truncate table aly_test]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:15, sql:[load data local infile "./test2.txt" into table a_test fields terminated by',' lines terminated by '\n']===
+===file:syntax/loaddata.sql, id:15, sql:[load data local infile "./test2.txt" into table aly_test fields terminated by',' lines terminated by '\n']===
 dble:[[]]
-===file:syntax/loaddata.sql, id:16, sql:[select * from a_test order by id]===
+===file:syntax/loaddata.sql, id:16, sql:[select * from aly_test order by id]===
 dble:[()]
-===file:syntax/loaddata.sql, id:17, sql:[truncate table a_test]===
+===file:syntax/loaddata.sql, id:17, sql:[truncate table aly_test]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:19, sql:[load data infile "./test2.txt" into table a_test fields terminated by',' lines terminated by '\n']===
+===file:syntax/loaddata.sql, id:19, sql:[load data infile "./test2.txt" into table aly_test fields terminated by',' lines terminated by '\n']===
 dble:[[]]
-===file:syntax/loaddata.sql, id:20, sql:[select * from a_test order by id]===
+===file:syntax/loaddata.sql, id:20, sql:[select * from aly_test order by id]===
 dble:[()]
-===file:syntax/loaddata.sql, id:21, sql:[truncate table a_test]===
+===file:syntax/loaddata.sql, id:21, sql:[truncate table aly_test]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:26, sql:[truncate table a_test]===
+===file:syntax/loaddata.sql, id:26, sql:[truncate table aly_test]===
 dble:[[]]
-===file:syntax/loaddata.sql, id:29, sql:[select * from a_test order by id]===
+===file:syntax/loaddata.sql, id:29, sql:[select * from aly_test order by id]===
 dble:[()]

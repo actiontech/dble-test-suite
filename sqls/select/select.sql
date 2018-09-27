@@ -5,9 +5,9 @@ insert into test_shard(id,k,pad) values(19,19,19)
 drop table if exists testdb.tb_test
 CREATE TABLE testdb.tb_test(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8
 insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15)
-drop table if exists sbtest2
-CREATE TABLE sbtest2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
-insert into sbtest2 values(1,1,'sb2_1',1),(2,2,'sb2_2',2),(3,3,'sb2_3',3),(4,4,'sb2_4',4),(5,5,'sb2_5',1),(6,6,'sb2_6',2),(7,7,'sb2_7',3),(8,8,'$sb2_8$',4)
+drop table if exists aly_order
+CREATE TABLE aly_order(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
+insert into aly_order values(1,1,'sb2_1',1),(2,2,'sb2_2',2),(3,3,'sb2_3',3),(4,4,'sb2_4',4),(5,5,'sb2_5',1),(6,6,'sb2_6',2),(7,7,'sb2_7',3),(8,8,'$sb2_8$',4)
 #
 #select select_expr
 #
@@ -39,11 +39,11 @@ select test_shard.pad t1 from test_shard
 select k,pad from test_shard
 select !1 from test_shard;
 select !id from test_shard;
-select !(select pad from sbtest2 where id=1) from test_shard;
+select !(select pad from aly_order where id=1) from test_shard;
 select id=1 from test_shard;
 select 1=id from test_shard;
 select id=BIT_COUNT(29) from test_shard;
-select pad=(select pad from sbtest2 where id=1) from test_shard;
+select pad=(select pad from aly_order where id=1) from test_shard;
 #
 #from table_references
 #
@@ -312,5 +312,5 @@ select id,pad,sum(id) from test_shard group by id,pad  order by id,pad limit 2,3
 #
 drop table if exists test_shard
 drop table if exists testdb.tb_test
-drop table if exists sbtest2
+drop table if exists aly_order
 drop table if exists mytest_auto_test1

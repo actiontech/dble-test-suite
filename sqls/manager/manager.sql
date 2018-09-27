@@ -9,7 +9,7 @@ SET SESSION sql_mode = 'TRADITIONAL';
 SET sql_mode = 'TRADITIONAL';
 
 #show
-show @@algorithm where schema=mytest and table=a_test;
+show @@algorithm where schema=mytest and table=aly_test;
 show @@backend
 show @@backend.old
 show @@backend.statistics
@@ -24,7 +24,7 @@ show @@cost_time
 show @@database
 show @@datanode
 show @@datanode where schema=mytest;
-show @@datanodes where schema=mytest and table=a_test;
+show @@datanodes where schema=mytest and table=aly_test;
 show @@datasource
 show @@datasource.cluster
 show @@datasource.synstatus

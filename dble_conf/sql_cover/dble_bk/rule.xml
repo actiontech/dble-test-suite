@@ -62,87 +62,7 @@
 			<algorithm>date_default</algorithm>
 		</rule>
 	</tableRule>
-	<tableRule name="sharding-by-fixed">
-		<rule>
-			<columns>w_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="sharding-by-fixed1">
-		<rule>
-			<columns>p_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
 
-	<tableRule name="mod-long">
-		<rule>
-			<columns>id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="c_mod-long">
-		<rule>
-			<columns>c_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="d_mod-long">
-		<rule>
-			<columns>d_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="h_mod-long">
-		<rule>
-			<columns>h_c_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="i_mod-long">
-		<rule>
-			<columns>i_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="n_mod-long">
-		<rule>
-			<columns>no_o_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="ol_mod-long">
-		<rule>
-			<columns>ol_number</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="o_mod-long">
-		<rule>
-			<columns>o_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="s_mod-long">
-		<rule>
-			<columns>s_i_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="w_mod-long">
-		<rule>
-			<columns>w_id</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="f_mod-long">
-		<rule>
-			<columns>entryUuid</columns>
-			<algorithm>sharding</algorithm>
-		</rule>
-	</tableRule>
-
-	<!--mf test rule-->
 	<tableRule name="hash-two">
         <rule>
             <columns>id</columns>
@@ -153,6 +73,12 @@
         <rule>
             <columns>id</columns>
             <algorithm>three-long</algorithm>
+        </rule>
+    </tableRule>
+	<tableRule name="hash-four">
+        <rule>
+            <columns>id</columns>
+            <algorithm>four-long</algorithm>
         </rule>
     </tableRule>
     <function name="two-long" class="Hash">
@@ -214,7 +140,7 @@
 		<property name="sPartionDay">10</property>
 		<property name="defaultNode">0</property>
 	</function>	
-	<function name="sharding" class="Hash">
+	<function name="four-long" class="Hash">
 		<property name="partitionCount">4</property>
 		<property name="partitionLength">1</property>
 	</function>	

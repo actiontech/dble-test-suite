@@ -11,7 +11,7 @@
 	
 	<user name="test">
 		<property name="password">111111</property>
-		<property name="schemas">mytest,tpccdb,testdb</property>
+		<property name="schemas">mytest,testdb</property>
 	</user>
 	<user name="root">
 		<property name="password">111111</property>

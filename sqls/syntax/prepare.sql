@@ -68,21 +68,21 @@ drop prepare pre_test
 #
 #contains create view
 #
-drop table if exists a_test
+drop table if exists aly_test
 drop table if exists a_order
 drop table if exists a_manager
-CREATE TABLE a_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))
+CREATE TABLE aly_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))
 CREATE TABLE a_order(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))
 CREATE TABLE a_manager(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))
-insert into a_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
+insert into aly_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
 insert into a_order values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
 insert into a_manager values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
-prepare pre_test from 'create view view_test as select a_test.id,a_test.name,a_test.pad,a_order.name as a_name from a_test inner join a_order'
+prepare pre_test from 'create view view_test as select aly_test.id,aly_test.name,aly_test.pad,a_order.name as a_name from aly_test inner join a_order'
 execute pre_test
 select * from view_test
 drop view view_test
 drop prepare pre_test
-prepare pre_test from  'create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from a_test a,(select all * from a_order) b where a.t_id=b.o_id'
+prepare pre_test from  'create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from aly_test a,(select all * from a_order) b where a.t_id=b.o_id'
 execute pre_test
 select * from view_test
 drop view view_test
@@ -135,10 +135,10 @@ drop prepare pre_test
 #
 #contains select
 #
-prepare pre_test from 'select a_test.id,a_test.name,a_test.pad,a_order.name as a_name from a_test inner join a_order'
+prepare pre_test from 'select aly_test.id,aly_test.name,aly_test.pad,a_order.name as a_name from aly_test inner join a_order'
 execute pre_test
 drop prepare pre_test
-prepare pre_test from 'select a.id,b.id as b_id,b.pad,a.t_id from a_test a,(select all * from a_order) b where a.t_id=b.o_id'
+prepare pre_test from 'select a.id,b.id as b_id,b.pad,a.t_id from aly_test a,(select all * from a_order) b where a.t_id=b.o_id'
 execute pre_test
 drop prepare pre_test
 prepare pre_test from 'select * from test_shard where id=3'
