@@ -163,8 +163,20 @@ insert into a_two values(1,123);
 insert into a_three values(2,111),(2,123),(2,NULL);
 select * from a_two a,a_three b where a.aa = b.bb;
 #github issue #678 #671
-drop table if exists bams_flow_log
-create table bams_flow_log (id int,busidate char(20),zoneno char(20),brno int,tellerno int);
+drop table if exists BAMS_FLOW_LOG
+create table BAMS_FLOW_LOG (id int,busidate char(20),zoneno char(20),brno int,tellerno int);
 SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM BAMS_FLOW_LOG F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T;
 SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM BAMS_FLOW_LOG F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T;
-drop table if exists bams_flow_log
+drop table if exists BAMS_FLOW_LOG
+#github issue #717
+drop table if exists a_test
+drop table if exists a_order
+create table a_test(id int, name varchar(20));
+create table a_order(id int, name varchar(20));
+insert into a_test value(1,'a');
+insert into a_order values(1,'d'),(2,'b'),(3,'c');
+select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL;
+drop table if exists a_test
+drop table if exists a_order
+
+

@@ -3,8 +3,10 @@
 #prepare
 drop table if exists a_test;
 drop table if exists a_order;
+drop table if exists a_manager;
 create table a_test(id int, name varchar(20));
 create table a_order(id int, name varchar(20));
+create table a_manager(id int, name varchar(20));
 insert into a_test values(1,'a'),(2,'b'),(5,null);
 insert into a_order values(1,1),(2,2),(3,null);
 #subquery position between select and from
@@ -30,6 +32,8 @@ select * from a_test where id not in (select id from a_order where id > 8) order
 select * from a_test where id not in (select max(name) from a_test where id =0)  order by id;
 select * from a_test where id not IN(select name from a_order where id =1) order by id;
 select a.* from a_test a left join a_order b on a.id != b.id where b.name = '1' order by id;
+SELECT * FROM a_test LEFT JOIN a_order ON a_test.id = a_order. NAME where a_test. NAME NOT IN (SELECT NAME FROM a_manager);
+
 #subquery with some
 select * from a_test  where id > SOME(select name from a_order);
 select * from a_test where id >some(select name from a_order where id =0);
@@ -66,3 +70,4 @@ select * from a_test where not exists(select name from a_order where id =0) orde
 select * from a_test where not exists(select null) order by id;
 #subquery with row compare, function is not available at 2018.9.26
 #select * from a_test where (id,id-2) > (select id,name from a_order where id = 2);
+SELECT * FROM (SELECT 1, 2, 3) AS t1;
