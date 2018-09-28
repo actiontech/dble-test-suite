@@ -1,3 +1,4 @@
+# -*- coding=utf-8 -*-
 Feature: basic sql translate/transmission correct, seperate read/write statements, read load balance
 
     Scenario Outline:#1 check read-write-split work fine and slaves load balance
@@ -82,6 +83,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | transaction/t_langues.sql                 |
           | transaction/transaction.sql               |
 
+    @current
     Scenario Outline:check sql statement "load data [local] infile ..." work fine#4
         Given create local and server file "test1.txt" and fill with text
         """
@@ -93,13 +95,13 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
 #      todo,bbb need to replace with chinese in later version
         Given create local and server file "test3.txt" and fill with text
         """
-        1,aaa,0,000,3.1415,20180905121530
-        2,bbb,1,111,-3.1415,20180905121530
-        3,$%'";:@#^&*_+-=|\<.>/?`~,5,1010,0.0010,20180905
+        1,aaa,0,0,3.1415,20180905121530
+        2,中,1,1,-3.1415,20180905121530
+        3,$%'";:@#^&*_+-=|\<.>/?`~,5,0,0.0010,20180905
         """
         Given create local and server file "test4.txt" and fill with text
         """
-        3,$%'";:@#^&*_+-=|\<.>/?`~,5,1010,0.0010,20180905
+        3,$%'";:@#^&*_+-=|\<.>/?`~,5,1,0.0010,20180905
         """
         Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
         Given clear dirty data yield by sql
