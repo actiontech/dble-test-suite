@@ -22,6 +22,16 @@ def init_log(context):
 
     context.config.setup_logging()
 
+def choose_conf(context):
+    if context.dble_conf.lower() == "sql_cover":
+        conf = context.cfg_dble['sql_conf']
+    elif context.dble_conf.lower() == "template":
+        conf = context.cfg_dble['base_conf']
+    else:
+        assert False, "userdata dble_conf usage: behave -D dble_conf=XXX ..., XXX can only be sql_cover or template"
+
+    return conf
+
 def before_all(context):
     context.current_log = init_log_directory()
     setup_logging(os.path.join(CONF_PATH, 'logging.yaml'))
@@ -54,7 +64,7 @@ def before_all(context):
     sys.path.append(steps_dir)
     init_log(context)
     try:
-        dble_conf = context.config.userdata.pop('dble_conf')
+        context.dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
 
@@ -66,10 +76,8 @@ def before_all(context):
         else:
             context.need_download = True
     else:
-        if dble_conf.lower() == "sql_cover":
-            replace_config(context, context.cfg_dble['sql_conf'])
-        elif dble_conf.lower() == "template":
-            replace_config(context, context.cfg_dble['base_conf'])
+        conf_path = choose_conf(context)
+        replace_config(context, conf_path)
 
         if not context.is_cluster:
             for node in context.dbles:
@@ -119,7 +127,8 @@ def after_scenario(context, scenario):
             delattr(context, conn_name)
 
     if not (context.config.stop and scenario.status == "failed"):
-        replace_config(context,  context.cfg_dble['base_conf'])
+        conf_path = choose_conf(context)
+        replace_config(context, conf_path)
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 def before_step(context, step):

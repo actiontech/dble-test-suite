@@ -56,27 +56,27 @@ dble:[[('test_shard', 0L, 'PRIMARY', 1L, 'id', 'A', 20L, None, None, '', 'BTREE'
 dble:[[]]
 ===file:syntax/prepare.sql, id:66, sql:[show index from test_shard]===
 dble:[[('test_shard', 0L, 'PRIMARY', 1L, 'id', 'A', 20L, None, None, '', 'BTREE', '', ''), ('test_shard', 1L, 'R_COMMENT', 1L, 'R_COMMENT', 'A', 19L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/prepare.sql, id:71, sql:[drop table if exists a_test]===
+===file:syntax/prepare.sql, id:71, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:syntax/prepare.sql, id:72, sql:[drop table if exists a_order]===
+===file:syntax/prepare.sql, id:72, sql:[drop table if exists aly_order]===
 dble:[[]]
 ===file:syntax/prepare.sql, id:73, sql:[drop table if exists a_manager]===
 dble:[[]]
-===file:syntax/prepare.sql, id:74, sql:[CREATE TABLE a_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))]===
+===file:syntax/prepare.sql, id:74, sql:[CREATE TABLE aly_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))]===
 dble:[[]]
-===file:syntax/prepare.sql, id:75, sql:[CREATE TABLE a_order(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))]===
+===file:syntax/prepare.sql, id:75, sql:[CREATE TABLE aly_order(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))]===
 dble:[[]]
 ===file:syntax/prepare.sql, id:76, sql:[CREATE TABLE a_manager(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))]===
 dble:[[]]
-===file:syntax/prepare.sql, id:77, sql:[insert into a_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)]===
+===file:syntax/prepare.sql, id:77, sql:[insert into aly_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)]===
 dble:[[]]
-===file:syntax/prepare.sql, id:78, sql:[insert into a_order values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)]===
+===file:syntax/prepare.sql, id:78, sql:[insert into aly_order values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)]===
 dble:[[]]
 ===file:syntax/prepare.sql, id:79, sql:[insert into a_manager values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)]===
 dble:[[]]
-===file:syntax/prepare.sql, id:80, sql:[prepare pre_test from 'create view view_test as select a_test.id,a_test.name,a_test.pad,a_order.name as a_name from a_test inner join a_order']===
+===file:syntax/prepare.sql, id:80, sql:[prepare pre_test from 'create view view_test as select aly_test.id,aly_test.name,aly_test.pad,aly_order.name as a_name from aly_test inner join aly_order']===
 dble:[[]]
-===file:syntax/prepare.sql, id:85, sql:[prepare pre_test from  'create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from a_test a,(select all * from a_order) b where a.t_id=b.o_id']===
+===file:syntax/prepare.sql, id:85, sql:[prepare pre_test from  'create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from aly_test a,(select all * from aly_order) b where a.t_id=b.o_id']===
 dble:[[]]
 ===file:syntax/prepare.sql, id:93, sql:[drop table if exists test_shard]===
 dble:[[]]
@@ -122,9 +122,9 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/prepare.sql, id:133, sql:[select * from test_shard]===
 dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
-===file:syntax/prepare.sql, id:138, sql:[prepare pre_test from 'select a_test.id,a_test.name,a_test.pad,a_order.name as a_name from a_test inner join a_order']===
+===file:syntax/prepare.sql, id:138, sql:[prepare pre_test from 'select aly_test.id,aly_test.name,aly_test.pad,aly_order.name as a_name from aly_test inner join aly_order']===
 dble:[[]]
-===file:syntax/prepare.sql, id:141, sql:[prepare pre_test from 'select a.id,b.id as b_id,b.pad,a.t_id from a_test a,(select all * from a_order) b where a.t_id=b.o_id']===
+===file:syntax/prepare.sql, id:141, sql:[prepare pre_test from 'select a.id,b.id as b_id,b.pad,a.t_id from aly_test a,(select all * from aly_order) b where a.t_id=b.o_id']===
 dble:[[]]
 ===file:syntax/prepare.sql, id:144, sql:[prepare pre_test from 'select * from test_shard where id=3']===
 dble:[[]]

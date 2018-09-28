@@ -1,7 +1,0 @@
-===file:syntax/loaddata.sql, id:24, sql:[load data local infile "./test3.txt" into table a_test fields terminated by',' lines terminated by '\n']===
-dble:[None]
-mysql:[()]
-[06:10:27.911487]dble err :(1136, "row data can't not calculate a sharding value,syntax error, token: ERROR $%, pos : 101")
-===file:syntax/loaddata.sql, id:25, sql:[select * from a_test order by id]===
-dble:[()]
-mysql:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (2L, 'bbb', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (3L, '$%\'";:@#^&*_+-=|<.>/', 5, '1', 0.001, datetime.datetime(2018, 9, 5, 0, 0)))]

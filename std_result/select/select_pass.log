@@ -12,11 +12,11 @@ dble:[[]]
 dble:[[]]
 ===file:select/select.sql, id:7, sql:[insert into testdb.tb_test values(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15)]===
 dble:[[]]
-===file:select/select.sql, id:8, sql:[drop table if exists sbtest2]===
+===file:select/select.sql, id:8, sql:[drop table if exists aly_order]===
 dble:[[]]
-===file:select/select.sql, id:9, sql:[CREATE TABLE sbtest2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))]===
+===file:select/select.sql, id:9, sql:[CREATE TABLE aly_order(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))]===
 dble:[[]]
-===file:select/select.sql, id:10, sql:[insert into sbtest2 values(1,1,'sb2_1',1),(2,2,'sb2_2',2),(3,3,'sb2_3',3),(4,4,'sb2_4',4),(5,5,'sb2_5',1),(6,6,'sb2_6',2),(7,7,'sb2_7',3),(8,8,'$sb2_8$',4)]===
+===file:select/select.sql, id:10, sql:[insert into aly_order values(1,1,'sb2_1',1),(2,2,'sb2_2',2),(3,3,'sb2_3',3),(4,4,'sb2_4',4),(5,5,'sb2_5',1),(6,6,'sb2_6',2),(7,7,'sb2_7',3),(8,8,'$sb2_8$',4)]===
 dble:[[]]
 ===file:select/select.sql, id:14, sql:[select 1+1]===
 dble:[[(2L,)]]
@@ -74,7 +74,7 @@ dble:[[(0L, 0L), (1L, 1L), (2L, 2L), (3L, 3L), (4L, 4L), (5L, 1L), (6L, 2L), (7L
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,)]]
 ===file:select/select.sql, id:41, sql:[select !id from test_shard;]===
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (1L,)]]
-===file:select/select.sql, id:42, sql:[select !(select pad from sbtest2 where id=1) from test_shard;]===
+===file:select/select.sql, id:42, sql:[select !(select pad from aly_order where id=1) from test_shard;]===
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,)]]
 ===file:select/select.sql, id:43, sql:[select id=1 from test_shard;]===
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (1L,)]]
@@ -82,7 +82,7 @@ dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (1L,)]]
 ===file:select/select.sql, id:45, sql:[select id=BIT_COUNT(29) from test_shard;]===
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (1L,)]]
-===file:select/select.sql, id:46, sql:[select pad=(select pad from sbtest2 where id=1) from test_shard;]===
+===file:select/select.sql, id:46, sql:[select pad=(select pad from aly_order where id=1) from test_shard;]===
 dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (1L,), (1L,)]]
 ===file:select/select.sql, id:50, sql:[select 1+1 from dual]===
 dble:[[(2L,)]]

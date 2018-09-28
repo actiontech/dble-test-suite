@@ -68,7 +68,7 @@ def start_dble_in_node(context, node):
     check_dble_started(context, ssh_client)
 
 def check_dble_started(context, ssh_client):
-    time.sleep(5)
+    time.sleep(10)
     cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
     rc, sto, ste = ssh_client.exec_command(cmd)
     if len(sto) == 0:

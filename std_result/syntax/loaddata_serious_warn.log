@@ -1,3 +1,0 @@
-===file:syntax/loaddata.sql, id:28, sql:[load data infile "./test3.txt" into table a_test fields terminated by',' lines terminated by '\n']===
-mysql err:(1406, "Data too long for column 'c3' at row 1")
-dble err[06:10:28.500057] :(1136, "row data can't not calculate a sharding value,syntax error, token: ERROR $%, pos : 101")

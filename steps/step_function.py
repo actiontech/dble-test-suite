@@ -1,6 +1,9 @@
-##!/usr/bin/python2.7
-# -*- coding: utf-8 -*-
-import sys
+#encoding: utf-8
+import sys   #引用sys模块进来，并不是进行sys的第一次加载
+reload(sys)  #重新加载sys
+sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
+
+# import sys
 import logging
 import os
 

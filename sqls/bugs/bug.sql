@@ -15,14 +15,14 @@ select * from test1 a inner join test2 b on a.c_char =b.c_char order by a.id
 select * from test1 a right join test2 b on a.c_char =b.c_char order by a.id
 select * from test1 a left join test2 b on a.c_char =b.c_char order by a.id
 #case from gonghang
-drop table if exists a_test
-drop table if exists a_order
-create table a_test(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
-create table a_order(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
+drop table if exists aly_test
+drop table if exists aly_order
+create table aly_test(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
+create table aly_order(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
 #!multiline
 SELECT COUNT(*) FROM (
      select test1.*
-     from mytest.a_test test1
+     from mytest.aly_test test1
      where test1.trancode = 'ATS000010CHGEBUSSPTBNK'
      AND test1.RETCODE = '0'
      AND test1.OAPP != 'F-CLMS'
@@ -30,30 +30,30 @@ SELECT COUNT(*) FROM (
      UNION
 
      SELECT test2.*
-     FROM mytest.a_order test2
+     FROM mytest.aly_order test2
      WHERE test2.trancode = 'ATS000008QRYBUSSPTGIFTLIST'
      AND test2.RETCODE = '0'
      AND test2.OAPP != 'F-CLMS'
      ) t3
 #end multiline
 #github issue 581
-drop table if exists a_test
-drop table if exists a_order
+drop table if exists aly_test
+drop table if exists aly_order
 drop table if exists a_manager
 drop table if exists test_global
-create table a_test(id int primary key,name varchar(10))
-create table a_order(id int primary key,name varchar(10))
+create table aly_test(id int primary key,name varchar(10))
+create table aly_order(id int primary key,name varchar(10))
 create table a_manager(id int primary key,name varchar(10))
 create table test_global(id int primary key,name varchar(10))
-insert into a_test values(1,'actiontech')
-insert into a_order values(1,'actiontech')
+insert into aly_test values(1,'actiontech')
+insert into aly_order values(1,'actiontech')
 insert into a_manager values(1,'actiontech')
 insert into test_global values(1,'actiontech')
-select a.id,a.name from a_test a join a_order b where a.id=b.id union  select id,name from a_manager
-select id,concat(id,'_',name)from a_test union all select id,concat(id,'_',name)from a_test
-select a.id,concat(a.id,'_',a.name) from a_test a join a_order b where a.id=b.id union  select id,concat(id,'_',name)from a_manager
-select 1 union select id from a_test
-select id from a_test union select 1
+select a.id,a.name from aly_test a join aly_order b where a.id=b.id union  select id,name from a_manager
+select id,concat(id,'_',name)from aly_test union all select id,concat(id,'_',name)from aly_test
+select a.id,concat(a.id,'_',a.name) from aly_test a join aly_order b where a.id=b.id union  select id,concat(id,'_',name)from a_manager
+select 1 union select id from aly_test
+select id from aly_test union select 1
 select 1 union select id from test_global
 select id from test_global union SELECT 1
 #github issue 537
@@ -122,13 +122,13 @@ CREATE TABLE test_shard(id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_deci
  select count(*) from test_shard where id = (select id from test_shard where id =1)
 drop table if exists test_shard
 #github issue 651
-drop table if exists a_test
-drop table if exists a_order
-create table a_test(id int primary key,name varchar(10))
-create table a_order(id int primary key,name varchar(10))
-insert into a_test values(1,'actiontech')
-insert into a_order values(1,'actiontech')
-select `A`.* FROM (select a_test.id,a_order.name from a_order, a_test where  a_test.id = a_order.id) `A` where `A`.id = 99 order by `A`.id
+drop table if exists aly_test
+drop table if exists aly_order
+create table aly_test(id int primary key,name varchar(10))
+create table aly_order(id int primary key,name varchar(10))
+insert into aly_test values(1,'actiontech')
+insert into aly_order values(1,'actiontech')
+select `A`.* FROM (select aly_test.id,aly_order.name from aly_order, aly_test where  aly_test.id = aly_order.id) `A` where `A`.id = 99 order by `A`.id
 #github issue 126
 drop table if exists test_shard
 create table test_shard(id int,c int,name varchar(20))
@@ -139,11 +139,11 @@ select * from test_shard wher id=3
 select * from test_shard where id=3 orde by id
 drop table if exists test_shard
 #github issue 666
-drop table if exists a_test
-CREATE TABLE a_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
-insert into a_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
-select id a,t_id b,name c,pad d from (select * from a_test union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
-select id,t_id,name,pad from a_test union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id
+drop table if exists aly_test
+CREATE TABLE aly_test(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
+insert into aly_test values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
+select id a,t_id b,name c,pad d from (select * from aly_test union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
+select id,t_id,name,pad from aly_test union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id
 drop table if exists test_global
 CREATE TABLE test_global(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
 insert into test_global values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
