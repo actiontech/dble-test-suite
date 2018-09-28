@@ -66,3 +66,45 @@ select * from aly_test where not exists(select name from aly_order where id =0) 
 select * from aly_test where not exists(select null) order by id;
 #subquery with row compare, function is not available at 2018.9.26
 #select * from aly_test where (id,id-2) > (select id,name from aly_order where id = 2);
+## case from developer
+truncate aly_test;
+truncate table aly_order;
+insert into aly_test values(1,'a'),(2,'b'),(5,null);
+insert into aly_order values(1,1),(2,2),(3,null),(5,'5'),(6,'6');
+#greater than compare when any() is:single null, single value and not null, multi-values without null, multi-values contains null, empty set
+select * from aly_order where id> any(select name from aly_test where id =9) order by id;
+select * from aly_order where id> any(select name from aly_test where id =5) order by id;
+select * from aly_order where id> any(select name from aly_test where id>1) order by id;
+select * from aly_order where id> any(select name from aly_test where id =1) order by id;
+select * from aly_order where id> any(select name from aly_test where id <=2) order by id;
+select * from aly_order where id> any(select name from aly_test) order by id;
+#not equal compare when any() is:single null, single value and not null, multi-values without null, multi-values contains null, empty set
+select * from aly_order where id<> any(select name from aly_test where id =9) order by id;
+select * from aly_order where id<> any(select name from aly_test where id =5) order by id;
+select * from aly_order where id<> any(select name from aly_test where id>1) order by id;
+select * from aly_order where id<> any(select name from aly_test where id =1) order by id;
+select * from aly_order where id<> any(select name from aly_test where id <=2) order by id;
+select * from aly_order where id<> any(select name from aly_test) order by id;
+#less than compare when all() is:single null, single value and not null, multi-values without null, multi-values contains null, empty set
+select * from aly_order where id< all(select name from aly_test where id =9) order by id;
+select * from aly_order where id< all(select name from aly_test where id =5) order by id;
+select * from aly_order where id< all(select name from aly_test where id>1) order by id;
+select * from aly_order where id< all(select name from aly_test where id =1) order by id;
+select * from aly_order where id< all(select name from aly_test where id <=2) order by id;
+select * from aly_order where id< all(select name from aly_test) order by id;
+#greater than compare when all() is:single null, single value and not null, multi-values without null, multi-values contains null, empty set
+select * from aly_order where id> all(select name from aly_test where id =9) order by id;
+select * from aly_order where id> all(select name from aly_test where id =5) order by id;
+select * from aly_order where id> all(select name from aly_test where id>1) order by id;
+select * from aly_order where id> all(select name from aly_test where id =1) order by id;
+select * from aly_order where id> all(select name from aly_test where id <=2) order by id;
+select * from aly_order where id> all(select name from aly_test) order by id;
+#equal compare when all() is:single null, single value and not null, multi-values without null, multi-values contains null, empty set
+select * from aly_order where id= all(select name from aly_test where id =9) order by id;
+select * from aly_order where id= all(select name from aly_test where id =5) order by id;
+select * from aly_order where id= all(select name from aly_test where id>1) order by id;
+select * from aly_order where id= all(select name from aly_test where id =1) order by id;
+select * from aly_order where id= all(select name from aly_test where id <=2) order by id;
+select * from aly_order where id= all(select name from aly_test) order by id;
+
+
