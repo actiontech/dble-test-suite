@@ -6,8 +6,5 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
 
         Examples:Types
           | filename                                  |
-          | transaction/D_langues.sql                 |
-          | transaction/lock.sql                      |
-          | transaction/t_langues.sql                 |
-          | transaction/transaction.sql               |
+          | syntax/sysfunction1.sql                 |
 

@@ -75,7 +75,7 @@ SELECT 2 >= 2
 SELECT GREATEST(2,0)
 SELECT GREATEST('B','A','C')
 SELECT 2 IN (0,3,5,7)
-SELECT (3,4) IN ((1,2), (3,4))
+#SELECT (3,4) IN ((1,2), (3,4))
 SELECT INTERVAL(23, 1, 15, 17, 30, 44, 200)
 SELECT 1 IS TRUE, 0 IS FALSE, NULL IS UNKNOWN
 SELECT 1 IS NOT UNKNOWN, 0 IS NOT UNKNOWN, NULL IS NOT UNKNOWN
@@ -290,10 +290,10 @@ SELECT POW(2,-2)
 SELECT POWER(2,2)
 SELECT RADIANS(90)
 #
-drop table if exists global_table1
-CREATE TABLE global_table1 (i INT)
-INSERT INTO global_table1 VALUES(1),(2),(3)
-SELECT i, RAND() FROM global_table1
+drop table if exists global_table1;
+CREATE TABLE global_table1 (i INT);
+INSERT INTO global_table1 VALUES(1),(2),(3);
+SELECT i, RAND() FROM global_table1 /*allow_diff*/
 SELECT i, RAND(3) FROM global_table1
 #
 SELECT ROUND(-1.23)

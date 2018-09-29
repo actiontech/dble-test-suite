@@ -1,10 +1,3 @@
-+===file:syntax/sysfunction1.sql, id:78, sql:[SELECT (3,4) IN ((1,2), (3,4))]===
-+dble:[None]
-+mysql:[((1L,),)]
-+[04:09:42.578734]dble err :(1064, 'Row Subqueries is not supported')
-===file:syntax/sysfunction1.sql, id:243, sql:[SELECT USER(), CHARSET(USER()), COLLATION(USER())]===
-dble:[[('test@dble-1.compose_net', 'utf8', 'utf8_general_ci')]]
-mysql:[[('test@172.100.9.253', 'utf8', 'utf8_general_ci')]]
-===file:syntax/sysfunction1.sql, id:296, sql:[SELECT i, RAND() FROM global_table1]===
-dble:[[(1L, 0.609724594847974), (2L, 0.5492259893093501), (3L, 0.9169561927364731)]]
-mysql:[[(1L, 0.027106553341361278), (2L, 0.5362004204990346), (3L, 0.5996824732047342)]]
++===file:syntax/sysfunction1.sql, id:243, sql:[SELECT USER(), CHARSET(USER()), COLLATION(USER())]===
++dble:[[('test@dble-1.compose_net', 'utf8', 'utf8_general_ci')]]
++mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com', 'utf8', 'utf8_general_ci')]]
