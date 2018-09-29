@@ -73,7 +73,7 @@ select * from aly_test where not exists(select null) order by id;
 ## case from developer
 truncate aly_test;
 truncate table aly_order;
-insert into aly_test values(1,'a'),(2,'b'),(5,null);
+insert into table_a values(1,null),(2,'2'),(5,'5');
 insert into aly_order values(1,1),(2,2),(3,null),(5,'5'),(6,'6');
 #greater than compare when any() is:single null, single value and not null, multi-values without null, multi-values contains null, empty set
 select * from aly_order where id> any(select name from aly_test where id =9) order by id;
