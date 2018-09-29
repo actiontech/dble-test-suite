@@ -7,8 +7,8 @@ create table aly_test(id int, name varchar(20));
 create table aly_order(id int, name varchar(20));
 insert into aly_test values(1,'a'),(2,'b'),(5,null);
 insert into aly_order values(1,1),(2,2),(3,null);
-drop table if exists aly_manager;
-create table aly_manager(id int, name varchar(20));
+drop table if exists a_manager;
+create table a_manager(id int, name varchar(20));
 #subquery position between select and from
 select *, (select name from aly_order where id=2) from aly_test order by id;
 select *, (select name from aly_order where id=8) from aly_test order by id;
