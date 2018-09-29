@@ -3,9 +3,9 @@
 // Author      : zhaohongjie
 // Version     :
 // Copyright   : reserved
-// Description : Hello World in C++, Ansi-style
+// Description : in C++, Ansi-style
 //============================================================================
-#include<mysql.h>
+#include <mysql.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -14,13 +14,13 @@
 using namespace std;
 
 int IS_DEBUG=0;
-char Host_Master[50] = "172.100.9.5";
-char Host_Uproxy[50] = "172.100.9.1";
+char Host_Master[50] = "172.100.9.4";
+char Host_Dble[50] = "172.100.9.1";
 char TEST_USER[100]="test";
 char TEST_USER_PASSWD[100]="111111";
 char TEST_DB[50]="mytest";
 unsigned int PORT=3306;
-unsigned int MPORT=8066;
+unsigned int DPORT=8066;
 
 int doPrintResult(MYSQL* mysql, MYSQL_RES  *res){
     MYSQL_ROW  row;
@@ -79,7 +79,7 @@ void case_mysql_real_connect(const char* sqls){
     if(IS_DEBUG){
         mysql_real_connect(test_conn, Host_Master, TEST_USER, TEST_USER_PASSWD, TEST_DB, PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
     }else{
-        mysql_real_connect(test_conn, Host_Uproxy, TEST_USER, TEST_USER_PASSWD, TEST_DB, MPORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        mysql_real_connect(test_conn, Host_Dble, TEST_USER, TEST_USER_PASSWD, TEST_DB, DPORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
     }
 
     if (test_conn == NULL) {
@@ -95,6 +95,7 @@ void case_mysql_real_connect(const char* sqls){
     int status = mysql_query(test_conn,sqls);
     if (status)
     {
+      printf("sqls to execute: %s \n", sqls);
       printf("execute multi statement(s) Err, %s \n", mysql_error(test_conn));
       mysql_close(test_conn);
       exit(1);
@@ -143,31 +144,32 @@ int main(int argc, char *argv[]) {
     if (argc>1){
         IS_DEBUG = strcmp(argv[1],"debug")==0;
         printf("IS_DEBUG: %d, argc:%d, argv[1]:%s\n", IS_DEBUG, argc, argv[1]);
+        printf("Usage:./c_mysql_api.o debug \n");
     }
     
 
     char sqls[] = "use mytest; \
-                    DROP TABLE IF EXISTS test_table;\
-                    CREATE TABLE test_table(id INT);\
+                    DROP TABLE IF EXISTS aly_test;\
+                    CREATE TABLE aly_test(id INT);\
                     begin; \
-                    INSERT INTO test_table VALUES(10);\
-                    INSERT INTO test_table VALUES(20);\
+                    INSERT INTO aly_test VALUES(10);\
+                    INSERT INTO aly_test VALUES(20);\
                     commit;";
 
-    char sqls2[] = "lock tables test_table write; \
-                    UPDATE test_table SET id=20 WHERE id=10;\
+    char sqls2[] = "lock tables aly_test write; \
+                    UPDATE aly_test SET id=20 WHERE id=10;\
                     unlock tables; \
                     start transaction; \
-                    INSERT INTO test_table VALUES(30);\
-                    rollback";
-    char sqls3[] = "SELECT * FROM test_table/* comment */; \
+                    INSERT INTO aly_test VALUES(30);\
+                    rollback;";
+    char sqls3[] = "SELECT * FROM aly_test/* comment */; \
                     /*! select 1*/;\
                     /* line 1 \
                     line 2 */ ;\
                     --i am comment";
 
     case_mysql_real_connect(sqls);
-    case_mysql_real_connect(sqls2);
+//    case_mysql_real_connect(sqls2);
     char sqls4[] = "select @@version_comment; \
                   select database();\
                   select user();\
@@ -177,14 +179,14 @@ int main(int argc, char *argv[]) {
                   select last_insert_id() as `id`;\
                   select @@identity; \
                   select @@session.tx_read_only";
-    case_mysql_real_connect(sqls4);
+//    case_mysql_real_connect(sqls4);
 
     char sqls5[] = "explain select 1; \
-                  create table test_table t(id int);\
-                  desc test_table;\
-                  create view view_test_table as select * from test_table;\
-                  drop view view_test_table;\
+                  create table aly_test t(id int);\
+                  desc aly_test;\
+                  create view view_aly_test as select * from aly_test;\
+                  drop view view_aly_test;\
                   show databases;\
                   set @a='test';";
-    case_mysql_real_connect(sqls5);
+//    case_mysql_real_connect(sqls5);
 }
