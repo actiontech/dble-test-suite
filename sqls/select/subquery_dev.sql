@@ -7,6 +7,8 @@ create table aly_test(id int, name varchar(20));
 create table aly_order(id int, name varchar(20));
 insert into aly_test values(1,'a'),(2,'b'),(5,null);
 insert into aly_order values(1,1),(2,2),(3,null);
+drop table if exists a_manager;
+create table a_manager(id int, name varchar(20));
 #subquery position between select and from
 select *, (select name from aly_order where id=2) from aly_test order by id;
 select *, (select name from aly_order where id=8) from aly_test order by id;
@@ -30,6 +32,8 @@ select * from aly_test where id not in (select id from aly_order where id > 8) o
 select * from aly_test where id not in (select max(name) from aly_test where id =0)  order by id;
 select * from aly_test where id not IN(select name from aly_order where id =1) order by id;
 select a.* from aly_test a left join aly_order b on a.id != b.id where b.name = '1' order by id;
+SELECT * FROM aly_test LEFT JOIN aly_order ON aly_test.id = aly_order. NAME where aly_test. NAME NOT IN (SELECT NAME FROM a_manager);
+SELECT * FROM (SELECT 1, 2, 3) AS t1;
 #subquery with some
 select * from aly_test  where id > SOME(select name from aly_order);
 select * from aly_test where id >some(select name from aly_order where id =0);

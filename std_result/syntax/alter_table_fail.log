@@ -1,0 +1,8 @@
+===file:syntax/alter_table.sql, id:139, sql:[ALTER TABLE aly_test ADD PRIMARY KEY USING HASH (code)]===
+dble:[None]
+mysql:[()]
+[03:53:28.564205]dble err :(-1, 'error totally whack')
+===file:syntax/alter_table.sql, id:143, sql:[ALTER TABLE aly_test ADD PRIMARY KEY USING BTREE (code)]===
+dble:[None]
+mysql:[()]
+[03:53:29.451443]dble err :(-1, 'error totally whack')
