@@ -70,13 +70,13 @@ def before_all(context):
 
     reinstall = context.config.userdata["reinstall"].lower() == "true"
     context.logger.info("need to reinstall dble: {0}".format(reinstall))
+    init_dble_conf(context)
     if reinstall:
         if context.config.userdata["tar_local"].lower() == "true":
             context.need_download = False
         else:
             context.need_download = True
     else:
-        init_dble_conf(context)
         replace_config(context, context.dble_conf)
 
         if not context.is_cluster:
