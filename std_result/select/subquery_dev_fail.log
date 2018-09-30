@@ -1,8 +1,0 @@
-===file:select/subquery_dev.sql, id:109, sql:[select * from aly_order where id= all(select name from aly_test where id>1) order by id;]===
-dble:[None]
-mysql:[()]
-[03:23:18.556308]dble err :(-1, 'error totally whack')
-===file:select/subquery_dev.sql, id:110, sql:[select * from aly_order where id= all(select name from aly_test where id =1) order by id;]===
-dble:[None]
-mysql:[()]
-[03:23:18.730580]dble err :(-1, 'error totally whack')
