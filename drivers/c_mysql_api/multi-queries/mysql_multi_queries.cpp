@@ -154,22 +154,26 @@ int main(int argc, char *argv[]) {
                     begin; \
                     INSERT INTO aly_test VALUES(10);\
                     INSERT INTO aly_test VALUES(20);\
-                    commit;";
+                    commit;\
+                    select * from aly_test order by id";
 
-    char sqls2[] = "lock tables aly_test write; \
+/*lock tables read should be write, but not support at present
+                    lock tables aly_test write; \
                     UPDATE aly_test SET id=20 WHERE id=10;\
                     unlock tables; \
-                    start transaction; \
+                    */
+    char sqls2[] = "start transaction; \
                     INSERT INTO aly_test VALUES(30);\
-                    rollback;";
-    char sqls3[] = "SELECT * FROM aly_test/* comment */; \
+                    rollback;\
+                    select * from aly_test order by id;";
+    char sqls3[] = "SELECT * FROM aly_test/* comment */ order by id; \
                     /*! select 1*/;\
                     /* line 1 \
                     line 2 */ ;\
                     --i am comment";
 
-    case_mysql_real_connect(sqls);
-//    case_mysql_real_connect(sqls2);
+    //case_mysql_real_connect(sqls);
+    //case_mysql_real_connect(sqls2);
     char sqls4[] = "select @@version_comment; \
                   select database();\
                   select user();\
@@ -179,14 +183,13 @@ int main(int argc, char *argv[]) {
                   select last_insert_id() as `id`;\
                   select @@identity; \
                   select @@session.tx_read_only";
-//    case_mysql_real_connect(sqls4);
+    //case_mysql_real_connect(sqls4);
 
-    char sqls5[] = "explain select 1; \
-                  create table aly_test t(id int);\
-                  desc aly_test;\
+    char sqls5[] = "desc aly_test;\
+                  drop view if exists view_aly_test;\
                   create view view_aly_test as select * from aly_test;\
-                  drop view view_aly_test;\
+                  drop view if exists view_aly_test;\
                   show databases;\
                   set @a='test';";
-//    case_mysql_real_connect(sqls5);
+    case_mysql_real_connect(sqls5);
 }

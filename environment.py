@@ -22,7 +22,7 @@ def init_log(context):
 
     context.config.setup_logging()
 
-def choose_conf(context):
+def init_dble_conf(context):
     if context.dble_conf.lower() == "sql_cover":
         conf = context.cfg_dble['sql_conf']
     elif context.dble_conf.lower() == "template":
@@ -30,7 +30,7 @@ def choose_conf(context):
     else:
         assert False, "userdata dble_conf usage: behave -D dble_conf=XXX ..., XXX can only be sql_cover or template"
 
-    return conf
+    context.dble_conf = conf
 
 def before_all(context):
     context.current_log = init_log_directory()
@@ -76,8 +76,8 @@ def before_all(context):
         else:
             context.need_download = True
     else:
-        conf_path = choose_conf(context)
-        replace_config(context, conf_path)
+        init_dble_conf(context)
+        replace_config(context, context.dble_conf)
 
         if not context.is_cluster:
             for node in context.dbles:
@@ -127,8 +127,7 @@ def after_scenario(context, scenario):
             delattr(context, conn_name)
 
     if not (context.config.stop and scenario.status == "failed"):
-        conf_path = choose_conf(context)
-        replace_config(context, conf_path)
+        replace_config(context, context.dble_conf)
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 def before_step(context, step):

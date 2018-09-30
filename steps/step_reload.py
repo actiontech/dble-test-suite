@@ -3,8 +3,6 @@ import sys
 import logging
 import MySQLdb
 
-from steps.SqlUtil import exec_sql
-
 sys.path.append("..")
 from behave import *
 from hamcrest import *
@@ -125,7 +123,7 @@ def check_sys_property(context, cmd, name, text):
     assert_that(flag, has_string('succeed'))
 
 def get_abs_path(context, file):
-    path = "{0}/{1}".format(context.cfg_dble['base_conf'], file)
+    path = "{0}/{1}".format(context.dble_conf, file)
     return path
 
 def upload_and_replace_conf(context, filename):
