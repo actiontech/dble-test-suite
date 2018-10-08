@@ -2,7 +2,9 @@
 <!DOCTYPE dble:schema SYSTEM "schema.dtd">
 <dble:schema xmlns:dble="http://dble.cloud/">
 	<schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
-        <table name="a_two" primaryKey="id" dataNode="dn1,dn2" rule="hash-two" />
+        <table name="a_one_1" primaryKey="id" dataNode="dn1" />
+		<table name="a_one_2" primaryKey="id" dataNode="dn1" />
+		<table name="a_two" primaryKey="id" dataNode="dn1,dn2" rule="hash-two" />
         <table name="a_three" primaryKey="id" dataNode="dn1,dn2,dn3" rule="hash-three" />
 		
 		<!--固定Hash分区(string)-->

@@ -137,8 +137,8 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
-                    context.logger.info("expectRS type is :{0}".format(isinstance(eval(expectRS), tuple)))
-                    context.logger.info("res type is :{0}".format(isinstance(res, tuple)))
+                    context.logger.info("expectRS type is tuple:{0}".format(isinstance(eval(expectRS), tuple)))
+                    context.logger.info("res type is tuple:{0}".format(isinstance(res, tuple)))
                     context.logger.info("expect resultset:{0}, real res:{1}".format(eval(expectRS), res))
                     hasResultSet(res, expectRS, True)
                 if hasnotObj:
