@@ -14,9 +14,10 @@ LOGGER = logging.getLogger('steps.install')
 
 my_thread={}
 
-@Then('create "{num}" conn and finally close all conn')
-def create_conn(context,num):
+@Then('create "{num}" conn while maxCon="{maxNum}" finally close all conn')
+def create_conn(context,num,maxNum):
     num = int(num)
+    maxNum = int(maxNum)
     conns = []
     try:
         err = None
@@ -35,8 +36,10 @@ def create_conn(context,num):
         if err is not None:
             context.logger.info("create conn: got err:{0}".format(err))
             context.logger.info("create maxCon is {0}".format(i))
-
-            assert_that(context.text,contains_string("can't create connections more than maxCon"))
+            assert_that(err[1],contains_string(context.text.strip()))
+        else:
+            context.logger.info("*************create maxCon is {0}******************".format(i+1))
+            assert i+1<=maxNum,"can not create conns more than {0}".format(maxNum)
     for conn in conns:
         conn.close()
 

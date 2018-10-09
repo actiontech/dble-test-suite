@@ -107,10 +107,10 @@ Feature: #
 	    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
-    Then create "9" conn and finally close all conn
-    Then create "10" conn and finally close all conn
+    Then create "9" conn while maxCon="9" finally close all conn
+    Then create "10" conn while maxCon="9" finally close all conn
     """
-    can't create connections more than maxCon
+    error totally whack
     """
 
   Scenario: # test cache related parameter "primaryKey"
