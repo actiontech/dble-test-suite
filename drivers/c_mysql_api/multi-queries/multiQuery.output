@@ -1,0 +1,99 @@
+==>c_api_quick_test 
+    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
+    pass! multi sqls success
+        print multi resultsets:
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+        1 rows affected
+        More results exist
+        1 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+result field 0:  id
+Number of rows 2
+field 0: 10                  , length:2
+field 0: 20                  , length:2
+==>c_api_quick_test 
+    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
+    pass! multi sqls success
+        print multi resultsets:
+        0 rows affected
+        More results exist
+        1 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+result field 0:  id
+Number of rows 2
+field 0: 10                  , length:2
+field 0: 20                  , length:2
+==>c_api_quick_test 
+    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
+    pass! multi sqls success
+        print multi resultsets:
+result field 0:  @@VERSION_COMMENT
+Number of rows 1
+field 0: dble Server (ActionTech), length:24
+        More results exist
+result field 0:  DATABASE()
+Number of rows 1
+field 0: mytest              , length:6
+        More results exist
+result field 0:  USER()
+Number of rows 1
+field 0: test@172.100.9.253  , length:18
+        More results exist
+result field 0:  VERSION()
+Number of rows 1
+field 0: 5.6.29-dble-9.9.9.9-533a13c-20181009064153, length:42
+        More results exist
+result field 0:  @@session.auto_increment_increment
+Number of rows 1
+field 0: 1                   , length:1
+        More results exist
+result field 0:  @@session.tx_isolation
+Number of rows 1
+field 0: REPEATABLE-READ     , length:15
+        More results exist
+result field 0:  id
+Number of rows 1
+field 0: 0                   , length:1
+        More results exist
+result field 0:  @@identity
+Number of rows 1
+field 0: 0                   , length:1
+        More results exist
+result field 0:  @@session.tx_read_only
+Number of rows 1
+field 0: 0                   , length:1
+==>c_api_quick_test 
+    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
+    pass! multi sqls success
+        print multi resultsets:
+result field 0:  Field
+result field 1:  Type
+result field 2:  Null
+result field 3:  Key
+result field 4:  Default
+result field 5:  Extra
+Number of rows 1
+field 0: id                  , length:2field 1: int(11)             , length:7field 2: YES                 , length:3field 3:                     , length:0field 4: (null)              , length:0field 5:                     , length:0
+        More results exist
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+result field 0:  DATABASE
+Number of rows 1
+field 0: mytest              , length:6
+        More results exist
+Could not get next result
