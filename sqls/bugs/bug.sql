@@ -178,5 +178,13 @@ insert into a_order values(1,'d'),(2,'b'),(3,'c');
 select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL;
 drop table if exists a_test
 drop table if exists a_order
+#github issue #687
+drop table if exists a_one_1
+drop table if exists a_one_2
+create table a_one_1(id int)
+create table a_one_2(id int)
+select * from a_one_1 a where exists (select * from a_one_2 b where a.id =b.id)
+drop table if exists a_one_1
+drop table if exists a_one_2
 
 
