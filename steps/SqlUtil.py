@@ -192,12 +192,13 @@ def hasResultSet(res, expectRS, bHas):
             real = findFromMultiRes(res, subResExpect)
             assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
     else:#for single query resultset
-        if type(resExpect[0])==type(res[0]) and len(resExpect) == len(res):
+        if len(resExpect) == len(res) and type(resExpect[0])==type(res[0]):
             real = cmp(sorted(list(resExpect)),sorted(list(res)))==0
             # LOGGER.debug("***zhj debug 1")
         else:
             real = res.__contains__(resExpect)
-            if not real:
+
+            if not real == bHas:
                 unicode_expect = resExpect.decode('utf8')
                 expect_tuple = map(lambda x: filter(lambda y: y == unicode_expect, x), res)
                 real = len(expect_tuple) > 0
