@@ -105,10 +105,10 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
         """
         Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
         Given clear dirty data yield by sql
-#        Given remove local and server file "test1.txt"
-#        Given remove local and server file "test2.txt"
-#        Given remove local and server file "test3.txt"
-#        Given remove local and server file "test4.txt"
+        Given remove local and server file "test1.txt"
+        Given remove local and server file "test2.txt"
+        Given remove local and server file "test3.txt"
+        Given remove local and server file "test4.txt"
 
         Examples:Types
           | filename                                    |
