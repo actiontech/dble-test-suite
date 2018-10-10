@@ -2,6 +2,7 @@ drop table if exists test_shard
 create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT int(11))
 insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string',1),(3,3, 'another',3),(2,2, 'a\nstring',3),(4,4, '中',2),(5,5, 'a\'string\'',5),(6,6, 'a\""string\""',5),(7,7, 'a\bstring',5),(8,8, 'a\nstring',6),(9,9, 'a\rstring',6),(10,10, 'a\tstring',2)
 ###########################select grammar on the view####################
+drop view if exists view_test
 create view view_test as select 1*4
 select * from view_test
 drop view view_test
