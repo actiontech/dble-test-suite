@@ -57,3 +57,5 @@ class DBUtil:
         if self._conn != None:
             self._conn.close()
             self._conn = None
+    def commit(self):
+        self._conn.commit()

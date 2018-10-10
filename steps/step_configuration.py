@@ -1,7 +1,6 @@
 import logging
+import thread
 import time
-
-import MySQLdb
 
 from behave import *
 from hamcrest import *
@@ -13,35 +12,42 @@ from lib.generate_util import *
 LOGGER = logging.getLogger('steps.install')
 
 my_thread={}
+errs=[]
+def createConn(context,num,sql):
+    num = int(num)
+    if sql:
+        exec_sql=sql
+    else:
+        exec_sql="insert into test_table values(1)"
+    context.logger.info("create {0} conn begin:##########################".format(num))
+    conn = get_dble_conn(context)
+    conn.autocommit(0)
+    res,err=conn.query(exec_sql)
+    context.logger.info("create {0} conn success!##########################".format(num))
+    if err:
+        context.logger.info("create {0} conn fail!##########################".format(num))
+        errs.append(err)
+    time.sleep(5)
+    conn.commit()
+    conn.close()
 
 @Then('create "{num}" conn while maxCon="{maxNum}" finally close all conn')
-def create_conn(context,num,maxNum):
+def step_impl(context,num,maxNum):
     num = int(num)
     maxNum = int(maxNum)
-    conns = []
-    try:
-        err = None
-        for i in range(0,num):
-            context.logger.info("create {0} conn begin:##########################".format(i+1))
-            conn = get_dble_conn(context)
-            cur = conn._cursor
-            cur.execute('start transaction')
-            cur.execute('select 1')
-            conns.append(conn)
 
-        context.logger.info("create conn: {0} conns have been created".format(len(conns)))
-    except MySQLdb.Error, e:
-        err = e.args
-    finally:
-        if err is not None:
-            context.logger.info("create conn: got err:{0}".format(err))
-            context.logger.info("create maxCon is {0}".format(i))
-            assert_that(err[1],contains_string(context.text.strip()))
-        else:
-            context.logger.info("*************create maxCon is {0}******************".format(i+1))
-            assert i+1<=maxNum,"can not create conns more than {0}".format(maxNum)
-    for conn in conns:
-        conn.close()
+    for i in range(0,num):
+        thread.start_new_thread(createConn,(context,i,''))
+
+    time.sleep(15)
+    if context.text:
+        context.logger.info("create conn got err:{0}".format(errs[1][1]))
+        assert errs, "expect get err,but err is:{0}".format(errs[1][1])
+    else:
+        if errs:
+            assert False, "expect no err,but outcomes:{0} when create conn".format(errs[1][1])
+        assert num-len(errs) <= maxNum, "can not create conns more than {0}".format(maxNum)
+
 
 @Given('create "{num}" front connections executing "{sql}"')
 def step_impl(context, num, sql):

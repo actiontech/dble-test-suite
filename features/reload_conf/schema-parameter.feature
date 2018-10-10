@@ -100,15 +100,19 @@ Feature: #
 	    </schema>
 	    <dataNode dataHost="dh1" database="db1" name="dn1" />
 	    <dataNode dataHost="dh1" database="db2" name="dn3" />
-	    <dataHost balance="0" maxCon="9" minCon="3" name="dh1" slaveThreshold="100" switchType="-1">
+	    <dataHost balance="0" maxCon="15" minCon="3" name="dh1" slaveThreshold="100" switchType="-1">
 		    <heartbeat>select user()</heartbeat>
 		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		    </writeHost>
 	    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
-    Then create "9" conn while maxCon="9" finally close all conn
-    Then create "10" conn while maxCon="9" finally close all conn
+    Then execute sql in "dble-1" in "user" mode
+    | user | passwd | conn   | toClose  | sql                                                    | expect      | db     |
+    | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | mytest |
+    | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | mytest |
+    Then create "15" conn while maxCon="15" finally close all conn
+    Then create "20" conn while maxCon="15" finally close all conn
     """
     error totally whack
     """
