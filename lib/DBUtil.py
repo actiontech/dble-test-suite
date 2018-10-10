@@ -10,7 +10,13 @@ class DBUtil:
                                                                                                strPassword, strDataBase,
                                                                                                strPort))
         try:
-            self._conn = MySQLdb.connect(host=strHost, user=strUser, passwd=str(strPassword), db=strDataBase, port=strPort,
+            if hasattr(context, "charset"):
+                mycharset= getattr(context, "charset")
+                self._conn = MySQLdb.connect(host=strHost, user=strUser, passwd=str(strPassword), db=strDataBase, port=strPort,
+                                         autocommit=True, charset=mycharset)
+                context.logger.info("conn charset is : {0}".format(mycharset))
+            else:
+                self._conn = MySQLdb.connect(host=strHost, user=strUser, passwd=str(strPassword), db=strDataBase, port=strPort,
                                          autocommit=True)
             self._cursor = self._conn.cursor()
         except MySQLdb.Error, e:
@@ -30,6 +36,8 @@ class DBUtil:
                 if self._cursor.nextset() is None: break
         except MySQLdb.Error,e:
             errMsg = e.args
+        except UnicodeEncodeError, codeErr:
+            errMsg = ((codeErr.args[1],codeErr.args[4]))
         finally:
             pass
 

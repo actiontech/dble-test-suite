@@ -126,8 +126,9 @@ def after_scenario(context, scenario):
             conn.close()
             delattr(context, conn_name)
 
-    if not (context.config.stop and scenario.status == "failed"):
+    if not (context.config.stop and scenario.status == "failed") and not "skip_restart" in scenario.tags:
         replace_config(context, context.dble_conf)
+        restart_dbles(context, context.dbles)
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 def before_step(context, step):

@@ -150,11 +150,6 @@ def set_dble_log_level(context, node, log_level):
         ssh_client.exec_command(cmd)
         return True
 
-@Given('Set the log level to "{log_level}"')
-def change_log_level(context, log_level, hostname):
-    node = get_node(context.dbles, hostname)
-    set_dble_log_level(context, node, log_level)
-
 def restart_dbles(context, nodes):
     for node in nodes:
         restart_dble(context, node)

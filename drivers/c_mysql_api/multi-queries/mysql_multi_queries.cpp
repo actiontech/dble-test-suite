@@ -172,8 +172,8 @@ int main(int argc, char *argv[]) {
                     line 2 */ ;\
                     --i am comment";
 
-    //case_mysql_real_connect(sqls);
-    //case_mysql_real_connect(sqls2);
+    case_mysql_real_connect(sqls);
+    case_mysql_real_connect(sqls2);
     char sqls4[] = "select @@version_comment; \
                   select database();\
                   select user();\
@@ -183,7 +183,7 @@ int main(int argc, char *argv[]) {
                   select last_insert_id() as `id`;\
                   select @@identity; \
                   select @@session.tx_read_only";
-    //case_mysql_real_connect(sqls4);
+    case_mysql_real_connect(sqls4);
 
     char sqls5[] = "desc aly_test;\
                   drop view if exists view_aly_test;\

@@ -2,6 +2,7 @@
 # @Time    : 2018/4/2 PM6:56
 # @Author  : zhaohongjie@actionsky.com
 import datetime
+import logging
 import re
 
 import MySQLdb
@@ -11,8 +12,7 @@ from hamcrest import *
 from lib.DBUtil import DBUtil
 from lib.XMLUtil import get_node_attr_by_kv
 from lib.Node import get_node
-
-
+LOGGER = logging.getLogger('steps.reload')
 
 def get_sql(type):
     if type == "read":
@@ -47,6 +47,9 @@ def exec_sql(context, ip, port):
         user = row["user"]
         passwd = row["passwd"]
         bClose = row["toClose"].lower()=="true"
+        charset = row.get("charset",None)
+        if charset is not None:
+            setattr(context, "charset", charset)
 
         sql = row["sql"]
         if sql == "default_read":
@@ -79,6 +82,9 @@ def exec_sql(context, ip, port):
                             expect=expect)
         else:
             do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
+
+        if charset is not None:
+            delattr(context, "charset")
 
 def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
         conn = None
@@ -148,7 +154,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                     hasResultSet(res, notExpectRS, False)
                 if lengthObj:
                     expectRS = lengthObj.group(1)
-                    context.logger.info("expect resultset:{0}, real res:{1}".format(eval(expectRS), len(res)))
+                    context.logger.info("expect resultset:{0}, length equal to real res length:{1}".format(eval(expectRS), len(res)))
                     assert_that(len(res),equal_to(eval(expectRS)))
                 if matchObj:
                     match_Obj = matchObj.group(1)
@@ -168,7 +174,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
 
             else:
                 assert_that(err, not None, "Err is None, expect:{0}".format(expect))
-                assert_that(err[1], contains_string(expect), "expect text: {0}".format(expect))
+                assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
 
         context.logger.info("to close {0} {1}".format(conn_type, bClose))
         if bClose and conn is not None:
@@ -186,11 +192,18 @@ def hasResultSet(res, expectRS, bHas):
             real = findFromMultiRes(res, subResExpect)
             assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
     else:#for single query resultset
-        if  type(resExpect[0])==type(res[0]) and len(resExpect) == len(res):
-            if cmp(sorted(list(resExpect)),sorted(list(res)))==0:
-                real = True
+        if len(resExpect) == len(res) and type(resExpect[0])==type(res[0]):
+            real = cmp(sorted(list(resExpect)),sorted(list(res)))==0
+            # LOGGER.debug("***zhj debug 1")
         else:
             real = res.__contains__(resExpect)
+
+            if not real == bHas:
+                unicode_expect = resExpect.decode('utf8')
+                expect_tuple = map(lambda x: filter(lambda y: y == unicode_expect, x), res)
+                real = len(expect_tuple) > 0
+                # LOGGER.debug("***zhj debug 2, len expect_tuple {0}".format(len(expect_tuple)))
+
         assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
 
 def matchResultSet(context,res,expect,num):
@@ -264,11 +277,7 @@ def balance(context, expectRS, bHas): #Float a value up and down
 
     a = abs(re_num - bHas)
     b = bHas *0.1
-    if(a < b):
-        rs = True
-    else:
-        rs = False
-    assert rs == True, "expect {0} in resultset {1}".format(expectRS, bHas)
+    assert a<b, "expect {0} in resultset {1}".format(expectRS, bHas)
 
 
 
