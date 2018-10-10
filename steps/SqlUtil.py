@@ -277,11 +277,7 @@ def balance(context, expectRS, bHas): #Float a value up and down
 
     a = abs(re_num - bHas)
     b = bHas *0.1
-    if(a < b):
-        rs = True
-    else:
-        rs = False
-    assert rs == True, "expect {0} in resultset {1}".format(expectRS, bHas)
+    assert a<b, "expect {0} in resultset {1}".format(expectRS, bHas)
 
 
 
