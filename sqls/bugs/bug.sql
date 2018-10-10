@@ -186,5 +186,8 @@ create table a_one_2(id int)
 select * from a_one_1 a where exists (select * from a_one_2 b where a.id =b.id)
 drop table if exists a_one_1
 drop table if exists a_one_2
-
-
+#github issue #679 added by zhj
+drop table if exists aly_test
+CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8;
+insert into aly_test values(18,'美国',20.0),(530,'中国',20.0);
+select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal;
