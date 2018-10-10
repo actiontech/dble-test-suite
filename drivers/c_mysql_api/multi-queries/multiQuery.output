@@ -93,8 +93,7 @@ field 0: id                  , length:2field 1: int(11)             , length:7fi
         0 rows affected
         More results exist
 result field 0:  DATABASE
-Number of rows 2
+Number of rows 1
 field 0: mytest              , length:6
-field 0: testdb              , length:6
         More results exist
 Could not get next result
