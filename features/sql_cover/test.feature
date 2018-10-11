@@ -6,5 +6,5 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
 
         Examples:Types
           | filename                                  |
-          | syntax/sysfunction1.sql                 |
+          | bugs/bug.sql                 |
 
