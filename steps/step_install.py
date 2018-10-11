@@ -240,7 +240,7 @@ def conf_zk_in_node(context, node):
     myid = node.host_name.split("-")[1]
     cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}/g' -e 's/port=.*/port={3}/g' -e 's/myid=.*/myid={0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
     rc, sto, ste = ssh_client.exec_command(cmd)
-    assert_that(ste, is_(""))
+    assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
 def disable_cluster_config_in_node(context, node):
     conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
@@ -248,7 +248,7 @@ def disable_cluster_config_in_node(context, node):
 
     ssh_client = node.ssh_conn
     rc, sto, ste = ssh_client.exec_command(cmd)
-    assert_that(ste, is_(""))
+    assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
 @given('change zk cluster to single mode')
 def dble_cluster_to_single(context):

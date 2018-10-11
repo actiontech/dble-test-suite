@@ -40,8 +40,9 @@ dble:[[(None,)]]
 dble:[[(21L,)]]
 ===file:syntax/sysfunction2.sql, id:60, sql:[select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')]===
 dble:[[('\xff\xe5a,\xf0\xc90eF',)]]
-===file:syntax/sysfunction2.sql, id:61, sql:[SELECT ENCRYPT('hello')]===
-dble:[[('7YSohLeGDQ0h6',)]]
+===file:syntax/sysfunction2.sql, id:61, sql:[SELECT ENCRYPT('hello')/*allow_diff*/]===
+dble:[[('ld3V82uXwhKB2',)]]
+mysql:[[('ld3V82uXwhKB2',)]]
 ===file:syntax/sysfunction2.sql, id:62, sql:[SELECT ENCRYPT('hello','abc')]===
 dble:[[('abl0JrMf6tlhw',)]]
 ===file:syntax/sysfunction2.sql, id:63, sql:[SELECT MD5('testing')]===
@@ -66,8 +67,6 @@ dble:[[('latin1_swedish_ci',)]]
 dble:[[('test@%',)]]
 ===file:syntax/sysfunction2.sql, id:79, sql:[SELECT DATABASE()]===
 dble:[[('mytest',)]]
-===file:syntax/sysfunction2.sql, id:82, sql:[SELECT USER()]===
-dble:[[('test@172.100.9.253',)]]
 ===file:syntax/sysfunction2.sql, id:83, sql:[SELECT LAST_INSERT_ID()]===
 dble:[[(0L,)]]
 ===file:syntax/sysfunction2.sql, id:84, sql:[drop table if exists aly_test]===
@@ -76,99 +75,104 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/sysfunction2.sql, id:86, sql:[insert into aly_test (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(3,3,'Northern','test003'),(2,2,'Western','test002'),(4,4,'Southern','test004')]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:87, sql:[SELECT ROW_COUNT()]===
+===file:syntax/sysfunction2.sql, id:88, sql:[SELECT ROW_COUNT()/*allow_diff*/]===
 dble:[[(0L,)]]
-===file:syntax/sysfunction2.sql, id:239, sql:[SELECT JSON_ARRAY_APPEND('["a", ["b", "c"], "d"]', '$[1]', 1)]===
+mysql:[[(0L,)]]
+===file:syntax/sysfunction2.sql, id:240, sql:[SELECT JSON_ARRAY_APPEND('["a", ["b", "c"], "d"]', '$[1]', 1)]===
 dble:[[('["a", ["b", "c", 1], "d"]',)]]
-===file:syntax/sysfunction2.sql, id:240, sql:[SELECT JSON_ARRAY(1, "abc", NULL, TRUE, CURTIME())]===
-dble:[[('[1, "abc", null, true, "13:52:15.000000"]',)]]
-===file:syntax/sysfunction2.sql, id:241, sql:[SELECT JSON_ARRAY_INSERT('["a", ["b", "c"], "d"]', '$[100]', 'x')]===
+===file:syntax/sysfunction2.sql, id:241, sql:[SELECT JSON_ARRAY(1, "abc", NULL, TRUE, CURTIME())/*allow_10%_diff*/]===
+dble:[[('[1, "abc", null, true, "13:52:51.000000"]',)]]
+===file:syntax/sysfunction2.sql, id:242, sql:[SELECT JSON_ARRAY_INSERT('["a", ["b", "c"], "d"]', '$[100]', 'x')]===
 dble:[[('["a", ["b", "c"], "d", "x"]',)]]
-===file:syntax/sysfunction2.sql, id:242, sql:[SELECT JSON_INSERT('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===
+===file:syntax/sysfunction2.sql, id:243, sql:[SELECT JSON_INSERT('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===
 dble:[[('{"a": 1, "b": [2, 3], "c": "[true, false]"}',)]]
-===file:syntax/sysfunction2.sql, id:243, sql:[SELECT JSON_MERGE('[1 ,2]', '[true ,false]')]===
+===file:syntax/sysfunction2.sql, id:244, sql:[SELECT JSON_MERGE('[1 ,2]', '[true ,false]')]===
 dble:[[('[1, 2, true, false]',)]]
-===file:syntax/sysfunction2.sql, id:244, sql:[SELECT JSON_MERGE('{"name": "x"}', '{"id": 47}')]===
+===file:syntax/sysfunction2.sql, id:245, sql:[SELECT JSON_MERGE('{"name": "x"}', '{"id": 47}')]===
 dble:[[('{"id": 47, "name": "x"}',)]]
-===file:syntax/sysfunction2.sql, id:245, sql:[SELECT JSON_MERGE('1' ,'true')]===
+===file:syntax/sysfunction2.sql, id:246, sql:[SELECT JSON_MERGE('1' ,'true')]===
 dble:[[('[1, true]',)]]
-===file:syntax/sysfunction2.sql, id:246, sql:[SELECT JSON_REMOVE('["a", ["b", "c"], "d"]', '$[1]')]===
+===file:syntax/sysfunction2.sql, id:247, sql:[SELECT JSON_REMOVE('["a", ["b", "c"], "d"]', '$[1]')]===
 dble:[[('["a", "d"]',)]]
-===file:syntax/sysfunction2.sql, id:247, sql:[SELECT JSON_REPLACE('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===
+===file:syntax/sysfunction2.sql, id:248, sql:[SELECT JSON_REPLACE('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===
 dble:[[('{"a": 10, "b": [2, 3]}',)]]
-===file:syntax/sysfunction2.sql, id:248, sql:[SELECT JSON_SET('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===
+===file:syntax/sysfunction2.sql, id:249, sql:[SELECT JSON_SET('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===
 dble:[[('{"a": 10, "b": [2, 3], "c": "[true, false]"}',)]]
-===file:syntax/sysfunction2.sql, id:249, sql:[SELECT JSON_UNQUOTE('"abc"')]===
+===file:syntax/sysfunction2.sql, id:250, sql:[SELECT JSON_UNQUOTE('"abc"')]===
 dble:[[('abc',)]]
-===file:syntax/sysfunction2.sql, id:250, sql:[SELECT JSON_UNQUOTE('"\\t\\u0032"')]===
+===file:syntax/sysfunction2.sql, id:251, sql:[SELECT JSON_UNQUOTE('"\\t\\u0032"')]===
 dble:[[('\t2',)]]
-===file:syntax/sysfunction2.sql, id:251, sql:[SELECT JSON_DEPTH('{}'), JSON_DEPTH('[]'), JSON_DEPTH('true')]===
+===file:syntax/sysfunction2.sql, id:252, sql:[SELECT JSON_DEPTH('{}'), JSON_DEPTH('[]'), JSON_DEPTH('true')]===
 dble:[[(1L, 1L, 1L)]]
-===file:syntax/sysfunction2.sql, id:252, sql:[SELECT JSON_DEPTH('[10, 20]'), JSON_DEPTH('[[] ,{}]')]===
+===file:syntax/sysfunction2.sql, id:253, sql:[SELECT JSON_DEPTH('[10, 20]'), JSON_DEPTH('[[] ,{}]')]===
 dble:[[(2L, 2L)]]
-===file:syntax/sysfunction2.sql, id:253, sql:[SELECT JSON_DEPTH('[10, {"a": 20}]')]===
+===file:syntax/sysfunction2.sql, id:254, sql:[SELECT JSON_DEPTH('[10, {"a": 20}]')]===
 dble:[[(3L,)]]
-===file:syntax/sysfunction2.sql, id:254, sql:[SELECT JSON_EXTRACT('[10 ,20, [30, 40]]', '$[1]')]===
+===file:syntax/sysfunction2.sql, id:255, sql:[SELECT JSON_EXTRACT('[10 ,20, [30, 40]]', '$[1]')]===
 dble:[[('20',)]]
-===file:syntax/sysfunction2.sql, id:256, sql:[SELECT JSON_VALID('hello'), JSON_VALID('"hello"')]===
+===file:syntax/sysfunction2.sql, id:257, sql:[SELECT JSON_VALID('hello'), JSON_VALID('"hello"')]===
 dble:[[(0L, 1L)]]
-===file:syntax/sysfunction2.sql, id:257, sql:[SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[1]', '$[0]')]===
+===file:syntax/sysfunction2.sql, id:258, sql:[SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[1]', '$[0]')]===
 dble:[[('[20, 10]',)]]
-===file:syntax/sysfunction2.sql, id:258, sql:[SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[2][*]')]===
+===file:syntax/sysfunction2.sql, id:259, sql:[SELECT JSON_EXTRACT('[10, 20, [30, 40]]', '$[2][*]')]===
 dble:[[('[30, 40]',)]]
-===file:syntax/sysfunction2.sql, id:259, sql:[SELECT JSON_OBJECT('id', 87, 'name', 'carrot')]===
+===file:syntax/sysfunction2.sql, id:260, sql:[SELECT JSON_OBJECT('id', 87, 'name', 'carrot')]===
 dble:[[('{"id": 87, "name": "carrot"}',)]]
-===file:syntax/sysfunction2.sql, id:260, sql:[SELECT JSON_QUOTE('null'), JSON_QUOTE('"null"')]===
+===file:syntax/sysfunction2.sql, id:261, sql:[SELECT JSON_QUOTE('null'), JSON_QUOTE('"null"')]===
 dble:[[('"null"', '"\\"null\\""')]]
-===file:syntax/sysfunction2.sql, id:261, sql:[SELECT JSON_QUOTE('[1, 2, 3]')]===
+===file:syntax/sysfunction2.sql, id:262, sql:[SELECT JSON_QUOTE('[1, 2, 3]')]===
 dble:[[('"[1, 2, 3]"',)]]
-===file:syntax/sysfunction2.sql, id:262, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction2.sql, id:263, sql:[drop table if exists global_table1]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:263, sql:[CREATE TABLE `global_table1` ( `c` json DEFAULT NULL, `g` int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1]===
+===file:syntax/sysfunction2.sql, id:264, sql:[CREATE TABLE `global_table1` ( `c` json DEFAULT NULL, `g` int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:264, sql:[insert into global_table1 values ('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
+===file:syntax/sysfunction2.sql, id:265, sql:[insert into global_table1 values ('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:267, sql:[ALTER TABLE global_table1 ADD COLUMN n INT;]===
+===file:syntax/sysfunction2.sql, id:268, sql:[ALTER TABLE global_table1 ADD COLUMN n INT;]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:268, sql:[UPDATE global_table1 SET n=1 WHERE c->"$.id" = "4"]===
+===file:syntax/sysfunction2.sql, id:269, sql:[UPDATE global_table1 SET n=1 WHERE c->"$.id" = "4"]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:270, sql:[DELETE FROM global_table1 WHERE c->"$.id" = "4"]===
+===file:syntax/sysfunction2.sql, id:271, sql:[DELETE FROM global_table1 WHERE c->"$.id" = "4"]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:272, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction2.sql, id:273, sql:[drop table if exists global_table1]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:273, sql:[CREATE TABLE global_table1 (a JSON, b INT)]===
+===file:syntax/sysfunction2.sql, id:274, sql:[CREATE TABLE global_table1 (a JSON, b INT)]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:274, sql:[INSERT INTO global_table1 VALUES ("[3,10,5,17,44]", 33), ("[3,10,5,17,[22,44,66]]", 0)]===
+===file:syntax/sysfunction2.sql, id:275, sql:[INSERT INTO global_table1 VALUES ("[3,10,5,17,44]", 33), ("[3,10,5,17,[22,44,66]]", 0)]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:276, sql:[SELECT a,b FROM global_table1 WHERE a->"$[0]" = 3]===
+===file:syntax/sysfunction2.sql, id:277, sql:[SELECT a,b FROM global_table1 WHERE a->"$[0]" = 3]===
 dble:[[('[3, 10, 5, 17, 44]', 33L), ('[3, 10, 5, 17, [22, 44, 66]]', 0L)]]
-===file:syntax/sysfunction2.sql, id:277, sql:[SELECT a,b FROM global_table1 WHERE a->"$[4][1]" IS NOT NULL]===
+===file:syntax/sysfunction2.sql, id:278, sql:[SELECT a,b FROM global_table1 WHERE a->"$[4][1]" IS NOT NULL]===
 dble:[[('[3, 10, 5, 17, [22, 44, 66]]', 0L)]]
-===file:syntax/sysfunction2.sql, id:279, sql:[SELECT JSON_EXTRACT(a, "$[4][1]") FROM global_table1]===
+===file:syntax/sysfunction2.sql, id:280, sql:[SELECT JSON_EXTRACT(a, "$[4][1]") FROM global_table1]===
 dble:[[(None,), ('44',)]]
-===file:syntax/sysfunction2.sql, id:280, sql:[drop table if exists global_table1]===
+===file:syntax/sysfunction2.sql, id:281, sql:[drop table if exists global_table1]===
 dble:[[]]
-===file:syntax/sysfunction2.sql, id:281, sql:[SELECT JSON_KEYS('{"a": 1, "b": {"c": 30}}')]===
+===file:syntax/sysfunction2.sql, id:282, sql:[SELECT JSON_KEYS('{"a": 1, "b": {"c": 30}}')]===
 dble:[[('["a", "b"]',)]]
-===file:syntax/sysfunction2.sql, id:282, sql:[SELECT JSON_KEYS('{"a": 1, "b": {"c": 30}}', '$.b')]===
+===file:syntax/sysfunction2.sql, id:283, sql:[SELECT JSON_KEYS('{"a": 1, "b": {"c": 30}}', '$.b')]===
 dble:[[('["c"]',)]]
-===file:syntax/sysfunction2.sql, id:283, sql:[SELECT JSON_LENGTH('[1, 2, {"a": 3}]')]===
+===file:syntax/sysfunction2.sql, id:284, sql:[SELECT JSON_LENGTH('[1, 2, {"a": 3}]')]===
 dble:[[(3L,)]]
-===file:syntax/sysfunction2.sql, id:284, sql:[SELECT JSON_LENGTH('{"a": 1, "b": {"c": 30}}')]===
+===file:syntax/sysfunction2.sql, id:285, sql:[SELECT JSON_LENGTH('{"a": 1, "b": {"c": 30}}')]===
 dble:[[(2L,)]]
-===file:syntax/sysfunction2.sql, id:285, sql:[SELECT JSON_LENGTH('{"a": 1, "b": {"c": 30}}', '$.b')]===
+===file:syntax/sysfunction2.sql, id:286, sql:[SELECT JSON_LENGTH('{"a": 1, "b": {"c": 30}}', '$.b')]===
 dble:[[(1L,)]]
-===file:syntax/sysfunction2.sql, id:286, sql:[SELECT JSON_MERGE('[1, 2]', '[true, false]')]===
+===file:syntax/sysfunction2.sql, id:287, sql:[SELECT JSON_MERGE('[1, 2]', '[true, false]')]===
 dble:[[('[1, 2, true, false]',)]]
-===file:syntax/sysfunction2.sql, id:287, sql:[SELECT JSON_MERGE('{"name": "x"}', '{"id": 47}')]===
+===file:syntax/sysfunction2.sql, id:288, sql:[SELECT JSON_MERGE('{"name": "x"}', '{"id": 47}')]===
 dble:[[('{"id": 47, "name": "x"}',)]]
-===file:syntax/sysfunction2.sql, id:288, sql:[SELECT JSON_MERGE('1', 'true')]===
+===file:syntax/sysfunction2.sql, id:289, sql:[SELECT JSON_MERGE('1', 'true')]===
 dble:[[('[1, true]',)]]
-===file:syntax/sysfunction2.sql, id:289, sql:[SELECT JSON_OBJECT('id', 87, 'name', 'carrot')]===
+===file:syntax/sysfunction2.sql, id:290, sql:[SELECT JSON_OBJECT('id', 87, 'name', 'carrot')]===
 dble:[[('{"id": 87, "name": "carrot"}',)]]
-===file:syntax/sysfunction2.sql, id:290, sql:[SELECT JSON_QUOTE('null'), JSON_QUOTE('"null"')]===
+===file:syntax/sysfunction2.sql, id:291, sql:[SELECT JSON_QUOTE('null'), JSON_QUOTE('"null"')]===
 dble:[[('"null"', '"\\"null\\""')]]
-===file:syntax/sysfunction2.sql, id:291, sql:[SELECT JSON_VALID('hello'), JSON_VALID('"hello"')]===
+===file:syntax/sysfunction2.sql, id:292, sql:[SELECT JSON_VALID('hello'), JSON_VALID('"hello"')]===
 dble:[[(0L, 1L)]]
-===file:syntax/sysfunction2.sql, id:292, sql:[drop table if exists aly_test]===
+===file:syntax/sysfunction2.sql, id:296, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:syntax/sysfunction2.sql, id:297, sql:[drop table if exists global_table1]===
+dble:[[]]
+===file:syntax/sysfunction2.sql, id:298, sql:[drop table if exists normal_table1]===
 dble:[[]]

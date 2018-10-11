@@ -4,4 +4,7 @@ Feature: #install dble
     Given install dble in all dble nodes
     Given config zookeeper cluster in all dble nodes
     Then start dble in order
+    Given change zk cluster to single mode
+    Given config zookeeper cluster in all dble nodes
+    Then start dble in order
     Given stop all dbles

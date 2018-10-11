@@ -5,8 +5,8 @@ mysql:[[(1L, 'X')]]
 dble:[[(2L, 'y')]]
 mysql:[[(2L, 'Y')]]
 ===file:syntax/sysfunction2.sql, id:76, sql:[SELECT CONNECTION_ID()]===
-dble:[[(2476L,)]]
-mysql:[[(135874L,)]]
+dble:[[(1551L,)]]
+mysql:[[(2330L,)]]
 ===file:syntax/sysfunction2.sql, id:77, sql:[SELECT CURRENT_USER()]===
 dble:[[('test@172.100.9.253',)]]
 mysql:[[('test@%',)]]
@@ -15,10 +15,10 @@ dble:[[('db3',)]]
 mysql:[[('mytest',)]]
 ===file:syntax/sysfunction2.sql, id:81, sql:[SELECT SESSION_USER()]===
 dble:[[('test@dble-1.compose_net',)]]
-mysql:[[('test@172.100.9.253',)]]
+mysql:[[('test@gateway',)]]
 ===file:syntax/sysfunction2.sql, id:82, sql:[SELECT USER()]===
 dble:[[('test@172.100.9.253',)]]
-mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
-===file:syntax/sysfunction2.sql, id:88, sql:[SELECT VERSION()]===
-dble:[[('5.6.29-dble-2.18.02.1-20180428145918',)]]
+mysql:[[('test@gateway',)]]
+===file:syntax/sysfunction2.sql, id:89, sql:[SELECT VERSION()]===
+dble:[[('5.6.29-dble-9.9.9.9-533a13c-20181009064153',)]]
 mysql:[[('5.7.13',)]]

@@ -255,7 +255,7 @@ def check_sql_dest(context, line_nu, sql):
     cmd1 = "sed '1,{0}d' {1}|sed -n '{2}'p |sed -n '/{3}/p' | sed -n '{4}'".format(context.log_linenu, logpath, sr,
                                                                                    sql1, node)
     rc, stdout, stderr = context.ssh_client.exec_command(cmd1)
-    assert_that(stderr, is_(" "))
+    assert_that(stderr, is_(" "), "std err {0} is not as expectd empty".format(stderr))
     sum = 0
     for i in stdout.readlines():
         sum += 1
@@ -264,7 +264,7 @@ def check_sql_dest(context, line_nu, sql):
             fpT.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(line_nu, sql.strip('\n'), context.sql_file))
             fpT.writelines("expect route number:{0},tesing route number:{1} \n".format(nodenum, sum))
             context.logger.info("route err")
-    assert_that(sum, equal_to(nodenum))
+    assert_that(sum, equal_to(nodenum), "sum: {0} is not equal to nodenum: {1}".format(sum, nodenum))
 
 
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')

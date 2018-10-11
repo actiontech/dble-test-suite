@@ -1,9 +1,6 @@
-===file:syntax/sysfunction3.sql, id:27, sql:[SELECT RELEASE_ALL_LOCKS()]===
-dble:[[(1L,)]]
-mysql:[[(0L,)]]
-===file:syntax/sysfunction3.sql, id:30, sql:[SELECT UUID()]===
-dble:[[('2567946c-534d-11e8-98c1-0242ac640905',)]]
-mysql:[[('25675d7f-534d-11e8-b54e-0242ac640904',)]]
-===file:syntax/sysfunction3.sql, id:31, sql:[SELECT UUID_SHORT()]===
-dble:[[(241749017334120462L,)]]
-mysql:[[(169691461195923470L,)]]
+===file:syntax/sysfunction3.sql, id:31, sql:[SELECT UUID()]===
+dble:[[('1738ea5a-cd1b-11e8-b8fd-0242ac640905',)]]
+mysql:[[('17381561-cd1b-11e8-8fc0-0242ac640904',)]]
+===file:syntax/sysfunction3.sql, id:32, sql:[SELECT UUID_SHORT()]===
+dble:[[(386110700411420672L,)]]
+mysql:[[(169936546022031360L,)]]

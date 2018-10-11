@@ -84,7 +84,8 @@ SELECT LAST_INSERT_ID()
 drop table if exists aly_test
 create table aly_test (ID int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))
 insert into aly_test (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(3,3,'Northern','test003'),(2,2,'Western','test002'),(4,4,'Southern','test004')
-SELECT ROW_COUNT()
+# ROW_COUNT sent to default node if exists
+SELECT ROW_COUNT()/*allow_diff*/
 SELECT VERSION()
 ##case7::Spatial Analysis Functions
 #SELECT ST_X(Point(15, 20))

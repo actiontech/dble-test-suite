@@ -109,7 +109,7 @@ def add_file(context,mapFile):
     text = str(context.text)
     cmd = "echo '{0}' > {1}".format(text, remove_txt)
     rc, sto, re = context.ssh_client.exec_command(cmd)
-    assert_that(re, is_(''))
+    assert_that(re, is_(''), "expect re is empty, but re is: {0}".format(re))
 
 @When('Execute "{cmd}" on the managerment client and check system property with "{name}","{text}"')
 def check_sys_property(context, cmd, name, text):
@@ -120,7 +120,7 @@ def check_sys_property(context, cmd, name, text):
         for i in range(len(result)):
             if result[i][0] == name and result[i][1] == text:
                 flag = "succeed"
-    assert_that(flag, has_string('succeed'))
+    assert_that(flag, has_string('succeed'), "expect flag contains 'succeed', but flag is: {0}".format(flag))
 
 def get_abs_path(context, file):
     path = "{0}/{1}".format(context.dble_conf, file)
@@ -133,9 +133,6 @@ def upload_and_replace_conf(context, filename):
 
 def get_encrypt(context, string):
     cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
-    context.logger.debug('zhj debug cmd:{0}'.format(cmd))
 
     rc, sto, ste = context.ssh_client.exec_command(cmd)
-    context.logger.debug("zhj debug2 sto:{0}, ste:{1}".format(sto.split('\n')[1], ste))
-    LOGGER.debug("zhj debug sto: {0}, ste:{1}".format(sto.split('\n')[1], ste))
     return sto.split('\n')[1]

@@ -2,8 +2,9 @@
  INCLUDES := -I/opt/mysql/include
  LIBDIRS  :=-L/opt/mysql/lib
 
-#编译
-make
+#执行
+bash multiQuery.sh
+> multiQuery.sh 中执行了 清理、编译、运行和结果比对
 
 #可能遇到的问题及解决	
  - 1, g++找不到
@@ -17,6 +18,6 @@ make
 #不使用Makefile,手动编译（相关mysql文件夹路径自行替换）
 g++ -g -o multiQuery.o -L/opt/mysql/lib -I/opt/mysql/include -lmysqlclient mysql_multi_queries.cpp
 
-#运行
-./multiQuery.o (链接dble)
+#调试
+./multiQuery.o (连接dble)
 ./multiQuery.o debug (直连mysql)

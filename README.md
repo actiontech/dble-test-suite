@@ -25,25 +25,21 @@ jdbc 5.1.39
 	如果打印调试信息：java -jar interface_test.jar debug| tee output.log 2>&1
 
 #四、使用MySQLdb驱动测试dble对sql的支持度（use behave)
- behave 自定义命令行参数说明：
- - -D tar_local={true|false}, default false, change in behave.ini as you need
+ behave 自定义命令行参数说明（change in behave.ini as you need）：
+ - -D tar_local={true|false}, default false
  - -D test_config={auto_dble_test.yaml}
  - -D reinstall=true, default false, true is a must for install related features
-
-##集群到单节点
-behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_base.feature
 
 ##通过ftp包安装单节点并启动
 behave -Dreinstall=true features/install_uninstall/install_dble.feature
 
-##更新dble单节点
-behave -Dreinstall=true features/install_uninstall/update_dble.feature
-
-##通过ftp包解压安装到所有节点，配置使用zk，启动所有节点
+##通过ftp包解压安装到所有节点，配置使用zk，启动所有节点,集群到单节点转换
 behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
 
 ##sql覆盖, manual do rf -rf sql_cover_log if not running by ci
-behave -D dble_conf=sql_cover features/sql_cover/sql.feature features/sql_cover/manager.feature
+behave -D dble_conf=sql_cover features/sql_cover/sql.feature 
+behave -D dble_conf=sql_cover features/sql_cover/subquery_plan_optimize.feature
+behave -D dble_conf=sql_cover features/sql_cover/manager.feature
 
 ##算法
 behave -D dble_conf=template features/function/
@@ -56,6 +52,9 @@ behave -D dble_conf=template features/sequence/sequence.feature
 
 ##安全性
 behave -D dble_conf=template features/safety/safety.feature
+
+##运维命令
+behave -D dble_conf=template features/managercmd/
 
 #zk 使用说明
 - 1.dble/conf/myid.properties配置：
