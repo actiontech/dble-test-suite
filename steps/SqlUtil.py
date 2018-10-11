@@ -65,7 +65,6 @@ def exec_sql(context, ip, port):
         if sql == "batch_insert":
             table_name = row["tb"]
             end = int(row["count"])
-            context.logger.info("1111111111111111111111111111111111the count is {0}".format(end))
             for i in range(1, end):
                 inspection_num = 'NJ' + str(100000 + i)
                 id == int(i)
@@ -276,7 +275,7 @@ def balance(context, expectRS, bHas): #Float a value up and down
     re_num = int (re.sub("\D","",str(expectRS[0])))
 
     a = abs(re_num - bHas)
-    b = bHas *0.1
+    b = bHas *0.15
     assert a<b, "expect {0} in resultset {1}".format(expectRS, bHas)
 
 
