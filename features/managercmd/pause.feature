@@ -61,14 +61,14 @@ Feature:
       #2.2 verify "queue"
       Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | root | 111111 | conn_0 | True    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=5       | success|         |
+        | root | 111111 | conn_0 | True    | pause @@DataNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=10       | success|         |
       Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | test | 111111 | conn_0 | True    | select * from test                          | execute{(5)}                  |  mytest       |
-      Given create "1" front connections executing "select * from test"
-      Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
-        | test | 111111 | new | True    | select * from test                          | The node is pausing, wait list is full                  |  mytest       |
+        | test | 111111 | conn_0 | True    | select * from test                          | execute{(10)}                  |  mytest       |
+      Given create "2" front connections executing "select * from test"
+      """
+      The node is pausing, wait list is full
+      """
       Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |
         | root | 111111 | new | True    | resume       | success|         |

@@ -1,11 +1,11 @@
 import logging
 import thread
 import time
+import MySQLdb
 
 from behave import *
 from hamcrest import *
 
-from step_thread import DbleThread
 from step_reload import get_admin_conn, get_dble_conn
 from lib.generate_util import *
 
@@ -19,17 +19,21 @@ def createConn(context,num,sql):
         exec_sql=sql
     else:
         exec_sql="insert into test_table values(1)"
-    context.logger.info("create {0} conn begin:##########################".format(num))
-    conn = get_dble_conn(context)
-    conn.autocommit(0)
-    res,err=conn.query(exec_sql)
-    context.logger.info("create {0} conn success!##########################".format(num))
-    if err:
-        context.logger.info("create {0} conn fail!##########################".format(num))
-        errs.append(err)
-    time.sleep(5)
-    conn.commit()
-    conn.close()
+    try:
+        context.logger.info("create {0} conn begin:##########################".format(num))
+        conn = get_dble_conn(context)
+        conn.autocommit(0)
+        res,err=conn.query(exec_sql)
+        if err:
+            context.logger.info("create {0} conn fail!:##########################".format(num))
+            errs.append(err)
+        time.sleep(5)
+        conn.commit()
+        conn.close()
+    except MySQLdb.Error, e:
+        if e.args:
+            context.logger.info("get error{0}:##########################".format(e.args))
+
 
 @Then('create "{num}" conn while maxCon="{maxNum}" finally close all conn')
 def step_impl(context,num,maxNum):
@@ -51,13 +55,13 @@ def step_impl(context,num,maxNum):
 
 @Given('create "{num}" front connections executing "{sql}"')
 def step_impl(context, num, sql):
-    nu = int(num)
-    for i in range(nu):
-        connName = "conn_"+str(i)
-        context.logger.info("***debug, conn name: {0}, i:{1}".format(connName, i))
-        conn = get_dble_conn(context)
-
-        long_sql_thread = DbleThread(context, conn, sql, True)
-        thd_name = "sql_thread_"+connName
-        context.logger.info("create thread: {0}".format(thd_name))
-        long_sql_thread.start()
+    num = int(num)
+    for i in range(0,num):
+        thread.start_new_thread(createConn,(context,i,sql))
+    time.sleep(10)
+    if context.text:
+        context.logger.info("create conn got err:{0}".format(errs))
+        assert_that(errs[0][1],contains_string(context.text.strip()),"expect get err,but err is:{0}".format(errs))
+    else:
+        if errs:
+            assert False, "expect no err,but outcomes:{0} when create conn".format(errs)
