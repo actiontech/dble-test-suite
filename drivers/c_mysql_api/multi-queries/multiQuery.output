@@ -1,82 +1,81 @@
 ==>c_api_quick_test 
     *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
-    pass! multi sqls success
+multi-sqls to execute: use mytest;                     DROP TABLE IF EXISTS aly_test;                    CREATE TABLE aly_test(id INT);                    begin;                     INSERT INTO aly_test VALUES(10);                    INSERT INTO aly_test VALUES(20);                    commit;                    select * from aly_test order by id 
         print multi resultsets:
+=====sql index 0 result: =====
         0 rows affected
         More results exist
+=====sql index 1 result: =====
         0 rows affected
         More results exist
+=====sql index 2 result: =====
         0 rows affected
         More results exist
+=====sql index 3 result: =====
         0 rows affected
         More results exist
+=====sql index 4 result: =====
         1 rows affected
         More results exist
+=====sql index 5 result: =====
         1 rows affected
         More results exist
+=====sql index 6 result: =====
         0 rows affected
         More results exist
+=====sql index 7 result: =====
 result field 0:  id
 Number of rows 2
 field 0: 10                  , length:2
 field 0: 20                  , length:2
 ==>c_api_quick_test 
     *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
-    pass! multi sqls success
+multi-sqls to execute: select @@version_comment;                   select database();                  select user();                  select @@session.auto_increment_increment;                  select @@session.tx_isolation;                  select last_insert_id() as `id`;                  select @@identity;                   select @@session.tx_read_only 
         print multi resultsets:
-        0 rows affected
-        More results exist
-        1 rows affected
-        More results exist
-        0 rows affected
-        More results exist
-result field 0:  id
-Number of rows 2
-field 0: 10                  , length:2
-field 0: 20                  , length:2
-==>c_api_quick_test 
-    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
-    pass! multi sqls success
-        print multi resultsets:
+=====sql index 0 result: =====
 result field 0:  @@VERSION_COMMENT
 Number of rows 1
 field 0: dble Server (ActionTech), length:24
         More results exist
+=====sql index 1 result: =====
 result field 0:  DATABASE()
 Number of rows 1
 field 0: mytest              , length:6
         More results exist
+=====sql index 2 result: =====
 result field 0:  USER()
 Number of rows 1
 field 0: test@172.100.9.253  , length:18
         More results exist
-result field 0:  VERSION()
-Number of rows 1
-field 0: 5.6.29-dble-9.9.9.9-533a13c-20181009064153, length:42
-        More results exist
+=====sql index 3 result: =====
 result field 0:  @@session.auto_increment_increment
 Number of rows 1
 field 0: 1                   , length:1
         More results exist
+=====sql index 4 result: =====
 result field 0:  @@session.tx_isolation
 Number of rows 1
 field 0: REPEATABLE-READ     , length:15
         More results exist
+=====sql index 5 result: =====
 result field 0:  id
 Number of rows 1
 field 0: 0                   , length:1
         More results exist
+=====sql index 6 result: =====
 result field 0:  @@identity
 Number of rows 1
 field 0: 0                   , length:1
         More results exist
+=====sql index 7 result: =====
 result field 0:  @@session.tx_read_only
 Number of rows 1
 field 0: 0                   , length:1
 ==>c_api_quick_test 
     *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
-    pass! multi sqls success
+multi-sqls to execute: desc aly_test;                  drop view if exists view_aly_test;                  create view view_aly_test as select * from aly_test;                  drop view if exists view_aly_test;                  show databases;                  set @a='test'; 
         print multi resultsets:
+=====sql index 0 result: =====
 result field 0:  Field
 result field 1:  Type
 result field 2:  Null
@@ -86,12 +85,16 @@ result field 5:  Extra
 Number of rows 1
 field 0: id                  , length:2field 1: int(11)             , length:7field 2: YES                 , length:3field 3:                     , length:0field 4: (null)              , length:0field 5:                     , length:0
         More results exist
+=====sql index 1 result: =====
         0 rows affected
         More results exist
+=====sql index 2 result: =====
         0 rows affected
         More results exist
+=====sql index 3 result: =====
         0 rows affected
         More results exist
+=====sql index 4 result: =====
 result field 0:  DATABASE
 Number of rows 1
 field 0: mytest              , length:6
