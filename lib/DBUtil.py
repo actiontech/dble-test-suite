@@ -62,7 +62,7 @@ class DBUtil:
         self.close()
 
     def close(self):
-        if self._conn != None:
+        if hasattr(self, '_conn') and self._conn != None:
             self._conn.close()
             self._conn = None
     def commit(self):
