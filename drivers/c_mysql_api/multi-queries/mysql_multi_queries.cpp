@@ -93,19 +93,19 @@ void case_mysql_real_connect(const char* sqls){
     //case: multi query, and multi resultsets
     /* execute multiple statements */
     int status = mysql_query(test_conn,sqls);
+    printf("multi-sqls to execute: %s \n", sqls);
     if (status)
     {
-      printf("sqls to execute: %s \n", sqls);
       printf("execute multi statement(s) Err, %s \n", mysql_error(test_conn));
       mysql_close(test_conn);
       exit(1);
-    }else{
-        printf("    pass! multi sqls success\n");
     }
 
     printf("        print multi resultsets:\n");
     /* process each statement result */
+    int k = 0;
     do {
+        printf("=====sql index %d result: =====\n", k);
         /* did current statement return data? */
         MYSQL_RES  *result = mysql_store_result(test_conn);
         if (result)
@@ -136,6 +136,7 @@ void case_mysql_real_connect(const char* sqls){
             printf("Could not get next result\n");
             //exit(1);
         }
+        k++;
     } while (status == 0);
 
     mysql_close(test_conn);
@@ -173,11 +174,13 @@ int main(int argc, char *argv[]) {
                     --i am comment";
 
     case_mysql_real_connect(sqls);
+
+//different dble version will make the std_result compare fail, todo: find a way to resolve
+//                  select version();\
     case_mysql_real_connect(sqls2);
     char sqls4[] = "select @@version_comment; \
                   select database();\
                   select user();\
-                  select version();\
                   select @@session.auto_increment_increment;\
                   select @@session.tx_isolation;\
                   select last_insert_id() as `id`;\
