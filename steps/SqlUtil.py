@@ -172,7 +172,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(duration, equal_to(eval(expectRS)))
 
             else:
-                assert_that(err, not None, "Err is None, expect:{0}".format(expect))
+                assert_that(err is not None, "Err is None, expect:{0}".format(expect))
                 assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
 
         context.logger.info("to close {0} {1}".format(conn_type, bClose))
@@ -223,7 +223,7 @@ def matchResultSet(context,res,expect,num):
             subRes_list.append(partOfSubRes)
 
     context.logger.info("expect subRes_list:{0}".format(subRes_list))
-    assert_that(subRes_list,not None)
+    assert_that(subRes_list is not None, "expect subRes_list not None, but it is")
 
 # the expext resultset must wholely in the same tuple of the mult-res list
 # for example: res=[((1,2)),((3,4))], expect=((2,3)) shuold return False
