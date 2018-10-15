@@ -134,3 +134,16 @@ def step_impl(context, filename):
     dble_node_ssh = get_ssh(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
     rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
+
+@Given ('update configure file "{filename}" with content on "{hostname}"')
+def step_impl(context,filename,hostname):
+    str = context.text.strip()
+    matchStr = str[0:10]
+    cmd1 ="sed -i '/{0}/d' /etc/{1}".format(matchStr,filename)
+    cmd2 = "sed -i '/server-id/a\{0}' /etc/{1}".format(str,filename)
+
+    ssh = get_ssh(context.mysqls,hostname)
+    ssh.exec_command(cmd1)
+    ssh.exec_command(cmd2)
+
+
