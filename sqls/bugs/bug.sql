@@ -194,5 +194,5 @@ select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by
 #github issue #758
 drop table if exists aly_test
 create table aly_test(id int, c_decimal float)
-select -sum(c_decimal) c_alias from aly_test order by c_alias
+select sum(c_decimal) c_alias from aly_test order by c_alias
 drop table if exists aly_test
