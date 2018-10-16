@@ -146,6 +146,7 @@ def update_file_content(context,filename, hostname):
 
     sed_cmd += " {0}".format(filename)
 
+    context.logger.info("sed cmd is :{0}".format(sed_cmd))
     ssh = get_ssh(context.mysqls,hostname)
     rc, stdout, stderr = ssh.exec_command(sed_cmd)
     assert_that(len(stderr)==0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
