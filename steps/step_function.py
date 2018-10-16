@@ -135,15 +135,17 @@ def step_impl(context, filename):
     rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
 
-@Given ('update configure file "{filename}" with content on "{hostname}"')
-def step_impl(context,filename,hostname):
-    str = context.text.strip()
-    matchStr = str[0:10]
-    cmd1 ="sed -i '/{0}/d' /etc/{1}".format(matchStr,filename)
-    cmd2 = "sed -i '/server-id/a\{0}' /etc/{1}".format(str,filename)
+
+@Given ('update file content "{filename}" in "{hostname}"')
+def update_file_content(context,filename, hostname):
+    sed_cmd_str = context.text.strip()
+    sed_cmd_list = sed_cmd_str.splitlines()
+    sed_cmd = "sed -i"
+    for cmd in sed_cmd_list:
+        sed_cmd += " -e '{0}'".format(cmd.strip())
+
+    sed_cmd += " {0}".format(filename)
 
     ssh = get_ssh(context.mysqls,hostname)
-    ssh.exec_command(cmd1)
-    ssh.exec_command(cmd2)
-
-
+    rc, stdout, stderr = ssh.exec_command(sed_cmd)
+    assert_that(len(stderr)==0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
