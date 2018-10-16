@@ -153,7 +153,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "reload @@config_all"
 
 
-  @current
   Scenario: #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -341,6 +340,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
+  @current
   Scenario: #test user maxCon
     Given delete the following xml segment
       |file        | parent           | child              |
@@ -367,16 +367,16 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Given Restart dble in "dble-1"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
+        | user         | passwd    | conn   | toClose  | sql      | expect  | db     |
         | test         | 123       | conn_0 | False    | select 1 | success | mytest |
-        | test         | 123       | new    | False    | select 1 | Access denied for user 'test',too many connections for this user | mytest |
+        | test         | 123       | new    | True     | select 1 | Access denied for user 'test',too many connections for this user | mytest |
         | action       | action    | conn_1 | False    | select 1 | success | mytest |
-        | action       | action    | new    | False    | select 1 | Access denied for user 'action',too many connections for this user | mytest |
+        | action       | action    | new    | True     | select 1 | Access denied for user 'action',too many connections for this user | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
         | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
         | root         | 111111    | conn_3 |False    | show @@version | success | mytest |
-        | root         | 111111    | new | False    | show @@version | Access denied for user 'root',too many connections for this user | mytest |
+        | root         | 111111    | new    | False    | show @@version | Access denied for user 'root',too many connections for this user | mytest |
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """

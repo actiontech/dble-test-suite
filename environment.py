@@ -9,13 +9,11 @@ from steps.step_install import replace_config, set_dbles_log_level, restart_dble
 CONF_PATH = './conf'
 logger = logging.getLogger('environment')
 
-class MyCls(object):pass
-
 def init_log(context):
     context.logger=logging.getLogger('{0}'.format("dble"))
     context.logger.setLevel(logging.INFO)
     formatter=logging.Formatter('[%(asctime)s %(filename)s L:%(lineno)d %(levelname)s] %(message)s','%H:%M:%S')
-    context.log_file = "./logs/log/{0}.log".format("dble")
+    context.log_file = "./logs/log/dble_info.log"
     file_handler=logging.FileHandler(context.log_file)
     file_handler.setFormatter(formatter)
     context.logger.addHandler(file_handler)

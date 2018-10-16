@@ -36,6 +36,9 @@ behave -Dreinstall=true features/install_uninstall/install_dble.feature
 ##通过ftp包解压安装到所有节点，配置使用zk，启动所有节点,集群到单节点转换
 behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
 
+##使用特定配置启动dble
+behave --stop -D dble_conf={sql_cover|template} features/setup.feature
+
 ##sql覆盖, manual do rf -rf sql_cover_log if not running by ci
 behave -D dble_conf=sql_cover features/sql_cover/sql.feature 
 behave -D dble_conf=sql_cover features/sql_cover/subquery_plan_optimize.feature

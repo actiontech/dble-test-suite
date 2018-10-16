@@ -124,17 +124,12 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if need_check_sharding:
                     check_for_dest_sharding(context, sql, shardings, user, passwd)
 
-
-                if bClose:
-                    conn.close()
-
             hasObj = re.search(r"has\{(.*?)\}", expect, re.I)
             hasnotObj = re.search(r"hasnot\{(.*?)\}", expect, re.I)
             lengthObj = re.search(r"length\{(.*?)\}", expect, re.I)
             matchObj = re.search(r"match\{(.*?)\}",expect,re.I)
             isBalance = re.search(r"balance\{(.*?)\}",expect, re.I)
             executeTime = re.search(r"execute\{(.*?)\}",expect, re.I)
-
 
             if expect == "success":
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
@@ -172,12 +167,13 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(duration, equal_to(eval(expectRS)))
 
             else:
-                assert_that(err, not None, "Err is None, expect:{0}".format(expect))
+                assert_that(err,not_none(), "Err is None, expect:{0}".format(expect))
                 assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
 
         context.logger.info("to close {0} {1}".format(conn_type, bClose))
-        if bClose and conn is not None:
-            conn.close()
+        if bClose:
+            if conn is not None:
+                conn.close()
 
             if hasattr(context, conn_type):
                 delattr(context, conn_type)
@@ -223,7 +219,7 @@ def matchResultSet(context,res,expect,num):
             subRes_list.append(partOfSubRes)
 
     context.logger.info("expect subRes_list:{0}".format(subRes_list))
-    assert_that(subRes_list,not None)
+    assert_that(subRes_list, not_none(), "expect subRes_list not None, but it is")
 
 # the expext resultset must wholely in the same tuple of the mult-res list
 # for example: res=[((1,2)),((3,4))], expect=((2,3)) shuold return False
