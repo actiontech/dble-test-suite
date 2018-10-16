@@ -1,6 +1,5 @@
-Feature:
-   Scenario:# test dataNode_caseSensitive ,whatever default dataNode is lower case or upper case ,dble should start success
-     # 1. set default dataNode lowercase ,mysql lower_case_table_name = 0
+Feature: #test dataNode_caseSensitive ,whatever default dataNode is lower case or upper case ,dble should start success
+   Scenario:# 1. set default dataNode lowercase ,mysql lower_case_table_name = 0
       Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -19,13 +18,14 @@ Feature:
 		    </writeHost>
 	    </dataHost>
      """
-     Given update configure file "my.cnf" with content on "mysql-master1"
+     Given restart mysql in "mysql-master1" with options
        """
-       lower_case_table_names =0
-       """
+       /lower_case_table_names/d
+       /server-id/a lower_case_table_names = 0
+      """
      Given Restart dble in "dble-1"
 
-    # 2. set default dataNode lowercase ,mysql lower_case_table_name = 1
+   Scenario:# 2. set default dataNode lowercase ,mysql lower_case_table_name = 1
      Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -44,13 +44,14 @@ Feature:
 		    </writeHost>
 	    </dataHost>
      """
-     Given update configure file "my.cnf" with content on "mysql-master1"
+     Given restart mysql in "mysql-master1" with options
        """
-       lower_case_table_names =1
-       """
+       /lower_case_table_names/d
+       /server-id/a lower_case_table_names = 1
+      """
      Given Restart dble in "dble-1"
 
-     # 3. set default dataNode uppercase ,mysql lower_case_table_name = 0
+   Scenario:# 3. set default dataNode uppercase ,mysql lower_case_table_name = 0
       Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -69,13 +70,14 @@ Feature:
 		    </writeHost>
 	    </dataHost>
      """
-     Given update configure file "my.cnf" with content on "mysql-master1"
+     Given restart mysql in "mysql-master1" with options
        """
-       lower_case_table_names =0
-       """
+       /lower_case_table_names/d
+       /server-id/a lower_case_table_names = 0
+      """
      Given Restart dble in "dble-1"
 
-     # 4. set default dataNode uppercase ,mysql lower_case_table_name = 1
+   Scenario:# 4. set default dataNode uppercase ,mysql lower_case_table_name = 1
       Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -94,9 +96,10 @@ Feature:
 		    </writeHost>
 	    </dataHost>
      """
-     Given update configure file "my.cnf" with content on "mysql-master1"
+     Given restart mysql in "mysql-master1" with options
        """
-       lower_case_table_names =1
-       """
+       /lower_case_table_names/d
+       /server-id/a lower_case_table_names = 1
+      """
      Given Restart dble in "dble-1"
 
