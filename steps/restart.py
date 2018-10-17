@@ -3,15 +3,18 @@
 # @Author  : zhaohongjie@actionsky.com
 
 import re
+
+import time
 from behave import *
 from hamcrest import *
 
 from lib.Node import get_node, get_ssh
+from steps.step_function import update_file_content
 
 
 @Given('restart mysql "{key}" with options "{options}" and reconnect success')
 def step_impl(context,key, options):
-    context.execute_steps(u'Given restart mysql "{0}" with options "{1}"'.format(key, options))
+    context.execute_steps(u'Given restart mysql in "{0}" with options "{1}"'.format(key, options))
     context.execute_steps(u'''
         Given execute admin command
             |cmd                                         | expect |group | index|
@@ -20,30 +23,15 @@ def step_impl(context,key, options):
         ''')
     context.execute_steps(u'Given connect after restart success')
 
-@Given('restart mysql "{key}" with options "{options}"')
-def restart_mysql(context, key, options):
-    mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
+@Given('restart mysql in "{host}" with options')
+def restart_mysql(context, host):
+    stop_mysql(context, host)
 
-    cgroup = getattr(context, context.cgroup)
-    # cell format: [ip, msb_dir, start/stop/status index in the msb_dir:master or single is 0 while slaves 1+]
-    hosts = [[context.mysql.ip, context.mysql.msb_dir, 0]]
-    for host in cgroup.masters:
-        ip = host.partition(":")[0]
-        hosts.append([ip, cgroup.msb_dir, 0])
+    time.sleep(10)
 
-    i=0
-    for host in cgroup.slaves:
-        i = i+1
-        ip = host.partition(":")[0]
-        hosts.append([ip, cgroup.msb_dir, i])
+    update_file_content(context, "/etc/my.cnf", host)
 
-    for host in hosts[::-1]:
-        stop_mysql(context,mysql_path, host)
-
-    context.execute_steps(u'Given sleep "10" seconds')
-
-    for host in hosts[::-1]:
-        start_mysql(context, mysql_path, host)
+    start_mysql(context, host)
 
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
@@ -66,7 +54,6 @@ def stop_mysql(context, hostName):
         context.logger.info("status_re: {0} , over".format(status_out))
 
 @Given('start mysql in host "{host}"')
-@Given('start mysql in host "{host}" with options "{options}"')
 def start_mysql(context, host):
     mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
 
@@ -109,6 +96,6 @@ def connect_test(context, ip, user, passwd, port):
                 isSuccess = True
                 conn.close()
 
-        context.execute_steps(u'Given sleep "60" seconds')
+        time.sleep(60)
 
     assert_that(isSuccess, "can not connect to {0} after 5 minutes wait".format(ip))

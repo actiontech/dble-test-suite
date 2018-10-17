@@ -3,9 +3,11 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
   # todo: the issue only occur under ushard ha env
 
   Scenario: #1 Enter scenario name here
-    Given update configure file "wrapper.conf" with content
+    Given update file content "/opt/dble/conf/wrapper.conf" in "dble-1"
+
     """
-    wrapper.java.additional.5=-Dfile.encoding=GBK
+    /additional.5/d
+    /additional.4/a wrapper.java.additional.5=-Dfile.encoding=GBK
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """

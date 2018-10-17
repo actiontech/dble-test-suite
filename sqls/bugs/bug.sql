@@ -191,3 +191,8 @@ drop table if exists aly_test
 CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8;
 insert into aly_test values(18,'美国',20.0),(530,'中国',20.0);
 select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal;
+#github issue #758
+drop table if exists aly_test
+create table aly_test(id int, c_decimal float)
+select sum(c_decimal) c_alias from aly_test order by c_alias
+drop table if exists aly_test

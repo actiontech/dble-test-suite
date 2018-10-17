@@ -43,7 +43,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
      """
       start dble service fail in 25 seconds!
      """
-  Scenario: #test usingDecrypt
+  Scenario: #2 test usingDecrypt
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
@@ -58,13 +58,13 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
-  Scenario: # server.xml only contains <user>
+  Scenario: #3 server.xml only contains <user>
     Given delete the following xml segment
       |file        | parent           | child                                        |
       |server.xml  | {'tag':'root'}   | {'tag':'system'} |
     Given Restart dble in "dble-1"
 
-  Scenario: #2 add/delete manager user
+  Scenario: #4 add/delete manager user
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
@@ -75,7 +75,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
-  Scenario: #3 add/delete privilege
+  Scenario: #5 add/delete privilege
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="testdb" sqlMaxLimit="100"></schema>
@@ -105,7 +105,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
     Then execute admin cmd "reload @@config_all"
 
-  Scenario: #4 add/delete Firewall
+  Scenario: #6 add/delete Firewall
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -153,7 +153,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "reload @@config_all"
 
 
-  Scenario: #5
+  Scenario: #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
@@ -218,7 +218,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     has{('managerPort','9066','Manager connection port. The default number is 9066')}
     """
 
-  Scenario: #edit manager user name or password
+  Scenario: #8 edit manager user name or password
     Given delete the following xml segment
         |file        | parent           | child              |
         |server.xml  | {'tag':'root'}   | {'tag':'user'} |
@@ -234,7 +234,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "show @@version" with user "root_test" passwd "123"
 
 
-  Scenario:#function of whitehost
+  Scenario:#9 function of whitehost
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -257,7 +257,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test   | 111111 | conn_0 | True    | select 1 |success | mytest |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
 
-  Scenario:# function of blacklist
+  Scenario:#10 function of blacklist
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -341,7 +341,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
   @current
-  Scenario: #test user maxCon
+  Scenario: #11 test user maxCon
     Given delete the following xml segment
       |file        | parent           | child              |
       |server.xml  | {'tag':'root'}   | {'tag':'root'} |
@@ -404,7 +404,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | action       | action    | conn_6 | False    | select 1 | success | mytest |
         | action       | action    | conn_7| False    | select 1 | success | mytest |
 
-  Scenario: #test system maxCon
+  Scenario: #12 test system maxCon
     Given delete the following xml segment
       |file        | parent           | child              |
       |server.xml  | {'tag':'root'}   | {'tag':'root'} |

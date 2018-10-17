@@ -149,6 +149,8 @@ Feature: # verify hint sql
       <schema name="mytest" >
          <table name="test_table" dataNode="dn2,dn4" rule="hash-two" />
       </schema>
+      <schema name="testdb" dataNode="dn2">
+      </schema>
 	   <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
 	   <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
       <dataHost balance="1" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
@@ -231,6 +233,8 @@ Feature: # verify hint sql
       <schema name="mytest" >
          <table name="test_table" dataNode="dn2,dn4" rule="hash-two" />
       </schema>
+      <schema name="testdb" dataNode="dn2">
+      </schema>
 	   <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
 	   <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
       <dataHost balance="2" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
@@ -312,6 +316,8 @@ Feature: # verify hint sql
     """
       <schema name="mytest" >
          <table name="test_table" dataNode="dn2,dn4" rule="hash-two" />
+      </schema>
+      <schema name="testdb" dataNode="dn2">
       </schema>
 	   <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
 	   <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
