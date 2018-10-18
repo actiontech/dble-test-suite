@@ -52,7 +52,6 @@ def before_all(context):
     else:
         context.dbles = get_nodes(context, "dble")
 
-    context.dble_status = "success"
     context.mysqls = get_nodes(context, "mysqls")
 
     context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])

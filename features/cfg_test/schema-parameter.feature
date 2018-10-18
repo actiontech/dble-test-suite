@@ -78,7 +78,7 @@ Feature: #
         | test | 111111 | conn_0 | False    | drop database if exists db2         | success             |  |
         | test | 111111 | conn_0 | False    | drop database if exists db3         | success             |  |
         | test | 111111 | conn_0 | False    | drop database if exists db4         | success             |  |
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                                           | expect              | db     |
         | test | 111111 | conn_0 | False    | create database if not exists db1         | success             |  |

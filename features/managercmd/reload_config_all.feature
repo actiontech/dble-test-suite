@@ -24,7 +24,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     <property name="backendProcessorExecutor">4</property>
     </system>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_B"

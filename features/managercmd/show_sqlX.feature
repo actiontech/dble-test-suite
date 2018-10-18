@@ -12,7 +12,7 @@ Feature: #show @@sql, show @@sql.resultset
 	    <property name="maxResultSet">1024</property>
     </system>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                            | expect     | db     |
         | test | 111111 | conn_0 | False    | drop table if exists ta        | success    | mytest |

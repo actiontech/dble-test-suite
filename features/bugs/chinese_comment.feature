@@ -19,7 +19,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="hash-four" />
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                             | expect       | db     |
         | test | 111111 | conn_0 | False    | drop table if exists test_table | success      | mytest |

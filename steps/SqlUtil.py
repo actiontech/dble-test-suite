@@ -167,7 +167,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(duration, equal_to(eval(expectRS)))
 
             else:
-                assert_that(err,not_none(), "Err is None, expect:{0}".format(expect))
+                assert_that(err,not_none(), "exec sql:{1} Err is None, expect:{0}".format(expect, sql))
                 assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
 
         context.logger.info("to close {0} {1}".format(conn_type, bClose))

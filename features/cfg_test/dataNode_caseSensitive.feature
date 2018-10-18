@@ -23,7 +23,7 @@ Feature: #test dataNode_caseSensitive ,whatever default dataNode is lower case o
        /lower_case_table_names/d
        /server-id/a lower_case_table_names = 0
       """
-     Given Restart dble in "dble-1"
+     Given Restart dble in "dble-1" success
 
    Scenario:# 2. set default dataNode lowercase ,mysql lower_case_table_name = 1
      Given delete the following xml segment
@@ -49,7 +49,7 @@ Feature: #test dataNode_caseSensitive ,whatever default dataNode is lower case o
        /lower_case_table_names/d
        /server-id/a lower_case_table_names = 1
       """
-     Given Restart dble in "dble-1"
+     Given Restart dble in "dble-1" success
 
    Scenario:# 3. set default dataNode uppercase ,mysql lower_case_table_name = 0
       Given delete the following xml segment
@@ -75,7 +75,7 @@ Feature: #test dataNode_caseSensitive ,whatever default dataNode is lower case o
        /lower_case_table_names/d
        /server-id/a lower_case_table_names = 0
       """
-     Given Restart dble in "dble-1"
+     Given Restart dble in "dble-1" success
 
    Scenario:# 4. set default dataNode uppercase ,mysql lower_case_table_name = 1
       Given delete the following xml segment
@@ -101,5 +101,5 @@ Feature: #test dataNode_caseSensitive ,whatever default dataNode is lower case o
        /lower_case_table_names/d
        /server-id/a lower_case_table_names = 1
       """
-     Given Restart dble in "dble-1"
+     Given Restart dble in "dble-1" success
 

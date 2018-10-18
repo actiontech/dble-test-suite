@@ -43,7 +43,7 @@ Feature: #
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
       |server.xml  |{'tag':'root'}   | {'tag':'user', 'kv_map':{'name':'test'}}  |
     Then execute admin cmd "reload @@config_all"
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
 
     #3.2 schema.xml contains only 1 stopped mysqld, reload @@config_all fail, start the mysqld, reload @@config_all success
     Given stop mysql in host "mysql-master1"
@@ -150,7 +150,7 @@ Feature: #
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     # todo : dble should start only with <dataNode>
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     """
     start dble service fail in 25 seconds!
     """
@@ -167,7 +167,7 @@ Feature: #
 		    </writeHost>
 	    </dataHost>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
 
   Scenario:# when configuration file contains illegal label<test/>
     Given delete the following xml segment
@@ -754,7 +754,7 @@ Feature: #
     """
         <property name="dataNodeHeartbeatPeriod">1000</property>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
@@ -794,7 +794,7 @@ Feature: #
     """
         <property name="dataNodeHeartbeatPeriod">1000</property>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |

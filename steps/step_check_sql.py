@@ -423,7 +423,11 @@ def step_impl(context, filename):
     destroy_sub_threads(context)
 
 
-def connect_test(context, ip, user, passwd, port):
+def dble_mng_connect_test(context, ip):
+    user = context.cfg_dble['manager_user']
+    passwd = str(context.cfg_dble['manager_password'])
+    port = context.cfg_dble['manager_port']
+
     conn = None
     isSuccess = False
     max_try = 5
@@ -443,8 +447,8 @@ def connect_test(context, ip, user, passwd, port):
 
         sleep(5)
 
+    assert_that(isSuccess, "connect test to {0}:9066 failed after {1} seconds".format(ip, 5*max_try))
     context.logger.info("create connection to dble 9066 success")
-    assert_that(isSuccess, "can not connect to {0} after {1} seconds wait".format(ip, 5*max_try))
 
 @Given('clear dirty data yield by sql')
 def step_impl(context):
@@ -465,7 +469,6 @@ def step_impl(context):
     exit_code = subprocess.call(["bash", "compare_result.sh"])
     assert_that(exit_code, equal_to(0), "result is different with standard")
     context.logger.info("read write split pass")
-
 
 def do_query_in_thread(context, dble_thread_tag, interval=5):
     global sql_queues
