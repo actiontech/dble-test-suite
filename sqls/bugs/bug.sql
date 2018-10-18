@@ -179,13 +179,13 @@ select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL;
 drop table if exists a_test
 drop table if exists a_order
 #github issue #687
-drop table if exists a_one_1
-drop table if exists a_one_2
-create table a_one_1(id int)
-create table a_one_2(id int)
-select * from a_one_1 a where exists (select * from a_one_2 b where a.id =b.id)
-drop table if exists a_one_1
-drop table if exists a_one_2
+drop table if exists sharding_one_1
+drop table if exists sharding_one_2
+create table sharding_one_1(id int)
+create table sharding_one_2(id int)
+select * from sharding_one_1 a where exists (select * from sharding_one_2 b where a.id =b.id)
+drop table if exists sharding_one_1
+drop table if exists sharding_one_2
 #github issue #679 added by zhj
 drop table if exists aly_test
 CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8;
