@@ -7,7 +7,7 @@ from behave.textutil import text
 from hamcrest import *
 
 from lib.Node import get_node, get_ssh
-from steps.step_check_sql import connect_test
+from steps.step_check_sql import dble_mng_connect_test
 
 LOGGER = logging.getLogger('steps.install')
 
@@ -55,63 +55,6 @@ def install_dble_in_all_nodes(context):
     for node in context.dbles:
         install_dble_in_node(context, node)
 
-@Then('Start dble in "{hostname}"')
-def start_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
-    start_dble_in_node(context, node)
-
-def start_dble_in_node(context, node):
-    ssh_client = node.ssh_conn
-    cmd = "cd {0} && (./dble/bin/dble start)".format(context.cfg_dble['install_dir'])
-    ssh_client.exec_command(cmd)
-    context.retry = 0
-    check_dble_started(context, ssh_client)
-
-def check_dble_started(context, ssh_client):
-    time.sleep(10)
-    cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    if len(sto) == 0:
-        if context.retry < 5:
-            context.retry = context.retry+1
-            check_dble_started(context, ssh_client)
-        else:
-            assert_that(context.text,contains_string("start dble service fail in 25 seconds!"))
-            context.dble_status = "fail"
-    else:
-        LOGGER.info("start dble success !!!")
-
-@Given("stop all dbles")
-def stop_dbles(context):
-    for node in context.dbles:
-        stop_dble_in_node(context, node)
-
-@Then('stop dble in "{hostname}"')
-def stop_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
-    stop_dble_in_node(context, node)
-
-def stop_dble_in_node(context, node):
-    ssh_client = node.ssh_conn
-    dble_install_path = context.cfg_dble['install_dir']
-    dble_exist = check_dble_exist(ssh_client, dble_install_path)
-
-    if dble_exist:
-        cmd = "cd {0} && (./dble/bin/dble stop)".format(dble_install_path)
-        ssh_client.exec_command(cmd)
-        time.sleep(3)
-        cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
-        rc, sto, ste = ssh_client.exec_command(cmd)
-        assert_that(ste.find(" "), "stop dble  service fail for:{0}".format(ste))
-    return dble_exist
-
-def check_dble_exist(ssh_client, dble_install_path):
-    exist_cmd = "if [ -d {0}/dble ];then echo 1;else echo 0; fi".format(dble_install_path)
-    cd, out, err = ssh_client.exec_command(exist_cmd)
-    dble_exist = str(out)=='1'# dble install dir exist
-    LOGGER.debug("dble dir exist: {0}".format(dble_exist))
-    return dble_exist
-
 @Given('download dble')
 def download_dble(context):
     LOGGER.info("delete local dble packet")
@@ -150,6 +93,70 @@ def set_dble_log_level(context, node, log_level):
         ssh_client.exec_command(cmd)
         return True
 
+@Then('Start dble in "{hostname}"')
+def start_dble_in_hostname(context, hostname):
+    node = get_node(context.dbles, hostname)
+    start_dble_in_node(context, node)
+
+def start_dble_in_node(context, node):
+    ssh_client = node.ssh_conn
+    cmd = "{0}/dble/bin/dble start".format(context.cfg_dble['install_dir'])
+    ssh_client.exec_command(cmd)
+    context.retry = 0
+    context.dble_start_success= False
+    check_dble_started(context, ssh_client)
+
+def check_dble_started(context, ssh_client):
+    time.sleep(5)
+    cmd = "[ -f /opt/dble/logs/dble.log ] && (grep -i 'is started and listening on' {0}/dble/logs/dble.log | wc -l) || echo 0".format(context.cfg_dble['install_dir'])
+    rc, sto, ste = ssh_client.exec_command(cmd)
+    # '2' means there are 2 lines about log stands for dble start success, those 2 lines are :
+    #$_Dble_Manager is started and listening on 9066
+    #$_Dble_Server is started and listening on 8066
+    if sto == '2':
+        context.dble_start_success = True
+    else:
+        if context.retry < 5:
+            context.retry = context.retry+1
+            check_dble_started(context, ssh_client)
+        else:
+            context.dble_start_success = False
+
+@Given("stop all dbles")
+def stop_dbles(context):
+    for node in context.dbles:
+        stop_dble_in_node(context, node)
+
+@Then('stop dble in "{hostname}"')
+def stop_dble_in_hostname(context, hostname):
+    node = get_node(context.dbles, hostname)
+    stop_dble_in_node(context, node)
+
+def stop_dble_in_node(context, node):
+    ssh_client = node.ssh_conn
+    dble_install_path = context.cfg_dble['install_dir']
+    dble_exist = check_dble_exist(ssh_client, dble_install_path)
+
+    if dble_exist:
+        cmd = "{0}/dble/bin/dble stop".format(dble_install_path)
+        ssh_client.exec_command(cmd)
+        time.sleep(3)
+        cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
+        rc, sto, ste = ssh_client.exec_command(cmd)
+        assert_that(sto.find(" "), "stop dble  service fail for:{0}".format(ste))
+
+        rm_log_cmd="rm -rf {0}/dble/logs/*.log".format(dble_install_path)
+        rc, sto, ste = ssh_client.exec_command(rm_log_cmd)
+        assert_that(len(ste)==0, "rm dble logs failed for: {0}".format(ste))
+    return dble_exist
+
+def check_dble_exist(ssh_client, dble_install_path):
+    exist_cmd = "[ -d {0}/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
+    cd, out, err = ssh_client.exec_command(exist_cmd)
+    dble_exist = str(out)=='1'# dble install dir exist
+    LOGGER.debug("dble dir exist: {0}".format(dble_exist))
+    return dble_exist
+
 def restart_dbles(context, nodes):
     for node in nodes:
         restart_dble(context, node)
@@ -158,21 +165,29 @@ def restart_dbles(context, nodes):
         config_zk_in_dble_nodes(context)
         restart_zk_service(context)
 
-def restart_dble(context, node):
-    stop_dble_in_node(context, node)
-    start_dble_in_node(context, node)
+@Then('restart dble in "{hostname}" failed for')
+def check_restart_dble_failed(context,hostname):
+    node = get_node(context.dbles, hostname)
+    restart_dble(context, node)
 
-    if context.dble_status == "success":
-        user = context.cfg_dble['manager_user']
-        passwd = str(context.cfg_dble['manager_password'])
-        port = context.cfg_dble['manager_port']
-        LOGGER.info("############################manager_user:{0}".format(user))
-        connect_test(context, node.ip, user, passwd, port)
+    assert_that(not context.dble_start_success, "Expect restart dble fail, but succeeded")
+    expect_errInfo = context.text.strip()
+    cmd = "grep -i '{0}' /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
+    rc, sto, ste = node.ssh_conn.exec_command(cmd)
+    assert_that(sto, equal_to_ignoring_whitespace("1"), "expect dble restart failed for {0}".format(expect_errInfo))
 
-@Given('Restart dble in "{hostname}"')
+@Given('Restart dble in "{hostname}" success')
 def step_impl(context, hostname):
     node = get_node(context.dbles, hostname)
     restart_dble(context, node)
+
+    assert_that(context.dble_start_success, "Expect restart dble success, but failed")
+    # dble_mng_connect_test(context, node.ip)
+
+@When('Restart dble in "dble-1"')
+def restart_dble(context, node):
+    stop_dble_in_node(context, node)
+    start_dble_in_node(context, node)
 
 @Then('start dble in order')
 def start_dble_in_order(context):

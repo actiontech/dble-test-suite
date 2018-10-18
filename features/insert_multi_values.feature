@@ -1,5 +1,6 @@
 Feature:  insert into values (),(),()... to verify the max rows can be inserted
 
+    @skip
     Scenario:
         Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
         """

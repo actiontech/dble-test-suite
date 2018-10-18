@@ -23,7 +23,7 @@ Feature: set charset in server.xml,check backend charsets are as set
             </writeHost>
 	    </dataHost>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
     Then check resultset "backend_rs_A" has lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
@@ -48,7 +48,7 @@ Feature: set charset in server.xml,check backend charsets are as set
      <property name="charset">latin1</property>
      </system>
      """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@backend" named "backend_rs_B"
     Then check resultset "backend_rs_B" has not lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |

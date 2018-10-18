@@ -4,11 +4,11 @@ Feature:#test reference manager cmd  and main function for slow query log
       #1.2 test disable @@slow_query_log
       #1.3 test show @@slow_query_log
       Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | root         | 111111    | conn_0 | False    | enable @@slow_query_log |   success   |  |
-        | root         | 111111    | conn_0 | False     | show @@slow_query_log |   has{('1',)}    |  |
-        | root         | 111111    | conn_0 | False    | disable @@slow_query_log |   success    |  |
-        | root         | 111111    | conn_0 | True     | show @@slow_query_log |   has{('0',)}    |  |
+        | user  | passwd    | conn   | toClose | sql                     | expect      | db  |
+        | root  | 111111    | conn_0 | False   | enable @@slow_query_log | success     |     |
+        | root  | 111111    | conn_0 | False   | show @@slow_query_log   | has{('1',)} |     |
+        | root  | 111111    | conn_0 | False   | disable @@slow_query_log| success     |     |
+        | root  | 111111    | conn_0 | True    | show @@slow_query_log   | has{('0',)} |     |
 
       #1.3 test show @@slow_query.time, reload @@slow_query.time
       #1.4 test show @@slow_query.flushperid, reload @@slow_query.flushperid
@@ -24,18 +24,18 @@ Feature:#test reference manager cmd  and main function for slow query log
       """
        Given Restart dble in "dble-1"
        Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | root         | 111111    | conn_0 | False    | show @@slow_query.time |   has{('30',)}   |  |
-        | root         | 111111    | conn_0 | False    | reload @@slow_query.time = 200 |   success    |  |
-        | root         | 111111    | conn_0 | False    | show @@slow_query.time |  has{('200',)}    |  |
+        | user   | passwd  | conn   | toClose | sql                                | expect        | db |
+        | root   | 111111  | conn_0 | False   | show @@slow_query.time             | has{('30',)}  |    |
+        | root   | 111111  | conn_0 | False   | reload @@slow_query.time = 200     | success       |    |
+        | root   | 111111  | conn_0 | False   | show @@slow_query.time             | has{('200',)} |    |
 
-        | root         | 111111    | conn_0 | False    | show @@slow_query.flushperiod |   has{('1000',)}   |  |
-        | root         | 111111    | conn_0 | False    | reload @@slow_query.flushperiod = 200 |   success    |  |
-        | root         | 111111    | conn_0 | False    | show @@slow_query.flushperiod |  has{('200',)}    |  |
+        | root   | 111111  | conn_0 | False   | show @@slow_query.flushperiod      | has{('1000',)}|    |
+        | root   | 111111  | conn_0 | False   | reload @@slow_query.flushperiod = 200 | success    |    |
+        | root   | 111111  | conn_0 | False   | show @@slow_query.flushperiod      | has{('200',)} |    |
 
-        | root         | 111111    | conn_0 | False    | show @@slow_query.flushsize |   has{('5',)}   |  |
-        | root         | 111111    | conn_0 | False    | reload @@slow_query.flushsize = 50 |   success    |  |
-        | root         | 111111    | conn_0 | False    | show @@slow_query.flushsize |  has{('50',)}    |  |
+        | root   | 111111  | conn_0 | False   | show @@slow_query.flushsize        | has{('5',)}   |    |
+        | root   | 111111  | conn_0 | False   | reload @@slow_query.flushsize = 50 | success       |    |
+        | root   | 111111  | conn_0 | False   | show @@slow_query.flushsize        | has{('50',)}  |    |
 
    Scenario:# 2.test main function of slow query log
       Given delete "/opt/dble/slowQuery" on "dble-1"

@@ -9,7 +9,7 @@ Feature: Functional testing of global sequences
     """
         <property name="sequnceHandlerType">2</property>
     """
-    Given Restart dble in "dble-1"
+    Given Restart dble in "dble-1" success
     Then Testing the global sequence can used in table
     """
     {'sequnceHandlerType':2,'table':'test_auto'}
