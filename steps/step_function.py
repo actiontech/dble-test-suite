@@ -160,31 +160,34 @@ def step_impl(context,filename,hostname):
     assert_that(len(stderr)==0 ,"get err{0} with deleting {1}".format(stderr,filename))
 
 
-@Then ('check following "{flag}" exist in "{filename}" in "{hostname}"')
+@Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
     strs = context.text.strip()
     strs_list = strs.splitlines()
 
     ssh = get_ssh(context.dbles,hostname)
-    if strs_list[0] == "dir":
-        for str in strs_list[1:]:
-            cmd = "find {0} -name {1}".format(filename,str)
-            context.logger.info("cmd is :{0}".format(cmd))
-            rc, stdout, stderr = ssh.exec_command(cmd)
-            context.logger.info("rc is :{0}, stdout is:{1}, stderr is: {2},".format(rc, stdout, stderr))
-            if flag == "not":
-                assert_that(len(stdout) == 0, "expect \"{0}\" not exist on {1},but exist".format(str, filename))
-            else:
-                assert_that(len(stdout) > 0, "expect \"{0}\" exist on {1},but not".format(str, filename))
+    for str in strs_list:
+        cmd = "grep \"{0}\" {1}".format(str,filename)
+        context.logger.info("cmd is :{0}".format(cmd))
+        rc, stdout, stderr = ssh.exec_command(cmd)
+        context.logger.info("rc is :{0}, stdout is:{1}, stderr is: {2},".format(rc,stdout,stderr))
+        if flag =="not":
+            assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
+        else:
+            assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
 
-    else:
-        for str in strs_list:
-            cmd = "grep \"{0}\" {1}".format(str,filename)
-            context.logger.info("cmd is :{0}".format(cmd))
-            rc, stdout, stderr = ssh.exec_command(cmd)
-            context.logger.info("rc is :{0}, stdout is:{1}, stderr is: {2},".format(rc,stdout,stderr))
-            if flag =="not":
-                assert_that(len(stdout) == 0,"expect \"{0}\" not exist on {1},but exist".format(str,filename))
-            else:
-                assert_that(len(stdout) > 0, "expect \"{0}\" exist on {1},but not".format(str, filename))
+@Then ('check following "{flag}" exist in dir "{dirname}" in "{hostname}"')
+def step_impl(context,flag,dirname,hostname):
+    strs = context.text.strip()
+    strs_list = strs.splitlines()
 
+    ssh = get_ssh(context.dbles, hostname)
+    for str in strs_list[1:]:
+        cmd = "find {0} -name {1}".format(dirname, str)
+        context.logger.info("cmd is :{0}".format(cmd))
+        rc, stdout, stderr = ssh.exec_command(cmd)
+        context.logger.info("rc is :{0}, stdout is:{1}, stderr is: {2},".format(rc, stdout, stderr))
+        if flag == "not":
+            assert_that(len(stdout) == 0, "expect \"{0}\" not exist in dir {1},but exist".format(str, dirname))
+        else:
+            assert_that(len(stdout) > 0, "expect \"{0}\" exist in dir {1},but not".format(str, dirname))
