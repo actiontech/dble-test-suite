@@ -39,7 +39,7 @@ Feature:#test reference manager cmd  and main function for slow query log
         | root   | 111111  | conn_0 | True    | show @@slow_query.flushsize             | has{('50',)}    |    |
    @regression
    Scenario:# 2.test main function of slow query log
-      Given delete "/opt/dble/slowQuery" on "dble-1"
+      Given delete file "/opt/dble/slowQuery" on "dble-1"
       Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
       """
        <system>
