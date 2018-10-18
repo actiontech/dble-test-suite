@@ -151,7 +151,7 @@ def update_file_content(context,filename, hostname):
     rc, stdout, stderr = ssh.exec_command(sed_cmd)
     assert_that(len(stderr)==0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
 
-@Given ('delete "{filename}" on "{hostname}"')
+@Given ('delete file "{filename}" on "{hostname}"')
 def step_impl(context,filename,hostname):
     cmd = "rm -rf {0}".format(filename)
     ssh = get_ssh(context.dbles,hostname)
