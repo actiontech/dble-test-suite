@@ -130,10 +130,12 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             matchObj = re.search(r"match\{(.*?)\}",expect,re.I)
             isBalance = re.search(r"balance\{(.*?)\}",expect, re.I)
             executeTime = re.search(r"execute\{(.*?)\}",expect, re.I)
+            hasString = re.search(r"hasStr\{(.*?)\}", expect, re.I)
+            hasNoString = re.search(r"hasNoStr\{(.*?)\}", expect, re.I)
 
             if expect == "success":
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
-            elif hasObj or hasnotObj or lengthObj or matchObj or isBalance:
+            elif hasObj or hasnotObj or lengthObj or matchObj or isBalance or hasString or hasNoString:
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
@@ -159,6 +161,15 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if isBalance:
                     bal_num = isBalance.group(1)
                     balance(context,res,int(bal_num))
+                if hasString:
+                    expectRS = hasString.group(1)
+                    assert_that(str(res), contains_string(str(expectRS)),
+                                "expect containing text: {0}, resultset:{1}".format(expectRS, res))
+                if hasNoString:
+                    notExpectRS = hasNoString.group(1)
+                    assert str(notExpectRS) not in str(res), "not expect containing text: {0}, resultset:{1}".format(
+                        notExpectRS, res)
+
 
             elif executeTime:
                 expectRS = executeTime.group(1)
