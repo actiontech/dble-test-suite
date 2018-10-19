@@ -172,7 +172,7 @@ def check_restart_dble_failed(context,hostname):
 
     assert_that(not context.dble_start_success, "Expect restart dble fail, but succeeded")
     expect_errInfo = context.text.strip()
-    cmd = "grep -i '{0}' /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
+    cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
     rc, sto, ste = node.ssh_conn.exec_command(cmd)
     assert_that(sto, equal_to_ignoring_whitespace("1"), "expect dble restart failed for {0}".format(expect_errInfo))
 

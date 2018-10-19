@@ -305,19 +305,19 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:180, sql:[drop table if exists a_order]===
 dble:[[]]
-===file:bugs/bug.sql, id:182, sql:[drop table if exists a_one_1]===
+===file:bugs/bug.sql, id:182, sql:[drop table if exists sharding_one_1]===
 dble:[[]]
-===file:bugs/bug.sql, id:183, sql:[drop table if exists a_one_2]===
+===file:bugs/bug.sql, id:183, sql:[drop table if exists sharding_one_2]===
 dble:[[]]
-===file:bugs/bug.sql, id:184, sql:[create table a_one_1(id int)]===
+===file:bugs/bug.sql, id:184, sql:[create table sharding_one_1(id int)]===
 dble:[[]]
-===file:bugs/bug.sql, id:185, sql:[create table a_one_2(id int)]===
+===file:bugs/bug.sql, id:185, sql:[create table sharding_one_2(id int)]===
 dble:[[]]
-===file:bugs/bug.sql, id:186, sql:[select * from a_one_1 a where exists (select * from a_one_2 b where a.id =b.id)]===
+===file:bugs/bug.sql, id:186, sql:[select * from sharding_one_1 a where exists (select * from sharding_one_2 b where a.id =b.id)]===
 dble:[[]]
-===file:bugs/bug.sql, id:187, sql:[drop table if exists a_one_1]===
+===file:bugs/bug.sql, id:187, sql:[drop table if exists sharding_one_1]===
 dble:[[]]
-===file:bugs/bug.sql, id:188, sql:[drop table if exists a_one_2]===
+===file:bugs/bug.sql, id:188, sql:[drop table if exists sharding_one_2]===
 dble:[[]]
 ===file:bugs/bug.sql, id:190, sql:[drop table if exists aly_test]===
 dble:[[]]
