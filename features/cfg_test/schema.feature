@@ -143,6 +143,7 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
 
+  @current
   Scenario: #4 schema.xml only contain partial content
     #4.1 schema.xml only has dataNodes,  dble starts successful,
     Given delete the following xml segment
@@ -150,9 +151,9 @@ Feature: #
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     # todo : dble should start only with <dataNode>
-    Given Restart dble in "dble-1" success
+    Then restart dble in "dble-1" failed for
     """
-    start dble service fail in 25 seconds!
+    dataNode dn1 reference dataHost:172.100.9.5 not exists!
     """
 
     ##4.2 schema.xml only has <dataHost>,  dble starts successful
