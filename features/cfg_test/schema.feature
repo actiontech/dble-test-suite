@@ -143,6 +143,7 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
 
+  @current
   Scenario: #4 schema.xml only contain partial content
     #4.1 schema.xml only has dataNodes,  dble starts successful,
     Given delete the following xml segment
@@ -150,9 +151,9 @@ Feature: #
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     # todo : dble should start only with <dataNode>
-    Given Restart dble in "dble-1" success
+    Then restart dble in "dble-1" failed for
     """
-    start dble service fail in 25 seconds!
+    dataNode dn1 reference dataHost:172.100.9.5 not exists!
     """
 
     ##4.2 schema.xml only has <dataHost>,  dble starts successful
@@ -517,12 +518,12 @@ Feature: #
 		    </writeHost>
 	    </dataHost>
     """
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
-    | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|1000 |
-    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|1000 |
-    | test | 111111 | conn_0 | True    | batch_insert                                    | success | mytest |test|1000 |
+    | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |
+    | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|
+    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|
+    Then prepare "1000" of data in the"test" in "test" mode
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
@@ -533,9 +534,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute "1000" of select in the"test" in "test" mode
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,),} | db1 |
@@ -575,9 +574,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute "1000" of select in the"test" in "test" mode
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} | db1 |
@@ -617,9 +614,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute "1000" of select in the"test" in "test" mode
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
@@ -665,9 +660,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute "1000" of select in the"test" in "test" mode
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} |  |
@@ -716,9 +709,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute "1000" of select in the"test" in "test" mode
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} |  |
@@ -761,9 +752,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1001 |
+    Then execute "1000" of select in the"test" in "test" mode
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,),} |  |
@@ -798,7 +787,7 @@ Feature: #
     Given stop mysql in host "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql               | expect  | db       |
-    | test  | 111111    | conn_0 | True    | select name from test;   | error totally whack | mytest  |
+    | test  | 111111    | conn_0 | True    | select name from test   | error totally whack | mytest  |
     Given start mysql in host "mysql-master2"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |

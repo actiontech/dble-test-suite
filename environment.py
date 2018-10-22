@@ -129,9 +129,9 @@ def after_scenario(context, scenario):
     logger.info('Scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 def before_step(context, step):
-    logger.info('*' * 30)
-    logger.info('step start: <{0}>'.format(step.name))
+    logger.debug('*' * 30)
+    logger.debug('step start: <{0}>'.format(step.name))
 
 def after_step(context, step):
-    logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
-    logger.info('*' * 30)
+    logger.debug('step end: <{0}>, status:{1}'.format(step.name, step.status))
+    logger.debug('*' * 30)

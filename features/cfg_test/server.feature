@@ -31,7 +31,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test_user2    | test_password | conn_0 | False    | select 1 | success | mytest |
         | test_user2   | test_password | conn_0 | True    | drop table if exists test_table | User READ ONLY | mytest |
 
-     #1.3client user with  schema which does not exist
+     #1.3client user with schema which does not exist
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <user name="test_user3">
@@ -39,9 +39,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="schemas">testdb</property>
      </user>
     """
-    Given Restart dble in "dble-1" success
+    Then Restart dble in "dble-1" failed for
      """
-      start dble service fail in 25 seconds!
+     schema testdb referred by user test_user3 is not exist!
      """
   Scenario: #2 test usingDecrypt
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -340,7 +340,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
-  @current
   Scenario: #11 test user maxCon
     Given delete the following xml segment
       |file        | parent           | child              |
