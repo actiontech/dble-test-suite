@@ -518,7 +518,7 @@ Feature: #
 		    </writeHost>
 	    </dataHost>
     """
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
     | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
     | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|1000 |
