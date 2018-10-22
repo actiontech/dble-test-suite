@@ -66,6 +66,16 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test) |success | mytest |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test) |success | mytest |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test) |success| mytest |
+    Given restart mysql in "mysql-master1" with options
+      """
+      /lower_case_table_names/d
+      /server-id/a lower_case_table_names = 0
+     """
+    Given restart mysql in "mysql-master2" with options
+     """
+      /lower_case_table_names/d
+      /server-id/a lower_case_table_names = 0
+     """
 
   @regression
   Scenario:# set backend mysql lower_case_table_names=0
