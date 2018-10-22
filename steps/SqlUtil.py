@@ -4,6 +4,7 @@
 import datetime
 import logging
 import re
+import random
 
 import MySQLdb
 from behave import *
@@ -38,6 +39,33 @@ def step_impl(context,hostname, user=""):
             port = context.cfg_dble['client_port']
     exec_sql(context, ip, port)
 
+@Then('prepare "{rows}" of data in the"{tablename}" in "{user}" mode')
+def step_impl(context,rows,tablename,user,dbname = "mytest"):
+    if context.text: expect = context.text
+    else:
+        expect = "success"
+    for i in range(1, int(rows) + 1):
+        inspection_num = 'NJ' + str(100000 + i)
+        sql = ("insert into {0} (id,name) values({1},'{2}');".format(tablename, i, inspection_num))
+        context.execute_steps(u"""
+            Then execute sql in "dble-1" in "user" mode
+            | user | passwd | conn   | toClose | sql    | expect   | db      |
+            | {0}  | 111111 | conn_0 | True    | {1}    | {2}      | {3}     |
+            """.format(user, sql, expect, dbname))
+        
+@Then('execute "{rows}" of select in the"{tablename}" in "{user}" mode')
+def step_impl(context,rows,tablename,user,dbname = "mytest"):
+    if context.text: expect = context.text
+    else:
+        expect = "success"
+    for i in range(1, int(rows) + 1):
+        sql = ("select name from {0} where id ={1};".format(tablename, i))
+        context.execute_steps(u"""
+            Then execute sql in "dble-1" in "user" mode
+            | user | passwd | conn   | toClose | sql    | expect   | db      |
+            | {0}  | 111111 | conn_0 | True    | {1}    | {2}      | {3}     |
+            """.format(user, sql, expect, dbname))
+        
 def exec_sql(context, ip, port):
     '''
     if row["sql"] is none, just create connection
@@ -62,25 +90,7 @@ def exec_sql(context, ip, port):
         db = row["db"]
         if db is None: db = ''
 
-        if sql == "batch_insert":
-            table_name = row["tb"]
-            end = int(row["count"])
-            for i in range(1, end):
-                inspection_num = 'NJ' + str(100000 + i)
-                id == int(i)
-                sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name,i,inspection_num))
-                do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
-                            expect=expect)
-        elif sql =="batch_select":
-            table_name = row["tb"]
-            end = int(row["count"])
-            for i in range(1, end):
-                id == int(i)
-                sql = ("select name from {0} where id ={1};".format(table_name,i))
-                do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
-                            expect=expect)
-        else:
-            do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
+        do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
         if charset is not None:
             delattr(context, "charset")
@@ -94,22 +104,22 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             else:
                 if hasattr(context, conn_type):
                     conn = getattr(context, conn_type)
-                    context.logger.info("get conn: {0}".format(conn_type))
+                    LOGGER.debug("get conn: {0}".format(conn_type))
                 else:
                     conn = DBUtil(ip, user, passwd, db, port, context)
                     setattr(context, conn_type, conn)
-                    context.logger.info("create conn: {0} and setattr on context for this conn".format(conn_type))
+                    LOGGER.debug("create conn: {0} and setattr on context for this conn".format(conn_type))
         except MySQLdb.Error,e:
             err = e.args
         finally:
-            context.logger.info("get or create conn:{0} got err:{1}".format(conn_type, err))
+            LOGGER.debug("get or create conn:{0} got err:{1}".format(conn_type, err))
 
             if err is not None:
                 context.logger.info("exec sql err is {0} {1}".format(err[0], err[1]))
             elif sql is not None and len(sql)>0:
                 need_check_sharding = re.search(r'\/\*dest_node:(.*?)\*\/', sql, re.I)
 
-                context.logger.info("sql:{0}, conn:{1}, err:{2}".format(sql,conn,err))
+                LOGGER.debug("sql:{0}, conn:{1}, err:{2}".format(sql,conn,err))
 
                 if need_check_sharding:
                     cidx = need_check_sharding.start()
@@ -180,7 +190,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(err,not_none(), "exec sql:{1} Err is None, expect:{0}".format(expect, sql))
                 assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
 
-        context.logger.info("to close {0} {1}".format(conn_type, bClose))
+        LOGGER.debug("to close {0} {1}".format(conn_type, bClose))
         if bClose:
             if conn is not None:
                 conn.close()
