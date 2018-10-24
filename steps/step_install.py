@@ -145,7 +145,7 @@ def stop_dble_in_node(context, node):
         rc, sto, ste = ssh_client.exec_command(cmd)
         assert_that(sto.find(" "), "stop dble  service fail for:{0}".format(ste))
 
-        rm_log_cmd="rm -rf {0}/dble/logs/*.log".format(dble_install_path)
+        rm_log_cmd="rm -rf {0}/dble/logs/wrapper.log".format(dble_install_path)
         rc, sto, ste = ssh_client.exec_command(rm_log_cmd)
         assert_that(len(ste)==0, "rm dble logs failed for: {0}".format(ste))
     return dble_exist
