@@ -126,11 +126,15 @@ def step_impl(context, filename):
         os.remove(filename)
 
     # remove file in dble
-    cmd = "rm -rf {0}".format(filename)
+    remove_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
+    cmd = "rm -rf {0}".format(remove_file)
     rc, stdout, stderr = context.ssh_client.exec_command(cmd)
     assert len(stderr)==0, "rm file in dble fail for {0}".format(stderr)
 
     # remove file in compare mysql
+    remove_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
+    cmd = "rm -rf {0}".format(remove_file)
+
     dble_node_ssh = get_ssh(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
     rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)

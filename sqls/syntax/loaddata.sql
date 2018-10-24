@@ -21,3 +21,26 @@ select * from aly_test order by id
 truncate table aly_test
 load data infile "./test3.txt" into table aly_test character set 'utf8' fields terminated by ',' lines terminated by '\n'
 select * from aly_test order by id
+##github #774
+drop table if exists aly_test
+create table aly_test(id int, c1 char(5), c2 char(5), c3 char(5));
+load data infile "./test4.txt" replace into table aly_test fields terminated by ',' lines terminated by '\n' (id,c1) set c2='c2', c3='c3';
+##lack column or/and lack terminated
+#-- drop table if exists aly_test
+#-- #!multiline
+#-- CREATE TABLE `aly_test` (
+#--   `c1` char(2) DEFAULT NULL,
+#--   `id` int(11) DEFAULT NULL,
+#--   `c2` varchar(5) DEFAULT NULL,
+#--   `c3` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+#--   `c4` date DEFAULT NULL,
+#--   `c5` time DEFAULT NULL,
+#--   `c6` tinyint(1) DEFAULT NULL,
+#--   `c7` bit(1) DEFAULT NULL
+#-- ) ENGINE=InnoDB DEFAULT CHARSET=latin1
+#-- #end multiline
+#-- load data local infile "./test5.txt" into table aly_test character set 'utf8' fields terminated by ',' lines terminated by '\n'
+#-- select * from aly_test order by id
+#-- truncate table aly_test
+#-- load data infile "./test5.txt" into table aly_test character set 'utf8' fields terminated by ',' lines terminated by '\n'
+#-- select * from aly_test order by id
