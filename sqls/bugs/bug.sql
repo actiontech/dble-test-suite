@@ -196,3 +196,12 @@ drop table if exists aly_test
 create table aly_test(id int, c_decimal float)
 select sum(c_decimal) c_alias from aly_test order by c_alias
 drop table if exists aly_test
+#github issue #779
+drop table if exists global_table1
+drop table if exists global_table2
+create table global_table1 (DATANUM int,EXPORT_DATA_FILENAME varchar(50))
+create table global_table2(id int)
+SELECT tempview1.tablename,tempview1.datanum,tempview2.tablename,tempview2.datanum FROM (SELECT SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1') tablename,SUM(t.DATANUM) datanum FROM global_table1 t GROUP BY SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1')) tempview1,(SELECT 'ctp_user' tablename, COUNT(1) datanum FROM global_table2) tempview2 WHERE tempview1.tablename = tempview2.tablename
+drop table if exists global_table1
+drop table if exists global_table2
+
