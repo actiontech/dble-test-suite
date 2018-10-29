@@ -14,7 +14,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
           | syntax/create_table_type.sql              |
           | syntax/data_types.sql                     |
           | syntax/delete.sql                         |
-          | syntax/identifiers.sql                         |
+          | syntax/identifiers.sql                    |
           | syntax/insert_on_duplicate_key.sql        |
           | syntax/insert_syntax.sql                  |
           | syntax/insert_value.sql                   |
@@ -168,5 +168,5 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
         | syntax/loaddata.sql                         |
 
     Scenario: #5 compare new generated results is same with the standard ones
-        When compare results with the standard results
+        When compare results with the standard results in "std_result"
 

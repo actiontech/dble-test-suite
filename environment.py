@@ -20,13 +20,12 @@ def init_log(context):
 
     context.config.setup_logging()
 
-def init_dble_conf(context):
-    if context.dble_conf.lower() == "sql_cover":
-        conf = context.cfg_dble['sql_conf']
-    elif context.dble_conf.lower() == "template":
-        conf = context.cfg_dble['base_conf']
+def init_dble_conf(context, para_dble_conf):
+    para_dble_conf_lower = para_dble_conf.lower()
+    if para_dble_conf_lower in ["sql_cover", "sql_cover_global", "template", "sql_cover_no_sharding"]:
+        conf = "{0}/{1}".format(context.cfg_dble['conf_dir'], para_dble_conf_lower)
     else:
-        assert False, "userdata dble_conf usage: behave -D dble_conf=XXX ..., XXX can only be sql_cover or template"
+        assert False, 'cmdline dble_conf\'s value can only be one of ["sql_cover", "sql_cover_global", "template", "sql_cover_no_sharding"]'
 
     context.dble_conf = conf
 
@@ -61,13 +60,13 @@ def before_all(context):
     sys.path.append(steps_dir)
     init_log(context)
     try:
-        context.dble_conf = context.config.userdata.pop('dble_conf')
+        para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
 
     reinstall = context.config.userdata["reinstall"].lower() == "true"
     context.logger.info("need to reinstall dble: {0}".format(reinstall))
-    init_dble_conf(context)
+    init_dble_conf(context, para_dble_conf)
     if reinstall:
         if context.config.userdata["tar_local"].lower() == "true":
             context.need_download = False
