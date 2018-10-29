@@ -6,7 +6,9 @@
 #2.所有容器安装mysql 5.7.13,账户初始设置，复制关系设置等, 并在dble所在容器安装zookeeper 3.4.9, jdk-8u121
   chmod +x env_dble.sh
   
-  ./env_dble.sh
+  #若是新环境，在执行./env_dble.sh前，将需要env_dble.sh文件中涉及的安装包手动拷到/opt/auto_build文件夹内.
+  且若脚本是从windows系统上传到类unix系统，则需要将*.sh文件的格式改为unix:首先用vi打开，如：vi install_mysql.sh,
+  然后在命令行下输入：set ff=unix 并保存。以上设置完毕后执行：./env_dble.sh
 
 #3.使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
 ```
