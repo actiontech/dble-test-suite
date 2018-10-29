@@ -68,7 +68,7 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success | mytest |
         | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2     |success            | mytest |
         | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2     |success     | mytest |
-#        | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
+        | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
 #        | test | 111111 | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | mytest |
@@ -155,7 +155,7 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2                  |success              | mytest |
         | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                  |Unknown column      | mytest |
         | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
-        # | test | 111111 | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
+#        | test | 111111 | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success               | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |Test is not exists  | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |error totally whack | mytest |
