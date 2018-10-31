@@ -191,8 +191,19 @@ drop table if exists aly_test
 CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8;
 insert into aly_test values(18,'美国',20.0),(530,'中国',20.0);
 select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal;
-#github issue #758
+#github issue #758 #760
 drop table if exists aly_test
 create table aly_test(id int, c_decimal float)
 select sum(c_decimal) c_alias from aly_test order by c_alias
+select -sum(c_decimal) c_alias from aly_test order by c_alias
+select abs(sum(c_decimal)) c_alias from aly_test order by c_alias
 drop table if exists aly_test
+#github issue #779
+drop table if exists global_table1
+drop table if exists global_table2
+create table global_table1 (DATANUM int,EXPORT_DATA_FILENAME varchar(50))
+create table global_table2(id int)
+SELECT tempview1.tablename,tempview1.datanum,tempview2.tablename,tempview2.datanum FROM (SELECT SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1') tablename,SUM(t.DATANUM) datanum FROM global_table1 t GROUP BY SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1')) tempview1,(SELECT 'ctp_user' tablename, COUNT(1) datanum FROM global_table2) tempview2 WHERE tempview1.tablename = tempview2.tablename
+drop table if exists global_table1
+drop table if exists global_table2
+

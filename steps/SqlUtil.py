@@ -4,6 +4,7 @@
 import datetime
 import logging
 import re
+import random
 
 import MySQLdb
 from behave import *
@@ -37,7 +38,7 @@ def step_impl(context,hostname, user=""):
         else:
             port = context.cfg_dble['client_port']
     exec_sql(context, ip, port)
-
+        
 def exec_sql(context, ip, port):
     '''
     if row["sql"] is none, just create connection
@@ -65,25 +66,32 @@ def exec_sql(context, ip, port):
         if sql == "batch_insert":
             table_name = row["tb"]
             end = int(row["count"])
-            for i in range(1, end):
+            for i in range(1, end + 1):
                 inspection_num = 'NJ' + str(100000 + i)
-                id == int(i)
-                sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name,i,inspection_num))
-                do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
-                            expect=expect)
-        elif sql =="batch_select":
+                sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name, i,inspection_num))
+                do_batch_sql(context, ip, user, passwd, db, port, sql)
+        elif sql == "batch_select":
             table_name = row["tb"]
             end = int(row["count"])
-            for i in range(1, end):
-                id == int(i)
-                sql = ("select name from {0} where id ={1};".format(table_name,i))
-                do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type,
-                            expect=expect)
+            for i in range(1, end + 1):
+                id == random.randint(1, end)
+                sql = ("select name from {0} where id ={1};".format(table_name, i))
+                do_batch_sql(context,ip,user,passwd,db,port,sql)
         else:
             do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
         if charset is not None:
             delattr(context, "charset")
+
+def do_batch_sql(context,ip, user, passwd, db, port,sql):
+    conn = None
+    try:
+        conn = DBUtil(ip, user, passwd, db, port, context)
+    except:
+        context.logger.info("create connection error when excute batch_select sql :{0}".format(sql))
+    res, err = conn.query(sql)
+    assert_that(err is None, "excute batch_select sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
+    conn.close()
 
 def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
         conn = None
@@ -94,22 +102,22 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             else:
                 if hasattr(context, conn_type):
                     conn = getattr(context, conn_type)
-                    context.logger.info("get conn: {0}".format(conn_type))
+                    LOGGER.debug("get conn: {0}".format(conn_type))
                 else:
                     conn = DBUtil(ip, user, passwd, db, port, context)
                     setattr(context, conn_type, conn)
-                    context.logger.info("create conn: {0} and setattr on context for this conn".format(conn_type))
+                    LOGGER.debug("create conn: {0} and setattr on context for this conn".format(conn_type))
         except MySQLdb.Error,e:
             err = e.args
         finally:
-            context.logger.info("get or create conn:{0} got err:{1}".format(conn_type, err))
+            LOGGER.debug("get or create conn:{0} got err:{1}".format(conn_type, err))
 
             if err is not None:
                 context.logger.info("exec sql err is {0} {1}".format(err[0], err[1]))
             elif sql is not None and len(sql)>0:
                 need_check_sharding = re.search(r'\/\*dest_node:(.*?)\*\/', sql, re.I)
 
-                context.logger.info("sql:{0}, conn:{1}, err:{2}".format(sql,conn,err))
+                LOGGER.debug("sql:{0}, conn:{1}, err:{2}".format(sql,conn,err))
 
                 if need_check_sharding:
                     cidx = need_check_sharding.start()
@@ -130,10 +138,12 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             matchObj = re.search(r"match\{(.*?)\}",expect,re.I)
             isBalance = re.search(r"balance\{(.*?)\}",expect, re.I)
             executeTime = re.search(r"execute\{(.*?)\}",expect, re.I)
+            hasString = re.search(r"hasStr\{(.*?)\}", expect, re.I)
+            hasNoString = re.search(r"hasNoStr\{(.*?)\}", expect, re.I)
 
             if expect == "success":
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
-            elif hasObj or hasnotObj or lengthObj or matchObj or isBalance:
+            elif hasObj or hasnotObj or lengthObj or matchObj or isBalance or hasString or hasNoString:
                 assert_that(err is None, "expect no err, but outcomes '{0}'".format(err))
                 if hasObj:
                     expectRS=hasObj.group(1)
@@ -159,7 +169,15 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if isBalance:
                     bal_num = isBalance.group(1)
                     balance(context,res,int(bal_num))
-
+                if hasString:
+                    expectRS = hasString.group(1)
+                    assert_that(str(res), contains_string(str(expectRS)),
+                                "expect containing text: {0}, resultset:{1}".format(expectRS, res))
+                if hasNoString:
+                    notExpectRS = hasNoString.group(1)
+                    assert str(notExpectRS) not in str(res), "not expect containing text: {0}, resultset:{1}".format(
+                        notExpectRS, res)
+                    
             elif executeTime:
                 expectRS = executeTime.group(1)
                 duration = (endtime - starttime).seconds
@@ -170,7 +188,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 assert_that(err,not_none(), "exec sql:{1} Err is None, expect:{0}".format(expect, sql))
                 assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
 
-        context.logger.info("to close {0} {1}".format(conn_type, bClose))
+        LOGGER.debug("to close {0} {1}".format(conn_type, bClose))
         if bClose:
             if conn is not None:
                 conn.close()

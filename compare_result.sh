@@ -1,4 +1,6 @@
 #!/bin/bash
+std_result_dir=${1-"std_result"}
+
 generate_simple_cmp_file () {
 	files=$(ls $1| egrep -v "*_pass.log|balance")
 
@@ -26,7 +28,7 @@ generate_simple_cmp_file () {
 
 rm -rf cmp_result && mkdir cmp_result
 rm -rf cmp_std_result && mkdir cmp_std_result
-generate_simple_cmp_file std_result cmp_std_result
+generate_simple_cmp_file ${std_result_dir} cmp_std_result
 generate_simple_cmp_file sql_cover_log cmp_result
 
 res=`diff -qwr cmp_std_result cmp_result`

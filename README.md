@@ -37,18 +37,21 @@ behave -Dreinstall=true features/install_uninstall/install_dble.feature
 behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
 
 ##使用特定配置启动dble
-behave --stop -D dble_conf={sql_cover|template} features/setup.feature
+behave --stop -D dble_conf={sql_cover|sql_cover_global|template} features/setup.feature
 
 ##sql覆盖, manual do rf -rf sql_cover_log if not running by ci
 behave -D dble_conf=sql_cover features/sql_cover/sql.feature 
 behave -D dble_conf=sql_cover features/sql_cover/subquery_plan_optimize.feature
 behave -D dble_conf=sql_cover features/sql_cover/manager.feature
 
+###全局表sql覆盖
+behave -Ddble_conf=sql_cover_global features/sql_cover/sql_global.feature
+
 ##算法
-behave -D dble_conf=template features/function/
+behave -D dble_conf=template features/sharding_func_test/
 
 ##配置
-behave -D dble_conf=template features/reload_conf/
+behave -D dble_conf=template features/cfg_test/
 
 ##全局序列(本地文件)
 behave -D dble_conf=template features/sequence/sequence.feature

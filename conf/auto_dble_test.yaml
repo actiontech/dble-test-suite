@@ -6,8 +6,7 @@ cfg_sys:
   ssh_password: sshpass
 cfg_dble:
   install_dir: /opt
-  base_conf: dble_conf/conf_template
-  sql_conf: dble_conf/sql_cover/dble
+  conf_dir: dble_conf/
   client_user: test
   client_password: 111111
   client_port: 8066

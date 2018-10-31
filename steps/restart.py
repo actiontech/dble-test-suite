@@ -49,7 +49,7 @@ def stop_mysql(context, hostName):
         success_p = "Shutting down MySQL.*?SUCCESS"
         obj = re.search(success_p, stop_out)
         isSuccess = obj is not None
-        assert isSuccess, "stop mysql in host:{0} err:{1}".format(hostName, err)
+        assert isSuccess, "stop mysql in host:{0} err:{1}".format(hostName, stop_err)
     else:
         context.logger.info("status_re: {0} , over".format(status_out))
 

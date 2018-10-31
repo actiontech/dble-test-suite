@@ -463,10 +463,10 @@ def step_impl(context):
     #     ssh.close_ssh()
 
 
-@When('compare results with the standard results')
-def step_impl(context):
+@When('compare results with the standard results in "{dirname}"')
+def step_impl(context,dirname):
     import subprocess
-    exit_code = subprocess.call(["bash", "compare_result.sh"])
+    exit_code = subprocess.call(["bash", "compare_result.sh", dirname])
     assert_that(exit_code, equal_to(0), "result is different with standard")
     context.logger.info("read write split pass")
 

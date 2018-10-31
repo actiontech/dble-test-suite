@@ -1,0 +1,16 @@
+﻿<?xml version="1.0"?>
+<!DOCTYPE dble:schema SYSTEM "schema.dtd">
+<dble:schema xmlns:dble="http://dble.cloud/">
+	<schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+	</schema>
+
+	<dataNode name="dn5" dataHost="172.100.9.5" database="db3" />
+
+	<dataHost name="172.100.9.5" maxCon="1000" minCon="10" balance="0" switchType="1"  slaveThreshold="100">
+		<heartbeat>select user()</heartbeat>
+		<writeHost host="hostM1" url="172.100.9.5:3306" user="test"
+				   password="111111">
+		</writeHost>
+	</dataHost>
+
+</dble:schema>

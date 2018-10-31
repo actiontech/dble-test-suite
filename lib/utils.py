@@ -3,7 +3,8 @@ import os
 import shutil
 import time
 import logging
-
+from behave import *
+from hamcrest import *
 from logging import config
 
 from functools import wraps
@@ -100,3 +101,8 @@ def get_nodes(context , flag):
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
     return nodes
+
+@Given('sleep "{num}" seconds')
+def step_impl(context, num):
+    int_num = int(num)
+    time.sleep(int_num)

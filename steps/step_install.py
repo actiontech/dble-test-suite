@@ -43,7 +43,7 @@ def install_dble_in_node(context, node):
     cmd = "cd {0} && tar xf {1}".format(context.cfg_dble['install_dir'], dble_packget)
     ssh_client.exec_command(cmd)
 
-    replace_config_in_node(context, context.cfg_dble['base_conf'], node)
+    replace_config_in_node(context, context.dble_conf, node)
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
