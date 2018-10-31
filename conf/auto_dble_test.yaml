@@ -32,8 +32,8 @@ cfg_dble:
 #    ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.06.0/
 #    ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.07.0/
 #  ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.09.1/
-  ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.10.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
+#  ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/2.18.10.0/
+  ftp_path: ftp://10.186.18.20/actiontech-mycat/qa/9.9.9.9/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   user: test
