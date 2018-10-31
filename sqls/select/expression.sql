@@ -11,9 +11,9 @@ select id,"another string" from test_shard
 select * from test_shard where R_NAME='a' ' ' 'string'
 select id,'a' ' ' 'string' from test_shard
 select * from test_shard where R_NAME=_utf8'中'
-#$skip http://10.186.18.21/autotest/dble/issues/1 $ select *,_utf8'中' from test_shard
+select *,_utf8'中' from test_shard
 select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci
-#$skip http://10.186.18.21/autotest/dble/issues/1 $ select *,_utf8'中'COLLATE utf8_danish_ci from test_shard
+select *,_utf8'中'COLLATE utf8_danish_ci from test_shard
 select * from test_shard where R_NAME='a\'string\''
 select id,'\'string\'',R_NAME from test_shard
 select * from test_shard where R_NAME='a\"string\"'
@@ -41,9 +41,9 @@ select * from test_shard where id=(select X'41'+0)
 select id,R_REGIONKEY+0 from test_shard
 select * from test_shard where R_NAME=(SELECT CHARSET(b''))
 select *,b'' from test_shard
-#$skip http://10.186.18.21/autotest/dble/issues/2 $ select * from test_shard where R_NAME=_latin1 b'1000001'
-#$skip http://10.186.18.21/autotest/dble/issues/2 $ select * from test_shard where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci
-#$skip http://10.186.18.21/autotest/dble/issues/2 $ select *,_latin1 b'1000001' from test_shard
+select * from test_shard where R_NAME=_latin1 b'1000001'
+select * from test_shard where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci
+select *,_latin1 b'1000001' from test_shard
 select * from test_shard where R_NAME=B'1000001'
 select * from test_shard where id=(select true)
 select true from test_shard

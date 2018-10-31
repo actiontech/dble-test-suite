@@ -18,7 +18,3 @@ mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L),
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
 [01:51:23.212497]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
-===file:select/reference_global_noshard.sql, id:40, sql:[select id,t_id,name,pad from test_global t force key(k_1) force index(pad_index)]===
-dble:[None]
-mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[01:51:23.321069]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
