@@ -519,6 +519,7 @@ Feature: #
 	    </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
     Then execute sql in "dble-1" in "user" mode
     | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
     | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|     |
