@@ -207,7 +207,7 @@ Feature:
       | test  | 111111 | conn_0 | True    | alter table test2 add name char  | success  | mytest   |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect               | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test4`}    | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test4`}    | mytest |
       | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasStr{`name`}      | mytest |
       | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test6'| hasNoStr{`id`}      | mytest |
     Then execute sql in "dble-1" in "user" mode
@@ -250,7 +250,7 @@ Feature:
       | test  | 111111 | conn_0 | True    | alter table test2 add name char  | success  | mytest   |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect               | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test5`}    | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`}    | mytest |
       | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasStr{`name`}      | mytest |
       | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test6'| hasNoStr{`id`}      | mytest |
     Then execute sql in "dble-1" in "user" mode

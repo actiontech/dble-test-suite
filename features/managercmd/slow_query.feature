@@ -62,8 +62,8 @@ Feature:#test reference manager cmd  and main function for slow query log
         | user         | passwd    | conn   | toClose  | sql                                        | expect    | db     |
         | test         | 111111    | conn_0 | False    | drop table if exists a_test            |  success  |   mytest|
         | test         | 111111    | conn_0 | False    | create table a_test(id int)            |  success  |   mytest|
-        | test         | 111111    | conn_0 | False    | alter table a_test add name char(20) |  success  |   mytest|
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,'a_test1'|  success  |   mytest|
+        | test         | 111111    | conn_0 | False    | alter table a_test add name char(20)   |  success  |   mytest|
+        | test         | 111111    | conn_0 | False    | insert into a_test values(1,'a_test1') |  success  |   mytest|
         | test         | 111111    | conn_0 | False    | select id from a_test                   |  success  |   mytest|
         | test         | 111111    | conn_0 | False    | select count(id) from a_test           |  success  |   mytest|
         | test         | 111111    | conn_0 | True     | delete from a_test                       |  success  |   mytest|

@@ -125,12 +125,12 @@ def after_scenario(context, scenario):
     if not (context.config.stop and scenario.status == "failed") and not "skip_restart" in scenario.tags:
         replace_config(context, context.dble_conf)
         restart_dbles(context, context.dbles)
-    logger.info('Scenario end: <{0}>'.format(scenario.name))
-    logger.info('#' * 30)
+    logger.debug('Scenario end: <{0}>'.format(scenario.name))
+    logger.debug('#' * 30)
 def before_step(context, step):
-    logger.info('*' * 30)
-    logger.info('step start: <{0}>'.format(step.name))
+    logger.debug('*' * 30)
+    logger.debug('step start: <{0}>'.format(step.name))
 
 def after_step(context, step):
-    logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
-    logger.info('*' * 30)
+    logger.debug('step end: <{0}>, status:{1}'.format(step.name, step.status))
+    logger.debug('*' * 30)
