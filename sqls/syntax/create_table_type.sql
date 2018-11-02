@@ -774,7 +774,11 @@ INSERT INTO aly_test ( id,data) VALUES (1,'enum1'),(2,'test_%%%00'),(3,'abcd_007
 SELECT * FROM aly_test
 #
 #SET(value1,value2,value3,...)
-#CREATE TABLE  aly_test( id int,data set('enum1','enum2','test_%%%00','enum3','abcd_007'))
+DROP TABLE IF EXISTS  aly_test
+CREATE TABLE  aly_test( id int,data set('enum1','enum2','test_%%%00','enum3','abcd_007'))
+desc aly_test
+INSERT INTO aly_test ( id,data) VALUES (1,'enum1'),(2,'test_%%%00'),(3,'abcd_007')
+SELECT * FROM aly_test
 #
 #JSON
 DROP TABLE IF EXISTS  aly_test

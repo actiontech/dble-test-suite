@@ -77,9 +77,17 @@ DESC aly_test
 SELECT id,data FROM aly_test
 #
 #data_type [reference_definition]
-#com.alibaba.druid.sql.parser.ParserException: syntax error
-#CREATE TABLE aly_order(id int,test int UNIQUE KEY,data varchar(10) )
-#CREATE TABLE aly_test(id int, data int references aly_order (data))
+#
+DROP TABLE IF EXISTS aly_order
+CREATE TABLE aly_order(id int,test int UNIQUE KEY,data varchar(10) )
+INSERT INTO aly_order VALUES (3,1,'ccc')
+DESC aly_order
+SELECT id,data FROM aly_order
+DROP TABLE IF EXISTS aly_test
+CREATE TABLE aly_test(id int, data int references aly_order (data))
+INSERT INTO aly_test VALUES (3,1)
+DESC aly_test
+SELECT id,data FROM aly_test
 #
 #data_type [GENERATED ALWAYS] ...
 #ERROR 1064 (HY000): com.alibaba.druid.sql.parser.ParserException: syntax error
@@ -189,10 +197,16 @@ DESC aly_test
 #index_option not SUPPORTED
 #ERROR 1064 (HY000): com.alibaba.druid.sql.parser.ParserException: syntax error
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),PRIMARY KEY (id) KEY_BLOCK_SIZE = 10)
-#CREATE TABLE aly_test ( id int(11),detail varchar(20),PRIMARY KEY (id) COMMENT 'testing')
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),PRIMARY KEY (detail) WITH PARSER ngram)
-#CREATE TABLE aly_test ( id int(11),detail varchar(20),PRIMARY KEY (id) USING HASH)
 #
+DROP TABLE IF EXISTS aly_test
+CREATE TABLE aly_test ( id int(11),detail varchar(20),PRIMARY KEY (id) COMMENT 'testing')
+INSERT INTO aly_test VALUES (1,'aaa')
+DESC aly_test
+DROP TABLE IF EXISTS aly_test
+CREATE TABLE aly_test ( id int(11),detail varchar(20),PRIMARY KEY (id) USING HASH)
+INSERT INTO aly_test VALUES (1,'aaa')
+DESC aly_test
 #
 #KEY [index_name] (index_col_name,...)
 #index_col_name:not SUPPORTED INSERT
@@ -234,8 +248,12 @@ DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),KEY key_id (id) USING HASH)
 INSERT INTO aly_test VALUES (1,1,'aaa')
 SHOW CREATE TABLE aly_test
+DROP TABLE IF EXISTS  aly_test
+CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),KEY key_id (id) COMMENT 'string')
+INSERT INTO aly_test VALUES (1,'aaa')
+SHOW CREATE TABLE aly_test
+#durid bug:
 #CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),KEY key_id (id) KEY_BLOCK_SIZE=1000)
-#CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),KEY key_id (id) COMMENT 'string')
 #CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),KEY key_id (id) WITH PARSER ngram)
 #
 #
@@ -249,7 +267,10 @@ DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11) NOT NULL ,test int,index id_index (id,test))
 INSERT INTO aly_test VALUES (1,1)
 SHOW CREATE TABLE aly_test
-#CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id ASC,test,detail(10) DESC))
+DROP TABLE IF EXISTS  aly_test
+CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id ASC,test,detail(10) DESC))
+INSERT INTO aly_test VALUES (1,1)
+SHOW CREATE TABLE aly_test
 #
 #INDEX [index_name] [index_type] (col_name,...)
 DROP TABLE IF EXISTS  aly_test
@@ -275,6 +296,7 @@ DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id) USING HASH)
 INSERT INTO aly_test VALUES (1,1,'aaa')
 SHOW index FROM aly_test
+#durid bug
 #CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id) KEY_BLOCK_SIZE=1000)
 #CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id) COMMENT 'string')
 #CREATE TABLE aly_test ( id int(11),test int,detail varchar(20),INDEX key_id (id) WITH PARSER ngram)
@@ -365,6 +387,7 @@ SHOW CREATE TABLE aly_test
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE INDEX ind_id USING HASH(id,detail))
 INSERT INTO aly_test VALUES (1,'aaa')
+#durid bug:
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE INDEX USING HASH(id,detail))
 SHOW CREATE TABLE aly_test
 DROP TABLE IF EXISTS  aly_test
@@ -389,7 +412,10 @@ DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE KEY ind_id (id,detail))
 INSERT INTO aly_test VALUES (1,'aaa')
 SHOW CREATE TABLE aly_test
-#CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE KEY ind_id (id ASC,detail DESC))
+DROP TABLE IF EXISTS  aly_test
+CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE KEY ind_id (id ASC,detail DESC))
+INSERT INTO aly_test VALUES (1,'aaa')
+SHOW CREATE TABLE aly_test
 DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),detail varchar(20),CONSTRAINT UNIQUE KEY unique_id (id,detail))
 INSERT INTO aly_test VALUES (1,'aaa')
@@ -406,6 +432,7 @@ DROP TABLE IF EXISTS aly_test
 CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE KEY unique_id USING HASH(id,detail ))
 INSERT INTO aly_test VALUES (1,'aaa')
 SHOW CREATE TABLE aly_test
+#durid bug:
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),UNIQUE KEY USING HASH(id,detail ))
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),CONSTRAINT UNIQUE KEY USING HASH(id,detail ))
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),CONSTRAINT id_pk UNIQUE KEY USING HASH(id,detail))
@@ -425,6 +452,7 @@ DROP TABLE IF EXISTS  aly_test
 CREATE TABLE aly_test ( id int(11),detail varchar(20),CONSTRAINT UNIQUE KEY unique_id USING HASH (id))
 INSERT INTO aly_test VALUES (1,'aaa')
 SHOW CREATE TABLE aly_test
+#durid bug:
 #CREATE TABLE aly_test ( id int(11),detail varchar(20),CONSTRAINT u_id UNIQUE KEY USING HASH (id))
 DROP TABLE IF EXISTS aly_test
 CREATE TABLE aly_test ( id int(11) NOT NULL ,INDEX id_index (id) USING HASH,CONSTRAINT id_pk UNIQUE KEY (id) )
@@ -523,10 +551,10 @@ DROP TABLE aly_test
 #CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'Y'
 #INSERT INTO aly_test VALUES (1)
 #SHOW CREATE TABLE  aly_test
-#DROP TABLE aly_test
-#CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'N'
-#INSERT INTO aly_test VALUES (1)
-#SHOW CREATE TABLE  aly_test
+DROP TABLE aly_test
+CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'N'
+INSERT INTO aly_test VALUES (1)
+SHOW CREATE TABLE  aly_test
 #
 #INSERT_METHOD [=] { NO | FIRST | LAST }
 DROP TABLE IF EXISTS aly_test
@@ -551,7 +579,10 @@ DROP TABLE aly_test
 CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=DYNAMIC
 INSERT INTO aly_test VALUES (1)
 SHOW CREATE TABLE  aly_test
-#CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=FIXED
+DROP TABLE aly_test
+CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=FIXED
+INSERT INTO aly_test VALUES (1)
+SHOW CREATE TABLE  aly_test
 DROP TABLE aly_test
 CREATE TABLE  aly_test ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=COMPRESSED
 INSERT INTO aly_test VALUES (1)
@@ -598,6 +629,13 @@ DROP TABLE aly_test
 CREATE TABLE aly_test( id int(11) NOT NULL ,PRIMARY KEY (id)) STATS_SAMPLE_PAGES = 100
 INSERT INTO aly_test VALUES (1)
 SHOW CREATE TABLE  aly_test
+#
+#index [COMMENT comment]
+DROP TABLE IF EXISTS aly_test
+CREATE TABLE aly_test(id int, data1 int,data2 int,data3 int UNIQUE KEY COMMENT 'test')
+INSERT INTO aly_test (id,data1,data2) VALUES (1,1,1)
+DESC aly_test
+SELECT id,data1,data2,data3 FROM aly_test
 #
 #clear tables
 #

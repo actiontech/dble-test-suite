@@ -1,9 +1,9 @@
-===file:syntax/prepare.sql, id:19, sql:[alter table test_shard drop index R_NAME]===
-mysql err:(1091, "Can't DROP 'R_NAME'; check that column/key exists")
-dble err[05:10:56.145589] :(1091, "Can't DROP 'R_NAME'; check that column/key exists")
-===file:syntax/prepare.sql, id:24, sql:[alter table test_shard drop index R_NAME]===
-mysql err:(1091, "Can't DROP 'R_NAME'; check that column/key exists")
-dble err[05:10:57.130262] :(1091, "Can't DROP 'R_NAME'; check that column/key exists")
-===file:syntax/prepare.sql, id:29, sql:[alter table test_shard drop primary key]===
-mysql err:(1091, "Can't DROP 'PRIMARY'; check that column/key exists")
-dble err[05:10:58.127763] :(1091, "Can't DROP 'PRIMARY'; check that column/key exists")
+===file:syntax/prepare.sql, id:100, sql:[select * from view_test/*error:no view*/]===
+mysql err:(1146, "Table 'db3.view_test' doesn't exist")
+dble err[02:08:53.079801] :(1146, "Table 'db3.view_test' doesn't exist")
+===file:syntax/prepare.sql, id:205, sql:[prepare pre_test fr 'select * from test_shard where id=2']===
+mysql err:(1149, "You have an error in your SQL syntax:prepare pre_test fr 'select * from test_shard where id=2'")
+dble err[02:08:53.235816] :(1149, "You have an error in your SQL syntax:prepare pre_test fr 'select * from test_shard where id=2'")
+===file:syntax/prepare.sql, id:207, sql:[execute pret/*error:unknown prepare*/]===
+mysql err:(1149, 'You have an error in your SQL syntax:execute pret/*error:unknown prepare*/')
+dble err[02:08:53.240096] :(1149, 'You have an error in your SQL syntax:execute pret/*error:unknown prepare*/')

@@ -1,7 +1,0 @@
-===file:syntax/create_index.sql, id:67, sql:[CREATE INDEX inx_id ON aly_test (id) comment '测试']===
-dble:[None]
-mysql:[()]
-[01:42:23.214718]dble err :(1064, 'sql syntax error, no terminated. COMMENT')
-===file:syntax/create_index.sql, id:68, sql:[SHOW INDEX FROM aly_test]===
-dble:[[]]
-mysql:[[('aly_test', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '\xe6\xb5\x8b\xe8\xaf\x95')]]

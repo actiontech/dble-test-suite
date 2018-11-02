@@ -34,11 +34,13 @@ select * from aly_test force index for join(pad_index,k_1)
 select * from aly_test use key(k_1)
 select * from aly_test ignore key(k_1)
 select * from aly_test force key(k_1)
+SELECT * FROM aly_test use INDEX (k_1) use INDEX (pad_index)
 select * from aly_test t use key(k_1) use index(pad_index) use index()
 select * from aly_test t ignore key(k_1) use index(pad_index) use index()
 select * from aly_test t ignore key(k_1) ignore index(pad_index) use index()
 select * from aly_test t force key(k_1) force index(pad_index)
 select * from aly_test t ignore key(k_1) force index(pad_index)
+select * from aly_test t ignore key(k_1) ignore index(pad_index)
 select id,pad,name from (select * from aly_test where pad>2) as a
 select * from aly_test a,aly_order b
 select a.id,b.id,b.pad,a.t_id from aly_test a,(select a_manager.id,a_manager.pad from aly_test join a_manager where aly_test.pad=a_manager.pad) b,(select * from aly_order where id>3) c where a.pad=b.pad and c.pad=b.pad

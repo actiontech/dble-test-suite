@@ -5,6 +5,7 @@ insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string'
 #
 #contains alter table
 #
+#!sql_thread_1
 prepare pre_test from 'alter table test_shard add age int(10)'
 execute pre_test
 show create table test_shard
