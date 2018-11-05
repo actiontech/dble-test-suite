@@ -72,8 +72,8 @@ Feature:#test reference manager cmd  and main function for slow query log
       """
       drop table if exists a_test
       create table a_test(id int)
-      alter table a_test add age int
-      insert into a_test values(1,20)
+      alter table a_test add name char(20)
+      insert into a_test values(1,'a_test1')
       select id from a_test
       select count(id) from a_test
       delete from a_test

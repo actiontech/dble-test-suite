@@ -61,7 +61,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <function class="NumberRange" name="rule_func1">
             <property name="mapFile">numberrange.txt</property>
             <property name="defaultNode">0</property>
-            <property name="type">0</property>
         </function>
         <function class="NumberRange" name="rule_func2">
             <property name="mapFile">numberrange.txt</property>

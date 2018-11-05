@@ -206,4 +206,13 @@ create table global_table2(id int)
 SELECT tempview1.tablename,tempview1.datanum,tempview2.tablename,tempview2.datanum FROM (SELECT SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1') tablename,SUM(t.DATANUM) datanum FROM global_table1 t GROUP BY SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1')) tempview1,(SELECT 'ctp_user' tablename, COUNT(1) datanum FROM global_table2) tempview2 WHERE tempview1.tablename = tempview2.tablename
 drop table if exists global_table1
 drop table if exists global_table2
+#github issue 258
+drop table if exists aly_test
+create table aly_test(id int,c_id int,name varchar(8)) partition by linear key algorithm=2 (id,c_id) partitions 4 (partition p0,partition p1,partition p2,partition p3)
+drop table if exists aly_test
+create table aly_test(id int,c_id int,name varchar(8)) partition by key  algorithm=1(id) partitions 4 (partition p0,partition p1,partition p2,partition p3)
+drop table if exists aly_test
+#github issue 316
+set session tx_read_only=1
+set session tx_read_only=0
 

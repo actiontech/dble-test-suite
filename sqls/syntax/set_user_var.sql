@@ -42,6 +42,9 @@ create table table_member_comments(id int(4), datetime timestamp, widgetID int(8
 create table table_guest_comments(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)
 insert into table_member_comments values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello python', 1),(3, 20160822174314, 100, 'hello java', 1)
 insert into table_guest_comments values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello php', 1),(3, 20160822174314, 100, 'hello c++', 0)
+#!share_conn
+set @vara=9
+set @varb=9
 SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM table_member_comments WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM table_guest_comments WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC
 #user variables
 set @abc123=1

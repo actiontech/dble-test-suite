@@ -1,7 +1,7 @@
 Feature: Verify that the Reload @@config_all is effective for server.xml
 
   Scenario: #1 add/delete client user
-     #1.1  client user with illegal label
+     #1.1  client user with illegal label got error
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
@@ -11,15 +11,14 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     </user>
     """
     Then execute admin cmd "reload @@config_all"
-
-    Then execute sql in "dble-1" in "user" mode
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
+    """
+    These properties of user[test_user]  are not recognized: test
+    """
 
        #1.2 client user with readonly
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
-     <user name="test_user2">
+     <user name="test_user">
         <property name="password">test_password</property>
         <property name="schemas">mytest</property>
         <property name="readOnly">true</property>
@@ -28,10 +27,10 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test_user2    | test_password | conn_0 | False    | select 1 | success | mytest |
-        | test_user2   | test_password | conn_0 | True    | drop table if exists test_table | User READ ONLY | mytest |
+        | test_user    | test_password | conn_0 | False   | select 1 | success | mytest |
+        | test_user    | test_password | conn_0 | True    | drop table if exists test_table | User READ ONLY | mytest |
 
-     #1.3client user with  schema which does not exist
+     #1.3client user with schema which does not exist
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <user name="test_user3">
@@ -39,9 +38,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="schemas">testdb</property>
      </user>
     """
-    Given Restart dble in "dble-1" success
+    Then Restart dble in "dble-1" failed for
      """
-      start dble service fail in 25 seconds!
+     schema testdb referred by user test_user3 is not exist!
      """
   Scenario: #2 test usingDecrypt
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -152,7 +151,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'mnger'}}|
     Then execute admin cmd "reload @@config_all"
 
-
   Scenario: #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -160,11 +158,10 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="bindIp">0.0.0.0</property>
         <property name="serverPort">8066</property>
         <property name="managerPort">9066</property>
-        <property name="lowerCaseTableNames">true</property>
-        <property name="processor">1</property>
+        <property name="processors">1</property>
         <property name="processorExecutor">32</property>
         <property name="fakeMySQLVersion">5.6.20</property>
-        <property name="sequenceHandlerType">2</property>
+        <property name="sequnceHandlerType">2</property>
         <property name="serverNodeId">1   </property>
         <property name="showBinlogStatusTimeout">60000</property>
         <property name="useCompression">1    </property>
@@ -188,17 +185,14 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="transactionRatateSize">16       </property>
         <property name="xaSessionCheckPeriod">1000     </property>
         <property name="xaLogCleanPeriod">1000     </property>
-        <property name="XARecoveryLogBaseDir">/tmlogs  </property>
-        <property name="XARecoveryLogBaseName">tmlog    </property>
+        <property name="xaRecoveryLogBaseDir">/tmlogs  </property>
+        <property name="xaRecoveryLogBaseName">tmlog    </property>
         <property name="useJoinStrategy">true     </property>
         <property name="nestLoopConnSize">4        </property>
         <property name="nestLoopRowsSize">2000     </property>
         <property name="bufferPoolChunkSize">4096     </property>
         <property name="bufferPoolPageNumber">512      </property>
         <property name="bufferPoolPageSize">2097152  </property>
-        <property name="useOffHeapForMerge">1m       </property>
-        <property name="spillsFileBufferSize">2k       </property>
-        <property name="dataNodeSortedTempDir">/sortDirs</property>
         <property name="useSqlStat">0        </property>
         <property name="bufferUsagePercent">80        </property>
         <property name="clearBigSqLResultSetMapMs">600000   </property>
@@ -340,7 +334,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
-  @current
   Scenario: #11 test user maxCon
     Given delete the following xml segment
       |file        | parent           | child              |
@@ -412,7 +405,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <system>
-          <property name="defaultSqlParser">druidparser</property>
 		   <property name="useGlobleTableCheck">1</property>
 		   <property name="processors">1</property>
           <property name="processorExecutor">1</property>
