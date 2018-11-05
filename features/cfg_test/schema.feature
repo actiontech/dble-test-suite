@@ -693,15 +693,15 @@ Feature: #
 	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
 	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
 	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-	    <dataHost balance="3" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+	    <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
 		    <heartbeat>select user()</heartbeat>
-		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
               <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="2"/>
 		    </writeHost>
 	    </dataHost>
     """
-    Then execute admin cmd "reload @@config_all" get the following output
+    Given Restart dble in "dble-1" success
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
@@ -722,13 +722,13 @@ Feature: #
     | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{250}|  |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{333} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{250} |  |
     Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{666} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
      Given delete the following xml segment
       |file        | parent          | child               |

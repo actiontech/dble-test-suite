@@ -147,7 +147,10 @@ def update_file_content(context,filename, hostname):
     sed_cmd += " {0}".format(filename)
 
     context.logger.info("sed cmd is :{0}".format(sed_cmd))
-    ssh = get_ssh(context.mysqls,hostname)
+    if hostname.startswith('dble'):
+        ssh = get_ssh(context.dbles,hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
     rc, stdout, stderr = ssh.exec_command(sed_cmd)
     assert_that(len(stderr)==0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
 
@@ -166,7 +169,7 @@ def step_impl(context,flag,filename,hostname):
 
     ssh = get_ssh(context.dbles,hostname)
     for str in strs_list:
-        cmd = "grep \"{0}\" {1}".format(str,filename)
+        cmd = "grep \'{0}\' {1}".format(str,filename)
         rc, stdout, stderr = ssh.exec_command(cmd)
         if flag =="not":
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
