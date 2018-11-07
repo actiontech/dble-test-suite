@@ -21,6 +21,7 @@ install reference: https://github.com/btraceio/btrace/tree/v1.3.8.3-1
 5.Add environment variables to file /etc/profile:
   echo 'export BTRACE_HOME=/opt/btrace' >>/etc/profile
   echo 'export PATH=$PATH:$BTRACE_HOME/bin' >>/etc/profile
+  source /etc/profile
 
 6.Verify whether the installation is successful or not:
   btrace --version
