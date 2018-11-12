@@ -2,7 +2,7 @@
 Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter feature name here
   # todo: the issue only occur under ushard ha env
 
-  Scenario: #1 Enter scenario name here
+  Scenario: #1 todo not complete yet
     Given update file content "/opt/dble/conf/wrapper.conf" in "dble-1"
 
     """

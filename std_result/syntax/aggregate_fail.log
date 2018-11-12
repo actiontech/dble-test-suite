@@ -1,0 +1,9 @@
+===file:syntax/aggregate.sql, id:6, sql:[select sec_to_time(sum(time_to_sec(t))) from three_sharding_t1;]===
+dble:[[(datetime.timedelta(34, 82799),)]]
+mysql:[[(datetime.timedelta(0, 55005),)]]
+===file:syntax/aggregate.sql, id:25, sql:[select *, group_concat(name order by name) from aly_test group by id;]===
+dble:[((None, 'b', 'b,c,b,c,b'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
+mysql:[((None, 'b', 'b,b,b,c,c'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
+===file:syntax/aggregate.sql, id:26, sql:[select *, group_concat(distinct name order by name desc separator ':') from aly_test group by id;]===
+dble:[((None, 'b', 'b:c'), (1L, 'a', 'a:d'), (2L, None, None), (3L, 'a', 'a'))]
+mysql:[((None, 'b', 'c:b'), (1L, 'a', 'd:a'), (2L, None, None), (3L, 'a', 'a'))]

@@ -56,6 +56,12 @@
             <algorithm>three-long</algorithm>
         </rule>
     </tableRule>
+	<tableRule name="hash-three-step10">
+        <rule>
+            <columns>id</columns>
+            <algorithm>three-long-step10</algorithm>
+        </rule>
+    </tableRule>
 	<tableRule name="hash-four">
         <rule>
             <columns>id</columns>
@@ -69,6 +75,10 @@
     <function name="three-long" class="Hash">
         <property name="partitionCount">3</property>
         <property name="partitionLength">1</property>
+    </function>
+    <function name="three-long-step10" class="Hash">
+        <property name="partitionCount">3</property>
+        <property name="partitionLength">10</property>
     </function>
 	<function name="four-long" class="Hash">
 		<property name="partitionCount">4</property>
