@@ -62,22 +62,6 @@ def exec_sql(context, ip, port):
         expect = row["expect"]
         db = row["db"]
         if db is None: db = ''
-
-        # if sql == "batch_insert":
-        #     table_name = row["tb"]
-        #     end = int(row["count"])
-        #     for i in range(1, end + 1):
-        #         inspection_num = 'NJ' + str(100000 + i)
-        #         sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name, i,inspection_num))
-        #         do_batch_sql(context, ip, user, passwd, db, port, sql)
-        # elif sql == "batch_select":
-        #     table_name = row["tb"]
-        #     end = int(row["count"])
-        #     for i in range(1, end + 1):
-        #         id == random.randint(1, end)
-        #         sql = ("select name from {0} where id ={1};".format(table_name, i))
-        #         do_batch_sql(context,ip,user,passwd,db,port,sql)
-        # else:
         do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
         if charset is not None:
