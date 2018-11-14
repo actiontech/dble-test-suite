@@ -74,27 +74,27 @@ public class Config {
 //			mysql_hosts[2]=Host_Slave1;
 //			mysql_hosts[3]=Host_Slave2;
 
-			TEST_USER = ini.get("mycat","user");
-			TEST_USER_PASSWD = ini.get("mycat","passwd");
-			TEST_PORT = Integer.parseInt(ini.get("mycat","port"));
+			TEST_USER = ini.get("dble","user");
+			TEST_USER_PASSWD = ini.get("dble","passwd");
+			TEST_PORT = Integer.parseInt(ini.get("dble","port"));
 			TEST_SETVER_NAME = ini.get("install", "server_name");
 
-			TEST_ADMIN = ini.get("mycat", "manager_user");
-			TEST_ADMIN_PASSWD = ini.get("mycat", "manager_passwd");
-			TEST_ADMIN_PORT = Integer.parseInt(ini.get("mycat","manager_port"));
+			TEST_ADMIN = ini.get("dble", "manager_user");
+			TEST_ADMIN_PASSWD = ini.get("dble", "manager_passwd");
+			TEST_ADMIN_PORT = Integer.parseInt(ini.get("dble","manager_port"));
 
 
 			SSH_USER = ini.get("ssh","user");
 			SSH_PASSWORD = ini.get("ssh","passwd");
 
 			MYSQL_INSTALL_PATH = ini.get("install","mysql_dir");
-			TEST_INSTALL_PATH = ini.get("mycat","install_path");
+			TEST_INSTALL_PATH = ini.get("dble","install_path");
 			ROOT_PATH = ini.get("env","root_path");
 			SQLS_CONFIG = ROOT_PATH + "features/sql_cover/sql.feature";
 //			SQLS_CONFIG = ROOT_PATH + "features/read_write_split/read_write_split.feature";
 
-//			String cmd = "cat "+MYCAT_INSTALL_PATH+"/uproxy.json";
-//			SSHCommandExecutor sshExecutor = new SSHCommandExecutor(Host_Mycat, Config.SSH_USER,
+//			String cmd = "cat "+dble_INSTALL_PATH+"/uproxy.json";
+//			SSHCommandExecutor sshExecutor = new SSHCommandExecutor(Host_dble, Config.SSH_USER,
 //					Config.SSH_PASSWORD);
 //			sshExecutor.execute(cmd);
 //			Vector<String> cnf = sshExecutor.getStandardOutput();
@@ -106,17 +106,17 @@ public class Config {
 //				if(tmp[0].indexOf("admin_user")!=-1){
 //					String va = tmp[1].trim();
 //					va = va.replace("\"", "");
-//					MYCAT_ADMIN = va;
+//					dble_ADMIN = va;
 ////					System.out.println(UPROXY_ADMIN);
 //				}
 //				if(tmp[0].indexOf("admin_password")!=-1){
 //					String va = tmp[1].trim();
 //					va = va.replace("\"", "");
-//					MYCAT_ADMIN_PASSWD = va;
+//					dble_ADMIN_PASSWD = va;
 ////					System.out.println(UPROXY_ADMIN_PASSWD);
 //				}
 //				if(tmp[0].indexOf("port")!=-1){
-//					MYCAT_PORT = Integer.parseInt(tmp[1].trim());
+//					dble_PORT = Integer.parseInt(tmp[1].trim());
 ////					System.out.println("port"+UPROXY_PORT);
 //				}
 //			}

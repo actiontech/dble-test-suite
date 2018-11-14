@@ -7,7 +7,7 @@ conf_path="dble_`date '+%Y-%m-%d_%H:%M:%S'`"
 
 /opt/dble/bin/dble stop
 rm -rf actiontech-dble.tar.gz
-cd /opt && wget ftp://ftp:ftp@10.186.18.20/actiontech-mycat/qa/${version}/actiontech-dble.tar.gz \
+cd /opt && wget ftp://ftp:ftp@10.186.18.20/actiontech-dble/qa/${version}/actiontech-dble.tar.gz \
 && mv /opt/dble/conf /tmp/${conf_path}
 rm -rf /opt/dble
 cd /opt && tar -zxf actiontech-dble.tar.gz

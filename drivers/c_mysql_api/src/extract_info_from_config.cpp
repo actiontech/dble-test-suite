@@ -145,10 +145,10 @@ int GetProfileString(char *profile, char *AppName, char *KeyName, char *KeyVal )
 void config(char *profile, char *sys)
 {
         GetProfileString(profile, sys, "ip", Host_Test);
-        GetProfileString(profile, "mycat", "user", TEST_USER);
+        GetProfileString(profile, "dble", "user", TEST_USER);
         GetProfileString(profile, "group1", "ip", Host_Master);
 
-        GetProfileString(profile, "mycat", "passwd", TEST_USER_PASSWD);
+        GetProfileString(profile, "dble", "passwd", TEST_USER_PASSWD);
         strcpy(TEST_ADMIN, "admin");
         strcpy(TEST_ADMIN_PASSWD, "password");
 }

@@ -9,11 +9,11 @@ from steps.step_reload import get_admin_conn
 
 def destroy_share_n_conn(context):
     for i in range(1,10):
-        mycat_conn_name = "share_conn_{0}".format(i)
-        if hasattr(context, mycat_conn_name):
-            conn_mycat = getattr(context, mycat_conn_name)
-            conn_mycat.close()
-            delattr(context, mycat_conn_name)
+        dble_conn_name = "share_conn_{0}".format(i)
+        if hasattr(context, dble_conn_name):
+            conn_dble = getattr(context, dble_conn_name)
+            conn_dble.close()
+            delattr(context, dble_conn_name)
 
 def do_admin_query(context, line_nu, sql):
     sql = sql.strip()
@@ -45,7 +45,7 @@ def step_impl(context, filename):
     filepath = "sqls/{0}".format(filename)
     sql = ''
     line_nu = 0
-    if (not hasattr(context, "conn_mycat")) or context.conn_mycat is None:
+    if (not hasattr(context, "conn_dble")) or context.conn_dble is None:
         context.conn_admin = get_admin_conn(context)
 
     with open(filepath) as fp:

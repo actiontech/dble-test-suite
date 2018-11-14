@@ -82,10 +82,15 @@ def step_impl(context, rs_name):
         isFound = False
         for rs_row in rs:
             for i in range(len(expect_row)):
-                expect_col = expect_row[i]
                 col_idx = col_idx_list[i]
                 real_col = rs_row[col_idx]
-                isFound = unicode(real_col) == unicode(expect_col)
+                if ( expect_row[i].rfind('+') != -1 ):
+                    bal = int(expect_row[i].split("+")[-1])
+                    expect_col = int(expect_row[i].split("+")[0])+bal
+                    isFound = int(real_col) <= expect_col
+                else:
+                    expect_col = expect_row[i]
+                    isFound = unicode(real_col) == unicode(expect_col)
                 context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break

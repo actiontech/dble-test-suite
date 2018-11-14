@@ -63,35 +63,26 @@ def exec_sql(context, ip, port):
         db = row["db"]
         if db is None: db = ''
 
-        if sql == "batch_insert":
-            table_name = row["tb"]
-            end = int(row["count"])
-            for i in range(1, end + 1):
-                inspection_num = 'NJ' + str(100000 + i)
-                sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name, i,inspection_num))
-                do_batch_sql(context, ip, user, passwd, db, port, sql)
-        elif sql == "batch_select":
-            table_name = row["tb"]
-            end = int(row["count"])
-            for i in range(1, end + 1):
-                id == random.randint(1, end)
-                sql = ("select name from {0} where id ={1};".format(table_name, i))
-                do_batch_sql(context,ip,user,passwd,db,port,sql)
-        else:
-            do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
+        # if sql == "batch_insert":
+        #     table_name = row["tb"]
+        #     end = int(row["count"])
+        #     for i in range(1, end + 1):
+        #         inspection_num = 'NJ' + str(100000 + i)
+        #         sql = ("insert into {0} (id,name) values({1},'{2}');".format(table_name, i,inspection_num))
+        #         do_batch_sql(context, ip, user, passwd, db, port, sql)
+        # elif sql == "batch_select":
+        #     table_name = row["tb"]
+        #     end = int(row["count"])
+        #     for i in range(1, end + 1):
+        #         id == random.randint(1, end)
+        #         sql = ("select name from {0} where id ={1};".format(table_name, i))
+        #         do_batch_sql(context,ip,user,passwd,db,port,sql)
+        # else:
+        do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
         if charset is not None:
             delattr(context, "charset")
 
-def do_batch_sql(context,ip, user, passwd, db, port,sql):
-    conn = None
-    try:
-        conn = DBUtil(ip, user, passwd, db, port, context)
-    except:
-        context.logger.info("create connection error when excute batch_select sql :{0}".format(sql))
-    res, err = conn.query(sql)
-    assert_that(err is None, "excute batch_select sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
-    conn.close()
 
 def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect):
         conn = None
@@ -284,13 +275,12 @@ def turn_on_general_log(context, shardings, user, passwd):
 
         conn.close()
 
-def balance(context, expectRS, bHas): #Float a value up and down
+def balance(context, RS, expectRS): #Float a value up and down
 
-    re_num = int (re.sub("\D","",str(expectRS[0])))
-
-    a = abs(re_num - bHas)
-    b = bHas *0.15
-    assert a<b, "expect {0} in resultset {1}".format(expectRS, bHas)
+    re_num = int (re.sub("\D","",str(RS[0])))  #get the number from result of dble
+    a = abs(re_num - expectRS)
+    b = expectRS *0.15
+    assert a<b, "expect {0} in resultset {1}".format(expectRS, expectRS)
 
 
 
@@ -326,3 +316,42 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
         assert err is None, "set general log on fail for {0}".format(err[1])
 
         conn.close()
+
+@Then('connect "{hostname}" to insert "{num}" of data for "{tablename}"')
+@Then('connect "{hostname}" to insert "{num}" of data for "{dbname}"."{tablename}"')
+def step_impl(context,hostname,num, tablename,dbname="mytest"):
+    sql = ("insert into {0} (id,name) values".format(tablename))
+    end = int(num)
+    for i in range(1, end + 1):
+        inspection_num = 'NJ' + str(100000 + i)
+        if (i == end):
+            sql = sql +("({0},'{1}');".format(i, inspection_num))
+        else:
+            sql = sql + ("({0},'{1}'),".format(i, inspection_num))
+        
+    do_batch_sql(context,hostname,dbname, sql)
+
+@Then('connect "{hostname}" to execute "{num}" of select for "{tablename}"')
+@Then('connect "{hostname}" to execute "{num}" of select for "{dbname}"."{tablename}"')
+def step_impl(context, hostname, num, tablename, dbname="mytest"):
+    end = int(num)
+    for i in range(1, end + 1):
+        id == random.randint(1, end)
+        sql = ("select name from {0} where id ={1};".format(tablename, i))
+        do_batch_sql(context,hostname, dbname, sql)
+    
+def do_batch_sql(context, hostname, db, sql):
+    conn = None
+    node = get_node(context.dbles, hostname)
+    ip = node._ip
+    user = context.cfg_dble['client_user']
+    passwd = context.cfg_dble['client_password']
+    port = context.cfg_dble['client_port']
+    try:
+        conn = DBUtil(ip, user, passwd, db, port, context)
+        res, err = conn.query(sql)
+    except:
+        context.logger.info("create connection error when excute batch_select sql :{0}".format(sql))
+    
+    assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
+    conn.close()

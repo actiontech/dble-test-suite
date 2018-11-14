@@ -86,9 +86,9 @@ def destroy_share_n_conn(context):
         dble_conn_name = "share_conn_{0}".format(i)
         mysql_conn_name = "{0}_mysql".format(dble_conn_name)
         if hasattr(context, dble_conn_name):
-            conn_mycat = getattr(context, dble_conn_name)
+            conn_dble = getattr(context, dble_conn_name)
             conn_mysql = getattr(context, mysql_conn_name)
-            conn_mycat.close()
+            conn_dble.close()
             conn_mysql.close()
             delattr(context, dble_conn_name)
             delattr(context, mysql_conn_name)
@@ -178,10 +178,10 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
             else:
                 isMysqlSynErr = err1[1].find('You have an error in your SQL syntax') != -1
             if err2 is None:
-                isMycatSynErr = None
+                isdbleSynErr = None
             else:
-                isMycatSynErr = err2[1].find('Syntax error or unsupported sql by uproxy') != -1
-            if err1 == err2 or (isMysqlSynErr and isMycatSynErr):
+                isdbleSynErr = err2[1].find('Syntax error or unsupported sql by uproxy') != -1
+            if err1 == err2 or (isMysqlSynErr and isdbleSynErr):
                 log_file = context.cur_warn_log
             else:
                 log_file = context.cur_serious_warn_log
@@ -237,7 +237,7 @@ def check_sql_dest(context, line_nu, sql):
         context.logger.info("sql value is : {0}".format(sql))
         context.logger.info("nodenum value is : {0}".format(nodenum))
 
-    # log = '{0}'.format(context.mycat.item)
+    # log = '{0}'.format(context.dble.item)
     logpath = get_full_log_path
     sr = "/route={/,/} rrs/"
 

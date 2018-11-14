@@ -108,14 +108,14 @@ public class Setup {
 	}
 
 	private void restart() {
-		// stop mycat
+		// stop dble
 		String cmd = "sh " + Config.TEST_INSTALL_PATH + Config.TEST_SETVER_NAME + "/bin/" + Config.TEST_SETVER_NAME + " stop";
 		SSHCommandExecutor sshExecutor = new SSHCommandExecutor(Config.Host_Test, Config.SSH_USER,
 				Config.SSH_PASSWORD);
 		sshExecutor.execute(cmd);
 		Config.sleep(10);
 
-		// start mycat
+		// start dble
 		TEST_LOG = Config.getTestLogName();
 
 //		String start_cmd = "cd " + Config.TEST_INSTALL_PATH + " && mkdir -p logs && (./uproxy >> logs/" + UPROXY_LOG

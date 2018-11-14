@@ -1,77 +1,59 @@
 # -*- coding=utf-8 -*-
 Feature: basic sql translate/transmission correct, seperate read/write statements, read load balance
 
-    Scenario Outline:#1 check read-write-split work fine and slaves load balance
-        Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
-        Given clear dirty data yield by sql
-
-        Examples:Types
-          | filename                                  |
-          | syntax/alter_table.sql                    |
-          | syntax/character.sql                      |
-          | syntax/create_index.sql                   |
-          | syntax/create_table_definition_syntax.sql |
-          | syntax/create_table_type.sql              |
-          | syntax/data_types.sql                     |
-          | syntax/delete.sql                         |
-          | syntax/identifiers.sql                    |
-          | syntax/insert_on_duplicate_key.sql        |
-          | syntax/insert_syntax.sql                  |
-          | syntax/insert_value.sql                   |
-          | syntax/replace.sql                        |
-          | syntax/reserved_words.sql                 |
-          | syntax/set_names_character.sql            |
-          | syntax/set_test.sql                       |
-          | syntax/set_user_var.sql                   |
-          | syntax/show.sql                           |
-          | syntax/sysfunction1.sql                   |
-          | syntax/sysfunction2.sql                   |
-          | syntax/sysfunction3.sql                   |
-          | syntax/truncate.sql                       |
-          | syntax/update_syntax.sql                  |
-          | syntax/prepare.sql                        |
-          | syntax/view.sql                           |
-          | bugs/bug.sql                              |
-
-    Scenario Outline:#2 check read-write-split work fine and slaves load balance
-        Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
-        Given clear dirty data yield by sql
-
-        Examples:Types
-          | filename                                    |
-          | select/expression.sql                       |
-          | select/expression_global.sql                |
-          | select/expression_no_sharding.sql           |
-          | select/join.sql                             |
-          | select/join_global.sql                      |
-          | select/join_global_no_sharding.sql          |
-          | select/join_global_sharding.sql             |
-          | select/join_no_er.sql                       |
-          | select/join_no_sharding.sql                 |
-          | select/join_shard_noshard.sql               |
-          | select/reference.sql                        |
-          | select/reference_global.sql                 |
-          | select/reference_global_noshard.sql         |
-          | select/reference_no_er.sql                  |
-          | select/reference_no_sharding.sql            |
-          | select/reference_shard_global.sql           |
-          | select/reference_shard_noshard.sql          |
-          | select/select.sql                           |
-          | select/select_global.sql                    |
-          | select/select_global_old.sql                |
-          | select/select_join_sharding.sql             |
-          | select/select_no_sharding.sql               |
-          | select/select_sharding.sql                  |
-          | select/subquery_dev.sql                     |
-          | select/subquery.sql                         |
-          | select/subquery_global.sql                  |
-          | select/subquery_global_noshard.sql          |
-          | select/subquery_no_er.sql                   |
-          | select/subquery_no_sharding.sql             |
-          | select/subquery_shard_global.sql            |
-          | select/subquery_shard_noshard.sql           |
-
-
-    Scenario: #5 compare new generated results is same with the standard ones
-        When compare results with the standard results in "std_result"
-
+    Scenario: #test balance
+      Given start mysql in host "mysql-master2"
+#    Given delete the following xml segment
+#      |file        | parent          | child               |
+#      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+#      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+#      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+#    """
+#	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+#		    <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+#	    </schema>
+#	    <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+#	    <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+#	    <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+#	    <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+#	    <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+#		    <heartbeat>select user()</heartbeat>
+#		    <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+#              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+#		    </writeHost>
+#	    </dataHost>
+#    """
+#    Then execute admin cmd "reload @@config_all"
+#    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
+#    Then execute sql in "dble-1" in "user" mode
+#    | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
+#    | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|     |
+#    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|     |
+#    Then connect "dble-1" to insert "1000" of data for "test"
+#    Then execute sql in "mysql-master2"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+#    | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
+#    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+#    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+#    Then execute sql in "mysql-slave1"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+#    | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
+#    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+#    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+#    Then connect "dble-1" to execute "1000" of select for "test"
+#    Then execute sql in "mysql-master2"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+#    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,),} | db1 |
+#    Then execute sql in "mysql-slave1"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+#    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,),} | db1 |
+#    Then execute sql in "mysql-master2"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+#    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+#    Then execute sql in "mysql-slave1"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+#    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+#    Then execute sql in "mysql-slave2"
+#    | user  | passwd    | conn   | toClose | sql                                 | expect  | db  |
+#    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |

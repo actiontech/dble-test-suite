@@ -524,7 +524,7 @@ Feature: #
     | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
     | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | mytest |test|     |
     | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|     |
-    | test | 111111 | conn_0 | True    | batch_insert                                    | success  | mytest |test|1000 |
+    Then connect "dble-1" to insert "1000" of data for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
@@ -535,9 +535,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
+    Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,),} | db1 |
@@ -577,9 +575,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success | db1 |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
+    Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} | db1 |
@@ -619,9 +615,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
+    Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
@@ -667,9 +661,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
+    Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} |  |
@@ -718,9 +710,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
+    Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{250}|  |
@@ -763,9 +753,7 @@ Feature: #
     | test  | 111111    | conn_0 | True    | set global general_log=on        | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql               | expect  | db       |tb   |count|
-    | test  | 111111    | conn_0 | True    | batch_select     | success | mytest  |test |1000 |
+    Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(1000L,),} |  |
