@@ -12,7 +12,7 @@ mv ${source_dir}/${jdk_full_name} /usr/java/
 echo "config java env"
 sed -i -e "/JAVA_HOME/d" -e "/export CLASSPATH=/d " /etc/bashrc
 
-echo "export JAVA_HOME=${source_dir}/${jdk_full_name}">>/etc/bashrc
+echo "export JAVA_HOME=/usr/java/${jdk_full_name}">>/etc/bashrc
 echo 'export CLASSPATH=.:$JAVA_HOME/lib/dt.jar:$JAVA_HOME/lib/tools.jar'>>/etc/bashrc
 echo 'export PATH=$JAVA_HOME/bin:$PATH'>>/etc/bashrc
 source /etc/bashrc
