@@ -85,13 +85,16 @@ def step_impl(context, rs_name):
                 col_idx = col_idx_list[i]
                 real_col = rs_row[col_idx]
                 if ( expect_row[i].rfind('+') != -1 ):
-                    bal = int(expect_row[i].split("+")[-1])
-                    expect_col = int(expect_row[i].split("+")[0])+bal
-                    isFound = int(real_col) <= expect_col
+                    expect =expect_row[i].split("+")
+                    expect_min = int(expect[0])
+                    expect_max = int(expect[-1])+expect_min
+                    real_col = int(real_col)
+                    isFound = (real_col >= expect_min) and (real_col <= expect_max)
+                    context.logger.info("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
                 else:
                     expect_col = expect_row[i]
                     isFound = unicode(real_col) == unicode(expect_col)
-                context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
+                    context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
         assert isFound, "expect line not found in resultset {0}".format(rs_name)

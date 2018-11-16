@@ -45,7 +45,7 @@ insert into table_guest_comments values(1, 20160825174312, 90, 'hello world', 0)
 #!share_conn
 set @vara=9
 set @varb=9
-SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM table_member_comments WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM table_guest_comments WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC
+SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM table_member_comments WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM table_guest_comments WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC /*allow_diff_sequence*/
 #user variables
 set @abc123=1
 set @123abc=2
