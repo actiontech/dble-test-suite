@@ -412,7 +412,15 @@ SELECT WEEKDAY('2008-02-03 22:23:00')
 SELECT WEEKOFYEAR('2008-02-20')
 SELECT YEAR('1987-01-01')
 SELECT YEARWEEK('1987-01-01')
+#github issue #817
+drop table if exists aly_order
+drop table if exists aly_test
+CREATE TABLE aly_test(id int(10),t_time timestamp(6),name char(120),pad int(11),PRIMARY KEY (id))
+CREATE TABLE aly_order(`id` int(10),`o_time` timestamp(6),`name` char(120),`pad` int(11),PRIMARY KEY (`id`))
+select * from aly_test a inner join aly_order b on a.pad=b.pad where b.o_time>=STR_TO_DATE('2018-11-08 00:00:00','%Y-%m-%d %H:%i: %s')
 #
 #clear tables
 #
 drop table if exists global_table1
+drop table if exists aly_order
+drop table if exists aly_test

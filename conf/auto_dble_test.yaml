@@ -57,6 +57,11 @@ cfg_mysql:
       ip: 172.100.9.3
       port: 3306
       hostname: mysql-slave2
+  group3:
+    master1:
+      ip: 172.100.9.1
+      port: 3306
+      hostname: mysql-master3
   compare_mysql:
     master1:
       ip: 172.100.9.4

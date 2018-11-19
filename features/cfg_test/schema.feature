@@ -494,7 +494,7 @@ Feature: #
         | root         | 111111    | conn_0 | True    | show @@version | success | mytest |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                             | expect   | db      |
-        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | ConnectionException  | mytest |
+        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | mytest |
 
   Scenario: #test balance
     Given delete the following xml segment

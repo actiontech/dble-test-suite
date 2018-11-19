@@ -52,17 +52,22 @@ Feature:
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | mytest |
-        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values(null)/*dest_node:dn4*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success | mytest |
-        | test | 111111 | conn_0 | True     | insert into date_table values('2018-01-9')/*dest_node:dn4*/   | success | mytest |
+        | user | passwd | conn   | toClose  | sql                                                                   | expect                                      | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists date_table                                   | success                                     | mytest |
+        | test | 111111 | conn_0 | False    | create table date_table(id date)                                  | success   | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values(null)/*dest_node:dn4*/           | success   | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success                                      | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success                                      | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success                                      | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success                                      | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success                                      | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success                                      | mytest |
+        | test | 111111 | conn_0 | True     | insert into date_table values('2018-01-9')/*dest_node:dn4*/   | success                                      | mytest |
+        | test | 111111 | conn_0 | False    | drop table if exists date_table                                   | success                                     | mytest |
+        | test | 111111 | conn_0 | False    | create table date_table(id timestamp, c timestamp)             | success   | mytest |
+        | test | 111111 | conn_0 | False    | insert into date_table values (null,null)              | Sharding column can't be null when the table in MySQL column is not null   | mytest |
+
+
 
     #test: set sEndDate and no defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
