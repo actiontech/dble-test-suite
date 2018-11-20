@@ -116,6 +116,74 @@ Feature: #
     """
     error totally whack
     """
+    #maxCon = the numbaer of datanode
+    Given delete the following xml segment
+      |file         | parent           | child                |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn3" name="test_shard" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="2" minCon="1" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+    | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
+    | test | 111111 | conn_0 | True     | drop table if exists test_shard    | success | mytest |
+    | test | 111111 | conn_0 | True     | drop table if exists test_no_shard    | success | mytest |
+    | test | 111111 | conn_0 | True     | create table test_shard(id int,name varchar(33))    | success | mytest |
+    | test | 111111 | conn_0 | True     | create table test_no_shard(id int,name varchar(33))    | success | mytest |
+    | test | 111111 | conn_0 | True     | insert into test_shard set id = 1    | success | mytest |
+    | test | 111111 | conn_0 | True     | insert into test_no_shard set id = 1    | success | mytest |
+    | test | 111111 | conn_0 | True     | select a.id from test_shard a,test_no_shard b where a.id = b.id    | success | mytest |
+    Then create "2" conn while maxCon="2" finally close all conn
+    Then create "4" conn while maxCon="2" finally close all conn
+    """
+    error totally whack
+    """
+    #maxCon < the numbaer of datanode
+    Given delete the following xml segment
+      |file         | parent           | child                |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+	    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn3" name="test_shard" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="db1" name="dn1" />
+	    <dataNode dataHost="dh1" database="db2" name="dn3" />
+	    <dataHost balance="0" maxCon="1" minCon="1" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+    | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
+    | test | 111111 | conn_0 | True     | drop table if exists test_shard    | success | mytest |
+    | test | 111111 | conn_0 | True     | drop table if exists test_no_shard    | success | mytest |
+    | test | 111111 | conn_0 | True     | create table test_shard(id int,name varchar(33))    | success | mytest |
+    | test | 111111 | conn_0 | True     | create table test_no_shard(id int,name varchar(33))    | success | mytest |
+    | test | 111111 | conn_0 | True     | insert into test_shard set id = 1    | success | mytest |
+    | test | 111111 | conn_0 | True     | insert into test_no_shard set id = 1    | success | mytest |
+    | test | 111111 | conn_0 | True     | select a.id from test_shard a,test_no_shard b where a.id = b.id    | success | mytest |
+    Then create "2" conn while maxCon="2" finally close all conn
+    Then create "4" conn while maxCon="2" finally close all conn
+    """
+    error totally whack
+    """
 
   Scenario: # test cache related parameter "primaryKey"
     #1 set primaryKey=id and the primary key of test_table is also id

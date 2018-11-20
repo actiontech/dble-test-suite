@@ -52,7 +52,7 @@ for((i=4; i<6; i=i+1)); do
 	&& mysql -uroot -e \"start slave\" "
 done
 
-for((i=0; i<3; i=i+1)); do
+for((i=0; i<=3; i=i+1)); do
     echo "add some user and database in ${mysql_install[$i]}"
     if [[ ${mysql_install[$i]} == "mysql" ]]; then
         docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database mytest\" "

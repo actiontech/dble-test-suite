@@ -1,4 +1,5 @@
 Feature: #show @@sql, show @@sql.resultset
+  @skip
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -39,9 +40,9 @@ Feature: #show @@sql, show @@sql.resultset
         |    8 | test   | insert into ta value(1, repeat('a', 1100)) |
     Then get resultset of admin cmd "show @@sql.resultset" named "sql_rs_B"
     Then check resultset "sql_rs_B" has lines with following column values
-        | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
-        | test   |         1   | SELECT * FROM ta LIMIT ?              | 2721             |
-        | test   |         1   | SELECT * FROM ta WHERE id = ? LIMIT ? | 1604             |
+        | USER-1 | FREQUENCY-2 | SQL-3                                      | RESULTSET_SIZE-4 |
+        | test   |         1     | SELECT * FROM ta LIMIT ?                | 2721               |
+        | test   |         1     | SELECT * FROM ta WHERE id = ? LIMIT ? | 1604               |
     Given delete the following xml segment
       |file        | parent           | child             |
       |server.xml  |{'tag':'root'}    | {'tag':'system'}  |
