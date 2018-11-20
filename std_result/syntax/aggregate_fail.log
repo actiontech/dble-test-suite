@@ -1,9 +1,12 @@
-===file:syntax/aggregate.sql, id:6, sql:[select sec_to_time(sum(time_to_sec(t))) from three_sharding_t1;]===
-dble:[[(datetime.timedelta(34, 82799),)]]
-mysql:[[(datetime.timedelta(0, 55005),)]]
-===file:syntax/aggregate.sql, id:25, sql:[select *, group_concat(name order by name) from aly_test group by id;]===
-dble:[((None, 'b', 'b,c,b,c,b'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
-mysql:[((None, 'b', 'b,b,b,c,c'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
-===file:syntax/aggregate.sql, id:26, sql:[select *, group_concat(distinct name order by name desc separator ':') from aly_test group by id;]===
-dble:[((None, 'b', 'b:c'), (1L, 'a', 'a:d'), (2L, None, None), (3L, 'a', 'a'))]
-mysql:[((None, 'b', 'c:b'), (1L, 'a', 'd:a'), (2L, None, None), (3L, 'a', 'a'))]
+===file:syntax/aggregate.sql, id:15, sql:[select avg(DISTINCT id), avg(DISTINCT c) from three_sharding_t1;]===
+dble:[[(Decimal('2.5000'), 0.8148136666666667)]]
+mysql:[[(Decimal('2.5000'), 0.814814788599809)]]
+===file:syntax/aggregate.sql, id:16, sql:[select avg(DISTINCT id) over_clause, avg(DISTINCT c) over_clause from three_sharding_t1;]===
+dble:[[(Decimal('2.5000'), 0.8148136666666667)]]
+mysql:[[(Decimal('2.5000'), 0.814814788599809)]]
+===file:syntax/aggregate.sql, id:31, sql:[select count(distinct id, c) from three_sharding_t1 group by c;]===
+dble:[[(1L,), (1L,), (1L,), (2L,)]]
+mysql:[[(0L,), (1L,), (1L,), (2L,)]]
+===file:syntax/aggregate.sql, id:60, sql:[select sum(DISTINCT id),sum(DISTINCT c1) from aly_test;]===
+dble:[[(Decimal('12'), 0.0)]]
+mysql:[[(Decimal('12'), 6.0)]]

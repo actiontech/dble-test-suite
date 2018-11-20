@@ -57,3 +57,6 @@
 tar -zxf /opt/auto_build/mysql*.tar.gz -C /opt
 mv /opt/mysql* /opt/mysql
 
+echo "/opt/mysql/lib" >>/etc/ld.so.conf.d/mariadb-x86_64.conf
+ldconfig
+
