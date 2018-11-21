@@ -108,7 +108,7 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose  | sql                                                    | expect      | db     |
+    | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
     | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | mytest |
     | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | mytest |
     Then create "15" conn while maxCon="15" finally close all conn
@@ -137,16 +137,16 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
-    | test | 111111 | conn_0 | True     | drop table if exists test_shard    | success | mytest |
-    | test | 111111 | conn_0 | True     | drop table if exists test_no_shard    | success | mytest |
-    | test | 111111 | conn_0 | True     | create table test_shard(id int,name varchar(33))    | success | mytest |
-    | test | 111111 | conn_0 | True     | create table test_no_shard(id int,name varchar(33))    | success | mytest |
-    | test | 111111 | conn_0 | True     | insert into test_shard set id = 1    | success | mytest |
-    | test | 111111 | conn_0 | True     | insert into test_no_shard set id = 1    | success | mytest |
-    | test | 111111 | conn_0 | True     | select a.id from test_shard a,test_no_shard b where a.id = b.id    | success | mytest |
-    | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | mytest |
-    | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | mytest |
+      | user | passwd | conn   | toClose | sql                                                             | expect  | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                 | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                              | success | mytest |
+      | test | 111111 | conn_0 | True    | create table test_shard(id int,name varchar(33))                | success | mytest |
+      | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name varchar(33))             | success | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard set id = 1                               | success | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_no_shard set id = 1                            | success | mytest |
+      | test | 111111 | conn_0 | True    | select a.id from test_shard a,test_no_shard b where a.id = b.id | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_table                                 | success | mytest |
+      | test | 111111 | conn_0 | True    | create table test_table(id int)                                 | success | mytest |
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
@@ -174,16 +174,16 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
-    | test | 111111 | conn_0 | True     | drop table if exists test_shard    | success | mytest |
-    | test | 111111 | conn_0 | True     | drop table if exists test_no_shard    | success | mytest |
-    | test | 111111 | conn_0 | True     | create table test_shard(id int,name varchar(33))    | success | mytest |
-    | test | 111111 | conn_0 | True     | create table test_no_shard(id int,name varchar(33))    | success | mytest |
-    | test | 111111 | conn_0 | True     | insert into test_shard set id = 1    | success | mytest |
-    | test | 111111 | conn_0 | True     | insert into test_no_shard set id = 1    | success | mytest |
-    | test | 111111 | conn_0 | True     | select a.id from test_shard a,test_no_shard b where a.id = b.id    | success | mytest |
-    | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | mytest |
-    | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | mytest |
+      | user | passwd | conn   | toClose | sql                                                             | expect  | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                 | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                              | success | mytest |
+      | test | 111111 | conn_0 | True    | create table test_shard(id int,name varchar(33))                | success | mytest |
+      | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name varchar(33))             | success | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard set id = 1                               | success | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_no_shard set id = 1                            | success | mytest |
+      | test | 111111 | conn_0 | True    | select a.id from test_shard a,test_no_shard b where a.id = b.id | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_table                                 | success | mytest |
+      | test | 111111 | conn_0 | True    | create table test_table(id int)                                 | success | mytest |
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
@@ -204,13 +204,13 @@ Feature: #
         | test | 111111 | conn_0 | False    |insert into test_table values(1,'test1'),(2,'test2')           | success      | mytest |
         | test | 111111 | conn_0 | True     |select * from test_table where name = 'test1'                   | success       | mytest |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
-        | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}| |
+        | user | passwd | conn   | toClose  | sql                         | expect      | db     |
+        | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}|         |
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table where id =1                       | success       | mytest |
+        | user | passwd | conn   | toClose  | sql                                          | expect         | db     |
+        | test | 111111 | conn_0 | True     |select * from test_table where id =1     | success        | mytest |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
+        | user | passwd | conn   | toClose  | sql                         | expect                                                                                   | db     |
         | root | 111111 | conn_0 | True     | show @@cache               | match{('TableID2DataNodeCache.`mytest`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
     #5.2 set primaryKey=name,but the primary key of test_table is id
@@ -220,8 +220,8 @@ Feature: #
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                                  | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table where id=1                   | success       | mytest |
+        | user | passwd | conn   | toClose  | sql                                                       | expect         | db     |
+        | test | 111111 | conn_0 | True     |select * from test_table where id=1                   | success        | mytest |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                         | expect                             | db     |
-        | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}| |
+        | user | passwd | conn   | toClose  | sql                         | expect                      | db     |
+        | root | 111111 | conn_0 | True     | show @@cache               | length{(2)}                |        |
