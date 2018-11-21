@@ -31,8 +31,10 @@ def createConn(context,num,sql):
         conn.commit()
         conn.close()
     except MySQLdb.Error, e:
+        conn.close()
         if e.args:
             context.logger.info("get error{0}:##########################".format(e.args))
+        
 
 
 @Then('create "{num}" conn while maxCon="{maxNum}" finally close all conn')
@@ -41,15 +43,16 @@ def step_impl(context,num,maxNum):
     maxNum = int(maxNum)
 
     for i in range(0,num):
+        context.logger.info("````````````````````````````{0}".format(i))
         thread.start_new_thread(createConn,(context,i,''))
 
     time.sleep(15)
     if context.text:
-        context.logger.info("create conn got err:{0}".format(errs[1][1]))
-        assert errs, "expect get err,but err is:{0}".format(errs[1][1])
+        context.logger.info("create conn got err:{0}".format(errs[0]))
+        assert errs, "expect get err,but err is:{0}".format(errs[0])
     else:
         if errs:
-            assert False, "expect no err,but outcomes:{0} when create conn".format(errs[1][1])
+            assert False, "expect no err,but outcomes:{0} when create conn".format(errs[0])
         assert num-len(errs) <= maxNum, "can not create conns more than {0}".format(maxNum)
 
 
