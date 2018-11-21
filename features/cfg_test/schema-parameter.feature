@@ -86,7 +86,6 @@ Feature: #
         | test | 111111 | conn_0 | False    | create database if not exists db3         | success             |  |
         | test | 111111 | conn_0 | False    | create database if not exists db4         | success             |  |
 
-  @skip
   Scenario:# 4 test parameters "maxCon"
     # 4.1 test connctions can't more than maxCon
     Given delete the following xml segment

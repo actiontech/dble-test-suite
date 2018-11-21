@@ -158,24 +158,24 @@ select id,t_id,name,pad from a_test_no_shard union (SELECT'20180716' AS id,'0011
 drop table if exists a_two
 drop table if exists a_three
 create table a_two(id int, aa int)
-create table a_three(id int, bb int);
-insert into a_two values(1,123);
-insert into a_three values(2,111),(2,123),(2,NULL);
-select * from a_two a,a_three b where a.aa = b.bb;
+create table a_three(id int, bb int)
+insert into a_two values(1,123)
+insert into a_three values(2,111),(2,123),(2,NULL)
+select * from a_two a,a_three b where a.aa = b.bb
 #github issue #678 #671
 drop table if exists a_two
-create table a_two (id int,busidate char(20),zoneno char(20),brno int,tellerno int);
-SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T;
-SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T;
+create table a_two (id int,busidate char(20),zoneno char(20),brno int,tellerno int)
+SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T
+SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T
 drop table if exists a_two
 #github issue #717
 drop table if exists a_test
 drop table if exists a_order
-create table a_test(id int, name varchar(20));
-create table a_order(id int, name varchar(20));
-insert into a_test value(1,'a');
-insert into a_order values(1,'d'),(2,'b'),(3,'c');
-select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL;
+create table a_test(id int, name varchar(20))
+create table a_order(id int, name varchar(20))
+insert into a_test value(1,'a')
+insert into a_order values(1,'d'),(2,'b'),(3,'c')
+select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL
 drop table if exists a_test
 drop table if exists a_order
 #github issue #687
@@ -188,9 +188,9 @@ drop table if exists sharding_one_1
 drop table if exists sharding_one_2
 #github issue #679 added by zhj
 drop table if exists aly_test
-CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8;
-insert into aly_test values(18,'美国',20.0),(530,'中国',20.0);
-select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal;
+CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8
+insert into aly_test values(18,'美国',20.0),(530,'中国',20.0)
+select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal
 #github issue #758 #760
 drop table if exists aly_test
 create table aly_test(id int, c_decimal float)
@@ -215,4 +215,12 @@ drop table if exists aly_test
 #github issue 316
 set session tx_read_only=1
 set session tx_read_only=0
-
+#github issue 845
+drop table if exists aly_test
+create table aly_test(id int, c binary)
+insert into aly_test values(1, 0x1),(2,0),(3,null),(4,1),(2,1),(null,0)
+select * from aly_test group by c
+select count(distinct id) from aly_test group by c
+select count(distinct c) from aly_test group by c
+select count(distinct id, c) from aly_test group by c
+drop table if exists aly_test

@@ -12,9 +12,10 @@ from lib.generate_util import *
 LOGGER = logging.getLogger('steps.install')
 
 my_thread={}
-errs=[]
 def createConn(context,num,sql):
     num = int(num)
+    global errs
+    errs = []
     if sql:
         exec_sql=sql
     else:
