@@ -1,0 +1,12 @@
+===file:syntax/aggregate.sql, id:15, sql:[select avg(DISTINCT id), avg(DISTINCT c) from three_sharding_t1;]===
+dble:[[(Decimal('2.5000'), 0.8148136666666667)]]
+mysql:[[(Decimal('2.5000'), 0.814814788599809)]]
+===file:syntax/aggregate.sql, id:16, sql:[select avg(DISTINCT id) over_clause, avg(DISTINCT c) over_clause from three_sharding_t1;]===
+dble:[[(Decimal('2.5000'), 0.8148136666666667)]]
+mysql:[[(Decimal('2.5000'), 0.814814788599809)]]
+===file:syntax/aggregate.sql, id:31, sql:[select count(distinct id, c) from three_sharding_t1 group by c;]===
+dble:[[(1L,), (1L,), (1L,), (2L,)]]
+mysql:[[(0L,), (1L,), (1L,), (2L,)]]
+===file:syntax/aggregate.sql, id:60, sql:[select sum(DISTINCT id),sum(DISTINCT c1) from aly_test;]===
+dble:[[(Decimal('12'), 0.0)]]
+mysql:[[(Decimal('12'), 6.0)]]

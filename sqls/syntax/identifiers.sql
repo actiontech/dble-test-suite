@@ -214,6 +214,27 @@ SET @s = CONCAT("SELECT ", @c, " FROM t")
 PREPARE stmt FROM @s
 EXECUTE stmt
 DEALLOCATE PREPARE stmt
+#Expression Syntax
+select 1 OR 0
+select 1 || 0
+select 1 XOR 0
+select 1 AND 0
+select 1 && 0
+select NOT 1
+select !1
+select 1 IS TRUE
+select 1 IS FALSE
+select 1 IS NOT FALSE
+select @undefined_uv IS UNKNOWN
+create table left_tbl(id int)
+insert into left_tbl values(1),(2),(3)
+create table right_tbl(id int)
+insert into right_tbl values(2),(3),(4)
+SELECT left_tbl.* FROM { OJ left_tbl LEFT OUTER JOIN right_tbl ON left_tbl.id = right_tbl.id } WHERE right_tbl.id IS NULL
+drop table left_tbl
+drop table right_tbl
+select 'a'||'b'
+select 1/0
 #!share_conn
 set sql_mode=PIPES_AS_CONCAT
 select 'a'||'b'
@@ -222,6 +243,14 @@ select not ! 1
 set sql_mode=HIGH_NOT_PRECEDENCE
 select ! not 1
 select not ! 1
+#others select...into,load data infile...
+drop table if EXISTS mytest.company_user
+CREATE TABLE IF NOT EXISTS mytest.company_user(id int(10) UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEY, username VARCHAR(24) NOT NULL UNIQUE, password VARCHAR(8) NOT NULL,company_name VARCHAR(250) NOT NULL UNIQUE, company_type VARCHAR(30) NOT NULL,  company_intro TEXT,  office_image TEXT, register_date DATE NOT NULL)ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_general_ci
+insert into mytest.company_user values (1, 'user1', '111111', 'action co.', 'limited', 'a company about managing database', NULL, 20131231)
+drop table if EXISTS tb_outfile
+create table mytest.tb_outfile like mytest.company_user
+load data infile '/tmp/outfile.txt' into table mytest.tb_outfile FIELDS TERMINATED BY ',' OPTIONALLY ENCLOSED BY '"' LINES TERMINATED BY '\n'
+select id, username from tb_outfile PROCEDURE ANALYSE(1, 1000)
 #case for key words as identifier
 #!share_conn
 drop table if exists `drop`

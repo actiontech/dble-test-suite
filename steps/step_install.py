@@ -67,10 +67,12 @@ def download_dble(context):
 
     cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_agent'],
                                                                     rpm_ftp_url)
+    LOGGER.info(cmd)
     os.popen(cmd)
 
     cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_agent'],
                                                           context.cfg_dble['packet_name'])
+    LOGGER.info(cmd)
     str = os.popen(cmd).read()
     assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
 
@@ -293,11 +295,14 @@ def replace_config_in_node(context, sourceCfgDir, node):
         cmd = 'rm -rf {0}/dble/conf_*'.format(context.cfg_dble['install_dir'])
         ssh_client.exec_command(cmd)
 
-    cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(dble_install_path)
-    ssh_client.exec_command(cmd)
+        cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(dble_install_path)
+        ssh_client.exec_command(cmd)
+    else:
+        cmd = 'mkdir -p {0}/dble'.format(dble_install_path)
+        ssh_client.exec_command(cmd)
 
     files = os.listdir(sourceCfgDir)
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
-        remove_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
-        node.sftp_conn.sftp_put(remove_file, local_file)
+        remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
+        node.sftp_conn.sftp_put(remote_file, local_file)

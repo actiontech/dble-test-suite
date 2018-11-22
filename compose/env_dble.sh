@@ -5,11 +5,14 @@ dble_install=("dble-1" "dble-2" "dble-3")
 count=${#mysql_install[@]}
 
 cp ./install_mysql.sh /opt/auto_build
-cp ./sources/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz /opt/auto_build/
+cp ./sources/mysql-*.tar.gz /opt/auto_build/
 
 for(( i=0;i<count;i=i+1 ));
 do
-	echo "install mysql in ${mysql_install[$i]} start"
+	docker exec ${mysql_install[$i]} sh -c "mkdir ~/.ssh"
+	docker cp ~/.ssh/id_rsa.pub ${mysql_install[$i]}:/root/.ssh/authorized_keys
+
+	echo "install mysql in ${mysql_install[$i]} start $i"
 	docker exec ${mysql_install[$i]} bash /init_assets/install_mysql.sh $i
 	echo "install mysql in ${mysql_install[$i]} finished"
 
@@ -31,8 +34,6 @@ do
 	done
 done
 
-mv ~/.ssh/known_hosts /tmp
-
 #start master and slaves
 for((i=2; i<3; i=i+1)); do
 	echo "set and restart master ${mysql_install[$i]}"
@@ -52,7 +53,7 @@ for((i=4; i<6; i=i+1)); do
 	&& mysql -uroot -e \"start slave\" "
 done
 
-for((i=0; i<=3; i=i+1)); do
+for((i=0; i<3; i=i+1)); do
     echo "add some user and database in ${mysql_install[$i]}"
     if [[ ${mysql_install[$i]} == "mysql" ]]; then
         docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database mytest\" "
@@ -69,12 +70,13 @@ done
 
 cp ./install_jdk.sh /opt/auto_build
 cp ./install_zookeeper.sh /opt/auto_build
-cp ./sources/jdk-8u121-linux-x64.tar.gz /opt/auto_build/
-cp ./sources/zookeeper-3.4.9.tar.gz /opt/auto_build/
+cp ./sources/jdk-*.tar.gz /opt/auto_build/
+cp ./sources/zookeeper-*.tar.gz /opt/auto_build/
 
 for((i=0; i<3; i=i+1)); do
     docker exec ${dble_install[$i]} bash /init_assets/install_jdk.sh $i
     echo "install jdk in ${mysql_install[$i]} finished"
     docker exec ${dble_install[$i]} bash /init_assets/install_zookeeper.sh $i
     echo "install zookeeper in ${dble_install[$i]} finished"
+    sleep 2s
 done
