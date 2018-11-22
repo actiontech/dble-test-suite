@@ -144,9 +144,10 @@ select * from aly_test union distinct select * from a_manager union distinct sel
 (select name as sort_a from aly_test where pad=1) union (select name from aly_order where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from aly_test where pad=1) union (select name,pad from aly_order where pad=1) order by sort_a,pad limit 10
 select 1 union select 1
-(select * from aly_test left join aly_order on aly_test.pad=aly_order.pad order by aly_test.id,aly_order.id)union (select * from aly_order left join a_manager on aly_order.pad=a_manager.pad)
+(select * from aly_test left join aly_order on aly_test.pad=aly_order.pad order by aly_test.id,aly_order.id)union (select * from aly_order left join a_manager on aly_order.pad=a_manager.pad)order by t_id, o_id/*allow_diff_sequence*/
 select * from a_manager,(select * from aly_test where id>3 union select * from aly_order where id<2) a
 (select * from aly_test order by id limit 0,3) union (select * from a_manager order by id limit 10,3) union (select * from aly_order order by id limit 20,3)
+(select a.id, a.name, b.name from aly_test a left join aly_order b on a.pad=b.pad) union(select a_manager.id, a_manager.name, a_manager.name from a_manager)/*allow_diff_sequence*/
 #
 #more than two tables join
 #
