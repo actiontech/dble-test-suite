@@ -14,8 +14,10 @@
   zookeeper-xxx.tar.gz
   jdk-xxx.tar.gz
       
+  ssh-keygen -t rsa
   chmod +x env_dble.sh
   ./env_dble.sh
+  
 
 #3.使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
 ```

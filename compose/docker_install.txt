@@ -14,9 +14,7 @@ install reference: https://docs.docker.com/install/linux/docker-ce/centos/#insta
 2,sudo yum install -y yum-utils \
   device-mapper-persistent-data \
   lvm2
-3,sudo yum-config-manager \
-    --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
+3,sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
 
     ps:如果出现timeout错误，可能国内访问不到docker官方镜像的缘故，可以通过aliyun的源来完成：
     sudo yum-config-manager --add-repo http://mirrors.aliyun.com/docker-ce/linux/centos/docker-ce.repo
@@ -35,7 +33,8 @@ ln -s /root/data/docker /var/lib/docker
 8,verify installation:docker --version
 ==============install docker compose=============================
 install reference: https://docs.docker.com/compose/install/#install-compose
-1,sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+1,
+sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   ps:download file may out of date, if error occurs, try to use latest version
 2,sudo chmod +x /usr/local/bin/docker-compose
 3,verify installation: docker-compose --version
@@ -46,3 +45,10 @@ echo "10.186.18.20 docker-registry" >> /etc/hosts
 echo '{ "insecure-registries":["docker-registry:5000"] }'>>/etc/docker/daemon.json
 systemctl restart docker
 cd compose && docker-compose -f docker-compose.yml up -d
+
+echo "172.100.9.1 dble-1" >> /etc/hosts
+echo "172.100.9.2 dble-2" >> /etc/hosts
+echo "172.100.9.3 dble-3" >> /etc/hosts
+echo "172.100.9.4 mysql" >> /etc/hosts
+echo "172.100.9.5 mysql-master1" >> /etc/hosts
+echo "172.100.9.6 mysql-master2" >> /etc/hosts
