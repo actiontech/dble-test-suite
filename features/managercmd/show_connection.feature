@@ -47,12 +47,12 @@ Feature:
     Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_C"
     Then check resultset "conn_rs_C" has lines with following column values
       | EXECUTE_TIME-5 | SQL-6                  |
-      |    100+200      | select sleep(0.1)    |
+      |    90+200      | select sleep(0.1)    |
     Given sleep "2" seconds
     Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_D"
     Then check resultset "conn_rs_D" has lines with following column values
       | EXECUTE_TIME-5 | SQL-6                  |
-      |    100+200      | select sleep(0.1)    |
+      |    90+200      | select sleep(0.1)    |
     #3
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql                      | expect  | db       |
@@ -60,8 +60,8 @@ Feature:
     Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_E"
     Then check resultset "conn_rs_E" has lines with following column values
       | EXECUTE_TIME-5 | SQL-6                 |
-      |    100+200      | select sleep(0.1)    |
-      |    1000+200     | select sleep(1)      |
+      |    90+200      | select sleep(0.1)    |
+      |    950+200     | select sleep(1)      |
 
 
 
