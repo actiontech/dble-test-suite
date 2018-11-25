@@ -1,4 +1,5 @@
 # create table
+select * from test2
 drop table if exists test
 drop table if exists test1
 create table test(id int, name varchar(40), depart varchar(40),role varchar(30),company varchar(50),code int(4) not null,salary float(8,2))
