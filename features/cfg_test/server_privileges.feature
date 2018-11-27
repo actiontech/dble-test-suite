@@ -122,8 +122,9 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | select * from mytest.test a join mytest.no_config_t b on a.id=b.id   | DML privilege check is not passed |      |
       | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test a join testdb.test1 b on a.id=b.id     | DML privilege check is not passed |      |
       | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test a join test2 b on a.id=b.id            | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test union select * from mytest.aly_order          | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test union select * from mytest.test               | DML privilege check is not passed |      |
+      | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test union select * from mytest.aly_order   | success |      |
+      | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test union select * from testdb.test1       | DML privilege check is not passed |      |
+#@skip for https://github.com/actiontech/dble/issues/860      | test_user | 111111 | conn_0 | False   | select * from mytest.aly_test union select * from mytest.test       | DML privilege check is not passed |      |
     #clear tables and close conn
     Then execute sql in "dble-1" in "user" mode
       | user      | passwd | conn   | toClose | sql                          | expect  | db   |
@@ -170,6 +171,7 @@ Feature:test user's privileges under different combination
         </privileges>
     </user>
     """
+    Then execute admin cmd "reload @@config_all"
     #table has explict privileges, not all privileges available, with no check to privileges
     Then execute sql in "dble-1" in "user" mode
       | user      | passwd | conn   | toClose | sql                                             | expect  | db   |
@@ -180,5 +182,5 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | update aly_order set name='b' where id=1        | success |      |
       | test_user | 111111 | conn_0 | False   | select * from aly_order                         | success |      |
       | test_user | 111111 | conn_0 | False   | delete from aly_order                           | success |      |
-      | test_user | 111111 | conn_0 | True    | show create table aly_order                     | success |      |
+      | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success |      |
       | test_user | 111111 | conn_0 | True    | drop table aly_order                            | success |      |
