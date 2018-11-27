@@ -216,11 +216,16 @@ drop table if exists aly_test
 set session tx_read_only=1
 set session tx_read_only=0
 #github issue 845
+drop table if exists three_sharding_t1
+create table three_sharding_t1(id int, c binary)
+insert into three_sharding_t1 values(1, 0x1),(2,0),(3,null),(4,1),(2,1),(null,0)
+select count(distinct id) from three_sharding_t1 group by c
+select count(distinct c) from three_sharding_t1 group by c
+select count(distinct id, c) from three_sharding_t1 group by c
 drop table if exists aly_test
-create table aly_test(id int, c binary)
-insert into aly_test values(1, 0x1),(2,0),(3,null),(4,1),(2,1),(null,0)
-select * from aly_test group by c
-select count(distinct id) from aly_test group by c
-select count(distinct c) from aly_test group by c
-select count(distinct id, c) from aly_test group by c
-drop table if exists aly_test
+#github issue 800
+drop table if EXISTS three_sharding_t1
+CREATE  table three_sharding_t1(id int)
+insert into three_sharding_t1 values(null)
+select * from three_sharding_t1 a where a.id is null;
+drop table if EXISTS three_sharding_t1
