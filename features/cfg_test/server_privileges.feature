@@ -1,4 +1,6 @@
 Feature:test user's privileges under different combination
+  dml:xxxx in order "insert,update,select,delete"
+  @smoke
   Scenario: check user privileges work right under check=true setting
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -26,6 +28,7 @@ Feature:test user's privileges under different combination
             <schema name="testdb" dml="1111" >
                 <table name="test1" dml="0000"></table>
                 <table name="test2" dml="0110"></table>
+                <table name="test4" dml="0110"></table>
             </schema>
         </privileges>
     </user>
@@ -74,7 +77,7 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | update test set name='b' where id=1        | DML privilege check is not passed |      |
       | test_user | 111111 | conn_0 | False   | select * from test                         | DML privilege check is not passed |      |
       | test_user | 111111 | conn_0 | False   | delete from test                           | DML privilege check is not passed |      |
-    #table not in user 'test_user' logic schema config, use schema's default privileges
+    #table logic schema default node, use schema's default privileges
     Then execute sql in "dble-1" in "user" mode
       | user      | passwd | conn   | toClose | sql                                             | expect  | db   |
       | test_user | 111111 | conn_0 | False   | use mytest                                      | success |      |
@@ -104,6 +107,16 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | update test2 set name='b' where id=1        | success |      |
       | test_user | 111111 | conn_0 | False   | select * from test2                         | success |      |
       | test_user | 111111 | conn_0 | False   | delete from test2                           | DML privilege check is not passed |      |
+    #table test4 in schema's default, test4 has explicit dml privileges
+    Then execute sql in "dble-1" in "user" mode
+      | user      | passwd | conn   | toClose | sql                                             | expect  | db   |
+      | test_user | 111111 | conn_0 | False   | use testdb                                      | success |      |
+      | test_user | 111111 | conn_0 | False   | drop table if exists test4                  | success |      |
+      | test_user | 111111 | conn_0 | False   | create table test4(id int, name varchar(10))| success |      |
+      | test_user | 111111 | conn_0 | False   | insert into test4 value(1,'a')              | DML privilege check is not passed |      |
+      | test_user | 111111 | conn_0 | False   | update test4 set name='b' where id=1        | success |      |
+      | test_user | 111111 | conn_0 | False   | select * from test4                         | success |      |
+      | test_user | 111111 | conn_0 | False   | delete from test4                           | DML privilege check is not passed |      |
     #table test3 has no privileges setting, schema has all dml privileges
     Then execute sql in "dble-1" in "user" mode
       | user      | passwd | conn   | toClose | sql                                         | expect  | db   |
@@ -138,8 +151,10 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | drop table no_config_t       | success |      |
       | test_user | 111111 | conn_0 | False   | drop table testdb.test1      | success |      |
       | test_user | 111111 | conn_0 | False   | drop table testdb.test2      | success |      |
-      | test_user | 111111 | conn_0 | True    | drop table testdb.test3      | success |      |
+      | test_user | 111111 | conn_0 | False   | drop table testdb.test3      | success |      |
+      | test_user | 111111 | conn_0 | True    | drop table testdb.test4      | success |      |
 
+  @regression
   Scenario: check user privileges work right under check=false setting
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
