@@ -1,0 +1,4 @@
+cfg_path:
+  yaml_path: D:\autotest\dble\dble\conf\auto_dble_test.yaml
+  result_path: D:\Jconnector\result
+  sqlfile_path: D:\Jconnector\sql_cover\route_sharding.sql
