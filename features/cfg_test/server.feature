@@ -1,5 +1,6 @@
 Feature: Verify that the Reload @@config_all is effective for server.xml
 
+  @regression
   Scenario: #1 add/delete client user
      #1.1  client user with illegal label got error
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -14,7 +15,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     These properties of user[test_user]  are not recognized: test
     """
-
        #1.2 client user with readonly
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
@@ -63,7 +63,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'system'} |
     Given Restart dble in "dble-1" success
 
-  Scenario: #4 add/delete manager user
+  Scenario: #4 both single & multiple manager user reload and do management cmd success
+    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "show @@version" with user "root_test" passwd "123"
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
@@ -104,54 +106,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
       |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
     Then execute admin cmd "reload @@config_all"
 
-  Scenario: #6 add/delete Firewall
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
-    """
-    <firewall>
-      <blacklist check="true">
-          <property name="selelctAllow">false</property>
-      </blacklist>
-    </firewall>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-    """
-    <user name="mnger">
-        <property name="password">111111</property>
-        <property name="manager">true</property>
-    </user>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
-    """
-    <firewall>
-        <whitehost>
-            <host host="10.186.23.68" user="test,mnger"/>
-            <host host="172.100.9.253" user="test,mnger"/>
-        </whitehost>
-    </firewall>
-    """
-    Then execute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
-    """
-    <firewall>
-        <whitehost>
-            <host host="10.186.23.68" user="test,mnger,root"/>
-            <host host="172.100.9.253" user="test,mnger,root"/>
-            <host host="127.0.0.1" user="root"/>
-        </whitehost>
-        <blacklist check="true">
-            <property name="selelctAllow">false</property>
-        </blacklist>
-    </firewall>
-    """
-    Then execute admin cmd "reload @@config_all" with user "mnger" passwd "111111"
-    Given delete the following xml segment
-      |file        | parent           | child                                   |
-      |server.xml  | {'tag':'root'}   | {'tag':'firewall'}                      |
-      |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'mnger'}}|
-    Then execute admin cmd "reload @@config_all"
-
-  Scenario: #7
+  Scenario: #7 multiple system property start success
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
@@ -211,23 +166,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     has{('managerPort','9066','Manager connection port. The default number is 9066')}
     """
-
-  Scenario: #8 edit manager user name or password
-    Given delete the following xml segment
-        |file        | parent           | child              |
-        |server.xml  | {'tag':'root'}   | {'tag':'user'} |
-
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
-      """
-       <user name="root_test">
-           <property name="password">123</property>
-           <property name="manager">true</property>
-       </user>
-     """
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "show @@version" with user "root_test" passwd "123"
-
-
   Scenario:#9 function of whitehost
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
@@ -334,7 +272,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
-  Scenario: #11 test user maxCon
+  Scenario: #11 test user maxCon, without system maxCon setting, user's maxCon 0 means using no checking
     Given delete the following xml segment
       |file        | parent           | child              |
       |server.xml  | {'tag':'root'}   | {'tag':'root'} |
