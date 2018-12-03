@@ -65,7 +65,7 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
 
   Scenario: #4 both single & multiple manager user reload and do management cmd success
     Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "show @@version" with user "root_test" passwd "123"
+    Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
