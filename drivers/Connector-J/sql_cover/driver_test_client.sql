@@ -15,8 +15,12 @@ insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012
 #insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (3,3, 'a string','2012/12/31 11:30:45',0),(4,4, 'a string','2012/12/31 11:30:45',0),(null,null, null,null,null);
 select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci;
 explain SELECT select * from aly_test where id=1;
-explain2 datanode=dn2 sql=select * from aly_test where id=1;
+explain2 datanode=dn2 sql=select * from test_shard where id=1;
 help
+/*!40101 SET character_set_client = @saved_cs_client*/;
+/*!40102 SET character_set_client = @saved_cs_client*/;
+/*40101%%%%%????&&&**djdjj*/;
+/*dfghdfgh*/;
 select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));
 select mytest.test_shard.R_NAME from test_shard;
 select * from test_shard where exists(select * from test_shard where id=1||id=3);
@@ -46,6 +50,9 @@ select * from aly_test a left join aly_order b on a.pad=b.pad where a.t_id>b.o_i
 (select name from aly_test where pad=1 order by id limit 10) union all (select name from aly_order where pad=1 order by id limit 10); --/*allow_diff_sequence*/
 (select name from aly_test where pad=1 order by id limit 10) union distinct (select name from aly_order where pad=1 order by id limit 10); --/*allow_diff_sequence*/
 select a.id,b.id,c.pad from aly_test a,aly_order b,a_manager c where a.id=b.id and a.id=c.pad;
+create view view_test1 as select * from aly_test where id=1;
+replace view view_test1 as select * from aly_test where id >3;
+select * from view_test1;
 create or replace view view_test as select * from aly_test;
 alter view view_test as select * from aly_order;
 select * from view_test;
@@ -70,7 +77,8 @@ SHOW INDEX FROM aly_test;
 DESC aly_test;
 #DROP INDEX idx_id ON aly_test;
 lock tables aly_test write;
-#lock tables aly_test read;
+unlock tables;
+lock tables aly_test read;
 unlock tables;
 show full columns from aly_test from mytest where field like 'o%';
 show full tables in mytest where table_type like 'base%';
@@ -91,7 +99,7 @@ SELECT CONCAT(c1,c2),c3 FROM test_shard;
 #statement
 prepare stmt from 'insert into aly_test values(111,111,"test中id为1",111)';
 execute stmt;
-show create table aly_test;
+select * from aly_test;
 drop prepare stmt;
 prepare stmt from 'select * from aly_test where id=?';
 set @b=1;
@@ -115,3 +123,5 @@ drop table if exists mytest.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz
 create table mytest.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl(id int);
 set @abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl='mytest';
 drop table mytest.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl;
+#show @@connection
+#kill conn_id
