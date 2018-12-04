@@ -31,13 +31,13 @@ public class testJDBC {
         String dbleuserName = client_user.toString();
         Object client_password = cdble.get("client_password");
         String dbleuserPwd = client_password.toString();
-        String dbleURL = "jdbc:mysql://10.186.60.61:7131/mytest";
+        String dbleURL = "jdbc:mysql://10.186.60.61:7131/mytest?characterEncoding=utf8";
         //manager
         Object manager_user = cdble.get("manager_user");
         String dblemanageruserName = manager_user.toString();
         Object manager_password = cdble.get("manager_password");
         String dblemanageruserPwd = manager_password.toString();
-        String dblemanagerURL = "jdbc:mysql://10.186.60.61:7161/mytest";
+        String dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/mytest?characterEncoding=utf8";
 
         //获取mysql链接参数
         Object cfg_mysql = com.actiontech.yamlParser.getConfig(ylPath_value, "cfg_mysql");
@@ -47,7 +47,7 @@ public class testJDBC {
         Object password = cmysql.get("password");
         String msqluserName = user.toString();
         String mysqluserPwd = password.toString();
-        String mysqlURL = "jdbc:mysql://10.186.60.61:7144/mytest";
+        String mysqlURL = "jdbc:mysql://10.186.60.61:7144/mytest?characterEncoding=utf8";
         if (sqPath_value.contains("manager")) {
             Connection dblemanagerconn = null;
             dblemanagerconn = conn.DBconn(dblemanagerURL, dblemanageruserName, dblemanageruserPwd);
@@ -138,6 +138,6 @@ public class testJDBC {
                 mysqlconn = null;
             }
         }
-
+        com.actiontech.cleanUp.rmfile("test1.txt");
     }
 }

@@ -45,7 +45,7 @@ public class executeManager {
             String line = null;
             int idNum = 1;
             try {
-                line = br.readLine();
+                //line = br.readLine();
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("#") == false) {
                         String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
@@ -86,6 +86,7 @@ public class executeManager {
                         }
                     }
                     idNum++;
+                    System.out.println(idNum);
                 }
             } catch (Exception fe) {
                 fe.printStackTrace();
