@@ -76,7 +76,6 @@ reload @@config_all -rf
 reload @@config_all -sfr
 reload @@metadata
 reload @@sqlslow=5
-reload @@sqlslow!30
 reload @@user_stat
 reload @@query_cf=aly_test&id
 reload @@query_cf
@@ -89,9 +88,8 @@ file @@list
 file @@show schema.xml
 #file @@upload schema.xml <table name="test_global11" 整个文件
 log @@limit=0,5000
-log @@limit=0|6000
 log @@key='select *'
-log @@regex=from aly_test$
+log @@regex=from\saly_test$
 #log @@file=dble.log @@limit='0:5000' @@key='select *' @@regex='*from aly_test'
 dryrun
 pause @@DataNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10
