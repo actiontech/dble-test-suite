@@ -43,7 +43,7 @@ show @@session
 show @@sql
 show @@sql.condition
 show @@sql.high
-show @@sql.slow_query_log
+show @@sql.slow
 show @@sql.resultset
 show @@sql.large
 show @@sql.large true
@@ -65,18 +65,20 @@ SHOW VARIABLES WHERE Variable_name ='language' OR Variable_name = 'net_write_tim
 switch @@datasource datahost
 switch @@datasource 172.100.9.5
 switch @@datasource datahost$0-4
-kill @@connection
+#kill @@connection
 #kill @@connection id1,id2,...
 stop @@heartbeat datahost:5000
 reload @@config
-reload @@config -s
-reload @@config -f
-reload @@config -r
+reload @@config_all -s
+reload @@config_all -f
+reload @@config_all -r
+reload @@config_all -rf
 reload @@config_all -sfr
 reload @@metadata
 reload @@sqlslow=5
-reload @@sqlslow 30
+reload @@sqlslow!30
 reload @@user_stat
+reload @@query_cf=aly_test&id
 reload @@query_cf
 reload @@query_cf=aly_test&id
 reload @@query_cf=NULL
@@ -86,11 +88,15 @@ online
 file @@list
 file @@show schema.xml
 #file @@upload schema.xml <table name="test_global11" 整个文件
-log @@file=dble.log limit=0:5000 key='select *' regex='^from aly_test'
+log @@limit=0,5000
+log @@limit=0|6000
+log @@key='select *'
+log @@regex=from aly_test$
+#log @@file=dble.log @@limit='0:5000' @@key='select *' @@regex='*from aly_test'
 dryrun
 pause @@DataNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10
 RESUME
-show @@ pause
+show @@pause
 show @@slow_query.time
 reload @@slow_query.time=200
 show @@slow_query.time
@@ -100,4 +106,5 @@ show @@slow_query.flushperiod
 show @@slow_query.flushsize
 reload @@slow_query.flushsize=1100
 show @@slow_query.flushsize
-create database @@dataNode =dn$1-4
+create database @@dataNode ='dn1'
+create database @@dataNode ='dn$1-4'

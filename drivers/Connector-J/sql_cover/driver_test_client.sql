@@ -16,9 +16,9 @@ insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012
 select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci;
 explain SELECT select * from aly_test where id=1;
 explain2 datanode=dn2 sql=select * from test_shard where id=1;
-help
-/*!40101 SET character_set_client = @saved_cs_client*/;
-/*!40102 SET character_set_client = @saved_cs_client*/;
+help;
+/*!40101 SET character_set_client = utf8*/;
+/*!40102 SET character_set_client = gbk*/;
 /*40101%%%%%????&&&**djdjj*/;
 /*dfghdfgh*/;
 select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));

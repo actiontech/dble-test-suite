@@ -2,6 +2,7 @@ package com.actiontech;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 
 public class compare {
 
@@ -22,10 +23,8 @@ public class compare {
                 return false;
             }
         }
-
 //        for (int i=0;i<dblers.size();i++){
-//            if(!dblers.get(i).equals(dblers.get(i))){
-//                return false;
+//            if((dblers.get(i) instanceof HashMap<>) &&(mysqlrs.get(i) instanceof HashMap<>) ){
 //            }
 //        }
         return true;
