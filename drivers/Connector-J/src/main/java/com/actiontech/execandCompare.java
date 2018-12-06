@@ -30,6 +30,7 @@ public class execandCompare {
         BufferedWriter passbw = null;
         FileWriter failfw = null;
         BufferedWriter failbw = null;
+        boolean logwritererr = false;
         try {
             passfw = new FileWriter(rspaths.get(0), true);
             passbw = new BufferedWriter(passfw);
@@ -37,12 +38,21 @@ public class execandCompare {
             failbw = new BufferedWriter(failfw);
         } catch (Exception fe) {
             fe.printStackTrace();
-            return;
+            logwritererr = true;
+        } finally {
+            if (logwritererr == true) {
+                cleanUp.closeBufferedWriter(failbw);
+                cleanUp.closeFileWriter(failfw);
+                cleanUp.closeBufferedWriter(passbw);
+                cleanUp.closeFileWriter(failfw);
+                return;
+            }
         }
 
         //循环执行sql文件内的语句
         FileReader fr = null;
         BufferedReader br = null;
+        boolean sqlfileReaderErr = false;
         try {
             fr = new FileReader(sqPath_value);
             br = new BufferedReader(fr);
@@ -95,7 +105,7 @@ public class execandCompare {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
-                            String mysqlErrorMsg ="(" + e.getErrorCode() + "): " + e.getMessage();
+                            String mysqlErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             mysqlrslist.add(mysqlErrorMsg);
                         }
                         //比较结果集及错误是否一致，不一致写入fai.logl文件，一致写入pass.log
@@ -104,7 +114,7 @@ public class execandCompare {
                         if (same) {
                             passbw.write(exec);
                             //String passstr = String.join(",", dblerslist);
-                            String passstr = dblerslist.toString() + "\r\n" ;
+                            String passstr = dblerslist.toString() + "\r\n";
                             passbw.write(passstr);
                         } else {
                             failbw.write(exec);
@@ -112,7 +122,7 @@ public class execandCompare {
                             //String mysqlfailstr = String.join(",", mysqlrslist);
                             String dblefailstr = dblerslist.toString();
                             String mysqlfailstr = mysqlrslist.toString();
-                            String failstr = "dble: " + dblefailstr + "\r\nmysql: " + mysqlfailstr + "\r\n" ;
+                            String failstr = "dble: " + dblefailstr + "\r\nmysql: " + mysqlfailstr + "\r\n";
                             failbw.write(failstr);
                         }
                     }
@@ -124,43 +134,18 @@ public class execandCompare {
             }
         } catch (Exception fe) {
             fe.printStackTrace();
-            return;
+            sqlfileReaderErr = true;
         } finally {
             //关闭sql文件读取流
-            try {
-                br.close();
-            } catch (Exception fe) {
-                fe.printStackTrace();
-            }
-            try {
-                fr.close();
-            } catch (Exception fe) {
-                fe.printStackTrace();
-            }
+            cleanUp.closeBufferedReader(br);
+            cleanUp.closeFileReader(fr);
         }
 
         // 关闭打开的流
-
-        try {
-            failbw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-        try {
-            failfw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-        try {
-            passbw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-        try {
-            passfw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
+        cleanUp.closeBufferedWriter(failbw);
+        cleanUp.closeFileWriter(failfw);
+        cleanUp.closeBufferedWriter(passbw);
+        cleanUp.closeFileWriter(failfw);
     }
 }
 
