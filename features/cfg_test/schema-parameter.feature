@@ -112,7 +112,7 @@ Feature: #
     | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | mytest |
     | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | mytest |
     Then create "15" conn while maxCon="15" finally close all conn
-    Then create "20" conn while maxCon="15" finally close all conn
+    Then create "16" conn while maxCon="15" finally close all conn
     """
     error totally whack
     """
