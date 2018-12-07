@@ -31,13 +31,13 @@ public class testJDBC {
         String dbleuserName = client_user.toString();
         Object client_password = cdble.get("client_password");
         String dbleuserPwd = client_password.toString();
-        String dbleURL = "jdbc:mysql://10.186.60.61:7131/mytest";
+        String dbleURL = "jdbc:mysql://10.186.60.61:7131/mytest?characterEncoding=utf8";
         //manager
         Object manager_user = cdble.get("manager_user");
         String dblemanageruserName = manager_user.toString();
         Object manager_password = cdble.get("manager_password");
         String dblemanageruserPwd = manager_password.toString();
-        String dblemanagerURL = "jdbc:mysql://10.186.60.61:7161/mytest";
+        String dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/mytest?characterEncoding=utf8";
 
         //获取mysql链接参数
         Object cfg_mysql = com.actiontech.yamlParser.getConfig(ylPath_value, "cfg_mysql");
@@ -47,37 +47,30 @@ public class testJDBC {
         Object password = cmysql.get("password");
         String msqluserName = user.toString();
         String mysqluserPwd = password.toString();
-        String mysqlURL = "jdbc:mysql://10.186.60.61:7144/mytest";
+        String mysqlURL = "jdbc:mysql://10.186.60.61:7144/mytest?characterEncoding=utf8";
         if (sqPath_value.contains("manager")) {
             Connection dblemanagerconn = null;
             dblemanagerconn = conn.DBconn(dblemanagerURL, dblemanageruserName, dblemanageruserPwd);
             if (dblemanagerconn != null) {
                 Statement dblemanagerstmt = null;
+                boolean stmterr = false;
                 try {
                     dblemanagerstmt = dblemanagerconn.createStatement();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     System.out.println("dble创建statement失败");
-                    return;
+                    stmterr = true;
+                } finally {
+                    if (stmterr == true) {
+                        cleanUp.closeStmt(dblemanagerstmt);
+                        cleanUp.closeConn(dblemanagerconn);
+                        return;
+                    }
                 }
                 com.actiontech.executeManager.execute(rtPath_value, sqPath_value, dblemanagerstmt);
                 //关闭statement链接
-                if (dblemanagerstmt != null) {
-                    try {
-                        dblemanagerstmt.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    dblemanagerstmt = null;
-                }
-            }
-            if (dblemanagerconn != null) {
-                try {
-                    dblemanagerconn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                dblemanagerconn = null;
+                cleanUp.closeStmt(dblemanagerstmt);
+                cleanUp.closeConn(dblemanagerconn);
             }
         } else {
             Connection dbleconn = null;
@@ -87,57 +80,45 @@ public class testJDBC {
             if (dbleconn != null && mysqlconn != null) {
                 Statement dblestmt = null;
                 Statement mysqlstmt = null;
+                boolean dblestmterr = false;
+                boolean mysqlstmterr = false;
                 try {
                     dblestmt = dbleconn.createStatement();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     System.out.println("dble创建statement失败");
-                    return;
+                    dblestmterr = true;
+                } finally {
+                    if (dblestmterr == true) {
+                        cleanUp.closeStmt(dblestmt);
+                        cleanUp.closeConn(mysqlconn);
+                        cleanUp.closeConn(dbleconn);
+                        return;
+                    }
                 }
                 try {
                     mysqlstmt = mysqlconn.createStatement();
                 } catch (SQLException e) {
                     e.printStackTrace();
                     System.out.println("mysql创建statement失败");
-                    return;
+                    mysqlstmterr = true;
+                } finally {
+                    if (mysqlstmterr == true) {
+                        cleanUp.closeStmt(mysqlstmt);
+                        cleanUp.closeStmt(dblestmt);
+                        cleanUp.closeConn(mysqlconn);
+                        cleanUp.closeConn(dbleconn);
+                        return;
+                    }
                 }
                 com.actiontech.execandCompare.execandCompare(rtPath_value, sqPath_value, dblestmt, mysqlstmt);
-                //关闭statement链接
-                if (dblestmt != null) {
-                    try {
-                        dblestmt.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    dblestmt = null;
-                }
-                if (mysqlstmt != null) {
-                    try {
-                        mysqlstmt.close();
-                    } catch (SQLException e) {
-                        e.printStackTrace();
-                    }
-                    mysqlstmt = null;
-                }
-            }
-            //关闭connection链接
-            if (dbleconn != null) {
-                try {
-                    dbleconn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                dbleconn = null;
-            }
-            if (mysqlconn != null) {
-                try {
-                    mysqlconn.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                mysqlconn = null;
+                //关闭statement链接及connection链接
+                cleanUp.closeStmt(mysqlstmt);
+                cleanUp.closeStmt(dblestmt);
+                cleanUp.closeConn(mysqlconn);
+                cleanUp.closeConn(dbleconn);
             }
         }
-
+        com.actiontech.cleanUp.rmfile("test1.txt");
     }
 }

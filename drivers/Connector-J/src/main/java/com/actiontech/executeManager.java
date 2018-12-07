@@ -25,19 +25,30 @@ public class executeManager {
         FileWriter passfw = null;
         BufferedWriter passbw = null;
         FileWriter failfw = null;
-        BufferedWriter failbr = null;
+        BufferedWriter failbw = null;
+        boolean logwritererr = false;
         try {
             passfw = new FileWriter(rspaths.get(0), true);
             passbw = new BufferedWriter(passfw);
             failfw = new FileWriter(rspaths.get(1), true);
-            failbr = new BufferedWriter(failfw);
+            failbw = new BufferedWriter(failfw);
         } catch (Exception fe) {
             fe.printStackTrace();
-            return;
+            logwritererr = true;
+        }finally {
+            if(logwritererr == true){
+                cleanUp.closeBufferedWriter(failbw);
+                cleanUp.closeFileWriter(failfw);
+                cleanUp.closeBufferedWriter(passbw);
+                cleanUp.closeFileWriter(failfw);
+                return;
+            }
         }
+
         //循环执行sql文件内的语句
         FileReader fr = null;
         BufferedReader br = null;
+        boolean sqlfileReaderErr = false;
         try {
             fr = new FileReader(sqPath_value);
             br = new BufferedReader(fr);
@@ -45,7 +56,8 @@ public class executeManager {
             String line = null;
             int idNum = 1;
             try {
-                line = br.readLine();
+                //line = br.readLine();
+                System.out.println(idNum);
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("#") == false) {
                         String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
@@ -55,16 +67,9 @@ public class executeManager {
                         //sql转化为小写
                         line = line.toLowerCase();
                         try {
-                            if (line.startsWith("select")) {
+                            if (line.startsWith("select")|| line.startsWith("show")|| line.startsWith("check")) {
                                 ResultSet dblers = dblemanagerstmt.executeQuery(line);
                                 dblerslist = publicFunc.convertList(dblers);
-                                String passstr = dblerslist.toString() + "\r\n" ;
-                                passbw.write(exec);
-                                passbw.write(passstr);
-                            } else if (line.startsWith("update") || line.startsWith("insert") || line.startsWith("delete")) {
-                                int dbleint = dblemanagerstmt.executeUpdate(line);
-                                String dbleintstr = String.valueOf(dbleint);
-                                dblerslist.add(dbleintstr);
                                 String passstr = dblerslist.toString() + "\r\n" ;
                                 passbw.write(exec);
                                 passbw.write(passstr);
@@ -78,58 +83,31 @@ public class executeManager {
                             }
                         } catch (SQLException e) {
                             e.printStackTrace();
-                            String dbleErrorMsg = e.getErrorCode() + e.getMessage();
+                            String dbleErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             dblerslist.add(dbleErrorMsg);
                             String failstr = dblerslist + "\r\n" ;
-                            passbw.write(exec);
-                            passbw.write(failstr);
+                            failbw.write(exec);
+                            failbw.write(failstr);
                         }
                     }
                     idNum++;
                 }
             } catch (Exception fe) {
                 fe.printStackTrace();
-                return;
             }
         } catch (Exception fe) {
             fe.printStackTrace();
-            return;
+            sqlfileReaderErr = true;
         } finally {
             //关闭sql文件读取流
-            try {
-                br.close();
-            } catch (Exception fe) {
-                fe.printStackTrace();
-            }
-            try {
-                fr.close();
-            } catch (Exception fe) {
-                fe.printStackTrace();
-            }
+            cleanUp.closeBufferedReader(br);
+            cleanUp.closeFileReader(fr);
         }
 
         // 关闭打开的流
-
-        try {
-            failbr.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-        try {
-            failfw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-        try {
-            passbw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-        try {
-            passfw.close();
-        } catch (Exception fe) {
-            fe.printStackTrace();
-        }
-
+        cleanUp.closeBufferedWriter(failbw);
+        cleanUp.closeFileWriter(failfw);
+        cleanUp.closeBufferedWriter(passbw);
+        cleanUp.closeFileWriter(failfw);
     }
 }
