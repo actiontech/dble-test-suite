@@ -1,11 +1,14 @@
-Feature: Verify that the Reload @@config_all is effective for server.xml
-#Date Date
-#PatternRange Partition
-#Enum Enum
-#NumberRange NumberRange
-#StringHash StringHash
-#hash hash
-  Scenario: #1 add/edit/drop tableRule
+Feature: Verify that Reload @@config_all would success with correct sharding rule
+#  shardingRuleConfigClass realClass
+# ---------------------------------------
+# Date Date
+# PatternRange Partition
+# Enum Enum
+# NumberRange NumberRange
+# StringHash StringHash
+# hash hash
+
+  Scenario: illegal tableRule will make reload fail #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <tableRule name="add_rule">
@@ -31,12 +34,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     Reload config failure
     """
-    Given delete the following xml segment
-      |file        | parent                 | child                                            |
-      |rule.xml    | {'tag':'root'}         | {'tag':'tableRule','kv_map':{'name':'add_rule'}} |
-    Then execute admin cmd "reload @@config_all"
 
-  Scenario: #2 add/edit/drop HASH function
+  @regression
+  Scenario: config Hash sharding will reload success #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="Hash" name="rule_func1">
@@ -49,13 +49,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         </function>
     """
     Then execute admin cmd "reload @@config_all"
-    Given delete the following xml segment
-      |file        | parent                 | child                                             |
-      |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func1'}} |
-      |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func2'}} |
-    Then execute admin cmd "reload @@config_all"
 
-  Scenario: #3 add/edit/drop NumberRange function
+  @regression
+  Scenario: config NumberRange sharding will relaod success #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="NumberRange" name="rule_func1">
@@ -75,13 +71,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     1001-5000=3
     """
     Then execute admin cmd "reload @@config_all"
-    Given delete the following xml segment
-      |file        | parent                 | child                                             |
-      |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func1'}} |
-      |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'rule_func2'}} |
-    Then execute admin cmd "reload @@config_all"
 
-  Scenario: #4 add/drop Enum function
+  @regression
+  Scenario: config Enum sharding will relaod success #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="Enum" name="add_rule">
@@ -102,8 +94,4 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     8=2
     9=3
     """
-    Then execute admin cmd "reload @@config_all"
-    Given delete the following xml segment
-      |file        | parent                 | child                                             |
-      |rule.xml    | {'tag':'root'}         | {'tag':'function','kv_map':{'name':'add_rule'}} |
     Then execute admin cmd "reload @@config_all"

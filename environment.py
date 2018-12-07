@@ -3,22 +3,10 @@ import os
 import sys
 
 from lib.Node import get_ssh, get_sftp
-from lib.utils import init_log_directory, setup_logging ,load_yaml_config, get_nodes
+from lib.utils import setup_logging ,load_yaml_config, get_nodes
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node
 
-CONF_PATH = './conf'
 logger = logging.getLogger('environment')
-
-def init_log(context):
-    context.logger=logging.getLogger('{0}'.format("dble"))
-    context.logger.setLevel(logging.INFO)
-    formatter=logging.Formatter('[%(asctime)s %(filename)s L:%(lineno)d %(levelname)s] %(message)s','%H:%M:%S')
-    context.log_file = "./logs/log/dble_info.log"
-    file_handler=logging.FileHandler(context.log_file)
-    file_handler.setFormatter(formatter)
-    context.logger.addHandler(file_handler)
-
-    context.config.setup_logging()
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
@@ -30,9 +18,10 @@ def init_dble_conf(context, para_dble_conf):
     context.dble_conf = conf
 
 def before_all(context):
-    context.current_log = init_log_directory()
-    setup_logging(os.path.join(CONF_PATH, 'logging.yaml'))
-    logger.debug('Setup logging configfile=<{0}>'.format(os.path.join(CONF_PATH, 'logging.yaml')))
+    setup_logging('./conf/logging.yaml')
+    steps_logger = logging.getLogger('root')
+    context.logger = steps_logger
+
     logger.info('*' * 30)
     logger.info('*       DBLE TEST START       *')
     logger.info('*' * 30)
@@ -58,14 +47,13 @@ def before_all(context):
 
     steps_dir = "{0}/steps".format(os.getcwd())
     sys.path.append(steps_dir)
-    init_log(context)
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
 
     reinstall = context.config.userdata["reinstall"].lower() == "true"
-    context.logger.info("need to reinstall dble: {0}".format(reinstall))
+    logger.info("need to reinstall dble: {0}".format(reinstall))
     init_dble_conf(context, para_dble_conf)
     if reinstall:
         if context.config.userdata["tar_local"].lower() == "true":

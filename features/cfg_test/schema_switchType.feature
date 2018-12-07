@@ -9,5 +9,6 @@ Feature: test for datahost property switchType
   2.multiple writeHost
   3.switchtype != -1
 
+  @skip
   Scenario: # Enter scenario name here
     # Enter steps here

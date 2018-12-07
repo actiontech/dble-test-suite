@@ -2,7 +2,7 @@
 Feature: test default db change right; cross db table not affected by others; and cross db sql works right
 
   Background: config for this test suites
-     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
 		    <table dataNode="dn1,dn2" name="test1" type="global" />
@@ -22,8 +22,8 @@ Feature: test default db change right; cross db table not affected by others; an
     """
     Then execute admin cmd "reload @@config_all"
 
-  @skip_restart
-  Scenario: default db not set, set;cross db table not affected by others; and cross db sql works right
+  @smoke @skip_restart
+  Scenario: default db not set;cross db table not affected by others; and cross db sql works right
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                             | expect  | db   |
       | test | 111111 | conn_0 | False   | drop table if exists test1                      | No database selected |      |

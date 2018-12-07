@@ -1,7 +1,7 @@
-Feature: dataNode's lettercase is insensitive, that is should not affected by lower_case_table_names
+Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
   @regression
-  Scenario:#1. dataNode's lettercase is insensitive, but reference to the dataNode name must consistent
+  Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
     Given delete the following xml segment
     |file        | parent          | child               |
     |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |

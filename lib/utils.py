@@ -27,42 +27,19 @@ def log_it(func):
 
     return logged_function
 
-def init_log_directory(symbolic=False):
-    logs_dir = 'logs'
-    symbolic_link = 'log'
-    cwd = os.getcwd()
+def init_log_dir(log_dir):
+    if os.path.exists(log_dir):
+        shutil.rmtree(log_dir)
+    os.mkdir(log_dir)
 
-    if not os.path.exists(logs_dir):
-        os.mkdir(logs_dir)
-
-    os.chdir(logs_dir)
-
-    if symbolic:
-        suffix = time.strftime('%Y_%m_%d_%H_%M_%S', time.localtime())
-        current_log = 'log_' + suffix
-        if os.path.exists(current_log):
-            shutil.move(current_log, current_log + '_bak')
-
-        os.mkdir(current_log)
-        if os.path.exists(symbolic_link):
-            os.remove(symbolic_link)
-
-        os.symlink(current_log, symbolic_link)
-    else:
-        if os.path.exists(symbolic_link):
-            shutil.rmtree(symbolic_link)
-        os.mkdir(symbolic_link)
-    os.chdir(cwd)
-
-    return os.path.join(logs_dir, symbolic_link)
-
-def setup_logging(logging_path):
-    if os.path.exists(logging_path):
-        with open(logging_path, 'rt') as f:
+def setup_logging(logging_cfg_file):
+    init_log_dir('logs')
+    if os.path.exists(logging_cfg_file):
+        with open(logging_cfg_file, 'rt') as f:
             dict_config = yaml.load(f.read())
         logging.config.dictConfig(dict_config)
     else:
-        print 'No such logging config file : <{0}>'.format(logging_path)
+        print 'No such logging config file : <{0}>'.format(logging_cfg_file)
         exit(1)
 
 @log_it

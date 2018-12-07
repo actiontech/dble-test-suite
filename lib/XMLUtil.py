@@ -62,7 +62,11 @@ def get_xml_from_str(str):
 
 def add_child_in_text(file, parentNode, childNodeInText):
     '''file:指定的xml文件的一个节点添加子节点
-       parentNodeID: 要添加节点的父节点，格式 {tag:schema,kv_map:{k1:v1,k2:v2}}
+       parentNodeID: 要添加节点的父节点，格式举例： {'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple
+       tag:父节点,节点
+       kv_map:父节点的节点属性信息，如name:value
+       prev:要添加的节点点的前一个节点名称
+       childIdx:要添加的子节点的位置索引
        childNodeInText: 子节点'''
     childNodeRoot = get_xml_from_str(childNodeInText)
 

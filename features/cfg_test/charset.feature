@@ -5,7 +5,8 @@ Feature: set charset in server.xml,check backend charsets are as set
   front connection charset is not controlled by server.xml property charset,
   but verify the default value here for convenient.
 
-  Scenario: #1 set server charset to check backend connection
+  @smoke
+  Scenario: set dble config to test what will happen to backend connection if they are same or different #1
     #   1.1 set backend charset utf8, front charset utf8;
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
