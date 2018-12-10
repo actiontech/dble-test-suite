@@ -1,5 +1,5 @@
 # Created by zhaohongjie at 2018/12/7
-Feature: config stable test
+Feature: schema config stable test
 
   Background delete default configs not must，reload @@config_all success
     Given delete the following xml segment
@@ -70,3 +70,29 @@ Feature: config stable test
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
+
+  @smoke
+  Scenario: set dataHost balance=0 in case which readHost will not be used, dble should still check whether readhost connectable #2
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    	<schema dataNode="dn2" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn2,dn4" name="test2" type="global" />
+	    </schema>
+	    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
+	    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
+	    <dataHost maxCon="100" minCon="10" name="172.100.9.6" balance="0" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+                <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="222"/>
+            </writeHost>
+	    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    Reload config failure
+    """
+    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
+    """
+        <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="111111"/>
+    """
+    Then execute admin cmd "reload @@config_all"

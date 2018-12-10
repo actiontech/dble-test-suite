@@ -1,5 +1,7 @@
-Feature: #install dble
-  Scenario: #install zk cluster in a clean enviroment
+Feature: install dble cluster, degrade to single dble, recover to cluser
+
+  @smoke
+  Scenario: install zk cluster, degrade to single dble, recover to cluser
     Given a clean environment in all dble nodes
     Given install dble in all dble nodes
     Given config zookeeper cluster in all dble nodes

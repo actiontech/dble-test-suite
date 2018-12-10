@@ -1,8 +1,9 @@
-# Created by Rita at 2018/11/5
-Feature:#github issue #793
-    # check if schema.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
+# Created by yexiaoli at 2018/11/5
+Feature:check if schema.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
+#github issue #793
 
-  Scenario: # set parameter "weight" for writeHost in cluster ,then execute "reload"
+  @regression
+  Scenario: set parameter "weight" for writeHost in cluster, then reload #1
        Given update file content "/opt/dble/conf/myid.properties" in "dble-1"
         """
         /cluster=/d
@@ -12,7 +13,7 @@ Feature:#github issue #793
        Then start dble in "dble-2"
        Then start dble in "dble-3"
        Given delete the following xml segment
-        |file         | parent           | child                 |
+        |file         | parent         | child               |
         |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
         |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
         |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |

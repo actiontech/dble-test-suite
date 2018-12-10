@@ -1,8 +1,8 @@
 # Created by zhaohongjie at 2018/12/7
-Feature: test create databsae @@datanode='dn1,dn2,...'
+Feature: test "create databsae @@datanode='dn1,dn2,...'"
 
   @regression
-  Scenario: create database for all used datanode #1
+  Scenario: "create database @@..." for all used datanode #1
      Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
      """
 	    <dataNode dataHost="172.100.9.5" database="da1" name="dn1" />
@@ -42,7 +42,7 @@ Feature: test create databsae @@datanode='dn1,dn2,...'
         | test | 111111 | conn_0 | True     | drop database if exists da2 | success  |        |
 
 
-  Scenario: create database for part of used datanode #2
+  Scenario: "create database @@..." for part of used datanode #2
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
     """
      	<dataNode dataHost="172.100.9.5" database="da11" name="dn1" />
@@ -92,7 +92,7 @@ Feature: test create databsae @@datanode='dn1,dn2,...'
         | test | 111111 | conn_0 | True     | drop database if exists da21 | success  |         |
 
   @regression
-  Scenario: create database for datanode of style 'dn$x-y' #3
+  Scenario: "create database @@..." for datanode of style 'dn$x-y' #3
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |

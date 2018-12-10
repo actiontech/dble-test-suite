@@ -1,7 +1,6 @@
-Feature: Verify that the Reload @@config_all is effective for server.xml
+Feature: test config in server.xml
 
-  @regression
-  Scenario: #1 add/delete client user
+  Scenario: add client user with illegal label, reload fail #1
      #1.1  client user with illegal label got error
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -15,22 +14,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     These properties of user[test_user]  are not recognized: test
     """
-       #1.2 client user with readonly
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-     <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="schemas">mytest</property>
-        <property name="readOnly">true</property>
-     </user>
-    """
-    Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "user" mode
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test_user    | test_password | conn_0 | False   | select 1 | success | mytest |
-        | test_user    | test_password | conn_0 | True    | drop table if exists test_table | User READ ONLY | mytest |
 
-     #1.3client user with schema which does not exist
+  @regression
+  Scenario: add client user with schema which does not exist, start dble fail #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <user name="test_user3">
@@ -42,7 +28,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
      """
      schema testdb referred by user test_user3 is not exist!
      """
-  Scenario: #2 test usingDecrypt
+
+  @smoke
+  Scenario: add client user with usingDecrypt=1, start/reload success, query success #4
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
@@ -57,13 +45,15 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
-  Scenario: #3 server.xml only contains <user>
+  @regression
+  Scenario: config server.xml with only <user> node, start dble success #5
     Given delete the following xml segment
-      |file        | parent           | child                                        |
+      |file        | parent           | child            |
       |server.xml  | {'tag':'root'}   | {'tag':'system'} |
     Given Restart dble in "dble-1" success
 
-  Scenario: #4 both single & multiple manager user reload and do management cmd success
+
+  Scenario: both single & multiple manager user reload and do management cmd success #6
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -76,37 +66,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
-  Scenario: #5 add/delete privilege
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-    """
-    <schema dataNode="dn5" name="testdb" sqlMaxLimit="100"></schema>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-    """
-    <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="schemas">mytest,testdb</property>
-        <property name="readOnly">true</property>
-        <privileges check="true">
-            <schema name="mytest" dml="0000" >
-                <table name="tableA" dml="1111"></table>
-                <table name="tableB" dml="1111"></table>
-            </schema>
-            <schema name="testdb" dml="1111" >
-                <table name="test1" dml="0000"></table>
-                <table name="test2" dml="0110"></table>
-            </schema>
-        </privileges>
-    </user>
-    """
-    Then execute admin cmd "reload @@config_all"
-
-    Given delete the following xml segment
-      |file        | parent           | child                                        |
-      |server.xml  | {'tag':'root'}   | {'tag':'user','kv_map':{'name':'test_user'}} |
-    Then execute admin cmd "reload @@config_all"
-
-  Scenario: #7 multiple system property start success
+  @regression
+  Scenario: config all system property, start dble success #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
@@ -166,7 +127,9 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     """
     has{('managerPort','9066','Manager connection port. The default number is 9066')}
     """
-  Scenario:#9 function of whitehost
+
+  @regression
+  Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #8
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -181,15 +144,24 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         <property name="password">111111</property>
         <property name="schemas">mytest</property>
     </user>
+    <user name="mng_user">
+        <property name="password">111111</property>
+        <property name="schemas">mytest</property>
+    </user>
     """
     Given Restart dble in "dble-1" success
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
+    Then execute admin cmd "show @@version" with user "mng_user" passwd "111111" get the following output
+    """
+    Access denied for user 'mng_user'
+    """
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test   | 111111 | conn_0 | True    | select 1 |success | mytest |
+        | user        | passwd | conn   | toClose | sql      | expect  | db     |
+        | test        | 111111 | conn_0 | True    | select 1 |success  | mytest |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
 
-  Scenario:#10 function of blacklist
+  @regression
+  Scenario: config sql blacklist #10
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -254,7 +226,6 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | BEGIN select * from suntest;END;   |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | delete from test_table_1    |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | update test_table_1 set id =10   |error totally whack | mytest |
- #
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -272,11 +243,8 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
-  Scenario: #11 test user maxCon, without system maxCon setting, user's maxCon 0 means using no checking
-    Given delete the following xml segment
-      |file        | parent           | child              |
-      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
-
+  @regression
+  Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
       <user name="root">
@@ -305,10 +273,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
         | action       | action    | new    | True     | select 1 | Access denied for user 'action',too many connections for this user | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
+        | root         | 111111    | conn_2 | False   | show @@version | success | mytest |
         | root         | 111111    | conn_3 |False    | show @@version | success | mytest |
-        | root         | 111111    | new    | False    | show @@version | Access denied for user 'root',too many connections for this user | mytest |
+        | root         | 111111    | new    | False   | show @@version | Access denied for user 'root',too many connections for this user | mytest |
 
+  @regression
+  Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #12
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
       <user name="root">
@@ -330,14 +300,15 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 123       | conn_4 | False    | select 1 | success | mytest |
-        | test         | 123       | conn_5 | False    | select 1 | success | mytest |
-        | action       | action    | conn_6 | False    | select 1 | success | mytest |
-        | action       | action    | conn_7| False    | select 1 | success | mytest |
+        | test         | 123       | conn_4 | False   | select 1 | success | mytest |
+        | test         | 123       | conn_5 | False   | select 1 | success | mytest |
+        | action       | action    | conn_6 | False   | select 1 | success | mytest |
+        | action       | action    | conn_7 | False   | select 1 | success | mytest |
 
-  Scenario: #12 test system maxCon
+  @regression
+  Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #12
     Given delete the following xml segment
-      |file        | parent           | child              |
+      |file        | parent           | child          |
       |server.xml  | {'tag':'root'}   | {'tag':'root'} |
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -369,12 +340,12 @@ Feature: Verify that the Reload @@config_all is effective for server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 123       | conn_0 | False    | select 1 | success | mytest |
-        | test         | 123       | new    | False    | select 1 | too many connections for this user | mytest |
-        | action       | action   | conn_1 | False    | select 1 | too many connections for dble server | mytest |
+        | test         | 123       | conn_0 | False   | select 1 | success | mytest |
+        | test         | 123       | new    | False   | select 1 | too many connections for this user | mytest |
+        | action       | action    | conn_1 | False   | select 1 | too many connections for dble server | mytest |
     Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | root         | 111111    | conn_2 | False    | show @@version | success | mytest |
+        | user     | passwd    | conn   | toClose | sql            | expect  | db     |
+        | root     | 111111    | conn_2 | False   | show @@version | too many connections for dble server | mytest |
 
 
 

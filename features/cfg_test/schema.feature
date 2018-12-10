@@ -14,27 +14,6 @@ Feature: schema basic config test
     """
     Then execute admin cmd "reload @@config_all"
 
-  @smoke
-  Scenario: set dataHost balance=0 which readHost will not use, in such case, dble should still check whether readhost connectable #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-    """
-	    <dataHost maxCon="100" minCon="10" name="172.100.9.6" balance="0" switchType="-1">
-		    <heartbeat>select user()</heartbeat>
-		    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-                <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="222"/>
-            </writeHost>
-	    </dataHost>
-    """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Reload config failure
-    """
-    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
-    """
-        <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="111111"/>
-    """
-    Then execute admin cmd "reload @@config_all"
-
   @regression
   Scenario: config with no use datanode (has counter-part datahost), expect reload success but at present fail, config no use datahost reload success #3
     #schema.xml only has dataNodes,  dble starts successful,
@@ -157,6 +136,38 @@ Feature: schema basic config test
         | test | 111111 | conn_0 | True     | drop database if exists da1 | success  |         |
         | test | 111111 | conn_0 | True     | drop database if exists da2 | success  |         |
     Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql            | expect  | db     |
+        | root  | 111111    | conn_0 | True    | show @@version | success | mytest |
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose | sql                             | expect   | db      |
+        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | mytest |
+
+  @regression
+  Scenario: database configed for datanode is not created and the datanode is used by table #10
+     Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+    	<schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+		    <table dataNode="dn1,dn3" name="test" type="global" />
+	    </schema>
+	    <dataNode dataHost="dh1" database="da1" name="dn1" />
+	    <dataNode dataHost="dh1" database="da2" name="dn3" />
+	    <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+		    <heartbeat>select user()</heartbeat>
+		    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+		    </writeHost>
+	    </dataHost>
+      """
+    Then execute sql in "mysql-master1"
+        | user | passwd | conn   | toClose  | sql                                 | expect    | db |
+        | test | 111111 | conn_0 | False    | drop database if exists da1         | success   |  |
+        | test | 111111 | conn_0 | False    | drop database if exists da2         | success   |  |
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql            | expect  | db     |
         | root  | 111111    | conn_0 | True    | show @@version | success | mytest |
