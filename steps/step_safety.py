@@ -12,61 +12,38 @@ from lib.DBUtil import *
 
 LOGGER = logging.getLogger('steps.safety')
 
-@Then('Test only schema level permission feature')
+@Then('test only schema level privilege configed')
 def test_schema_permission(context):
     dble_conn = get_dble_conn(context)
-    for item in context.table:
-        test_conn = DBUtil(context.cfg_dble['dble']['ip'], item['user'], item['password'], item['schema'],
+    for row in context.table:
+        # prepare table
+        test_conn = DBUtil(context.cfg_dble['dble']['ip'], row['user'], row['password'], row['schema'],
                            context.cfg_dble['client_port'], context)
-        sql = "drop table if exists {0}".format(item['table'])
+        sql = "drop table if exists {0}".format(row['table'])
         test_conn.query(sql)
-        sql = "create table {0}(id int, data varchar(10))".format(item['table'])
+        sql = "create table {0}(id int, data varchar(10))".format(row['table'])
         test_conn.query(sql)
-        sql = "insert into {0} values (1,'aaa'),(2,'bbb'),(3,'ccc'),(4,'ddd')".format(item['table'])
+        sql = "insert into {0} values (1,'aaa'),(2,'bbb'),(3,'ccc'),(4,'ddd')".format(row['table'])
         dble_conn.query(sql)
-        permission = []
-        value = int(item['dml'])
-        LOGGER.info("dml: {0}".format(value/1))
-        for i in range(4):
-            if value%10 == 1:
-                if i == 0:
-                    permission.append("DELETE")
-                if i == 1:
-                    permission.append("SELECT")
-                if i == 2:
-                    permission.append("UPDATE")
-                if i == 3:
-                    permission.append("INSERT")
-            value = value/10
-        LOGGER.info("permission: {0}".format(permission))
-        del_sql = "delete from {0} where id = 1".format(item['table'])
-        sel_sql = "select * from {0}".format(item['table'])
-        upd_sql = "update {0} set data='AAA' where id = 1".format(item['table'])
-        ins_sql = "insert into {0} values (5, 'eee')".format(item['table'])
-        if "DELETE" in permission:
-            res, errs = test_conn.query(del_sql)
-            assert_that(errs, is_(None))
-        else:
-            res, errs = test_conn.query(del_sql)
-            assert_that(errs[1], contains_string('The statement DML privilege check is not passed'))
-        if "SELECT" in permission:
-            res, errs = test_conn.query(sel_sql)
-            assert_that(errs, is_(None))
-        else:
-            res, errs = test_conn.query(sel_sql)
-            assert_that(errs[1], contains_string('The statement DML privilege check is not passed'))
-        if "UPDATE" in permission:
-            res, errs = test_conn.query(upd_sql)
-            assert_that(errs, is_(None))
-        else:
-            res, errs = test_conn.query(upd_sql)
-            assert_that(errs[1], contains_string('The statement DML privilege check is not passed'))
-        if "INSERT" in permission:
-            res, errs = test_conn.query(ins_sql)
-            assert_that(errs, is_(None))
-        else:
-            res, errs = test_conn.query(ins_sql)
-            assert_that(errs[1], contains_string('The statement DML privilege check is not passed'))
+
+        # prepare sql
+        value = row['dml']
+        LOGGER.info("dml:{0}".format(value))
+        del_sql = "delete from {0} where id = 1".format(row['table'])
+        sel_sql = "select * from {0}".format(row['table'])
+        upd_sql = "update {0} set data='AAA' where id = 1".format(row['table'])
+        ins_sql = "insert into {0} values (5, 'eee')".format(row['table'])
+        lack_priv_msg = "The statement DML privilege check is not passed"
+        sqls_in_priv_order = [ins_sql,upd_sql,sel_sql,del_sql]
+
+        # do test
+        for priv, sql in zip(value, sqls_in_priv_order):
+            res, errs = test_conn.query(sql)
+            if priv == 1:
+                assert_that(errs, is_(None))
+            else:
+                assert_that(errs[1], contains_string(lack_priv_msg))
+
         test_conn.close()
     dble_conn.close()
 
@@ -121,7 +98,7 @@ def test_readonly_schema(context):
 
     dble_conn.close()
 
-@Then('Test config schema and table permission feature')
+@Then('test config both readonly and schema privilege')
 def test_schema_table(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)

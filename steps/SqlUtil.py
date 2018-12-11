@@ -112,7 +112,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
             lengthObj = re.search(r"length\{(.*?)\}", expect, re.I)
             matchObj = re.search(r"match\{(.*?)\}",expect,re.I)
             isBalance = re.search(r"balance\{(.*?)\}",expect, re.I)
-            executeTime = re.search(r"execute\{(.*?)\}",expect, re.I)
+            executeTime = re.search(r"execute_time\{(.*?)\}",expect, re.I)
             hasString = re.search(r"hasStr\{(.*?)\}", expect, re.I)
             hasNoString = re.search(r"hasNoStr\{(.*?)\}", expect, re.I)
 
