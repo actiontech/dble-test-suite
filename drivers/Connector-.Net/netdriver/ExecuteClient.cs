@@ -57,7 +57,7 @@ namespace netdriver
                 if (!line.StartsWith("#"))
                 {
                     bool allow_diff_sequence = false;
-                    if (line.StartsWith("allow_diff_sequence"))
+                    if (line.Contains("allow_diff_sequence"))
                     {
                         allow_diff_sequence = true;
                     }
@@ -77,7 +77,7 @@ namespace netdriver
                             String countStr = Convert.ToString(count);
                             dblerslist.Add(countStr);
                         }
-                        else if (line.StartsWith("select") || line.StartsWith("show") || line.StartsWith("check"))
+                        else if (line.StartsWith("select") || line.StartsWith("show") || line.StartsWith("check") || line.Contains("union"))
                         {
                             MySqlDataReader rdr = dblecmd.ExecuteReader();
                             while (rdr.Read())
@@ -148,7 +148,7 @@ namespace netdriver
                     }
                     catch (MySqlException ex)
                     {
-                        String errMsg = ex.Number + ":" + ex.Message;
+                        String errMsg = ex.Number + ": " + ex.Message;
                         dblerslist.Add(errMsg);
                     }
 
@@ -164,7 +164,7 @@ namespace netdriver
                             String countStr = Convert.ToString(count);
                             mysqlrslist.Add(countStr);
                         }
-                        else if (line.StartsWith("select") || line.StartsWith("show") || line.StartsWith("check")|| line.Contains("union"))
+                        else if (line.StartsWith("select") || line.StartsWith("show") || line.StartsWith("check") || line.Contains("union"))
                         {
                             MySqlDataReader rdr = mysqlcmd.ExecuteReader();
                             while (rdr.Read())

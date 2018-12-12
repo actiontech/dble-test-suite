@@ -58,6 +58,29 @@ namespace netdriver
                 {
                     String exec = "===File:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
                     line = line.ToLower();
+                    //for kill command
+                    //int PID = 0;
+                    //if (line.StartsWith("kill"))
+                    //{
+                    //    try
+                    //    {
+                    //        string showsql = "show @@connection;";
+                    //        MySqlCommand showcmd = new MySqlCommand(showsql, dblemanagerconn);
+                    //        MySqlDataReader showrdr = showcmd.ExecuteReader();
+                    //        //int PID = 0;
+                    //        while (showrdr.Read())
+                    //        {
+                    //            var pid = showrdr.GetValue(1);
+                    //            PID = Convert.ToInt32(pid);
+                    //            break;
+                    //        }
+                    //        showrdr.Close();
+                    //    }
+                    //    catch (MySqlException e) {
+
+                    //    }
+                    //}
+                    
                     List<String> dblerslist = new List<string>();
                     try
                     {
