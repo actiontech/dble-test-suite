@@ -1,5 +1,5 @@
 Feature:
-  @regression
+  @smoke
   Scenario: PatternRange sharding function
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """

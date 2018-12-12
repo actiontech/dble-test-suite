@@ -1,5 +1,5 @@
 Feature:
-  @regression
+  @smoke
   Scenario: stringhash function
     #test: <= 2880
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"

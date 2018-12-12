@@ -51,7 +51,7 @@ Feature: schema basic config test
     """
     Reload config failure
     """
-  @regression
+  @smoke
   Scenario: config <dataNode> with "$" preseting range, reload success #5
     Given delete the following xml segment
       |file        | parent          | child               |

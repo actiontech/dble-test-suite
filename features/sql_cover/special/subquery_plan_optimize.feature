@@ -2,6 +2,7 @@
 Feature: subquery execute plan should be optimized for ER/Global table join #dble github issue #685
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
 
+  @regression
   Scenario: check ER tables subquery execute plan optimized
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
@@ -20,6 +21,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       |explain select * from table_a a, table_b b on a.id =b.id | 4 |
       |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 7 |
 
+  @regression
   Scenario: check Global tables subquery execute plan optimized
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """

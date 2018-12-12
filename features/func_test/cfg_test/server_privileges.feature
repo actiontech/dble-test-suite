@@ -321,7 +321,7 @@ Feature:test user's privileges under different combination
       | testE | testE    | mytest | 0100  | schema_permission |
       | testF | testF    | mytest | 1000  | schema_permission |
 
-  @regression
+  @smoke
   Scenario: mix privilege config: readonly + schema
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
