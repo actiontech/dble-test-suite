@@ -133,7 +133,7 @@ Feature: check lower_case_table_names works right for dble
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                              | expect                 | db     |
-        | test | 111111 | conn_0 | True    |                                                                                   | 1049 Unknown database 'DBTest'     | DBTest |
+        | test | 111111 | conn_0 | True    |                                                                                   | Unknown database 'DBTest'     | DBTest |
         | test | 111111 | conn_0 | False   | drop table if exists Test_Table                                              | success               | DbTest |
         | test | 111111 | conn_0 | False   | create table TEst_Table(id int)                                              | doesn't exist        | DbTest |
         | test | 111111 | conn_0 | False   | create table Test_Table(id int)                                              | success               | DbTest |
