@@ -28,9 +28,9 @@ namespace netdriver
             //MySqlConnection dblemanagerconn = conn.Conn(dblemanagerconnStr);
 
             //读取sql文件循环执行文件
-            String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql","D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_manager.sql" };
+            //String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql","D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_manager.sql" };
             //String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\sql cover\\driver_test_manager.sql" };
-            //String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql" };
+            String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql" };
             List<String> sqlfiles = GetFile.GetFiles(testargs);
 
             if (sqlfiles.Count <= 0)
