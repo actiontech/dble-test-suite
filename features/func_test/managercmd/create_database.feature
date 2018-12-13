@@ -74,13 +74,13 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                       | expect          | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da1' | has{('da1',),}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da2' | has{('da2',),}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da3' | has{('da3',),}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da11' | has{('da11',),}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da21' | has{('da21',),}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da31' | has{('da31',),}  |         |
     Then execute sql in "mysql-master2"
         | user | passwd | conn   | toClose  | sql                        | expect           | db     |
-        | test | 111111 | conn_0 | True     | show databases like 'da1'  |  has{('da1',),}  |         |
-        | test | 111111 | conn_0 | True     | show databases like 'da2'  |  has{('da2',),}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da11'  |  has{('da11',),}  |         |
+        | test | 111111 | conn_0 | True     | show databases like 'da21'  |  has{('da21',),}  |         |
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                          | expect   | db      |
         | test | 111111 | conn_0 | True     | drop database if exists da11 | success  |         |
@@ -97,8 +97,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root','childIdx':'0'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
         <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
             <table dataNode="dn10,dn11,dn20,dn21" name="test" rule="hash-four" />
