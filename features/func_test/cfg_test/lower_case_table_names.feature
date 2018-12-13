@@ -157,7 +157,7 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success               | mytest |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |Test doesn't exist  | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |error totally whack | mytest |
+#        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |error totally whack | mytest |
         | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)          |success               | mytest |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | mytest |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | mytest |
+#        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | mytest |
