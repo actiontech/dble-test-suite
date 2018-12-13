@@ -21,7 +21,7 @@ namespace netdriver
                 try
                 {
                     File.Delete(path);
-                    Console.WriteLine("Remove file:" + path + "success");
+                    Console.WriteLine("Remove file:" + path + " success");
                 }
                 catch(IOException ioe)
                 {

@@ -70,11 +70,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CleanUp.cs" />
+    <Compile Include="ClientTest.cs" />
     <Compile Include="CompareRs.cs" />
     <Compile Include="Conn.cs" />
+    <Compile Include="ConnectorTest.cs" />
+    <Compile Include="ManagerTest.cs" />
     <Compile Include="ResultConvert.cs" />
     <Compile Include="CreateFile.cs" />
-    <Compile Include="DbleManagerConn.cs" />
     <Compile Include="ExecuteClient.cs" />
     <Compile Include="ExecuteManager.cs" />
     <Compile Include="GetConfig.cs" />
