@@ -151,7 +151,7 @@ select * from a_manager,(select * from aly_test where id>3 union select * from a
 #
 #more than two tables join
 #
-select a.id,b.id,c.pad from aly_test a,aly_order b,a_manager c where a.id=b.id and a.id=c.pad
+-- select a.id,b.id,c.pad from aly_test a,aly_order b,a_manager c where a.id=b.id and a.id=c.pad
 #
 #clear tables
 #
