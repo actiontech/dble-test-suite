@@ -260,7 +260,7 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success |      |
       | test_user | 111111 | conn_0 | True    | drop table aly_order                            | success |      |
 
-  @regression
+  @regression @current
   Scenario: config only schema level privileges, tables in the schema privileges will inherit it
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """

@@ -107,8 +107,10 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
       1,1,,
       """
       #1.5 abnormal test for lack column
-#      Given create local and server file "test5.txt" and fill with text
-#      """
+      Given create local and server file "test5.txt" and fill with text
+      """
+      4,
+      """
 #      ,1,a,20181018163000,20181018,163000,0,0
 #      b,,b,20181018163000,20181018,163000,0,0
 #      c,3,,20181018163000,20181018,163000,0,0
@@ -161,7 +163,7 @@ Feature: basic sql translate/transmission correct, seperate read/write statement
       Given remove local and server file "test2.txt"
       Given remove local and server file "test3.txt"
       Given remove local and server file "test4.txt"
-#      Given remove local and server file "test5.txt"
+      Given remove local and server file "test5.txt"
 
       Examples:Types
         | filename                                    |
