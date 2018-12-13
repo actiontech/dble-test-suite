@@ -98,7 +98,7 @@ def test_readonly_schema(context):
 
     dble_conn.close()
 
-@Then('test config both readonly and schema privilege')
+@Then('Test config schema and table permission feature')
 def test_schema_table(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)

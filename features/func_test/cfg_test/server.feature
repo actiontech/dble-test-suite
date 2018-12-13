@@ -151,10 +151,9 @@ Feature: test config in server.xml
     """
     Given Restart dble in "dble-1" success
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
-    Then execute admin cmd "show @@version" with user "mng_user" passwd "111111" get the following output
-    """
-    Access denied for user 'mng_user'
-    """
+    Then execute sql in "dble-1" in "admin" mode
+        | user        | passwd | conn   | toClose | sql      | expect  | db     |
+        | mng_user   | 111111 | conn_0 | True    | show @@version |Access denied for user 'mng_user' with host '172.100.9.253 |  |
     Then execute sql in "dble-1" in "user" mode
         | user        | passwd | conn   | toClose | sql      | expect  | db     |
         | test        | 111111 | conn_0 | True    | select 1 |success  | mytest |
@@ -345,7 +344,7 @@ Feature: test config in server.xml
         | action       | action    | conn_1 | False   | select 1 | too many connections for dble server | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user     | passwd    | conn   | toClose | sql            | expect  | db     |
-        | root     | 111111    | conn_2 | False   | show @@version | too many connections for dble server | mytest |
+#        | root     | 111111    | conn_2 | False   | show @@version | too many connections for dble server | mytest |
 
 
 

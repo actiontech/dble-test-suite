@@ -2,6 +2,15 @@ Feature: test some import nodes attr in schema.xml
 
   @smoke
   Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=true" #2
+    Given delete the following xml segment
+      |file         | parent           | child                 |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+        <schema dataNode="dn1" name="mytest" sqlMaxLimit="3">
+            <table dataNode="dn1,dn3" name="test_table" type="global"/>
+        </schema>
+      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                             | expect  | db     |
@@ -9,10 +18,10 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | mytest |
         | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | mytest |
         | test | 111111 | conn_0 | True     | select * from test_table                        | length{(3)} | mytest |
-        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | mytest |
-        | test | 111111 | conn_0 | False    | create table default_table(id int)              | success | mytest |
-        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)/*dest_node:dn5*/    | success | mytest |
-        | test | 111111 | conn_0 | False    | select * from default_table                     | length{(3)} | mytest |
+#        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | mytest |
+#        | test | 111111 | conn_0 | False    | create table default_table(id int)              | success | mytest |
+#        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)/*dest_node:dn5*/    | success | mytest |
+#        | test | 111111 | conn_0 | False    | select * from default_table                     | length{(3)} | mytest |
 
   @regression
   Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=false" #2
@@ -20,9 +29,11 @@ Feature: test some import nodes attr in schema.xml
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
 
-    Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <table dataNode="dn1,dn3" name="test_table" type="global" needAddLimit="false"/>
+      <schema dataNode="dn1" name="mytest" sqlMaxLimit="3">
+          <table dataNode="dn1,dn3" name="test_table" type="global" needAddLimit="false"/>
+      </schema>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode

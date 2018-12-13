@@ -69,7 +69,7 @@ Feature:test user's privileges under different combination
             <table dataNode="dn1,dn2,dn3,dn4" name="aly_order" rule="hash-four" />
             <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
     </schema>
-    <schema name="testdb" sqlMaxLimit="100">
+    <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
             <table dataNode="dn1,dn2,dn3,dn4" name="test1" rule="hash-four" />
             <table dataNode="dn1,dn2,dn3,dn4" name="test2" rule="hash-four" />
             <table dataNode="dn1,dn2,dn3,dn4" name="test3" rule="hash-four" />
@@ -351,7 +351,7 @@ Feature:test user's privileges under different combination
     </user>
     """
     Then execute admin cmd "reload @@config_all"
-    Then test config both readonly and schema privilege
+    Then Test config readonly and schema permission feature
       | user  | password | schema | dml   | table             |
       | testA | testA    | mytest | 0000  | schema_permission |
       | testB | testB    | mytest | 1111  | schema_permission |

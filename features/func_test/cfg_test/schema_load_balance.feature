@@ -49,7 +49,7 @@ Feature: test read load balance
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,),} | db1 |
 
   @regression
-  Scenario: dataHost balance="1", do balance bewteen read host and standby write host #2
+  Scenario: dataHost balance="1", do balance on read host or standby write host #2
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -69,7 +69,6 @@ Feature: test read load balance
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
             </writeHost>
-            <writeHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test"></writeHost>
         </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
@@ -78,7 +77,7 @@ Feature: test read load balance
     | test  | 111111    | conn_0 | False   | set global general_log=on       | success | db1 |
     | test  | 111111    | conn_0 | False   | set global log_output='table'   | success | db1 |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
-    Then execute sql in "mysql-slave2"
+    Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
     | test  | 111111    | conn_0 | False   | set global general_log=on       | success | db1 |
     | test  | 111111    | conn_0 | False   | set global log_output='table'   | success | db1 |
@@ -86,10 +85,10 @@ Feature: test read load balance
     Then connect "dble-1" to execute "1000" of select for "test"
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{500} |  |
-    Then execute sql in "mysql-slave2"
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{1000} |  |
+    Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{500} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{0} |  |
 
   @regression
   Scenario: dataHost balance="2", do balance bewteen read host and write host #3

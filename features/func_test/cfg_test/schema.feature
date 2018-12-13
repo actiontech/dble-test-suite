@@ -109,11 +109,6 @@ Feature: schema basic config test
 
   @smoke
   Scenario:github issue 598-636,database configed for datanode is not created and the datanode is not used by any table #9
-    Given delete the following xml segment
-      |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
@@ -166,7 +161,7 @@ Feature: schema basic config test
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                                 | expect    | db |
         | test | 111111 | conn_0 | False    | drop database if exists da1         | success   |  |
-        | test | 111111 | conn_0 | False    | drop database if exists da2         | success   |  |
+        | test | 111111 | conn_0 | True    | drop database if exists da2         | success   |  |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql            | expect  | db     |

@@ -264,7 +264,7 @@ def balance(context, RS, expectRS): #Float a value up and down
     re_num = int (re.sub("\D","",str(RS[0])))  #get the number from result of dble
     a = abs(re_num - expectRS)
     b = expectRS *0.15
-    assert a<b, "expect {0} in resultset {1}".format(expectRS, expectRS)
+    assert a<=b, "expect {0} in resultset {1}".format(expectRS, re_num)
 
 
 
