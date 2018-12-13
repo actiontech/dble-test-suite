@@ -1,5 +1,5 @@
 Feature:Date sharding function
-  @regression
+  @smoke
   Scenario: Date sharding function
     #test: sBeginDate not configured
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"

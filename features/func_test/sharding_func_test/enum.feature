@@ -1,5 +1,5 @@
 Feature:
-  @regression
+  @smoke
   Scenario: Enum sharding function
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"

@@ -45,7 +45,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
 
-  @regression
+  @smoke
   Scenario: reload @@config_all, eg:remove old writeHost and add new, drop backend connection pool for old writeHost, create new connection pool, backend conn in use will not be dropped even the writehost was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"

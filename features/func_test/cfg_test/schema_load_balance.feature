@@ -132,7 +132,7 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
-  @regression
+  @smoke
   Scenario: dataHost balance="2", do balance bewteen read host and write host according to their weight #4
     Given delete the following xml segment
       |file        | parent          | child               |

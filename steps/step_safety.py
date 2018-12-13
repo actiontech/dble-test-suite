@@ -39,7 +39,7 @@ def test_schema_permission(context):
         # do test
         for priv, sql in zip(value, sqls_in_priv_order):
             res, errs = test_conn.query(sql)
-            if priv == 1:
+            if priv == "1":
                 assert_that(errs, is_(None))
             else:
                 assert_that(errs[1], contains_string(lack_priv_msg))
