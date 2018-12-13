@@ -344,7 +344,7 @@ Feature: test config in server.xml
         | action       | action    | conn_1 | False   | select 1 | too many connections for dble server | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user     | passwd    | conn   | toClose | sql            | expect  | db     |
-#        | root     | 111111    | conn_2 | False   | show @@version | too many connections for dble server | mytest |
+        | root     | 111111    | conn_2 | False   | show @@version | success | mytest |
 
 
 
