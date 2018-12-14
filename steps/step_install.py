@@ -3,11 +3,11 @@ import os
 import logging
 import re
 from behave import *
-from behave.textutil import text
+import MySQLdb
 from hamcrest import *
 
 from lib.Node import get_node, get_ssh
-from steps.step_check_sql import dble_mng_connect_test
+from steps.step_reload import get_dble_conn
 
 LOGGER = logging.getLogger('steps.install')
 
@@ -106,23 +106,27 @@ def start_dble_in_node(context, node):
     ssh_client.exec_command(cmd)
     context.retry = 0
     context.dble_start_success= False
-    check_dble_started(context, ssh_client)
+    check_dble_started(context)
 
-def check_dble_started(context, ssh_client):
-    time.sleep(5)
-    cmd = "[ -f /opt/dble/logs/dble.log ] && (grep -i 'is started and listening on' {0}/dble/logs/dble.log | wc -l) || echo 0".format(context.cfg_dble['install_dir'])
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    # '2' means there are 2 lines about log stands for dble start success, those 2 lines are :
-    #$_Dble_Manager is started and listening on 9066
-    #$_Dble_Server is started and listening on 8066
-    if sto == '2':
-        context.dble_start_success = True
-    else:
+def check_dble_started(context):
+    dble_conn = None
+    try:
+        dble_conn = get_dble_conn(context)
+        res, err = dble_conn.query("select 1")
+    except MySQLdb.Error, e:
+        err = e.args
+    finally:
+        if dble_conn:dble_conn.close()
+
+    context.dble_start_success = err is None
+    LOGGER.info("check dble started err:{0}, loop {1}".format(context.dble_start_success, context.retry))
+    if not context.dble_start_success:
         if context.retry < 5:
             context.retry = context.retry+1
-            check_dble_started(context, ssh_client)
+            time.sleep(5)
+            check_dble_started(context)
         else:
-            context.dble_start_success = False
+            assert False, "dble started failed after 5 times try"
 
 @Given("stop all dbles")
 def stop_dbles(context):
@@ -267,15 +271,12 @@ def disable_cluster_config_in_node(context, node):
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
-@given('change zk cluster to single mode')
+@given('stop dble cluster and zk service')
 def dble_cluster_to_single(context):
     for node in context.dbles:
         stop_dble_in_node(context, node)
         disable_cluster_config_in_node(context, node)
         stop_zk_service(context, node)
-
-    LOGGER.info("Start only the Dble service on the node dble-1")
-    start_dble_in_hostname(context, "dble-1")
 
 def replace_config(context, sourceCfgDir):
     for node in context.dbles:
@@ -305,4 +306,5 @@ def replace_config_in_node(context, sourceCfgDir, node):
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
+        LOGGER.info("sftp from: {0} to {1}".format(local_file, remote_file))
         node.sftp_conn.sftp_put(remote_file, local_file)

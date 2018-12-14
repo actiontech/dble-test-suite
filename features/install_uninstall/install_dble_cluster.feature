@@ -2,6 +2,7 @@
 Feature: # install_dble_cluster.feature:to config dble in zk cluster
 
   Scenario: # install zk cluster
+    Given stop dble cluster and zk service
     Given a clean environment in all dble nodes
     Given install dble in all dble nodes
     Given config zookeeper cluster in all dble nodes
