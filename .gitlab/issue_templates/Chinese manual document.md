@@ -1,11 +1,11 @@
-* **dble version£º**  
+* **dble version: **  
 
-* **preconditions £º**  
+* **preconditions: **  
 
-* **description£º** 
+* **description: ** 
 
 
-* **supplements(log,othertry)£º**   
+* **supplements(log,othertry): **   
 
 
 
