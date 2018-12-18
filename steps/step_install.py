@@ -157,7 +157,7 @@ def stop_dble_in_node(context, node):
     return dble_exist
 
 def check_dble_exist(ssh_client, dble_install_path):
-    exist_cmd = "[ -d {0}/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
+    exist_cmd = "[ -d {0}/dble/bin/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
     cd, out, err = ssh_client.exec_command(exist_cmd)
     dble_exist = str(out)=='1'# dble install dir exist
     LOGGER.debug("dble dir exist: {0}".format(dble_exist))
@@ -274,8 +274,9 @@ def disable_cluster_config_in_node(context, node):
 @given('stop dble cluster and zk service')
 def dble_cluster_to_single(context):
     for node in context.dbles:
-        stop_dble_in_node(context, node)
-        disable_cluster_config_in_node(context, node)
+        if check_dble_exist(node.ssh_conn, context.cfg_dble['install_dir']):
+            stop_dble_in_node(context, node)
+            disable_cluster_config_in_node(context, node)
         stop_zk_service(context, node)
 
 def replace_config(context, sourceCfgDir):
@@ -308,3 +309,9 @@ def replace_config_in_node(context, sourceCfgDir, node):
         remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
         LOGGER.info("sftp from: {0} to {1}".format(local_file, remote_file))
         node.sftp_conn.sftp_put(remote_file, local_file)
+
+@Given('reset dble registered nodes in zk')
+def step_impl(context):
+    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh rmr /dble".format(context.cfg_dble["install_dir"])
+    ssh_client = get_ssh(context.dbles, "dble-1")
+    ssh_client.exec_command(resetCmd)

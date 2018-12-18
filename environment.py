@@ -98,7 +98,6 @@ def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     pass
-    logger.info('Exit hook before_scenario')
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')

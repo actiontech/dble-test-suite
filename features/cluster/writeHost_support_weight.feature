@@ -2,16 +2,8 @@
 Feature:check if schema.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
 #github issue #793
 
-  @regression
+  @regression @skip_restart
   Scenario: set parameter "weight" for writeHost in cluster, then reload #1
-       Given update file content "/opt/dble/conf/myid.properties" in "dble-1"
-        """
-        /cluster=/d
-        /#set false/a cluster=zk
-        """
-       Given Restart dble in "dble-1" success
-       Then start dble in "dble-2"
-       Then start dble in "dble-3"
        Given delete the following xml segment
         |file         | parent         | child               |
         |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -43,12 +35,3 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
         """
         weight="3"
         """
-       # recover environment
-       Then stop dble in "dble-2"
-       Then stop dble in "dble-3"
-       Given update file content "/opt/dble/conf/myid.properties" in "dble-1"
-        """
-        /cluster=/d
-        /#set false/a cluster=false
-        """
-       Given Restart dble in "dble-1" success

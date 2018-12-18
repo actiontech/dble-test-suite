@@ -62,7 +62,7 @@ select * from aly_test order by id lock in share mode;
 begin;
 update aly_test set pad=22 where id=1/*zhj1*/;
 #!sql_thread_1
-rollback ;
+rollback/*zhj2*/;
 #!sql_thread_2
 update aly_test set pad=22 where id=2/*zhj3*/;
 select * from aly_test order by id;
