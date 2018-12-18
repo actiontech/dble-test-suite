@@ -107,7 +107,7 @@ def start_dble_in_node(context, node, expect_success=True):
 
     check_dble_started(context, node)
 
-    assert_that(context.dble_start_success==expect_success, "Expect restart dble {0}".format(expect_success))
+    assert_that(context.dble_start_success==expect_success, "Expect restart dble success {0}".format(expect_success))
 
     if not expect_success:
         expect_errInfo = context.text.strip()
@@ -130,7 +130,7 @@ def check_dble_started(context, node):
         if dble_conn:dble_conn.close()
 
     context.dble_start_success = err is None
-    LOGGER.info("check dble started err:{0}, loop {1}".format(context.dble_start_success, context.retry_start_dble))
+    LOGGER.info("dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
     if not context.dble_start_success:
         if context.retry_start_dble < 5:
             context.retry_start_dble = context.retry_start_dble+1
