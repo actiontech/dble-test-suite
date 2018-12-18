@@ -1,6 +1,5 @@
-# Created by apple at 2018/12/17
-Feature: #Enter feature name here
-  # Enter feature description here
+# Created by zhaohongjie at 2018/12/17
+Feature: stop dble cluster and zk service
 
-  Scenario: # Enter scenario name here
+  Scenario:  stop dble cluster and zk service
     Given stop dble cluster and zk service
