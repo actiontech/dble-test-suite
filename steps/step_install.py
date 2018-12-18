@@ -109,7 +109,7 @@ def start_dble_in_node(context, node, expect_success=True):
 
     assert_that(context.dble_start_success==expect_success, "Expect restart dble {0}".format(expect_success))
 
-    if not success:
+    if not expect_success:
         expect_errInfo = context.text.strip()
         cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
         rc, sto, ste = node.ssh_conn.exec_command(cmd)
@@ -197,9 +197,9 @@ def step_impl(context, hostname):
     node = get_node(context.dbles, hostname)
     restart_dble(context, node)
 
-def restart_dble(context, node, success=True):
+def restart_dble(context, node, expect_success=True):
     stop_dble_in_node(context, node)
-    start_dble_in_node(context, node, success)
+    start_dble_in_node(context, node, expect_success)
 
 @Then('start dble in order')
 def start_dble_in_order(context):
