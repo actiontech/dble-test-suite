@@ -100,18 +100,29 @@ def start_dble_in_hostname(context, hostname):
     node = get_node(context.dbles, hostname)
     start_dble_in_node(context, node)
 
-def start_dble_in_node(context, node):
+def start_dble_in_node(context, node, expect_success=True):
     ssh_client = node.ssh_conn
     cmd = "{0}/dble/bin/dble start".format(context.cfg_dble['install_dir'])
     ssh_client.exec_command(cmd)
-    context.retry = 0
-    context.dble_start_success= False
-    check_dble_started(context)
 
-def check_dble_started(context):
+    check_dble_started(context, node)
+
+    assert_that(context.dble_start_success==expect_success, "Expect restart dble {0}".format(expect_success))
+
+    if not success:
+        expect_errInfo = context.text.strip()
+        cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
+        rc, sto, ste = node.ssh_conn.exec_command(cmd)
+        assert_that(sto, equal_to_ignoring_whitespace("1"), "expect dble restart failed for {0}".format(expect_errInfo))
+
+def check_dble_started(context, node):
+    if not hasattr(context, "retry_start_dble"):
+        context.retry_start_dble = 0
+        context.dble_start_success= False
+
     dble_conn = None
     try:
-        dble_conn = get_dble_conn(context)
+        dble_conn = get_dble_conn(context,"mytest", node)
         res, err = dble_conn.query("select 1")
     except MySQLdb.Error, e:
         err = e.args
@@ -119,14 +130,14 @@ def check_dble_started(context):
         if dble_conn:dble_conn.close()
 
     context.dble_start_success = err is None
-    LOGGER.info("check dble started err:{0}, loop {1}".format(context.dble_start_success, context.retry))
+    LOGGER.info("check dble started err:{0}, loop {1}".format(context.dble_start_success, context.retry_start_dble))
     if not context.dble_start_success:
-        if context.retry < 5:
-            context.retry = context.retry+1
+        if context.retry_start_dble < 5:
+            context.retry_start_dble = context.retry_start_dble+1
             time.sleep(5)
-            check_dble_started(context)
+            check_dble_started(context,node)
         else:
-            assert False, "dble started failed after 5 times try"
+            LOGGER.info("dble started failed after 5 times try")
 
 @Given("stop all dbles")
 def stop_dbles(context):
@@ -141,27 +152,32 @@ def stop_dble_in_hostname(context, hostname):
 def stop_dble_in_node(context, node):
     ssh_client = node.ssh_conn
     dble_install_path = context.cfg_dble['install_dir']
-    dble_exist = check_dble_exist(ssh_client, dble_install_path)
+    dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
-    if dble_exist:
-        cmd = "{0}/dble/bin/dble stop".format(dble_install_path)
-        ssh_client.exec_command(cmd)
-        time.sleep(3)
-        cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}'"
-        rc, sto, ste = ssh_client.exec_command(cmd)
-        assert_that(sto.find(" "), "stop dble  service fail for:{0}".format(ste))
+    if dble_pid_exist:
+        cmd_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs kill -9"
+        cmd_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs kill -9"
+        rc1, sto1, ste1 = ssh_client.exec_command(cmd_guard)
+        rc2, sto2, ste2 = ssh_client.exec_command(cmd_core)
+        assert_that(len(ste1)==0 and len(ste2)==0, "kill dble process fail for:{0},{1}".format(ste1,ste2))
 
+    if dble_dir_exist:
         rm_log_cmd="rm -rf {0}/dble/logs/*.log".format(dble_install_path)
         rc, sto, ste = ssh_client.exec_command(rm_log_cmd)
         assert_that(len(ste)==0, "rm dble logs failed for: {0}".format(ste))
-    return dble_exist
+    return dble_dir_exist
 
 def check_dble_exist(ssh_client, dble_install_path):
+    cmd = "ps aux|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | wc -l"
+    rc, sto, ste = ssh_client.exec_command(cmd)
+    dble_pid_exist = str(sto)=='1'
+
     exist_cmd = "[ -d {0}/dble/bin/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
     cd, out, err = ssh_client.exec_command(exist_cmd)
-    dble_exist = str(out)=='1'# dble install dir exist
-    LOGGER.debug("dble dir exist: {0}".format(dble_exist))
-    return dble_exist
+    dble_dir_exist = str(out)=='1'# dble install dir exist
+
+    LOGGER.debug("dble dir exist: {0}, dble pid exist:{1}".format(dble_dir_exist, dble_pid_exist))
+    return dble_pid_exist, dble_dir_exist
 
 def restart_dbles(context, nodes):
     for node in nodes:
@@ -174,26 +190,16 @@ def restart_dbles(context, nodes):
 @Then('restart dble in "{hostname}" failed for')
 def check_restart_dble_failed(context,hostname):
     node = get_node(context.dbles, hostname)
-    restart_dble(context, node)
-
-    assert_that(not context.dble_start_success, "Expect restart dble fail, but succeeded")
-    expect_errInfo = context.text.strip()
-    cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
-    rc, sto, ste = node.ssh_conn.exec_command(cmd)
-    assert_that(sto, equal_to_ignoring_whitespace("1"), "expect dble restart failed for {0}".format(expect_errInfo))
+    restart_dble(context, node, False)
 
 @Given('Restart dble in "{hostname}" success')
 def step_impl(context, hostname):
     node = get_node(context.dbles, hostname)
     restart_dble(context, node)
 
-    assert_that(context.dble_start_success, "Expect restart dble success, but failed")
-    # dble_mng_connect_test(context, node.ip)
-
-@When('Restart dble in "dble-1"')
-def restart_dble(context, node):
+def restart_dble(context, node, success=True):
     stop_dble_in_node(context, node)
-    start_dble_in_node(context, node)
+    start_dble_in_node(context, node, success)
 
 @Then('start dble in order')
 def start_dble_in_order(context):
@@ -274,9 +280,8 @@ def disable_cluster_config_in_node(context, node):
 @given('stop dble cluster and zk service')
 def dble_cluster_to_single(context):
     for node in context.dbles:
-        if check_dble_exist(node.ssh_conn, context.cfg_dble['install_dir']):
-            stop_dble_in_node(context, node)
-            disable_cluster_config_in_node(context, node)
+        stop_dble_in_node(context, node)
+        disable_cluster_config_in_node(context, node)
         stop_zk_service(context, node)
 
 def replace_config(context, sourceCfgDir):
@@ -291,9 +296,9 @@ def replace_config_in_node(context, sourceCfgDir, node):
 
     ssh_client = node.ssh_conn
     dble_install_path = context.cfg_dble['install_dir']
-    dble_exist = check_dble_exist(ssh_client, dble_install_path)
+    dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
-    if dble_exist:
+    if dble_dir_exist:
         cmd = 'rm -rf {0}/dble/conf_*'.format(context.cfg_dble['install_dir'])
         ssh_client.exec_command(cmd)
 

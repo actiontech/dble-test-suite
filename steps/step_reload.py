@@ -3,6 +3,8 @@ import sys
 import logging
 import MySQLdb
 
+from lib.Node import get_node
+
 sys.path.append("..")
 from behave import *
 from hamcrest import *
@@ -11,8 +13,10 @@ from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, 
 
 LOGGER = logging.getLogger('steps.reload')
 
-def get_dble_conn(context, default_db="mytest"):
-    conn = DBUtil(context.cfg_dble['dble']['ip'], context.cfg_dble['client_user'],
+def get_dble_conn(context, default_db="mytest", node=None):
+    if node is None:
+        node = get_node(context.dbles, "dble-1")
+    conn = DBUtil(node.ip, context.cfg_dble['client_user'],
                          context.cfg_dble['client_password'], default_db, context.cfg_dble['client_port'],
                          context)
     return conn

@@ -23,7 +23,7 @@ def before_all(context):
     context.logger = steps_logger
 
     logger.info('*' * 30)
-    logger.info('*       DBLE TEST START       *')
+    logger.info('*       DBLE TEST START      *')
     logger.info('*' * 30)
     logger.info('Enter hook before_all')
 
