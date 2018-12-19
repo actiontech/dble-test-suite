@@ -14,4 +14,3 @@ Feature: install dble cluster, degrade to single dble, recover to cluster
     Given reset dble registered nodes in zk
     Then start dble in order
     Given stop dble cluster and zk service
-    Given stop dble cluster and zk service
