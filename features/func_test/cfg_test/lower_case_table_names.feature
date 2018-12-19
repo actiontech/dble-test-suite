@@ -150,7 +150,7 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   | create table test(Id int)                                                     | success               | mytest |
         | test | 111111 | conn_1 | False   | insert into test(id) value(2)                                                 | success              | mytest |
         | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join Test t2 on t1.id=t2.Id |Test doesn't exist | mytest |
-        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |Unknown column      | mytest |
+        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |error totally whack     | mytest |
         | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success              | mytest |
         | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2                  |success              | mytest |
         | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                  |Unknown column      | mytest |

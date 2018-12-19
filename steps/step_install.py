@@ -5,6 +5,7 @@ import re
 from behave import *
 import MySQLdb
 from hamcrest import *
+from lib.DBUtil import *
 
 from lib.Node import get_node, get_ssh
 from steps.step_reload import get_dble_conn
@@ -113,7 +114,7 @@ def start_dble_in_node(context, node, expect_success=True):
         expect_errInfo = context.text.strip()
         cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
         rc, sto, ste = node.ssh_conn.exec_command(cmd)
-        assert_that(sto, equal_to_ignoring_whitespace("1"), "expect dble restart failed for {0}".format(expect_errInfo))
+        assert_that(sto, not equal_to_ignoring_whitespace("0"), "expect dble restart failed for {0}".format(expect_errInfo))
 
 def check_dble_started(context, node):
     if not hasattr(context, "retry_start_dble"):
@@ -122,8 +123,8 @@ def check_dble_started(context, node):
 
     dble_conn = None
     try:
-        dble_conn = get_dble_conn(context,"mytest", node)
-        res, err = dble_conn.query("select 1")
+        dble_conn = DBUtil(context.cfg_dble['dble']['ip'], context.cfg_dble['manager_user'], context.cfg_dble['manager_password'], "", context.cfg_dble['manager_port'],context)
+        res, err = dble_conn.query("show @@version")
     except MySQLdb.Error, e:
         err = e.args
     finally:

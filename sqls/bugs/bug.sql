@@ -229,3 +229,9 @@ CREATE  table three_sharding_t1(id int)
 insert into three_sharding_t1 values(null)
 select * from three_sharding_t1 a where a.id is null;
 drop table if EXISTS three_sharding_t1
+#github issue 884
+drop table if exists test_shard;
+create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),t datetime,b bool)DEFAULT CHARSET=UTF8;
+insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0);
+drop table if exists test_shard;
+select * from test_shard where exists(select * from test_shard where id=1||id=3);

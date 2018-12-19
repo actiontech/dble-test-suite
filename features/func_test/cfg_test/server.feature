@@ -252,7 +252,7 @@ Feature: test config in server.xml
         <property name="maxCon">2</property>
       </user>
       <user name="test">
-        <property name="password">123</property>
+        <property name="password">111111</property>
         <property name="schemas">mytest</property>
          <property name="maxCon">1</property>
       </user>
@@ -266,8 +266,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose  | sql      | expect  | db     |
-        | test         | 123       | conn_0 | False    | select 1 | success | mytest |
-        | test         | 123       | new    | True     | select 1 | Access denied for user 'test',too many connections for this user | mytest |
+        | test         | 111111       | conn_0 | False    | select 1 | success | mytest |
+        | test         | 111111       | new    | True     | select 1 | Access denied for user 'test',too many connections for this user | mytest |
         | action       | action    | conn_1 | False    | select 1 | success | mytest |
         | action       | action    | new    | True     | select 1 | Access denied for user 'action',too many connections for this user | mytest |
     Then execute sql in "dble-1" in "admin" mode
@@ -285,7 +285,7 @@ Feature: test config in server.xml
         <property name="manager">true</property>
       </user>
       <user name="test">
-        <property name="password">123</property>
+        <property name="password">111111</property>
         <property name="schemas">mytest</property>
          <property name="maxCon">0</property>
       </user>
@@ -299,8 +299,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 123       | conn_4 | False   | select 1 | success | mytest |
-        | test         | 123       | conn_5 | False   | select 1 | success | mytest |
+        | test         | 111111       | conn_4 | False   | select 1 | success | mytest |
+        | test         | 111111       | conn_5 | False   | select 1 | success | mytest |
         | action       | action    | conn_6 | False   | select 1 | success | mytest |
         | action       | action    | conn_7 | False   | select 1 | success | mytest |
 
@@ -324,7 +324,7 @@ Feature: test config in server.xml
           <property name="manager">true</property>
      </user>
      <user name="test">
-          <property name="password">123</property>
+          <property name="password">111111</property>
           <property name="schemas">mytest</property>
           <property name="maxCon">1</property>
      </user>
@@ -339,8 +339,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 123       | conn_0 | False   | select 1 | success | mytest |
-        | test         | 123       | new    | False   | select 1 | too many connections for this user | mytest |
+        | test         | 111111       | conn_0 | False   | select 1 | success | mytest |
+        | test         | 111111       | new    | False   | select 1 | too many connections for this user | mytest |
         | action       | action    | conn_1 | False   | select 1 | too many connections for dble server | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user     | passwd    | conn   | toClose | sql            | expect  | db     |

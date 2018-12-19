@@ -10,7 +10,7 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
         |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
         |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
        Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-          """
+       """
               <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
                   <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
               </schema>
@@ -25,13 +25,14 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
                     <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="3"/>
                   </writeHost>
               </dataHost>
-            """
-        Then execute admin cmd "reload @@config_all"
-        Then check following " " exist in file "/opt/dble/conf/schema.xml" in "dble-2"
-        """
-        weight="3"
-        """
-        Then check following " " exist in file "/opt/dble/conf/schema.xml" in "dble-3"
-        """
-        weight="3"
-        """
+      """
+      Then execute admin cmd "reload @@config_all"
+      Given sleep "2" seconds
+      Then check following " " exist in file "/opt/dble/conf/schema.xml" in "dble-2"
+      """
+      weight="3"
+     """
+      Then check following " " exist in file "/opt/dble/conf/schema.xml" in "dble-3"
+      """
+      weight="3"
+      """
