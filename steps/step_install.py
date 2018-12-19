@@ -138,6 +138,9 @@ def check_dble_started(context, node):
             check_dble_started(context,node)
         else:
             LOGGER.info("dble started failed after 5 times try")
+            delattr(context, "retry_start_dble")
+    else:
+        delattr(context, "retry_start_dble")
 
 @Given("stop all dbles")
 def stop_dbles(context):
