@@ -175,7 +175,7 @@ def check_dble_exist(ssh_client, dble_install_path):
     rc, sto, ste = ssh_client.exec_command(cmd)
     dble_pid_exist = str(sto)=='1'
 
-    exist_cmd = "[ -d {0}/dble/bin/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
+    exist_cmd = "[ -f {0}/dble/bin/dble ] && (echo 1) || (echo 0)".format(dble_install_path)
     cd, out, err = ssh_client.exec_command(exist_cmd)
     dble_dir_exist = str(out)=='1'# dble install dir exist
 
@@ -184,6 +184,7 @@ def check_dble_exist(ssh_client, dble_install_path):
 
 def restart_dbles(context, nodes):
     for node in nodes:
+        LOGGER.debug("***debug try to restart dble:{0}".format(node.host_name))
         restart_dble(context, node)
 
     if len(nodes) > 1:
