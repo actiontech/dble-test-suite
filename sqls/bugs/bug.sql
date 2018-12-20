@@ -60,8 +60,8 @@ select id from test_global union SELECT 1
 drop table if exists test_shard
 create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))DEFAULT CHARSET=UTF8
 insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string','test001'),(3,3, 'another string','test003'),(2,2, 'a\nstring','test002'),(4,4, '中','test004'),(5,5, 'a\'string\'','test005'),(6,6, 'a\""string\""','test006'),(7,7, 'a\bstring','test007'),(8,8, 'a\nstring','test008'),(9,9, 'a\rstring','test009'),(10,10, 'a\tstring','test010'),(11,11, 'a\zstring','test011'),(12,12, 'a\\string','test012'),(13,13, 'a\%string','test013'),(14,14, 'a\_string','test014'),(15,15, 'MySQL','test015'),(16,16, 'binary','test016'),(65,16, 'binary','test016'),(17,12345678901234567890123.4567890,17,17),(18,18, 'A','test018'),(19,19, '','test019')
-explain(select 1 from test_shard)union(select 2)/*allow_diff*/
-explain (select 1 from test_shard)union(select 2)/*allow_diff*/
+#explain(select 1 from test_shard)union(select 2)/*allow_diff*/
+#explain (select 1 from test_shard)union(select 2)/*allow_diff*/
 #github issue #535
 drop table if exists test_global
 drop table if exists global_table2
@@ -233,5 +233,5 @@ drop table if EXISTS three_sharding_t1
 drop table if exists test_shard;
 create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),t datetime,b bool)DEFAULT CHARSET=UTF8;
 insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0);
+select * from test_shard where exists(select * from test_shard where id=1||id=3)
 drop table if exists test_shard;
-select * from test_shard where exists(select * from test_shard where id=1||id=3);

@@ -440,10 +440,10 @@ SELECT Department,min(age) as age,avg(salary) salary  FROM (SELECT a.id,name,age
 SELECT Department,sum(age) as age,avg(salary) salary  FROM (SELECT a.id,name,age,Department,salary FROM enum_patch_integer a inner join aly_test b on a.id=b.ID where salary >=500 and age <=150 order by Department DESC) AS Actions GROUP BY Department ORDER BY salary ASC/*allow_diff_sequence*/
 SELECT Department,sum(age) as age,avg(salary) salary  FROM (SELECT a.id,name,age,Department,salary FROM enum_patch_integer a left join aly_test b on a.id=b.ID where salary >=500 and age <=150 order by Department DESC) AS Actions GROUP BY Department ORDER BY salary ASC/*allow_diff_sequence*/
 SELECT Department,sum(age) as age,avg(salary) salary  FROM (SELECT a.id,name,age,Department,salary FROM enum_patch_integer a right join aly_test b on a.id=b.ID where salary >=500 and age <=150 order by Department DESC) AS Actions GROUP BY Department ORDER BY salary ASC/*allow_diff_sequence*/
--- SELECT name,age,salary,department FROM enum_patch_integer a,aly_test b where a.id=b.ID and b.ID in (select ID from aly_test order by ID)
--- SELECT name,age,salary,department FROM enum_patch_integer a inner join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
--- SELECT name,age,salary,department FROM enum_patch_integer a left join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
--- SELECT name,age,salary,department FROM enum_patch_integer a right join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
+SELECT name,age,salary,department FROM enum_patch_integer a,aly_test b where a.id=b.ID and b.ID in (select ID from aly_test order by ID)
+SELECT name,age,salary,department FROM enum_patch_integer a inner join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
+SELECT name,age,salary,department FROM enum_patch_integer a left join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
+SELECT name,age,salary,department FROM enum_patch_integer a right join aly_test b on a.id=b.ID where b.ID in (select ID from aly_test order by ID)
 #
 #clear tables
 #

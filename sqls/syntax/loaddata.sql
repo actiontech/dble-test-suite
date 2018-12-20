@@ -29,8 +29,8 @@ select * from aly_test;
 ##github #768, column type int lacked fills 0 not null
 drop table if exists aly_test
 create table aly_test(id int, c1 int);
--- load data infile "./test5.txt" into table aly_test fields terminated by ',' lines terminated by '\n';
--- select * from aly_test;
+#load data infile "./test5.txt" into table aly_test fields terminated by ',' lines terminated by '\n';
+#select * from aly_test;
 
 ##lack column or/and lack terminated
 #-- drop table if exists aly_test
