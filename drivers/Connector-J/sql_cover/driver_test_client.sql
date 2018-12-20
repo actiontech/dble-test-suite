@@ -101,6 +101,14 @@ prepare stmt from 'insert into aly_test values(111,111,"test中id为1",111)';
 execute stmt;
 select * from aly_test;
 drop prepare stmt;
+prepare stmt from "insert into aly_test values(111,111,'test中id为1',111)";
+execute stmt;
+select * from aly_test;
+drop prepare stmt;
+prepare stmt from 'insert into aly_test values(111,111,\'test中id为1\',111)'
+execute stmt;
+select * from aly_test;
+drop prepare stmt;
 prepare stmt from 'select * from aly_test where id=?';
 set @b=1;
 execute stmt using @b;

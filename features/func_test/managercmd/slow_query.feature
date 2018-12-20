@@ -114,8 +114,12 @@ Feature: test slow query log related manager command
         | test         | 111111    | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | mytest |
         | test         | 111111    | conn_0 | False    | insert into a_test values(3,3)                                  |  success                         | mytest |
      Then check following " " exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
-      """
-      drop table if exists a_test
-      create table a_test(id int(10) unsigned NOT NULL,name char(1))
-      insert into a_test values(3,3)
-      """
+     """
+     drop table if exists a_test
+     create table a_test(id int(10) unsigned NOT NULL,name char(1))
+     insert into a_test values(3,3)
+     """
+     Then check following "not" exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
+     """
+     insert into a_test values(1,1),(2,1111)
+     """
