@@ -235,3 +235,10 @@ create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar
 insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0);
 select * from test_shard where exists(select * from test_shard where id=1||id=3)
 drop table if exists test_shard;
+#github issue 829
+drop table if exists test_global
+create table test_global(id int,name varchar(30),role varchar(30))
+/* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view mytest.view_tg as select name,role from mytest.test_global
+/* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM mytest */
+drop table if exists test_global
+drop view if exists view_tg
