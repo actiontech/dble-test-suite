@@ -50,11 +50,15 @@ int main()
 		delete dbleMcon;
 	}
 	if (findSubstr(sqlfilename,"client")) {
+		string loadpath = string(curpath) + '/' + "test1.txt";
+		const char *loadfile = loadpath.c_str();
+		WriteLoadData("test1.txt");
 		dblecon = createConn(ChostName, CuserName, Cpassword);
 		mysqlcon = createConn(MysqlhostName, MysqluserName, Mysqlpassword);
 		client_exec(sqlfile, logpath, dblecon, mysqlcon);
 		delete dblecon;
 		delete mysqlcon;
+		RmFile(loadfile);
 	}
 	exit(0);
 }

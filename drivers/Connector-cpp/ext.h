@@ -8,10 +8,11 @@
 #include <fstream>
 #include<string>
 #include<list>
-using namespace std;:
+#include "config.h"
+using namespace std;
 using namespace sql;
-//typedef sql::Connection Connection;
 
+int WriteLoadData(string filename);
 int createdir(const char *filepath);
 //sql::Connection *conn(const char *hostName, const char *userName, const char *password);
 Connection* createConn(const char *hostName, const char *userName, const char *password);
@@ -21,7 +22,7 @@ bool compareList(list<string> dblerslist, list<string> mysqlrslist, bool allow_d
 string convertList(list<string> lt);
 list<string> exec_sql(Statement *stmt, string line);
 bool findSubstr(string str, string substr);
-//void close_ifstream(ifstream *file);
-//void close_ofstream(ofstream *file);
+//Config YParse(string yamlpath, string dockername, string client);
+int RmFile(const char *filepath);
 
 #endif
