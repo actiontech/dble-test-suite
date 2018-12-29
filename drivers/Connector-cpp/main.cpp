@@ -4,6 +4,8 @@
 #include "ext.h"
 #include <unistd.h>  
 #include <stdio.h>
+#include <string>
+#include <string.h>
 #include "mysql_connection.h"
 #include "mysql_driver.h"
 //#include <cppconn/driver.h>
@@ -14,43 +16,84 @@ using namespace sql;
 #define MAX_PATH 1024  
 #endif
 
-int main()
+int main(int argc, char *argv[])
 {
-	//创建数据库链接
 	Connection *dbleMcon;
 	Connection *dblecon;
 	Connection *mysqlcon;
-	const char *MhostName = "tcp://10.186.60.61:7171";
-	const char *MuserName = "root";
-	const char *Mpassword = "111111";
-	const char *ChostName = "tcp://10.186.60.61:7131";
-	const char *CuserName = "test";
-	const char *Cpassword = "111111";
-	const char *MysqlhostName = "tcp://10.186.60.61:7144";
-	const char *MysqluserName = "test";
-	const char *Mysqlpassword = "111111";
-	//获取当前路径
+	char *MhostName;
+	const char *MuserName;
+	const char *Mpassword;
+	char *ChostName;
+	const char *CuserName;
+	const char *Cpassword;
+	char *MysqlhostName;
+	const char *MysqluserName;
+	const char *Mysqlpassword;
+	string sqlfilename;
+	const char *sqlfile;
+	//get current path
 	char buffer[MAX_PATH];
 	const char *curpath = getcwd(buffer, MAX_PATH);
-	//获取当前时间戳
+	//get current timestampt
 	unsigned long stime = time(0);
 	string strtime = to_string(stime);
 	string path = string(curpath) + '/' + strtime;
 	const char *logpath = path.c_str();
 	createdir(logpath);
-	//获取sqlfile路径,后期从配置读取
-	string sqlfilename = string(curpath) + '/' + "sql/driver_test_manager.sql";
-	//string sqlfilename = string(curpath) + '/' + "sql/driver_test_client.sql";
-	const char *sqlfile = sqlfilename.c_str();
-	//cout << string(sqlfile) << endl;
+	Config cfg;
+	cfg = YParse(string(argv[2]));
+	//string(argv[3]) = "driver_test_manager.sql";
+	if (string(argv[1]) == "test") {
+		MhostName = "tcp://10.186.60.61:7171";
+		MuserName = "root";
+		Mpassword = "111111";
+		ChostName = "tcp://10.186.60.61:7131";
+		CuserName = "test";
+		Cpassword = "111111";
+		MysqlhostName = "tcp://10.186.60.61:7144";
+		MysqluserName = "test";
+		Mysqlpassword = "111111";
 
-	if (findSubstr(sqlfilename,"manager")) {
+		sqlfilename = string(curpath) + "/assets/sql/driver_test_manager.sql";
+		//sqlfilename = string(curpath) + "/assets/sql/driver_test_client.sql";
+		sqlfile = sqlfilename.c_str();
+		//cout << string(sqlfile) << endl;
+	}
+	else {
+		string Mdblehost = "tcp://" + cfg.MhostName + ":" + cfg.MhostPort;
+		MhostName = new char[50];
+		strcpy(MhostName, Mdblehost.c_str());
+		MuserName = cfg.MuserName.c_str();
+		Mpassword = cfg.Mpassword.c_str();
+		string Cdblehost = "tcp://" + cfg.ChostName + ":" + cfg.ChostPort;
+		ChostName = new char[50];
+		strcpy(ChostName, Cdblehost.c_str());
+		//ChostName = Cdblehost.c_str();
+		CuserName = cfg.CuserName.c_str();
+		Cpassword = cfg.Cpassword.c_str();
+		string Mysqlhost = "tcp://" + cfg.MysqlhostName + ":" + cfg.MysqlhostPort;
+		MysqlhostName = new char[50];
+		strcpy(MysqlhostName, Mysqlhost.c_str());
+		//MysqlhostName = Mysqlhost.c_str();
+		MysqluserName = cfg.MysqluserName.c_str();
+		Mysqlpassword = cfg.Mysqlpassword.c_str();
+		sqlfilename = string(curpath) + cfg.sqlpath.substr(1, cfg.sqlpath.length() - 1) + "/" + argv[3];
+		sqlfile = sqlfilename.c_str();
+		cout << string(sqlfile) << endl;
+		cout << string(MhostName) << endl;
+		cout << string(MuserName) << endl;
+		cout << string(Mpassword) << endl;
+	}
+
+
+	if (findSubstr(sqlfilename, "manager")) {
 		dbleMcon = createConn(MhostName, MuserName, Mpassword);
 		manager_exec(sqlfile, logpath, dbleMcon);
 		delete dbleMcon;
 	}
-	if (findSubstr(sqlfilename,"client")) {
-		string loadpath = string(curpath) + '/' + "test1.txt";
+	if (findSubstr(sqlfilename, "client")) {
+		string loadpath = string(curpath) + "/test1.txt";
 		const char *loadfile = loadpath.c_str();
 		WriteLoadData("test1.txt");
 		dblecon = createConn(ChostName, CuserName, Cpassword);
@@ -60,6 +103,6 @@ int main()
 		delete mysqlcon;
 		RmFile(loadfile);
 	}
+
 	exit(0);
 }
-

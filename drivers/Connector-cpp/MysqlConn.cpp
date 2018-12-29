@@ -14,7 +14,7 @@ using namespace sql;
 
 
 
-Connection *createConn(const char *hostName, const char *userName, const char *password) {
+Connection *createConn(char *hostName, const char *userName, const char *password) {
 	mysql::MySQL_Driver *driver;
 	Connection *con;
 	try {

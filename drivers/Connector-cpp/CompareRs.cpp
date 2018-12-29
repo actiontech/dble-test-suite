@@ -8,7 +8,7 @@ using namespace std;
 
 bool compareList(list<string> dblerslist, list<string> mysqlrslist, bool allow_diff_sequence) {
 	if (dblerslist.size() != mysqlrslist.size()) {
-		cout << "not equal" << endl;
+		//cout << "not equal" << endl;
 		return false;
 	}
 
@@ -21,7 +21,7 @@ bool compareList(list<string> dblerslist, list<string> mysqlrslist, bool allow_d
 	list<string>::iterator iter2;
 	for (iter1 = dblerslist.begin(), iter2 = mysqlrslist.begin(); iter1 != dblerslist.end(); iter1++, iter2++) {
 		if (*iter1 != *iter2) {
-			cout << "not equal" << endl;
+			//cout << "not equal" << endl;
 			return false;
 			//break;
 		}

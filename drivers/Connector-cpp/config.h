@@ -7,10 +7,20 @@ using namespace std;
 
 class Config {
 public:
-	string name;
-	string port;
-	string user;
-	string passwd;
+	string MhostName;
+	string MhostPort;
+	string MuserName;
+	string Mpassword;
+	string ChostName;
+	string ChostPort;
+	string CuserName;
+	string Cpassword;
+	string MysqlhostName;
+	string MysqlhostPort;
+	string MysqluserName;
+	string Mysqlpassword;
+	string db;
+	string sqlpath;
 };
 
 #endif

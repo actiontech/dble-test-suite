@@ -22,7 +22,7 @@ list<string> exec_sql(Statement *stmt, string line) {
 	ResultSet *res;
 	ResultSetMetaData *res_meta;
 	try {
-		if (findSubstr(line, "select") || findSubstr(line, "show") || findSubstr(line, "check") || findSubstr(line, "union") || findSubstr(line, "desc") || findSubstr(line, "@b")) {
+		if (findSubstr(line, "select") || findSubstr(line, "show") || findSubstr(line, "check") || findSubstr(line, "union") || findSubstr(line, "explain") || findSubstr(line, "desc") || findSubstr(line, "@b")) {
 			res = stmt->executeQuery(line);
 			string res_line;
 			if (res->rowsCount() == 0) {
