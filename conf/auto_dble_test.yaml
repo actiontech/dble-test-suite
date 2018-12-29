@@ -4,6 +4,7 @@ cfg_sys:
   share_path_docker: /init_assets
   ssh_user: root
   ssh_password: sshpass
+  default_db: mytest
   sql_source: ./assets/sql
 cfg_dble:
   install_dir: /opt
@@ -14,7 +15,6 @@ cfg_dble:
   manager_user: root
   manager_password: 111111
   manager_port: 9066
-  default_db: mytest
   dble:
     ip: 172.100.9.1
     hostname: dble-1
