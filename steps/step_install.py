@@ -120,10 +120,12 @@ def check_dble_started(context, node):
     if not hasattr(context, "retry_start_dble"):
         context.retry_start_dble = 0
         context.dble_start_success= False
-
+        
+    ip = node._ip
     dble_conn = None
     try:
-        dble_conn = DBUtil(context.cfg_dble['dble']['ip'], context.cfg_dble['manager_user'], context.cfg_dble['manager_password'], "", context.cfg_dble['manager_port'],context)
+        dble_conn = DBUtil(ip, context.cfg_dble['manager_user'], context.cfg_dble['manager_password'], "",
+                           context.cfg_dble['manager_port'], context)
         res, err = dble_conn.query("show @@version")
     except MySQLdb.Error, e:
         err = e.args

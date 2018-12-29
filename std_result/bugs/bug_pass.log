@@ -1,3 +1,4 @@
+
 ===file:bugs/bug.sql, id:2, sql:[drop table if exists a_two]===
 dble:[[]]
 ===file:bugs/bug.sql, id:3, sql:[CREATE TABLE a_two (id int(11) NOT NULL,c_flag char(255) DEFAULT NULL,c_decimal decimal(16,4) DEFAULT NULL,PRIMARY KEY (id)) ENGINE=InnoDB DEFAULT CHARSET=utf8]===
@@ -93,12 +94,6 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:62, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string','test001'),(3,3, 'another string','test003'),(2,2, 'a\nstring','test002'),(4,4, '中','test004'),(5,5, 'a\'string\'','test005'),(6,6, 'a\""string\""','test006'),(7,7, 'a\bstring','test007'),(8,8, 'a\nstring','test008'),(9,9, 'a\rstring','test009'),(10,10, 'a\tstring','test010'),(11,11, 'a\zstring','test011'),(12,12, 'a\\string','test012'),(13,13, 'a\%string','test013'),(14,14, 'a\_string','test014'),(15,15, 'MySQL','test015'),(16,16, 'binary','test016'),(65,16, 'binary','test016'),(17,12345678901234567890123.4567890,17,17),(18,18, 'A','test018'),(19,19, '','test019')]===
 dble:[[]]
-===file:bugs/bug.sql, id:63, sql:[explain(select 1 from test_shard)union(select 2)/*allow_diff*/]===
-dble:[[('distinct_1', 'DISTINCT', 'union_all_1'), ('dn1_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn2_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn3_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn4_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn5_0', 'BASE SQL', 'select 2 as `1`'), ('merge_1', 'MERGE', 'dn1_0; dn2_0; dn3_0; dn4_0'), ('merge_2', 'MERGE', 'dn5_0'), ('shuffle_field_1', 'SHUFFLE_FIELD', 'merge_1'), ('shuffle_field_2', 'SHUFFLE_FIELD', 'distinct_1'), ('union_all_1', 'UNION_ALL', 'shuffle_field_1; merge_2')]]
-mysql:[[(None, 'UNION RESULT', '<union1,2>', None, 'ALL', None, None, None, None, None, None, 'Using temporary'), (1L, 'PRIMARY', 'test_shard', None, 'index', None, 'PRIMARY', '4', None, 20L, 100.0, 'Using index'), (2L, 'UNION', None, None, None, None, None, None, None, None, None, 'No tables used')]]
-===file:bugs/bug.sql, id:64, sql:[explain (select 1 from test_shard)union(select 2)/*allow_diff*/]===
-dble:[[('distinct_1', 'DISTINCT', 'union_all_1'), ('dn1_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn2_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn3_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn4_0', 'BASE SQL', 'select 1 from  `test_shard`'), ('dn5_0', 'BASE SQL', 'select 2 as `1`'), ('merge_1', 'MERGE', 'dn1_0; dn2_0; dn3_0; dn4_0'), ('merge_2', 'MERGE', 'dn5_0'), ('shuffle_field_1', 'SHUFFLE_FIELD', 'merge_1'), ('shuffle_field_2', 'SHUFFLE_FIELD', 'distinct_1'), ('union_all_1', 'UNION_ALL', 'shuffle_field_1; merge_2')]]
-mysql:[[(None, 'UNION RESULT', '<union1,2>', None, 'ALL', None, None, None, None, None, None, 'Using temporary'), (1L, 'PRIMARY', 'test_shard', None, 'index', None, 'PRIMARY', '4', None, 20L, 100.0, 'Using index'), (2L, 'UNION', None, None, None, None, None, None, None, None, None, 'No tables used')]]
 ===file:bugs/bug.sql, id:66, sql:[drop table if exists test_global]===
 dble:[[]]
 ===file:bugs/bug.sql, id:67, sql:[drop table if exists global_table2]===
@@ -269,21 +264,21 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:160, sql:[create table a_two(id int, aa int)]===
 dble:[[]]
-===file:bugs/bug.sql, id:161, sql:[create table a_three(id int, bb int);]===
+===file:bugs/bug.sql, id:161, sql:[create table a_three(id int, bb int)]===
 dble:[[]]
-===file:bugs/bug.sql, id:162, sql:[insert into a_two values(1,123);]===
+===file:bugs/bug.sql, id:162, sql:[insert into a_two values(1,123)]===
 dble:[[]]
-===file:bugs/bug.sql, id:163, sql:[insert into a_three values(2,111),(2,123),(2,NULL);]===
+===file:bugs/bug.sql, id:163, sql:[insert into a_three values(2,111),(2,123),(2,NULL)]===
 dble:[[]]
-===file:bugs/bug.sql, id:164, sql:[select * from a_two a,a_three b where a.aa = b.bb;]===
+===file:bugs/bug.sql, id:164, sql:[select * from a_two a,a_three b where a.aa = b.bb]===
 dble:[[(1L, 123L, 2L, 123L)]]
 ===file:bugs/bug.sql, id:166, sql:[drop table if exists a_two]===
 dble:[[]]
-===file:bugs/bug.sql, id:167, sql:[create table a_two (id int,busidate char(20),zoneno char(20),brno int,tellerno int);]===
+===file:bugs/bug.sql, id:167, sql:[create table a_two (id int,busidate char(20),zoneno char(20),brno int,tellerno int)]===
 dble:[[]]
-===file:bugs/bug.sql, id:168, sql:[SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T;]===
+===file:bugs/bug.sql, id:168, sql:[SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T]===
 dble:[[('20180716', '00119', 1L, 0L), ('20180716', '00119', 1L, 2L)]]
-===file:bugs/bug.sql, id:169, sql:[SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T;]===
+===file:bugs/bug.sql, id:169, sql:[SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM a_two F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T]===
 dble:[[('20180716', '00119', 0L, 0L)]]
 ===file:bugs/bug.sql, id:170, sql:[drop table if exists a_two]===
 dble:[[]]
@@ -291,15 +286,15 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:173, sql:[drop table if exists a_order]===
 dble:[[]]
-===file:bugs/bug.sql, id:174, sql:[create table a_test(id int, name varchar(20));]===
+===file:bugs/bug.sql, id:174, sql:[create table a_test(id int, name varchar(20))]===
 dble:[[]]
-===file:bugs/bug.sql, id:175, sql:[create table a_order(id int, name varchar(20));]===
+===file:bugs/bug.sql, id:175, sql:[create table a_order(id int, name varchar(20))]===
 dble:[[]]
-===file:bugs/bug.sql, id:176, sql:[insert into a_test value(1,'a');]===
+===file:bugs/bug.sql, id:176, sql:[insert into a_test value(1,'a')]===
 dble:[[]]
-===file:bugs/bug.sql, id:177, sql:[insert into a_order values(1,'d'),(2,'b'),(3,'c');]===
+===file:bugs/bug.sql, id:177, sql:[insert into a_order values(1,'d'),(2,'b'),(3,'c')]===
 dble:[[]]
-===file:bugs/bug.sql, id:178, sql:[select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL;]===
+===file:bugs/bug.sql, id:178, sql:[select b.* from a_test b left join a_order a on a.id=b.id where a.id is NULL]===
 dble:[[]]
 ===file:bugs/bug.sql, id:179, sql:[drop table if exists a_test]===
 dble:[[]]
@@ -321,9 +316,95 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:190, sql:[drop table if exists aly_test]===
 dble:[[]]
-===file:bugs/bug.sql, id:191, sql:[CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8;]===
+===file:bugs/bug.sql, id:191, sql:[CREATE TABLE aly_test(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4),PRIMARY KEY (id)) DEFAULT CHARSET=utf8]===
 dble:[[]]
-===file:bugs/bug.sql, id:192, sql:[insert into aly_test values(18,'美国',20.0),(530,'中国',20.0);]===
+===file:bugs/bug.sql, id:192, sql:[insert into aly_test values(18,'美国',20.0),(530,'中国',20.0)]===
 dble:[[]]
-===file:bugs/bug.sql, id:193, sql:[select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal;]===
+===file:bugs/bug.sql, id:193, sql:[select c_decimal,group_concat(c_flag) from aly_test where c_decimal =20 group by c_decimal]===
 dble:[[(Decimal('20.0000'), '\xe7\xbe\x8e\xe5\x9b\xbd,\xe4\xb8\xad\xe5\x9b\xbd')]]
+===file:bugs/bug.sql, id:195, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:bugs/bug.sql, id:196, sql:[create table aly_test(id int, c_decimal float)]===
+dble:[[]]
+===file:bugs/bug.sql, id:197, sql:[select sum(c_decimal) c_alias from aly_test order by c_alias]===
+dble:[((None,),)]
+===file:bugs/bug.sql, id:198, sql:[select -sum(c_decimal) c_alias from aly_test order by c_alias]===
+dble:[((None,),)]
+===file:bugs/bug.sql, id:199, sql:[select abs(sum(c_decimal)) c_alias from aly_test order by c_alias]===
+dble:[((None,),)]
+===file:bugs/bug.sql, id:200, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:bugs/bug.sql, id:202, sql:[drop table if exists global_table1]===
+dble:[[]]
+===file:bugs/bug.sql, id:203, sql:[drop table if exists global_table2]===
+dble:[[]]
+===file:bugs/bug.sql, id:204, sql:[create table global_table1 (DATANUM int,EXPORT_DATA_FILENAME varchar(50))]===
+dble:[[]]
+===file:bugs/bug.sql, id:205, sql:[create table global_table2(id int)]===
+dble:[[]]
+===file:bugs/bug.sql, id:206, sql:[SELECT tempview1.tablename,tempview1.datanum,tempview2.tablename,tempview2.datanum FROM (SELECT SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1') tablename,SUM(t.DATANUM) datanum FROM global_table1 t GROUP BY SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1')) tempview1,(SELECT 'ctp_user' tablename, COUNT(1) datanum FROM global_table2) tempview2 WHERE tempview1.tablename = tempview2.tablename]===
+dble:[[]]
+===file:bugs/bug.sql, id:207, sql:[drop table if exists global_table1]===
+dble:[[]]
+===file:bugs/bug.sql, id:208, sql:[drop table if exists global_table2]===
+dble:[[]]
+===file:bugs/bug.sql, id:210, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:bugs/bug.sql, id:211, sql:[create table aly_test(id int,c_id int,name varchar(8)) partition by linear key algorithm=2 (id,c_id) partitions 4 (partition p0,partition p1,partition p2,partition p3)]===
+dble:[[]]
+===file:bugs/bug.sql, id:212, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:bugs/bug.sql, id:213, sql:[create table aly_test(id int,c_id int,name varchar(8)) partition by key  algorithm=1(id) partitions 4 (partition p0,partition p1,partition p2,partition p3)]===
+dble:[[]]
+===file:bugs/bug.sql, id:214, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:bugs/bug.sql, id:216, sql:[set session tx_read_only=1]===
+dble:[[]]
+===file:bugs/bug.sql, id:217, sql:[set session tx_read_only=0]===
+dble:[[]]
+===file:bugs/bug.sql, id:219, sql:[drop table if exists three_sharding_t1]===
+dble:[[]]
+===file:bugs/bug.sql, id:220, sql:[create table three_sharding_t1(id int, c binary)]===
+dble:[[]]
+===file:bugs/bug.sql, id:221, sql:[insert into three_sharding_t1 values(1, 0x1),(2,0),(3,null),(4,1),(2,1),(null,0)]===
+dble:[[]]
+===file:bugs/bug.sql, id:222, sql:[select count(distinct id) from three_sharding_t1 group by c]===
+dble:[[(1L,), (1L,), (1L,), (2L,)]]
+===file:bugs/bug.sql, id:223, sql:[select count(distinct c) from three_sharding_t1 group by c]===
+dble:[[(0L,), (1L,), (1L,), (1L,)]]
+===file:bugs/bug.sql, id:224, sql:[select count(distinct id, c) from three_sharding_t1 group by c]===
+dble:[[(0L,), (1L,), (1L,), (2L,)]]
+===file:bugs/bug.sql, id:225, sql:[drop table if exists aly_test]===
+dble:[[]]
+===file:bugs/bug.sql, id:227, sql:[drop table if EXISTS three_sharding_t1]===
+dble:[[]]
+===file:bugs/bug.sql, id:228, sql:[CREATE  table three_sharding_t1(id int)]===
+dble:[[]]
+===file:bugs/bug.sql, id:229, sql:[insert into three_sharding_t1 values(null)]===
+dble:[[]]
+===file:bugs/bug.sql, id:230, sql:[select * from three_sharding_t1 a where a.id is null;]===
+dble:[[(None,)]]
+===file:bugs/bug.sql, id:231, sql:[drop table if EXISTS three_sharding_t1]===
+dble:[[]]
+===file:bugs/bug.sql, id:233, sql:[drop table if exists test_shard;]===
+dble:[[]]
+===file:bugs/bug.sql, id:234, sql:[create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),t datetime,b bool)DEFAULT CHARSET=UTF8;]===
+dble:[[]]
+===file:bugs/bug.sql, id:235, sql:[insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0);]===
+dble:[[]]
+===file:bugs/bug.sql, id:236, sql:[select * from test_shard where exists(select * from test_shard where id=1||id=3)]===
+dble:[[(1L, 1.0, 'a string', datetime.datetime(2012, 12, 31, 11, 30, 45), 0), (2L, 2.0, 'a string', datetime.datetime(2012, 12, 31, 11, 30, 45), 0), (5L, 5.0, 'a string', datetime.datetime(2018, 12, 3, 11, 30, 45), 0)]]
+===file:bugs/bug.sql, id:237, sql:[drop table if exists test_shard;]===
+dble:[[]]
+===file:bugs/bug.sql, id:239, sql:[drop table if exists test_global]===
+dble:[[]]
+===file:bugs/bug.sql, id:240, sql:[create table test_global(id int,name varchar(30),role varchar(30))]===
+dble:[[]]
+===file:bugs/bug.sql, id:241, sql:[/* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view mytest.view_tg as select name,role from mytest.test_global]===
+dble:[[]]
+===file:bugs/bug.sql, id:242, sql:[/* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM mytest */]===
+dble:[[]]
+===file:bugs/bug.sql, id:243, sql:[drop table if exists test_global]===
+dble:[[]]
+===file:bugs/bug.sql, id:244, sql:[drop view if exists view_tg]===
+dble:[[]]

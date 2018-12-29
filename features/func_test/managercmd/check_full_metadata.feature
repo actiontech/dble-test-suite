@@ -1,3 +1,4 @@
+# Created by maofei at 2018/12/21
 Feature: test "check full @@metadata...'"
 
   @regression
@@ -391,3 +392,76 @@ Feature: test "check full @@metadata...'"
       | user | passwd | conn   | toClose | sql                                    | expect   | db     |
       | test | 111111 | conn_0 | True    | drop table if exists test_shard        | success  | mytest |
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | mytest |
+
+  @regression
+  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      """
+      <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">
+      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
+      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="R_REGIONKEY" autoIncrement="true"/>
+      </schema>
+      <dataNode name="dn1" dataHost="host1" database="db1"/>
+      <dataNode name="dn2" dataHost="host1" database="db2"/>
+      <dataNode name="dn3" dataHost="host1" database="db3"/>
+      <dataNode name="dn4" dataHost="host1" database="db4"/>
+      <dataHost balance="0" maxCon="1000" minCon="5" name="host1" switchType="2" slaveThreshold="100">
+      <heartbeat>show slave status</heartbeat>
+      <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
+      </writeHost>
+      </dataHost>
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                               | expect   | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                   | success  | mytest |
+      | test | 111111 | conn_0 | True    | CREATE TABLE test_shard (id BIGINT PRIMARY KEY AUTO_INCREMENT,clientNum CHAR(20) NOT NULL ) | success  | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1),(2,2),(3,3),(4,4),(5,5)  | success  | mytest |
+    Then execute admin cmd "reload @@config_all"
+    Then check following "not" exist in file "dble.log" in "dble-1"
+      """
+      CREATE TABLE `test_shard`
+      """
+    Then execute admin cmd "reload @@metadata"
+    Then check following "not" exist in file "dble.log" in "dble-1"
+      """
+      CREATE TABLE `test_shard`
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+       """
+       <system>
+       <property name="checkTableConsistency">1</property>
+       <property name="checkTableConsistencyPeriod">1000</property>
+       </system>
+       """
+    Given Restart dble in "dble-1" success
+    Then check following "not" exist in file "dble.log" in "dble-1"
+      """
+      CREATE TABLE `test_shard`
+      """
+    Given sleep "1" seconds
+    Then check following "not" exist in file "dble.log" in "dble-1"
+      """
+      CREATE TABLE `test_shard`
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test_shard`}   | mytest |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                               | expect   | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test1                   | success  | mytest |
+      | test | 111111 | conn_0 | True    | create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50)) | success  | mytest |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5)  | success  | mytest |
+    Then execute admin cmd "reload @@config_all"
+    Then check following "not" exist in file "dble.log" in "dble-1"
+      """
+      CREATE TABLE `mytest_auto_test1`
+      """
+    Then execute admin cmd "reload @@metadata"
+    Then check following "not" exist in file "dble.log" in "dble-1"
+      """
+      CREATE TABLE `mytest_auto_test1`
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`mytest_auto_test1`}   | mytest |
