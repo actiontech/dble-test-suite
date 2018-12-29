@@ -25,4 +25,4 @@ cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
 4.Compile and run
 cd /opt/cpp
 g++ *.cpp -l mysqlcppconn -l yaml-cpp
-./a.out
+./a.out "" "/opt/cpp/conf/cfg.yaml" "driver_test_manager.sql"
