@@ -284,7 +284,7 @@ def step_impl(context, filename):
         lines = fp.readlines()
         total_lines = len(lines)
         line_nu = 0
-        default_db = "mytest"
+        default_db = context.cfg_dble['default_db']
         step_len = 1;
         next_line = lines[0].strip()
         for idx in range(0, total_lines):
