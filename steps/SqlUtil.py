@@ -244,6 +244,9 @@ def turn_on_general_log(context, shardings, user, passwd):
         node = get_node(context.mysqls, ip)
         conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
 
+        res, err = conn.query("set global log_output='file'")
+        assert err is None, "get general log file fail for {0}".format(err[1])
+
         res, err = conn.query("set global general_log=off")
         assert err is None, "set general log off fail for {0}".format(err[1])
 
