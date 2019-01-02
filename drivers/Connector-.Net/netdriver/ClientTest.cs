@@ -18,7 +18,7 @@ namespace netdriver
             {
                 for (int i = 0; i < Csqlfiles.Count; i++)
                 {
-                    //获取需要执行的sql文件名,生成对应的log文件
+                    //create log files as per the name of sql file
                     String sqlpath = Csqlfiles[i];
                     String sqlfilename = Path.GetFileNameWithoutExtension(sqlpath);
                     String passlogname = sqlfilename + "_pass.log";
@@ -27,11 +27,11 @@ namespace netdriver
                     String[] logfiles = CreateFile.CreateFiles(logpath, logfilenames);
 
                     SetUp.IniFile("test1.txt");
-                    //执行sql,比对结果并写入文件
+                    //excute the sqls, compare and write the results to log files
                     ExecuteClient.Execute(Csqlfiles[i], logfiles, dbleconn, mysqlconn);
                     CleanUp.Rmfile("test1.txt");
                 }
-                //关闭数据库链接
+                //close db connections
                 CleanUp.CloseConnection(dbleconn);
                 CleanUp.CloseConnection(mysqlconn);
             }

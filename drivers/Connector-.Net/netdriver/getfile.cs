@@ -11,7 +11,7 @@ namespace netdriver
     {
         public static List<String> GetFiles(String[] filepath)
         {
-            //文件存在
+            //if file exists
             List<String> files = new List<String>();
             for (int i = 0; i < filepath.Length; i++)
             {

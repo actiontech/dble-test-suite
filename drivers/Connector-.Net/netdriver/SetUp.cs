@@ -24,7 +24,7 @@ namespace netdriver
             try
             {
                 var fileHanlder = File.Create(path);
-                fileHanlder.Close();//释放文件句柄
+                fileHanlder.Close();//release the file handle
             }
             catch (Exception fe)
             {

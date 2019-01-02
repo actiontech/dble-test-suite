@@ -26,6 +26,7 @@ namespace netdriver
                 catch(IOException ioe)
                 {
                     Console.WriteLine(ioe.Message);
+                    Environment.Exit(-1);
                 }  
             }
         }
@@ -41,6 +42,7 @@ namespace netdriver
                 catch (IOException e) {
                     Console.WriteLine(e.ToString());
                     Console.WriteLine("Close " + sr + " failed！");
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -56,6 +58,7 @@ namespace netdriver
                 {
                     Console.WriteLine(e.ToString());
                     Console.WriteLine("Close " + sw + " failed！");
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -72,6 +75,7 @@ namespace netdriver
                 {
                     Console.WriteLine(e.ToString());
                     Console.WriteLine("Close " + conn + " failed！");
+                    Environment.Exit(-1);
                 }
             }
         }
