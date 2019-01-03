@@ -40,17 +40,12 @@ namespace netdriver
 
             try
             {
-                failsw = new StreamWriter(logfiles[1].ToString(), true);
+                failsw = new StreamWriter(logfiles[1], true);
             }
             catch (IOException ioe)
             {
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamWriter(failsw);
-            }
-
-            if ((sr == null) || (passsw == null) || (failsw == null))
-            {
-                return;
             }
 
             while ((line = sr.ReadLine()) != null){
@@ -85,6 +80,11 @@ namespace netdriver
                     try
                     {
                         MySqlCommand cmd = new MySqlCommand(line, dblemanagerconn);
+                        if (dblemanagerconn.State != System.Data.ConnectionState.Open)
+                        {
+                            dblemanagerconn.Open();
+                        }
+
                         MySqlDataReader rdr = cmd.ExecuteReader();
                             while (rdr.Read())
                             {

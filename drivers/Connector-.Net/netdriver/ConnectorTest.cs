@@ -49,7 +49,7 @@ namespace netdriver
                 dbleconnStr = "server="+ cfg.dble_server + ";user=" + cfg.dble_user + ";database=" + cfg.db + ";port=" + cfg.dble_port + ";password=" + cfg.dble_password + ";Charset=utf8";
                 dblemanagerconnStr = "server=" + cfg.dbleM_server + ";user=" + cfg.dbleM_user + ";port=" + cfg.dbleM_port + ";password=" + cfg.dbleM_password + ";Charset=utf8";
                 mysqlconnStr = "server=" + cfg.mysql_server + ";user=" + cfg.mysql_user + ";database=" + cfg.db + ";port=" + cfg.mysql_port + ";password=" + cfg.mysql_password + ";Charset=utf8";
-
+                //cfg.sqlpath = "sql_cover";
                 String Msqlpath = Path.Combine(curpath, cfg.sqlpath, args[2]);
                 String Csqlpath = Path.Combine(curpath, cfg.sqlpath, args[3]);
                 Msqlfile = new String[] { Msqlpath };

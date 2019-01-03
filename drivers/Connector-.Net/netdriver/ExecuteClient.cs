@@ -42,17 +42,13 @@ namespace netdriver
 
             try
             {
-                failsw = new StreamWriter(logfiles[1].ToString(), true);
+                failsw = new StreamWriter(logfiles[1], true);
             }
             catch (IOException ioe)
             {
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamWriter(failsw);
                 Environment.Exit(-1);
-            }
-            if ((sr == null) || (passsw == null) || (failsw == null))
-            {
-                return;
             }
 
             while ((line = sr.ReadLine()) != null)
@@ -73,6 +69,10 @@ namespace netdriver
                     {
 
                         MySqlCommand dblecmd = new MySqlCommand(line, dbleconn);
+                        if (dbleconn.State != System.Data.ConnectionState.Open) {
+                            dbleconn.Open();
+                        }
+                            
 
                         if (line.Contains("insert") || line.Contains("update") || line.Contains("delete"))
                         {
@@ -161,6 +161,11 @@ namespace netdriver
                     {
 
                         MySqlCommand mysqlcmd = new MySqlCommand(line, mysqlconn);
+                        if (mysqlconn.State != System.Data.ConnectionState.Open)
+                        {
+                            mysqlconn.Open();
+                        }
+
                         if (line.Contains("insert") || line.Contains("update") || line.Contains("delete"))
                         {
                             int count = mysqlcmd.ExecuteNonQuery();

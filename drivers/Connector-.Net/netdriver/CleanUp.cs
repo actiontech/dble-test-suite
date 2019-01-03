@@ -14,7 +14,8 @@ namespace netdriver
         public static void Rmfile(String filename)
         {
             String curpath = Environment.CurrentDirectory;
-            String path = curpath + "\\" + filename;
+            //String path = curpath + "\\" + filename;
+            String path = Path.Combine(curpath, filename);
             if (File.Exists(path))
             {
 
