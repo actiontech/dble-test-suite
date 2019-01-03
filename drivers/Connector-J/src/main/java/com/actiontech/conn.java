@@ -12,23 +12,24 @@ public class conn {
             Class.forName("com.mysql.jdbc.Driver");
             conn = DriverManager.getConnection(dbURL, userName, userPwd);
             System.out.println("Connection Successful!");
-            return conn;
+            //return conn;
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
+            //e.printStackTrace();
+            System.exit(-1);
         } catch (SQLException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
             System.out.println(e.getMessage());
             try {
                 if (conn != null) {
                     conn.close();
                     conn = null;
+                    System.exit(-1);
                 }
             } catch (SQLException ce){
-                ce.printStackTrace();
-                return null;
+                //ce.printStackTrace();
+                System.exit(-1);
             }
         }
-        return null;
+        return conn;
     }
 }

@@ -21,8 +21,8 @@ public class cleanUp {
                 fw.close();
 
             } catch (Exception fe) {
-                fe.printStackTrace();
-                System.out.println("关闭：" + fw + "失败！");
+                //fe.printStackTrace();
+                System.out.println("close：" + fw + "failed！");
             }
         }
         fw = null;
@@ -35,7 +35,7 @@ public class cleanUp {
 
             } catch (Exception fe) {
                 fe.printStackTrace();
-                System.out.println("关闭：" + bw + "失败！");
+                System.out.println("close：" + bw + "failed！");
             }
         }
         bw = null;
@@ -48,7 +48,7 @@ public class cleanUp {
 
             } catch (Exception fe) {
                 fe.printStackTrace();
-                System.out.println("关闭：" + fr + "失败！");
+                System.out.println("close：" + fr + "failed！");
             }
         }
         fr = null;
@@ -61,7 +61,7 @@ public class cleanUp {
 
             } catch (Exception fe) {
                 fe.printStackTrace();
-                System.out.println("关闭：" + br + "失败！");
+                System.out.println("close：" + br + "failed！");
             }
         }
         br = null;
@@ -74,7 +74,7 @@ public class cleanUp {
 
             } catch (Exception fe) {
                 fe.printStackTrace();
-                System.out.println("关闭：" + conn + "失败！");
+                System.out.println("close：" + conn + "failed！");
             }
         }
         conn = null;
@@ -87,7 +87,7 @@ public class cleanUp {
 
             } catch (Exception fe) {
                 fe.printStackTrace();
-                System.out.println("关闭：" + stmt + "失败！");
+                System.out.println("close：" + stmt + "failed！");
             }
         }
         stmt = null;

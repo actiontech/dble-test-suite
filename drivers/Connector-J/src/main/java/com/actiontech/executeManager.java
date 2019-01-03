@@ -7,8 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 public class executeManager {
-    public static void execute(String rtPath_value, String sqPath_value, Statement dblemanagerstmt){
-        //创建新的文件夹
+    public static void execute(String rtPath_value, String sqPath_value, Statement dblemanagerstmt) {
         long currentTime = System.currentTimeMillis();
         String tst = String.valueOf(currentTime);
         String cfilepath = rtPath_value + "\\" + tst;
@@ -21,7 +20,7 @@ public class executeManager {
         String sqlfile_fail = sqlfilename + "_fail.log";
         String[] rsfiles = {sqlfile_pass, sqlfile_fail};
         ArrayList<String> rspaths = com.actiontech.createFileUtil.createFile(cfilepath, rsfiles);
-        //打开log文件
+
         FileWriter passfw = null;
         BufferedWriter passbw = null;
         FileWriter failfw = null;
@@ -35,8 +34,8 @@ public class executeManager {
         } catch (Exception fe) {
             fe.printStackTrace();
             logwritererr = true;
-        }finally {
-            if(logwritererr == true){
+        } finally {
+            if (logwritererr == true) {
                 cleanUp.closeBufferedWriter(failbw);
                 cleanUp.closeFileWriter(failfw);
                 cleanUp.closeBufferedWriter(passbw);
@@ -45,7 +44,6 @@ public class executeManager {
             }
         }
 
-        //循环执行sql文件内的语句
         FileReader fr = null;
         BufferedReader br = null;
         boolean sqlfileReaderErr = false;
@@ -61,23 +59,20 @@ public class executeManager {
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("#") == false) {
                         String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
-                        //dble执行sql
-                        //判断语句类型，按不同函数执行 todo 大小写
                         ArrayList<String> dblerslist = new ArrayList<String>();
-                        //sql转化为小写
                         line = line.toLowerCase();
                         try {
-                            if (line.startsWith("select")|| line.startsWith("show")|| line.startsWith("check")) {
+                            if (line.startsWith("select") || line.startsWith("show") || line.startsWith("check")) {
                                 ResultSet dblers = dblemanagerstmt.executeQuery(line);
                                 dblerslist = publicFunc.convertList(dblers);
-                                String passstr = dblerslist.toString() + "\r\n" ;
+                                String passstr = dblerslist.toString() + "\r\n";
                                 passbw.write(exec);
                                 passbw.write(passstr);
                             } else {
                                 boolean dbleboolean = dblemanagerstmt.execute(line);
                                 String dbleboolstr = String.valueOf(dbleboolean);
                                 dblerslist.add(dbleboolstr);
-                                String passstr = dblerslist.toString() + "\r\n" ;
+                                String passstr = dblerslist.toString() + "\r\n";
                                 passbw.write(exec);
                                 passbw.write(passstr);
                             }
@@ -85,7 +80,7 @@ public class executeManager {
                             e.printStackTrace();
                             String dbleErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             dblerslist.add(dbleErrorMsg);
-                            String failstr = dblerslist + "\r\n" ;
+                            String failstr = dblerslist + "\r\n";
                             failbw.write(exec);
                             failbw.write(failstr);
                         }
@@ -99,12 +94,10 @@ public class executeManager {
             fe.printStackTrace();
             sqlfileReaderErr = true;
         } finally {
-            //关闭sql文件读取流
             cleanUp.closeBufferedReader(br);
             cleanUp.closeFileReader(fr);
         }
 
-        // 关闭打开的流
         cleanUp.closeBufferedWriter(failbw);
         cleanUp.closeFileWriter(failfw);
         cleanUp.closeBufferedWriter(passbw);

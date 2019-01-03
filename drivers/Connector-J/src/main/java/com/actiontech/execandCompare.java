@@ -10,7 +10,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 public class execandCompare {
 
     public static void execandCompare(String rtPath_value, String sqPath_value, Statement dblestmt, Statement mysqlstmt) {
-        //创建新的文件夹
+        //create directory
         long currentTime = System.currentTimeMillis();
         String tst = String.valueOf(currentTime);
         String cfilepath = rtPath_value + "\\" + tst;
@@ -23,9 +23,9 @@ public class execandCompare {
         String sqlfile_fail = sqlfilename + "_fail.log";
         String[] rsfiles = {sqlfile_pass, sqlfile_fail};
         ArrayList<String> rspaths = com.actiontech.createFileUtil.createFile(cfilepath, rsfiles);
-        //创建load临时文件
+
         com.actiontech.setUp.iniFile("test1.txt");
-        //打开log文件
+
         FileWriter passfw = null;
         BufferedWriter passbw = null;
         FileWriter failfw = null;
@@ -44,12 +44,11 @@ public class execandCompare {
                 cleanUp.closeBufferedWriter(failbw);
                 cleanUp.closeFileWriter(failfw);
                 cleanUp.closeBufferedWriter(passbw);
-                cleanUp.closeFileWriter(failfw);
+                cleanUp.closeFileWriter(passfw);
                 return;
             }
         }
 
-        //循环执行sql文件内的语句
         FileReader fr = null;
         BufferedReader br = null;
         boolean sqlfileReaderErr = false;
@@ -64,13 +63,11 @@ public class execandCompare {
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("#") == false) {
                         String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
-                        //dble执行sql
-                        //判断语句类型，按不同函数执行 todo 大小写
+                        //dble
                         ArrayList<String> dblerslist = new ArrayList<String>();
-                        //sql转化为小写
                         line = line.toLowerCase();
                         try {
-                            if (line.startsWith("select")) {
+                            if (line.startsWith("select")||line.startsWith("show")) {
                                 ResultSet dblers = dblestmt.executeQuery(line);
                                 dblerslist = publicFunc.convertList(dblers);
                             } else if (line.startsWith("update") || line.startsWith("insert") || line.startsWith("delete")) {
@@ -83,12 +80,11 @@ public class execandCompare {
                                 dblerslist.add(dbleboolstr);
                             }
                         } catch (SQLException e) {
-                            e.printStackTrace();
-                            //String dbleErrorMsg = e.getErrorCode() + e.getMessage();
+                            //e.printStackTrace();
                             String dbleErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             dblerslist.add(dbleErrorMsg);
                         }
-                        //mysql执行sql
+                        //mysql
                         ArrayList<String> mysqlrslist = new ArrayList<String>();
                         try {
                             if (line.startsWith("select")) {
@@ -102,24 +98,21 @@ public class execandCompare {
                                 boolean mysqlboolean = mysqlstmt.execute(line);
                                 String mysqlboolstr = String.valueOf(mysqlboolean);
                                 mysqlrslist.add(mysqlboolstr);
-                            }
+                                }
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                             String mysqlErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             mysqlrslist.add(mysqlErrorMsg);
                         }
-                        //比较结果集及错误是否一致，不一致写入fai.logl文件，一致写入pass.log
+                        //compare the ResultSet
                         boolean same;
                         same = compare.compareList(dblerslist, mysqlrslist);
                         if (same) {
                             passbw.write(exec);
-                            //String passstr = String.join(",", dblerslist);
                             String passstr = dblerslist.toString() + "\r\n";
                             passbw.write(passstr);
                         } else {
                             failbw.write(exec);
-                            //String dblefailstr = String.join(",", dblerslist);
-                            //String mysqlfailstr = String.join(",", mysqlrslist);
                             String dblefailstr = dblerslist.toString();
                             String mysqlfailstr = mysqlrslist.toString();
                             String failstr = "dble: " + dblefailstr + "\r\nmysql: " + mysqlfailstr + "\r\n";
@@ -136,16 +129,14 @@ public class execandCompare {
             fe.printStackTrace();
             sqlfileReaderErr = true;
         } finally {
-            //关闭sql文件读取流
             cleanUp.closeBufferedReader(br);
             cleanUp.closeFileReader(fr);
         }
 
-        // 关闭打开的流
         cleanUp.closeBufferedWriter(failbw);
         cleanUp.closeFileWriter(failfw);
         cleanUp.closeBufferedWriter(passbw);
-        cleanUp.closeFileWriter(failfw);
+        cleanUp.closeFileWriter(passfw);
     }
 }
 
