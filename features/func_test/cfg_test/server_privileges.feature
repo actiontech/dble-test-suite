@@ -2,7 +2,7 @@ Feature:test user's privileges under different combination
   dml:xxxx in order "insert,update,select,delete"
 
   @regression
-  Scenario: config privileges, including exist schema, different privileges, not exist schema,reload success #5
+  Scenario: config privileges, including exist schema, different privileges, not exist schema,reload success #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="testdb" sqlMaxLimit="100"></schema>
@@ -56,7 +56,7 @@ Feature:test user's privileges under different combination
         | test      | 111111        | conn_0 | True    | drop table if exists test_table                    | success        | mytest|
 
   @smoke
-  Scenario: check user privileges work right under check=true setting, including:
+  Scenario: check user privileges work right under check=true setting, including: #2
   tables' explict privileges prior to schema's,
   one client users' privileges not affected by others,
   tables have no explict privileges use schema's privilege,
@@ -215,7 +215,7 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | True    | drop table testdb.test4      | success |      |
 
   @regression
-  Scenario: check user privileges work right under check=false setting
+  Scenario: check user privileges work right under check=false setting #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
@@ -261,7 +261,7 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | True    | drop table aly_order                            | success |      |
 
   @regression @current
-  Scenario: config only schema level privileges, tables in the schema privileges will inherit it
+  Scenario: config only schema level privileges, tables in the schema privileges will inherit it #5
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table dataNode="dn1,dn2,dn3,dn4" name="schema_permission" rule="hash-four"/>
@@ -322,7 +322,7 @@ Feature:test user's privileges under different combination
       | testF | testF    | mytest | 1000  | schema_permission |
 
   @smoke
-  Scenario: mix privilege config: readonly + schema
+  Scenario: mix privilege config: readonly + schema #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="readonly_schema1">
@@ -373,7 +373,7 @@ Feature:test user's privileges under different combination
     Then execute admin cmd "reload @@config_all"
 
   @regression
-  Scenario: config both table and schema privileges, table's privilege prior to schema's
+  Scenario: config both table and schema privileges, table's privilege prior to schema's #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="schema_table1">
