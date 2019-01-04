@@ -51,7 +51,7 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     Then execute admin cmd "reload @@config_all"
 
   @regression
-  Scenario: config NumberRange sharding will relaod success #3
+  Scenario: config NumberRange sharding will reload success #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <function class="NumberRange" name="rule_func1">

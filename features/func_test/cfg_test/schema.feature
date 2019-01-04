@@ -15,7 +15,7 @@ Feature: schema basic config test
     Then execute admin cmd "reload @@config_all"
 
   @regression
-  Scenario: config with no use datanode (has counter-part datahost), expect reload success but at present fail, config no use datahost reload success #3
+  Scenario: config with no use datanode (has no counter-part datahost), expect reload success but at present fail, config no use datahost reload success #2
     #schema.xml only has dataNodes,  dble starts successful,
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -41,7 +41,7 @@ Feature: schema basic config test
     """
     Given Restart dble in "dble-1" success
 
-  Scenario: when config file contains illegal label<test/>, reload fail #4
+  Scenario: when config file contains illegal label<test/>, reload fail #3
     Given add xml segment to node with attribute "{'tag':'root','prev': 'dataHost'}" in "schema.xml"
     """
         <test>
@@ -52,7 +52,7 @@ Feature: schema basic config test
     Reload config failure
     """
   @smoke
-  Scenario: config <dataNode> with "$" preseting range, reload success #5
+  Scenario: config <dataNode> with "$" preseting range, reload success #4
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -76,7 +76,7 @@ Feature: schema basic config test
      | test | 111111 | conn_0 | False    | drop table if exists test   | success | mytest |
      | test | 111111 | conn_0 | True     | create table test(id int)    | success | mytest |
 
-  Scenario: config readhost xml node closed with none abbr mode, expect reload success, but fail at present #6
+  Scenario: config readhost xml node closed with none abbr mode, expect reload success, but fail at present #5
     Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
     """
     <readHost host="hostM1" password="111111" url="172.100.9.2:3306" user="test">
@@ -87,7 +87,7 @@ Feature: schema basic config test
     """
     Reload config failure
     """
-  Scenario:.when <readHost> put outside <wirteHost>, reload fail #7
+  Scenario:.when <readHost> put outside <wirteHost>, reload fail #6
     Given add xml segment to node with attribute "{'tag':'dataHost'}" in "schema.xml"
     """
     <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
@@ -97,7 +97,7 @@ Feature: schema basic config test
     Reload config failure
     """
   @regression
-  Scenario: config table sharding rule not defined in rule.xml, reload fail #8
+  Scenario: config table sharding rule not defined in rule.xml, reload fail #7
     Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
     """
     <table dataNode="dn1,dn2" name="test" rule="sharding-test" />

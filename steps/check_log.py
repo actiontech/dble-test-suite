@@ -10,9 +10,9 @@ from lib.Node import get_node, get_ssh
 from steps.step_check_sql import get_log_linenu, get_full_log_path
 from steps.step_function import update_file_content
 
-@Then('check "{logfile}" in "{hostname}" has the warnings in resultset "{rs_name}"')
-def step_impl(context,hostname, logfile, rs_name):
-    rs = getattr(context, rs_name)
+@Then('check "{logfile}" in "{hostname}" has the warnings')
+def step_impl(context,hostname, logfile):
+    rs = context.table
 
     logpath = "{0}/dble/logs/{1}".format(context.cfg_dble['install_dir'], logfile)
     cmd = "cat {0}".format(logpath)

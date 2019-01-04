@@ -6,7 +6,7 @@ Feature: set charset in server.xml,check backend charsets are as set
   but verify the default value here for convenient.
 
   @smoke
-  Scenario: set dble config to test what will happen to backend connection if they are same or different #1
+  Scenario: set dble config charset same or different to session charset, session charset priorier to config charset #1
     #   1.1 set backend charset utf8, front charset utf8;
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
