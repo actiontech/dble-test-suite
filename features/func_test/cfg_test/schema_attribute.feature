@@ -1,7 +1,7 @@
 Feature: test some import nodes attr in schema.xml
 
   @smoke
-  Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=true" #2
+  Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=true" #1
     Given delete the following xml segment
       |file         | parent           | child                 |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -37,8 +37,11 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose  | sql                         | expect      | db     |
-    | test | 111111 | conn_0 | True     | select * from test_table    | length{(5)} | mytest |
+        | user | passwd | conn   | toClose  | sql                                             | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists test_table                 | success | mytest |
+        | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | mytest |
+        | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | mytest |
+        | test | 111111 | conn_0 | True     | select * from test_table    | length{(5)} | mytest |
 
   @regression
   Scenario: config "table" node attr "name" with multiple values #3
@@ -125,7 +128,7 @@ Feature: test some import nodes attr in schema.xml
     """
 
   @regression
-  Scenario: config "table" node attr "primaryKey" is coincidence with table's real primary key #5
+  Scenario: config "table" node attr "primaryKey" is coincidence with table's real primary key #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="hash-two" />
@@ -148,7 +151,7 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`mytest`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
   @regression
-  Scenario: config "table" node attr "primaryKey" is not coincidence with table's real primary key #5
+  Scenario: config "table" node attr "primaryKey" is not coincidence with table's real primary key #7
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="name" rule="hash-two" />

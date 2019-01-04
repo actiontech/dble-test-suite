@@ -16,7 +16,7 @@ Feature: test config in server.xml
     """
 
   @regression
-  Scenario: add client user with schema which does not exist, start dble fail #3
+  Scenario: add client user with schema which does not exist, start dble fail #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <user name="test_user3">
@@ -30,7 +30,7 @@ Feature: test config in server.xml
      """
 
   @smoke
-  Scenario: add client user with usingDecrypt=1, start/reload success, query success #4
+  Scenario: add client user with usingDecrypt=1, start/reload success, query success #3
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">
@@ -46,14 +46,14 @@ Feature: test config in server.xml
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
   @regression
-  Scenario: config server.xml with only <user> node, start dble success #5
+  Scenario: config server.xml with only <user> node, start dble success #4
     Given delete the following xml segment
       |file        | parent           | child            |
       |server.xml  | {'tag':'root'}   | {'tag':'system'} |
     Given Restart dble in "dble-1" success
 
 
-  Scenario: both single & multiple manager user reload and do management cmd success #6
+  Scenario: both single & multiple manager user reload and do management cmd success #5
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -67,7 +67,7 @@ Feature: test config in server.xml
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
   @regression
-  Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #8
+  Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #6
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -98,7 +98,7 @@ Feature: test config in server.xml
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
 
   @regression
-  Scenario: config sql blacklist #10
+  Scenario: config sql blacklist #7
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -181,7 +181,7 @@ Feature: test config in server.xml
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
   @regression
-  Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #11
+  Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
       <user name="root">
@@ -215,7 +215,7 @@ Feature: test config in server.xml
         | root         | 111111    | new    | False   | show @@version | Access denied for user 'root',too many connections for this user | mytest |
 
   @regression
-  Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #12
+  Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
       <user name="root">
@@ -243,7 +243,7 @@ Feature: test config in server.xml
         | action       | action    | conn_7 | False   | select 1 | success | mytest |
 
   @regression
-  Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #12
+  Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #10
     Given delete the following xml segment
       |file        | parent           | child          |
       |server.xml  | {'tag':'root'}   | {'tag':'root'} |

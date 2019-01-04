@@ -108,7 +108,7 @@ Feature: schema basic config test
     """
 
   @smoke
-  Scenario:github issue 598-636,database configed for datanode is not created and the datanode is not used by any table #9
+  Scenario:github issue 598-636,database configed for datanode is not created and the datanode is not used by any table #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
