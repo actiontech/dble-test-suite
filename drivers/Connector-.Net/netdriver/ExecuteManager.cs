@@ -12,7 +12,7 @@ namespace netdriver
     {
         public static void Execute(String sqlfile,String[] logfiles, MySqlConnection dblemanagerconn)
         {
-            //读取文件，循环执行sql
+            //excute the sqls one by one
             int idNum = 1;
             string line;
             StreamReader sr = null;
@@ -27,7 +27,7 @@ namespace netdriver
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamReader(sr);
             }
-            //打开log文件
+            //open log files
             try
             {
                 passsw = new StreamWriter(logfiles[0], true);
@@ -40,17 +40,12 @@ namespace netdriver
 
             try
             {
-                failsw = new StreamWriter(logfiles[1].ToString(), true);
+                failsw = new StreamWriter(logfiles[1], true);
             }
             catch (IOException ioe)
             {
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamWriter(failsw);
-            }
-
-            if ((sr == null) || (passsw == null) || (failsw == null))
-            {
-                return;
             }
 
             while ((line = sr.ReadLine()) != null){
@@ -85,6 +80,11 @@ namespace netdriver
                     try
                     {
                         MySqlCommand cmd = new MySqlCommand(line, dblemanagerconn);
+                        if (dblemanagerconn.State != System.Data.ConnectionState.Open)
+                        {
+                            dblemanagerconn.Open();
+                        }
+
                         MySqlDataReader rdr = cmd.ExecuteReader();
                             while (rdr.Read())
                             {
@@ -138,7 +138,7 @@ namespace netdriver
                         }
                         rdr.Close();
 
-                        //写入log
+                        //write to logs
                         passsw.WriteLine(exec);
                         String listStr = ResultConvert.CovertListToString(dblerslist);
                         passsw.WriteLine("dble: ["+listStr+"]");
@@ -154,7 +154,7 @@ namespace netdriver
                 }
                 idNum++;
             }
-            //关闭打开的流
+            //close the opened iostream
             CleanUp.CloseStreamWriter(failsw);
             CleanUp.CloseStreamWriter(passsw);
             CleanUp.CloseStreamReader(sr);

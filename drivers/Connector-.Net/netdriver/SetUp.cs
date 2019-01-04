@@ -15,7 +15,8 @@ namespace netdriver
             String[] datalist = { "10,10,'Vicky',10", "11,11,'刘家',11" };
             //create file
             String curpath = Environment.CurrentDirectory;
-            String path = curpath + "\\" + filename;
+            //String path = curpath + "\\" + filename;
+            String path = Path.Combine(curpath, filename);
             //File loadfile = new File(path);
             if (File.Exists(path))
             {
@@ -24,7 +25,7 @@ namespace netdriver
             try
             {
                 var fileHanlder = File.Create(path);
-                fileHanlder.Close();//释放文件句柄
+                fileHanlder.Close();//release the file handle
             }
             catch (Exception fe)
             {

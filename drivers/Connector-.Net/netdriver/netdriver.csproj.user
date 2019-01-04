@@ -15,5 +15,6 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|AnyCPU'">
     <EnableUnmanagedDebugging>true</EnableUnmanagedDebugging>
+    <StartArguments>"test" "D:\autotest\dble\dble\conf\\auto_dble_test.yaml" "driver_test_manager.sql" "driver_test_client.sql"</StartArguments>
   </PropertyGroup>
 </Project>

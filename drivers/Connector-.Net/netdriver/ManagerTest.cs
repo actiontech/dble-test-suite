@@ -17,7 +17,7 @@ namespace netdriver
             {
                 for (int i = 0; i < Msqlfiles.Count; i++)
                 {
-                    //获取需要执行的sql文件名,生成对应的log文件
+                    //create log files as per the name of sql file
                     String sqlpath = Msqlfiles[i];
                     String sqlfilename = Path.GetFileNameWithoutExtension(sqlpath);
                     String passlogname = sqlfilename + "_pass.log";
@@ -27,7 +27,7 @@ namespace netdriver
 
                     ExecuteManager.Execute(Msqlfiles[i], logfiles, dblemanagerconn);
                 }
-                //关闭数据库链接
+                //close db connection
                 CleanUp.CloseConnection(dblemanagerconn);
             }
         }

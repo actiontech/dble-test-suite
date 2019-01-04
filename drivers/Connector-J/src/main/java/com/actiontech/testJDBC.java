@@ -1,6 +1,7 @@
 package com.actiontech;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mysql.jdbc.MySQLConnection;
 
 import java.sql.*;
 import java.io.*;
@@ -10,45 +11,44 @@ import java.util.*;
 public class testJDBC {
 
     public static void main(String[] args) {
-        //获取配置文件路径
-        String config_path = "D:\\Jconnector\\src\\configs.yaml";
-        Object cfg_path = com.actiontech.yamlParser.getConfig(config_path, "cfg_path");
-        // object -> Map
-        ObjectMapper oMapper = new ObjectMapper();
-        Map<String, Object> path = oMapper.convertValue(cfg_path, Map.class);
-        Object yaml_path = path.get("yaml_path");
-        String ylPath_value = yaml_path.toString();
-        Object result_path = path.get("result_path");
-        String rtPath_value = result_path.toString();
-        Object sqlfile_path = path.get("sqlfile_path");
-        String sqPath_value = sqlfile_path.toString();
+        String dbleURL;
+        String dblemanagerURL;
+        String mysqlURL;
+        String sqlfile;
+        String dblemanageruserName;
+        String dblemanageruserPwd;
+        String dbleuserName;
+        String dbleuserPwd;
+        String msqluserName;
+        String mysqluserPwd;
+        String logpath = System.getProperty("user.dir");
+        if (args[0].equals("test")){
+            dbleURL = "jdbc:mysql://10.186.60.61:7131/mytest?characterEncoding=utf8";
+            dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/mytest?characterEncoding=utf8";
+            mysqlURL = "jdbc:mysql://10.186.60.61:7144/mytest?characterEncoding=utf8";
+            sqlfile = "D:\\Jconnector\\sql_cover\\driver_test_client.sql";
+            dblemanageruserName = "root";
+            dblemanageruserPwd = "111111";
+            dbleuserName = "test";
+            dbleuserPwd = "111111";
+            msqluserName = "test";
+            mysqluserPwd = "111111";
+        }else{
+            Config cfg = com.actiontech.yamlParser.getConfig(args[1]);
+            dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8";
+            dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8";
+            mysqlURL = "jdbc:mysql://" + cfg.mysql_server + ":" + cfg.mysql_port + "/" + cfg.db + "?characterEncoding=utf8";
+            sqlfile = System.getProperty("user.dir") + cfg.sqlpath + "/" + args[2];
+            dblemanageruserName = cfg.dbleM_user;
+            dblemanageruserPwd = cfg.dbleM_password;
+            dbleuserName = cfg.dble_user;
+            dbleuserPwd = cfg.dble_password;
+            msqluserName = cfg.mysql_user;
+            mysqluserPwd = cfg.mysql_password;
+        }
 
-        //获取dble链接参数
-        Object cfg_dble = com.actiontech.yamlParser.getConfig(ylPath_value, "cfg_dble");
-        ObjectMapper oMapperdble = new ObjectMapper();
-        Map<String, Object> cdble = oMapperdble.convertValue(cfg_dble, Map.class);
-        Object client_user = cdble.get("client_user");
-        String dbleuserName = client_user.toString();
-        Object client_password = cdble.get("client_password");
-        String dbleuserPwd = client_password.toString();
-        String dbleURL = "jdbc:mysql://10.186.60.61:7131/mytest?characterEncoding=utf8";
-        //manager
-        Object manager_user = cdble.get("manager_user");
-        String dblemanageruserName = manager_user.toString();
-        Object manager_password = cdble.get("manager_password");
-        String dblemanageruserPwd = manager_password.toString();
-        String dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/mytest?characterEncoding=utf8";
 
-        //获取mysql链接参数
-        Object cfg_mysql = com.actiontech.yamlParser.getConfig(ylPath_value, "cfg_mysql");
-        ObjectMapper oMappermysql = new ObjectMapper();
-        Map<String, Object> cmysql = oMappermysql.convertValue(cfg_mysql, Map.class);
-        Object user = cmysql.get("user");
-        Object password = cmysql.get("password");
-        String msqluserName = user.toString();
-        String mysqluserPwd = password.toString();
-        String mysqlURL = "jdbc:mysql://10.186.60.61:7144/mytest?characterEncoding=utf8";
-        if (sqPath_value.contains("manager")) {
+        if (sqlfile.contains("manager")) {
             Connection dblemanagerconn = null;
             dblemanagerconn = conn.DBconn(dblemanagerURL, dblemanageruserName, dblemanageruserPwd);
             if (dblemanagerconn != null) {
@@ -57,17 +57,17 @@ public class testJDBC {
                 try {
                     dblemanagerstmt = dblemanagerconn.createStatement();
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    System.out.println("dble创建statement失败");
+                    //e.printStackTrace();
+                    System.out.println("dble create statement failed!");
                     stmterr = true;
                 } finally {
                     if (stmterr == true) {
                         cleanUp.closeStmt(dblemanagerstmt);
                         cleanUp.closeConn(dblemanagerconn);
-                        return;
+                        System.exit(-1);
                     }
                 }
-                com.actiontech.executeManager.execute(rtPath_value, sqPath_value, dblemanagerstmt);
+                com.actiontech.executeManager.execute(logpath, sqlfile, dblemanagerstmt);
                 //关闭statement链接
                 cleanUp.closeStmt(dblemanagerstmt);
                 cleanUp.closeConn(dblemanagerconn);
@@ -85,22 +85,22 @@ public class testJDBC {
                 try {
                     dblestmt = dbleconn.createStatement();
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    System.out.println("dble创建statement失败");
+                    //e.printStackTrace();
+                    System.out.println("dble create statement failed!");
                     dblestmterr = true;
                 } finally {
                     if (dblestmterr == true) {
                         cleanUp.closeStmt(dblestmt);
                         cleanUp.closeConn(mysqlconn);
                         cleanUp.closeConn(dbleconn);
-                        return;
+                        System.exit(-1);
                     }
                 }
                 try {
                     mysqlstmt = mysqlconn.createStatement();
                 } catch (SQLException e) {
-                    e.printStackTrace();
-                    System.out.println("mysql创建statement失败");
+                    //e.printStackTrace();
+                    System.out.println("mysql create statement failed!");
                     mysqlstmterr = true;
                 } finally {
                     if (mysqlstmterr == true) {
@@ -108,16 +108,17 @@ public class testJDBC {
                         cleanUp.closeStmt(dblestmt);
                         cleanUp.closeConn(mysqlconn);
                         cleanUp.closeConn(dbleconn);
-                        return;
+                        System.exit(-1);
                     }
                 }
-                com.actiontech.execandCompare.execandCompare(rtPath_value, sqPath_value, dblestmt, mysqlstmt);
-                //关闭statement链接及connection链接
+                com.actiontech.execandCompare.execandCompare(logpath, sqlfile, dblestmt, mysqlstmt);
+
                 cleanUp.closeStmt(mysqlstmt);
                 cleanUp.closeStmt(dblestmt);
                 cleanUp.closeConn(mysqlconn);
                 cleanUp.closeConn(dbleconn);
             }
+
         }
         com.actiontech.cleanUp.rmfile("test1.txt");
     }

@@ -15,50 +15,70 @@ namespace netdriver
         /// 
         /// </summary>
         /// <param name="args"></param>
+        //static void Main(string[] args)
         static void Main(string[] args)
         {
-            //String ConnStr = GetConfig.GetYamlConfig("E:\\NetConnector\\netdriver\\Properties\\auto_dble_test.yaml","mysql");//改成传参的方式
             //Test.Testing();
-            //链接数据库
-            //getconfig.GetConfig();
-            string dbleconnStr = "server=10.186.60.61;user=test;database=mytest;port=7131;password=111111;Charset=utf8";
-            string mysqlconnStr = "server=10.186.60.61;user=test;database=mytest;port=7144;password=111111;Charset=utf8";
-            string dblemanagerconnStr = "server=10.186.60.61;user=root;port=7171;password=111111;Charset=utf8";
-            //string dblemanagerconnStr = "server=192.168.2.166;user=man1;port=9066;password=654321";
-            //MySqlConnection dblemanagerconn = conn.Conn(dblemanagerconnStr);
+            string dbleconnStr;
+            string mysqlconnStr;
+            string dblemanagerconnStr;
+            //Config cfg;
+            Config cfg = new Config();
+            String[] Msqlfile;
+            String[] Csqlfile;
 
-            //获取sql执行文件
-            //String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql","D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_manager.sql" };
-            String[] Msqlfile = new String[] { "D:\\NetConnector\\netdriver\\sql cover\\driver_test_manager.sql" };
-            String[] Csqlfile = new String[] { "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql" };
-            List<String> Msqlfiles = GetFile.GetFiles(Msqlfile);
-            List<String> Csqlfiles = GetFile.GetFiles(Csqlfile);
-
-            if (Msqlfiles.Count <= 0 && Csqlfiles.Count <= 0)
-            {
-                Console.WriteLine("There is no testing file，please check the config!");
-                return;
-            }
-            //获取时间戳
+            //get timestamp
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
             String tsp = Convert.ToInt64(ts.TotalSeconds).ToString();
             //String curpath = Directory.GetCurrentDirectory();
             String curpath = Environment.CurrentDirectory;
             String logpath = Path.Combine(curpath, tsp);
 
-            //执行client端sqls
+            if (args[0] == "test")
+            {
+                dbleconnStr = "server=10.186.60.61;user=test;database=mytest;port=7131;password=111111;Charset=utf8";
+                mysqlconnStr = "server=10.186.60.61;user=test;database=mytest;port=7144;password=111111;Charset=utf8";
+                dblemanagerconnStr = "server=10.186.60.61;user=root;port=7171;password=111111;Charset=utf8";
+
+                //String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql","D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_manager.sql" };
+                Msqlfile = new String[] { "D:\\NetConnector\\netdriver\\sql cover\\driver_test_manager.sql" };
+                Csqlfile = new String[] { "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql" };
+            }
+            else {
+                cfg = GetConfig.GetYamlConfig(args[1]);
+                dbleconnStr = "server="+ cfg.dble_server + ";user=" + cfg.dble_user + ";database=" + cfg.db + ";port=" + cfg.dble_port + ";password=" + cfg.dble_password + ";Charset=utf8";
+                dblemanagerconnStr = "server=" + cfg.dbleM_server + ";user=" + cfg.dbleM_user + ";port=" + cfg.dbleM_port + ";password=" + cfg.dbleM_password + ";Charset=utf8";
+                mysqlconnStr = "server=" + cfg.mysql_server + ";user=" + cfg.mysql_user + ";database=" + cfg.db + ";port=" + cfg.mysql_port + ";password=" + cfg.mysql_password + ";Charset=utf8";
+                //cfg.sqlpath = "sql_cover";
+                String Msqlpath = Path.Combine(curpath, cfg.sqlpath, args[2]);
+                String Csqlpath = Path.Combine(curpath, cfg.sqlpath, args[3]);
+                Msqlfile = new String[] { Msqlpath };
+                Csqlfile = new String[] { Csqlpath };
+            }
+
+            //get the execute sql file
+            List<String> Msqlfiles = GetFile.GetFiles(Msqlfile);
+            List<String> Csqlfiles = GetFile.GetFiles(Csqlfile);
+
+            if (Msqlfiles.Count <= 0 && Csqlfiles.Count <= 0)
+            {
+                Console.WriteLine("There is no testing file，please check the config!");
+                //return;
+                Environment.Exit(-1);
+            }
+         
+            //execute with client sqls
             if (Csqlfiles.Count > 0)
             {
                 ClientTest.CTest(dbleconnStr,mysqlconnStr, Csqlfiles,logpath);
             }
-            //执行管理端sqls
+            //execute with manager sqls
             if (Msqlfiles.Count > 0)
             {
                 ManagerTest.MTest(dblemanagerconnStr, Msqlfiles, logpath);
             }
 
-            //正常退出
-            //System.Environment.Exit(0);
+            Environment.Exit(0);
             //Application.Exit();
         }
     }

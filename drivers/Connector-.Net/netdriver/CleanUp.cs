@@ -14,7 +14,8 @@ namespace netdriver
         public static void Rmfile(String filename)
         {
             String curpath = Environment.CurrentDirectory;
-            String path = curpath + "\\" + filename;
+            //String path = curpath + "\\" + filename;
+            String path = Path.Combine(curpath, filename);
             if (File.Exists(path))
             {
 
@@ -26,6 +27,7 @@ namespace netdriver
                 catch(IOException ioe)
                 {
                     Console.WriteLine(ioe.Message);
+                    Environment.Exit(-1);
                 }  
             }
         }
@@ -41,6 +43,7 @@ namespace netdriver
                 catch (IOException e) {
                     Console.WriteLine(e.ToString());
                     Console.WriteLine("Close " + sr + " failed！");
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -56,6 +59,7 @@ namespace netdriver
                 {
                     Console.WriteLine(e.ToString());
                     Console.WriteLine("Close " + sw + " failed！");
+                    Environment.Exit(-1);
                 }
             }
         }
@@ -72,6 +76,7 @@ namespace netdriver
                 {
                     Console.WriteLine(e.ToString());
                     Console.WriteLine("Close " + conn + " failed！");
+                    Environment.Exit(-1);
                 }
             }
         }

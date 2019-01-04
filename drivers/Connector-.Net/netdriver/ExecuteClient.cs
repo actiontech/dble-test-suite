@@ -12,7 +12,7 @@ namespace netdriver
     {
         public static void Execute(String sqlfile, String[] logfiles, MySqlConnection dbleconn, MySqlConnection mysqlconn)
         {
-            //读取文件，循环执行sql
+            //excute the sqls one by one
             int idNum = 1;
             string line;
             StreamReader sr = null;
@@ -26,8 +26,9 @@ namespace netdriver
             {
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamReader(sr);
+                Environment.Exit(-1);
             }
-            //打开log文件
+            //open the log files
             try
             {
                 passsw = new StreamWriter(logfiles[0], true);
@@ -36,20 +37,18 @@ namespace netdriver
             {
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamWriter(passsw);
+                Environment.Exit(-1);
             }
 
             try
             {
-                failsw = new StreamWriter(logfiles[1].ToString(), true);
+                failsw = new StreamWriter(logfiles[1], true);
             }
             catch (IOException ioe)
             {
                 Console.WriteLine(ioe.Message);
                 CleanUp.CloseStreamWriter(failsw);
-            }
-            if ((sr == null) || (passsw == null) || (failsw == null))
-            {
-                return;
+                Environment.Exit(-1);
             }
 
             while ((line = sr.ReadLine()) != null)
@@ -64,12 +63,16 @@ namespace netdriver
 
                     String exec = "===File:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
                     line = line.ToLower().Trim();
-                    //dble执行
+                    //dble
                     List<String> dblerslist = new List<string>();
                     try
                     {
 
                         MySqlCommand dblecmd = new MySqlCommand(line, dbleconn);
+                        if (dbleconn.State != System.Data.ConnectionState.Open) {
+                            dbleconn.Open();
+                        }
+                            
 
                         if (line.Contains("insert") || line.Contains("update") || line.Contains("delete"))
                         {
@@ -152,12 +155,17 @@ namespace netdriver
                         dblerslist.Add(errMsg);
                     }
 
-                    //mysql执行
+                    //mysql
                     List<String> mysqlrslist = new List<string>();
                     try
                     {
 
                         MySqlCommand mysqlcmd = new MySqlCommand(line, mysqlconn);
+                        if (mysqlconn.State != System.Data.ConnectionState.Open)
+                        {
+                            mysqlconn.Open();
+                        }
+
                         if (line.Contains("insert") || line.Contains("update") || line.Contains("delete"))
                         {
                             int count = mysqlcmd.ExecuteNonQuery();
@@ -239,7 +247,7 @@ namespace netdriver
                         mysqlrslist.Add(errMsg);
                     }
 
-                    //对比并写入log
+                    //compare and write to logs
                     bool same = CompareRs.CompareRS(dblerslist, mysqlrslist, allow_diff_sequence);
                     if (same)
                     {
@@ -260,7 +268,7 @@ namespace netdriver
                 idNum++;
 
             }
-            //关闭打开的流
+            //close the opened iostream
             CleanUp.CloseStreamWriter(failsw);
             CleanUp.CloseStreamWriter(passsw);
             CleanUp.CloseStreamReader(sr);

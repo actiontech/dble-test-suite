@@ -72,6 +72,7 @@
     <Compile Include="CleanUp.cs" />
     <Compile Include="ClientTest.cs" />
     <Compile Include="CompareRs.cs" />
+    <Compile Include="Config.cs" />
     <Compile Include="Conn.cs" />
     <Compile Include="ConnectorTest.cs" />
     <Compile Include="ManagerTest.cs" />
@@ -84,6 +85,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SetUp.cs" />
+    <Compile Include="t1.cs" />
+    <Compile Include="t2.cs" />
     <Compile Include="Test.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -25,6 +25,7 @@ namespace netdriver
                 Console.WriteLine("open conn failed");
                 conn.Close();
                 conn = null;
+                Environment.Exit(-1);
             }
             return conn;
         }
