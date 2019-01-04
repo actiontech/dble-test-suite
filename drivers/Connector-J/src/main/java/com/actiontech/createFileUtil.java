@@ -2,6 +2,7 @@ package com.actiontech;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.*;
 import java.util.ArrayList;
 import java.util.List;
 //import java.io.InputStream;
@@ -40,7 +41,10 @@ public class createFileUtil {
             }
         }
         for (int i = 0; i < destFileNames.length; i++) {
-            String fpath = filePath + "\\" + destFileNames[i];
+            String fpath = filePath + File.separator + destFileNames[i];
+//            String fpath;
+//            Path path = Paths.get(filePath,destFileNames[i]);
+//            fpath = path.toString();
             File file = new File(fpath);
             if (!file.exists()) {
                 System.out.println("create " + destFileNames[i] + " failed!");
