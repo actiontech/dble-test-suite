@@ -29,8 +29,12 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
         <property name="bindIp">0.0.0.0</property>
         <property name="serverPort">8066</property>
         <property name="managerPort">9066</property>
-        <property name="processors">-1</property>
-        <property name="processorExecutor">-32</property>
+        <property name="processors">4</property>
+        <property name="processorExecutor">4</property>
+        <property name="backendProcessors">4</property>
+        <property name="backendProcessorExecutor">4</property>
+        <property name="complexExecutor">4</property>
+        <property name="writeToBackendExecutor">4</property>
         <property name="fakeMySQLVersion">5.6.24   </property>
         <property name="serverNodeId">1   </property>
         <property name="showBinlogStatusTimeout">60000</property>
@@ -70,12 +74,12 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | bindIp                      | 0.0.0.0                         |
       | serverPort                  | 8066                            |
       | managerPort                 | 9066                            |
-      | processors                  | 16                              |
-      | backendProcessors           | 16                              |
-      | processorExecutor           | 16                              |
-      | backendProcessorExecutor    | 16                              |
-      | complexExecutor             | 8                               |
-      | writeToBackendExecutor      | 16                              |
+      | processors                  | 4                               |
+      | backendProcessors           | 4                               |
+      | processorExecutor           | 4                               |
+      | backendProcessorExecutor    | 4                               |
+      | complexExecutor             | 4                               |
+      | writeToBackendExecutor      | 4                               |
       | fakeMySQLVersion            | 5.6.24                          |
       | sequnceHandlerType          | Local TimeStamp(like Snowflake) |
       | serverBacklog               | 2048                            |
@@ -153,8 +157,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | property [ checkTableConsistency ] 'false' data type should be int, skip       |
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
-      | Xml     | WARNING | Property [ processorExecutor ] '-32' in server.xml is illegal, use 16 replaced |
-      | Xml     | WARNING | Property [ processors ] '-1' in server.xml is illegal, use 16 replaced         |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
       | Xml     | WARNING | Property [ sequnceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
@@ -165,4 +167,21 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | property [ useSqlStat ] 'false' data type should be int, skip                  |
       | Xml     | WARNING | property [ useThreadUsageStat ] 'false' data type should be int, skip          |
       | Xml     | WARNING | property [ usingAIO ] 'false' data type should be int, skip                    |
-    And check "dble.log" in "dble-1" has the warnings in resultset "dryrun_rs"
+    And check "dble.log" in "dble-1" has the warnings
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
+      | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
+      | Xml     | WARNING | property [ bufferUsagePercent ] '80%' data type should be int, skip            |
+      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8 replaced       |
+      | Xml     | WARNING | property [ checkTableConsistency ] 'false' data type should be int, skip       |
+      | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
+      | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
+      | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
+      | Xml     | WARNING | Property [ sequnceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
+      | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
+      | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
+      | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
+      | Xml     | WARNING | property [ useGlobleTableCheck ] 'false' data type should be int, skip         |
+      | Xml     | WARNING | property [ usePerformanceMode ] 'false' data type should be int, skip          |
+      | Xml     | WARNING | property [ useSqlStat ] 'false' data type should be int, skip                  |
+      | Xml     | WARNING | property [ useThreadUsageStat ] 'false' data type should be int, skip          |
+      | Xml     | WARNING | property [ usingAIO ] 'false' data type should be int, skip                    |

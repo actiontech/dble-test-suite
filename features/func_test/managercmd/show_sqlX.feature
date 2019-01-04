@@ -24,7 +24,7 @@ Feature: show @@sql, show @@sql.resultset
         | test | 111111 | conn_0 | False    | insert into ta value(3, repeat('c', 100))  | success    | mytest |
         | test | 111111 | conn_0 | False    | update ta set k="c" where id=3             | success    | mytest |
         | test | 111111 | conn_0 | False    | select * from ta                           | success    | mytest |
-        | test | 111111 | conn_0 | False    | select * from ta limit 1                   | success    | mytest |
+        | test | 111111 | conn_0 | False    | select * from ta order by id limit 1       | success    | mytest |
         | test | 111111 | conn_0 | False    | select * from ta where id=2                | success    | mytest |
         | test | 111111 | conn_0 | False    | delete from ta where id=1                  | success    | mytest |
         | test | 111111 | conn_0 | True     | alter table ta drop column k               | success    | mytest |
@@ -33,7 +33,7 @@ Feature: show @@sql, show @@sql.resultset
         | ID-0 | USER-1 | SQL-4                                      |
         |    1 | test   | delete from ta where id=1                  |
         |    2 | test   | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
-        |    3 | test   | SELECT * FROM ta LIMIT 1                   |
+        |    3 | test   | select * from ta order by id limit 1       |
         |    4 | test   | SELECT * FROM ta LIMIT 100                 |
         |    5 | test   | update ta set k="c" where id=3             |
         |    6 | test   | insert into ta value(3, repeat('c', 100))  |
@@ -42,7 +42,7 @@ Feature: show @@sql, show @@sql.resultset
     Then get resultset of admin cmd "show @@sql.resultset" named "sql_rs_B"
     Then check resultset "sql_rs_B" has lines with following column values
         | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
-        | test   |         1   | SELECT * FROM ta LIMIT ?              | 2721             |
+        | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1183             |
         | test   |         1   | SELECT * FROM ta WHERE id = ? LIMIT ? | 1604             |
     Given delete the following xml segment
       |file        | parent           | child             |

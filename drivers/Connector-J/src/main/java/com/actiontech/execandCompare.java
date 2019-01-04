@@ -13,7 +13,7 @@ public class execandCompare {
         //create directory
         long currentTime = System.currentTimeMillis();
         String tst = String.valueOf(currentTime);
-        String cfilepath = rtPath_value + "\\" + tst;
+        String cfilepath = rtPath_value + File.separator + tst;
         com.actiontech.createFileUtil.createDir(cfilepath);
 
         File sqlf = new File(sqPath_value);
