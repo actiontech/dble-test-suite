@@ -318,13 +318,17 @@ def step_impl(context,hostname,num, tablename,dbname="mytest"):
         
     do_batch_sql(context,hostname,dbname, sql)
 
+@Then('connect "{hostname}" to execute "{num}" of select')
 @Then('connect "{hostname}" to execute "{num}" of select for "{tablename}"')
 @Then('connect "{hostname}" to execute "{num}" of select for "{dbname}"."{tablename}"')
-def step_impl(context, hostname, num, tablename, dbname="mytest"):
+def step_impl(context, hostname, num, tablename="", dbname="mytest"):
     end = int(num)
     for i in range(1, end + 1):
-        id == random.randint(1, end)
-        sql = ("select name from {0} where id ={1};".format(tablename, i))
+        if context.text:
+            sql = context.text.strip()
+        else:
+            id == random.randint(1, end)
+            sql = ("select name from {0} where id ={1};".format(tablename, i))
         do_batch_sql(context,hostname, dbname, sql)
     
 def do_batch_sql(context, hostname, db, sql):
