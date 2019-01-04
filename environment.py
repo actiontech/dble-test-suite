@@ -34,6 +34,7 @@ def before_all(context):
     for name, values in parsed.iteritems():
         setattr(context, name, values)
 
+    context.userDebug = context.config.userdata["userDebug"].lower() == "true"
     context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
     if context.is_cluster:
         context.dbles = get_nodes(context, "dble_cluster")
@@ -109,7 +110,7 @@ def after_scenario(context, scenario):
             conn.close()
             delattr(context, conn_name)
 
-    if not (context.config.stop and scenario.status == "failed") and not "skip_restart" in scenario.tags:
+    if not (context.config.stop and scenario.status == "failed") and not "skip_restart" in scenario.tags and not context.userDebug:
         replace_config(context, context.dble_conf)
         restart_dbles(context, context.dbles)
     logger.debug('after_scenario end: <{0}>'.format(scenario.name))

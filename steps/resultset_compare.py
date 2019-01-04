@@ -94,7 +94,7 @@ def step_impl(context, rs_name):
                 else:
                     expect_col = expect_row[i]
                     isFound = unicode(real_col) == unicode(expect_col)
-                    context.logger.info("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
+                    # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
         assert isFound, "expect line not found in resultset {0}".format(rs_name)

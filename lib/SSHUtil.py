@@ -23,7 +23,7 @@ class SSHClient(Logging):
         sto = stdout.read().strip('\n')
         ste = stderr.read().strip('\n')
         self.logger.debug('<{0}>: Execute command: <{1}> '
-                          'Return code <{2}>, Stdout: <{3}>, Stderr <{4}>'.format(self._host, command, rc, sto, ste))
+                          'Return code <{2}>, Stdout[0:200]: <{3}>, Stderr <{4}>'.format(self._host, command, rc, sto[0:200], ste))
         return rc, sto, ste
 
     def open_sftp(self):

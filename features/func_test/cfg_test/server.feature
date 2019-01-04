@@ -67,68 +67,6 @@ Feature: test config in server.xml
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
   @regression
-  Scenario: config all system property, start dble success #7
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-    """
-    <system>
-        <property name="bindIp">0.0.0.0</property>
-        <property name="serverPort">8066</property>
-        <property name="managerPort">9066</property>
-        <property name="processors">1</property>
-        <property name="processorExecutor">32</property>
-        <property name="fakeMySQLVersion">5.6.20</property>
-        <property name="sequnceHandlerType">2</property>
-        <property name="serverNodeId">1   </property>
-        <property name="showBinlogStatusTimeout">60000</property>
-        <property name="useCompression">1    </property>
-        <property name="usingAIO">0    </property>
-        <property name="useZKSwitch">true </property>
-        <property name="charset">utf-8</property>
-        <property name="maxPacketSize">16777216</property>
-        <property name="txIsolation">3       </property>
-        <property name="checkTableConsistency">0       </property>
-        <property name="checkTableConsistencyPeriod">60000</property>
-        <property name="useGlobleTableCheck">0    </property>
-        <property name="glableTableCheckPeriod">86400000</property>
-        <property name="dataNodeIdleCheckPeriod">300000  </property>
-        <property name="dataNodeHeartbeatPeriod">10000   </property>
-        <property name="processorCheckPeriod">1000    </property>
-        <property name="sqlExecuteTimeout">300     </property>
-        <property name="idleTimeout">1800000 </property>
-        <property name="recordTxn">0       </property>
-        <property name="transactionLogBaseDir">/txlogs </property>
-        <property name="transactionLogBaseName">server-tx</property>
-        <property name="transactionRatateSize">16       </property>
-        <property name="xaSessionCheckPeriod">1000     </property>
-        <property name="xaLogCleanPeriod">1000     </property>
-        <property name="xaRecoveryLogBaseDir">/tmlogs  </property>
-        <property name="xaRecoveryLogBaseName">tmlog    </property>
-        <property name="useJoinStrategy">true     </property>
-        <property name="nestLoopConnSize">4        </property>
-        <property name="nestLoopRowsSize">2000     </property>
-        <property name="bufferPoolChunkSize">4096     </property>
-        <property name="bufferPoolPageNumber">512      </property>
-        <property name="bufferPoolPageSize">2097152  </property>
-        <property name="useSqlStat">0        </property>
-        <property name="bufferUsagePercent">80        </property>
-        <property name="clearBigSqLResultSetMapMs">600000   </property>
-        <property name="sqlRecordCount">10            </property>
-        <property name="maxResultSet">524288          </property>
-        <property name="backSocketSoRcvbuf">4194304   </property>
-        <property name="backSocketSoSndbuf">1048576   </property>
-        <property name="backSocketNoDelay">1          </property>
-        <property name="frontSocketSoRcvbuf">1048576  </property>
-        <property name="frontSocketSoSndbuf">4194304  </property>
-        <property name="frontSocketNoDelay">1         </property>
-    </system>
-    """
-    Given Restart dble in "dble-1" success
-    Then execute admin cmd "show @@sysparam" get the following output
-    """
-    has{('managerPort','9066','Manager connection port. The default number is 9066')}
-    """
-
-  @regression
   Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #8
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
