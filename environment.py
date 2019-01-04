@@ -34,7 +34,7 @@ def before_all(context):
     for name, values in parsed.iteritems():
         setattr(context, name, values)
 
-    context.userDebug = context.config.userdata["userDebug"].lower() == "true"
+    context.userDebug = context.config.userdata["user_debug"].lower() == "true"
     context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
     if context.is_cluster:
         context.dbles = get_nodes(context, "dble_cluster")
