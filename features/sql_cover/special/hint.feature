@@ -418,6 +418,22 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | True    | create procedure select_name() begin select id,name from test_sp where id =2;end | success |  db1  |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
+        | user | passwd | conn       | toClose  | sql                                                                                             | expect  | db     |
         | test | 111111 | conn_0     | False    | /*!dble:datanode=dn1*/call select_name                                            | has{[((2L, 'test_sp2'),)]} | mytest |
-        | test | 111111 | conn_0     | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name          | has{[((2L, 'test_sp2'),)]} | mytest |
+        | test | 111111 | conn_0     | True     | /*!dble:sql=select id from test_shard where id =2*/call select_name          | has{[((2L, 'test_sp2'),)]} | mytest |
+
+  @regression
+  Scenario: routed node when index with hint    from issue: 892    author:maofei
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                             | expect  | db     |
+        | test | 111111 | conn_0 | True     | drop table if exists test_global            | success | mytest |
+        | test | 111111 | conn_0 | True     | create table test_global(id int)            | success | mytest |
+        | test | 111111 | conn_0 | True     | create index index_test on test_global(id) | success | mytest |
+    Then connect "dble-1" to execute "100" of select
+    """
+    show index from test_global /*test*/
+    """
+    Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    """
+    dn5{show index from test_global/*test*/}
+    """
