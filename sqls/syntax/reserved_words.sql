@@ -980,10 +980,11 @@ show columns from `select`
 show create table `select`
 create index `create` on `select`(`key`)
 show index from `select`
-drop view if exists `drop`
-#show create view `drop`    #issue: 920
-create or replace view `drop` as select * from `select`
-show create view `drop` /*allow_diff*/
+#issue: 920
+#drop view if exists `drop`
+#show create view `drop`
+#create or replace view `drop` as select * from `select`
+#show create view `drop` /*allow_diff*/
 drop index `create` on `select`
 #
 #clear tables
