@@ -974,8 +974,8 @@ show index from aly_test
 drop table if exists `select`
 drop table if exists `drop`
 create table `select`(id int,`key` int)
-show tables
-show table status
+show tables /*allow_diff*/
+show table status /*allow_diff*/
 show columns from `select`
 show create table `select`
 create index `create` on `select`(`key`)
@@ -983,8 +983,8 @@ show index from `select`
 #issue: 920
 #drop view if exists `drop`
 #show create view `drop`
-#create or replace view `drop` as select * from `select`
-#show create view `drop` /*allow_diff*/
+create or replace view `drop` as select * from `select`
+show create view `drop` /*allow_diff*/
 drop index `create` on `select`
 #
 #clear tables
