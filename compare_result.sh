@@ -1,39 +1,36 @@
 #!/bin/bash
 std_result_dir=${1-"std_result"}
+real_result_dir=${2-"sql_cover_log"}
+cmp_std_res_dir=cmp_${std_result_dir}
+cmp_real_res_dir=cmp_${real_result_dir}
 
+#echo "generate real diff files"
 generate_simple_cmp_file () {
 	files=$(ls $1| egrep -v "*_pass.log|balance")
 
-    cmp_dir=$2
-
     for s in $files; do
-#        echo "file: $s"
         if [ -d "$1/$s" ]; then
-            mkdir "$cmp_dir/$s"
-            subfiles=$(ls "$1/$s"| grep -E -v *_pass.log)
-            for ss in $subfiles; do
-#                echo "$1/$s/$ss"
-#                echo "$cmp_dir/$s/$ss"
-                grep '===file:' "$1/$s/$ss" > "$cmp_dir/$s/$ss"
-                grep '===id:' "$1/$s/$ss" >> "$cmp_dir/$s/$ss"
-            done
+#            echo "$s is dir"
+            generate_simple_cmp_file "$1/$s" "$2/$s"
 		else
-#		    echo "$1/$s/$ss"
-#            echo "$cmp_dir/$s/$ss"
-            grep '===file:' "$1/$s" > "$cmp_dir/$s"
-            grep '===id:' "$1/$s" >> "$cmp_dir/$s"
+#		    echo "source: $1/$s, dest:"$2/$s""
+            mkdir -p "$2"
+            grep '===file:' "$1/$s" > "$2/$s"
+            #added by wujingling
+            grep '===id:' "$1/$s" >> "$2/$s"
         fi
     done
 }
 
-rm -rf cmp_result && mkdir cmp_result
-rm -rf cmp_std_result && mkdir cmp_std_result
-generate_simple_cmp_file ${std_result_dir} cmp_std_result
-generate_simple_cmp_file sql_cover_log cmp_result
+rm -rf ${cmp_std_res_dir} && mkdir ${cmp_std_res_dir}
+rm -rf ${cmp_real_res_dir} && mkdir ${cmp_real_res_dir}
+generate_simple_cmp_file ${std_result_dir} ${cmp_std_res_dir}
+generate_simple_cmp_file ${real_result_dir} ${cmp_real_res_dir}
 
-res=`diff -qwr cmp_std_result cmp_result`
+res=`diff -qwr ${cmp_std_res_dir} ${cmp_real_res_dir}`
 if [ ${#res} -gt 0 ]; then
-    echo "Oop! result is different with the standard one, try 'diff -qwr cmp_std_result cmp_result' to see the differences"
+    echo "Oop! results are different with the standard ones, try 'diff -qwr ${cmp_std_res_dir}/.../file1 ${cmp_real_res_dir}/.../file2' to see the details"
+    echo "${res}"
     exit 1
 else
     echo "pass"

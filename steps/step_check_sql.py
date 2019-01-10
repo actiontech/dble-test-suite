@@ -1,5 +1,6 @@
 import datetime
 import os
+import shutil
 import re
 import difflib
 from Queue import Queue
@@ -266,7 +267,12 @@ def check_sql_dest(context, line_nu, sql):
             context.logger.info("route err")
     assert_that(sum, equal_to(nodenum), "sum: {0} is not equal to nodenum: {1}".format(sum, nodenum))
 
+@Given('rm old logs "{sql_cover_log}" if exists')
+def step_impl(context, sql_cover_log):
+    if os.path.exists(sql_cover_log):
+        shutil.rmtree(sql_cover_log)
 
+@Then('execute sql in file "{filename}"')
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')
 def step_impl(context, filename):
     context.sql_file = filename
@@ -466,9 +472,14 @@ def step_impl(context):
 @When('compare results with the standard results in "{dirname}"')
 def step_impl(context,dirname):
     import subprocess
-    exit_code = subprocess.call(["bash", "compare_result.sh", dirname])
-    assert_that(exit_code, equal_to(0), "result is different with standard")
-    context.logger.info("read write split pass")
+    try:
+        out_bytes = subprocess.check_output(['bash', 'compare_result.sh', dirname])
+    except subprocess.CalledProcessError as e:
+        out_bytes = e.output  # Output generated before error
+        out_text = out_bytes.decode('utf-8')
+        assert False, "result is different with standard, {0}".format(out_text)
+    finally:
+        context.logger.info(out_bytes.decode('utf-8'))
 
 def do_query_in_thread(context, dble_thread_tag, interval=5):
     global sql_queues
