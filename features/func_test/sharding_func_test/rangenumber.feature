@@ -1,6 +1,6 @@
 Feature:
   @smoke
-  Scenario: PatternRange function
+  Scenario: PatternRange function #1
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """

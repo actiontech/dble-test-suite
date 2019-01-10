@@ -394,7 +394,7 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | mytest |
 
   @regression
-  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log
+  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
       <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">

@@ -1,6 +1,6 @@
 Feature:
   @smoke
-  Scenario: Enum sharding function
+  Scenario: Enum sharding function #1
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """

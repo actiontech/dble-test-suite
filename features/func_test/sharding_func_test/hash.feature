@@ -1,6 +1,6 @@
 Feature:
   @smoke
-  Scenario: hash function
+  Scenario: hash function #1
     #test: <= 2880
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """

@@ -10,7 +10,7 @@ Feature: test slow query log related manager command
         | root  | 111111    | conn_0 | True    | show @@slow_query_log   | has{('0',)}  |     |
 
   @regression
-  Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize"
+  Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
       Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
       """
       <system>
@@ -36,7 +36,7 @@ Feature: test slow query log related manager command
         | root   | 111111  | conn_0 | True    | show @@slow_query.flushsize           | has{('50',)}   |    |
 
   @regression
-  Scenario: check slow query log written in assigned file
+  Scenario: check slow query log written in assigned file #3
       Given delete file "/opt/dble/slowQuery" on "dble-1"
       Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
       """

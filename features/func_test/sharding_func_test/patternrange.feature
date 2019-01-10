@@ -1,6 +1,6 @@
 Feature:
   @smoke
-  Scenario: PatternRange sharding function
+  Scenario: PatternRange sharding function #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <tableRule name="patternrange_rule">

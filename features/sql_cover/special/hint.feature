@@ -1,7 +1,7 @@
 Feature: verify hint sql
 
   @regression
-  Scenario: test hint format: /*!dble:datanode=xxx*/
+  Scenario: test hint format: /*!dble:datanode=xxx*/ #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn3" rule="hash-two" />
@@ -70,7 +70,7 @@ Feature: verify hint sql
         | test | 111111 | new    | True    | desc test_table                                                                    | length{(2)}} | db2   |
 
   @regression
-  Scenario: test hint format: /*!dble:sql=xxx*/
+  Scenario: test hint format: /*!dble:sql=xxx*/ #2
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn3" rule="hash-two" />
@@ -142,7 +142,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0    | True    | desc test_table                                                                    | length{(2)}} | db2   |
 
   @regression
-  Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 1
+  Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 1 #3
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -227,7 +227,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
   @regression
-  Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2
+  Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2 #4
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -312,7 +312,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
   @regression
-  Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 3
+  Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 3 #5
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -397,7 +397,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
   @regression
-  Scenario: hint for specail sql syntax: call procedure
+  Scenario: hint for specail sql syntax: call procedure #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
       """
         <table name="test_sp" dataNode="dn1,dn3" rule="hash-two" />
