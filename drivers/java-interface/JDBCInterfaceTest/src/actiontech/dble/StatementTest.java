@@ -1,10 +1,8 @@
 package actiontech.dble;
 
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.SQLWarning;
-import java.sql.Statement;
+import java.sql.*;
+import java.io.ByteArrayInputStream;
+import java.util.Properties;
 
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
@@ -19,6 +17,11 @@ public class StatementTest extends InterfaceTest {
 		itf_warnings();
 		itf_execute();
 		itf_autoincrement();
+		try {
+			itf_blob();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		System.out.println("autoincrement() is passed");
 	}
 
@@ -307,4 +310,72 @@ public class StatementTest extends InterfaceTest {
 			close_stmt(stmt);
 		}
 	}
+	/*
+	 * function:prepare with blob , mysql will return more than one package
+	 * */
+	private void itf_blob()throws Exception {
+
+
+	    String sql1="drop table if exists test_shard;";
+		TestUtilities.executeUpdate(uproxyConn, sql1);
+		TestUtilities.executeUpdate(mysqlConn, sql1);
+		String sql2="create table test_shard(id char,pad blob,name char)";
+		TestUtilities.executeUpdate(uproxyConn, sql2);
+		TestUtilities.executeUpdate(mysqlConn, sql2);
+
+		//Set auto-commit to false
+		mysqlConn.setAutoCommit(false);
+		uproxyConn.setAutoCommit(false);
+
+		String SQL = "INSERT INTO test_shard " +
+				"VALUES(?, ?, ?)";
+
+
+
+//		 Create PrepareStatement object
+		PreparedStatement mysql_pstmt = mysqlConn.prepareStatement(SQL);
+		PreparedStatement uproxy_pstmt = uproxyConn.prepareStatement(SQL);
+
+
+
+		// Set the variables
+
+		String blobValue = "I am a Tester!";
+        ByteArrayInputStream inputStream = new ByteArrayInputStream(blobValue.getBytes());
+		ByteArrayInputStream inputStream_1 = new ByteArrayInputStream(blobValue.getBytes());
+        mysql_pstmt.setString(1, ""+1);;
+        mysql_pstmt.setBlob(2, inputStream);
+		mysql_pstmt.setString( 3, "S" );
+
+		uproxy_pstmt.setString(1, ""+1);;
+        uproxy_pstmt.setBlob(2, inputStream_1);
+		uproxy_pstmt.setString( 3, "S" );
+
+		mysql_pstmt.executeUpdate();
+		uproxy_pstmt.executeUpdate();
+
+
+		mysqlConn.setAutoCommit(true);
+		uproxyConn.setAutoCommit(true);
+
+		String sql = "select * from test_shard";
+
+		ResultSet mysql_rs = mysql_pstmt.executeQuery(sql);
+		ResultSet uproxy_rs = uproxy_pstmt.executeQuery(sql);
+
+		print_debug("compare_result: " + sql);
+		boolean isEqual = compare_result(mysql_rs, uproxy_rs);
+		if(isEqual){
+			System.out.println("pass! itf_blob()!");
+		}else{
+			on_assert_fail("fail! itf_blob()");
+		}
+		close_rs(mysql_rs);
+		close_rs(uproxy_rs);
+
+		close_stmt(mysql_pstmt);
+		close_stmt(uproxy_pstmt);
+
+	}
+
 }

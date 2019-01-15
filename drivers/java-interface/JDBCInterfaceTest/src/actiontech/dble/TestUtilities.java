@@ -176,8 +176,11 @@ public class TestUtilities {
 	public Connection getConnectionAllowMultiQuery(ConnProperties prop) throws SQLException {
 		Connection conn = null;
 		Properties connectionProps = new Properties();
-		connectionProps.put("user", prop.userName);
-		connectionProps.put("password", prop.password);
+		connectionProps.setProperty("user", prop.userName);
+		connectionProps.setProperty("password", prop.password);
+		connectionProps.setProperty("useServerPrepStmts", "true");
+		connectionProps.setProperty("cachePrepStmts", "true");
+
 
 		String urlString = "jdbc:mysql://" + prop.serverName +
 				":" + prop.portNumber + "";
