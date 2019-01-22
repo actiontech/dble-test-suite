@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Main {
 	public static void main(String[] args)  throws Exception{
-		boolean isDebug = false;
+		boolean isDebug = true;
 		if (isDebug) {
 			Config.initDebug();
 			dotest();
@@ -18,25 +18,37 @@ public class Main {
 
 	private static void dotest() {
 		String[] sqls = {
-				"drop table if EXISTS  t/* uproxy_dest_expect:M */;"
+				"select * from test;"
 		};
 
-		JDBCConn conn = new JDBCConn("10.186.18.109", "uproxy", "111111", Config.TEST_DB, 7140);
+		JDBCConn conn = new JDBCConn("10.186.65.63", "test", "test", "mytest", 8066);
 		System.out.println("==========================dble execute result=========================");
 		for (String sql : sqls) {
 			boolean isR = conn.execute(sql);
-			showResult(conn, isR, "uproxy execute result");
+//			showResult(conn, isR, "uproxy execute result");
 		}
-		conn.close();
+//		conn.close();
 
 		System.out.println("==========================mysql execute result=========================");
 
-		JDBCConn conn2 = new JDBCConn("10.186.18.109", "uproxy", "111111", Config.TEST_DB, 7142);
+		JDBCConn conn2 = new JDBCConn("10.186.65.4", "test", "test", "mytest", 3306);
 		for (String sql : sqls) {
 			boolean isR2 = conn2.execute(sql);
-			showResult(conn2, isR2, "mysql execute result");
+//			showResult(conn2, isR2, "mysql execute result");
 		}
+		try {
 
+			ResultSet re1 = conn.stmt.getResultSet();
+			ResultSet re2 = conn2.stmt.getResultSet();
+
+
+			ExecSQLAndCompare tt = new ExecSQLAndCompare("abc");
+			boolean isResEqual = tt.equal(re1, re2);
+			System.out.println(isResEqual);
+		}catch(SQLException e){
+			System.out.println(e.getStackTrace());
+		}
+		conn.close();
 		conn2.close();
 	}
 
