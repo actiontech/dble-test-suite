@@ -21,7 +21,7 @@ LOGGER = logging.getLogger('steps.function')
 @then('Test the data types supported by the sharding column in "{sql_name}"')
 def test_data_type(context, sql_name):
     LOGGER.info("test all data types")
-    sql_path = "sharding/{0}".format(sql_name)
+    sql_path = "sharding_func/{0}".format(sql_name)
     context.execute_steps(u'Then execute sql in "{0}" to check read-write-split work fine and log dest slave'.format(sql_path))
 
 def create_node_conn(context):
