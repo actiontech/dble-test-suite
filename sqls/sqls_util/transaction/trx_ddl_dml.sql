@@ -1,9 +1,10 @@
+#!default_db:schema1
 drop table if exists test1
 CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
 drop table if exists schema2.test2
 CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
-drop table if exists testdb.schema2.test2
-CREATE TABLE testdb.schema2.test2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
+drop table if exists schema3.test3
+CREATE TABLE schema3.test3(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))
 #*******************insert*****单节点******commit******************
 #!share_conn
 SET @@session.autocommit = ON
@@ -751,64 +752,64 @@ select * from schema2.test2 order by id
 #!share_conn
 delete from test1
 insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use testdb
-delete from schema2.test2
-insert into schema2.test2 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use schema3
+delete from test3
+insert into test3 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
-select a.*,b.* from schema2.test2 a,schema1.test1 b where a.pad=b.pad
-update schema2.test2 set c='test'
-select * from schema2.test2 order by id
+select a.*,b.* from test3 a,schema1.test1 b where a.pad=b.pad
+update test3 set c='test'
+select * from test3 order by id
 select * from schema1.test1 order by id
 commit
-select * from schema2.test2 order by id
+select * from test3 order by id
 select * from schema1.test1 order by id
 use schema1
 #************************************************
 #!share_conn
 delete from test1
 insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use testdb
-delete from schema2.test2
-insert into schema2.test2 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use schema3
+delete from test3
+insert into test3 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
-select a.*,b.* from schema2.test2 a,schema1.test1 b where a.pad=b.pad
-update schema2.test2 set c='test'
-select * from schema2.test2 order by id
+select a.*,b.* from test3 a,schema1.test1 b where a.pad=b.pad
+update test3 set c='test'
+select * from test3 order by id
 select * from schema1.test1 order by id
 rollback
-select * from schema2.test2 order by id
+select * from test3 order by id
 select * from schema1.test1 order by id
 use schema1
 #************************************************
 #!share_conn
 delete from test1
 insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use testdb
-delete from schema2.test2
-insert into schema2.test2 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use schema3
+delete from test3
+insert into test3 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
 update schema1.test1 set pad=200
 update schema2.test2 set c='test'
-select * from schema2.test2 order by id
+select * from test3 order by id
 select * from schema1.test1 order by id
 commit
-select * from schema2.test2 order by id
+select * from test3 order by id
 select * from schema1.test1 order by id
 use schema1
 #************************************************
 #!share_conn
 delete from test1
 insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
-use testdb
-delete from schema2.test2
-insert into schema2.test2 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
+use schema3
+delete from test3
+insert into test3 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4),(5,5,5,5),(6,6,6,6)
 begin
 update schema1.test1 set pad=200
-update schema2.test2 set c='test'
-select * from schema2.test2 order by id
+update test3 set c='test'
+select * from test3 order by id
 select * from schema1.test1 order by id
 rollback
-select * from schema2.test2 order by id
+select * from test3 order by id
 select * from schema1.test1 order by id
 use schema1
 #**********************drop**************************
@@ -832,4 +833,4 @@ select * from test1 order by id
 #
 drop table if exists test1
 drop table if exists schema2.test2
-drop table if exists testdb.schema2.test2
+drop table if exists schema3.test3
