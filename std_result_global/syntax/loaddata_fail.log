@@ -1,6 +1,0 @@
-===file:syntax/loaddata.sql, id:20, sql:[select * from aly_test order by id]===
-dble:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30), None), (2L, '?', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30), None), (3L, '$%\'";:@#^&*_+-=|<.>/?`~', 5, '0', 0.001, datetime.datetime(2018, 9, 5, 0, 0), None))]
-mysql:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (2L, '?', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (3L, '$%\'";:@#^&*_+-=|<.>/?`~', 5, '0', 0.001, datetime.datetime(2018, 9, 5, 0, 0)))]
-===file:syntax/loaddata.sql, id:23, sql:[select * from aly_test order by id]===
-dble:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30), None), (2L, '?', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30), None), (3L, '$%\'";:@#^&*_+-=|<.>/?`~', 5, '0', 0.001, datetime.datetime(2018, 9, 5, 0, 0), None))]
-mysql:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (2L, '?', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (3L, '$%\'";:@#^&*_+-=|<.>/?`~', 5, '0', 0.001, datetime.datetime(2018, 9, 5, 0, 0)))]
