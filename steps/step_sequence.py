@@ -57,8 +57,8 @@ def step_impl(context):
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey| mytest |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success |mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | mytest |
         | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(id {1} auto_increment, name varchar(20), primary key (id))| success | mytest |
@@ -67,12 +67,12 @@ def step_impl(context):
         | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | mytest |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(idd {1}, name varchar(20))  | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | Unknown column 'ID' in 'field list' | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey or incrementColumn | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | please make sure your table structure has primaryKey or incrementColumn | mytest |
         | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
         | test | 111111 | conn_0 | False   | create table {0}(idd {1} auto_increment, name varchar(20), primary key(idd))| success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey| mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | Unknown column 'ID' in 'field list' | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey or incrementColumn | mytest |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | please make sure your table structure has primaryKey or incrementColumn | mytest |
     """.format(tb, "bigint", rand_str))
 
     #use int not bigint as global sequnce
