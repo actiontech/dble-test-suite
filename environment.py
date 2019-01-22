@@ -11,10 +11,10 @@ logger = logging.getLogger('environment')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
-    if para_dble_conf_lower in ["sql_cover", "sql_cover_global", "template", "sql_cover_nosharding"]:
+    if para_dble_conf_lower in ["sql_cover_mixed", "sql_cover_global", "template", "sql_cover_nosharding","sql_cover_sharding"]:
         conf = "{0}{1}".format(context.cfg_dble['conf_dir'], para_dble_conf_lower)
     else:
-        assert False, 'cmdline dble_conf\'s value can only be one of ["sql_cover", "sql_cover_global", "template", "sql_cover_no_sharding"]'
+        assert False, 'cmdline dble_conf\'s value can only be one of ["template", "sql_cover_mixed", "sql_cover_global", "sql_cover_nosharding","sql_cover_sharding"]'
 
     context.dble_conf = conf
 
