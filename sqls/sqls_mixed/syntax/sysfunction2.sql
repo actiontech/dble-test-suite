@@ -1,3 +1,4 @@
+#!default_db:schema1
 ##dealline JSON FUNCTION
 ##case1::Full-text search functions
 #CREATE TABLE articles (id INT UNSIGNED AUTO_INCREMENT NOT NULL PRIMARY KEYtitle VARCHAR(200) body TEXTFULLTEXT (title,body)) ENGINE=InnoDB
