@@ -2,88 +2,46 @@
 Feature: global table sql cover test
 
    @current
-    Scenario Outline:cover empty line in file, no line in file, chinese character in file, special character in file for load data [local] infile ...#4
-      #1.1 no line in file
-      Given create local and server file "test1.txt" and fill with text
-      """
-      """
-      #1.2 empty line in file
-      Given create local and server file "test2.txt" and fill with text
-      """
+   Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
+     Given set sql cover log dir "sql_cover_global"
+     Given prepare loaddata.sql data for sql test
+     Then execute sql in file "sqls_util/syntax/loaddata.sql"
+     Given clear dirty data yield by sql
+     Given clean loaddata.sql used data
 
-      """
-      #1.3 chinese character and special character
-      Given create local and server file "test3.txt" and fill with text
-      """
-      1,aaa,0,0,3.1415,20180905121530
-      2,中,1,1,-3.1415,20180905121530
-      3,$%'";:@#^&*_+-=|\<.>/?`~,5,0,0.0010,20180905
-      """
-      #1.4 with replace into in load data
-      Given create local and server file "test4.txt" and fill with text
-      """
-      1,1,,
-      """
-      #1.5 abnormal test for lack column
-#      Given create local and server file "test5.txt" and fill with text
-#      """
-#      ,1,a,20181018163000,20181018,163000,0,0
-#      b,,b,20181018163000,20181018,163000,0,0
-#      c,3,,20181018163000,20181018,163000,0,0
-#      d,4,d,,20181018,163000,0,0b00
-#      e,5,e,20181018163000,,163000,0,0b00
-#      f,6,f,20181018163000,20181018,,0,0b00
-#      g,7,g,20181018163000,20181018,163000,,0
-#      h,8,h,20181018163000,20181018,163000,0,
-#
-#      ,,i,20181018163000,20181018,163000,0,1
-#      ,,,20181018163000,20181018,163000,0,1
-#      ,,,,20181018,163000,0,0b00
-#      ,,,,,163000,0,0b00
-#      ,,,,,,0,0b00
-#      ,,,,,,,0b00
-#      ,,,,,,,
-#      ,,,,,,
-#      ,,,,,
-#      ,,,,
-#      ,,,
-#      ,,
-#      ,
-#
-#      j,9,j,20181018163000,20181018,163000,0,1
-#      k,10,k,20181018163000,20181018,163000,0,
-#      l,11,l,20181018163000,20181018,163000,
-#      m,12,m,20181018163000,20181018,
-#      o,13,o,20181018163000,
-#      p,14,p,
-#      q,15,
-#      r,
-#
-#      s,16,s,20181018163000,20181018,163000,0
-#      t,17,t,20181018163000,20181018,163000
-#      u,18,u,20181018163000,20181018
-#      v,19,v,20181018163000
-#      w,20,w
-#      x,21
-#      y
-#
-#
-#      z,22,z,20181018163000,20181018,163000,0,0
-#      aa,0x17,1,20181018163000,20181018,163000,0,0
-#
-#
-#      """
-      Then execute sql in "<filename>" to check read-write-split work fine and log dest slave
+    Scenario Outline:sql cover for global table #2
+      Given set sql cover log dir "sql_cover_global"
+      Then execute sql in file "<filename>"
       Given clear dirty data yield by sql
-      Given remove local and server file "test1.txt"
-      Given remove local and server file "test2.txt"
-      Given remove local and server file "test3.txt"
-      Given remove local and server file "test4.txt"
-#      Given remove local and server file "test5.txt"
 
       Examples:Types
-        | filename                                    |
-        | syntax/loaddata.sql                         |
+        | filename                                              |
+        | sqls_util/select/expression.sql                       |
+        | sqls_util/select/reference.sql                        |
+        | sqls_util/select/select.sql                           |
+        | sqls_util/syntax/aggregate.sql                        |
+        | sqls_util/syntax/alter_table.sql                      |
+        | sqls_util/syntax/create_table_definition.sql          |
+        | sqls_util/syntax/data_types_1.sql                     |
+        | sqls_util/syntax/data_types_2.sql                     |
+        | sqls_util/syntax/delete.sql                           |
+        | sqls_util/syntax/identifiers_util.sql                 |
+        | sqls_util/syntax/insert.sql                           |
+        | sqls_util/syntax/insert_on_duplicate_key.sql          |
+        | sqls_util/syntax/insert_value.sql                     |
+        | sqls_util/syntax/prepare.sql                          |
+        | sqls_util/syntax/replace.sql                          |
+        | sqls_util/syntax/reserved_words.sql                   |
+        | sqls_util/syntax/set_names_character.sql              |
+        | sqls_util/syntax/set_server_var_util.sql              |
+        | sqls_util/syntax/set_user_var_util.sql                |
+        | sqls_util/syntax/show.sql                             |
+        | sqls_util/syntax/show_dble.sql                        |
+        | sqls_util/syntax/sys_function_util.sql                |
+        | sqls_util/syntax/truncate.sql                         |
+        | sqls_util/syntax/union.sql                            |
+        | sqls_util/syntax/update_syntax.sql                    |
+        | sqls_util/syntax/view.sql                             |
 
     Scenario: #5 compare new generated results is same with the standard ones
-        When compare results with the standard results in "std_result_global"
+        When compare results in "sql_cover_global" with the standard results in "std_sql_cover_global"
