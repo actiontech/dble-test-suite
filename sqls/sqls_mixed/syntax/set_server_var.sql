@@ -1,3 +1,4 @@
+#!default_db:schema1
 #System variables:
 #auto_increment_increment: controls the interval between successive column values. (both)
 #!share_conn
