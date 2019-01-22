@@ -1,3 +1,4 @@
+#!default_db:schema1
 #less important
 create table if not exists sharding_4_t1(id int,name varchar(8)) partition by hash(id);
 drop table sharding_4_t1;

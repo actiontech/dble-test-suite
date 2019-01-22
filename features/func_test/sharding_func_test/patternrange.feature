@@ -1,4 +1,4 @@
-Feature: PatternRange sharding function test suits
+Feature: PatternRange sharding function
   @smoke
   Scenario: PatternRange sharding function #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"

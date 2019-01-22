@@ -1,3 +1,4 @@
+#!default_db:schema1
 #LOCK
 lock tables sharding_4_t1 read
 unlock tables
