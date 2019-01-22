@@ -1,4 +1,4 @@
-Feature: stringhash sharding function test suits
+Feature: stringhash function
   @smoke
   Scenario: stringhash function
     #test: <= 2880

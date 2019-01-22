@@ -476,11 +476,11 @@ def step_impl(context):
     #     ssh.close_ssh()
 
 
-@When('compare results with the standard results in "{dirname}"')
-def step_impl(context,dirname):
+@When('compare results in "{real_res}" with the standard results in "{std_res}"')
+def step_impl(context,real_res, std_res):
     import subprocess
     try:
-        out_bytes = subprocess.check_output(['bash', 'compare_result.sh', dirname])
+        out_bytes = subprocess.check_output(['bash', 'compare_result.sh', std_res, real_res])
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
         out_text = out_bytes.decode('utf-8')
