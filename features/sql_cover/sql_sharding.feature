@@ -1,16 +1,16 @@
 # -*- coding=utf-8 -*-
-Feature: global table sql cover test
+Feature: sharding table sql cover test
 
    @current
    Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
-     Given set sql cover log dir "sql_cover_global"
+     Given set sql cover log dir "sql_cover_sharding"
      Given prepare loaddata.sql data for sql test
      Then execute sql in file "sqls_util/syntax/loaddata.sql"
      Given clear dirty data yield by sql
      Given clean loaddata.sql used data
 
-    Scenario Outline:sql cover for global table #2
-      Given set sql cover log dir "sql_cover_global"
+    Scenario Outline:sql cover for sharding table #2
+      Given set sql cover log dir "sql_cover_sharding"
       Then execute sql in file "<filename>"
       Given clear dirty data yield by sql
 
@@ -47,10 +47,7 @@ Feature: global table sql cover test
         | sqls_util/transaction/trx_isolation.sql               |
         | sqls_util/transaction/trx_syntax.sql                  |
         | sqls_util/dev_dealed/cross_db.sql                     |
-        | special_global/select/join.sql                        |
-        | special_global/select/reference_global.sql            |
-        | special_global/select/select_global_old.sql           |
-        | special_global/select/subquery_global.sql             |
+        | special_sharding/select/select_sharding.sql           |
 
     Scenario: #5 compare new generated results is same with the standard ones
-        When compare results in "sql_cover_global" with the standard results in "std_sql_cover_global"
+        When compare results in "sql_cover_sharding" with the standard results in "std_sql_cover_sharding"
