@@ -21,7 +21,7 @@ LOGGER = logging.getLogger('steps.function')
 @then('Test the data types supported by the sharding column in "{sql_name}"')
 def test_data_type(context, sql_name):
     LOGGER.info("test all data types")
-    sql_path = "function/{0}".format(sql_name)
+    sql_path = "sharding/{0}".format(sql_name)
     context.execute_steps(u'Then execute sql in "{0}" to check read-write-split work fine and log dest slave'.format(sql_path))
 
 def create_node_conn(context):
@@ -99,6 +99,33 @@ def step_impl(context):
         res,err = conn.query(sql)
         assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute plan seems not optimized, the plan:{1}".format(sql,res)
 
+@Given('prepare loaddata.sql data for sql test')
+def step_impl(context):
+    context.execute_steps(
+    u'''
+      #1.1 no line in file
+      Given create local and server file "test1.txt" and fill with text
+      """
+      """
+      #1.2 empty line in file
+      Given create local and server file "test2.txt" and fill with text
+      """
+
+      """
+      #1.3 chinese character and special character
+      Given create local and server file "test3.txt" and fill with text
+      """
+      1,aaa,0,0,3.1415,20180905121530
+      2,中,1,1,-3.1415,20180905121530
+      3,$%'";:@#^&*_+-=|\<.>/?`~,5,0,0.0010,20180905
+      """
+      #1.4 with replace into in load data
+      Given create local and server file "test4.txt" and fill with text
+      """
+      1,1,,
+      """
+    ''')
+
 @Given('create local and server file "{filename}" and fill with text')
 def step_impl(context, filename):
     LOGGER.info("*** zhj debug context.text:{0}".format(context.text))
@@ -118,6 +145,16 @@ def step_impl(context, filename):
     remove_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
     compare_mysql_sftp = get_sftp(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
     compare_mysql_sftp.sftp_put(remove_file, filename)
+
+@Given('clean loaddata.sql used data')
+def step_impl(context):
+    context.execute_steps(
+    u'''
+      Given remove local and server file "test1.txt"
+      Given remove local and server file "test2.txt"
+      Given remove local and server file "test3.txt"
+      Given remove local and server file "test4.txt"
+    ''')
 
 @Given('remove local and server file "{filename}"')
 def step_impl(context, filename):
