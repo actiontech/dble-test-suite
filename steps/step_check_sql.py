@@ -44,6 +44,9 @@ def get_read_dest_cmd(context):
     cmd = "sed '1,{0}d' {1}|grep 'routing query to mysqld' | grep -o -e {2}".format(context.log_linenu, logpath, regIP)
     return cmd
 
+@Given('set sql cover log dir "{logdir}"')
+def step_impl(context, logdir):
+    context.cfg_dble['sql_cover_log'] = logdir
 
 @Given('init read-write-split data')
 def step_impl(context):
@@ -53,7 +56,7 @@ def step_impl(context):
     if context.sql_file.find("/") == -1:
         sql_file_name = context.sql_file
     else:
-        group = context.sql_file.partition("/");
+        group = context.sql_file.rpartition("/");
         sql_file_name = group[2]
         subdir = subdir + group[0]
         if not os.path.exists(subdir):
@@ -290,7 +293,11 @@ def step_impl(context, filename):
         lines = fp.readlines()
         total_lines = len(lines)
         line_nu = 0
-        default_db = context.cfg_sys['default_db']
+        if lines[0].startswith("#!default_db:"):
+            default_db = lines[0].split(':')[1]
+            default_db = default_db.strip()
+        else:
+            default_db = context.cfg_sys['default_db']
         step_len = 1;
         next_line = lines[0].strip()
         for idx in range(0, total_lines):

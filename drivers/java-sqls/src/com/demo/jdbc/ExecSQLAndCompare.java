@@ -42,7 +42,7 @@ public class ExecSQLAndCompare {
 	public ExecSQLAndCompare(String sqlFile) {
 		_sqlFile = sqlFile;
 		// TODO Auto-generated constructor stub
-		initData();
+//		initData();
 
 	}
 
@@ -336,7 +336,7 @@ public class ExecSQLAndCompare {
 		}
 	}
 
-	private boolean equal(Object set1, Object set2) {
+	public boolean equal(Object set1, Object set2) {
 		// System.out.println("uproxy ResultSet:" + (set1 instanceof
 		// ResultSet));
 		// System.out.println("mysql ResultSet:" + (set2 instanceof ResultSet));
