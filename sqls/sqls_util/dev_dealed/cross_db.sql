@@ -1,4 +1,4 @@
-# Created by zhaohongjie at 2019/1/10
+# Created by zhaohongjie at 2019/1/22
 #!share_conn
 drop table if exists schema1.test1;
 drop table if exists schema2.test2;
