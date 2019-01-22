@@ -1,3 +1,4 @@
+#!default_db:schema1
 # Created by zhaohongjie at 2019/1/16
 #SET NAMES {'charset_name'
 #    [COLLATE 'collation_name'] | DEFAULT}
