@@ -18,7 +18,7 @@ cd /usr/local/mysql && mkdir data && chown -R mysql:mysql .
 echo "configure my.cnf!"
 cp /usr/local/mysql/support-files/my-default.cnf /etc/my.cnf
 sed -i '/mysqld_safe/,+2d' /etc/my.cnf
-sed -i -e '$a [client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n' -e "/\[mysqld\]/a server-id=$(($1+2)) \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables=\"*\" \ngtid-mode=on \nenforce_gtid_consistency=on" /etc/my.cnf
+sed -i -e '$a [client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n' -e "/\[mysqld\]/a server-id=$(($1+2)) \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables=\"*\" \ngtid-mode=on \nenforce_gtid_consistency=on \nearly-plugin-load=keyring_file.so" /etc/my.cnf
 
 echo "mysql initialize!"
 rm -rf /var/lib/mysql
