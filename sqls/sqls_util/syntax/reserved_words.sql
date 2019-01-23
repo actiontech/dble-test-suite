@@ -18,7 +18,7 @@ select id,`LEADING` from test1 order by `LEADING` limit 10
 drop table if exists test1 
 create table test1 (id int,`LIKE` int)
 insert into test1 (id,`LIKE`) values (1,1),(2,3),(3,4),(4,5)
-select id,`LIKE`否from test1 order by `LIKE` limit 10
+select id,`LIKE` from test1 order by `LIKE` limit 10
 drop table if exists test1 
 create table test1 (id int,`LINES` int)
 insert into test1 (id,`LINES`) values (1,1),(2,3),(3,4),(4,5)
@@ -984,7 +984,7 @@ show index from `select`
 #issue: 920
 #drop view if exists `drop`
 #show create view `drop`
-create or replace view `drop` as select id, from `select`
+create or replace view `drop` as select id from `select`
 show create view `drop` /*allow_diff*/
 drop index `create` on `select`
 #
