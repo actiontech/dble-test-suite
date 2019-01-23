@@ -34,24 +34,24 @@ ALTER TABLE test1 UNION (schema2.test2);
 #
 #ADD {INDEX|KEY} ... [index_type] ... (not SUPPORTED)
 ALTER TABLE test1 ADD KEY id_index USING BTREE (id)
-drop index id_idx on test1
+drop index id_index on test1
 ALTER TABLE test1 ADD KEY id_index USING HASH (id)
-drop index id_idx on test1
+drop index id_index on test1
 ALTER TABLE test1 ADD KEY id_index USING BTREE (id,R_COMMENT,R_NAME)
-drop index id_idx on test1
+drop index id_index on test1
 ALTER TABLE test1 ADD KEY id_index USING BTREE (id ASC,R_COMMENT(2) ASC,R_NAME(2) DESC)
-drop index id_idx on test1
+drop index id_index on test1
 #
 #ADD {INDEX|KEY} ... [index_option]... (not SUPPORTED)
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) key_block_size = 100
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING BTREE
-drop index id_idx on test1
+drop index idx on test1
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING HASH
-drop index id_idx on test1
+drop index idx on test1
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) with parser parser_name
-drop index id_idx on test1
+drop index idx on test1
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) comment 'testing'
-drop index id_idx on test1
+drop index idx on test1
 #
 #
 #ADD [COLUMN] col_name column_definition
