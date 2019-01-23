@@ -24,7 +24,7 @@ SELECT ROW_COUNT()/*allow_diff*/
 drop table if exists test1
 CREATE TABLE `test1` ( `c` json DEFAULT NULL, `g` int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1
 insert into test1 values ('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)
-SELECT c, c->"$.id", g, n FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"
+SELECT c, c->"$.id", g FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"
 SELECT c, c->"$.id", g FROM test1 WHERE c->"$.id" > 1 ORDER BY c->"$.name"
 ALTER TABLE test1 ADD COLUMN n INT;
 UPDATE test1 SET n=1 WHERE c->"$.id" = "4"
