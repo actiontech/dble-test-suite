@@ -57,9 +57,9 @@ INSERT INTO test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON
 SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1
 insert ignore into test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='new'
 SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1
-insert IGNORE schema2.test2(id,R_REGIONKEY,R_NAME,R_COMMENT) values(13,26,'test','test'),(15,30,'test','test') ON DUPLICATE KEY UPDATE R_REGIONKEY=(select max(R_REGIONKEY) from aly_test)
+insert IGNORE schema2.test2(id,R_REGIONKEY,R_NAME,R_COMMENT) values(13,26,'test','test'),(15,30,'test','test') ON DUPLICATE KEY UPDATE R_REGIONKEY=(select max(R_REGIONKEY) from test1)
 SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1
-insert IGNORE schema2.test2(id,R_REGIONKEY,R_NAME,R_COMMENT) values(1,(select min(R_REGIONKEY) from aly_test) ,'test','test'),(2,14,'test','test') ON DUPLICATE KEY UPDATE R_REGIONKEY=(select max(R_REGIONKEY) from aly_test)
+insert IGNORE schema2.test2(id,R_REGIONKEY,R_NAME,R_COMMENT) values(1,(select min(R_REGIONKEY) from aly_test) ,'test','test'),(2,14,'test','test') ON DUPLICATE KEY UPDATE R_REGIONKEY=(select max(R_REGIONKEY) from test1)
 SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1
 #
 #clear tables
