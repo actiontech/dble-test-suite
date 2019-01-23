@@ -1,3 +1,4 @@
+#!default_db:schema1
 #user_var_name = expr
 #SET @var_name = expr [, @var_name = expr] ...
 SET @t1=1, @t2=2, @t3:=4

@@ -1,3 +1,4 @@
+#!default_db:schema1
 ##deadline DATE and TIME
 ##case1:Type Conversion in Expression Evaluation
 SELECT 1+'1'

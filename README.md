@@ -50,6 +50,12 @@ behave -D dble_conf=sql_cover features/sql_cover/manager.feature
 ###全局表sql覆盖
 behave -Ddble_conf=sql_cover_global features/sql_cover/sql_global.feature
 
+###混合类型表sql覆盖
+behave -Ddble_conf=sql_cover_mixed features/sql_cover/sql_mixed.feature
+
+###分片表sql覆盖
+behave -Ddble_conf=sql_cover_sharding features/sql_cover/sql_sharding.feature
+
 ###非分片表sql覆盖
 behave --stop -Ddble_conf=sql_cover_nosharding features/sql_cover/sql_nosharding.feature
 
