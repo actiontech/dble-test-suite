@@ -36,5 +36,5 @@ UPDATE test1 SET id = 2 WHERE id = @var1:= 1
 SELECT @var1 := 1, @var2
 SELECT @var1, @var2 := @var1
 
-SET @total_tax = (SELECT SUM(id) FROM aly_test)
+SET @total_tax = (SELECT SUM(id) FROM test1)
 SELECT @total_tax
