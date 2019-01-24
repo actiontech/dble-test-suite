@@ -105,7 +105,7 @@ void ps_multi_test(){
 
 	MYSQL* con = getConn();
 
-	myquery(mysql_query(con, "drop procedure if exists mytest.sp;"),con);
+	myquery(mysql_query(con, "drop procedure if exists schema1.sp;"),con);
 
 	myquery(mysql_query(con,
 			"create procedure sp()"

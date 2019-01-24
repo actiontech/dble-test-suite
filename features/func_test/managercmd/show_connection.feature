@@ -9,7 +9,7 @@ Feature: show @@connection.sql test
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
         </schema>
         <dataNode dataHost="172.100.9.1" database="db1" name="dn1" />
@@ -25,11 +25,11 @@ Feature: show @@connection.sql test
     Given Restart dble in "dble-1" success
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
-  @regression
+  @TRIVIAL
   Scenario: query execute time <1ms #1
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose | sql                    | expect  | db       |
-      | test  | 111111    | conn_0 | False   | select sleep(0.0001)   | success | mytest  |
+      | test  | 111111    | conn_0 | False   | select sleep(0.0001)   | success | schema1  |
     Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_A"
     Then check resultset "conn_rs_A" has lines with following column values
       | EXECUTE_TIME-5 | SQL-6                  |
@@ -40,11 +40,11 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME-5 | SQL-6                  |
       |    0+200         | select sleep(0.0001) |
 
-  @regression
+  @TRIVIAL
   Scenario: query execute time >1ms #2
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql               | expect  | db       |
-      | test  | 111111    | conn_0 | False    | select sleep(0.1) | success | mytest   |
+      | test  | 111111    | conn_0 | False    | select sleep(0.1) | success | schema1   |
     Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_C"
     Then check resultset "conn_rs_C" has lines with following column values
       | EXECUTE_TIME-5 | SQL-6                |
@@ -55,12 +55,12 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME-5 | SQL-6                |
       |    90+200      | select sleep(0.1)    |
 
-  @regression
+  @TRIVIAL
   Scenario: multiple session with multiple query display #3
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql              | expect  | db       |
-      | test  | 111111    | conn_1 | False    | select sleep(1)  | success | mytest   |
-      | test  | 111111    | conn_0 | False    | select sleep(0.1)| success | mytest   |
+      | test  | 111111    | conn_1 | False    | select sleep(1)  | success | schema1   |
+      | test  | 111111    | conn_0 | False    | select sleep(0.1)| success | schema1   |
     Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_E"
     Then check resultset "conn_rs_E" has lines with following column values
       | EXECUTE_TIME-5 | SQL-6                 |

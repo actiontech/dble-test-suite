@@ -5,7 +5,7 @@ Feature: set charset in server.xml,check backend charsets are as set
   front connection charset is not controlled by server.xml property charset,
   but verify the default value here for convenient.
 
-  @smoke
+  @BLOCKER
   Scenario: set dble config charset same or different to session charset, session charset priorier to config charset #1
     #   1.1 set backend charset utf8, front charset utf8;
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -33,11 +33,11 @@ Feature: set charset in server.xml,check backend charsets are as set
       | 172.100.9.3 |     utf8                | utf8_general_ci         | utf8                     |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd  | conn   | toClose | sql                                         | expect  | db     |charset|
-      | test | 111111  | conn_0 | False   | drop table if exists aly_test               | success | mytest | utf8  |
-      | test | 111111  | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | mytest | utf8  |
-      | test | 111111  | conn_0 | False   | insert into aly_test value(1, '中')         | success | mytest | utf8  |
-      | test | 111111  | conn_0 | False   | select name from aly_test                   | has{('中')}| mytest | utf8  |
-      | test | 111111  | conn_0 | False   | set names utf8                              | success | mytest | utf8  |
+      | test | 111111  | conn_0 | False   | drop table if exists aly_test               | success | schema1 | utf8  |
+      | test | 111111  | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | schema1 | utf8  |
+      | test | 111111  | conn_0 | False   | insert into aly_test value(1, '中')         | success | schema1 | utf8  |
+      | test | 111111  | conn_0 | False   | select name from aly_test                   | has{('中')}| schema1 | utf8  |
+      | test | 111111  | conn_0 | False   | set names utf8                              | success | schema1 | utf8  |
     Then get resultset of admin cmd "show @@connection" named "conn_rs_A"
     Then check resultset "conn_rs_A" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
@@ -63,9 +63,9 @@ Feature: set charset in server.xml,check backend charsets are as set
       | 172.100.9.3 |     latin1              | latin1_swedish_ci       | latin1                   |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd  | conn   | toClose | sql                                         | expect  | db     |
-        | test | 111111  | conn_1 | False   | drop table if exists aly_test               | success | mytest |
-        | test | 111111  | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | mytest |
-        | test | 111111  | conn_1 | False   | insert into aly_test value(1, '中')         | ordinal not in range | mytest |
+        | test | 111111  | conn_1 | False   | drop table if exists aly_test               | success | schema1 |
+        | test | 111111  | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | schema1 |
+        | test | 111111  | conn_1 | False   | insert into aly_test value(1, '中')         | ordinal not in range | schema1 |
     Then get resultset of admin cmd "show @@connection" named "conn_rs_B"
     Then check resultset "conn_rs_B" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
@@ -73,5 +73,5 @@ Feature: set charset in server.xml,check backend charsets are as set
     #   1.3 set backend charset latin1, but set front charset utf8 to indirectly change used backend charset;
     Then execute sql in "dble-1" in "user" mode
         | user | passwd  | conn   | toClose | sql                                 | expect  | db     |charset|
-        | test | 111111  | conn_2 | False   | insert into aly_test value(1, '中') | success | mytest |utf8  |
-        | test | 111111  | conn_2 | True    | select name from aly_test           | has{('中')} | mytest |utf8  |
+        | test | 111111  | conn_2 | False   | insert into aly_test value(1, '中') | success | schema1 |utf8  |
+        | test | 111111  | conn_2 | True    | select name from aly_test           | has{('中')} | schema1 |utf8  |
