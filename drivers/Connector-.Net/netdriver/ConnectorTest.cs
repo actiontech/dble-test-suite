@@ -36,8 +36,8 @@ namespace netdriver
 
             if (args[0] == "test")
             {
-                dbleconnStr = "server=10.186.60.61;user=test;database=mytest;port=7131;password=111111;Charset=utf8";
-                mysqlconnStr = "server=10.186.60.61;user=test;database=mytest;port=7144;password=111111;Charset=utf8";
+                dbleconnStr = "server=10.186.60.61;user=test;database=schema1;port=7131;password=111111;Charset=utf8";
+                mysqlconnStr = "server=10.186.60.61;user=test;database=schema1;port=7144;password=111111;Charset=utf8";
                 dblemanagerconnStr = "server=10.186.60.61;user=root;port=7171;password=111111;Charset=utf8";
 
                 //String[] testargs = new String[]{ "D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_client.sql","D:\\NetConnector\\netdriver\\bin\\Release\\sql_cover\\driver_test_manager.sql" };

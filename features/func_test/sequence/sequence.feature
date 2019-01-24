@@ -1,8 +1,8 @@
 Feature: Functional testing of global sequences
-  @smoke
+  @BLOCKER
   Scenario: Configuration test for local file mode #1
     #1 test config
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
     """

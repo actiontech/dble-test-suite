@@ -1,15 +1,15 @@
 ===file:syntax/view.sql, id:93, sql:[select * from view_test1/*table doesn't exist*/]===
-mysql err:(1146, "Table 'mytest.view_test1' doesn't exist")
+mysql err:(1146, "Table 'schema1.view_test1' doesn't exist")
 dble err[22:20:09.852772] :(1146, "Table 'db3.view_test1' doesn't exist")
 ===file:syntax/view.sql, id:101, sql:[select * from view_test/*table doesn't exist*/]===
-mysql err:(1146, "Table 'mytest.view_test' doesn't exist")
+mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
 dble err[22:20:10.016102] :(1146, "Table 'db3.view_test' doesn't exist")
 ===file:syntax/view.sql, id:105, sql:[select * from view_test/*table doesn't exist*/]===
-mysql err:(1146, "Table 'mytest.view_test' doesn't exist")
+mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
 dble err[22:20:10.371942] :(1146, "Table 'db3.view_test' doesn't exist")
 ===file:syntax/view.sql, id:117, sql:[select * from view_test]===
-mysql err:(1356, "View 'mytest.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
+mysql err:(1356, "View 'schema1.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
 dble err[22:20:11.274756] :(1003, "Unknown column 'test_shard.R_NAME' in 'field list'")
 ===file:syntax/view.sql, id:121, sql:[select * from view_test]===
-mysql err:(1356, "View 'mytest.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
+mysql err:(1356, "View 'schema1.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
 dble err[22:20:11.771807] :(1003, "Unknown column 'test_shard.R_NAME' in 'field list'")
