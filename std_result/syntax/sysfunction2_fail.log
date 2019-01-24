@@ -12,7 +12,7 @@ dble:[[('test@172.100.9.253',)]]
 mysql:[[('test@%',)]]
 ===file:syntax/sysfunction2.sql, id:80, sql:[select schema()]===
 dble:[[('db3',)]]
-mysql:[[('mytest',)]]
+mysql:[[('schema1',)]]
 ===file:syntax/sysfunction2.sql, id:81, sql:[SELECT SESSION_USER()]===
 dble:[[('test@dble-1.compose_net',)]]
 mysql:[[('test@gateway',)]]

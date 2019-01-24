@@ -1,8 +1,8 @@
 #manager command
 check @@metadata
 check full @@metadata
-check full @@metadata where schema = 'mytest'
-#check full @@metadata where schema = 'mytest' and table =
+check full @@metadata where schema = 'schema1'
+#check full @@metadata where schema = 'schema1' and table =
 #select
 select @@VERSION_COMMENT
 select @@SESSION.TX_READ_ONLY
@@ -12,7 +12,7 @@ set @a=20
 SET SESSION sql_mode = 'TRADITIONAL'
 SET sql_mode = 'TRADITIONAL'
 #show
-show @@algorithm where schema=mytest and table=aly_test
+show @@algorithm where schema=schema1 and table=aly_test
 show @@backend
 show @@backend.old
 show @@backend.statistics
@@ -26,8 +26,8 @@ show @@connection.sql
 show @@cost_time
 show @@database
 show @@datanode
-show @@datanode where schema=mytest;
-show @@datanodes where schema=mytest and table=aly_test;
+show @@datanode where schema=schema1;
+show @@datanodes where schema=schema1 and table=aly_test;
 show @@datasource
 show @@datasource.cluster
 show @@datasource.synstatus

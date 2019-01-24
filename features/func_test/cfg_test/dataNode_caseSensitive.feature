@@ -1,6 +1,6 @@
 Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
-  @smoke
+  @NORMAL
   Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
     Given delete the following xml segment
     |file        | parent          | child               |
@@ -9,7 +9,7 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
     |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-      <schema dataNode="DN1" name="mytest" sqlMaxLimit="100">
+      <schema dataNode="DN1" name="schema1" sqlMaxLimit="100">
           <table dataNode="DN1,dn3" name="test1" type="global" />
        </schema>
        <dataNode dataHost="172.100.9.5" database="db1" name="DN1" />
@@ -34,7 +34,7 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
     Given Restart dble in "dble-1" success
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-       <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+       <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
            <table dataNode="dn1,dn3" name="test" type="global" />
        </schema>
     """

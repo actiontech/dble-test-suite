@@ -1,10 +1,10 @@
 Feature: show @@sql, show @@sql.resultset
 
-  @regression
+  @NORMAL
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
         <table dataNode="dn1,dn2,dn3" name="ta" rule="hash-three" />
     </schema>
     """
@@ -17,17 +17,17 @@ Feature: show @@sql, show @@sql.resultset
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                        | expect     | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists ta                    | success    | mytest |
-        | test | 111111 | conn_0 | False    | create table ta(id int,k varchar(1500))    | success    | mytest |
-        | test | 111111 | conn_0 | False    | insert into ta value(1, repeat('a', 1100)) | success    | mytest |
-        | test | 111111 | conn_0 | False    | insert into ta value(2, repeat('b', 1500)) | success    | mytest |
-        | test | 111111 | conn_0 | False    | insert into ta value(3, repeat('c', 100))  | success    | mytest |
-        | test | 111111 | conn_0 | False    | update ta set k="c" where id=3             | success    | mytest |
-        | test | 111111 | conn_0 | False    | select * from ta                           | success    | mytest |
-        | test | 111111 | conn_0 | False    | select * from ta order by id limit 1       | success    | mytest |
-        | test | 111111 | conn_0 | False    | select * from ta where id=2                | success    | mytest |
-        | test | 111111 | conn_0 | False    | delete from ta where id=1                  | success    | mytest |
-        | test | 111111 | conn_0 | True     | alter table ta drop column k               | success    | mytest |
+        | test | 111111 | conn_0 | False    | drop table if exists ta                    | success    | schema1 |
+        | test | 111111 | conn_0 | False    | create table ta(id int,k varchar(1500))    | success    | schema1 |
+        | test | 111111 | conn_0 | False    | insert into ta value(1, repeat('a', 1100)) | success    | schema1 |
+        | test | 111111 | conn_0 | False    | insert into ta value(2, repeat('b', 1500)) | success    | schema1 |
+        | test | 111111 | conn_0 | False    | insert into ta value(3, repeat('c', 100))  | success    | schema1 |
+        | test | 111111 | conn_0 | False    | update ta set k="c" where id=3             | success    | schema1 |
+        | test | 111111 | conn_0 | False    | select * from ta                           | success    | schema1 |
+        | test | 111111 | conn_0 | False    | select * from ta order by id limit 1       | success    | schema1 |
+        | test | 111111 | conn_0 | False    | select * from ta where id=2                | success    | schema1 |
+        | test | 111111 | conn_0 | False    | delete from ta where id=1                  | success    | schema1 |
+        | test | 111111 | conn_0 | True     | alter table ta drop column k               | success    | schema1 |
     Then get resultset of admin cmd "show @@sql" named "sql_rs_A"
     Then check resultset "sql_rs_A" has lines with following column values
         | ID-0 | USER-1 | SQL-4                                      |
