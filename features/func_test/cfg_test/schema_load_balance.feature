@@ -5,11 +5,11 @@ Feature: test read load balance
   2.https://actiontech.github.io/dble-docs-cn/1.config_file/1.2_schema.xml.html balance part
   todo: may need take various of writehost or readhost status abnormal into consideration
 
-  @regression
+  @CRITICAL
   Scenario: dataHost balance="0", do not balance, all read send to master #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -27,8 +27,8 @@ Feature: test read load balance
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
     Then execute sql in "dble-1" in "user" mode
     | user | passwd | conn   | toClose | sql                                         | expect   | db      |tb  |count|
-    | test | 111111 | conn_0 | True    | drop table if exists test                   | success  | mytest |test|     |
-    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | mytest |test|     |
+    | test | 111111 | conn_0 | True    | drop table if exists test                   | success  | schema1 |test|     |
+    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | schema1 |test|     |
     Then connect "dble-1" to insert "1000" of data for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                             | expect  | db     |
@@ -48,7 +48,7 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,),} | db1 |
 
-  @regression
+  @CRITICAL
   Scenario: dataHost balance="1", do balance on read host or standby write host #2
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -57,7 +57,7 @@ Feature: test read load balance
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -90,7 +90,7 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{0} |  |
 
-  @regression
+  @NORMAL
   Scenario: dataHost balance="2", do balance bewteen read host and write host #3
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -99,7 +99,7 @@ Feature: test read load balance
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -132,7 +132,7 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
-  @smoke
+  @CRITICAL
   Scenario: dataHost balance="2", do balance bewteen read host and write host according to their weight #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -141,7 +141,7 @@ Feature: test read load balance
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -183,7 +183,7 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
-  @regression
+  @CRITICAL
   Scenario: dataHost balance="3", do balance bewteen read host #5
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -192,7 +192,7 @@ Feature: test read load balance
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -234,7 +234,7 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
 
-  @regression
+  @NORMAL
   Scenario: dataHost balance="3" and tempReadHostAvailable="1", do balance bewteen read host even writehost down #6
      Given delete the following xml segment
       |file        | parent          | child               |
@@ -243,7 +243,7 @@ Feature: test read load balance
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -274,7 +274,7 @@ Feature: test read load balance
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |  |
     Given start mysql in host "mysql-master2"
 
-  @regression
+  @NORMAL
   Scenario: dataHost balance="3" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -283,7 +283,7 @@ Feature: test read load balance
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
         <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
@@ -305,7 +305,7 @@ Feature: test read load balance
     Given stop mysql in host "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
     | user  | passwd    | conn   | toClose | sql                   | expect  | db       |
-    | test  | 111111    | conn_0 | True    | select name from test | error totally whack | mytest  |
+    | test  | 111111    | conn_0 | True    | select name from test | error totally whack | schema1  |
     Given start mysql in host "mysql-master2"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
