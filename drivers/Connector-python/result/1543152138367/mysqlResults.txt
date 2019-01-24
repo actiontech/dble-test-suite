@@ -1,6 +1,6 @@
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:1, sql:# create table===
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:2, sql:select * from test2===
-1146 (42S02): Table 'mytest.test2' doesn't exist
+1146 (42S02): Table 'schema1.test2' doesn't exist
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:3, sql:drop table if exists test===
 No result set to fetch from.
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:4, sql:drop table if exists test1===
@@ -16,7 +16,7 @@ No result set to fetch from.
 No result set to fetch from.
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:10, sql:#select===
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:11, sql:#select * from test where name like 'A%%'===
-===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:12, sql:show full tables from mytest===
+===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:12, sql:show full tables from schema1===
 (u'test', u'BASE TABLE')
 (u'test1', u'BASE TABLE')
 (u'view_tt', u'VIEW')

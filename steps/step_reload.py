@@ -13,7 +13,7 @@ from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, 
 
 LOGGER = logging.getLogger('steps.reload')
 
-def get_dble_conn(context, default_db="mytest", node=None):
+def get_dble_conn(context, default_db="schema1", node=None):
     if node is None:
         node = get_node(context.dbles, "dble-1")
     conn = DBUtil(node.ip, context.cfg_dble['client_user'],

@@ -2,7 +2,7 @@ Feature:  insert into values (),(),()... to verify the max rows can be inserted
 
     @skip
     Scenario:
-        Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
+        Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
         """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="fixed_string_rule" />
         """

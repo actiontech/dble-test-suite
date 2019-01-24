@@ -238,7 +238,7 @@ dble:[[('\ra\rb\r',)]]
 dble:[[('\na\nb\n',)]]
 ===file:syntax/data_types.sql, id:186, sql:[select '\fa\fb\f']===
 dble:[[('fafbf',)]]
-===file:syntax/data_types.sql, id:189, sql:[use mytest]===
+===file:syntax/data_types.sql, id:189, sql:[use schema1]===
 dble:[[]]
 ===file:syntax/data_types.sql, id:190, sql:[select 1]===
 dble:[[(1L,)]]

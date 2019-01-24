@@ -2,7 +2,7 @@
 Feature: manager commands test
   # Enter feature description here
 
-  @smoke
+  @NORMAL
   Scenario Outline:
     Then execute sql in "<filename>" to check manager work fine
 

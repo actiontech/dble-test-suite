@@ -48,7 +48,7 @@ void case_mysql_real_connect(MYSQL* conn){
 	//case: multi query, and multi resultsets
 	/* execute multiple statements */
 	int status = mysql_query(test_conn,
-	                     "use mytest;\
+	                     "use schema1;\
 	                      DROP TABLE IF EXISTS test_table;\
 	                      CREATE TABLE test_table(id INT);\
 	                      INSERT INTO test_table VALUES(10);\
