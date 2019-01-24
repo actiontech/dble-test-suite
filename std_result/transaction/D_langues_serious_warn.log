@@ -1,6 +1,6 @@
 ===file:transaction/D_langues.sql, id:819, sql:[select * from aly_test order by id]===
-mysql err:(1146, "Table 'mytest.aly_test' doesn't exist")
+mysql err:(1146, "Table 'schema1.aly_test' doesn't exist")
 dble err[02:00:43.234209] :(1105, 'table aly_test doesn't exist!You should create it OR reload metadata')
 ===file:transaction/D_langues.sql, id:827, sql:[select * from aly_test order by id]===
-mysql err:(1146, "Table 'mytest.aly_test' doesn't exist")
+mysql err:(1146, "Table 'schema1.aly_test' doesn't exist")
 dble err[02:00:43.939454] :(1105, 'table aly_test doesn't exist!You should create it OR reload metadata')

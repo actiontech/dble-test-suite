@@ -24,27 +24,27 @@ MYSQL* getConn(){
     }
 
     if(IS_DEBUG){
-        if(mysql_query(conn, "drop database if exists mytest")){
-		printf("'drop database if exists mytest' err: %s\n", mysql_error(conn));
+        if(mysql_query(conn, "drop database if exists schema1")){
+		printf("'drop database if exists schema1' err: %s\n", mysql_error(conn));
 		exit(1);
 	    }else{
-		    printf("    'drop database if exists mytest'\n");
+		    printf("    'drop database if exists schema1'\n");
 	    }
 
-	    if(mysql_query(conn, "create database mytest")){
-		    printf("'create database mytest' err: %s\n", mysql_error(conn));
+	    if(mysql_query(conn, "create database schema1")){
+		    printf("'create database schema1' err: %s\n", mysql_error(conn));
 		    exit(1);
 	    }else{
-		    printf("    'create database mytest'\n");
+		    printf("    'create database schema1'\n");
 	    }
     }
 
 
-	if(mysql_query(conn, "use mytest")){
-		printf("'use mytest' err: %s\n", mysql_error(conn));
+	if(mysql_query(conn, "use schema1")){
+		printf("'use schema1' err: %s\n", mysql_error(conn));
 		exit(1);
 	}else{
-		printf("    'use mytest'\n");
+		printf("    'use schema1'\n");
 	}
 
     return conn;

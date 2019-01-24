@@ -189,7 +189,7 @@ public class TestUtilities {
 		conn = DriverManager.getConnection(fullUrlString,
 				connectionProps);
 		System.out.println("connect success!");
-		//TestUtilities.executeUpdate(conn, "create database if not exists mytest");
+		//TestUtilities.executeUpdate(conn, "create database if not exists schema1");
 		//conn.setCatalog(prop.dbName);
 //		System.out.println("set catalog success!");
 		return conn;
