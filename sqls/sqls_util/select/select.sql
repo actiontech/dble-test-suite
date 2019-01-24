@@ -19,7 +19,7 @@ select BIT_OR(pad) from test1
 select BIT_XOR(pad) from test1
 select count(pad) from test1
 select count(distinct pad) from test1
-select group_concat(pad) from test1
+select group_concat(pad) from test1 group by pad
 select max(pad) from test1
 select min(pad) from test1
 select std(pad) from test1
@@ -59,7 +59,7 @@ select BIT_OR(id),pad from test1 group by pad
 select BIT_XOR(id),pad from test1 group by pad
 select count(id),pad from test1 group by pad
 select count(distinct pad) from test1 group by pad
-select group_concat(id),pad from test1 group by pad
+select group_concat(id),pad from test1 group by pad order by pad
 select max(id),pad from test1 group by pad
 select min(id),pad from test1 group by pad
 select std(id),pad from test1 group by pad
@@ -270,9 +270,9 @@ insert into test1 values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','17
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME
 select R_NAME,max(R_REGIONKEY) from test1 group by R_name
-select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 limit 2,3
-select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 limit 1,1
-select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 limit 1,2
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 2,3
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,1
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,2
 select id,R_REGIONKEY from test1 order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test1 group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test1 group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3
