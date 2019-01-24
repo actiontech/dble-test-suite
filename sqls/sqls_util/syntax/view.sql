@@ -25,6 +25,39 @@ drop view view_test
 create view view_test as select sum(id) a,R_COMMENT from test1 group by R_COMMENT having R_COMMENT<6 order by a limit 3 
 select * from view_test
 drop view view_test
+####################The features of distributed view###########
+create view view_test as select R_NAME from test1
+select * from view_test
+alter table test1 change R_NAME name varchar(50)
+select * from view_test
+alter table test1 change name R_NAME varchar(50)
+select * from view_test
+alter table test1 drop R_NAME
+select * from view_test
+drop view view_test
+####################################view grammar#######################
+create or replace view view_test as select * from test1
+select * from view_test
+create or replace view view_test as select * from test1 where R_NAME like'%string%'
+select * from view_test
+drop view view_test
+#create or replace algorithm=undefined view view_test as select * from test1
+#create or replace algorithm=undefined view view_test as select * from test1 where R_NAME like'%string%'
+#create or replace algorithm=merge view view_test as select * from test1
+#create or replace algorithm=merge view view_test as select * from test1 where R_NAME like'%string%'
+#create or replace algorithm=temptable view view_test as select * from test1
+#create or replace algorithm=temptable view view_test as select * from test1 where R_NAME like'%string%'
+#create or replace definer=test view view_test as select * from test1
+#create or replace definer=test view view_test as select * from test1 where R_NAME like'%string%'
+#create or replace definer=current_user view view_test as select * from test1
+#create or replace definer=current_user view view_test as select * from test1 where R_NAME like'%string%'
+#create or replace sql security definer view view_test as select * from test1
+#create or replace sql security definer view view_test as select * from test1 where R_NAME like'%string%'
+#create or replace sql security invoker view view_test as select * from test1
+#create or replace sql security invoker view view_test as select * from test1 where R_NAME like'%string%'
+#create view view_test as select * from test1 with check option
+#create view view_test as select * from test1 with cascaded check option
+#create view view_test as select * from test1 with local check option
 drop table if exists test1
 drop table if exists schema2.test2
 drop table if exists schema3.test3
@@ -51,29 +84,6 @@ drop view view_test
 create view view_test as select * from test1 union select * from schema2.test2
 select * from view_test
 drop view view_test
-####################################view grammar#######################
-create or replace view view_test as select * from test1
-select * from view_test
-create or replace view view_test as select * from test1 where R_NAME like'%string%'
-select * from view_test
-drop view view_test
-#create or replace algorithm=undefined view view_test as select * from test1
-#create or replace algorithm=undefined view view_test as select * from test1 where R_NAME like'%string%'
-#create or replace algorithm=merge view view_test as select * from test1
-#create or replace algorithm=merge view view_test as select * from test1 where R_NAME like'%string%'
-#create or replace algorithm=temptable view view_test as select * from test1
-#create or replace algorithm=temptable view view_test as select * from test1 where R_NAME like'%string%'
-#create or replace definer=test view view_test as select * from test1
-#create or replace definer=test view view_test as select * from test1 where R_NAME like'%string%'
-#create or replace definer=current_user view view_test as select * from test1
-#create or replace definer=current_user view view_test as select * from test1 where R_NAME like'%string%'
-#create or replace sql security definer view view_test as select * from test1
-#create or replace sql security definer view view_test as select * from test1 where R_NAME like'%string%'
-#create or replace sql security invoker view view_test as select * from test1
-#create or replace sql security invoker view view_test as select * from test1 where R_NAME like'%string%'
-#create view view_test as select * from test1 with check option
-#create view view_test as select * from test1 with cascaded check option
-#create view view_test as select * from test1 with local check option
 ######################alter view ###################################
 create or replace view view_test as select * from test1
 alter view view_test as select * from schema2.test2
@@ -110,16 +120,6 @@ select * from schema2.test2 a join view_test b where a.pad=b.pad
 select count(*) from (select * from view_test) a
 select * from schema2.test2 union select * from view_test
 select * from schema2.test2 where id<(select count(*) from view_test)
-drop view view_test
-####################The features of distributed view###########
-create view view_test as select R_NAME from test1
-select * from view_test
-alter table test1 change R_NAME name varchar(50)
-select * from view_test
-alter table test1 change name R_NAME varchar(50)
-select * from view_test
-alter table test1 drop R_NAME
-select * from view_test
 drop view view_test
 #
 #clear tables

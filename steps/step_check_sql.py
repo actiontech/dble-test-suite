@@ -74,7 +74,7 @@ def step_impl(context):
     context.cur_serious_warn_log = "{0}/{1}_serious_warn.log".format(subdir, sql_file_name)
 
 
-def get_compare_conn(context, default_db="mytest"):
+def get_compare_conn(context, default_db="schema1"):
     m_ip = context.cfg_mysql['compare_mysql']['master1']['ip']
     m_port = context.cfg_mysql['compare_mysql']['master1']['port']
     m_user = context.cfg_mysql['user']
