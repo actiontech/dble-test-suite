@@ -12,13 +12,13 @@ dble:[[]]
 dble:[[]]
 ===file:syntax/show.sql, id:7, sql:[show columns from aly_order]===
 dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('MYDATE', 'date', 'YES', '', None, ''), ('O_CUSTKEY', 'varchar(20)', 'YES', '', None, ''), ('O_ORDERKEY', 'varchar(20)', 'NO', 'PRI', None, ''), ('O_TOTALPRICE', 'int(20)', 'YES', '', None, '')]]
-===file:syntax/show.sql, id:9, sql:[show columns from aly_order from mytest]===
+===file:syntax/show.sql, id:9, sql:[show columns from aly_order from schema1]===
 dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('MYDATE', 'date', 'YES', '', None, ''), ('O_CUSTKEY', 'varchar(20)', 'YES', '', None, ''), ('O_ORDERKEY', 'varchar(20)', 'NO', 'PRI', None, ''), ('O_TOTALPRICE', 'int(20)', 'YES', '', None, '')]]
-===file:syntax/show.sql, id:11, sql:[show full columns from aly_order from mytest]===
+===file:syntax/show.sql, id:11, sql:[show full columns from aly_order from schema1]===
 dble:[[('ID', 'int(11)', None, 'YES', '', None, '', 'select,insert,update,references', ''), ('MYDATE', 'date', None, 'YES', '', None, '', 'select,insert,update,references', ''), ('O_CUSTKEY', 'varchar(20)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('O_ORDERKEY', 'varchar(20)', 'latin1_swedish_ci', 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('O_TOTALPRICE', 'int(20)', None, 'YES', '', None, '', 'select,insert,update,references', '')]]
-===file:syntax/show.sql, id:12, sql:[show full columns from aly_order from mytest like 'o%']===
+===file:syntax/show.sql, id:12, sql:[show full columns from aly_order from schema1 like 'o%']===
 dble:[[('O_CUSTKEY', 'varchar(20)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('O_ORDERKEY', 'varchar(20)', 'latin1_swedish_ci', 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('O_TOTALPRICE', 'int(20)', None, 'YES', '', None, '', 'select,insert,update,references', '')]]
-===file:syntax/show.sql, id:13, sql:[show full columns from aly_order from mytest where field like 'o%']===
+===file:syntax/show.sql, id:13, sql:[show full columns from aly_order from schema1 where field like 'o%']===
 dble:[[('O_CUSTKEY', 'varchar(20)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('O_ORDERKEY', 'varchar(20)', 'latin1_swedish_ci', 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('O_TOTALPRICE', 'int(20)', None, 'YES', '', None, '', 'select,insert,update,references', '')]]
 ===file:syntax/show.sql, id:14, sql:[show table status/*allow_diff*/]===
 dble:[[('aly_order', 'InnoDB', 10L, 'Dynamic', 1L, 16384L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', ''), ('aly_test', 'InnoDB', 10L, 'Dynamic', 1L, 16384L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2018, 9, 12, 14, 2, 31), datetime.datetime(2018, 9, 12, 14, 2, 31), None, 'latin1_swedish_ci', None, '', '')]]
@@ -30,19 +30,19 @@ mysql:[[('aly_order', 'InnoDB', 10L, 'Dynamic', 8L, 2048L, 16384L, 0L, 0L, 0L, N
 dble:[[('aly_order',), ('aly_test',)]]
 ===file:syntax/show.sql, id:17, sql:[show full tables]===
 dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
-===file:syntax/show.sql, id:18, sql:[show tables from mytest]===
+===file:syntax/show.sql, id:18, sql:[show tables from schema1]===
 dble:[[('aly_order',), ('aly_test',)]]
-===file:syntax/show.sql, id:19, sql:[show tables in mytest]===
+===file:syntax/show.sql, id:19, sql:[show tables in schema1]===
 dble:[[('aly_order',), ('aly_test',)]]
-===file:syntax/show.sql, id:20, sql:[show full tables from mytest]===
+===file:syntax/show.sql, id:20, sql:[show full tables from schema1]===
 dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
-===file:syntax/show.sql, id:21, sql:[show full tables in mytest]===
+===file:syntax/show.sql, id:21, sql:[show full tables in schema1]===
 dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:22, sql:[show tables like 'aly_o%']===
 dble:[[('aly_order',)]]
-===file:syntax/show.sql, id:23, sql:[show full tables from mytest like 'aly%']===
+===file:syntax/show.sql, id:23, sql:[show full tables from schema1 like 'aly%']===
 dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
-===file:syntax/show.sql, id:24, sql:[show full tables in mytest where table_type like 'base%']===
+===file:syntax/show.sql, id:24, sql:[show full tables in schema1 where table_type like 'base%']===
 dble:[[('aly_order', 'BASE TABLE'), ('aly_test', 'BASE TABLE')]]
 ===file:syntax/show.sql, id:25, sql:[create INDEX index_001 ON aly_test (ID)]===
 dble:[[]]
@@ -50,25 +50,25 @@ dble:[[]]
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:syntax/show.sql, id:27, sql:[show index in aly_test]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:28, sql:[show index from aly_test from mytest]===
+===file:syntax/show.sql, id:28, sql:[show index from aly_test from schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:29, sql:[show index in aly_test in mytest]===
+===file:syntax/show.sql, id:29, sql:[show index in aly_test in schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:30, sql:[show index in aly_test from mytest]===
+===file:syntax/show.sql, id:30, sql:[show index in aly_test from schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:31, sql:[show index from aly_test in mytest]===
+===file:syntax/show.sql, id:31, sql:[show index from aly_test in schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:syntax/show.sql, id:32, sql:[show keys from aly_test]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:syntax/show.sql, id:33, sql:[show keys in aly_test]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:34, sql:[show keys from aly_test from mytest]===
+===file:syntax/show.sql, id:34, sql:[show keys from aly_test from schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:35, sql:[show keys from aly_test in mytest]===
+===file:syntax/show.sql, id:35, sql:[show keys from aly_test in schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:36, sql:[show keys in aly_test in mytest]===
+===file:syntax/show.sql, id:36, sql:[show keys in aly_test in schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
-===file:syntax/show.sql, id:37, sql:[show keys in aly_test from mytest]===
+===file:syntax/show.sql, id:37, sql:[show keys in aly_test from schema1]===
 dble:[[('aly_test', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('aly_test', 1L, 'index_001', 1L, 'ID', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:syntax/show.sql, id:38, sql:[drop index index_001 on aly_test]===
 dble:[[]]
