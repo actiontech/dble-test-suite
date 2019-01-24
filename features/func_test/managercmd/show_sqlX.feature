@@ -1,6 +1,6 @@
 Feature: show @@sql, show @@sql.resultset
 
-  @regression
+  @NORMAL
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """

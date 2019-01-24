@@ -1,7 +1,7 @@
 # Created by maofei at 2019/1/2
 Feature: # Detecting the reasonableness of the alarm information returned by the front end
 
-  @regression
+  @TRIVIAL
   Scenario: # union with different number of columns
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose| sql                          | expect    | db     |

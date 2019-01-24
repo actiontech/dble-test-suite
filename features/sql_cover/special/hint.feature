@@ -1,6 +1,6 @@
 Feature: verify hint sql
 
-  @regression
+  @NORMAL
   Scenario: test hint format: /*!dble:datanode=xxx*/ #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
@@ -69,7 +69,7 @@ Feature: verify hint sql
         | test | 111111 | new    | True    | desc test_table                                                                     | length{(3)}} | db1   |
         | test | 111111 | new    | True    | desc test_table                                                                    | length{(2)}} | db2   |
 
-  @regression
+  @NORMAL
   Scenario: test hint format: /*!dble:sql=xxx*/ #2
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
@@ -141,7 +141,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0    | True    | desc test_table                                                                     | length{(3)}} | db1   |
         | test | 111111 | conn_0    | True    | desc test_table                                                                    | length{(2)}} | db2   |
 
-  @regression
+  @TRIVIAL
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 1 #3
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -226,7 +226,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | False    | set global log_output='file'                                                           | success |    |
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
-  @regression
+  @NORMAL
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2 #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -311,7 +311,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | False    | set global log_output='file'                                                           | success |    |
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
-  @regression
+  @NORMAL
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 3 #5
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -396,7 +396,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | False    | set global log_output='file'                                                           | success |    |
         | test | 111111 | conn_0     | True     | set global general_log=off                                                                |success |    |
 
-  @regression
+  @TRIVIAL
   Scenario: hint for specail sql syntax: call procedure #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
       """

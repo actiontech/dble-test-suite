@@ -1,5 +1,6 @@
 Feature: test config in server.xml
 
+  @TRIVIAL
   Scenario: add client user with illegal label, reload fail #1
      #1.1  client user with illegal label got error
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -15,7 +16,7 @@ Feature: test config in server.xml
     These properties of user[test_user]  are not recognized: test
     """
 
-  @regression
+  @TRIVIAL
   Scenario: add client user with schema which does not exist, start dble fail #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
@@ -29,7 +30,7 @@ Feature: test config in server.xml
      schema testdb referred by user test_user3 is not exist!
      """
 
-  @smoke
+  @BLOCKER
   Scenario: add client user with usingDecrypt=1, start/reload success, query success #3
     Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -45,14 +46,14 @@ Feature: test config in server.xml
         | user         | passwd        | conn   | toClose | sql      | expect  | db     |
         | test_user    | test_password | conn_0 | True    | select 1 | success | mytest |
 
-  @regression
+  @TRIVIAL
   Scenario: config server.xml with only <user> node, start dble success #4
     Given delete the following xml segment
       |file        | parent           | child            |
       |server.xml  | {'tag':'root'}   | {'tag':'system'} |
     Given Restart dble in "dble-1" success
 
-
+  @TRIVIAL
   Scenario: both single & multiple manager user reload and do management cmd success #5
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
@@ -66,7 +67,7 @@ Feature: test config in server.xml
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
-  @regression
+  @CRITICAL
   Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #6
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
@@ -97,7 +98,7 @@ Feature: test config in server.xml
         | test        | 111111 | conn_0 | True    | select 1 |success  | mytest |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | mytest |
 
-  @regression
+  @CRITICAL
   Scenario: config sql blacklist #7
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
@@ -180,7 +181,7 @@ Feature: test config in server.xml
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | mytest |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | mytest |
 
-  @regression
+  @CRITICAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
@@ -214,7 +215,7 @@ Feature: test config in server.xml
         | root         | 111111    | conn_3 |False    | show @@version | success | mytest |
         | root         | 111111    | new    | False   | show @@version | Access denied for user 'root',too many connections for this user | mytest |
 
-  @regression
+  @NORMAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
@@ -242,7 +243,7 @@ Feature: test config in server.xml
         | action       | action    | conn_6 | False   | select 1 | success | mytest |
         | action       | action    | conn_7 | False   | select 1 | success | mytest |
 
-  @regression
+  @CRITICAL
   Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #10
     Given delete the following xml segment
       |file        | parent           | child          |

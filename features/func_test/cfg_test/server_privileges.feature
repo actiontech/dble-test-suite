@@ -1,7 +1,7 @@
 Feature:test user's privileges under different combination
   dml:xxxx in order "insert,update,select,delete"
 
-  @regression
+  @TRIVIAL
   Scenario: config privileges, including exist schema, different privileges, not exist schema,reload success #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -27,7 +27,7 @@ Feature:test user's privileges under different combination
     """
     Then execute admin cmd "reload @@config_all"
 
-  @regression
+  @CRITICAL
   Scenario: add readonly client user, user can only read to table in schema's default node and to global table #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
@@ -55,8 +55,8 @@ Feature:test user's privileges under different combination
         | test_user | test_password | conn_1 | False   | select * from test_table                           | success        | mytest |
         | test      | 111111        | conn_0 | True    | drop table if exists test_table                    | success        | mytest|
 
-  @smoke
-  Scenario: check user privileges work right under check=true setting, including: #2
+  @BLOCKER
+  Scenario: check user privileges work right under check=true setting, including: #3
   tables' explict privileges prior to schema's,
   one client users' privileges not affected by others,
   tables have no explict privileges use schema's privilege,
@@ -214,8 +214,8 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | drop table testdb.test3      | success |      |
       | test_user | 111111 | conn_0 | True    | drop table testdb.test4      | success |      |
 
-  @regression
-  Scenario: check user privileges work right under check=false setting #3
+  @NORMAL
+  Scenario: check user privileges work right under check=false setting #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
@@ -260,7 +260,7 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success |      |
       | test_user | 111111 | conn_0 | True    | drop table aly_order                            | success |      |
 
-  @regression @current
+  @CRITICAL @current
   Scenario: config only schema level privileges, tables in the schema privileges will inherit it #5
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
@@ -321,7 +321,7 @@ Feature:test user's privileges under different combination
       | testE | testE    | mytest | 0100  | schema_permission |
       | testF | testF    | mytest | 1000  | schema_permission |
 
-  @smoke
+  @BLOCKER
   Scenario: mix privilege config: readonly + schema #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -372,7 +372,7 @@ Feature:test user's privileges under different combination
       |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema3'}} |
     Then execute admin cmd "reload @@config_all"
 
-  @regression
+  @NORMAL
   Scenario: config both table and schema privileges, table's privilege prior to schema's #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """

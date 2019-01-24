@@ -22,7 +22,7 @@ Feature: test default db change right; cross db table not affected by others; an
     """
     Then execute admin cmd "reload @@config_all"
 
-  @smoke @skip_restart
+  @BLOCKER @skip_restart
   Scenario: default db not set;cross db table not affected by others; and cross db sql works right
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                             | expect  | db   |

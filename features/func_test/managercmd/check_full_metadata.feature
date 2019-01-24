@@ -1,7 +1,7 @@
 # Created by maofei at 2018/12/21
 Feature: test "check full @@metadata...'"
 
-  @regression
+  @CRITICAL
   Scenario: config same table name in different schema #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -39,7 +39,7 @@ Feature: test "check full @@metadata...'"
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard' | hasStr{`id` int(11) DEFAULT NULL}    |    |
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='testdb' and table='test_shard' | hasStr{`age` int(11) DEFAULT NULL}   |    |
 
-  @regression
+  @CRITICAL
   Scenario: config no-sharding table's name is same as sharding table's name, their metadatas are not affected by each other #2
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                      | expect  | db       |
@@ -83,7 +83,7 @@ Feature: test "check full @@metadata...'"
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test1' | hasNoStr{`name2`}                  |      |
       | root | 111111 | conn_0 | True    | check @@metadata                                              | success                            |      |
 
-  @regression
+  @CRITICAL
   Scenario: config no-sharding table's name is same as global table's name, their metadatas are not affected by each other #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
@@ -127,7 +127,7 @@ Feature: test "check full @@metadata...'"
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='testdb' and table='test1' | hasNoStr{`age` int(11) DEFAULT NULL} |    |
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='testdb' and table='test1' | hasStr{`name`}                       |    |
 
-  @regression
+  @CRITICAL
   Scenario: config no tables in node schema, then create 1 table in default node and do ddl,reload @@metadata, check table's metadata during the procedure #4
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                         | expect   | db     |
@@ -168,7 +168,7 @@ Feature: test "check full @@metadata...'"
       | user | passwd | conn   | toClose | sql                       | expect  | db     |
       | test | 111111 | conn_0 | True    | drop table if exists test | success | mytest |
 
-  @regression
+  @CRITICAL
   Scenario: backend tables in datanode are inconsistent or lack in some datanode for a config sharding/global table, check metadata and query #5
     """
     5.1 the table structure of the sharding table in the datanode is different
@@ -286,7 +286,7 @@ Feature: test "check full @@metadata...'"
       | test  | 111111 | conn_0 | True    | drop table if exists test5  | success                             | mytest   |
       | test  | 111111 | conn_0 | True    | drop table if exists test2  | success                             | mytest   |
 
-  @regression
+  @NORMAL
   Scenario: Some of datahost's writehost(with or without readhost) cannot be connectted, check metadata and query #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """

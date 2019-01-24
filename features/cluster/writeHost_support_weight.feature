@@ -2,7 +2,7 @@
 Feature:check if schema.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
 #github issue #793
 
-  @regression @skip_restart
+  @CRITICAL @skip_restart
   Scenario: set parameter "weight" for writeHost in cluster, then reload #1
        Given delete the following xml segment
         |file         | parent         | child               |
