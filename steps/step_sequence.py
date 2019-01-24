@@ -20,13 +20,13 @@ def step_impl(context):
     context.execute_steps(u"""
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                                          | success           | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(id,name) values(1, '{2}')    | In insert Syntax, you can't set value for Autoincrement column| mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} set id=1, name='{2}'         | In insert Syntax, you can't set value for Autoincrement column| mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')| success | mytest |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | schema1 |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                                          | success           | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0}(id,name) values(1, '{2}')    | In insert Syntax, you can't set value for Autoincrement column| schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} set id=1, name='{2}'         | In insert Syntax, you can't set value for Autoincrement column| schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')| success | schema1 |
     """.format(tb, "bigint", rand_str))
 
     sequnceHandlerType = text.get("sequnceHandlerType")
@@ -56,23 +56,23 @@ def step_impl(context):
     context.execute_steps(u"""
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success |mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} auto_increment, name varchar(20), primary key (id))| success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | mytest |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(idd {1}, name varchar(20))  | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey or incrementColumn | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | please make sure your table structure has primaryKey or incrementColumn | mytest |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(idd {1} auto_increment, name varchar(20), primary key(idd))| success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey or incrementColumn | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | please make sure your table structure has primaryKey or incrementColumn | mytest |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | schema1 |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey| schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | schema1 |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | schema1 |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} auto_increment, name varchar(20), primary key (id))| success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | schema1 |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | schema1 |
+        | test | 111111 | conn_0 | False   | create table {0}(idd {1}, name varchar(20))  | success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | Unknown column 'ID' in 'field list' | schema1 |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | schema1 |
+        | test | 111111 | conn_0 | False   | create table {0}(idd {1} auto_increment, name varchar(20), primary key(idd))| success | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey| schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | Unknown column 'ID' in 'field list' | schema1 |
     """.format(tb, "bigint", rand_str))
 
     #use int not bigint as global sequnce
@@ -80,10 +80,10 @@ def step_impl(context):
     context.execute_steps(u"""
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | mytest |
-        | test | 111111 | conn_0 | True    | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | mytest |
+        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | schema1 |
+        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | schema1 |
+        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | schema1 |
+        | test | 111111 | conn_0 | True    | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | schema1 |
     """.format(tb, "int", rand_str))
 
 # Given('append "{line}" in {seq_file}')
