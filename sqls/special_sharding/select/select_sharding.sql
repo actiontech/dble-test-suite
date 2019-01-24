@@ -1,3 +1,4 @@
+#!default_db:schema1
 drop table if exists test1
 CREATE TABLE test1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)
 create index ID_index on test1(ID)
