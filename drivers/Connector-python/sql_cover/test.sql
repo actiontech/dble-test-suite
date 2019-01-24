@@ -9,7 +9,7 @@ insert into test values(1,'Amy','R&D','developer','ePay',1001,'27000.22'),(2,'Em
 insert into test1 values(1,'Amy','R&D','developer',1001),(2,'Emily','R&D','developer',1002),(3,'Ray','R&D','QA',1003),(4,'Lily','R&D','QA',1004),(5,'Penny','Finance','Manager',1005),(6,'Benny','Human Resources','Manager',1006)
 #select
 #select * from test where name like 'A%%'
-show full tables from mytest
+show full tables from schema1
 select * from test1
 #update
 update test1 set depart='QA',role='tester' where id in(3,4)

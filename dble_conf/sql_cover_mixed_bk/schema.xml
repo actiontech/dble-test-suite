@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <!DOCTYPE dble:schema SYSTEM "schema.dtd">
 <dble:schema xmlns:dble="http://dble.cloud/">
-	<schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+	<schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
         <table name="sharding_one_1" primaryKey="id" dataNode="dn1" />
 		<table name="sharding_one_2" primaryKey="id" dataNode="dn1" />
 		<table name="a_two" primaryKey="id" dataNode="dn1,dn2" rule="hash-two" />

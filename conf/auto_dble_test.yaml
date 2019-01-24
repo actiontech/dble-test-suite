@@ -4,7 +4,7 @@ cfg_sys:
   share_path_docker: /init_assets
   ssh_user: root
   ssh_password: sshpass
-  default_db: mytest
+  default_db: schema1
   sql_source: ./assets/sql
 cfg_dble:
   install_dir: /opt
