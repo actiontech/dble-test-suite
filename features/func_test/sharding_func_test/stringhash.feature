@@ -1,4 +1,4 @@
-Feature:
+Feature: stringhash function
   @smoke
   Scenario: stringhash function
     #test: <= 2880

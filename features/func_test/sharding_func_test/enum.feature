@@ -1,4 +1,4 @@
-Feature:
+Feature:enum sharding function
   @smoke
   Scenario: Enum sharding function #1
     #test: type:integer not default node

@@ -28,7 +28,14 @@ jdbc 5.1.39
  behave 自定义命令行参数说明（change in behave.ini as you need）：
  - -D tar_local={true|false}, default false
  - -D test_config={auto_dble_test.yaml}
- - -D reinstall=true, default false, true is a must for install related features
+ - -D reinstall=true, default false, true if for install related features
+ 
+##according to allure-behave, case severity enum values:
+BLOCKER
+CRITICAL
+NORMAL
+MINOR
+TRIVIAL
 
 ##通过ftp包安装单节点并启动
 behave -Dreinstall=true features/install_uninstall/install_dble.feature

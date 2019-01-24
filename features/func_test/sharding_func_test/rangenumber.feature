@@ -1,4 +1,4 @@
-Feature:
+Feature: PatternRange in number function
   @smoke
   Scenario: PatternRange function #1
     #test: set defaultNode
