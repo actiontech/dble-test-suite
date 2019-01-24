@@ -7,7 +7,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
   Background: prepare for reload @@config_all -?
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
     <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
     <dataNode name="dn1" dataHost="host1" database="db1"/>
@@ -28,7 +28,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     Given Restart dble in "dble-1" success
 
-  @regression
+  @CRITICAL
   Scenario: reload @@config_all, eg:no writehost change, reload @@config_all does not rebuild backend connection pool #1
     Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
     Then execute admin cmd "reload @@config_all"
@@ -45,7 +45,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
 
-  @smoke
+  @BLOCKER
   Scenario: reload @@config_all, eg:remove old writeHost and add new, drop backend connection pool for old writeHost, create new connection pool, backend conn in use will not be dropped even the writehost was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -67,10 +67,10 @@ Feature: reload @@config_all base test, not including all cases in testlink
     #reload @@config_all, eg: backend conn in use will not be dropped even the writehost was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                                   | expect     | db     |
-      | test | 111111 | conn_0 | False    | drop table if exists test_shard       | success    | mytest |
-      | test | 111111 | conn_0 | False    | create table test_shard(id int)       | success    | mytest |
-      | test | 111111 | conn_0 | False    | begin                                 | success    | mytest |
-      | test | 111111 | conn_0 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | mytest |
+      | test | 111111 | conn_0 | False    | drop table if exists test_shard       | success    | schema1 |
+      | test | 111111 | conn_0 | False    | create table test_shard(id int)       | success    | schema1 |
+      | test | 111111 | conn_0 | False    | begin                                 | success    | schema1 |
+      | test | 111111 | conn_0 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="5" name="host1" switchType="2" slaveThreshold="100">
@@ -152,10 +152,10 @@ Feature: reload @@config_all base test, not including all cases in testlink
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                            | expect     | db     |
-      | test | 111111 | conn_1 | False    | drop table if exists test_shard       | success    | mytest |
-      | test | 111111 | conn_1 | False    | create table test_shard(id int)       | success    | mytest |
-      | test | 111111 | conn_1 | False    | begin                                 | success    | mytest |
-      | test | 111111 | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | mytest |
+      | test | 111111 | conn_1 | False    | drop table if exists test_shard       | success    | schema1 |
+      | test | 111111 | conn_1 | False    | create table test_shard(id int)       | success    | schema1 |
+      | test | 111111 | conn_1 | False    | begin                                 | success    | schema1 |
+      | test | 111111 | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Then execute admin cmd "reload @@config_all -r -f -s"
     Then get resultset of admin cmd "show @@backend" named "backend_rs_I"
     Then check resultsets "backend_rs_I" does not including resultset "backend_rs_H" in following columns

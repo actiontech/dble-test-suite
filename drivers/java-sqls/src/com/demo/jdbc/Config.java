@@ -22,7 +22,7 @@ public class Config {
 
 	public static String TEST_USER;
 	public static String TEST_USER_PASSWD;
-	public static String TEST_DB = "mytest";
+	public static String TEST_DB = "schema1";
 	public static int TEST_PORT;
 	public static int TEST_ADMIN_PORT;
 	public static int MYSQL_PORT = 3306;
@@ -135,7 +135,7 @@ public class Config {
 //		Config.Host_Slave2 = Config.Host_Single_MySQL;
 		TEST_USER = "test";
 		TEST_USER_PASSWD = "test";
-		TEST_DB = "mytest";
+		TEST_DB = "schema1";
 	}
 
 	public static String getUproxyAdminCmd() {
