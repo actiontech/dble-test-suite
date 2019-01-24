@@ -134,10 +134,10 @@ drop prepare pre_test
 #
 #contains select
 #
-prepare pre_test from 'select test1.id,test1.name,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2'
+prepare pre_test from 'select test1.id,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2'
 execute pre_test
 drop prepare pre_test
-prepare pre_test from 'select a.id,b.id as b_id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id'
+prepare pre_test from 'select a.id as a.t_id,b.id as b_id,b.pad from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id'
 execute pre_test
 drop prepare pre_test
 prepare pre_test from 'select * from test1 where id=3'
