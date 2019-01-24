@@ -1,6 +1,6 @@
 Feature: multi-tenancy, user-Permission
 
-  @regression
+  @NORMAL
   Scenario: multi-tenancy, authority for certain tenant is right #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -75,7 +75,7 @@ Feature: multi-tenancy, user-Permission
         | testC| testC  | conn_2 | False    | create table mytestC.sbtestC1(id int) | success           |        |
         | testC| testC  | conn_2 | True     | drop table if exists mytestC.sbtestC1 | success           |        |
 
-  @regression
+  @NORMAL
   Scenario: # Query statements with 2 subqueries can cause thread insecurities  from issue:917  author:maofei
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """

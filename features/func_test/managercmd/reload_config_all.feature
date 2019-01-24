@@ -28,7 +28,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     Given Restart dble in "dble-1" success
 
-  @regression
+  @CRITICAL
   Scenario: reload @@config_all, eg:no writehost change, reload @@config_all does not rebuild backend connection pool #1
     Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
     Then execute admin cmd "reload @@config_all"
@@ -45,7 +45,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
 
-  @smoke
+  @BLOCKER
   Scenario: reload @@config_all, eg:remove old writeHost and add new, drop backend connection pool for old writeHost, create new connection pool, backend conn in use will not be dropped even the writehost was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"

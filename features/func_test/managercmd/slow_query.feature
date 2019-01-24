@@ -1,6 +1,6 @@
 Feature: test slow query log related manager command
 
-  @regression
+  @NORMAL
   Scenario:test "enable @@slow_query_log"，"disable @@slow_query_log"，"show @@slow_query_log" #1
       Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql                     | expect       | db  |
@@ -9,7 +9,7 @@ Feature: test slow query log related manager command
         | root  | 111111    | conn_0 | False   | disable @@slow_query_log| success      |     |
         | root  | 111111    | conn_0 | True    | show @@slow_query_log   | has{('0',)}  |     |
 
-  @regression
+  @NORMAL
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
       Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
       """
@@ -35,7 +35,7 @@ Feature: test slow query log related manager command
         | root   | 111111  | conn_0 | False   | reload @@slow_query.flushsize = 50    | success        |    |
         | root   | 111111  | conn_0 | True    | show @@slow_query.flushsize           | has{('50',)}   |    |
 
-  @regression
+  @NORMAL
   Scenario: check slow query log written in assigned file #3
       Given delete file "/opt/dble/slowQuery" on "dble-1"
       Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"

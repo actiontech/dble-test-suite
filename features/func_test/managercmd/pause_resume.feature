@@ -1,7 +1,7 @@
 # Created by yexiaoli at 2018/12/7
 Feature: test "pause/resume" manager cmd
 
-  @regression
+  @NORMAL
   Scenario: basic pause/resume test #1
       #1.1 pause without any parameters
       #1.2 pause with  timeout not in ([0-9]+)
@@ -21,7 +21,7 @@ Feature: test "pause/resume" manager cmd
         | root | 111111 | conn_0 | False    | resume                                                                    | success |         |
         | root | 111111 | conn_0 | True     | pause @@DataNode = 'dn1,dn3,dn6' and timeout = 10,queue=10                |DataNode dn6 did not exists |         |
 
-  @regression
+  @CRITICAL
   Scenario: verify pause "wait_limit" work  #2
       Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                        | expect   | db       |
@@ -42,7 +42,7 @@ Feature: test "pause/resume" manager cmd
         | user | passwd | conn   | toClose  | sql                | expect  | db        |
         | test | 111111 | conn_0 | True     | select * from test | success |   mytest  |
 
-  @regression
+  @CRITICAL
   Scenario: verify "pause" when transaction executing and after transaction commit #3
       Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                                          | expect                    | db     |

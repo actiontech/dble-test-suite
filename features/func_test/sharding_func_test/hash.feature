@@ -1,5 +1,5 @@
-Feature:hash sharding function
-  @smoke
+Feature:
+  @BLOCKER
   Scenario: hash function #1
     #test: <= 2880
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
