@@ -25,7 +25,7 @@ Feature: show @@connection.sql test
     Given Restart dble in "dble-1" success
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
-  @regression
+  @TRIVIAL
   Scenario: query execute time <1ms #1
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose | sql                    | expect  | db       |
@@ -40,7 +40,7 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME-5 | SQL-6                  |
       |    0+200         | select sleep(0.0001) |
 
-  @regression
+  @TRIVIAL
   Scenario: query execute time >1ms #2
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql               | expect  | db       |
@@ -55,7 +55,7 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME-5 | SQL-6                |
       |    90+200      | select sleep(0.1)    |
 
-  @regression
+  @TRIVIAL
   Scenario: multiple session with multiple query display #3
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd    | conn   | toClose  | sql              | expect  | db       |

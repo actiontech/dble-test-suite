@@ -1,5 +1,5 @@
 Feature:
-  @smoke
+  @BLOCKER
   Scenario: PatternRange sharding function #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """

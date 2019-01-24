@@ -11,7 +11,7 @@ Feature: schema config stable test
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
 
-  @smoke
+  @NORMAL
   Scenario: config contains only 1 stopped mysqld, reload @@config_all fail, start the mysqld, reload @@config_all success #1
     Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -44,7 +44,7 @@ Feature: schema config stable test
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
 
-  @smoke
+  @BLOCKER
   Scenario: add mysqld with disabled="true", no readhost, reload success #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -60,7 +60,7 @@ Feature: schema config stable test
     """
     Then execute admin cmd "reload @@config_all"
 
-  @regression
+  @NORMAL
   Scenario: add readhost for writehost in disabled state, execute select success with balance not 0 #3
     Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}, 'childIdx':1}" in "schema.xml"
     """
@@ -71,8 +71,8 @@ Feature: schema config stable test
         | user | passwd | conn   | toClose  | sql      | expect   | db     |
         | test | 111111 | conn_0 | True     | select 2 | success  | mytest |
 
-  @smoke
-  Scenario: set dataHost balance=0 in case which readHost will not be used, dble should still check whether readhost connectable #2
+  @NORMAL
+  Scenario: set dataHost balance=0 in case which readHost will not be used, dble should still check whether readhost connectable #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <schema dataNode="dn2" name="mytest" sqlMaxLimit="100">

@@ -1,6 +1,6 @@
 Feature: test some import nodes attr in schema.xml
 
-  @smoke
+  @BLOCKER
   Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=true" #1
     Given delete the following xml segment
       |file         | parent           | child                 |
@@ -23,7 +23,7 @@ Feature: test some import nodes attr in schema.xml
 #        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)/*dest_node:dn5*/    | success | mytest |
 #        | test | 111111 | conn_0 | False    | select * from default_table                     | length{(3)} | mytest |
 
-  @regression
+  @TRIVIAL
   Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=false" #2
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -43,7 +43,7 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | mytest |
         | test | 111111 | conn_0 | True     | select * from test_table    | length{(5)} | mytest |
 
-  @regression
+  @TRIVIAL
   Scenario: config "table" node attr "name" with multiple values #3
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
      """
@@ -59,7 +59,7 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | False    | create table test2_table(id int)  | success             | mytest |
         | test | 111111 | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | mytest |
 
-  @smoke
+  @BLOCKER
   Scenario: test "dataHost" node attr "maxCon" #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -89,7 +89,7 @@ Feature: test some import nodes attr in schema.xml
     """
     error totally whack
     """
-  @regression
+  @NORMAL
   Scenario: if "dataHost" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1 #5
     Given delete the following xml segment
       |file        | parent          | child                |
@@ -127,7 +127,7 @@ Feature: test some import nodes attr in schema.xml
     error totally whack
     """
 
-  @regression
+  @CRITICAL
   Scenario: config "table" node attr "primaryKey" is coincidence with table's real primary key #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """
@@ -150,7 +150,7 @@ Feature: test some import nodes attr in schema.xml
         | user | passwd | conn   | toClose  | sql           | expect                                                                                   | db     |
         | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`mytest`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
-  @regression
+  @NORMAL
   Scenario: config "table" node attr "primaryKey" is not coincidence with table's real primary key #7
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
     """

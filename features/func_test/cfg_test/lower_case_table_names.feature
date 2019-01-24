@@ -3,7 +3,7 @@ Feature: check lower_case_table_names works right for dble
 #  lower_case_table_names=0, case sensitive
 #  lower_case_table_names=1, case insensitive
 
-  @smoke
+  @BLOCKER
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
     Given restart mysql in "mysql-master1" with options
     """
@@ -97,7 +97,7 @@ Feature: check lower_case_table_names works right for dble
      /server-id/a lower_case_table_names = 0
      """
 
-  @smoke
+  @BLOCKER
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
