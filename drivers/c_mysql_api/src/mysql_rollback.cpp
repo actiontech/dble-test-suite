@@ -12,9 +12,9 @@ void case_mysql_rollback(MYSQL* conn){
 
     MYSQL* new_conn = mysql_init(NULL);
     if(IS_DEBUG){
-        mysql_real_connect(new_conn, Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, "mytest", MYSQL_PORT, NULL, CLIENT_DEPRECATE_EOF);
+        mysql_real_connect(new_conn, Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, "schema1", MYSQL_PORT, NULL, CLIENT_DEPRECATE_EOF);
     }else{
-        mysql_real_connect(new_conn, Host_Test, TEST_USER, TEST_USER_PASSWD, "mytest", TEST_PORT,NULL, CLIENT_DEPRECATE_EOF);
+        mysql_real_connect(new_conn, Host_Test, TEST_USER, TEST_USER_PASSWD, "schema1", TEST_PORT,NULL, CLIENT_DEPRECATE_EOF);
 	}
     if (new_conn == NULL) {
         printf("Error connecting to database: %s\n", mysql_error(new_conn));
