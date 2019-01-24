@@ -21,7 +21,7 @@ No result set to fetch from.
 No result set to fetch from.
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:10, sql:#select===
 ===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:11, sql:#select * from test where name like 'A%%'===
-===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:12, sql:show full tables from mytest===
+===File：F:\Actionskyworkspace\python\sql_cover\test.sql, id:12, sql:show full tables from schema1===
 (u'test', u'BASE TABLE')
 (u'test1', u'BASE TABLE')
 (u'test2', u'BASE TABLE')

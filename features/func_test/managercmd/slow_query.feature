@@ -49,7 +49,7 @@ Feature: test slow query log related manager command
      """
      Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="a_test" rule="hash-four" />
         </schema>
      """
@@ -64,13 +64,13 @@ Feature: test slow query log related manager command
         | root         | 111111    | conn_0 | True     | disable @@slow_query_log       | success  |      |
       Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose  | sql                             | expect    | db     |
-        | test         | 111111    | conn_0 | False    | drop table if exists a_test     |  success  | mytest |
-        | test         | 111111    | conn_0 | False    | create table a_test(id int)     |  success  | mytest |
-        | test         | 111111    | conn_0 | False    | alter table a_test add age int  |  success  | mytest |
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,20) |  success  | mytest |
-        | test         | 111111    | conn_0 | False    | select id from a_test           |  success  | mytest |
-        | test         | 111111    | conn_0 | False    | select count(id) from a_test    |  success  | mytest |
-        | test         | 111111    | conn_0 | True     | delete from a_test              |  success  | mytest |
+        | test         | 111111    | conn_0 | False    | drop table if exists a_test     |  success  | schema1 |
+        | test         | 111111    | conn_0 | False    | create table a_test(id int)     |  success  | schema1 |
+        | test         | 111111    | conn_0 | False    | alter table a_test add age int  |  success  | schema1 |
+        | test         | 111111    | conn_0 | False    | insert into a_test values(1,20) |  success  | schema1 |
+        | test         | 111111    | conn_0 | False    | select id from a_test           |  success  | schema1 |
+        | test         | 111111    | conn_0 | False    | select count(id) from a_test    |  success  | schema1 |
+        | test         | 111111    | conn_0 | True     | delete from a_test              |  success  | schema1 |
 
       Then check following "not" exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
       """
@@ -87,13 +87,13 @@ Feature: test slow query log related manager command
         | root         | 111111    | conn_0 | True    | enable @@slow_query_log |  success|        |
       Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose  | sql                             | expect  | db     |
-        | test         | 111111    | conn_0 | False    | drop table if exists a_test     | success |  mytest|
-        | test         | 111111    | conn_0 | False    | create table a_test(id int)     | success |  mytest|
-        | test         | 111111    | conn_0 | False    | alter table a_test add age int  | success |  mytest|
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,20) | success |  mytest|
-        | test         | 111111    | conn_0 | False    | select id from a_test           | success |  mytest|
-        | test         | 111111    | conn_0 | False    | select count(id) from a_test    | success |  mytest|
-        | test         | 111111    | conn_0 | True     | delete from a_test              | success |  mytest|
+        | test         | 111111    | conn_0 | False    | drop table if exists a_test     | success |  schema1|
+        | test         | 111111    | conn_0 | False    | create table a_test(id int)     | success |  schema1|
+        | test         | 111111    | conn_0 | False    | alter table a_test add age int  | success |  schema1|
+        | test         | 111111    | conn_0 | False    | insert into a_test values(1,20) | success |  schema1|
+        | test         | 111111    | conn_0 | False    | select id from a_test           | success |  schema1|
+        | test         | 111111    | conn_0 | False    | select count(id) from a_test    | success |  schema1|
+        | test         | 111111    | conn_0 | True     | delete from a_test              | success |  schema1|
       Then check following " " exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
       """
       drop table if exists a_test
@@ -109,10 +109,10 @@ Feature: test slow query log related manager command
         | root         | 111111    | conn_0 | True    | enable @@slow_query_log |  success|        |
      Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose  | sql                                                             | expect                           | db     |
-        | test         | 111111    | conn_0 | False    | drop table if exists a_test                                     |  success                         | mytest |
-        | test         | 111111    | conn_0 | False    | create table a_test(id int(10) unsigned NOT NULL,name char(1))  |  success                         | mytest |
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | mytest |
-        | test         | 111111    | conn_0 | False    | insert into a_test values(3,3)                                  |  success                         | mytest |
+        | test         | 111111    | conn_0 | False    | drop table if exists a_test                                     |  success                         | schema1 |
+        | test         | 111111    | conn_0 | False    | create table a_test(id int(10) unsigned NOT NULL,name char(1))  |  success                         | schema1 |
+        | test         | 111111    | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | schema1 |
+        | test         | 111111    | conn_0 | False    | insert into a_test values(3,3)                                  |  success                         | schema1 |
      Then check following " " exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
      """
      drop table if exists a_test

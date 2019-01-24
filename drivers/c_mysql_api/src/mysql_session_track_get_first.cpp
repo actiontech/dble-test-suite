@@ -11,7 +11,7 @@ void case_mysql_session_track_get_first(MYSQL* conn){
 	printf("==>mysql_session_track_get_first && mysql_session_track_get_next test suites\n");
 	createAndFillTable(conn);
 
-	const char * stmt_str = "use mytest/*master*/";
+	const char * stmt_str = "use schema1/*master*/";
 //	printf("    Execute: %s\n", stmt_str);
 
 	if (mysql_query(conn, stmt_str) != 0)

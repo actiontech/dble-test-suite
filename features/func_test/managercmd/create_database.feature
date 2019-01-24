@@ -99,7 +99,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-        <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn10,dn11,dn20,dn21" name="test" rule="hash-four" />
         </schema>
 

@@ -16,7 +16,7 @@ namespace netdriver
     {
         public static void Testing()
         {
-            string connStr = "server=10.186.60.61;user=test;database=mytest;port=7144;password=111111";
+            string connStr = "server=10.186.60.61;user=test;database=schema1;port=7144;password=111111";
             MySqlConnection conn = new MySqlConnection(connStr);
             try
             {

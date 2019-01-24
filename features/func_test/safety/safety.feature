@@ -79,16 +79,16 @@ Feature: multi-tenancy, user-Permission
   Scenario: # Query statements with 2 subqueries can cause thread insecurities  from issue:917  author:maofei
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
      <table dataNode="dn1,dn2,dn3,dn4" name="test_shard" rule="hash-four" />
     </schema>
     """
     Then execute admin cmd "Reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                                   | expect            | db     |
-      |test  |111111  |conn_0  |True      |drop table if exists test_shard     |success           |mytest  |
-      |test  |111111  |conn_0  |True      |create table test_shard (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))     |success           |mytest  |
-      |test  |111111  |conn_0  |True      |insert into test_shard (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')     |success           |mytest  |
+      |test  |111111  |conn_0  |True      |drop table if exists test_shard     |success           |schema1  |
+      |test  |111111  |conn_0  |True      |create table test_shard (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))     |success           |schema1  |
+      |test  |111111  |conn_0  |True      |insert into test_shard (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')     |success           |schema1  |
     Then connect "dble-1" to execute "100" of select
     """
     select * from test_shard where HEX(R_bit) not like (select '%A%') escape (select '%')
