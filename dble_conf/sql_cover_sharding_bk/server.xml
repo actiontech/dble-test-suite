@@ -10,7 +10,7 @@
 	
 	<user name="test">
 		<property name="password">111111</property>
-		<property name="schemas">mytest,testdb,schema1,schema2,schema3</property>
+		<property name="schemas">schema1,schema2,schema3</property>
 	</user>
 	<user name="root">
 		<property name="password">111111</property>
