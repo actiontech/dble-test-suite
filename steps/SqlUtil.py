@@ -306,7 +306,7 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
 
 @Then('connect "{hostname}" to insert "{num}" of data for "{tablename}"')
 @Then('connect "{hostname}" to insert "{num}" of data for "{dbname}"."{tablename}"')
-def step_impl(context,hostname,num, tablename,dbname="mytest"):
+def step_impl(context,hostname,num, tablename,dbname="schema1"):
     sql = ("insert into {0} (id,name) values".format(tablename))
     end = int(num)
     for i in range(1, end + 1):
@@ -321,7 +321,7 @@ def step_impl(context,hostname,num, tablename,dbname="mytest"):
 @Then('connect "{hostname}" to execute "{num}" of select')
 @Then('connect "{hostname}" to execute "{num}" of select for "{tablename}"')
 @Then('connect "{hostname}" to execute "{num}" of select for "{dbname}"."{tablename}"')
-def step_impl(context, hostname, num, tablename="", dbname="mytest"):
+def step_impl(context, hostname, num, tablename="", dbname="schema1"):
     end = int(num)
     for i in range(1, end + 1):
         if context.text:

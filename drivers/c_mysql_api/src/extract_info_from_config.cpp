@@ -19,7 +19,7 @@ char TEST_ADMIN_PASSWD[100];
 
 char TEST_USER[100];
 char TEST_USER_PASSWD[100];
-char TEST_DB[50] = "mytest";
+char TEST_DB[50] = "schema1";
 unsigned int TEST_PORT=8066;
 //static unsigned int MYSQL_PORT = 3306;
 

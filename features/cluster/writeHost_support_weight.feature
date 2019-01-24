@@ -2,7 +2,7 @@
 Feature:check if schema.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
 #github issue #793
 
-  @regression @skip_restart
+  @CRITICAL @skip_restart
   Scenario: set parameter "weight" for writeHost in cluster, then reload #1
        Given delete the following xml segment
         |file         | parent         | child               |
@@ -11,7 +11,7 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
         |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
        Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
        """
-              <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+              <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
                   <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
               </schema>
               <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />

@@ -37,13 +37,13 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:37, sql:[SELECT COUNT(*) FROM (
 select test1.*
-from mytest.aly_test test1
+from schema1.aly_test test1
 where test1.trancode = 'ATS000010CHGEBUSSPTBNK'
 AND test1.RETCODE = '0'
 AND test1.OAPP != 'F-CLMS'
 UNION
 SELECT test2.*
-FROM mytest.aly_order test2
+FROM schema1.aly_order test2
 WHERE test2.trancode = 'ATS000008QRYBUSSPTGIFTLIST'
 AND test2.RETCODE = '0'
 AND test2.OAPP != 'F-CLMS'
@@ -400,9 +400,9 @@ dble:[[]]
 dble:[[]]
 ===file:bugs/bug.sql, id:240, sql:[create table test_global(id int,name varchar(30),role varchar(30))]===
 dble:[[]]
-===file:bugs/bug.sql, id:241, sql:[/* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view mytest.view_tg as select name,role from mytest.test_global]===
+===file:bugs/bug.sql, id:241, sql:[/* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view schema1.view_tg as select name,role from schema1.test_global]===
 dble:[[]]
-===file:bugs/bug.sql, id:242, sql:[/* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM mytest */]===
+===file:bugs/bug.sql, id:242, sql:[/* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM schema1 */]===
 dble:[[]]
 ===file:bugs/bug.sql, id:243, sql:[drop table if exists test_global]===
 dble:[[]]

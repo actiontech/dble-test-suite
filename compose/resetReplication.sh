@@ -34,7 +34,7 @@ for((i=4; i<6; i=i+1)); do
 done
 
 echo "create database in compare mysql"
-docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database mytest\" "
+docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database schema1\" "
 docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database testdb\" "
 docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database tpccdb\" "
 
