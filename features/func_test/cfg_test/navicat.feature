@@ -1,7 +1,7 @@
 # Created by yexiaoli at 2018/11/1
 Feature: queries to mysql default database send by  Navicat Premium 12, dble will mock a resultset to support it
 
-  @regression
+  @NORMAL
   Scenario: test navicat used sqls support when connect to dble
     Then execute sql in "dble-1" in "user" mode
     | user         | passwd         | conn    | toClose | sql                                                                                                                                                                                              | expect        | db     |

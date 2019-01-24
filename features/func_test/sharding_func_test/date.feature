@@ -1,5 +1,5 @@
 Feature:Date sharding function
-  @smoke
+  @BLOCKER
   Scenario: Date sharding function #1
     #test: sBeginDate not configured
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
