@@ -7,7 +7,7 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
 # NumberRange NumberRange
 # StringHash StringHash
 # hash hash
-
+  @TRIVIAL
   Scenario: illegal tableRule will make reload fail #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
@@ -35,7 +35,7 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     Reload config failure
     """
 
-  @regression
+  @NORMAL
   Scenario: config Hash sharding will reload success #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
@@ -50,7 +50,7 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     """
     Then execute admin cmd "reload @@config_all"
 
-  @regression
+  @TRIVIAL
   Scenario: config NumberRange sharding will reload success #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
@@ -72,7 +72,7 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     """
     Then execute admin cmd "reload @@config_all"
 
-  @regression
+  @TRIVIAL
   Scenario: config Enum sharding will relaod success #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """

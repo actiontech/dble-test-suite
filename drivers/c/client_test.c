@@ -8,7 +8,7 @@ int main() {
     unsigned int port = 8066;
     char *user = "test";
     char *password = "test";
-    char *database = "mytest";
+    char *database = "schema1";
 
     mysql = mysql_init(NULL);
     if(!mysql_real_connect(mysql, server, user, password, database, port, NULL, CLIENT_DEPRECATE_EOF))
