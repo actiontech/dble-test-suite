@@ -2,7 +2,7 @@ Feature: schema basic config test
 
   @TRIVIAL
   Scenario: config with er table and extra no use datanode, reload success #1
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'mytest'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" >
             <childTable name="child_table" primaryKey="id" joinKey="id" parentKey="id" />
@@ -60,7 +60,7 @@ Feature: schema basic config test
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2" name="test" type="global" />
         </schema>
         <dataNode dataHost="172.100.9.5" database="db$1-2" name="dn$1-2" />
@@ -73,8 +73,8 @@ Feature: schema basic config test
     Then execute admin cmd "Reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-     | test | 111111 | conn_0 | False    | drop table if exists test   | success | mytest |
-     | test | 111111 | conn_0 | True     | create table test(id int)    | success | mytest |
+     | test | 111111 | conn_0 | False    | drop table if exists test   | success | schema1 |
+     | test | 111111 | conn_0 | True     | create table test(id int)    | success | schema1 |
   @TRIVIAL
   Scenario: config readhost xml node closed with none abbr mode, expect reload success, but fail at present #5
     Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
@@ -112,7 +112,7 @@ Feature: schema basic config test
   Scenario:github issue 598-636,database configed for datanode is not created and the datanode is not used by any table #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
 
@@ -134,10 +134,10 @@ Feature: schema basic config test
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql            | expect  | db     |
-        | root  | 111111    | conn_0 | True    | show @@version | success | mytest |
+        | root  | 111111    | conn_0 | True    | show @@version | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                             | expect   | db      |
-        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | mytest |
+        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | schema1 |
 
   @NORMAL
   Scenario: database configed for datanode is not created and the datanode is used by table #10
@@ -148,7 +148,7 @@ Feature: schema basic config test
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
      Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-        <schema dataNode="dn1" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn3" name="test" type="global" />
         </schema>
         <dataNode dataHost="dh1" database="da1" name="dn1" />
@@ -166,7 +166,7 @@ Feature: schema basic config test
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql            | expect  | db     |
-        | root  | 111111    | conn_0 | True    | show @@version | success | mytest |
+        | root  | 111111    | conn_0 | True    | show @@version | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                             | expect   | db      |
-        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | mytest |
+        | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | schema1 |

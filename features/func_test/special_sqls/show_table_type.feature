@@ -7,7 +7,7 @@ Feature: table type check
   Scenario: show full tables could show config table and it was basic table #1
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                     | expect                       | db     |
-        | test | 111111 | conn_0 | False    | create table if not exists test(id int) | success                      | mytest |
-        | test | 111111 | conn_0 | False    | show full tables                        | has{('test','BASE TABLE')}   | mytest |
-        | test | 111111 | conn_0 | False    | show full tables from `mytest`        | has{('test','BASE TABLE')}   | mytest |
-        | test | 111111 | conn_0 | True     | drop table test                         | success                      | mytest |
+        | test | 111111 | conn_0 | False    | create table if not exists test(id int) | success                      | schema1 |
+        | test | 111111 | conn_0 | False    | show full tables                        | has{('test','BASE TABLE')}   | schema1 |
+        | test | 111111 | conn_0 | False    | show full tables from `schema1`        | has{('test','BASE TABLE')}   | schema1 |
+        | test | 111111 | conn_0 | True     | drop table test                         | success                      | schema1 |

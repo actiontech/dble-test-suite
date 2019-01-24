@@ -13,14 +13,14 @@ def getConfig(conf_path):
     dble__port = 7131
     dble_user = cfg_dble['client_user']
     dble_passwd = str(cfg_dble['client_password'])
-    dble_database = 'mytest'
+    dble_database = 'schema1'
 
     cfg_mysql = yconf['cfg_mysql']
     mysql_host = '10.186.31.25'
     mysql_port = 7144
     mysql_user = cfg_mysql['user']
     mysql_passwd = str(cfg_mysql['password'])
-    mysql_database = 'mytest'
+    mysql_database = 'schema1'
 
 
     dble_config = {

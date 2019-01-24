@@ -5,7 +5,7 @@ Feature: test "check full @@metadata...'"
   Scenario: config same table name in different schema #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
     <table name="test_shard" dataNode="dn2,dn3" rule="hash-two"/>
     </schema>
     <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
@@ -16,49 +16,49 @@ Feature: test "check full @@metadata...'"
     """
     <user name="test">
         <property name="password">111111</property>
-        <property name="schemas">mytest,testdb</property>
+        <property name="schemas">schema1,testdb</property>
     </user>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                | expect          | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                    | success         | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                    | success         | schema1 |
       | test | 111111 | conn_0 | True    | drop table if exists test_shard                    | success         | testdb |
-      | test | 111111 | conn_0 | True    | create table test_shard(id int,name char)          | success         | mytest |
+      | test | 111111 | conn_0 | True    | create table test_shard(id int,name char)          | success         | schema1 |
       | test | 111111 | conn_0 | True    | create table test_shard(id int,name char,age int)  | success         | testdb |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                  | expect                                          | db     |
-      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1) | Column count doesn't match value count at row 1 | mytest |
-      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1)   | success                                         | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1) | Column count doesn't match value count at row 1 | schema1 |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1)   | success                                         | schema1 |
       | test | 111111 | conn_0 | True    | insert into test_shard values(1,1)   | Column count doesn't match value count at row 1 | testdb |
       | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1) | success                                         | testdb |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                                | expect                               | db |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard' | hasNoStr{`age` int(11) DEFAULT NULL} |    |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard' | hasStr{`id` int(11) DEFAULT NULL}    |    |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard' | hasNoStr{`age` int(11) DEFAULT NULL} |    |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard' | hasStr{`id` int(11) DEFAULT NULL}    |    |
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='testdb' and table='test_shard' | hasStr{`age` int(11) DEFAULT NULL}   |    |
 
   @CRITICAL
   Scenario: config no-sharding table's name is same as sharding table's name, their metadatas are not affected by each other #2
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                      | expect  | db       |
-      | test | 111111 | conn_0 | True    | drop table if exists test1                               | success | mytest   |
-      | test | 111111 | conn_0 | True    | create table test1(id int,name1 char,age int,name2 char) | success | mytest   |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1)                        | success | mytest   |
+      | test | 111111 | conn_0 | True    | drop table if exists test1                               | success | schema1   |
+      | test | 111111 | conn_0 | True    | create table test1(id int,name1 char,age int,name2 char) | success | schema1   |
+      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1)                        | success | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                           | expect                                   | db    |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test1' | hasStr{`name2` char(1) DEFAULT NULL} |       |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test1' | hasStr{`name2` char(1) DEFAULT NULL} |       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test">
         <property name="password">111111</property>
-        <property name="schemas">mytest,testdb</property>
+        <property name="schemas">schema1,testdb</property>
     </user>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
     <table name="test1" dataNode="dn2,dn3" rule="hash-two"/>
     </schema>
     <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
@@ -68,19 +68,19 @@ Feature: test "check full @@metadata...'"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                            | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test1                     | success | mytest |
-      | test | 111111 | conn_0 | True    | create table test1(id int,name char,age int)   | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test1                     | success | schema1 |
+      | test | 111111 | conn_0 | True    | create table test1(id int,name char,age int)   | success | schema1 |
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                               | expect                                          | db       |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1) | Column count doesn't match value count at row 1 | mytest   |
-      | test | 111111 | conn_0 | True    | insert into test1 values(2,2,2)   | success                                         | mytest   |
-      | test | 111111 | conn_0 | True    | alter table test1 drop name       | success                                         | mytest   |
+      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1) | Column count doesn't match value count at row 1 | schema1   |
+      | test | 111111 | conn_0 | True    | insert into test1 values(2,2,2)   | success                                         | schema1   |
+      | test | 111111 | conn_0 | True    | alter table test1 drop name       | success                                         | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                           | expect                             | db   |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test1' | hasStr{`age` int(11) DEFAULT NULL} |      |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test1' | hasNoStr{`name`}                   |      |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test1' | hasNoStr{`name2`}                  |      |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test1' | hasStr{`age` int(11) DEFAULT NULL} |      |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test1' | hasNoStr{`name`}                   |      |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test1' | hasNoStr{`name2`}                  |      |
       | root | 111111 | conn_0 | True    | check @@metadata                                              | success                            |      |
 
   @CRITICAL
@@ -89,12 +89,12 @@ Feature: test "check full @@metadata...'"
     """
     <user name="test">
         <property name="password">111111</property>
-        <property name="schemas">mytest,testdb</property>
+        <property name="schemas">schema1,testdb</property>
     </user>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
     <table name="test1" dataNode="dn2,dn3" rule="hash-two"/>
     </schema>
     <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
@@ -135,38 +135,38 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True     | create database db3         | success  |        |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                         | expect     | db      |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' | success    |         |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' | success    |         |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                         | expect      | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test                   | success     | mytest  |
-      | test | 111111 | conn_0 | True    | create table test(id int,name char,age int) | success     | mytest  |
-      | test | 111111 | conn_0 | True    | insert into test values(1,1,1)              | success     | mytest  |
-      | test | 111111 | conn_0 | True    | alter table test drop name                  | success     | mytest  |
-      | test | 111111 | conn_0 | True    | insert into test values(2,2)                | success     | mytest  |
+      | test | 111111 | conn_0 | True    | drop table if exists test                   | success     | schema1  |
+      | test | 111111 | conn_0 | True    | create table test(id int,name char,age int) | success     | schema1  |
+      | test | 111111 | conn_0 | True    | insert into test values(1,1,1)              | success     | schema1  |
+      | test | 111111 | conn_0 | True    | alter table test drop name                  | success     | schema1  |
+      | test | 111111 | conn_0 | True    | insert into test values(2,2)                | success     | schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                          | expect                             | db   |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest'  |hasStr{`age` int(11) DEFAULT NULL}  |      |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest'  |hasNoStr{`name`}                    |      |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'  |hasStr{`age` int(11) DEFAULT NULL}  |      |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'  |hasNoStr{`name`}                    |      |
       | root | 111111 | conn_0 | True    | reload @@metadata                            | success                            |      |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                          | expect  | db       |
-      | test | 111111 | conn_0 | True    | insert into test values(3,3) | success | mytest   |
-      | test | 111111 | conn_0 | True    | alter table test drop age    | success | mytest   |
-      | test | 111111 | conn_0 | True    | insert into test values(4)   | success | mytest   |
+      | test | 111111 | conn_0 | True    | insert into test values(3,3) | success | schema1   |
+      | test | 111111 | conn_0 | True    | alter table test drop age    | success | schema1   |
+      | test | 111111 | conn_0 | True    | insert into test values(4)   | success | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                            | expect                               | db  |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest'    |hasNoStr{`age` int(11) DEFAULT NULL}  |     |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest'    |hasStr{`id` int(11) DEFAULT NULL}     |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'    |hasNoStr{`age` int(11) DEFAULT NULL}  |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'    |hasStr{`id` int(11) DEFAULT NULL}     |     |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                       | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test | success | schema1 |
 
   @CRITICAL
   Scenario: backend tables in datanode are inconsistent or lack in some datanode for a config sharding/global table, check metadata and query #5
@@ -179,7 +179,7 @@ Feature: test "check full @@metadata...'"
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
       <table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
       <table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
       <table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
@@ -191,17 +191,17 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd         | conn   | toClose | sql                                            | expect  | db       |
-      | test | 111111         | conn_0 | True    | drop table if exists test1                     | success | mytest   |
-      | test | 111111         | conn_0 | True    | create table test1(id int,name char,age int)   | success | mytest   |
-      | test | 111111         | conn_0 | True    | drop table if exists test2                     | success | mytest   |
-      | test | 111111         | conn_0 | True    | create table test2(id int,name char,age int)   | success | mytest   |
-      | test | 111111         | conn_0 | True    | drop table if exists test3                     | success | mytest   |
-      | test | 111111         | conn_0 | True    | create table test3(id int,name char,age int)   | success | mytest   |
-      | test | 111111         | conn_0 | True    | drop table if exists test4                     | success | mytest   |
-      | test | 111111         | conn_0 | True    | create table test4(id int,name char,age int)   | success | mytest   |
-      | test | 111111         | conn_0 | True    | drop table if exists test5                     | success | mytest   |
-      | test | 111111         | conn_0 | True    | create table test5(id int,name char,age int)   | success | mytest   |
-      | test | 111111         | conn_0 | True    | drop table if exists test6                     | success | mytest   |
+      | test | 111111         | conn_0 | True    | drop table if exists test1                     | success | schema1   |
+      | test | 111111         | conn_0 | True    | create table test1(id int,name char,age int)   | success | schema1   |
+      | test | 111111         | conn_0 | True    | drop table if exists test2                     | success | schema1   |
+      | test | 111111         | conn_0 | True    | create table test2(id int,name char,age int)   | success | schema1   |
+      | test | 111111         | conn_0 | True    | drop table if exists test3                     | success | schema1   |
+      | test | 111111         | conn_0 | True    | create table test3(id int,name char,age int)   | success | schema1   |
+      | test | 111111         | conn_0 | True    | drop table if exists test4                     | success | schema1   |
+      | test | 111111         | conn_0 | True    | create table test4(id int,name char,age int)   | success | schema1   |
+      | test | 111111         | conn_0 | True    | drop table if exists test5                     | success | schema1   |
+      | test | 111111         | conn_0 | True    | create table test5(id int,name char,age int)   | success | schema1   |
+      | test | 111111         | conn_0 | True    | drop table if exists test6                     | success | schema1   |
     #5.1
      Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                        | expect   | db      |
@@ -209,21 +209,21 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                             | expect   | db        |
-      | test  | 111111 | conn_0 | True    | select * from test2             | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1,1) | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | alter table test2 drop name     | success  | mytest   |
+      | test  | 111111 | conn_0 | True    | select * from test2             | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1,1) | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | alter table test2 drop name     | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test4`}   | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test2`} | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test2`}   | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasNoStr{`test4`} | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasNoStr{`name`}   | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasStr{`age`}      | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test6'| hasNoStr{`id`}      | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test4`}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test2`} | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test2`}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasNoStr{`test4`} | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}      | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}      | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                        | expect                       | db     |
-      | test  | 111111 | conn_0 | True    | alter table test4 drop age | check that column/key exists | mytest |
+      | test  | 111111 | conn_0 | True    | alter table test4 drop age | check that column/key exists | schema1 |
     #5.2
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                               | expect   | db      |
@@ -231,19 +231,19 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                              | expect   | db       |
-      | test  | 111111 | conn_0 | True    | select * from test2              | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1)    | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | alter table test2 add name char  | success  | mytest   |
+      | test  | 111111 | conn_0 | True    | select * from test2              | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1)    | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | alter table test2 add name char  | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                          | expect             | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0      | hasStr{`test4`}    | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasStr{`name`}     | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0      | hasStr{`test4`}    | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}     | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                            | expect                           | db        |
-      | test  | 111111 | conn_0 | True    | alter table test4 drop name                    | Table 'db1.test4' doesn't exist  | mytest   |
-      | test  | 111111 | conn_0 | True    | drop table if exists test4                     | success                          | mytest   |
-      | test  | 111111 | conn_0 | True    | drop table if exists test2                     | success                          | mytest   |
-      | test  | 111111 | conn_0 | True    | create table test2(id int,name char,age int)   | success                            | mytest   |
+      | test  | 111111 | conn_0 | True    | alter table test4 drop name                    | Table 'db1.test4' doesn't exist  | schema1   |
+      | test  | 111111 | conn_0 | True    | drop table if exists test4                     | success                          | schema1   |
+      | test  | 111111 | conn_0 | True    | drop table if exists test2                     | success                          | schema1   |
+      | test  | 111111 | conn_0 | True    | create table test2(id int,name char,age int)   | success                            | schema1   |
     #5.3
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                                 | expect   | db      |
@@ -251,21 +251,21 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                 | expect   | db        |
-      | test  | 111111 | conn_0 | True    | select * from test2               | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1,1) | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | alter table test2 drop name      | success  | mytest   |
+      | test  | 111111 | conn_0 | True    | select * from test2               | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1,1) | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | alter table test2 drop name      | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`}   | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test2`} | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test2`}   | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasNoStr{`test5`} | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasNoStr{`name`}   | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasStr{`age`}      | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test6'| hasNoStr{`id`}      | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test2`} | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test2`}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =1       | hasNoStr{`test5`} | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}      | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}      | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                 | expect                              | db        |
-      | test  | 111111 | conn_0 | True    | alter table test5 drop age       | check that column/key exists     | mytest   |
+      | test  | 111111 | conn_0 | True    | alter table test5 drop age       | check that column/key exists     | schema1   |
     #5.4
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                                  | expect   | db      |
@@ -273,24 +273,24 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                                  | expect   | db        |
-      | test  | 111111 | conn_0 | True    | select * from test2                | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1)    | success  | mytest   |
-      | test  | 111111 | conn_0 | True    | alter table test2 add name char  | success  | mytest   |
+      | test  | 111111 | conn_0 | True    | select * from test2                | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | insert into test2 values(1,1)    | success  | schema1   |
+      | test  | 111111 | conn_0 | True    | alter table test2 add name char  | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect               | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`}    | mytest |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test2'| hasStr{`name`}      | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`}    | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}      | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                         | expect                              | db        |
-      | test  | 111111 | conn_0 | True    | alter table test5 drop name | Table 'db1.test5' doesn't exist  | mytest   |
-      | test  | 111111 | conn_0 | True    | drop table if exists test5  | success                             | mytest   |
-      | test  | 111111 | conn_0 | True    | drop table if exists test2  | success                             | mytest   |
+      | test  | 111111 | conn_0 | True    | alter table test5 drop name | Table 'db1.test5' doesn't exist  | schema1   |
+      | test  | 111111 | conn_0 | True    | drop table if exists test5  | success                             | schema1   |
+      | test  | 111111 | conn_0 | True    | drop table if exists test2  | success                             | schema1   |
 
   @NORMAL
   Scenario: Some of datahost's writehost(with or without readhost) cannot be connectted, check metadata and query #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
       <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
       <table name="test_two" dataNode="dn2,dn4" rule="hash-two" primaryKey="id"/>
     </schema>
@@ -305,25 +305,25 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                   | expect   | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                       | success  | mytest |
-      | test | 111111 | conn_0 | True    | drop table if exists test_two                         | success  | mytest |
-      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                    | success  | mytest |
-      | test | 111111 | conn_0 | True    | create table test_shard(id int,name char,age int)     | success  | mytest |
-      | test | 111111 | conn_0 | True    | create table test_two(id int,name char,age int)       | success  | mytest |
-      | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name1 char,age int) | success  | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                       | success  | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test_two                         | success  | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                    | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_shard(id int,name char,age int)     | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_two(id int,name char,age int)       | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name1 char,age int) | success  | schema1 |
     #6.1 Unable to connect to datahost does not exist readhost
     Given stop mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                   | expect              | db     |
-      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1)  | success             | mytest |
-      | test | 111111 | conn_0 | True    | alter table test_two drop age         | success             | mytest |
-      | test | 111111 | conn_0 | True    | alter table test_shard drop name      | error totally whack | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1)  | success             | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_two drop age         | success             | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_shard drop name      | error totally whack | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                                | expect                             | db  |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard' | hasStr{`name` }                    |     |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_two'   | hasStr{`id` int(11) DEFAULT NULL}  |     |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_two'   | hasNoStr{`age`}                    |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard' | hasStr{`name` }                    |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_two'   | hasStr{`id` int(11) DEFAULT NULL}  |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_two'   | hasNoStr{`age`}                    |     |
       | root | 111111 | conn_0 | True    | show @@version                                                     | success                            |     |
       | root | 111111 | conn_0 | True    | reload @@metadata                                                  | success                            |     |
     Given start mysql in host "mysql-master1"
@@ -332,38 +332,38 @@ Feature: test "check full @@metadata...'"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                    | expect              | db     |
-      | test | 111111 | conn_0 | True    | insert into test_shard values(2,2,2)   | success             | mytest |
-      | test | 111111 | conn_0 | True    | alter table test_no_shard drop age     | success             | mytest |
-      | test | 111111 | conn_0 | True    | alter table test_shard drop name       | error totally whack | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(2,2,2)   | success             | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_no_shard drop age     | success             | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_shard drop name       | error totally whack | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                                   | expect                             | db  |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard'    | hasStr{`name` }                    |     |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_no_shard' | hasStr{`id` int(11) DEFAULT NULL}  |     |
-      | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_no_shard' | hasNoStr{`age`}                    |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard'    | hasStr{`name` }                    |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_no_shard' | hasStr{`id` int(11) DEFAULT NULL}  |     |
+      | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_no_shard' | hasNoStr{`age`}                    |     |
       | root | 111111 | conn_0 | True    | show @@version                                                        | success                            |     |
       | root | 111111 | conn_0 | True    | reload @@metadata                                                     | success                            |     |
     Given start mysql in host "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard    | success | mytest |
-      | test | 111111 | conn_0 | True    | drop table if exists test_two      | success | mytest |
-      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard | success | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard    | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test_two      | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard | success | schema1 |
 
   @regression
   Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <schema name="mytest" sqlMaxLimit="100" dataNode="dn5">
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
       <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                               | expect   | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                   | success  | mytest |
-      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                | success  | mytest |
-      | test | 111111 | conn_0 | True    | create table test_shard(id int,name char,age int) | success  | mytest |
-      | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name1 char)     | success  | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_shard(id int,name char,age int) | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name1 char)     | success  | schema1 |
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                                                  | expect   | db      |
       | test | 111111 | conn_0 | True     |drop view if exists view_test                         | success  | db1     |
@@ -372,17 +372,17 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True     |create view view_test1 as select * from test_no_shard | success  | db3     |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                     | expect   | db     |
-      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1)    | success  | mytest |
-      | test | 111111 | conn_0 | True    | insert into test_no_shard values(1,1)   | success  | mytest |
-      | test | 111111 | conn_0 | True    | alter table test_shard drop age         | success  | mytest |
-      | test | 111111 | conn_0 | True    | alter table test_no_shard add age int   | success  | mytest |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1,1)    | success  | schema1 |
+      | test | 111111 | conn_0 | True    | insert into test_no_shard values(1,1)   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_shard drop age         | success  | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_no_shard add age int   | success  | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                   | expect                | db |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest'                           | hasNoStr{view_test}   |    |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard'    | hasNoStr{age}         |    |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_shard'    | hasStr{name}          |    |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_no_shard' | hasStr{name1}         |    |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' and table='test_no_shard' | hasStr{age}           |    |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'                           | hasNoStr{view_test}   |    |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard'    | hasNoStr{age}         |    |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard'    | hasStr{name}          |    |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_no_shard' | hasStr{name1}         |    |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_no_shard' | hasStr{age}           |    |
       | root  | 111111 | conn_0 | True    | show @@version                                                        | success               |    |
       | root  | 111111 | conn_0 | True    | reload @@metadata                                                     | success               |    |
     Then execute sql in "mysql-master1"
@@ -391,14 +391,14 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True     |drop view view_test1               | success  | db3     |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                    | expect   | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard        | success  | mytest |
-      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard        | success  | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | schema1 |
 
   @regression
   Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
-      <schema name="mytest" sqlMaxLimit="100" dataNode="dn1">
+      <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
       <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
       <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="R_REGIONKEY" autoIncrement="true"/>
       </schema>
@@ -415,9 +415,9 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                               | expect   | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                   | success  | mytest |
-      | test | 111111 | conn_0 | True    | CREATE TABLE test_shard (id BIGINT PRIMARY KEY AUTO_INCREMENT,clientNum CHAR(20) NOT NULL ) | success  | mytest |
-      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1),(2,2),(3,3),(4,4),(5,5)  | success  | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists test_shard                   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | CREATE TABLE test_shard (id BIGINT PRIMARY KEY AUTO_INCREMENT,clientNum CHAR(20) NOT NULL ) | success  | schema1 |
+      | test | 111111 | conn_0 | True    | insert into test_shard values(1,1),(2,2),(3,3),(4,4),(5,5)  | success  | schema1 |
     Then execute admin cmd "reload @@config_all"
     Then check following "not" exist in file "dble.log" in "dble-1"
       """
@@ -447,12 +447,12 @@ Feature: test "check full @@metadata...'"
       """
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test_shard`}   | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test_shard`}   | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                               | expect   | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test1                   | success  | mytest |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50)) | success  | mytest |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5)  | success  | mytest |
+      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test1                   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table mytest_auto_test1 (id int(11),R_REGIONKEY bigint primary key AUTO_INCREMENT,R_NAME varchar(50),R_COMMENT varchar(50)) | success  | schema1 |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test1(id,R_NAME,R_COMMENT) values(1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5)  | success  | schema1 |
     Then execute admin cmd "reload @@config_all"
     Then check following "not" exist in file "dble.log" in "dble-1"
       """
@@ -465,4 +465,4 @@ Feature: test "check full @@metadata...'"
       """
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
-      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`mytest_auto_test1`}   | mytest |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`mytest_auto_test1`}   | schema1 |

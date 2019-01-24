@@ -84,5 +84,5 @@ select '\na\nb\n'
 select '\fa\fb\f'
 ##case use db
 #!share_conn
-use mytest
+use schema1
 select 1
