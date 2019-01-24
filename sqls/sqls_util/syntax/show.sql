@@ -1,7 +1,7 @@
 #!default_db:schema1
  drop table if exists test1
  create table test1 (ID int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))
- insert into test1 (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(2,2,'Western','test002'),(3,3,'Northern','test003'),(4,4,'Southern','test004'),(3,3,'northern','test003'),(null,null,null,null)
+ insert into test1 (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(2,2,'Western','test002'),(3,3,'Northern','test003'),(4,4,'Southern','test004'),(null,null,null,null)
  show columns in test1
  show columns from test1 from schema1
  show full columns from test1 from schema1
