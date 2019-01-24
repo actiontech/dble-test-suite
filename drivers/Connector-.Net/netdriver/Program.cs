@@ -21,8 +21,8 @@
 //            //Test.Testing();
 //            //链接数据库
 //            //getconfig.GetConfig();
-//            string dbleconnStr = "server=10.186.60.61;user=test;database=mytest;port=7131;password=111111;Charset=utf8";
-//            string mysqlconnStr = "server=10.186.60.61;user=test;database=mytest;port=7144;password=111111;Charset=utf8";
+//            string dbleconnStr = "server=10.186.60.61;user=test;database=schema1;port=7131;password=111111;Charset=utf8";
+//            string mysqlconnStr = "server=10.186.60.61;user=test;database=schema1;port=7144;password=111111;Charset=utf8";
 //            string dblemanagerconnStr = "server=10.186.60.61;user=root;port=7171;password=111111;Charset=utf8";
 //            //string dblemanagerconnStr = "server=192.168.2.166;user=man1;port=9066;password=654321";
 //            //MySqlConnection dblemanagerconn = conn.Conn(dblemanagerconnStr);

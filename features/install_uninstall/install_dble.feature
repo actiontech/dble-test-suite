@@ -1,6 +1,6 @@
 Feature: install single dble
 
-  @smoke
+  @BLOCKER
   Scenario: install single dble in a clean environment
     Given a clean environment in all dble nodes
     Given install dble in "dble-1"
