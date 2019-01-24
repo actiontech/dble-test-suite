@@ -30,7 +30,7 @@ dble:[[('\xe6\xb1\xa4\xe5\xa7\x86',)]]
 dble:[[]]
 ===file:syntax/character.sql, id:23, sql:[CREATE TABLE `t` ( `c` char(50) CHARACTER SET gbk DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8]===
 dble:[[]]
-===file:syntax/character.sql, id:25, sql:[select sleep(3) union select * from mytest.t]===
+===file:syntax/character.sql, id:25, sql:[select sleep(3) union select * from schema1.t]===
 dble:[[('0',)]]
 ===file:syntax/character.sql, id:27, sql:[SELECT _utf8'abc' COLLATE utf8_danish_ci]===
 dble:[[('abc',)]]

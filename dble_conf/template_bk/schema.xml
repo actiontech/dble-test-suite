@@ -1,6 +1,6 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
 <!DOCTYPE dble:schema SYSTEM "schema.dtd"><dble:schema xmlns:dble="http://dble.cloud/">
-	<schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+	<schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
 		<table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
 	</schema>
 

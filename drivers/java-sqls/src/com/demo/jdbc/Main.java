@@ -21,7 +21,7 @@ public class Main {
 				"select * from test;"
 		};
 
-		JDBCConn conn = new JDBCConn("10.186.65.63", "test", "test", "mytest", 8066);
+		JDBCConn conn = new JDBCConn("10.186.65.63", "test", "test", "schema1", 8066);
 		System.out.println("==========================dble execute result=========================");
 		for (String sql : sqls) {
 			boolean isR = conn.execute(sql);
@@ -31,7 +31,7 @@ public class Main {
 
 		System.out.println("==========================mysql execute result=========================");
 
-		JDBCConn conn2 = new JDBCConn("10.186.65.4", "test", "test", "mytest", 3306);
+		JDBCConn conn2 = new JDBCConn("10.186.65.4", "test", "test", "schema1", 3306);
 		for (String sql : sqls) {
 			boolean isR2 = conn2.execute(sql);
 //			showResult(conn2, isR2, "mysql execute result");

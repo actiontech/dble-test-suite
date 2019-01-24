@@ -1,6 +1,6 @@
 Feature: install dble cluster, degrade to single dble, recover to cluster
 
-  @smoke
+  @BLOCKER
   @skip_restart
   Scenario: install zk cluster, degrade to single dble, recover to cluster
     Given stop dble cluster and zk service
