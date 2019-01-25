@@ -142,7 +142,7 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | True     |select * from test_table where name = 'test1'                | success       | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql          | expect      | db     |
-        | root | 111111 | conn_0 | True     | show @@cache | length{(2)} |        |
+        | root | 111111 | conn_0 | True     | show @@cache | length{(3)} |        |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                     | expect         | db     |
         | test | 111111 | conn_0 | True     |select * from test_table where id =1     | success        | mytest |
@@ -162,4 +162,4 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | True     |select * from test_table where id=1 | success        | mytest |
     Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql          | expect       | db     |
-        | root | 111111 | conn_0 | True     | show @@cache | length{(2)}  |        |
+        | root | 111111 | conn_0 | True     | show @@cache | length{(3)}  |        |
