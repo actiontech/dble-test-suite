@@ -201,6 +201,7 @@ SELECT id,data,code FROM test1
 #[index_type] not supported
 #[index_option] not supported
 #CONSTRAINT UNIQUE KEY: not supported
+drop index idxs on test1
 ALTER TABLE test1 ADD UNIQUE USING HASH (id)
 ALTER TABLE test1 ADD UNIQUE (id) COMMENT 'string'
 ALTER TABLE test1 ADD UNIQUE KEY idxs USING HASH (id asc,code DESC) comment 'string'
@@ -254,7 +255,7 @@ DESC test1
 DROP TABLE IF EXISTS test1
 create table test1(a int(4))
 alter table test1 add 01a boolean
-alter table test1 drop column sharding_4_t1.01a
+alter table test1 drop column test1.01a
 alter table test1 add `011` boolean
 alter table test1 add $ boolean
 alter table test1 add _ boolean
