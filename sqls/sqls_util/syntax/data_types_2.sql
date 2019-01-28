@@ -208,7 +208,7 @@ insert into test1 values(19, 10)
 select b from test1
 #boolean
 drop table if exists test1
-create table test1(a int(16) not null primary key auto_increment, b BOOL)
+create table test1(id int(16) not null primary key auto_increment, b BOOL)
 insert into test1 values(1,TRUE)
 insert into test1 values(2,True)
 insert into test1 values(3,true)
