@@ -992,9 +992,3 @@ drop index `create` on `select`
 #
 drop table if exists test1
 drop table if exists `select`
-
-
-
-
-
-
