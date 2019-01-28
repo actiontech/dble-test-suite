@@ -2,6 +2,8 @@
 #INSERT INTO tbl_name VALUES(expr,expr,...) ON DUPLICATE KEY UPDATE col_name=expr,col_name1=expr1
 DROP TABLE if exists test1
 create TABLE test1 (id int(11),R_REGIONKEY int(11) primary key default 10,R_NAME varchar(50),R_COMMENT varchar(50))
+create TABLE schema2.test2 (id int(11),R_REGIONKEY int(11) primary key default 10,R_NAME varchar(50),R_COMMENT varchar(50))
+insert into schema2.test2 (id,R_REGIONKEY,R_NAME,R_COMMENT) values(0,1,'test','test')
 INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004') ON DUPLICATE KEY UPDATE R_NAME='test'
 SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1
 INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,5, 'Northern','test003'),(2,6, 'Western','test002'),(4,7, 'Southern','test004') ON DUPLICATE KEY UPDATE R_NAME='test'
