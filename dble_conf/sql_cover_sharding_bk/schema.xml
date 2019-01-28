@@ -3,13 +3,15 @@
 <dble:schema xmlns:dble="http://dble.cloud/">
 	<schema name="schema1" sqlMaxLimit="100">
 		<table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+		<table name="select" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
 	</schema>
 	<schema name="schema2" sqlMaxLimit="100">
+		<table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
 		<table name="sharding_4_t2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-		<table name="global_4_t1" dataNode="dn1,dn2,dn3,dn4" type="global" />
 	</schema>
 	<schema name="schema3" sqlMaxLimit="100">
 		<table name="sharding_4_t3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+		<table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
 	</schema>
 	<dataNode name="dn1" dataHost="172.100.9.5" database="db1" />
 	<dataNode name="dn2" dataHost="172.100.9.6" database="db1" />
