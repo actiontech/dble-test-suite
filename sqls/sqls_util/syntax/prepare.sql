@@ -87,6 +87,18 @@ select * from view_test
 drop view view_test
 drop prepare pre_test
 #
+#contains select
+#
+prepare pre_test from 'select test1.id,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2'
+execute pre_test
+drop prepare pre_test
+prepare pre_test from 'select a.id as a.t_id,b.id as b_id,a.pad from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id'
+execute pre_test
+drop prepare pre_test
+prepare pre_test from 'select * from test1 where id=3'
+execute pre_test
+drop prepare pre_test
+#
 #contains drop view
 #
 drop table if exists test1
@@ -130,18 +142,6 @@ prepare pre_test from 'replace into test1 values(?,?,?,?)'
 set @a=20,@b=20,@c='test_new',@d='test20'
 execute pre_test using @a,@b,@c,@d
 select * from test1
-drop prepare pre_test
-#
-#contains select
-#
-prepare pre_test from 'select test1.id,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2'
-execute pre_test
-drop prepare pre_test
-prepare pre_test from 'select a.id as a.t_id,b.id as b_id,a.pad from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id'
-execute pre_test
-drop prepare pre_test
-prepare pre_test from 'select * from test1 where id=3'
-execute pre_test
 drop prepare pre_test
 #
 #using set
