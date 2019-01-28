@@ -35,6 +35,7 @@ select * from view_test
 alter table test1 drop R_NAME
 select * from view_test
 drop view view_test
+alter table test1 add R_NAME varchar(50)
 ####################################view grammar#######################
 create or replace view view_test as select * from test1
 select * from view_test
