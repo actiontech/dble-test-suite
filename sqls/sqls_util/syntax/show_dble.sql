@@ -16,7 +16,7 @@ show table status
 show columns from test1
 show columns in test1
 show columns from test1 from schema1
-show columns from test1 from testdb
+show columns from test1 from schema2
 show columns in test1 in schema1
 show columns from test1 in schema1
 show full fields from test1 from schema1 like '%i%'
