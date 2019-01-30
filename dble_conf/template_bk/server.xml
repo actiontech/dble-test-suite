@@ -8,7 +8,7 @@
 	
 	<user name="test">
 		<property name="password">111111</property>
-		<property name="schemas">mytest</property>
+		<property name="schemas">schema1</property>
 	</user>
 	<user name="root">
 		<property name="password">111111</property>

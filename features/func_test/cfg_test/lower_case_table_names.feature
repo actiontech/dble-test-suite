@@ -42,7 +42,7 @@ Feature: check lower_case_table_names works right for dble
       </user>
       <user name="test">
         <property name="password">111111</property>
-        <property name="schemas">mytest, DbTest</property>
+        <property name="schemas">schema1, DbTest</property>
       </user>
     """
     Given Restart dble in "dble-1" success
@@ -59,23 +59,23 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_0 | False   | use dbtest                                                           | success             | DbTest |
         | test | 111111 | conn_0 | False   | select dbtest.test_table.id from dbtest.test_table            | success              | DbTest |
         | test | 111111 | conn_0 | True    | select DbTest.Test_Table.id from DbTest.Test_Table            | success              | DbTest |
-        | test | 111111 | conn_1 | False   | drop table if exists Test                                         | success              | mytest |
-        | test | 111111 | conn_1 | False   | drop table if exists test                                         | success              | mytest |
-        | test | 111111 | conn_1 | False   | create table test(Id int)                                         | success              | mytest |
-        | test | 111111 | conn_1 | False   | insert into test(id) value(2)                                     | success             | mytest |
-        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join Test t2 on t1.id=t2.Id |success | mytest |
-        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |success| mytest |
-        | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success | mytest |
-        | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2     |success            | mytest |
-        | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2     |success     | mytest |
-        | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
-        | test | 111111 | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test) |success | mytest |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test) |success | mytest |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test) |success| mytest |
+        | test | 111111 | conn_1 | False   | drop table if exists Test                                         | success              | schema1 |
+        | test | 111111 | conn_1 | False   | drop table if exists test                                         | success              | schema1 |
+        | test | 111111 | conn_1 | False   | create table test(Id int)                                         | success              | schema1 |
+        | test | 111111 | conn_1 | False   | insert into test(id) value(2)                                     | success             | schema1 |
+        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join Test t2 on t1.id=t2.Id |success | schema1 |
+        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |success| schema1 |
+        | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success | schema1 |
+        | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2     |success            | schema1 |
+        | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2     |success     | schema1 |
+        | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
+        | test | 111111 | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test) |success | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test) |success | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test) |success| schema1 |
     Given restart mysql in "mysql-master1" with options
       """
       /lower_case_table_names/d
@@ -116,7 +116,7 @@ Feature: check lower_case_table_names works right for dble
       </user>
       <user name="test">
         <property name="password">111111</property>
-        <property name="schemas">mytest, DbTest</property>
+        <property name="schemas">schema1, DbTest</property>
       </user>
     """
     Then restart dble in "dble-1" failed for
@@ -145,19 +145,19 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_0 | False   | use dbtest                                                                      | Unknown database     | DbTest |
         | test | 111111 | conn_0 | False   | select dbtest.test_table.id from dbtest.test_table                        | doesn't exist        | DbTest |
         | test | 111111 | conn_0 | True    | select DbTest.Test_Table.id from DbTest.Test_Table                        | success                | DbTest |
-        | test | 111111 | conn_1 | False   | drop table if exists Test                                                     | success               | mytest |
-        | test | 111111 | conn_1 | False   | drop table if exists test                                                     | success               | mytest |
-        | test | 111111 | conn_1 | False   | create table test(Id int)                                                     | success               | mytest |
-        | test | 111111 | conn_1 | False   | insert into test(id) value(2)                                                 | success              | mytest |
-        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join Test t2 on t1.id=t2.Id |Test doesn't exist | mytest |
-        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |error totally whack     | mytest |
-        | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success              | mytest |
-        | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2                  |success              | mytest |
-        | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                  |Unknown column      | mytest |
-        | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success               | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |Test doesn't exist  | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |error totally whack | mytest |
-        | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)          |success               | mytest |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | mytest |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | mytest |
+        | test | 111111 | conn_1 | False   | drop table if exists Test                                                     | success               | schema1 |
+        | test | 111111 | conn_1 | False   | drop table if exists test                                                     | success               | schema1 |
+        | test | 111111 | conn_1 | False   | create table test(Id int)                                                     | success               | schema1 |
+        | test | 111111 | conn_1 | False   | insert into test(id) value(2)                                                 | success              | schema1 |
+        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join Test t2 on t1.id=t2.Id |Test doesn't exist | schema1 |
+        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |error totally whack     | schema1 |
+        | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success              | schema1 |
+        | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2                  |success              | schema1 |
+        | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                  |Unknown column      | schema1 |
+        | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success               | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |Test doesn't exist  | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |error totally whack | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)          |success               | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
