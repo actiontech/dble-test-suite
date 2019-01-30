@@ -72,7 +72,7 @@ insert into test1 values(8, 'a\Zb')
 insert into test1 values(9, 'a\\b')
 insert into test1 values(10, 'a\%b')
 insert into test1 values(11, 'a\_b')
-select data from test1
+select b from test1
 #
 #DATE
 DROP TABLE IF EXISTS  test1
@@ -90,8 +90,8 @@ INSERT INTO test1 ( id,data) VALUES (9,'10000-01-01')
 INSERT INTO test1 ( id,data) VALUES (10,'9999-01-100')
 INSERT INTO test1 ( id,data) VALUES (11,'1000-01-01')
 INSERT INTO test1 ( id,data) VALUES (12,'9999-12-31')
-INSERT INTO test1( id,date) VALUES (13,'20170201')
-INSERT INTO test1( id,date) VALUES (14,'170202')
+INSERT INTO test1( id,data) VALUES (13,'20170201')
+INSERT INTO test1( id,data) VALUES (14,'170202')
 SELECT * FROM test1
 #
 #TIME[(fsp)]
