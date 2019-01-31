@@ -1,0 +1,918 @@
+===file:sqls_util/transaction/trx_syntax.sql, id:2, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:3, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:6, sql:[SET @@session.autocommit = ON]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:7, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:8, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:9, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:10, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:11, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:12, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:13, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:14, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:15, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:16, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:19, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:20, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:21, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:22, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:23, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:24, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:25, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:26, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:27, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:28, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:31, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:32, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:33, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:34, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:35, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:36, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:37, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:38, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:39, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:40, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:43, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:44, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:45, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:46, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:47, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:48, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:49, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:50, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:51, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:52, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:55, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:56, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:57, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:58, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:59, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:60, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:61, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:62, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:63, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:64, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:67, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:68, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:69, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:70, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:71, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:72, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:73, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:74, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:75, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:76, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:79, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:80, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:81, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:82, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:83, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:84, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:85, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:86, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:87, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:88, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:91, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:92, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:93, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:94, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:95, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:96, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:97, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:98, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:99, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:100, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:103, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:105, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:106, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:107, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:108, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:109, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:110, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:111, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:112, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:115, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:117, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:118, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:119, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:120, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:122, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:123, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:127, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:129, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:130, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:131, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:132, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:133, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:134, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:135, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:136, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:139, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:141, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:142, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:143, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:144, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:146, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:147, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:151, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:153, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:154, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:155, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:156, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:157, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:158, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:159, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:160, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:163, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:165, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:166, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:167, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:168, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:170, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:171, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:175, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:177, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:178, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:179, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:180, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:181, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:182, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:183, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:184, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:187, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:189, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:190, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:191, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:192, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:194, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:195, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:199, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:200, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:201, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:202, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:203, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:204, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:205, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:206, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:207, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:208, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:211, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:212, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:213, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:214, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:215, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:216, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:217, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:218, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:219, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:220, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:223, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:224, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:225, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:226, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:227, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:228, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:229, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:230, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:231, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:232, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:235, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:236, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:237, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:238, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:239, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:240, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:241, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:242, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:243, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:244, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:247, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:248, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:249, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:250, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:251, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:252, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:253, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:254, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:255, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:256, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:259, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:260, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:261, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:262, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:263, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:264, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:265, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:266, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:267, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:268, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:271, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:272, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:273, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:274, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:275, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:276, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:277, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:278, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:279, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:280, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:283, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:284, sql:[start transaction]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:285, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:286, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:287, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:288, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:289, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:290, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:291, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:292, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:295, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:296, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:297, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:298, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:299, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:300, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:301, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:302, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:303, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:304, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:305, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:308, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:309, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:310, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:311, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:312, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:313, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:314, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:315, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:316, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:317, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:318, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:321, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:322, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:323, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:324, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:325, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:326, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:327, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:328, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:329, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:330, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:331, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:334, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:335, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:336, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:337, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:338, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:339, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:340, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:341, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:342, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:343, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:344, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:347, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:348, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:349, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:350, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:351, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:352, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:353, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:354, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:355, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:356, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:357, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:360, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:361, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:362, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:363, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:364, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:365, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:366, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:367, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:368, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:369, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:370, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:373, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:374, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:375, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:376, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:377, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:378, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:379, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:380, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:381, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:382, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:383, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:386, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:387, sql:[set autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:388, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:389, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:390, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:391, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:392, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:393, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:394, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:395, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:396, sql:[set autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:399, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:400, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:401, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:402, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:403, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:404, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:405, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:406, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:407, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:408, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:409, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:412, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:413, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:414, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:415, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:416, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_syntax.sql, id:417, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:418, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:419, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:420, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:421, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:422, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:425, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:426, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:427, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:428, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:429, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:430, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:431, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:432, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:433, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:434, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:435, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:438, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:439, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:440, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:441, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:442, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:443, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:444, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:445, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:446, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:447, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:448, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:451, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:452, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:453, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:454, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:455, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:456, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:457, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:458, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:459, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:460, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:461, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:464, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:465, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:466, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:467, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:468, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:469, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:470, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:471, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:472, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:473, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:474, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:477, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:478, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:479, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:480, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:481, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:482, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:483, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:484, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:485, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:486, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:487, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:490, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:491, sql:[set @@session.autocommit=0]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:492, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:493, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:494, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:495, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:496, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:497, sql:[update test1 set pad=10]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:498, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:499, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:500, sql:[set @@session.autocommit=1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:503, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:505, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:506, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:508, sql:[SET @@session.autocommit = ON]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:511, sql:[insert into test1 values(5,5,5,5)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:513, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:514, sql:[update test1 set pad=10 where id =1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:517, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:521, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:523, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:524, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:528, sql:[insert into test1 values(5,5,5,5)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:530, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:532, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:534, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:535, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
+===file:sqls_util/transaction/trx_syntax.sql, id:538, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:540, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:541, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:545, sql:[insert into test1 values(5,5,5,5),(6,6,6,6)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:547, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:548, sql:[update test1 set pad=10 where id =1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:551, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:555, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:557, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:558, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:562, sql:[insert into test1 values(5,5,5,5),(6,6,6,6)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:564, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:568, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:572, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:574, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:575, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:579, sql:[insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:581, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:582, sql:[update test1 set pad=10 where id =1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:585, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:589, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:591, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:592, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:596, sql:[insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:598, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:602, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:606, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:608, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:609, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:613, sql:[insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:615, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:616, sql:[update test1 set pad=10 where id =1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:619, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:623, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:625, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_syntax.sql, id:626, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:630, sql:[insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:632, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:636, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:641, sql:[drop table if exists test1]===
+dble:[[]]
