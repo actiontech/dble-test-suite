@@ -1,0 +1,143 @@
+===file:sqls_mixed/syntax/identifiers.sql, id:15, sql:[create table "tb2" (col INT)]===
+dble:[None]
+mysql:[()]
+[01:31:14.080876]dble err :(-1, 'error totally whack')
+===file:sqls_mixed/syntax/identifiers.sql, id:32, sql:[drop view if exists abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm]===
+dble:[()]
+mysql:[None]
+mysql err:(1059, "Identifier name 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm' is too long")
+===file:sqls_mixed/syntax/identifiers.sql, id:33, sql:[create view abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm as select * from sharding_4_t1]===
+dble:[()]
+mysql:[None]
+mysql err:(1059, "Identifier name 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm' is too long")
+===file:sqls_mixed/syntax/identifiers.sql, id:45, sql:[select id from .sharding_4_t1]===
+dble:[None]
+mysql:[()]
+[01:31:15.768216]dble err :(1064, 'ERROR. pos 16, line 1, column 16, token DOT')
+===file:sqls_mixed/syntax/identifiers.sql, id:51, sql:[create table BIT_AND (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.050224]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BIT_AND (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:53, sql:[create table BIT_OR (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.157642]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BIT_OR (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:55, sql:[create table BIT_XOR (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.266299]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BIT_XOR (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:56, sql:[drop table if EXISTS CAST]===
+dble:[None]
+mysql:[()]
+[01:31:16.319349]dble err :(1064, 'error pos 25, line 1, column 21, token CAST')
+===file:sqls_mixed/syntax/identifiers.sql, id:57, sql:[create table CAST (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.372880]dble err :(1064, 'error pos 17, line 1, column 13, token CAST')
+===file:sqls_mixed/syntax/identifiers.sql, id:59, sql:[create table CURDATE (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.483875]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CURDATE (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:61, sql:[create table CURTIME (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.593149]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CURTIME (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:63, sql:[create table DATE_ADD (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.706324]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATE_ADD (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:65, sql:[create table DATE_SUB (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.819797]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'DATE_SUB (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:67, sql:[create table EXTRACT (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:16.928758]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'EXTRACT (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:69, sql:[create table GROUP_CONCAT (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.040300]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'GROUP_CONCAT (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:71, sql:[create table MAX (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.148797]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'MAX (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:73, sql:[create table MID (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.256596]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'MID (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:75, sql:[create table MIN (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.363986]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'MIN (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:77, sql:[create table NOW (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.476546]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'NOW (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:79, sql:[create table POSITION (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.597578]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'POSITION (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:83, sql:[create table STD (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.828072]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STD (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:85, sql:[create table STDDEV (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:17.937513]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STDDEV (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:87, sql:[create table STDDEV_POP (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.047534]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STDDEV_POP (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:89, sql:[create table STDDEV_SAMP (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.158868]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'STDDEV_SAMP (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:93, sql:[create table SUBSTR (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.385943]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SUBSTR (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:95, sql:[create table SUBSTRING (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.496028]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SUBSTRING (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:97, sql:[create table SUM (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.604831]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SUM (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:99, sql:[create table SYSDATE (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.714272]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SYSDATE (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:103, sql:[create table TRIM (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:18.938717]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'TRIM (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:105, sql:[create table VARIANCE (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:19.046934]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VARIANCE (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:107, sql:[create table VAR_POP (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:19.155804]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VAR_POP (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:109, sql:[create table VAR_SAMP (i int)]===
+dble:[None]
+mysql:[()]
+[01:31:19.265943]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VAR_SAMP (i int)' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:127, sql:[CREATE TABLE `interval` (begin INT, end INT)]===
+dble:[None]
+mysql:[()]
+[01:31:20.237962]dble err :(1064, 'error pos 30, line 1, column 26, token BEGIN')
+===file:sqls_mixed/syntax/identifiers.sql, id:128, sql:[drop table if exists schema1.interval]===
+dble:[None]
+mysql:[()]
+[01:31:20.293457]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'interval' at line 1")
+===file:sqls_mixed/syntax/identifiers.sql, id:129, sql:[CREATE TABLE schema1.interval (begin INT, end INT)]===
+dble:[None]
+mysql:[()]
+[01:31:20.349320]dble err :(1064, 'error pos 36, line 1, column 32, token BEGIN')
+===file:sqls_mixed/syntax/identifiers.sql, id:137, sql:[EXECUTE stmt]===
+dble:[[(', @c, ',), (', @c, ',), (', @c, ',)]]
+mysql:[[(1L,), (2L,), (3L,)]]
