@@ -1,33 +1,33 @@
 ===file:sqls_util/syntax/set_user_var_util.sql, id:12, sql:[(SELECT @vara:=id FROM test1 WHERE id=10 AND B=1) UNION (SELECT @varb:=B FROM schema2.test2 WHERE id=@vara AND B=2) UNION (SELECT id FROM schema3.test3 WHERE id=@vara+@varb AND B=1)]===
 dble:[None]
 mysql:[((10L,), (2L,), (12L,))]
-[22:04:25.191044]dble err :(-1, 'error totally whack')
+[03:12:55.082718]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:23, sql:[SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM test1 WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM schema2.test2 WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC /*allow_diff_sequence*/]===
 dble:[None]
 mysql:[((99L, 100L, 'hello java'), (99L, 100L, 'hello c++'), (99L, 100L, 'hello python'))]
-[22:04:25.704996]dble err :(-1, 'error totally whack')
+[03:12:55.602963]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:28, sql:[SELECT @min_price:=MIN(price),@max_price:=MAX(price) FROM test1]===
 dble:[None]
 mysql:[((1.25, 234.25),)]
-[22:04:25.927525]dble err :(1064, 'not support assignment')
+[03:12:55.851275]dble err :(1064, 'not support assignment')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:29, sql:[SELECT * FROM test1 WHERE price=@min_price OR price=@max_price]===
 dble:[[]]
 mysql:[[(1L, 'D', 234.25), (3L, 'D', 1.25)]]
 ===file:sqls_util/syntax/set_user_var_util.sql, id:30, sql:[SELECT (@aa:=id) AS a, (@aa+3) AS b FROM test1 HAVING b=5]===
 dble:[None]
 mysql:[()]
-[22:04:26.032690]dble err :(1064, 'not support assignment')
+[03:12:55.954016]dble err :(1064, 'not support assignment')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:35, sql:[UPDATE test1 SET id = 2 WHERE id = @var1:= 1]===
 dble:[None]
 mysql:[()]
-[22:04:26.306008]dble err :(1064, 'SQL AST nodes type mismatch!')
+[03:12:56.230117]dble err :(1064, 'SQL AST nodes type mismatch!')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:37, sql:[SELECT @var1, @var2 := @var1]===
 dble:[[(None, None)]]
 mysql:[[(1L, 1L)]]
 ===file:sqls_util/syntax/set_user_var_util.sql, id:39, sql:[SET @total_tax = (SELECT SUM(id) FROM test1)]===
 dble:[None]
 mysql:[()]
-[22:04:26.522367]dble err :(-1, 'error totally whack')
+[03:12:56.413941]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:40, sql:[SELECT @total_tax]===
 dble:[[(None,)]]
 mysql:[[(Decimal('17'),)]]
