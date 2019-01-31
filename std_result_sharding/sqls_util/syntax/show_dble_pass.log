@@ -16,7 +16,11 @@ dble:[[('drop',), ('test1',)]]
 dble:[[('test1', 'BASE TABLE')]]
 ===file:sqls_util/syntax/show_dble.sql, id:16, sql:[show columns from test1]===
 dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:17, sql:[show columns in test1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:18, sql:[show columns from test1 from schema1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:20, sql:[show columns in test1 in schema1]===
 dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:21, sql:[show columns from test1 in schema1]===
 dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
