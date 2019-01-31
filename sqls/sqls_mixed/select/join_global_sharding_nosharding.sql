@@ -13,9 +13,9 @@ insert into schema2.global_4_t1 values(1,1,'global_4_t1中id为1',1),(2,2,'test_
 #join table
 #
 select a.id,b.id,b.pad,a.o_id from (select noshard_t1.id,noshard_t1.pad,noshard_t1.o_id from noshard_t1 join schema2.global_4_t1 where noshard_t1.pad=schema2.global_4_t1.pad ) a,(select sharding_4_t1.id,sharding_4_t1.pad from noshard_t1 join sharding_4_t1 where noshard_t1.pad=sharding_4_t1.pad) b where a.pad=b.pad
-select a.id,b.id,b.pad,a.o_id from (select sharding_4_t1.id,sharding_4_t1.pad,sharding_4_t1.o_id from sharding_4_t1 join schema2.global_4_t1 where sharding_4_t1.pad=schema2.global_4_t1.pad ) a,(select sharding_4_t1.id,sharding_4_t1.pad from sharding_4_t1 join sharding_4_t1 where sharding_4_t1.pad=sharding_4_t1.pad) b where a.pad=b.pad
+select a.id,b.id,b.pad,a.m_id from (select sharding_4_t1.id,sharding_4_t1.pad,sharding_4_t1.m_id from sharding_4_t1 join schema2.global_4_t1 where sharding_4_t1.pad=schema2.global_4_t1.pad ) a,(select s2.id,s1.pad from sharding_4_t1 s1 join sharding_4_t1 s2 where s1.pad=s2.pad) b where a.pad=b.pad
 select a.id,b.id,b.pad,a.t_id from schema2.global_4_t1 a,(select sharding_4_t1.id,sharding_4_t1.pad from schema2.global_4_t1 join sharding_4_t1 where schema2.global_4_t1.pad=sharding_4_t1.pad) b,(select * from noshard_t1 where id>3) c where a.pad=b.pad and c.pad=b.pad
-select a.id,b.id,b.pad,a.t_id from (select noshard_t1.id,noshard_t1.pad,noshard_t1.o_id from noshard_t1 join sharding_4_t1 where noshard_t1.pad=sharding_4_t1.pad ) a,(select schema2.global_4_t1.id,schema2.global_4_t1.pad from noshard_t1 join schema2.global_4_t1 where noshard_t1.pad=schema2.global_4_t1.pad) b where a.pad=b.pad limit 4
+select a.id,b.id,b.pad,a.o_id from (select noshard_t1.id,noshard_t1.pad,noshard_t1.o_id from noshard_t1 join sharding_4_t1 where noshard_t1.pad=sharding_4_t1.pad ) a,(select schema2.global_4_t1.id,schema2.global_4_t1.pad from noshard_t1 join schema2.global_4_t1 where noshard_t1.pad=schema2.global_4_t1.pad) b where a.pad=b.pad order by a.id,b.id limit 4
 #
 #SELECT ... UNION [ALL | DISTINCT] SELECT ... [UNION [ALL | DISTINCT] SELECT ...]
 #
