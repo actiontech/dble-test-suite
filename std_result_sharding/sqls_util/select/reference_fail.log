@@ -1,20 +1,20 @@
 ===file:sqls_util/select/reference.sql, id:10, sql:[select id,t_id,name,pad from test1 t use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[21:58:21.771677]dble err :(1064, 'error pos 48, line 1, column 48, token RPAREN')
+[03:06:50.014604]dble err :(1064, 'error pos 48, line 1, column 48, token RPAREN')
 ===file:sqls_util/select/reference.sql, id:11, sql:[select id,t_id,name,pad from test1 t use key()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[21:58:21.807005]dble err :(1064, 'error pos 46, line 1, column 46, token RPAREN')
+[03:06:50.048002]dble err :(1064, 'error pos 46, line 1, column 46, token RPAREN')
 ===file:sqls_util/select/reference.sql, id:34, sql:[select id,t_id,name,pad from test1 t use key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[21:58:23.157824]dble err :(1064, 'error pos 82, line 1, column 82, token RPAREN')
+[03:06:51.402702]dble err :(1064, 'error pos 82, line 1, column 82, token RPAREN')
 ===file:sqls_util/select/reference.sql, id:35, sql:[select id,t_id,name,pad from test1 t ignore key(k_1) use index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[21:58:23.241524]dble err :(1064, 'error pos 85, line 1, column 85, token RPAREN')
+[03:06:51.485413]dble err :(1064, 'error pos 85, line 1, column 85, token RPAREN')
 ===file:sqls_util/select/reference.sql, id:36, sql:[select id,t_id,name,pad from test1 t ignore key(k_1) ignore index(pad_index) use index()]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[21:58:23.325038]dble err :(1064, 'error pos 88, line 1, column 88, token RPAREN')
+[03:06:51.568767]dble err :(1064, 'error pos 88, line 1, column 88, token RPAREN')
