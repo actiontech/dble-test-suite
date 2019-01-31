@@ -1,0 +1,43 @@
+===file:sqls_util/syntax/data_types_1.sql, id:17, sql:[INSERT INTO test1 SET id = b'11111111']===
+dble:[None]
+mysql:[()]
+[22:00:01.162862]dble err :(1064, "Not Supported of Sharding Value EXPR :b'11111111'")
+===file:sqls_util/syntax/data_types_1.sql, id:18, sql:[INSERT INTO test1 SET id = b'00000000']===
+dble:[None]
+mysql:[()]
+[22:00:01.214553]dble err :(1064, "Not Supported of Sharding Value EXPR :b'00000000'")
+===file:sqls_util/syntax/data_types_1.sql, id:19, sql:[INSERT INTO test1 SET id = b'1010']===
+dble:[None]
+mysql:[()]
+[22:00:01.298910]dble err :(1064, "Not Supported of Sharding Value EXPR :b'1010'")
+===file:sqls_util/syntax/data_types_1.sql, id:20, sql:[INSERT INTO test1 SET id = b'0101']===
+dble:[None]
+mysql:[()]
+[22:00:01.398133]dble err :(1064, "Not Supported of Sharding Value EXPR :b'0101'")
+===file:sqls_util/syntax/data_types_1.sql, id:21, sql:[INSERT INTO test1 SET id = b'01010']===
+dble:[None]
+mysql:[()]
+[22:00:01.453882]dble err :(1064, "Not Supported of Sharding Value EXPR :b'01010'")
+===file:sqls_util/syntax/data_types_1.sql, id:22, sql:[INSERT INTO test1 SET id = 0b11111111]===
+dble:[None]
+mysql:[()]
+[22:00:01.510654]dble err :(1064, "Not Supported of Sharding Value EXPR :b'11111111'")
+===file:sqls_util/syntax/data_types_1.sql, id:23, sql:[INSERT INTO test1 SET id = 0b00000000]===
+dble:[None]
+mysql:[()]
+[22:00:01.600702]dble err :(1064, "Not Supported of Sharding Value EXPR :b'00000000'")
+===file:sqls_util/syntax/data_types_1.sql, id:24, sql:[INSERT INTO test1 SET id = 0b1010]===
+dble:[None]
+mysql:[()]
+[22:00:01.659141]dble err :(1064, "Not Supported of Sharding Value EXPR :b'1010'")
+===file:sqls_util/syntax/data_types_1.sql, id:25, sql:[INSERT INTO test1 SET id = 0b0101]===
+dble:[None]
+mysql:[()]
+[22:00:01.715558]dble err :(1064, "Not Supported of Sharding Value EXPR :b'0101'")
+===file:sqls_util/syntax/data_types_1.sql, id:26, sql:[INSERT INTO test1 SET id = 0b01010]===
+dble:[None]
+mysql:[()]
+[22:00:01.772680]dble err :(1064, "Not Supported of Sharding Value EXPR :b'01010'")
+===file:sqls_util/syntax/data_types_1.sql, id:27, sql:[SELECT id, id+0, BIN(id+0), OCT(id+0), HEX(id+0) FROM test1]===
+dble:[[]]
+mysql:[[('\x00', 0L, '0', '0', '0'), ('\x00', 0L, '0', '0', '0'), ('\x05', 5L, '101', '5', '5'), ('\x05', 5L, '101', '5', '5'), ('\n', 10L, '1010', '12', 'A'), ('\n', 10L, '1010', '12', 'A'), ('\n', 10L, '1010', '12', 'A'), ('\n', 10L, '1010', '12', 'A'), ('\xff', 255L, '11111111', '377', 'FF'), ('\xff', 255L, '11111111', '377', 'FF')]]

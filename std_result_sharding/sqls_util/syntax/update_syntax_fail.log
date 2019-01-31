@@ -1,0 +1,17 @@
+===file:sqls_util/syntax/update_syntax.sql, id:20, sql:[UPDATE test1 SET id=id-1]===
+dble:[None]
+mysql:[()]
+[22:05:41.258575]dble err :(1064, "Sharding column can't be updated test1->ID")
+===file:sqls_util/syntax/update_syntax.sql, id:21, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
+mysql:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:22, sql:[UPDATE test1 SET id=10 WHERE id=4 OR id=1 AND id=3]===
+dble:[None]
+mysql:[()]
+[22:05:41.420245]dble err :(1064, "Sharding column can't be updated test1->ID")
+===file:sqls_util/syntax/update_syntax.sql, id:23, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
+mysql:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:60, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001'), (2L, 12L, 'test2', 'test002'), (3L, 13L, 'test2', 'test003'), (4L, 20L, 'test1', 'test004')]]
+mysql:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 20L, 'test1', 'test004')]]
