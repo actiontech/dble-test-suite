@@ -418,8 +418,6 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/select/select.sql, id:269, sql:[insert into test1 values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:270, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT]===
-dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (5L, 3.0, '', datetime.date(1776, 4, 30)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (4L, 4.0, 'a', datetime.date(1967, 9, 12)), (3L, 3.0, '', datetime.date(1983, 1, 1)))]
 ===file:sqls_util/select/select.sql, id:272, sql:[select R_NAME,max(R_REGIONKEY) from test1 group by R_name]===
 dble:[[('', 3.0), ('a', 4.0), ('a sting', 1.0), ('b', 4.0)]]
 ===file:sqls_util/select/select.sql, id:273, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 2,3]===

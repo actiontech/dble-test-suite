@@ -1,3 +1,3 @@
 ===file:sqls_util/syntax/data_types_2.sql, id:139, sql:[INSERT INTO test1 ( id,data) VALUES (4,1901),(5,2156),(6,0000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 2")
-dble err[22:00:46.795301] :(1264, "Out of range value for column 'data' at row 1")
+dble err[03:09:13.100261] :(1264, "Out of range value for column 'data' at row 1")

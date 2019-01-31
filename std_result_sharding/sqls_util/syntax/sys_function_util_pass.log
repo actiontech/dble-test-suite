@@ -4,7 +4,7 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:6, sql:[SELECT i, RAND() FROM test1 /*allow_diff*/]===
 dble:[[]]
-mysql:[[(1L, 0.335009010820658), (2L, 0.09555655913013644), (3L, 0.47275579392235334)]]
+mysql:[[(1L, 0.9093214719643085), (2L, 0.036336967755422896), (3L, 0.453720453617834)]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:9, sql:[drop table if exists test1]===
 dble:[[]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:10, sql:[create table test1(a json, b int)]===

@@ -121,7 +121,7 @@ dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L,
 ===file:sqls_util/select/expression.sql, id:69, sql:[select R_name name from test1]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
 ===file:sqls_util/select/expression.sql, id:70, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2018, 12, 30),)]]
+dble:[[(datetime.date(2019, 1, 1),)]]
 ===file:sqls_util/select/expression.sql, id:71, sql:[select * from test1 where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:sqls_util/select/expression.sql, id:123, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' + interval 30 day)]===
@@ -185,6 +185,8 @@ dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:sqls_util/select/expression.sql, id:159, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true >= (HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:sqls_util/select/expression.sql, id:160, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test1 where HEX(R_bit) not in (1,2,3)))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:161, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true <=(select HEX(R_bit) not like (select 2) from test1 limit 1)]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 ===file:sqls_util/select/expression.sql, id:162, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false <(select HEX(R_bit) like (select 1) a from test1 order by a limit 1)]===
 dble:[()]

@@ -1,11 +1,11 @@
 ===file:sqls_util/syntax/insert.sql, id:24, sql:[INSERT INTO test1 (id,data) VALUES (abs(-1),concat(2,'text'))]===
 dble:[None]
 mysql:[()]
-[22:01:27.237287]dble err :(1064, 'Not Supported of Sharding Value EXPR :abs(-1)')
+[03:09:53.550396]dble err :(1064, 'Not Supported of Sharding Value EXPR :abs(-1)')
 ===file:sqls_util/syntax/insert.sql, id:27, sql:[INSERT INTO test1 VALUES (abs(-1),concat(2,'text'))]===
 dble:[None]
 mysql:[()]
-[22:01:27.401662]dble err :(1064, 'Not Supported of Sharding Value EXPR :abs(-1)')
+[03:09:53.706932]dble err :(1064, 'Not Supported of Sharding Value EXPR :abs(-1)')
 ===file:sqls_util/syntax/insert.sql, id:28, sql:[SELECT id,data FROM test1]===
 dble:[[(1L, 'a'), (1L, 'a'), (2L, 'aa'), (2L, 'b'), (3L, 'a'), (3L, 'aaa'), (4L, 'aaaaa'), (4L, 'b'), (5L, 'c'), (6L, 'a'), (6L, 'e'), (7L, None), (7L, 'b'), (7L, 'f'), (8L, 'c'), (8L, 'g'), (9L, 'd'), (9L, 'h'), (10L, '2 test')]]
 mysql:[[(1L, '2text'), (1L, '2text'), (1L, 'a'), (1L, 'a'), (2L, 'aa'), (2L, 'b'), (3L, 'a'), (3L, 'aaa'), (4L, 'aaaaa'), (4L, 'b'), (5L, 'c'), (6L, 'a'), (6L, 'e'), (7L, None), (7L, 'b'), (7L, 'f'), (8L, 'c'), (8L, 'g'), (9L, 'd'), (9L, 'h'), (10L, '2 test')]]
