@@ -1,138 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dble:rule SYSTEM "rule.dtd">
 <dble:rule xmlns:dble="http://dble.cloud/">
-	<tableRule name="fixed_uniform_string_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>fixed_uniform_string</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="fixed_nonuniform_string_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>fixed_nonuniform_string</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="enum_integer_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>enum_integer</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="enum_string_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>enum_string</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="range_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>range</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="date_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>date</algorithm>
-		</rule>
-	</tableRule>
-	<tableRule name="date_default_rule">
-		<rule>
-			<columns>id</columns>
-			<algorithm>date_default</algorithm>
-		</rule>
-	</tableRule>
 
-	<tableRule name="hash-two">
-        <rule>
-            <columns>id</columns>
-            <algorithm>two-long</algorithm>
-        </rule>
-    </tableRule>
-    <tableRule name="hash-three">
-        <rule>
-            <columns>id</columns>
-            <algorithm>three-long</algorithm>
-        </rule>
-    </tableRule>
-	<tableRule name="hash-three-step10">
-        <rule>
-            <columns>id</columns>
-            <algorithm>three-long-step10</algorithm>
-        </rule>
-    </tableRule>
 	<tableRule name="hash-four">
         <rule>
             <columns>id</columns>
             <algorithm>four-long</algorithm>
         </rule>
     </tableRule>
-    <function name="two-long" class="Hash">
-        <property name="partitionCount">2</property>
-        <property name="partitionLength">1</property>
-    </function>
-    <function name="three-long" class="Hash">
-        <property name="partitionCount">3</property>
-        <property name="partitionLength">1</property>
-    </function>
-    <function name="three-long-step10" class="Hash">
-        <property name="partitionCount">3</property>
-        <property name="partitionLength">10</property>
-    </function>
+
 	<function name="four-long" class="Hash">
 		<property name="partitionCount">4</property>
 		<property name="partitionLength">1</property>
-	</function>
-	<function name="fixed_uniform" class="Hash">
-		<property name="partitionCount">4</property>
-		<property name="partitionLength">256</property>
-	</function>		
-	<function name="fixed_nonuniform" class="Hash">
-		<property name="partitionCount">2,1</property>
-		<property name="partitionLength">256,512</property>
-	</function>
-	<function name="fixed_uniform_string" class="StringHash">
-		<property name="partitionCount">4</property>
-		<property name="partitionLength">256</property>
-		<property name="hashSlice">0:2</property>
-	</function>		
-	<function name="fixed_nonuniform_string" class="StringHash">
-		<property name="partitionCount">2,1</property>
-		<property name="partitionLength">256,512</property>
-		<property name="hashSlice">0:2</property>
-	</function>	
-	<function name="enum_integer" class="Enum">
-		<property name="mapFile">enum-integer.txt</property>
-		<property name="type">0</property>
-		<property name="defaultNode">0</property>
-	</function>	
-	<function name="enum_string" class="Enum">
-		<property name="mapFile">enum-string.txt</property>
-		<property name="type">1</property>
-		<property name="defaultNode">0</property>
-	</function>	
-	<function name="range" class="NumberRange">
-		<property name="mapFile">range.txt</property>
-		<!--<property name="defaultNode">0</property>-->
-	</function>	
-	<function name="range_string" class="NumberRange">
-		<property name="mapFile">range_default.txt</property>
-		<property name="defaultNode">3</property>
-	</function>	
-	<function name="date" class="Date">
-		<property name="dateFormat">yyyy-MM-dd</property>
-		<property name="sBeginDate">2016-12-01</property>
-		<property name="sEndDate">2017-01-9</property>
-		<property name="sPartionDay">10</property>
-		<!--<property name="defaultNode">0</property>-->
-	</function>	
-	<function name="date_default" class="Date">
-		<property name="dateFormat">yyyy-MM-dd</property>
-		<property name="sBeginDate">2016-12-01</property>
-		<property name="sEndDate">2017-01-9</property>
-		<property name="sPartionDay">10</property>
-		<property name="defaultNode">0</property>
 	</function>
 
 </dble:rule>
