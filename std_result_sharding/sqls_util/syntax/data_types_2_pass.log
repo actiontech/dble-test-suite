@@ -110,6 +110,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_2.sql, id:74, sql:[insert into test1 values(11, 'a\_b')]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:75, sql:[select b from test1]===
+dble:[[('a\x00b',), ('a\x08b',), ('a\test1',), ('a\nb',), ('a\rb',), ('a\x1ab',), ('a"b',), ("a'b",), ('a\\%b',), ('a\\_b',), ('a\\b',)]]
 ===file:sqls_util/syntax/data_types_2.sql, id:78, sql:[DROP TABLE IF EXISTS  test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_2.sql, id:79, sql:[CREATE TABLE  test1( id int,data date)]===
@@ -132,8 +134,12 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_2.sql, id:92, sql:[INSERT INTO test1 ( id,data) VALUES (12,'9999-12-31')]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:93, sql:[INSERT INTO test1( id,data) VALUES (13,'20170201')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:94, sql:[INSERT INTO test1( id,data) VALUES (14,'170202')]===
+dble:[[]]
 ===file:sqls_util/syntax/data_types_2.sql, id:95, sql:[SELECT * FROM test1]===
-dble:[[(2L, datetime.date(2014, 11, 11)), (3L, datetime.date(2014, 11, 11)), (4L, datetime.date(2014, 11, 11)), (5L, datetime.date(2014, 11, 11)), (7L, datetime.date(999, 1, 1)), (8L, None), (11L, datetime.date(1000, 1, 1)), (12L, datetime.date(9999, 12, 31))]]
+dble:[[(2L, datetime.date(2014, 11, 11)), (3L, datetime.date(2014, 11, 11)), (4L, datetime.date(2014, 11, 11)), (5L, datetime.date(2014, 11, 11)), (7L, datetime.date(999, 1, 1)), (8L, None), (11L, datetime.date(1000, 1, 1)), (12L, datetime.date(9999, 12, 31)), (13L, datetime.date(2017, 2, 1)), (14L, datetime.date(2017, 2, 2))]]
 ===file:sqls_util/syntax/data_types_2.sql, id:98, sql:[DROP TABLE IF EXISTS  test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_2.sql, id:99, sql:[CREATE TABLE  test1( id int,data time)]===
