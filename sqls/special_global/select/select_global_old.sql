@@ -147,19 +147,19 @@ select id,O_ORDERKEY,O_TOTALPRICE from test1 where id>36900 and id<36902 group b
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where O_CUSTKEY not between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a where not (O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300') group by o_custkey
-drop table if exists test2
-create table test2(id int(11),C_NAME varchar(20),C_NATIONKEY varchar(20),C_ORDERKEY varchar(20),C_CUSTKEY varchar(20) primary key)
-insert into test2 (id,C_NAME,C_NATIONKEY,C_ORDERKEY,C_CUSTKEY) values (1,'chenxiao','NATIONKEY_001','ORDERKEY_001','CUSTKEY_003'),(3,'wangye','NATIONKEY_001','ORDERKEY_004','CUSTKEY_111'),(2,'xiaojuan','NATIONKEY_001','ORDERKEY_005','CUSTKEY_132'),(4,'chenqi','NATIONKEY_051','ORDERKEY_010','CUSTKEY_333'),(5,'marui','NATIONKEY_002','ORDERKEY_011','CUSTKEY_012'),(8,'huachen','NATIONKEY_002','ORDERKEY_007','CUSTKEY_980'),(7,'yanglu','NATIONKEY_132','ORDERKEY_006','CUSTKEY_420')
-select C_NAME from test2 where C_NAME like 'A__A'
-select C_NAME from test2 where C_NAME like 'm___i'
-select C_NAME from test2 where C_NAME like 'ch___i%%'
-select C_NAME from test2 where C_NAME like 'ch___i%%' ESCAPE 'i'
-select count(*) from test2 where C_NAME not like 'chen%'
-select count(*) from test2 where not (C_NAME like 'chen%')
-select C_NAME from test2 where C_NAME like binary 'chen%'
-select C_NAME from test2 where C_NAME like 'chen%'
-select C_NAME from test2 where  C_NAME  like concat('%','AM','%')
-select C_NAME from test2 where  C_NAME  like concat('%','en','%')
+drop table if exists schema2.test2
+create table schema2.test2(id int(11),C_NAME varchar(20),C_NATIONKEY varchar(20),C_ORDERKEY varchar(20),C_CUSTKEY varchar(20) primary key)
+insert into schema2.test2 (id,C_NAME,C_NATIONKEY,C_ORDERKEY,C_CUSTKEY) values (1,'chenxiao','NATIONKEY_001','ORDERKEY_001','CUSTKEY_003'),(3,'wangye','NATIONKEY_001','ORDERKEY_004','CUSTKEY_111'),(2,'xiaojuan','NATIONKEY_001','ORDERKEY_005','CUSTKEY_132'),(4,'chenqi','NATIONKEY_051','ORDERKEY_010','CUSTKEY_333'),(5,'marui','NATIONKEY_002','ORDERKEY_011','CUSTKEY_012'),(8,'huachen','NATIONKEY_002','ORDERKEY_007','CUSTKEY_980'),(7,'yanglu','NATIONKEY_132','ORDERKEY_006','CUSTKEY_420')
+select C_NAME from schema2.test2 where C_NAME like 'A__A'
+select C_NAME from schema2.test2 where C_NAME like 'm___i'
+select C_NAME from schema2.test2 where C_NAME like 'ch___i%%'
+select C_NAME from schema2.test2 where C_NAME like 'ch___i%%' ESCAPE 'i'
+select count(*) from schema2.test2 where C_NAME not like 'chen%'
+select count(*) from schema2.test2 where not (C_NAME like 'chen%')
+select C_NAME from schema2.test2 where C_NAME like binary 'chen%'
+select C_NAME from schema2.test2 where C_NAME like 'chen%'
+select C_NAME from schema2.test2 where  C_NAME  like concat('%','AM','%')
+select C_NAME from schema2.test2 where  C_NAME  like concat('%','en','%')
 select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_132'
 (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY) union (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY)
 select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003' union select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_132' order by O_ORDERKEY
@@ -170,36 +170,36 @@ select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003' union se
 (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003' order by O_ORDERKEY limit 5) union all (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_980' order by O_ORDERKEY limit 5)
 (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003') union all (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_132') order by O_ORDERKEY limit 5
 (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_132') union DISTINCT (select O_CUSTKEY,O_ORDERKEY from test1 a where O_CUSTKEY ='CUSTKEY_003') order by O_ORDERKEY limit 5
-select O_ORDERKEY,O_CUSTKEY,C_NAME from test1,test2 where O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006'
-select count(*) from test1 as a where a.id >= any(select id from test2)
-select count(*) from test1 as a where a.id >= any(select avg(id) from test2 group by id)
-select count(*) from test1 as a where a.id in(select id from test2)
-select count(*) from test1 as a where a.id not in(select id from test2)
-select count(*) from test1 as a where not (a.id in(select id from test2))
-select count(*) from test1 as a where a.id not in(select id from test2 where C_ORDERKEY in(1,2))
-select count(*) from test1 as a where not (a.id in(select id from test2 where C_ORDERKEY in(1,2)))
-select count(*) from test1 as a where a.id =some(select id from test2)
-select count(*) from test1 as a where a.id != any(select id from test2)
+select O_ORDERKEY,O_CUSTKEY,C_NAME from test1,schema2.test2 where O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006'
+select count(*) from test1 as a where a.id >= any(select id from schema2.test2)
+select count(*) from test1 as a where a.id >= any(select avg(id) from schema2.test2 group by id)
+select count(*) from test1 as a where a.id in(select id from schema2.test2)
+select count(*) from test1 as a where a.id not in(select id from schema2.test2)
+select count(*) from test1 as a where not (a.id in(select id from schema2.test2))
+select count(*) from test1 as a where a.id not in(select id from schema2.test2 where C_ORDERKEY in(1,2))
+select count(*) from test1 as a where not (a.id in(select id from schema2.test2 where C_ORDERKEY in(1,2)))
+select count(*) from test1 as a where a.id =some(select id from schema2.test2)
+select count(*) from test1 as a where a.id != any(select id from schema2.test2)
 select count(*) from (select O_CUSTKEY,count(O_CUSTKEY) as counts from test1 group by O_CUSTKEY) as a where counts<10 group by counts
-select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 join test2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007'
-select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 INNER join test2 where O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007'
-select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 INNER join test2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006'
-select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 CROSS join test2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006'
-select test1.O_ORDERKEY,test1.O_CUSTKEY,C_NAME from test1 CROSS join test2 using(id) order by test1.O_ORDERKEY,test1.O_CUSTKEY,C_NAME
-select O_ORDERKEY,O_CUSTKEY,C_NAME from test2 as a STRAIGHT_JOIN test1 b where b.O_CUSTKEY=a.c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007'
-select b.O_ORDERKEY,b.O_CUSTKEY,a.C_NAME from test2 a STRAIGHT_JOIN test1 b on b.O_CUSTKEY=a.c_CUSTKEY and b.O_ORDERKEY<'ORDERKEY_007'
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test2 as a left join test1 b on b.O_CUSTKEY=a.C_CUSTKEY and a.C_CUSTKEY<'CUSTKEY_300'
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test2 as a left join test1 b using(id) where a.C_CUSTKEY<'CUSTKEY_300'
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test2 as a left OUTER join test1 b using(id)
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test1 b right join test2 as a using(id) where a.c_CUSTKEY<'CUSTKEY_300'
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test1 b right join test2 as a  using(id)
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test1 b right join test2 as a on b.O_CUSTKEY=a.C_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300'
+select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 join schema2.test2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007'
+select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 INNER join schema2.test2 where O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007'
+select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 INNER join schema2.test2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006'
+select O_ORDERKEY,O_CUSTKEY,C_NAME from test1 CROSS join schema2.test2 on O_CUSTKEY=c_CUSTKEY and O_ORDERKEY<'ORDERKEY_006'
+select test1.O_ORDERKEY,test1.O_CUSTKEY,C_NAME from test1 CROSS join schema2.test2 using(id) order by test1.O_ORDERKEY,test1.O_CUSTKEY,C_NAME
+select O_ORDERKEY,O_CUSTKEY,C_NAME from schema2.test2 as a STRAIGHT_JOIN test1 b where b.O_CUSTKEY=a.c_CUSTKEY and O_ORDERKEY<'ORDERKEY_007'
+select b.O_ORDERKEY,b.O_CUSTKEY,a.C_NAME from schema2.test2 a STRAIGHT_JOIN test1 b on b.O_CUSTKEY=a.c_CUSTKEY and b.O_ORDERKEY<'ORDERKEY_007'
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from schema2.test2 as a left join test1 b on b.O_CUSTKEY=a.C_CUSTKEY and a.C_CUSTKEY<'CUSTKEY_300'
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from schema2.test2 as a left join test1 b using(id) where a.C_CUSTKEY<'CUSTKEY_300'
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from schema2.test2 as a left OUTER join test1 b using(id)
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test1 b right join schema2.test2 as a using(id) where a.c_CUSTKEY<'CUSTKEY_300'
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test1 b right join schema2.test2 as a  using(id)
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test1 b right join schema2.test2 as a on b.O_CUSTKEY=a.C_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300'
 drop table if exists test1
-drop table if exists test2
+drop table if exists schema2.test2
 create table test1 (id int(11),O_ORDERKEY varchar(20) primary key,O_CUSTKEY varchar(20),O_TOTALPRICE int(20),MYDATE date)
-create table test2(id int(11),C_NAME varchar(20),C_NATIONKEY varchar(20),C_ORDERKEY varchar(20),C_CUSTKEY varchar(20) primary key)
+create table schema2.test2(id int(11),C_NAME varchar(20),C_NATIONKEY varchar(20),C_ORDERKEY varchar(20),C_CUSTKEY varchar(20) primary key)
 insert into test1 (id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE) values (1,'ORDERKEY_001','CUSTKEY_003',200000,'20141022'),(2,'ORDERKEY_002','CUSTKEY_003',100000,'19920501'),(4,'ORDERKEY_004','CUSTKEY_111',500,'20080105'),(5,'ORDERKEY_005','CUSTKEY_132',100,'19920628'),(10,'ORDERKEY_010','CUSTKEY_333',88888888,'19920720'),(11,'ORDERKEY_011','CUSTKEY_012',323456,'19920822'),(7,'ORDERKEY_007','CUSTKEY_980',12000,'19920910'),(6,'ORDERKEY_006','CUSTKEY_420',231,'19921111')
-insert into test2 (id,C_NAME,C_NATIONKEY,C_ORDERKEY,C_CUSTKEY) values (1,'chenxiao','NATIONKEY_001','ORDERKEY_001','CUSTKEY_003'),(3,'wangye','NATIONKEY_001','ORDERKEY_004','CUSTKEY_111'),(2,'xiaojuan','NATIONKEY_001','ORDERKEY_005','CUSTKEY_132'),(4,'chenqi','NATIONKEY_051','ORDERKEY_010','CUSTKEY_333'),(5,'marui','NATIONKEY_002','ORDERKEY_011','CUSTKEY_012'),(8,'huachen','NATIONKEY_002','ORDERKEY_007','CUSTKEY_980'),(7,'yanglu','NATIONKEY_132','ORDERKEY_006','CUSTKEY_420')
+insert into schema2.test2 (id,C_NAME,C_NATIONKEY,C_ORDERKEY,C_CUSTKEY) values (1,'chenxiao','NATIONKEY_001','ORDERKEY_001','CUSTKEY_003'),(3,'wangye','NATIONKEY_001','ORDERKEY_004','CUSTKEY_111'),(2,'xiaojuan','NATIONKEY_001','ORDERKEY_005','CUSTKEY_132'),(4,'chenqi','NATIONKEY_051','ORDERKEY_010','CUSTKEY_333'),(5,'marui','NATIONKEY_002','ORDERKEY_011','CUSTKEY_012'),(8,'huachen','NATIONKEY_002','ORDERKEY_007','CUSTKEY_980'),(7,'yanglu','NATIONKEY_132','ORDERKEY_006','CUSTKEY_420')
 create index ORDERS_FK1 on test1(O_CUSTKEY)
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by o_custkey
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1  where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by o_custkey
@@ -207,32 +207,32 @@ select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 w
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by 2
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY), sums
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY),sums
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from test2 where c_custkey=o_custkey) asc
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from test2 where c_custkey=o_custkey) asc
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by counts asc,2 desc
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by counts asc,2 desc
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_013' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by o_custkey
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_012' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by o_custkey
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by 2
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by 2
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY)
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY)
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by (select C_ORDERKEY from test2 where c_custkey=o_custkey) asc
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by (select C_ORDERKEY from test2 where c_custkey=o_custkey) asc
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by counts asc,2 desc
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by counts asc,2 desc
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_013' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by o_custkey
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_012' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by o_custkey
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by 2
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by 2
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY)
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY)
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by counts asc,2 desc
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by counts asc,2 desc
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,2 desc limit 2
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,2 desc limit 2
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,3
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,3
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1
 select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY) asc,2 desc limit 10
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY) asc,2 desc limit 10
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,10
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,10
-select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1
-select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY) asc,2 desc limit 10
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY) asc,2 desc limit 10
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,10
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 1,10
+select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1
+select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by count(O_ORDERKEY) asc,O_CUSTKEY desc limit 10 offset 1
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts,MYDATE from test1 use index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 use key (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_800' group by o_custkey
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 use key (ORDERS_FK1) ignore index (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_800' group by o_custkey
@@ -241,24 +241,24 @@ select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 i
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 use index for order by (ORDERS_FK1) ignore index for group by (ORDERS_FK1) where O_CUSTKEY between 1 and 50 group by o_custkey
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 as a use index for group by (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
 select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 a use index for join (ORDERS_FK1) ignore index for join (ORDERS_FK1) where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_300' group by o_custkey
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test2 as a left join test1 b ignore index for join(ORDERS_FK1) on b.O_CUSTKEY=a.c_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300'
-select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from test2 as a force index for join(primary) left join test1 b ignore index for join(ORDERS_FK1) on b.O_CUSTKEY=a.c_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300'
-select UPPER((select C_NAME FROM test2 limit 1)) FROM test2 limit 1
-select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY=(select min(C_CUSTKEY) from test2)
-select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY) from test2)
-select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY)+1 from test2)
-select count(*) from test2 as a where a.c_CUSTKEY=(select max(C_CUSTKEY) from test1 where C_CUSTKEY=a.C_CUSTKEY)
-select C_CUSTKEY  from test2 as a where (select count(*) from test1 where O_CUSTKEY=a.C_CUSTKEY)=2
-select count(*) from test1 as a where a.id <> all(select id from test2)
-select count(*) from test1 as a where 56000< all(select id from test2)
-select count(*) from test2 as a where 2>all(select count(*) from test1 where O_CUSTKEY=C_CUSTKEY)
-select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,O_CUSTKEY)=(select c_ORDERKEY,c_CUSTKEY from test2 where c_name='yanglu')
-select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,a.O_CUSTKEY) in (select c_ORDERKEY,c_CUSTKEY from test2) order by id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE
-select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where exists(select * from test2 where a.O_CUSTKEY=test2.C_CUSTKEY)
-select distinct O_ORDERKEY,O_CUSTKEY from test1 a where exists(select * from test2 where a.O_CUSTKEY=test2.C_CUSTKEY)
-select count(*) from test1 a where not exists(select * from test2 where a.O_CUSTKEY=test2.C_CUSTKEY)
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from schema2.test2 as a left join test1 b ignore index for join(ORDERS_FK1) on b.O_CUSTKEY=a.c_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300'
+select a.c_CUSTKEY,a.C_NAME,b.O_ORDERKEY from schema2.test2 as a force index for join(primary) left join test1 b ignore index for join(ORDERS_FK1) on b.O_CUSTKEY=a.c_CUSTKEY and a.c_CUSTKEY<'CUSTKEY_300'
+select UPPER((select C_NAME FROM schema2.test2 limit 1)) FROM schema2.test2 limit 1
+select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY=(select min(C_CUSTKEY) from schema2.test2)
+select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY) from schema2.test2)
+select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY)+1 from schema2.test2)
+select count(*) from schema2.test2 as a where a.c_CUSTKEY=(select max(C_CUSTKEY) from test1 where C_CUSTKEY=a.C_CUSTKEY)
+select C_CUSTKEY  from schema2.test2 as a where (select count(*) from test1 where O_CUSTKEY=a.C_CUSTKEY)=2
+select count(*) from test1 as a where a.id <> all(select id from schema2.test2)
+select count(*) from test1 as a where 56000< all(select id from schema2.test2)
+select count(*) from schema2.test2 as a where 2>all(select count(*) from test1 where O_CUSTKEY=C_CUSTKEY)
+select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,O_CUSTKEY)=(select c_ORDERKEY,c_CUSTKEY from schema2.test2 where c_name='yanglu')
+select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,a.O_CUSTKEY) in (select c_ORDERKEY,c_CUSTKEY from schema2.test2) order by id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE
+select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)
+select distinct O_ORDERKEY,O_CUSTKEY from test1 a where exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)
+select count(*) from test1 a where not exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)
 #
 #clear tables
 #
 drop table if exists test1
-drop table if exists test2
+drop table if exists schema2.test2
