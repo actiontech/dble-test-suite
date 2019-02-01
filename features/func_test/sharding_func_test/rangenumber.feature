@@ -1,4 +1,4 @@
-Feature:
+Feature: PatternRange sharding function test suits
   @smoke
   Scenario: PatternRange function #1
     #test: set defaultNode
