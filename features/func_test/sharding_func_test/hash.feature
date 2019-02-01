@@ -1,4 +1,4 @@
-Feature:
+Feature:hash sharding function test suits
   @smoke
   Scenario: hash function #1
     #test: <= 2880
