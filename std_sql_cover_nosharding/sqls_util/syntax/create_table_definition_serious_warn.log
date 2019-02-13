@@ -1,0 +1,6 @@
+===file:sqls_util/syntax/create_table_definition.sql, id:587, sql:[INSERT INTO test1 VALUES (1)]===
+mysql err:(1146, "Table 'schema1.test1' doesn't exist")
+dble err[02:18:21.338350] :(1146, "Table 'db3.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:588, sql:[SHOW CREATE TABLE  test1]===
+mysql err:(1146, "Table 'schema1.test1' doesn't exist")
+dble err[02:18:21.418789] :(1146, "Table 'db3.test1' doesn't exist")
