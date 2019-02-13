@@ -1,5 +1,5 @@
 ===file:sqls_util/select/select.sql, id:62, sql:[select group_concat(id),pad from test1 group by pad order by pad]===
-dble:[(('16', -1L), ('0', 0L), ('1,5', 1L), ('2,6', 2L), ('10,9,3,7', 3L), ('11,4,8', 4L), ('12', 5L), ('13', 6L), ('14', 14L), ('15', 15L), ('17', 17L), ('18', 18L), ('19', 19L))]
+dble:[(('16', -1L), ('0', 0L), ('1,5', 1L), ('2,6', 2L), ('10,3,7,9', 3L), ('4,8,11', 4L), ('12', 5L), ('13', 6L), ('14', 14L), ('15', 15L), ('17', 17L), ('18', 18L), ('19', 19L))]
 mysql:[(('16', -1L), ('0', 0L), ('1,5', 1L), ('2,6', 2L), ('10,9,7,3', 3L), ('8,4,11', 4L), ('12', 5L), ('13', 6L), ('14', 14L), ('15', 15L), ('17', 17L), ('18', 18L), ('19', 19L))]
 ===file:sqls_util/select/select.sql, id:65, sql:[select std(id),pad from test1 group by pad]===
 dble:[[(0.0, -1L), (0.0, 0L), (0.0, 5L), (0.0, 6L), (0.0, 14L), (0.0, 15L), (0.0, 17L), (0.0, 18L), (0.0, 19L), (2.0, 1L), (2.0, 2L), (2.680951323690902, 3L), (2.867441755680875, 4L)]]
@@ -25,7 +25,7 @@ mysql:[[(0.0, -1L), (0.0, 0L), (0.0, 5L), (0.0, 6L), (0.0, 14L), (0.0, 15L), (0.
 ===file:sqls_util/select/select.sql, id:81, sql:[select pad,count(id) t from test1 group by pad with rollup]===
 dble:[None]
 mysql:[((-1L, 1L), (0L, 1L), (1L, 2L), (2L, 2L), (3L, 4L), (4L, 3L), (5L, 1L), (6L, 1L), (14L, 1L), (15L, 1L), (17L, 1L), (18L, 1L), (19L, 1L), (None, 20L))]
-[03:07:02.271472]dble err :(-1, 'error totally whack')
+[03:48:11.061675]dble err :(-1, 'error totally whack')
 ===file:sqls_util/select/select.sql, id:91, sql:[select id,k,c,pad from test1 order by null]===
 dble:[((1L, 1L, 'id1', 1L), (5L, 5L, 'id5', 1L), (9L, 9L, 'test', 3L), (13L, 13L, 'y_u', 6L), (17L, 17L, 'new*\n*line', 17L), (0L, 0L, '0', 0L), (4L, 4L, 'id4', 4L), (8L, 8L, '$id8$', 4L), (12L, 12L, '_g', 5L), (16L, 16L, '16', -1L), (2L, 2L, 'id2', 2L), (6L, 6L, 'id6', 2L), (10L, 10L, '\xe4\xb8\xad', 3L), (14L, 14L, '20%', 14L), (18L, 18L, 'a', 18L), (3L, 3L, 'id3', 3L), (7L, 7L, 'id7', 3L), (11L, 11L, 'i_', 4L), (15L, 15L, 'a_1', 15L), (19L, 19L, None, 19L))]
 mysql:[((0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L))]
@@ -38,11 +38,11 @@ mysql:[((16L, -1L), (0L, 0L), (1L, 1L), (5L, 1L), (2L, 2L), (6L, 2L), (10L, 3L),
 ===file:sqls_util/select/select.sql, id:182, sql:[select id,k,c,pad from test1 where id=@var1 := 1]===
 dble:[None]
 mysql:[((1L, 1L, 'id1', 1L),)]
-[03:07:07.161691]dble err :(1064, 'sql syntax error, no terminated. COLONEQ')
+[03:48:16.194841]dble err :(1064, 'sql syntax error, no terminated. COLONEQ')
 ===file:sqls_util/select/select.sql, id:186, sql:[select id,k,c,pad from test1 where id in(2,3,6.4,7,12)]===
 dble:[None]
 mysql:[((2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (7L, 7L, 'id7', 3L), (12L, 12L, '_g', 5L))]
-[03:07:07.408185]dble err :(1064, 'columnValue:6.4 Please eliminate any quote and non number within it.')
+[03:48:16.405770]dble err :(1064, 'columnValue:6.4 Please eliminate any quote and non number within it.')
 ===file:sqls_util/select/select.sql, id:234, sql:[select count(*) from test1 group by R_COMMENT,R_NAME order by null]===
 dble:[((3L,), (4L,), (1L,), (1L,))]
 mysql:[((1L,), (1L,), (3L,), (4L,))]
@@ -56,17 +56,11 @@ mysql:[((3L,), (2L,))]
 dble:[((2L,), (3L,))]
 mysql:[((3L,), (2L,))]
 ===file:sqls_util/select/select.sql, id:243, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT+1 asc]===
-dble:[((2L, 1.0, 'a', None), (1L, 1.0, 'a sting', None), (5L, 3.0, '', 'string'), (9L, 4.0, 'a', 'b'), (4L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (7L, 3.0, '', 'string'), (6L, 4.0, 'a', 'b'))]
+dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (6L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (7L, 3.0, '', 'string'), (4L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (5L, 3.0, '', 'string'), (9L, 4.0, 'a', 'b'))]
 mysql:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (3L, 3.0, '', 'string'), (4L, 4.0, 'a', 'b'), (5L, 3.0, '', 'string'), (6L, 4.0, 'a', 'b'), (7L, 3.0, '', 'string'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'))]
 ===file:sqls_util/select/select.sql, id:244, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT,1+1]===
-dble:[((2L, 1.0, 'a', None), (1L, 1.0, 'a sting', None), (9L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (4L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (7L, 3.0, '', 'string'), (5L, 3.0, '', 'string'))]
+dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (6L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'), (4L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (5L, 3.0, '', 'string'), (3L, 3.0, '', 'string'), (7L, 3.0, '', 'string'))]
 mysql:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (4L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (5L, 3.0, '', 'string'), (7L, 3.0, '', 'string'))]
 ===file:sqls_util/select/select.sql, id:254, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_comment]===
-dble:[((2L, 1.0, 'a', None), (1L, 1.0, 'a sting', None), (9L, 4.0, 'a', 'b'), (4L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (7L, 3.0, '', 'string'), (5L, 3.0, '', 'string'))]
+dble:[((2L, 1.0, 'a', None), (1L, 1.0, 'a sting', None), (9L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (4L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (7L, 3.0, '', 'string'), (5L, 3.0, '', 'string'))]
 mysql:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (4L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (5L, 3.0, '', 'string'), (7L, 3.0, '', 'string'))]
-===file:sqls_util/select/select.sql, id:270, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT]===
-dble:[((2L, 1.0, 'a', None), (1L, 1.0, 'a sting', None), (5L, 3.0, '', datetime.date(1776, 4, 30)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (4L, 4.0, 'a', datetime.date(1967, 9, 12)), (3L, 3.0, '', datetime.date(1983, 1, 1)))]
-mysql:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (5L, 3.0, '', datetime.date(1776, 4, 30)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (4L, 4.0, 'a', datetime.date(1967, 9, 12)), (3L, 3.0, '', datetime.date(1983, 1, 1)))]
-===file:sqls_util/select/select.sql, id:271, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME]===
-dble:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (5L, 3.0, '', datetime.date(1776, 4, 30)), (4L, 4.0, 'a', datetime.date(1967, 9, 12)), (2L, 1.0, 'a', None), (1L, 1.0, 'a sting', None), (6L, 4.0, 'b', datetime.date(1963, 12, 9)))]
-mysql:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (5L, 3.0, '', datetime.date(1776, 4, 30)), (2L, 1.0, 'a', None), (4L, 4.0, 'a', datetime.date(1967, 9, 12)), (1L, 1.0, 'a sting', None), (6L, 4.0, 'b', datetime.date(1963, 12, 9)))]

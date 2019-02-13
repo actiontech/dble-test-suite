@@ -1,30 +1,3 @@
 ===file:sqls_mixed/syntax/identifiers.sql, id:3, sql:[lock tables sharding_4_t1 read]===
 mysql err:(1146, "Table 'schema1.sharding_4_t1' doesn't exist")
-dble err[01:31:13.461712] :(1105, "Table 'db1.sharding_4_t1' doesn't exist")
-===file:sqls_mixed/syntax/identifiers.sql, id:150, sql:[create table .drop(`order` int, `add` int)]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.494602] :(1064, 'error pos 14, line 1, column 13, token DOT')
-===file:sqls_mixed/syntax/identifiers.sql, id:151, sql:[insert into `drop`(`order`, `add`) values(1,1)]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.573468] :(1146, "Table 'db3.drop' doesn't exist")
-===file:sqls_mixed/syntax/identifiers.sql, id:152, sql:[insert into .drop(drop.order, drop.add) values(1,1)]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.654447] :(1064, 'error pos 13, line 1, column 12, token DOT')
-===file:sqls_mixed/syntax/identifiers.sql, id:153, sql:[insert into .drop(.drop.order, .drop.add) values(1,1)]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.735760] :(1064, 'error pos 13, line 1, column 12, token DOT')
-===file:sqls_mixed/syntax/identifiers.sql, id:154, sql:[insert into .drop(schema1.drop.order, schema1.drop.add) values(1,1)]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.816382] :(1064, 'error pos 13, line 1, column 12, token DOT')
-===file:sqls_mixed/syntax/identifiers.sql, id:155, sql:[select `order` from .drop]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.895838] :(1064, 'ERROR. pos 21, line 1, column 21, token DOT')
-===file:sqls_mixed/syntax/identifiers.sql, id:156, sql:[select drop.order from .drop order by `add`]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:21.977887] :(1064, 'ERROR. pos 11, line 1, column 7, token DROP')
-===file:sqls_mixed/syntax/identifiers.sql, id:157, sql:[select drop.order from .drop order by drop.add]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:22.060537] :(1064, 'ERROR. pos 11, line 1, column 7, token DROP')
-===file:sqls_mixed/syntax/identifiers.sql, id:158, sql:[select drop.order from .drop order by .drop.add]===
-mysql err:(1356, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[01:31:22.141309] :(1064, 'ERROR. pos 11, line 1, column 7, token DROP')
+dble err[04:19:51.924660] :(1105, "Table 'db1.sharding_4_t1' doesn't exist")

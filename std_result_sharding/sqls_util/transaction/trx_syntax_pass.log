@@ -820,6 +820,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:517, sql:[commit]===
 dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:518, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (5L, 5L, '5', 5L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:521, sql:[delete from test1]===
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:523, sql:[select * from test1 order by id]===
@@ -830,8 +832,6 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:530, sql:[rollback]===
 dble:[[]]
-===file:sqls_util/transaction/trx_syntax.sql, id:532, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:534, sql:[commit]===
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:535, sql:[select * from test1 order by id]===
@@ -850,6 +850,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:551, sql:[commit]===
 dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:552, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:555, sql:[delete from test1]===
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:557, sql:[select * from test1 order by id]===
@@ -876,6 +878,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:585, sql:[commit]===
 dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:586, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:589, sql:[delete from test1]===
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:591, sql:[select * from test1 order by id]===
@@ -902,6 +906,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:619, sql:[commit]===
 dble:[[]]
+===file:sqls_util/transaction/trx_syntax.sql, id:620, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:623, sql:[delete from test1]===
 dble:[[]]
 ===file:sqls_util/transaction/trx_syntax.sql, id:625, sql:[select * from test1 order by id]===
