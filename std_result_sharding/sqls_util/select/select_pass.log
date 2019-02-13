@@ -414,18 +414,22 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/select/select.sql, id:267, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:268, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:sqls_util/select/select.sql, id:268, sql:[insert into test1 values (2,1, 'a','1983-01-02')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:269, sql:[insert into test1 values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')]===
+===file:sqls_util/select/select.sql, id:269, sql:[insert into test1 values(3,3,'','1983-01-01'),(4,4,'a1','1967-09-12'),(5,3,'b1','1776-04-30'),(6,4,'b','1963-12-09')]===
 dble:[[]]
+===file:sqls_util/select/select.sql, id:270, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT]===
+dble:[((1L, 1.0, 'a sting', None), (5L, 3.0, 'b1', datetime.date(1776, 4, 30)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (4L, 4.0, 'a1', datetime.date(1967, 9, 12)), (3L, 3.0, '', datetime.date(1983, 1, 1)), (2L, 1.0, 'a', datetime.date(1983, 1, 2)))]
+===file:sqls_util/select/select.sql, id:271, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME]===
+dble:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (2L, 1.0, 'a', datetime.date(1983, 1, 2)), (1L, 1.0, 'a sting', None), (4L, 4.0, 'a1', datetime.date(1967, 9, 12)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (5L, 3.0, 'b1', datetime.date(1776, 4, 30)))]
 ===file:sqls_util/select/select.sql, id:272, sql:[select R_NAME,max(R_REGIONKEY) from test1 group by R_name]===
-dble:[[('', 3.0), ('a', 4.0), ('a sting', 1.0), ('b', 4.0)]]
+dble:[[('', 3.0), ('a', 1.0), ('a sting', 1.0), ('a1', 4.0), ('b', 4.0), ('b1', 3.0)]]
 ===file:sqls_util/select/select.sql, id:273, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 2,3]===
-dble:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (4L, 4.0, 'a', datetime.date(1967, 9, 12)), (5L, 3.0, '', datetime.date(1776, 4, 30)))]
+dble:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (4L, 4.0, 'a1', datetime.date(1967, 9, 12)), (5L, 3.0, 'b1', datetime.date(1776, 4, 30)))]
 ===file:sqls_util/select/select.sql, id:274, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,1]===
-dble:[((2L, 1.0, 'a', None),)]
+dble:[((2L, 1.0, 'a', datetime.date(1983, 1, 2)),)]
 ===file:sqls_util/select/select.sql, id:275, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,2]===
-dble:[((2L, 1.0, 'a', None), (3L, 3.0, '', datetime.date(1983, 1, 1)))]
+dble:[((2L, 1.0, 'a', datetime.date(1983, 1, 2)), (3L, 3.0, '', datetime.date(1983, 1, 1)))]
 ===file:sqls_util/select/select.sql, id:276, sql:[select id,R_REGIONKEY from test1 order by id,R_REGIONKEY limit 2,3]===
 dble:[((3L, 3.0), (4L, 4.0), (5L, 3.0))]
 ===file:sqls_util/select/select.sql, id:277, sql:[select id,R_REGIONKEY from test1 group by id,R_REGIONKEY limit 2,3]===
