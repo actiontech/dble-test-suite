@@ -56,7 +56,7 @@ def step_impl(context):
     if context.sql_file.find("/") == -1:
         sql_file_name = context.sql_file
     else:
-        group = context.sql_file.rpartition("/");
+        group = context.sql_file.rpartition("/")
         sql_file_name = group[2]
         subdir = subdir + group[0]
         if not os.path.exists(subdir):
