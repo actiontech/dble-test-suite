@@ -1,0 +1,433 @@
+===file:sqls_util/syntax/create_table_definition.sql, id:5, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:7, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:14, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', '', None, '')]]
+mysql:[[('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:17, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:20, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'NO', '', 'abc', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'varchar(10)', 'NO', '', 'abc', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:23, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', 'abc', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'varchar(10)', 'YES', '', 'abc', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:26, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'YES', '', 'abcde', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'YES', '', 'abcde', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:41, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:45, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:49, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'NO', 'PRI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'NO', 'PRI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:57, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` char(20) DEFAULT NULL COMMENT 'test COMMENT',\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` char(20) DEFAULT NULL COMMENT 'test COMMENT',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+===file:sqls_util/syntax/create_table_definition.sql, id:69, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:73, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:77, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'char(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:85, sql:[DESC schema2.test2]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('test', 'int(11)', 'YES', 'UNI', None, '')]]
+mysql:[[('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('test', 'int(11)', 'YES', 'UNI', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:90, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:99, sql:[CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))]===
+dble:[None]
+mysql:[()]
+[06:48:44.215434]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:100, sql:[INSERT INTO test1 (id,data1,data2)  VALUES (1,'aaa1','aaa2')]===
+dble:[None]
+mysql:[()]
+[06:48:44.257824]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:101, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data1', 'varchar(10)', 'YES', '', None, ''), ('data2', 'varchar(10)', 'YES', '', None, ''), ('data3', 'varchar(20)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data1', 'varchar(10)', 'YES', '', None, ''), ('data2', 'varchar(10)', 'YES', '', None, ''), ('data3', 'varchar(20)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:102, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 'aaa1', 'aaa2', 'aaa1 aaa2')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:106, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) virtual)]===
+dble:[None]
+mysql:[()]
+[06:48:44.555909]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:107, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:44.588358]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:108, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:109, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:111, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) stored)]===
+dble:[None]
+mysql:[()]
+[06:48:44.900711]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SORTED,  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checking consisten' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:112, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:44.948230]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:113, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'STORED GENERATED'))]
+[06:48:45.028124]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:114, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 2L),)]
+[06:48:45.109321]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:118, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE)]===
+dble:[None]
+mysql:[()]
+[06:48:45.252963]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:119, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:45.303188]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:120, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, 'VIRTUAL GENERATED'))]
+[06:48:45.383718]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:121, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 2L),)]
+[06:48:45.464633]dble err :(1146, "Table 'db2.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:123, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY)]===
+dble:[None]
+mysql:[()]
+[06:48:45.606561]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:124, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:45.654637]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:125, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, 'VIRTUAL GENERATED'))]
+[06:48:45.734072]dble err :(1146, "Table 'db2.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:126, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 2L),)]
+[06:48:45.813352]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:130, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY COMMENT 'test')]===
+dble:[None]
+mysql:[()]
+[06:48:45.957073]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:131, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:46.004236]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:132, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, 'VIRTUAL GENERATED'))]
+[06:48:46.085053]dble err :(1146, "Table 'db2.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:133, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 2L),)]
+[06:48:46.166069]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:137, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NOT NULL)]===
+dble:[None]
+mysql:[()]
+[06:48:46.311231]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:138, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:46.358681]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:139, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'NO', '', None, 'VIRTUAL GENERATED'))]
+[06:48:46.438194]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:140, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 2L),)]
+[06:48:46.517603]dble err :(1146, "Table 'db2.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:142, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NULL)]===
+dble:[None]
+mysql:[()]
+[06:48:46.662947]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:143, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:46.712640]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:144, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'VIRTUAL GENERATED'))]
+[06:48:46.795245]dble err :(1146, "Table 'db1.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:145, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 2L),)]
+[06:48:46.877178]dble err :(1146, "Table 'db2.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:150, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) STORED PRIMARY KEY)]===
+dble:[None]
+mysql:[()]
+[06:48:47.026463]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2) SORTED,  _dble_op_time bigint DEFAULT NULL COMMENT 'field for' at line 1")
+===file:sqls_util/syntax/create_table_definition.sql, id:151, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[06:48:47.076202]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:152, sql:[DESC test1]===
+dble:[None]
+mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'NO', 'PRI', None, 'STORED GENERATED'))]
+[06:48:47.161141]dble err :(1146, "Table 'db2.test1' doesn't exist")
+===file:sqls_util/syntax/create_table_definition.sql, id:162, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:166, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'NO', 'PRI', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'NO', 'PRI', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:170, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:174, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:183, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:187, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:191, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:195, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'NO', 'PRI', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, ''), ('test', 'int(11)', 'NO', 'PRI', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:208, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:212, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:222, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:226, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`,`test`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`,`test`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:230, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`,`test`,`detail`(10))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`,`test`,`detail`(10))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:237, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:241, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:249, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:253, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:257, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`) COMMENT 'string'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+===file:sqls_util/syntax/create_table_definition.sql, id:268, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:272, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `test` int(11) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `id_index` (`id`,`test`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `test` int(11) DEFAULT NULL,\n  KEY `id_index` (`id`,`test`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:276, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `key_id` (`id`,`test`,`detail`(10))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  KEY `key_id` (`id`,`test`,`detail`(10))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:313, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:317, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:321, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `un_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:325, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `un_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:329, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `u_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:336, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `un_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:340, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `un_id` (`id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:346, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `un_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:350, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `co_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `un_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:356, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:369, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:373, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:377, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:381, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `unique_id` (`id`,`test`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `unique_id` (`id`,`test`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:385, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`test`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`test`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:389, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `u_id` (`id`,`test`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `test` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `unique_id` (`id`,`test`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:395, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `ind_id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `ind_id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:399, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `idx_id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `idx_id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:403, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `idx_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `idx_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:413, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:417, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:421, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `ind_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:425, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `unique_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `unique_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:429, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `u_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `u_id` (`id`,`detail`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:437, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `unique_id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `unique_id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:445, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`detail`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:449, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:453, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `u_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `unique_id` (`id`,`detail`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:457, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `unique_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  UNIQUE KEY `unique_id` (`id`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:481, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `detail` varchar(20) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:489, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:493, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:499, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:503, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:507, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:511, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=gbk")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=gbk')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:515, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=gbk")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=gbk')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:519, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:523, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=gbk")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=gbk')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:529, sql:[SHOW CREATE TABLE test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='test11 TABLE'")]]
+mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 COMMENT='test11 TABLE'")]]
+===file:sqls_util/syntax/create_table_definition.sql, id:535, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 KEY_BLOCK_SIZE=2")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 KEY_BLOCK_SIZE=2')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:539, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 KEY_BLOCK_SIZE=2")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 KEY_BLOCK_SIZE=2')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:545, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:549, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 DELAY_KEY_WRITE=1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 DELAY_KEY_WRITE=1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:556, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='Y'")]]
+mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='Y'")]]
+===file:sqls_util/syntax/create_table_definition.sql, id:560, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='N'")]]
+mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='N'")]]
+===file:sqls_util/syntax/create_table_definition.sql, id:566, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:570, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:574, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:580, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:584, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=DYNAMIC')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:592, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPRESSED")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPRESSED')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:596, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=REDUNDANT")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=REDUNDANT')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:600, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:606, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:610, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_AUTO_RECALC=0")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_AUTO_RECALC=0')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:614, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_AUTO_RECALC=1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_AUTO_RECALC=1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:620, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:624, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_PERSISTENT=0")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_PERSISTENT=0')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:628, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_PERSISTENT=1")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_PERSISTENT=1')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:634, sql:[SHOW CREATE TABLE  test1]===
+dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_SAMPLE_PAGES=100")]]
+mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 STATS_SAMPLE_PAGES=100')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:640, sql:[DESC test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]

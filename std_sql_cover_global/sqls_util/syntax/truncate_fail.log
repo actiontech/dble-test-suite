@@ -1,0 +1,33 @@
+===file:sqls_util/syntax/truncate.sql, id:5, sql:[select * from test1]===
+dble:[[(0L, 1L, 'test', 'test', 1550040865486L)]]
+mysql:[[(0L, 1L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:8, sql:[select * from test1]===
+dble:[[(1L, 100L, 'test', None, 1550040865662L)]]
+mysql:[[(1L, 100L, 'test', None)]]
+===file:sqls_util/syntax/truncate.sql, id:11, sql:[select * from test1 where R_COMMENT='xi''an']===
+dble:[[(1L, 2L, 'yang', "xi'an", 1550040865856L)]]
+mysql:[[(1L, 2L, 'yang', "xi'an")]]
+===file:sqls_util/syntax/truncate.sql, id:14, sql:[select * from test1]===
+dble:[[(1L, 4L, 'test', 'test', 1550040866023L), (2L, 5L, 'test', 'test', 1550040866023L)]]
+mysql:[[(1L, 4L, 'test', 'test'), (2L, 5L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:17, sql:[select * from test1]===
+dble:[[(1L, 8L, 'test', 'test', 1550040866232L), (2L, 10L, 'test', 'test', 1550040866232L)]]
+mysql:[[(1L, 8L, 'test', 'test'), (2L, 10L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:20, sql:[select * from test1]===
+dble:[[(1L, 5L, 'test', 'test', 1550040866435L), (2L, 6L, 'test', 'test', 1550040866435L)]]
+mysql:[[(1L, 5L, 'test', 'test'), (2L, 6L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:22, sql:[select * from test1]===
+dble:[[(1L, 5L, 'test', 'test', 1550040866435L), (1L, 7L, 'test', 'test', 1550040866545L), (2L, 6L, 'test', 'test', 1550040866435L), (2L, 8L, 'test', 'test', 1550040866545L)]]
+mysql:[[(1L, 5L, 'test', 'test'), (1L, 7L, 'test', 'test'), (2L, 6L, 'test', 'test'), (2L, 8L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:25, sql:[select * from test1]===
+dble:[[(6L, 12L, 'test', 'test', 1550040866750L), (7L, 13L, 'test', 'test', 1550040866750L)]]
+mysql:[[(6L, 12L, 'test', 'test'), (7L, 13L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:28, sql:[select * from test1]===
+dble:[[(2L, 5L, 'test', 'test', 1550040866935L), (3L, 6L, 'test', 'test', 1550040866935L)]]
+mysql:[[(2L, 5L, 'test', 'test'), (3L, 6L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:31, sql:[select * from test1]===
+dble:[[(5L, 7L, 'test', 'test', 1550040867134L), (6L, 22L, 'test', 'test', 1550040867134L)]]
+mysql:[[(5L, 7L, 'test', 'test'), (6L, 22L, 'test', 'test')]]
+===file:sqls_util/syntax/truncate.sql, id:34, sql:[select * from test1]===
+dble:[[(100L, 999L, 'test', 'test', 1550040867337L)]]
+mysql:[[(100L, 999L, 'test', 'test')]]
