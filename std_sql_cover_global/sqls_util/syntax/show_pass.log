@@ -1,0 +1,66 @@
+===file:sqls_util/syntax/show.sql, id:2, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:3, sql:[create table test1 (ID int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:4, sql:[insert into test1 (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(2,2,'Western','test002'),(3,3,'Northern','test003'),(4,4,'Southern','test004')]===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:8, sql:[show full columns from test1 from schema1 like 'n%']===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:9, sql:[show full columns from test1 from schema1 where field like 's%']===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:10, sql:[show table status/*allow_diff*/]===
+dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
+mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them"), ('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 13, 14, 53, 56), datetime.datetime(2019, 2, 13, 14, 53, 56), None, 'latin1_swedish_ci', None, '', '')]]
+===file:sqls_util/syntax/show.sql, id:11, sql:[show table status like 'aly_o%'/*allow_diff*/]===
+dble:[[]]
+mysql:[[]]
+===file:sqls_util/syntax/show.sql, id:12, sql:[show tables]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show.sql, id:13, sql:[show full tables]===
+dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show.sql, id:14, sql:[show tables from schema1]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show.sql, id:15, sql:[show tables in schema1]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show.sql, id:16, sql:[show full tables from schema1]===
+dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show.sql, id:17, sql:[show full tables in schema1]===
+dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show.sql, id:18, sql:[show tables like 'aly_o%']===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:19, sql:[show full tables from schema1 like 'aly%']===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:20, sql:[show full tables in schema1 where table_type like 'base%']===
+dble:[[('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show.sql, id:21, sql:[create INDEX index_001 ON test1 (ID)]===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:22, sql:[show index from test1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:23, sql:[show index in test1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:24, sql:[show index from test1 from schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:25, sql:[show index in test1 in schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:26, sql:[show index in test1 from schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:27, sql:[show index from test1 in schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:28, sql:[show keys from test1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:29, sql:[show keys in test1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:30, sql:[show keys from test1 from schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:31, sql:[show keys from test1 in schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:32, sql:[show keys in test1 in schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:33, sql:[show keys in test1 from schema1]===
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/show.sql, id:34, sql:[drop index index_001 on test1]===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:47, sql:[show open tables from schema1 like 'aly_o%']===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:51, sql:[drop table if exists test1]===
+dble:[[]]
