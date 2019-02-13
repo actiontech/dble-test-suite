@@ -1,0 +1,56 @@
+===file:sqls_util/syntax/set_user_var_util.sql, id:3, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:4, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:5, sql:[drop table if exists schema3.test3]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:6, sql:[create table test1(id int(4), B int(4))]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:7, sql:[insert into test1 values (10, 1),(10, 1),(11,1),(10, 1)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:8, sql:[create table schema2.test2(id int(4), B int(4))]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:9, sql:[insert into schema2.test2 values (10, 1),(11, 2),(10,2)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:10, sql:[create table schema3.test3(id int(4), B int(4))]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:11, sql:[insert into schema3.test3 values (12, 1),(11, 1),(10,11)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:12, sql:[(SELECT @vara:=id FROM test1 WHERE id=10 AND B=1) UNION (SELECT @varb:=B FROM schema2.test2 WHERE id=@vara AND B=2) UNION (SELECT id FROM schema3.test3 WHERE id=@vara+@varb AND B=1)]===
+dble:[[(2L,), (10L,), (12L,)]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:14, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:15, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:16, sql:[create table test1(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:17, sql:[create table schema2.test2(id int(4), datetime timestamp, widgetID int(8), message varchar(255), active boolean)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:18, sql:[insert into test1 values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello python', 1),(3, 20160822174314, 100, 'hello java', 1)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:19, sql:[insert into schema2.test2 values(1, 20160825174312, 90, 'hello world', 0),(2, 20160823174313, 100, 'hello php', 1),(3, 20160822174314, 100, 'hello c++', 0)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:21, sql:[set @vara=9]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:22, sql:[set @varb=9]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:23, sql:[SELECT @vara,  @varb, mydata.message FROM( (SELECT @vara := 99, datetime, message FROM test1 WHERE widgetID = 100 AND active = 1) UNION (SELECT @varb := 100, datetime, message FROM schema2.test2 WHERE widgetID = 100 AND active = 0) ) mydata ORDER BY mydata.datetime, @vara ASC /*allow_diff_sequence*/]===
+dble:[[(99L, 100L, 'hello c++'), (99L, 100L, 'hello java'), (99L, 100L, 'hello python')]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:25, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:26, sql:[create table test1(id int(4), dealer varchar(10), price float(8,2))]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:27, sql:[insert into test1 values(1, 'D', 234.25),(2, 'D', 67.29),(3, 'D', 1.25),(4,'D',19.95)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:30, sql:[SELECT (@aa:=id) AS a, (@aa+3) AS b FROM test1 HAVING b=5]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:32, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:33, sql:[create table test1(id int)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:34, sql:[insert into test1 values(1),(3),(5),(7)]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:35, sql:[UPDATE test1 SET id = 2 WHERE id = @var1:= 1]===
+dble:[[]]
+===file:sqls_util/syntax/set_user_var_util.sql, id:36, sql:[SELECT @var1 := 1, @var2]===
+dble:[[(1L, None)]]
