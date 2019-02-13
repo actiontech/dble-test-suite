@@ -1,0 +1,9 @@
+===file:sqls_util/syntax/prepare.sql, id:110, sql:[select * from view_test/*error:no view*/]===
+mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
+dble err[06:52:01.949723] :(1146, "Table 'schema1.view_test' doesn't exist")
+===file:sqls_util/syntax/prepare.sql, id:203, sql:[prepare pre_test fr 'select * from test1 where id=2']===
+mysql err:(1149, "You have an error in your SQL syntax:prepare pre_test fr 'select * from test1 where id=2'")
+dble err[06:52:02.182258] :(1149, "You have an error in your SQL syntax:prepare pre_test fr 'select * from test1 where id=2'")
+===file:sqls_util/syntax/prepare.sql, id:205, sql:[execute pret/*error:unknown prepare*/]===
+mysql err:(1149, 'You have an error in your SQL syntax:execute pret/*error:unknown prepare*/')
+dble err[06:52:02.191164] :(1149, 'You have an error in your SQL syntax:execute pret/*error:unknown prepare*/')

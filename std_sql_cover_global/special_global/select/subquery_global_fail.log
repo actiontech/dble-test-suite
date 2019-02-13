@@ -1,0 +1,28 @@
+===file:special_global/select/subquery_global.sql, id:22, sql:[select * from (select schema3.test3.pad from test1 left join schema3.test3 on test1.pad=schema3.test3.pad) a;]===
+dble:[None]
+mysql:[((1L,), (1L,), (2L,), (3L,), (4L,), (1L,), (1L,), (None,))]
+[07:03:57.257213]dble err :(1003, "Unknown column 'schema3.test3.pad' in 'on clause'")
+===file:special_global/select/subquery_global.sql, id:48, sql:[select a.id,b.id,b.pad,a.t_id from (select test1.id,test1.pad,test1.t_id from test1 join schema3.test3 where test1.pad=schema3.test3.pad ) a,(select schema2.test2.id,schema2.test2.pad from test1 join schema2.test2 where test1.pad=schema2.test2.pad) b where a.pad=b.pad;]===
+dble:[None]
+mysql:[((1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L), (2L, 2L, 2L, 2L), (3L, 4L, 4L, 3L), (4L, 3L, 3L, 4L), (1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L))]
+[07:03:58.749835]dble err :(1003, "Unknown column 'schema3.test3.pad' in 'where clause'")
+===file:special_global/select/subquery_global.sql, id:63, sql:[select id,t_id,name,pad from test1 where (id,pad)=(select id,pad from schema3.test3 limit 1)]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
+[07:03:59.465502]dble err :(1064, 'Row Subqueries is not supported')
+===file:special_global/select/subquery_global.sql, id:64, sql:[select id,t_id,name,pad from test1 where row(id,pad)=(select id,pad from schema3.test3 limit 1)]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
+[07:03:59.545499]dble err :(1241, 'Operand should contain 1 column(s)')
+===file:special_global/select/subquery_global.sql, id:65, sql:[select id,name,pad from test1 where (id,pad)in(select id,pad from schema3.test3)]===
+dble:[None]
+mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
+[07:03:59.563378]dble err :(1064, 'Row Subqueries is not supported')
+===file:special_global/select/subquery_global.sql, id:66, sql:[select id,name,pad from test1 where (1,1)in(select id,pad from schema3.test3)]===
+dble:[None]
+mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
+[07:03:59.642806]dble err :(1064, 'Row Subqueries is not supported')
+===file:special_global/select/subquery_global.sql, id:67, sql:[SELECT pad FROM test1 AS x WHERE x.id = (SELECT pad FROM schema3.test3 AS y WHERE x.id = (SELECT pad FROM schema2.test2 WHERE y.id = schema2.test2.id))]===
+dble:[None]
+mysql:[((1L,), (2L,), (4L,), (3L,))]
+[07:03:59.726768]dble err :(1105, 'Correlated Sub Queries is not supported ')

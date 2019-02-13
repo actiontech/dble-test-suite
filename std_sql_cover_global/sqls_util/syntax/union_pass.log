@@ -1,0 +1,651 @@
+===file:sqls_util/syntax/union.sql, id:3, sql:[drop table if exists  test1]===
+dble:[[]]
+===file:sqls_util/syntax/union.sql, id:4, sql:[CREATE TABLE  test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/syntax/union.sql, id:5, sql:[insert into  test1 values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)]===
+dble:[[]]
+===file:sqls_util/syntax/union.sql, id:6, sql:[insert into  test1(id,k,pad) values(19,19,19)]===
+dble:[[]]
+===file:sqls_util/syntax/union.sql, id:10, sql:[select id from  test1 union SELECT 1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:11, sql:[select id from  test1 union SELECT CASE BINARY 'B' WHEN 'a' THEN 1 WHEN 'b' THEN 2 END]===
+dble:[[(None,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:12, sql:[select id from  test1 union SELECT IF(1>2,2,3)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:13, sql:[select id from  test1 union SELECT IF(STRCMP('test','test1'),'no','yes')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('no',)]]
+===file:sqls_util/syntax/union.sql, id:14, sql:[select id from  test1 union SELECT IFNULL(1,0)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:15, sql:[select id from  test1 union SELECT IFNULL(1/0,10)]===
+dble:[[(Decimal('0.0000'),), (Decimal('1.0000'),), (Decimal('2.0000'),), (Decimal('3.0000'),), (Decimal('4.0000'),), (Decimal('5.0000'),), (Decimal('6.0000'),), (Decimal('7.0000'),), (Decimal('8.0000'),), (Decimal('9.0000'),), (Decimal('10.0000'),), (Decimal('11.0000'),), (Decimal('12.0000'),), (Decimal('13.0000'),), (Decimal('14.0000'),), (Decimal('15.0000'),), (Decimal('16.0000'),), (Decimal('17.0000'),), (Decimal('18.0000'),), (Decimal('19.0000'),)]]
+===file:sqls_util/syntax/union.sql, id:16, sql:[select id from  test1 union SELECT IFNULL(1/0,'yes')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('yes',)]]
+===file:sqls_util/syntax/union.sql, id:17, sql:[select id from  test1 union SELECT NULLIF(1,1)]===
+dble:[[(None,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:18, sql:[select id from  test1 union SELECT ASCII('2')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (50L,)]]
+===file:sqls_util/syntax/union.sql, id:19, sql:[select id from  test1 union SELECT ASCII('dx')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (100L,)]]
+===file:sqls_util/syntax/union.sql, id:20, sql:[select id from  test1 union SELECT BIN(12)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('1100',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:21, sql:[select id from  test1 union SELECT BIT_LENGTH('text')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (32L,)]]
+===file:sqls_util/syntax/union.sql, id:22, sql:[select id from  test1 union SELECT CHAR(77,121,83,81,'76')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('MySQL',)]]
+===file:sqls_util/syntax/union.sql, id:23, sql:[select id from  test1 union SELECT HEX(CHAR(1,0))]===
+dble:[[('0',), ('0100',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:24, sql:[select id from  test1 union SELECT HEX(CHAR(256*256))]===
+dble:[[('0',), ('010000',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:25, sql:[select id from  test1 union SELECT CHARSET(CHAR(X'65' USING utf8))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('utf8',)]]
+===file:sqls_util/syntax/union.sql, id:26, sql:[select id from  test1 union select CHAR_LENGTH("abc")]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:27, sql:[select id from  test1 union select CHARACTER_LENGTH("abc")]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:28, sql:[select id from  test1 union SELECT 'My' 'S' 'QL']===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('MySQL',)]]
+===file:sqls_util/syntax/union.sql, id:29, sql:[select id from  test1 union SELECT CONCAT('My', 'S', 'QL')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('MySQL',)]]
+===file:sqls_util/syntax/union.sql, id:30, sql:[select id from  test1 union SELECT CONCAT_WS(',','First name','Second name','Last Name')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('First name,Second name,Last Name',)]]
+===file:sqls_util/syntax/union.sql, id:31, sql:[select id from  test1 union SELECT ELT(1, 'ej', 'Heja', 'hej', 'foo')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ej',)]]
+===file:sqls_util/syntax/union.sql, id:32, sql:[select id from  test1 union SELECT EXPORT_SET(6,'1','0',',',10)]===
+dble:[[('0',), ('0,1,1,0,0,0,0,0,0,0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:33, sql:[select id from  test1 union SELECT FIELD('ej', 'Hej', 'ej', 'Heja', 'hej', 'foo')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:34, sql:[select id from  test1 union SELECT FIND_IN_SET('b','a,b,c,d')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:35, sql:[select id from  test1 union SELECT FORMAT(12332.123456, 4)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('12,332.1235',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:36, sql:[select id from  test1 union SELECT TO_BASE64('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('YWJj',)]]
+===file:sqls_util/syntax/union.sql, id:37, sql:[select id from  test1 union SELECT FROM_BASE64(TO_BASE64('abc'))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('abc',)]]
+===file:sqls_util/syntax/union.sql, id:38, sql:[select id from  test1 union SELECT HEX(255)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('FF',)]]
+===file:sqls_util/syntax/union.sql, id:39, sql:[select id from  test1 union SELECT CONV(HEX(255),16,10)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('255',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:40, sql:[select id from  test1 union SELECT INSERT('Quadratic', 3, 4, 'What')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('QuWhattic',)]]
+===file:sqls_util/syntax/union.sql, id:41, sql:[select id from  test1 union SELECT INSTR('foobarbar', 'bar')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:42, sql:[select id from  test1 union SELECT LCASE('QUADRATICALLY')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('quadratically',)]]
+===file:sqls_util/syntax/union.sql, id:43, sql:[select id from  test1 union SELECT LEFT('foobarbar', 5)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('fooba',)]]
+===file:sqls_util/syntax/union.sql, id:44, sql:[select id from  test1 union SELECT LENGTH('text')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:45, sql:[select id from  test1 union SELECT LOCATE('bar', 'foobarbar')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:46, sql:[select id from  test1 union SELECT LOCATE('bar', 'foobarbar', 5)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:47, sql:[select id from  test1 union SELECT LOWER('QUADRATICALLY')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('quadratically',)]]
+===file:sqls_util/syntax/union.sql, id:48, sql:[select id from  test1 union SELECT LPAD('hi',4,'??')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('??hi',)]]
+===file:sqls_util/syntax/union.sql, id:49, sql:[select id from  test1 union SELECT LTRIM('  barbar')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('barbar',)]]
+===file:sqls_util/syntax/union.sql, id:50, sql:[select id from  test1 union SELECT MAKE_SET(1 | 4,'hello','nice','world')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('hello,world',)]]
+===file:sqls_util/syntax/union.sql, id:51, sql:[select id from  test1 union SELECT Mid('Quadratically',5,6)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ratica',)]]
+===file:sqls_util/syntax/union.sql, id:52, sql:[select id from  test1 union SELECT OCT(12)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:53, sql:[select id from  test1 union SELECT OCTET_LENGTH('text')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:54, sql:[select id from  test1 union SELECT ORD('2')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (50L,)]]
+===file:sqls_util/syntax/union.sql, id:55, sql:[select id from  test1 union SELECT POSITION('bar' IN 'foobarbar')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:56, sql:[select id from  test1 union SELECT QUOTE('Don\'t!')]===
+dble:[[("'Don\\'t!'",), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:57, sql:[select id from  test1 union SELECT REPEAT('MySQL', 3)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('MySQLMySQLMySQL',)]]
+===file:sqls_util/syntax/union.sql, id:58, sql:[select id from  test1 union SELECT REPLACE('www.mysql.com', 'w', 'Ww')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('WwWwWw.mysql.com',)]]
+===file:sqls_util/syntax/union.sql, id:59, sql:[select id from  test1 union SELECT REVERSE('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('cba',)]]
+===file:sqls_util/syntax/union.sql, id:60, sql:[select id from  test1 union SELECT RIGHT('foobarbar', 4)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('rbar',)]]
+===file:sqls_util/syntax/union.sql, id:61, sql:[select id from  test1 union SELECT RPAD('hi',5,'?')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('hi???',)]]
+===file:sqls_util/syntax/union.sql, id:62, sql:[select id from  test1 union SELECT RTRIM('barbar   ')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('barbar',)]]
+===file:sqls_util/syntax/union.sql, id:63, sql:[select id from  test1 union SELECT SOUNDEX('Hello')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('H400',)]]
+===file:sqls_util/syntax/union.sql, id:64, sql:[select id from  test1 union SELECT SPACE(6)]===
+dble:[[('      ',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:65, sql:[select id from  test1 union SELECT STRCMP('text', 'text2')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:66, sql:[select id from  test1 union SELECT SUBSTR('Quadratically',5)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ratically',)]]
+===file:sqls_util/syntax/union.sql, id:67, sql:[select id from  test1 union SELECT SUBSTR('Quadratically',5,6)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ratica',)]]
+===file:sqls_util/syntax/union.sql, id:68, sql:[select id from  test1 union SELECT SUBSTRING('Quadratically',5)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ratically',)]]
+===file:sqls_util/syntax/union.sql, id:69, sql:[select id from  test1 union SELECT SUBSTRING('foobarbar' FROM 4)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('barbar',)]]
+===file:sqls_util/syntax/union.sql, id:70, sql:[select id from  test1 union SELECT SUBSTRING('Quadratically',5,6)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ratica',)]]
+===file:sqls_util/syntax/union.sql, id:71, sql:[select id from  test1 union SELECT SUBSTRING('Sakila' FROM -4 FOR 2)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ki',)]]
+===file:sqls_util/syntax/union.sql, id:72, sql:[select id from  test1 union SELECT SUBSTRING_INDEX('www.mysql.com', '.', 2)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('www.mysql',)]]
+===file:sqls_util/syntax/union.sql, id:73, sql:[select id from  test1 union SELECT TO_BASE64('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('YWJj',)]]
+===file:sqls_util/syntax/union.sql, id:74, sql:[select id from  test1 union SELECT TRIM('  bar   ')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('bar',)]]
+===file:sqls_util/syntax/union.sql, id:75, sql:[select id from  test1 union SELECT TRIM(LEADING 'x' FROM 'xxxbarxxx')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('barxxx',)]]
+===file:sqls_util/syntax/union.sql, id:76, sql:[select id from  test1 union SELECT TRIM(BOTH 'x' FROM 'xxxbarxxx')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('bar',)]]
+===file:sqls_util/syntax/union.sql, id:77, sql:[select id from  test1 union SELECT TRIM(TRAILING 'xyz' FROM 'barxxyz')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('barx',)]]
+===file:sqls_util/syntax/union.sql, id:78, sql:[select id from  test1 union SELECT UCASE('Hej')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('HEJ',)]]
+===file:sqls_util/syntax/union.sql, id:79, sql:[select id from  test1 union SELECT UNHEX('4D7953514C')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('MySQL',)]]
+===file:sqls_util/syntax/union.sql, id:80, sql:[select id from  test1 union SELECT UPPER('Hej')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('HEJ',)]]
+===file:sqls_util/syntax/union.sql, id:81, sql:[select id from  test1 union SELECT CHARSET(BINARY 'a')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('binary',)]]
+===file:sqls_util/syntax/union.sql, id:82, sql:[select id from  test1 union SELECT COLLATION(BINARY 'a')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('binary',)]]
+===file:sqls_util/syntax/union.sql, id:84, sql:[select id from  test1 union SELECT CHARSET(USER())]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('utf8',)]]
+===file:sqls_util/syntax/union.sql, id:85, sql:[select id from  test1 union SELECT COLLATION(USER())]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('utf8_general_ci',)]]
+===file:sqls_util/syntax/union.sql, id:86, sql:[select id from  test1 union SELECT CHARSET(COMPRESS('abc'))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('binary',)]]
+===file:sqls_util/syntax/union.sql, id:87, sql:[select id from  test1 union SELECT COLLATION(COMPRESS('abc'))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('binary',)]]
+===file:sqls_util/syntax/union.sql, id:88, sql:[select id from  test1 union select ABS(-32)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (32L,)]]
+===file:sqls_util/syntax/union.sql, id:89, sql:[select id from  test1 union SELECT ACOS(1)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:90, sql:[select id from  test1 union SELECT ACOS(1.0001)]===
+dble:[[(None,), (0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:91, sql:[select id from  test1 union SELECT ASIN(0.2)]===
+dble:[[(0.0,), (0.2013579207903308,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:92, sql:[select id from  test1 union SELECT ATAN(-2)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:93, sql:[select id from  test1 union SELECT ATAN(-2,2)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:94, sql:[select id from  test1 union  SELECT ATAN2(PI(),0)]===
+dble:[[(0.0,), (1.0,), (1.5707963267948966,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:95, sql:[select id from  test1 union  SELECT CEIL(-1.23)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:96, sql:[select id from  test1 union SELECT CEILING(1.23)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:97, sql:[select id from  test1 union SELECT CONV('a',16,2)]===
+dble:[[('0',), ('1',), ('10',), ('1010',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:98, sql:[select id from  test1 union SELECT CONV('6E',18,8)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('172',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:99, sql:[select id from  test1 union SELECT CONV(-17,10,-18)]===
+dble:[[('-H',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:100, sql:[select id from  test1 union SELECT CONV(10+'10'+'10'+X'0a',10,10)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('40',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:101, sql:[select id from  test1 union SELECT COS(PI())]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:102, sql:[select id from  test1 union SELECT COT(12)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:103, sql:[select id from  test1 union SELECT CRC32('MySQL')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (3259397556L,)]]
+===file:sqls_util/syntax/union.sql, id:104, sql:[select id from  test1 union SELECT DEGREES(PI())]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,), (180.0,)]]
+===file:sqls_util/syntax/union.sql, id:105, sql:[select id from  test1 union SELECT DEGREES(PI() / 2)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,), (90.0,)]]
+===file:sqls_util/syntax/union.sql, id:106, sql:[select id from  test1 union SELECT EXP(2)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (7.38905609893065,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:107, sql:[select id from  test1 union SELECT FLOOR(1.23)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:108, sql:[select id from  test1 union SELECT FLOOR(-1.23)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:109, sql:[select id from  test1 union SELECT FORMAT(12332.123456, 4)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('12,332.1235',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:110, sql:[select id from  test1 union SELECT FORMAT(12332.2,2,'de_DE')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('12.332,20',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:111, sql:[select id from  test1 union SELECT HEX(255)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('FF',)]]
+===file:sqls_util/syntax/union.sql, id:112, sql:[select id from  test1 union SELECT CONV(HEX(255),16,10)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('255',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:113, sql:[select id from  test1 union SELECT X'616263']===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('abc',)]]
+===file:sqls_util/syntax/union.sql, id:114, sql:[select id from  test1 union SELECT HEX('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('616263',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:115, sql:[select id from  test1 union SELECT LN(2)]===
+dble:[[(0.0,), (0.6931471805599453,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:116, sql:[select id from  test1 union SELECT LN(-2)]===
+dble:[[(None,), (0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:117, sql:[select id from  test1 union SELECT LOG(2)]===
+dble:[[(0.0,), (0.6931471805599453,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:118, sql:[select id from  test1 union SELECT LOG(2,65536)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:119, sql:[select id from  test1 union SELECT LOG2(65536)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:120, sql:[select id from  test1 union SELECT LOG10(100)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:121, sql:[select id from  test1 union SELECT MOD(234, 10)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:122, sql:[select id from  test1 union SELECT 253 % 7]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:123, sql:[select id from  test1 union SELECT PI()]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (3.141593,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:124, sql:[select id from  test1 union SELECT POW(2,-2)]===
+dble:[[(0.0,), (0.25,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:125, sql:[select id from  test1 union SELECT POWER(2,2)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:126, sql:[select id from  test1 union SELECT RADIANS(90)]===
+dble:[[(0.0,), (1.0,), (1.5707963267948966,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:127, sql:[select id from  test1 union SELECT ROUND(-1.23)]===
+dble:[[(Decimal('-1'),), (Decimal('0'),), (Decimal('1'),), (Decimal('2'),), (Decimal('3'),), (Decimal('4'),), (Decimal('5'),), (Decimal('6'),), (Decimal('7'),), (Decimal('8'),), (Decimal('9'),), (Decimal('10'),), (Decimal('11'),), (Decimal('12'),), (Decimal('13'),), (Decimal('14'),), (Decimal('15'),), (Decimal('16'),), (Decimal('17'),), (Decimal('18'),), (Decimal('19'),)]]
+===file:sqls_util/syntax/union.sql, id:128, sql:[select id from  test1 union SELECT ROUND(1.298, 0)]===
+dble:[[(Decimal('0'),), (Decimal('1'),), (Decimal('2'),), (Decimal('3'),), (Decimal('4'),), (Decimal('5'),), (Decimal('6'),), (Decimal('7'),), (Decimal('8'),), (Decimal('9'),), (Decimal('10'),), (Decimal('11'),), (Decimal('12'),), (Decimal('13'),), (Decimal('14'),), (Decimal('15'),), (Decimal('16'),), (Decimal('17'),), (Decimal('18'),), (Decimal('19'),)]]
+===file:sqls_util/syntax/union.sql, id:129, sql:[select id from  test1 union SELECT ROUND(150.000,2)]===
+dble:[[(Decimal('0.00'),), (Decimal('1.00'),), (Decimal('2.00'),), (Decimal('3.00'),), (Decimal('4.00'),), (Decimal('5.00'),), (Decimal('6.00'),), (Decimal('7.00'),), (Decimal('8.00'),), (Decimal('9.00'),), (Decimal('10.00'),), (Decimal('11.00'),), (Decimal('12.00'),), (Decimal('13.00'),), (Decimal('14.00'),), (Decimal('15.00'),), (Decimal('16.00'),), (Decimal('17.00'),), (Decimal('18.00'),), (Decimal('19.00'),), (Decimal('150.00'),)]]
+===file:sqls_util/syntax/union.sql, id:130, sql:[select id from  test1 union SELECT ROUND(150,2)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (150L,)]]
+===file:sqls_util/syntax/union.sql, id:131, sql:[select id from  test1 union SELECT ROUND(2.5)]===
+dble:[[(Decimal('0'),), (Decimal('1'),), (Decimal('2'),), (Decimal('3'),), (Decimal('4'),), (Decimal('5'),), (Decimal('6'),), (Decimal('7'),), (Decimal('8'),), (Decimal('9'),), (Decimal('10'),), (Decimal('11'),), (Decimal('12'),), (Decimal('13'),), (Decimal('14'),), (Decimal('15'),), (Decimal('16'),), (Decimal('17'),), (Decimal('18'),), (Decimal('19'),)]]
+===file:sqls_util/syntax/union.sql, id:132, sql:[select id from  test1 union SELECT ROUND(25E-1)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:133, sql:[select id from  test1 union SELECT SIGN(-32)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:134, sql:[select id from  test1 union SELECT ROUND(SIN(PI()))]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:135, sql:[select id from  test1 union SELECT SQRT(20)]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (4.47213595499958,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:136, sql:[select id from  test1 union SELECT TAN(PI())]===
+dble:[[(0.0,), (1.0,), (2.0,), (3.0,), (4.0,), (5.0,), (6.0,), (7.0,), (8.0,), (9.0,), (10.0,), (11.0,), (12.0,), (13.0,), (14.0,), (15.0,), (16.0,), (17.0,), (18.0,), (19.0,)]]
+===file:sqls_util/syntax/union.sql, id:137, sql:[select id from  test1 union SELECT TRUNCATE(122,-2)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (100L,)]]
+===file:sqls_util/syntax/union.sql, id:138, sql:[select id from  test1 union SELECT TRUNCATE(1.999,1)]===
+dble:[[(Decimal('0.0'),), (Decimal('1.0'),), (Decimal('1.9'),), (Decimal('2.0'),), (Decimal('3.0'),), (Decimal('4.0'),), (Decimal('5.0'),), (Decimal('6.0'),), (Decimal('7.0'),), (Decimal('8.0'),), (Decimal('9.0'),), (Decimal('10.0'),), (Decimal('11.0'),), (Decimal('12.0'),), (Decimal('13.0'),), (Decimal('14.0'),), (Decimal('15.0'),), (Decimal('16.0'),), (Decimal('17.0'),), (Decimal('18.0'),), (Decimal('19.0'),)]]
+===file:sqls_util/syntax/union.sql, id:139, sql:[select id from  test1 union SELECT DATE_ADD('2008-01-02', INTERVAL 31 DAY)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2008-02-02',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:140, sql:[select id from  test1 union SELECT ADDDATE('2008-01-02', INTERVAL 31 DAY)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2008-02-02',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:141, sql:[select id from  test1 union SELECT ADDDATE('2008-01-02', 31)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2008-02-02',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:142, sql:[select id from  test1 union SELECT ADDTIME('2007-12-31 23:59:59.999999', '1 1:1:1.000002')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2008-01-02 01:01:01.000001',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:143, sql:[select id from  test1 union SELECT ADDTIME('01:00:00.999999', '02:00:00.999998')]===
+dble:[[('0',), ('03:00:01.999997',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:144, sql:[select id from  test1 union SELECT CONVERT_TZ('2004-01-01 12:00:00','GMT','MET')]===
+dble:[[(None,), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:145, sql:[select id from  test1 union SELECT CONVERT_TZ('2004-01-01 12:00:00','+00:00','+10:00')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2004-01-01 22:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:146, sql:[select id from  test1 union SELECT CURDATE()]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:147, sql:[select id from  test1 union SELECT CURDATE() + 0]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (20190213L,)]]
+===file:sqls_util/syntax/union.sql, id:149, sql:[select id from  test1 union SELECT CURRENT_DATE()]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:151, sql:[select id from  test1 union SELECT CURRENT_TIME() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('14:54:44',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('14:54:44',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:152, sql:[select id from  test1 union SELECT CURTIME() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('14:54:44',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('14:54:44',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:154, sql:[select id from  test1 union SELECT CURRENT_TIMESTAMP() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:44',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:44',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:155, sql:[select id from  test1 union SELECT NOW() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:44',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:44',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:157, sql:[select id from  test1 union SELECT LOCALTIME() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:45',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:45',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:159, sql:[select id from  test1 union SELECT LOCALTIMESTAMP() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:45',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:45',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:160, sql:[select id from  test1 union SELECT DATE('2003-12-31 01:02:03')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2003-12-31',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:161, sql:[select id from  test1 union SELECT DATEDIFF('2007-12-31 23:59:59','2007-12-30')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:162, sql:[select id from  test1 union SELECT DATEDIFF('2010-11-30 23:59:59','2010-12-31')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:163, sql:[select id from  test1 union SELECT '2008-12-31 23:59:59' + INTERVAL 1 SECOND]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2009-01-01 00:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:164, sql:[select id from  test1 union SELECT INTERVAL 1 DAY + '2008-12-31']===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2009-01-01',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:165, sql:[select id from  test1 union SELECT '2005-01-01' - INTERVAL 1 SECOND]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2004-12-31 23:59:59',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:166, sql:[select id from  test1 union SELECT DATE_ADD('2000-12-31 23:59:59',INTERVAL 1 SECOND)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2001-01-01 00:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:167, sql:[select id from  test1 union SELECT DATE_ADD('2010-12-31 23:59:59',INTERVAL 1 DAY)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2011-01-01 23:59:59',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:168, sql:[select id from  test1 union SELECT DATE_ADD('2100-12-31 23:59:59',INTERVAL '1:1' MINUTE_SECOND)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2101-01-01 00:01:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:169, sql:[select id from  test1 union SELECT DATE_SUB('2005-01-01 00:00:00', INTERVAL '1 1:1:1' DAY_SECOND)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2004-12-30 22:58:59',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:170, sql:[select id from  test1 union SELECT DATE_ADD('1900-01-01 00:00:00', INTERVAL '-1 10' DAY_HOUR)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('1899-12-30 14:00:00',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:171, sql:[select id from  test1 union SELECT DATE_SUB('1998-01-02', INTERVAL 31 DAY)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('1997-12-02',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:172, sql:[select id from  test1 union SELECT DATE_ADD('1992-12-31 23:59:59.000002',INTERVAL '1.999999' SECOND_MICROSECOND)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('1993-01-01 00:00:01.000001',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:173, sql:[select id from  test1 union SELECT DATE_ADD('2009-01-01', INTERVAL 6/4 HOUR_MINUTE)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2009-01-04 12:20:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:174, sql:[select id from  test1 union SELECT DATE_ADD('1970-01-01 12:00:00',INTERVAL CAST(6/4 AS DECIMAL(3,1)) HOUR_MINUTE)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('1970-01-01 13:05:00',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:175, sql:[select id from  test1 union SELECT DATE_ADD('2013-01-01', INTERVAL 1 DAY)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2013-01-02',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:176, sql:[select id from  test1 union SELECT DATE_ADD('2013-01-01', INTERVAL 1 HOUR)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2013-01-01 01:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:177, sql:[select id from  test1 union SELECT DATE_ADD('2009-01-30', INTERVAL 1 MONTH)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2009-02-28',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:178, sql:[select id from  test1 union SELECT DATE_ADD('2006-07-00', INTERVAL 1 DAY)]===
+dble:[[(None,), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:179, sql:[select id from  test1 union SELECT '2005-03-32' + INTERVAL 1 MONTH]===
+dble:[[(None,), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:180, sql:[select id from  test1 union SELECT DATE_FORMAT('2009-10-04 22:23:00', '%W %M %Y')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('Sunday October 2009',)]]
+===file:sqls_util/syntax/union.sql, id:181, sql:[select id from  test1 union SELECT DATE_FORMAT('2007-10-04 22:23:00', '%H:%i:%s')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('22:23:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:182, sql:[select id from  test1 union SELECT DATE_FORMAT('1900-10-04 22:23:00','%D %y %a %d %m %b %j')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('4th 00 Thu 04 10 Oct 277',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:183, sql:[select id from  test1 union SELECT DATE_FORMAT('1997-10-04 22:23:00','%H %k %I %r %T %S %w')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('22 22 10 10:23:00 PM 22:23:00 00 6',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:184, sql:[select id from  test1 union SELECT DATE_FORMAT('1999-01-01', '%X %V')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('1998 52',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:185, sql:[select id from  test1 union SELECT DATE_FORMAT('2006-06-00', '%d')]===
+dble:[[('0',), ('00',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:186, sql:[select id from  test1 union SELECT DAY('2007-02-03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:187, sql:[select id from  test1 union SELECT DAYOFMONTH('2007-02-03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:188, sql:[select id from  test1 union SELECT DAYNAME('2007-02-03')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('Saturday',)]]
+===file:sqls_util/syntax/union.sql, id:189, sql:[select id from  test1 union SELECT DAYOFWEEK('2007-02-03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:190, sql:[select id from  test1 union SELECT DAYOFYEAR('2007-02-03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (34L,)]]
+===file:sqls_util/syntax/union.sql, id:191, sql:[select id from  test1 union SELECT EXTRACT(YEAR FROM '2009-07-02')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (2009L,)]]
+===file:sqls_util/syntax/union.sql, id:192, sql:[select id from  test1 union SELECT EXTRACT(YEAR_MONTH FROM '2009-07-02 01:02:03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (200907L,)]]
+===file:sqls_util/syntax/union.sql, id:193, sql:[select id from  test1 union SELECT EXTRACT(DAY_MINUTE FROM '2009-07-02 01:02:03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (20102L,)]]
+===file:sqls_util/syntax/union.sql, id:194, sql:[select id from  test1 union SELECT EXTRACT(MICROSECOND FROM '2003-01-02 10:30:00.000123')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (123L,)]]
+===file:sqls_util/syntax/union.sql, id:195, sql:[select id from  test1 union SELECT FROM_DAYS(730669)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2000-07-03',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:196, sql:[select id from  test1 union SELECT FROM_UNIXTIME(1447430881)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2015-11-14 00:08:01',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:197, sql:[select id from  test1 union SELECT FROM_UNIXTIME(1447430881) + 0]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (20151114000801L,)]]
+===file:sqls_util/syntax/union.sql, id:198, sql:[select id from  test1 union SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019 13th February 02:54:48 2019',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:199, sql:[select id from  test1 union SELECT DATE_FORMAT('2003-10-03',GET_FORMAT(DATE,'EUR'))]===
+dble:[[('0',), ('03.10.2003',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:200, sql:[select id from  test1 union SELECT STR_TO_DATE('10.31.2003',GET_FORMAT(DATE,'USA'))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2003-10-31',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:201, sql:[select id from  test1 union SELECT HOUR('10:05:03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:202, sql:[select id from  test1 union SELECT HOUR('272:59:59')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (272L,)]]
+===file:sqls_util/syntax/union.sql, id:203, sql:[select id from  test1 union SELECT LAST_DAY('2003-02-05')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2003-02-28',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:204, sql:[select id from  test1 union SELECT MAKEDATE(2011,31)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2011-01-31',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:205, sql:[select id from  test1 union SELECT MAKEDATE(2011,32)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2011-02-01',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:206, sql:[select id from  test1 union SELECT MAKETIME(12,15,30)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('12:15:30',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:207, sql:[select id from  test1 union SELECT MICROSECOND('12:00:00.123456')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (123456L,)]]
+===file:sqls_util/syntax/union.sql, id:208, sql:[select id from  test1 union SELECT MINUTE('2008-02-03 10:05:03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:209, sql:[select id from  test1 union SELECT MONTH('2008-02-03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:210, sql:[select id from  test1 union SELECT MONTHNAME('2008-02-03')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('February',)]]
+===file:sqls_util/syntax/union.sql, id:211, sql:[select id from  test1 union SELECT NOW() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:49',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 14:54:49',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:212, sql:[select id from  test1 union SELECT PERIOD_ADD(200801,2)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (200803L,)]]
+===file:sqls_util/syntax/union.sql, id:213, sql:[select id from  test1 union SELECT PERIOD_DIFF(200802,200703)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:214, sql:[select id from  test1 union SELECT QUARTER('2008-04-01')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:215, sql:[select id from  test1 union SELECT SECOND('10:05:03')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:216, sql:[select id from  test1 union SELECT SEC_TO_TIME(2378)]===
+dble:[[('0',), ('00:39:38',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:217, sql:[select id from  test1 union SELECT STR_TO_DATE('01,5,2013','%d,%m,%Y')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2013-05-01',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:218, sql:[select id from  test1 union SELECT STR_TO_DATE('May 1, 2013','%M %d,%Y')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2013-05-01',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:219, sql:[select id from  test1 union SELECT STR_TO_DATE('a09:30:17','a%h:%i:%s')]===
+dble:[[('0',), ('09:30:17',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:220, sql:[select id from  test1 union SELECT SUBDATE('2008-01-02', INTERVAL 31 DAY)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2007-12-02',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:221, sql:[select id from  test1 union SELECT SUBDATE('2008-01-02 12:00:00', 31)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2007-12-02 12:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:222, sql:[select id from  test1 union SELECT SUBTIME('2007-12-31 23:59:59.999999','1 1:1:1.000002')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2007-12-30 22:58:58.999997',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:223, sql:[select id from  test1 union SELECT TIME('2003-12-31 01:02:03')]===
+dble:[[('0',), ('01:02:03',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:224, sql:[select id from  test1 union SELECT TIMEDIFF('2000:01:01 00:00:00','2000:01:01 00:00:00.000001')]===
+dble:[[('-00:00:00.000001',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:225, sql:[select id from  test1 union SELECT TIMESTAMP('2003-12-31')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2003-12-31 00:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:226, sql:[select id from  test1 union SELECT TIMESTAMP('2003-12-31 12:00:00','12:00:00')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2004-01-01 00:00:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:227, sql:[select id from  test1 union SELECT TIMESTAMPADD(MINUTE,1,'2003-01-02')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2003-01-02 00:01:00',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:228, sql:[select id from  test1 union SELECT TIMESTAMPDIFF(MONTH,'2003-02-01','2003-05-01')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:229, sql:[select id from  test1 union SELECT TIME_FORMAT('100:00:00', '%H %k %h %I %l')]===
+dble:[[('0',), ('1',), ('10',), ('100 100 04 04 4',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:230, sql:[select id from  test1 union SELECT TIME_TO_SEC('22:23:00')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (80580L,)]]
+===file:sqls_util/syntax/union.sql, id:231, sql:[select id from  test1 union SELECT TO_DAYS(950501)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (728779L,)]]
+===file:sqls_util/syntax/union.sql, id:232, sql:[select id from  test1 union SELECT TO_SECONDS(950501)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (62966505600L,)]]
+===file:sqls_util/syntax/union.sql, id:233, sql:[select id from  test1 union SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (1447381219L,)]]
+===file:sqls_util/syntax/union.sql, id:234, sql:[select id from  test1 union SELECT UNIX_TIMESTAMP()]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (1550040891L,)]]
+===file:sqls_util/syntax/union.sql, id:235, sql:[select id from  test1 union SELECT UTC_DATE()]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:236, sql:[select id from  test1 union SELECT UTC_DATE() + 0]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (20190213L,)]]
+===file:sqls_util/syntax/union.sql, id:237, sql:[select id from  test1 union SELECT UTC_TIME() /*allow_diff*/]===
+dble:[[('0',), ('06:54:51',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('06:54:51',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:238, sql:[select id from  test1 union SELECT UTC_TIME() + 0 /*allow_diff*/]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (65451L,)]]
+mysql:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (65451L,)]]
+===file:sqls_util/syntax/union.sql, id:239, sql:[select id from  test1 union SELECT UTC_TIMESTAMP() /*allow_diff*/]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 06:54:51',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+mysql:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('2019-02-13 06:54:51',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:240, sql:[select id from  test1 union SELECT UTC_TIMESTAMP() + 0 /*allow_diff*/]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (20190213065451L,)]]
+mysql:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (20190213065451L,)]]
+===file:sqls_util/syntax/union.sql, id:241, sql:[select id from  test1 union SELECT WEEK('2008-02-20')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:242, sql:[select id from  test1 union SELECT WEEK('2008-12-31',1)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (53L,)]]
+===file:sqls_util/syntax/union.sql, id:243, sql:[select id from  test1 union SELECT WEEKDAY('2008-02-03 22:23:00')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:244, sql:[select id from  test1 union SELECT WEEKOFYEAR('2008-02-20')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:245, sql:[select id from  test1 union SELECT YEAR('1987-01-01')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (1987L,)]]
+===file:sqls_util/syntax/union.sql, id:246, sql:[select id from  test1 union SELECT YEARWEEK('1987-01-01')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (198652L,)]]
+===file:sqls_util/syntax/union.sql, id:247, sql:[select id from  test1 union  SELECT BINARY 'a' = 'A']===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:248, sql:[select id from  test1 union  select cast('a'='A' as binary)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:249, sql:[select id from  test1 union SELECT CONCAT('hello you ',2)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('hello you 2',)]]
+===file:sqls_util/syntax/union.sql, id:250, sql:[select id from  test1 union SELECT _binary 'a' = 'A']===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:251, sql:[select id from  test1 union SELECT ExtractValue('<a><b/></a>', 'count(/a/b)')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:252, sql:[select id from  test1 union SELECT BIT_COUNT(b'101010')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:253, sql:[select id from  test1 union SELECT BIT_COUNT(29)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:254, sql:[select id from  test1 union SELECT 29 & 15]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:255, sql:[select id from  test1 union SELECT 5 & ~1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:256, sql:[select id from  test1 union SELECT 29 | 15]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (31L,)]]
+===file:sqls_util/syntax/union.sql, id:257, sql:[select id from  test1 union SELECT 1 ^ 0]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:258, sql:[select id from  test1 union SELECT 1 << 2]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:259, sql:[select id from  test1 union SELECT 4 >> 2]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:260, sql:[select id from  test1 union SELECT AES_DECRYPT('text',UNHEX('F3229A0B371ED2D9441B830D21A390C3'))]===
+dble:[[(None,), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:261, sql:[select id from  test1 union SELECT LENGTH(COMPRESS(REPEAT('a',1000)))]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (21L,)]]
+===file:sqls_util/syntax/union.sql, id:262, sql:[select id from  test1 union select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('\xff\xe5a,\xf0\xc90eF',)]]
+===file:sqls_util/syntax/union.sql, id:263, sql:[select id from  test1 union SELECT ENCRYPT('hello')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('xtC2oJCjH5CBY',)]]
+===file:sqls_util/syntax/union.sql, id:264, sql:[select id from  test1 union SELECT ENCRYPT('hello','abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('abl0JrMf6tlhw',)]]
+===file:sqls_util/syntax/union.sql, id:265, sql:[select id from  test1 union SELECT MD5('testing')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ae2b1fca515949e5d54fb22b8ed95575',)]]
+===file:sqls_util/syntax/union.sql, id:266, sql:[select id from  test1 union SELECT PASSWORD('mypass')]===
+dble:[[('*6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:267, sql:[select id from  test1 union SELECT PASSWORD('mypass')]===
+dble:[[('*6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:269, sql:[select id from  test1 union SELECT SHA('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('a9993e364706816aba3e25717850c26c9cd0d89d',)]]
+===file:sqls_util/syntax/union.sql, id:270, sql:[select id from  test1 union SELECT SHA1('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('a9993e364706816aba3e25717850c26c9cd0d89d',)]]
+===file:sqls_util/syntax/union.sql, id:271, sql:[select id from  test1 union SELECT SHA2('abc', 224)]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:272, sql:[select id from  test1 union SELECT UNCOMPRESS(COMPRESS('any string'))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('any string',)]]
+===file:sqls_util/syntax/union.sql, id:273, sql:[select id from  test1 union SELECT UNCOMPRESSED_LENGTH(COMPRESS(REPEAT('a',30)))]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (30L,)]]
+===file:sqls_util/syntax/union.sql, id:274, sql:[select id from  test1 union SELECT BENCHMARK(1000000,AES_ENCRYPT('hello','goodbye'))]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:275, sql:[select id from  test1 union SELECT CHARSET('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('latin1',)]]
+===file:sqls_util/syntax/union.sql, id:276, sql:[select id from  test1 union SELECT COLLATION('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('latin1_swedish_ci',)]]
+===file:sqls_util/syntax/union.sql, id:278, sql:[select id from  test1 union SELECT CURRENT_USER()]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('test@%',)]]
+===file:sqls_util/syntax/union.sql, id:284, sql:[select id from  test1 union SELECT LAST_INSERT_id()]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:285, sql:[select id from  test1 union SELECT ROW_COUNT()]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:287, sql:[select id from  test1 union SELECT GET_LOCK('lock1',10)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:288, sql:[select id from  test1 union SELECT RELEASE_LOCK('lock2')]===
+dble:[[(None,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:289, sql:[select id from  test1 union SELECT INET_ATON('10.0.5.9')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (167773449L,)]]
+===file:sqls_util/syntax/union.sql, id:290, sql:[select id from  test1 union SELECT INET_NTOA(167773449)]===
+dble:[[('0',), ('1',), ('10',), ('10.0.5.9',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:291, sql:[select id from  test1 union SELECT HEX(INET6_ATON(INET_NTOA(167773449)))]===
+dble:[[('0',), ('0A000509',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:292, sql:[select id from  test1 union select IS_FREE_LOCK('abc')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:293, sql:[select id from  test1 union SELECT IS_IPV4('10.0.5.9')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:294, sql:[select id from  test1 union SELECT IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9'))]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:295, sql:[select id from  test1 union SELECT HEX(INET6_ATON('192.168.0.1'))]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('C0A80001',)]]
+===file:sqls_util/syntax/union.sql, id:296, sql:[select id from  test1 union select IS_IPV4_COMPAT(INET6_ATON('::192.168.0.1'))]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:297, sql:[select id from  test1 union SELECT IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9'))]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:298, sql:[select id from  test1 union SELECT IS_IPV6('10.0.5.9')]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:299, sql:[select id from  test1 union select IS_USED_LOCK('abc')]===
+dble:[[(None,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:300, sql:[select id from  test1 union SELECT NAME_CONST('myname', 14)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:301, sql:[select id from  test1 union SELECT RELEASE_ALL_LOCKS()]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:302, sql:[select id from  test1 union SELECT SLEEP(1)]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:307, sql:[SELECT 1 union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:308, sql:[SELECT 4 >> 2 union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:309, sql:[SELECT AES_DECRYPT('text',UNHEX('F3229A0B371ED2D9441B830D21A390C3')) union select id from  test1]===
+dble:[[(None,), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:310, sql:[SELECT LENGTH(COMPRESS(REPEAT('a',1000))) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (21L,)]]
+===file:sqls_util/syntax/union.sql, id:311, sql:[select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('\xff\xe5a,\xf0\xc90eF',)]]
+===file:sqls_util/syntax/union.sql, id:312, sql:[SELECT ENCRYPT('hello') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('1uSnUbLQT7vlc',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:313, sql:[SELECT ENCRYPT('hello','abc') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('abl0JrMf6tlhw',)]]
+===file:sqls_util/syntax/union.sql, id:314, sql:[SELECT MD5('testing') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('ae2b1fca515949e5d54fb22b8ed95575',)]]
+===file:sqls_util/syntax/union.sql, id:315, sql:[SELECT PASSWORD('mypass') union select id from  test1]===
+dble:[[('*6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:316, sql:[SELECT PASSWORD('mypass') union select id from  test1]===
+dble:[[('*6C8989366EAF75BB670AD8EA7A7FC1176A95CEF4',), ('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:318, sql:[SELECT SHA('abc') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('a9993e364706816aba3e25717850c26c9cd0d89d',)]]
+===file:sqls_util/syntax/union.sql, id:319, sql:[SELECT SHA1('abc') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('a9993e364706816aba3e25717850c26c9cd0d89d',)]]
+===file:sqls_util/syntax/union.sql, id:320, sql:[SELECT SHA2('abc', 224) union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('23097d223405d8228642a477bda255b32aadbce4bda0b3f7e36c9da7',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:321, sql:[SELECT UNCOMPRESS(COMPRESS('any string')) union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('any string',)]]
+===file:sqls_util/syntax/union.sql, id:322, sql:[SELECT UNCOMPRESSED_LENGTH(COMPRESS(REPEAT('a',30))) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (30L,)]]
+===file:sqls_util/syntax/union.sql, id:323, sql:[SELECT BENCHMARK(1000000,AES_ENCRYPT('hello','goodbye')) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:324, sql:[SELECT CHARSET('abc') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('latin1',)]]
+===file:sqls_util/syntax/union.sql, id:325, sql:[SELECT COLLATION('abc') union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('latin1_swedish_ci',)]]
+===file:sqls_util/syntax/union.sql, id:333, sql:[SELECT LAST_INSERT_id() union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:336, sql:[SELECT GET_LOCK('lock1',10) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:337, sql:[SELECT RELEASE_LOCK('lock2') union select id from  test1]===
+dble:[[(None,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:338, sql:[SELECT INET_ATON('10.0.5.9') union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,), (167773449L,)]]
+===file:sqls_util/syntax/union.sql, id:339, sql:[SELECT INET_NTOA(167773449) union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('10.0.5.9',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:340, sql:[SELECT HEX(INET6_ATON(INET_NTOA(167773449))) union select id from  test1]===
+dble:[[('0',), ('0A000509',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',)]]
+===file:sqls_util/syntax/union.sql, id:341, sql:[select IS_FREE_LOCK('abc') union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:342, sql:[SELECT IS_IPV4('10.0.5.9') union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:343, sql:[SELECT IS_IPV4_COMPAT(INET6_ATON('::10.0.5.9')) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:344, sql:[SELECT HEX(INET6_ATON('192.168.0.1')) union select id from  test1]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('C0A80001',)]]
+===file:sqls_util/syntax/union.sql, id:345, sql:[select IS_IPV4_COMPAT(INET6_ATON('::192.168.0.1')) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:346, sql:[SELECT IS_IPV4_MAPPED(INET6_ATON('::10.0.5.9')) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:347, sql:[SELECT IS_IPV6('10.0.5.9') union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:348, sql:[select IS_USED_LOCK('abc') union select id from  test1]===
+dble:[[(None,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:349, sql:[SELECT NAME_CONST('myname', 14) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:350, sql:[SELECT RELEASE_ALL_LOCKS() union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:351, sql:[SELECT SLEEP(1) union select id from  test1]===
+dble:[[(0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (7L,), (8L,), (9L,), (10L,), (11L,), (12L,), (13L,), (14L,), (15L,), (16L,), (17L,), (18L,), (19L,)]]
+===file:sqls_util/syntax/union.sql, id:355, sql:[select id from  test1 union SELECT SHA('abc')]===
+dble:[[('0',), ('1',), ('10',), ('11',), ('12',), ('13',), ('14',), ('15',), ('16',), ('17',), ('18',), ('19',), ('2',), ('3',), ('4',), ('5',), ('6',), ('7',), ('8',), ('9',), ('a9993e364706816aba3e25717850c26c9cd0d89d',)]]
+===file:sqls_util/syntax/union.sql, id:359, sql:[drop table if exists  test1]===
+dble:[[]]

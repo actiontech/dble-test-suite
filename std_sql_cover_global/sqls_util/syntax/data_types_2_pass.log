@@ -1,0 +1,530 @@
+===file:sqls_util/syntax/data_types_2.sql, id:4, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:5, sql:[CREATE TABLE  test1( id int,data char)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:7, sql:[INSERT INTO test1 ( id,data) VALUES (1,0)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:9, sql:[INSERT INTO test1 ( id,data) VALUES (2,'a')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:12, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:13, sql:[CREATE TABLE  test1( id int,data char BINARY)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:15, sql:[INSERT INTO test1 ( id,data) VALUES (1,0)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:17, sql:[INSERT INTO test1 ( id,data) VALUES (2,'a')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:19, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:20, sql:[CREATE TABLE  test1( id int,data char(5))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:24, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcde')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:26, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:27, sql:[CREATE TABLE  test1( id int,data char(255) CHARACTER SET 'utf8' COLLATE utf8_bin )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:29, sql:[INSERT INTO test1 ( id,data) VALUES (111,''),(112,'a'),(113,0),(114,'1_23'),(115,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:31, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:32, sql:[CREATE TABLE  test1( id int,data char(255))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:34, sql:[INSERT INTO test1 ( id,data) VALUES (111,''),(112,'a'),(113,0),(114,'1_23'),(115,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:38, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:39, sql:[CREATE TABLE  test1( id int,data varchar(0))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:43, sql:[SELECT * FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:44, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:45, sql:[CREATE TABLE  test1( id int,data varchar(0) BINARY)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:49, sql:[SELECT * FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:50, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:51, sql:[CREATE TABLE  test1( id int,data varchar(30))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:52, sql:[INSERT INTO test1 ( id,data) VALUES (1,123456)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:54, sql:[INSERT INTO test1 ( id,data) VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaabcdef')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:56, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:57, sql:[CREATE TABLE  test1( id int,data varchar(30) CHARACTER SET 'utf8' COLLATE utf8_bin )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:58, sql:[INSERT INTO test1 ( id,data) VALUES (1,123456)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:60, sql:[INSERT INTO test1 ( id,data) VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaabcdef')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:62, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:63, sql:[create table test1(id int(16) not null primary key auto_increment, b varchar(255))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:64, sql:[insert into test1 values(1, 'a\'b')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:65, sql:[insert into test1 values(2, 'a\"b')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:66, sql:[insert into test1 values(3, 'a\0b')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:67, sql:[insert into test1 values(4, 'a\bb')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:68, sql:[insert into test1 values(5, 'a\nb')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:69, sql:[insert into test1 values(6, 'a\rb')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:70, sql:[insert into test1 values(7, 'a\test1')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:71, sql:[insert into test1 values(8, 'a\Zb')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:72, sql:[insert into test1 values(9, 'a\\b')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:73, sql:[insert into test1 values(10, 'a\%b')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:74, sql:[insert into test1 values(11, 'a\_b')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:75, sql:[select b from test1]===
+dble:[[('a\x00b',), ('a\x08b',), ('a\test1',), ('a\nb',), ('a\rb',), ('a\x1ab',), ('a"b',), ("a'b",), ('a\\%b',), ('a\\_b',), ('a\\b',)]]
+===file:sqls_util/syntax/data_types_2.sql, id:78, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:79, sql:[CREATE TABLE  test1( id int,data date)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:82, sql:[INSERT INTO test1 ( id,data) VALUES (2,'2014/11/11')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:83, sql:[INSERT INTO test1 ( id,data) VALUES (3,'20141111')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:84, sql:[INSERT INTO test1 ( id,data) VALUES (4,'2014-11-11 09:59:59')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:85, sql:[INSERT INTO test1 ( id,data) VALUES (5,'2014-11-11')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:87, sql:[INSERT INTO test1 ( id,data) VALUES (7,'999-01-01')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:88, sql:[INSERT INTO test1 ( id,data) VALUES (8,'1000-01-00')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:91, sql:[INSERT INTO test1 ( id,data) VALUES (11,'1000-01-01')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:92, sql:[INSERT INTO test1 ( id,data) VALUES (12,'9999-12-31')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:93, sql:[INSERT INTO test1( id,data) VALUES (13,'20170201')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:94, sql:[INSERT INTO test1( id,data) VALUES (14,'170202')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:98, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:99, sql:[CREATE TABLE  test1( id int,data time)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:102, sql:[INSERT INTO test1 ( id,data) VALUES (2,'000:00:00')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:103, sql:[INSERT INTO test1 ( id,data) VALUES (2,'00000')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:104, sql:[INSERT INTO test1 ( id,data) VALUES (3,'121212')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:105, sql:[INSERT INTO test1 ( id,data) VALUES (4,'2014-11-11 09:59:59')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:106, sql:[INSERT INTO test1 ( id,data) VALUES (5,'23:59:59')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:107, sql:[INSERT INTO test1 ( id,data) VALUES (6,'24:00:00')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:108, sql:[INSERT INTO test1 ( id,data) VALUES (7,'24:00:01')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:109, sql:[INSERT INTO test1 ( id,data) VALUES (8,'00:00:00')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:110, sql:[INSERT INTO test1 ( id,data) VALUES (9,'23:59:59')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:114, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:115, sql:[CREATE TABLE  test1( id int,data timestamp)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:118, sql:[SELECT * FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:121, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:122, sql:[CREATE TABLE  test1( id int,data datetime)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:124, sql:[INSERT INTO test1 ( id,data) VALUES (1,'1000-01-01 00:00:00'),(2,'9999-12-31 23:59:59')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:126, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:127, sql:[CREATE TABLE test1( id int,data1 time(2), data2 datetime(2), data3 timestamp(2))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:129, sql:[INSERT INTO test1 VALUES(1,'17:51:04.777', '2014-09-08 17:51:04.777', '2014-09-08 17:51:04.777')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:133, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:134, sql:[CREATE TABLE  test1( id int,data year)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:140, sql:[SELECT * FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:142, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:143, sql:[create table test1(id int(16) not null primary key auto_increment, b TIMESTAMP)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:144, sql:[insert into test1 values(1, '2012-12-31 11:30:45')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:145, sql:[insert into test1 values(2, TIMESTAMP'1970-12-31 11:30:45')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:146, sql:[insert into test1 values(3, TIMESTAMP '2037^12^31 11+30+45')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:147, sql:[insert into test1 values(4, TIMESTAMP'2012/12/31 11*30*45')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:148, sql:[insert into test1 values(5, TIMESTAMP'2012@12@31 11^30^45')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:149, sql:[insert into test1 values(6, '2012-2-1 2:3:4')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:157, sql:[insert into test1 values(13, TIMESTAMP'20121231113045')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:158, sql:[insert into test1 values(14, TIMESTAMP'121231113045')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:161, sql:[insert into test1 values(17, 19830905132800)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:162, sql:[insert into test1 values(18, 830905132800)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:163, sql:[insert into test1 values(19, 20160302)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:164, sql:[insert into test1 values(20, 161214)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:165, sql:[select b from test1]===
+dble:[[(datetime.datetime(1970, 12, 31, 11, 30, 45),), (datetime.datetime(1983, 9, 5, 13, 28),), (datetime.datetime(1983, 9, 5, 13, 28),), (datetime.datetime(2012, 2, 1, 2, 3, 4),), (datetime.datetime(2012, 12, 31, 11, 30, 45),), (datetime.datetime(2012, 12, 31, 11, 30, 45),), (datetime.datetime(2012, 12, 31, 11, 30, 45),), (datetime.datetime(2012, 12, 31, 11, 30, 45),), (datetime.datetime(2012, 12, 31, 11, 30, 45),), (datetime.datetime(2016, 3, 2, 0, 0),), (datetime.datetime(2016, 12, 14, 0, 0),), (datetime.datetime(2037, 12, 31, 11, 30, 45),)]]
+===file:sqls_util/syntax/data_types_2.sql, id:166, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:167, sql:[create table test1(id int(16) not null primary key auto_increment, b DATE)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:168, sql:[insert into test1 values(1, '2012^12^31')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:169, sql:[insert into test1 values(2, DATE '2012-12-31')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:172, sql:[insert into test1 values(5, DATE'20381231')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:173, sql:[Insert into test1 values(6, DATE'701231')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:174, sql:[insert into test1 values(7, DATE'991231')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:175, sql:[insert into test1 values(8, DATE'001231')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:176, sql:[insert into test1 values(9, DATE'691231')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:181, sql:[insert into test1 values(13, 371231)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:182, sql:[insert into test1 values(14, 19121231)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:183, sql:[select b from test1]===
+dble:[[(datetime.date(1912, 12, 31),), (datetime.date(1970, 12, 31),), (datetime.date(1999, 12, 31),), (datetime.date(2000, 12, 31),), (datetime.date(2012, 12, 31),), (datetime.date(2012, 12, 31),), (datetime.date(2037, 12, 31),), (datetime.date(2038, 12, 31),), (datetime.date(2069, 12, 31),)]]
+===file:sqls_util/syntax/data_types_2.sql, id:184, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:185, sql:[create table test1(id int(16) not null primary key auto_increment, b TIME)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:186, sql:[insert into test1 values(1, '0 10:11:12')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:187, sql:[insert into test1 values(2, '34 10:11:12')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:188, sql:[insert into test1 values(3, '34 10:11')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:189, sql:[insert into test1 values(4, '34 10')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:190, sql:[insert into test1 values(5, '10')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:191, sql:[insert into test1 values(20, '0 10:11:12.100005')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:192, sql:[insert into test1 values(21, '0 3:5:2')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:193, sql:[insert into test1 values(22, '0 03:05:02')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:205, sql:[insert into test1 values(17, 101112)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:206, sql:[insert into test1 values(18, 1011)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:207, sql:[insert into test1 values(19, 10)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:208, sql:[select b from test1]===
+dble:[[(datetime.timedelta(0, 10),), (datetime.timedelta(0, 10),), (datetime.timedelta(0, 611),), (datetime.timedelta(0, 11102),), (datetime.timedelta(0, 11102),), (datetime.timedelta(0, 36672),), (datetime.timedelta(0, 36672),), (datetime.timedelta(0, 36672),), (datetime.timedelta(34, 36000),), (datetime.timedelta(34, 36660),), (datetime.timedelta(34, 36672),)]]
+===file:sqls_util/syntax/data_types_2.sql, id:210, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:211, sql:[create table test1(id int(16) not null primary key auto_increment, b BOOL)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:212, sql:[insert into test1 values(1,TRUE)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:213, sql:[insert into test1 values(2,True)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:214, sql:[insert into test1 values(3,true)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:215, sql:[insert into test1 values(4,trUe)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:216, sql:[insert into test1 values(5,FALSE)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:217, sql:[insert into test1 values(6,False)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:218, sql:[insert into test1 values(7,fAlSe)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:219, sql:[insert into test1 values(8,false)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:220, sql:[insert into test1 values(9,0)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:221, sql:[insert into test1 values(10,1)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:222, sql:[select b from test1]===
+dble:[[(0,), (0,), (0,), (0,), (0,), (1,), (1,), (1,), (1,), (1,)]]
+===file:sqls_util/syntax/data_types_2.sql, id:225, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:226, sql:[CREATE TABLE  test1( id int,data binary)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:228, sql:[INSERT INTO test1 ( id,data) VALUES (1,'a')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:230, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:231, sql:[CREATE TABLE  test1( id int,data binary(5))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:234, sql:[INSERT INTO test1 ( id,data) VALUES (2,'abcde')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:238, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:239, sql:[CREATE TABLE  test1( id int,data varbinary(5))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:242, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcde')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:246, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:247, sql:[CREATE TABLE  test1( id int,data tinyblob)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:249, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:253, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:254, sql:[CREATE TABLE  test1( id int,data blob)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:256, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:260, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:261, sql:[CREATE TABLE  test1( id int,data mediumblob)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:263, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:267, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:268, sql:[CREATE TABLE  test1( id int,data longblob)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:270, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:274, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:275, sql:[CREATE TABLE  test1( id int,data tinytext CHARACTER SET 'utf8' COLLATE utf8_bin)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:277, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:279, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:280, sql:[CREATE TABLE  test1( id int,data tinytext)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:282, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:284, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:285, sql:[CREATE TABLE  test1( id int,data tinytext binary)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:287, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:291, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:292, sql:[CREATE TABLE  test1( id int,data text)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:294, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:296, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:297, sql:[CREATE TABLE  test1( id int,data text CHARACTER SET 'utf8' COLLATE utf8_bin )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:299, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:301, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:302, sql:[CREATE TABLE  test1( id int,data text binary)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:304, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:308, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:309, sql:[CREATE TABLE  test1( id int,data mediumtext)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:311, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:313, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:314, sql:[CREATE TABLE  test1( id int,data mediumtext CHARACTER SET 'utf8' COLLATE utf8_bin )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:316, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:318, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:319, sql:[CREATE TABLE  test1( id int,data mediumtext)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:321, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:325, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:326, sql:[CREATE TABLE  test1( id int,data longtext)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:328, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:330, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:331, sql:[CREATE TABLE  test1( id int,data longtext CHARACTER SET 'utf8' COLLATE utf8_bin )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:333, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:335, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:336, sql:[CREATE TABLE  test1( id int,data longtext binary)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:338, sql:[INSERT INTO test1 ( id,data) VALUES (1,''),(2,'abc'),(3,'123'),(4,'a..a'),(5,'abc 1'),(6,'a_bcdeg'),(7,'__%%%\\'),(8,'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:342, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:343, sql:[CREATE TABLE  test1( id int,data enum('enum1','enum2','test_%%%00','enum3','abcd_007'))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:345, sql:[INSERT INTO test1 ( id,data) VALUES (1,'enum1'),(2,'test_%%%00'),(3,'abcd_007')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:349, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:350, sql:[CREATE TABLE  test1( id int,data set('enum1','enum2','test_%%%00','enum3','abcd_007'))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:352, sql:[INSERT INTO test1 ( id,data) VALUES (1,'enum1'),(2,'test_%%%00'),(3,'abcd_007')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:356, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:357, sql:[CREATE TABLE test1( id int,data json)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:358, sql:[INSERT INTO test1 VALUES(1,'["abc", 10, null, true, false]')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:359, sql:[INSERT INTO test1 VALUES(1,'{"k1": "value", "k2": 10}')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:360, sql:[INSERT INTO test1 VALUES(1,'["12:18:29.000000", "2015-07-29", "2015-07-29 12:18:29.000000"]')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:364, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:365, sql:[CREATE TABLE test1( id int,data GEOMETRY)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:366, sql:[INSERT INTO test1 VALUES(1,POINT(15,20))]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:371, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:372, sql:[CREATE TABLE test1(id int, data varchar(50)character set ascii)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:374, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\'')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:376, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:377, sql:[CREATE TABLE test1(id int, data varchar(50))character set utf8]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:379, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\'')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:381, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:382, sql:[CREATE TABLE test1(id int, data varchar(50)character set ascii)character set = 'utf8']===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:384, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\'')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:386, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:387, sql:[CREATE TABLE test1(id int, data varchar(50)character set ascii)character set = 'utf8' collate utf8_bin]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:389, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\'')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:391, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:392, sql:[CREATE TABLE test1(id int, data varchar(50)character set big5)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:394, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\'')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:395, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:396, sql:[CREATE TABLE test1(id int, data1 varchar(50)character set dec8, data2 varchar(50)character set cp850, data3 varchar(50)character set hp8, data4 varchar(50)character set koi8r)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:397, sql:[INSERT INTO test1 VALUES (1,'a','b','c','d')]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:400, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:401, sql:[CREATE TABLE test1(id int, data1 varchar(50) character set euckr, data2 varchar(50) character set swe7, data3 varchar(50) character set latin2, data4 varchar(50) character set ujis, data5 varchar(50) character set sjis, data6 varchar(50) character set hebrew, data7 varchar(50) character set tis620, data8 varchar(50) character set koi8u, data9 varchar(50) character set cp1250,data10 varchar(50) character set cp866)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:403, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:404, sql:[CREATE TABLE test1(id int, data1 varchar(50) character set keybcs2, data2 varchar(50) character set macce, data3 varchar(50) character set macroman, data4 varchar(50) character set cp852, data5 varchar(50) character set cp1251, data6 varchar(50) character set cp1256, data7 varchar(50) character set cp1257, data8 varchar(50) character set geostd8, data9 varchar(50) character set cp932,data10 varchar(50) character set eucjpms)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:406, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:407, sql:[CREATE TABLE test1(id int, data varchar(50) character set latin1)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:409, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:410, sql:[CREATE TABLE test1(id int, data varchar(50) character set latin1 collate latin1_swedish_ci)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:412, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:413, sql:[CREATE TABLE test1(id int, data varchar(50) character set latin1 collate latin1_bin )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:415, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:416, sql:[CREATE TABLE test1(id int, data varchar(50) character set gb2312)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:418, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:419, sql:[CREATE TABLE test1(id int, data varchar(50) character set gbk)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:421, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:422, sql:[CREATE TABLE test1(id int, data varchar(50) character set gbk collate gbk_chinese_ci )]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:424, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:425, sql:[CREATE TABLE test1(id int, data varchar(50) character set gbk collate gbk_bin)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:427, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:428, sql:[CREATE TABLE test1(id int, data varchar(50) character set latin5)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:430, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:431, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf8)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:432, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\''),(3,'\test1'),(4,NULL)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:435, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:436, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf8 collate utf8_bin)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:437, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\''),(3,'\test1'),(4,NULL)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:440, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:441, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf8 collate utf8_unicode_ci)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:442, sql:[INSERT INTO test1 VALUES (1,'a'),(2,'\''),(3,'\test1'),(4,NULL)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:445, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:446, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf8mb4)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:448, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:449, sql:[CREATE TABLE test1(id int, data varchar(50) character set latin7)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:451, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:452, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf16)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:454, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:455, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf16le)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:457, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:458, sql:[CREATE TABLE test1(id int, data varchar(50) character set utf32)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:460, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:461, sql:[CREATE TABLE test1(id int, data varchar(50) character set gb18030)]===
+dble:[[]]
+===file:sqls_util/syntax/data_types_2.sql, id:466, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]

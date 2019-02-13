@@ -1,0 +1,20 @@
+===file:sqls_util/dev_dealed/cross_db.sql, id:3, sql:[drop table if exists schema1.test1;]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:4, sql:[drop table if exists schema2.test2;]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:5, sql:[drop table if exists schema3.test3;]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:6, sql:[create table schema1.test1(id int);]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:7, sql:[create table schema2.test2(id int);]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:8, sql:[create table schema3.test3(id int);]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:10, sql:[insert into schema1.test1 values(1);]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:11, sql:[insert into schema2.test2 values(2);]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:12, sql:[insert into schema3.test3 values(3);]===
+dble:[[]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:21, sql:[use schema1;]===
+dble:[[]]
