@@ -1,0 +1,12 @@
+===file:sqls_util/syntax/view.sql, id:71, sql:[select * from view_test]===
+dble:[None]
+mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, '$test$4', 4L))]
+[02:24:57.742057]dble err :(1003, "Unknown column 'schema2.test2.id' in 'where clause'")
+===file:sqls_util/syntax/view.sql, id:86, sql:[select * from view_test]===
+dble:[None]
+mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L))]
+[02:24:58.814122]dble err :(1105, 'java.util.NoSuchElementException')
+===file:sqls_util/syntax/view.sql, id:122, sql:[select * from schema2.test2 union select * from view_test]===
+dble:[None]
+mysql:[((1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L))]
+[02:25:00.865947]dble err :(1105, 'java.util.NoSuchElementException')
