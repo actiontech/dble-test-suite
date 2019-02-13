@@ -1,0 +1,20 @@
+===file:sqls_util/syntax/show_dble.sql, id:2, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:3, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:4, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:5, sql:[CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:8, sql:[show tables]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show_dble.sql, id:9, sql:[show full tables]===
+dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show_dble.sql, id:10, sql:[show tables from schema1]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show_dble.sql, id:11, sql:[show full tables from schema1 like 'test%']===
+dble:[[('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show_dble.sql, id:31, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:32, sql:[drop table if exists schema2.test2]===
+dble:[[]]
