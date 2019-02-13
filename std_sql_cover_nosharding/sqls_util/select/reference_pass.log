@@ -1,0 +1,62 @@
+===file:sqls_util/select/reference.sql, id:5, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/select/reference.sql, id:6, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/select/reference.sql, id:7, sql:[insert into test1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)]===
+dble:[[]]
+===file:sqls_util/select/reference.sql, id:8, sql:[create index pad_index on test1(pad)]===
+dble:[[]]
+===file:sqls_util/select/reference.sql, id:12, sql:[select id,t_id,name,pad from test1 use index(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:13, sql:[select id,t_id,name,pad from test1 ignore index(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:14, sql:[select id,t_id,name,pad from test1 force index(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:15, sql:[select id,t_id,name,pad from test1 use index(pad_index,k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:16, sql:[select id,t_id,name,pad from test1 ignore index(pad_index,k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:17, sql:[select id,t_id,name,pad from test1 force index(pad_index,k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:18, sql:[select id,t_id,name,pad from test1 use key for join(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:19, sql:[select id,t_id,name,pad from test1 ignore key for join(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:20, sql:[select id,t_id,name,pad from test1 force key for join(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:21, sql:[select id,t_id,name,pad from test1 use key for order by(k_1) order by t_id]===
+dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+===file:sqls_util/select/reference.sql, id:22, sql:[select id,t_id,name,pad from test1 ignore key for order by(k_1)/*allow_diff_sequence*/]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:23, sql:[select id,t_id,name,pad from test1 force key for order by(k_1) order by t_id]===
+dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
+===file:sqls_util/select/reference.sql, id:24, sql:[select count(*) from test1 use key for group by(k_1)]===
+dble:[[(6L,)]]
+===file:sqls_util/select/reference.sql, id:25, sql:[select count(*) from test1 ignore key  for group by(k_1)]===
+dble:[[(6L,)]]
+===file:sqls_util/select/reference.sql, id:26, sql:[select count(*) from test1 force key for group by(k_1)]===
+dble:[[(6L,)]]
+===file:sqls_util/select/reference.sql, id:27, sql:[select id,t_id,name,pad from test1 use index for join(pad_index,k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:28, sql:[select id,t_id,name,pad from test1 ignore index for join(pad_index,k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:29, sql:[select id,t_id,name,pad from test1 force index for join(pad_index,k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:30, sql:[select id,t_id,name,pad from test1 use key(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:31, sql:[select id,t_id,name,pad from test1 ignore key(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:32, sql:[select id,t_id,name,pad from test1 force key(k_1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:33, sql:[select id,t_id,name,pad FROM test1 use INDEX (k_1) use INDEX (pad_index)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:37, sql:[select id,t_id,name,pad from test1 t force key(k_1) force index(pad_index)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:38, sql:[select id,t_id,name,pad from test1 t ignore key(k_1) force index(pad_index)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:39, sql:[select id,t_id,name,pad from test1 t ignore key(k_1) ignore index(pad_index)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_util/select/reference.sql, id:40, sql:[select id,pad,name from (select * from test1 where pad>2) as a]===
+dble:[[(3L, 4L, 'test\xe4\xb8\xadid\xe4\xb8\xba3'), (4L, 3L, '$test$4'), (6L, 6L, 'test6')]]
+===file:sqls_util/select/reference.sql, id:44, sql:[drop table if exists test1]===
+dble:[[]]

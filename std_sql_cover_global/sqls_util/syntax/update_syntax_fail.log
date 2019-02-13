@@ -1,0 +1,36 @@
+===file:sqls_util/syntax/update_syntax.sql, id:11, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test1', 'test11', 1550040911780L), (2L, 1L, 'test1', 'test11', 1550040911780L), (3L, 1L, 'test1', 'test11', 1550040911780L), (4L, 1L, 'test1', 'test11', 1550040911780L)]]
+mysql:[[(1L, 1L, 'test1', 'test11'), (2L, 1L, 'test1', 'test11'), (3L, 1L, 'test1', 'test11'), (4L, 1L, 'test1', 'test11')]]
+===file:sqls_util/syntax/update_syntax.sql, id:32, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001', 1550040912865L), (2L, 1L, 'test', 'test002', 1550040912865L), (3L, 1L, 'test', 'test003', 1550040912865L), (4L, 1L, 'test', 'test004', 1550040912865L)]]
+mysql:[[(1L, 1L, 'test', 'test001'), (2L, 1L, 'test', 'test002'), (3L, 1L, 'test', 'test003'), (4L, 1L, 'test', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:39, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test', 1550040913150L), (2L, 2L, 'test', 1550040913150L), (3L, 3L, 'test', 1550040913150L), (4L, 4L, 'test', 1550040913150L), (12L, 12L, 'mydetail', 1550040913094L)]]
+mysql:[[(1L, 1L, 'test'), (2L, 2L, 'test'), (3L, 3L, 'test'), (4L, 4L, 'test'), (12L, 12L, 'mydetail')]]
+===file:sqls_util/syntax/update_syntax.sql, id:44, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001', 1550040913397L), (2L, 2L, 'Western', 'test002', 1550040913397L), (3L, 3L, 'Northern', 'test003', 1550040913397L), (4L, 10L, 'Southern', 'test004', 1550040913456L)]]
+mysql:[[(1L, 1L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 10L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:46, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'aly', 'test001', 1550040913594L), (2L, 2L, 'aly', 'test002', 1550040913594L), (3L, 3L, 'aly', 'test003', 1550040913594L), (4L, 10L, 'aly', 'test004', 1550040913594L)]]
+mysql:[[(1L, 1L, 'aly', 'test001'), (2L, 2L, 'aly', 'test002'), (3L, 3L, 'aly', 'test003'), (4L, 10L, 'aly', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:48, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001', 1550040913732L), (2L, 2L, 'aly', 'test002', 1550040913594L), (3L, 3L, 'aly', 'test003', 1550040913594L), (4L, 10L, 'aly', 'test004', 1550040913594L)]]
+mysql:[[(1L, 1L, 'test', 'test001'), (2L, 2L, 'aly', 'test002'), (3L, 3L, 'aly', 'test003'), (4L, 10L, 'aly', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:50, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test1', 'test001', 1550040913873L), (2L, 2L, 'test1', 'test002', 1550040913873L), (3L, 3L, 'test1', 'test003', 1550040913873L), (4L, 10L, 'aly', 'test004', 1550040913594L)]]
+mysql:[[(1L, 1L, 'test1', 'test001'), (2L, 2L, 'test1', 'test002'), (3L, 3L, 'test1', 'test003'), (4L, 10L, 'aly', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:52, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test1', 'test001', 1550040913873L), (2L, 2L, 'test1', 'test002', 1550040913873L), (3L, 3L, 'test1', 'test003', 1550040913873L), (4L, 10L, 'test1', 'test004', 1550040914014L)]]
+mysql:[[(1L, 1L, 'test1', 'test001'), (2L, 2L, 'test1', 'test002'), (3L, 3L, 'test1', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:54, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001', 1550040914155L), (2L, 2L, 'test2', 'test002', 1550040914155L), (3L, 3L, 'test2', 'test003', 1550040914155L), (4L, 10L, 'test1', 'test004', 1550040914014L)]]
+mysql:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:56, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001', 1550040914155L), (2L, 2L, 'test2', 'test002', 1550040914155L), (3L, 3L, 'test2', 'test003', 1550040914155L), (4L, 10L, 'test1', 'test004', 1550040914014L)]]
+mysql:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:58, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001', 1550040914155L), (2L, 2L, 'test2', 'test002', 1550040914155L), (3L, 3L, 'test2', 'test003', 1550040914155L), (4L, 10L, 'test1', 'test004', 1550040914014L)]]
+mysql:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:60, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001', 1550040914155L), (2L, 2L, 'test2', 'test002', 1550040914155L), (3L, 3L, 'test2', 'test003', 1550040914155L), (4L, 20L, 'test1', 'test004', 1550040914571L)]]
+mysql:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 20L, 'test1', 'test004')]]
