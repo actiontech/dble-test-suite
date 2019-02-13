@@ -1,0 +1,393 @@
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:16, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041247668L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:18, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041247909L),)]
+mysql:[((1L, 1L, '1', 10L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:28, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041248491L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:37, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041248863L), (2L, 2L, '2', 2L, 1550041248941L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:39, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041249182L), (2L, 2L, '2', 10L, 1550041249182L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:50, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041249850L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:60, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041250167L), (2L, 2L, '2', 2L, 1550041250248L), (3L, 3L, '3', 3L, 1550041250330L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:62, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041250576L), (2L, 2L, '2', 10L, 1550041250576L), (3L, 3L, '3', 10L, 1550041250576L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:74, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041251311L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:85, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041251680L), (2L, 2L, '2', 2L, 1550041251760L), (3L, 3L, '3', 3L, 1550041251838L), (4L, 4L, '4', 4L, 1550041251917L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:87, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041252156L), (2L, 2L, '2', 10L, 1550041252156L), (3L, 3L, '3', 10L, 1550041252156L), (4L, 4L, '4', 10L, 1550041252156L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:100, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041252975L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:108, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041253340L), (5L, 5L, '5', 5L, 1550041253340L))]
+mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:110, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041253578L), (5L, 5L, '5', 10L, 1550041253578L))]
+mysql:[((1L, 1L, '1', 10L), (5L, 5L, '5', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:120, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041254185L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:128, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041254555L), (2L, 2L, '2', 2L, 1550041254555L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:130, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041254794L), (2L, 2L, '2', 10L, 1550041254794L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:140, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041255434L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:148, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041255805L), (2L, 2L, '2', 2L, 1550041255805L), (3L, 3L, '3', 3L, 1550041255805L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:150, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041256044L), (2L, 2L, '2', 10L, 1550041256044L), (3L, 3L, '3', 10L, 1550041256044L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:160, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041256622L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:168, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041256991L), (2L, 2L, '2', 2L, 1550041256991L), (3L, 3L, '3', 3L, 1550041256991L), (4L, 4L, '4', 4L, 1550041256991L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:170, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041257231L), (2L, 2L, '2', 10L, 1550041257231L), (3L, 3L, '3', 10L, 1550041257231L), (4L, 4L, '4', 10L, 1550041257231L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:180, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041257842L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:186, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041258056L), (2L, 2L, '2', 2L, 1550041258056L), (3L, 3L, '3', 3L, 1550041258056L), (4L, 4L, '4', 4L, 1550041258056L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:189, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041258321L), (2L, 2L, '2', 2L, 1550041258056L), (3L, 3L, '3', 3L, 1550041258056L), (4L, 4L, '4', 4L, 1550041258056L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:191, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041258515L), (2L, 2L, '2', 10L, 1550041258515L), (3L, 3L, '3', 10L, 1550041258515L), (4L, 4L, '4', 10L, 1550041258515L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:197, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041258729L), (2L, 2L, '2', 2L, 1550041258729L), (3L, 3L, '3', 3L, 1550041258729L), (4L, 4L, '4', 4L, 1550041258729L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:200, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041258729L), (2L, 2L, '2', 2L, 1550041258729L), (3L, 3L, '3', 3L, 1550041258729L), (4L, 4L, '4', 4L, 1550041258729L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:202, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041259206L), (2L, 2L, '2', 10L, 1550041259206L), (3L, 3L, '3', 10L, 1550041259206L), (4L, 4L, '4', 10L, 1550041259206L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:208, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041259608L), (2L, 2L, '2', 2L, 1550041259608L), (3L, 3L, '3', 3L, 1550041259608L), (4L, 4L, '4', 4L, 1550041259608L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:212, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041259820L), (2L, 2L, '2', 10L, 1550041259898L), (3L, 3L, '3', 3L, 1550041259608L), (4L, 4L, '4', 4L, 1550041259608L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:214, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041260137L), (2L, 2L, '2', 10L, 1550041260137L), (3L, 3L, '3', 10L, 1550041260137L), (4L, 4L, '4', 10L, 1550041260137L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:220, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041260352L), (2L, 2L, '2', 2L, 1550041260352L), (3L, 3L, '3', 3L, 1550041260352L), (4L, 4L, '4', 4L, 1550041260352L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:224, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041260352L), (2L, 2L, '2', 2L, 1550041260352L), (3L, 3L, '3', 3L, 1550041260352L), (4L, 4L, '4', 4L, 1550041260352L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:226, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041260909L), (2L, 2L, '2', 10L, 1550041260909L), (3L, 3L, '3', 10L, 1550041260909L), (4L, 4L, '4', 10L, 1550041260909L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:232, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041261092L), (2L, 2L, '2', 2L, 1550041261092L), (3L, 3L, '3', 3L, 1550041261092L), (4L, 4L, '4', 4L, 1550041261092L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:237, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041261331L), (2L, 2L, '2', 10L, 1550041261410L), (3L, 3L, '3', 10L, 1550041261489L), (4L, 4L, '4', 4L, 1550041261092L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:239, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041261732L), (2L, 2L, '2', 10L, 1550041261732L), (3L, 3L, '3', 10L, 1550041261732L), (4L, 4L, '4', 10L, 1550041261732L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:245, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041261979L), (2L, 2L, '2', 2L, 1550041261979L), (3L, 3L, '3', 3L, 1550041261979L), (4L, 4L, '4', 4L, 1550041261979L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:250, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041261979L), (2L, 2L, '2', 2L, 1550041261979L), (3L, 3L, '3', 3L, 1550041261979L), (4L, 4L, '4', 4L, 1550041261979L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:252, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041262584L), (2L, 2L, '2', 10L, 1550041262584L), (3L, 3L, '3', 10L, 1550041262584L), (4L, 4L, '4', 10L, 1550041262584L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:258, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041262801L), (2L, 2L, '2', 2L, 1550041262801L), (3L, 3L, '3', 3L, 1550041262801L), (4L, 4L, '4', 4L, 1550041262801L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:264, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041263007L), (2L, 2L, '2', 10L, 1550041263085L), (3L, 3L, '3', 10L, 1550041263164L), (4L, 4L, '4', 10L, 1550041263242L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:266, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041263483L), (2L, 2L, '2', 10L, 1550041263483L), (3L, 3L, '3', 10L, 1550041263483L), (4L, 4L, '4', 10L, 1550041263483L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:272, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041263665L), (2L, 2L, '2', 2L, 1550041263665L), (3L, 3L, '3', 3L, 1550041263665L), (4L, 4L, '4', 4L, 1550041263665L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:278, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041263665L), (2L, 2L, '2', 2L, 1550041263665L), (3L, 3L, '3', 3L, 1550041263665L), (4L, 4L, '4', 4L, 1550041263665L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:280, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041264379L), (2L, 2L, '2', 10L, 1550041264379L), (3L, 3L, '3', 10L, 1550041264379L), (4L, 4L, '4', 10L, 1550041264379L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:286, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041264591L), (2L, 2L, '2', 2L, 1550041264591L), (3L, 3L, '3', 3L, 1550041264591L), (4L, 4L, '4', 4L, 1550041264591L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:289, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 100L, 1550041264801L), (2L, 2L, '2', 100L, 1550041264801L), (3L, 3L, '3', 100L, 1550041264801L), (4L, 4L, '4', 100L, 1550041264801L))]
+mysql:[((1L, 1L, '1', 100L), (2L, 2L, '2', 100L), (3L, 3L, '3', 100L), (4L, 4L, '4', 100L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:291, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041265043L), (2L, 2L, '2', 10L, 1550041265043L), (3L, 3L, '3', 10L, 1550041265043L), (4L, 4L, '4', 10L, 1550041265043L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:297, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041265226L), (2L, 2L, '2', 2L, 1550041265226L), (3L, 3L, '3', 3L, 1550041265226L), (4L, 4L, '4', 4L, 1550041265226L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:300, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041265226L), (2L, 2L, '2', 2L, 1550041265226L), (3L, 3L, '3', 3L, 1550041265226L), (4L, 4L, '4', 4L, 1550041265226L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:302, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041265675L), (2L, 2L, '2', 10L, 1550041265675L), (3L, 3L, '3', 10L, 1550041265675L), (4L, 4L, '4', 10L, 1550041265675L))]
+mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:308, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041265922L), (2L, 2L, '2', 2L, 1550041265922L), (3L, 3L, '3', 3L, 1550041265922L), (4L, 4L, '4', 4L, 1550041265922L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:311, sql:[select * from test1 order by id]===
+dble:[((2L, 2L, '2', 2L, 1550041265922L), (3L, 3L, '3', 3L, 1550041265922L), (4L, 4L, '4', 4L, 1550041265922L))]
+mysql:[((2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:313, sql:[select * from test1 order by id]===
+dble:[((3L, 3L, '3', 3L, 1550041265922L), (4L, 4L, '4', 4L, 1550041265922L))]
+mysql:[((3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:319, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041266617L), (2L, 2L, '2', 2L, 1550041266617L), (3L, 3L, '3', 3L, 1550041266617L), (4L, 4L, '4', 4L, 1550041266617L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:322, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041266617L), (2L, 2L, '2', 2L, 1550041266617L), (3L, 3L, '3', 3L, 1550041266617L), (4L, 4L, '4', 4L, 1550041266617L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:324, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041266617L), (3L, 3L, '3', 3L, 1550041266617L), (4L, 4L, '4', 4L, 1550041266617L))]
+mysql:[((1L, 1L, '1', 1L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:330, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041267311L), (2L, 2L, '2', 2L, 1550041267311L), (3L, 3L, '3', 3L, 1550041267311L), (4L, 4L, '4', 4L, 1550041267311L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:334, sql:[select * from test1 order by id]===
+dble:[((3L, 3L, '3', 3L, 1550041267311L), (4L, 4L, '4', 4L, 1550041267311L))]
+mysql:[((3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:336, sql:[select * from test1 order by id]===
+dble:[((4L, 4L, '4', 4L, 1550041267311L),)]
+mysql:[((4L, 4L, '4', 4L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:342, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041268116L), (2L, 2L, '2', 2L, 1550041268116L), (3L, 3L, '3', 3L, 1550041268116L), (4L, 4L, '4', 4L, 1550041268116L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:346, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041268116L), (2L, 2L, '2', 2L, 1550041268116L), (3L, 3L, '3', 3L, 1550041268116L), (4L, 4L, '4', 4L, 1550041268116L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:348, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041268116L), (2L, 2L, '2', 2L, 1550041268116L), (4L, 4L, '4', 4L, 1550041268116L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:354, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041268892L), (2L, 2L, '2', 2L, 1550041268892L), (3L, 3L, '3', 3L, 1550041268892L), (4L, 4L, '4', 4L, 1550041268892L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:359, sql:[select * from test1 order by id]===
+dble:[((4L, 4L, '4', 4L, 1550041268892L),)]
+mysql:[((4L, 4L, '4', 4L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:367, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041269740L), (2L, 2L, '2', 2L, 1550041269740L), (3L, 3L, '3', 3L, 1550041269740L), (4L, 4L, '4', 4L, 1550041269740L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:372, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041269740L), (2L, 2L, '2', 2L, 1550041269740L), (3L, 3L, '3', 3L, 1550041269740L), (4L, 4L, '4', 4L, 1550041269740L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:374, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041269740L), (2L, 2L, '2', 2L, 1550041269740L), (3L, 3L, '3', 3L, 1550041269740L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:380, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041270565L), (2L, 2L, '2', 2L, 1550041270565L), (3L, 3L, '3', 3L, 1550041270565L), (4L, 4L, '4', 4L, 1550041270565L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:394, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041271537L), (2L, 2L, '2', 2L, 1550041271537L), (3L, 3L, '3', 3L, 1550041271537L), (4L, 4L, '4', 4L, 1550041271537L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:400, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041271537L), (2L, 2L, '2', 2L, 1550041271537L), (3L, 3L, '3', 3L, 1550041271537L), (4L, 4L, '4', 4L, 1550041271537L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:402, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041271537L), (2L, 2L, '2', 2L, 1550041271537L), (4L, 4L, '4', 4L, 1550041271537L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:408, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041272473L), (2L, 2L, '2', 2L, 1550041272473L), (3L, 3L, '3', 3L, 1550041272473L), (4L, 4L, '4', 4L, 1550041272473L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:419, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041273192L), (2L, 2L, '2', 2L, 1550041273192L), (3L, 3L, '3', 3L, 1550041273192L), (4L, 4L, '4', 4L, 1550041273192L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:422, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041273192L), (2L, 2L, '2', 2L, 1550041273192L), (3L, 3L, '3', 3L, 1550041273192L), (4L, 4L, '4', 4L, 1550041273192L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:436, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041274393L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:448, sql:[select * from test1 order by id]===
+dble:[((2L, 1L, '1', 1L, 1550041275191L),)]
+mysql:[((2L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:456, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041275614L),)]
+mysql:[((1L, 1L, '1', 10L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:460, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 100L, 1550041275933L),)]
+mysql:[((1L, 1L, '1', 100L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:468, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 10L, 1550041276384L),)]
+mysql:[((1L, 1L, '1', 10L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:480, sql:[select * from test1 where id=2]===
+dble:[[(2L, 2L, '2', 2L, 1550041277099L)]]
+mysql:[[(2L, 2L, '2', 2L)]]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:484, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 100L, 1550041277503L), (2L, 2L, '2', 100L, 1550041277503L))]
+mysql:[((1L, 1L, '1', 100L), (2L, 2L, '2', 100L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:492, sql:[select * from test1 where id=2]===
+dble:[[(2L, 2L, '2', 2L, 1550041277907L)]]
+mysql:[[(2L, 2L, '2', 2L)]]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:504, sql:[select * from test1 where id=4]===
+dble:[[(4L, 4L, '4', 4L, 1550041278697L)]]
+mysql:[[(4L, 4L, '4', 4L)]]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:508, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 100L, 1550041279093L), (2L, 2L, '2', 2L, 1550041278697L), (4L, 4L, '4', 4L, 1550041278697L))]
+mysql:[((1L, 1L, '1', 100L), (2L, 2L, '2', 2L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:516, sql:[select * from test1 where id=4]===
+dble:[[(4L, 4L, '4', 4L, 1550041279496L)]]
+mysql:[[(4L, 4L, '4', 4L)]]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:529, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, '1', 1550041280351L), (2L, 2L, '1', 1L, '1', 1550041280510L))]
+mysql:[((1L, 1L, '1', 1L, '1'), (2L, 2L, '1', 1L, '1'))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:541, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, '1', 1550041281091L), (2L, 1L, '1', 1L, '1', 1550041281255L))]
+mysql:[((1L, 1L, '1', 1L, '1'), (2L, 1L, '1', 1L, '1'))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:551, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041281831L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:553, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041281831L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:560, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041282352L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:562, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041282352L),)]
+mysql:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:642, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, '1', 1550041287097L),)]
+mysql:[((1L, 1L, '1', 1L, '1'),)]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:645, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, '1', 1550041287097L), (2L, 1L, '1', 1L, '1', 1550041287337L))]
+mysql:[((1L, 1L, '1', 1L, '1'), (2L, 1L, '1', 1L, '1'))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:658, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 20L, 1550041288010L), (2L, 2L, '2', 2L, 1550041287960L), (3L, 3L, '3', 3L, 1550041287960L))]
+mysql:[((1L, 1L, '1', 20L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:669, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 20L, 1550041288650L), (2L, 2L, '2', 2L, 1550041288566L), (3L, 3L, '3', 3L, 1550041288566L))]
+mysql:[((1L, 1L, '1', 20L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:685, sql:[select * from test1 order by id]===
+dble:[((1L, 2L, '1', 1L, 1550041289287L), (2L, 2L, '2', 2L, 1550041288915L), (3L, 3L, '3', 3L, 1550041288915L), (4L, 4L, '4', 4L, 1550041288915L), (5L, 5L, '5', 5L, 1550041288915L), (6L, 6L, '6', 6L, 1550041288915L), (7L, 1L, 'test', 1L, 1550041289047L))]
+mysql:[((1L, 2L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 1L, 'test', 1L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:700, sql:[select * from test1 order by id]===
+dble:[((1L, 2L, '1', 1L, 1550041290043L), (2L, 2L, '2', 2L, 1550041289724L), (3L, 3L, '3', 3L, 1550041289724L), (4L, 4L, '4', 4L, 1550041289724L), (5L, 5L, '5', 5L, 1550041289724L), (6L, 6L, '6', 6L, 1550041289724L))]
+mysql:[((1L, 2L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:709, sql:[select a.* from test1 a,schema2.test2 b where a.pad=b.pad order by id]===
+dble:[((2L, 2L, '2', 2L, 1550041290508L), (3L, 3L, '3', 3L, 1550041290508L), (4L, 4L, '4', 4L, 1550041290508L), (5L, 5L, '5', 5L, 1550041290508L), (6L, 6L, '6', 6L, 1550041290508L))]
+mysql:[((2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:711, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041290721L), (2L, 2L, '2', 2L, 1550041290508L), (3L, 3L, '3', 3L, 1550041290508L), (4L, 4L, '4', 4L, 1550041290508L), (5L, 5L, '5', 5L, 1550041290508L), (6L, 6L, '6', 6L, 1550041290508L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:720, sql:[select a.* from test1 a,schema2.test2 b where a.pad=b.pad order by id]===
+dble:[((2L, 2L, '2', 2L, 1550041291158L), (3L, 3L, '3', 3L, 1550041291158L), (4L, 4L, '4', 4L, 1550041291158L), (5L, 5L, '5', 5L, 1550041291158L), (6L, 6L, '6', 6L, 1550041291158L))]
+mysql:[((2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:722, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041291158L), (2L, 2L, '2', 2L, 1550041291158L), (3L, 3L, '3', 3L, 1550041291158L), (4L, 4L, '4', 4L, 1550041291158L), (5L, 5L, '5', 5L, 1550041291158L), (6L, 6L, '6', 6L, 1550041291158L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:732, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041292106L), (2L, 2L, '2', 2L, 1550041291861L), (3L, 3L, '3', 3L, 1550041291861L), (4L, 4L, '4', 4L, 1550041291861L), (5L, 5L, '5', 5L, 1550041291861L), (6L, 6L, '6', 6L, 1550041291861L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:733, sql:[select * from schema2.test2 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041291945L), (2L, 2L, '2', 2L, 1550041291945L), (3L, 3L, '3', 3L, 1550041291945L), (4L, 4L, '4', 200L, 1550041292187L), (5L, 5L, '5', 5L, 1550041291945L), (6L, 6L, '6', 6L, 1550041291945L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 200L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:735, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041292106L), (2L, 2L, '2', 2L, 1550041291861L), (3L, 3L, '3', 3L, 1550041291861L), (4L, 4L, '4', 4L, 1550041291861L), (5L, 5L, '5', 5L, 1550041291861L), (6L, 6L, '6', 6L, 1550041291861L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:736, sql:[select * from schema2.test2 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041291945L), (2L, 2L, '2', 2L, 1550041291945L), (3L, 3L, '3', 3L, 1550041291945L), (4L, 4L, '4', 200L, 1550041292187L), (5L, 5L, '5', 5L, 1550041291945L), (6L, 6L, '6', 6L, 1550041291945L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 200L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:746, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041293080L), (2L, 2L, '2', 2L, 1550041292838L), (3L, 3L, '3', 3L, 1550041292838L), (4L, 4L, '4', 4L, 1550041292838L), (5L, 5L, '5', 5L, 1550041292838L), (6L, 6L, '6', 6L, 1550041292838L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:747, sql:[select * from schema2.test2 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041292919L), (2L, 2L, '2', 2L, 1550041292919L), (3L, 3L, '3', 3L, 1550041292919L), (4L, 4L, '4', 200L, 1550041293160L), (5L, 5L, '5', 5L, 1550041292919L), (6L, 6L, '6', 6L, 1550041292919L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 200L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:749, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041292838L), (2L, 2L, '2', 2L, 1550041292838L), (3L, 3L, '3', 3L, 1550041292838L), (4L, 4L, '4', 4L, 1550041292838L), (5L, 5L, '5', 5L, 1550041292838L), (6L, 6L, '6', 6L, 1550041292838L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:750, sql:[select * from schema2.test2 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041292919L), (2L, 2L, '2', 2L, 1550041292919L), (3L, 3L, '3', 3L, 1550041292919L), (4L, 4L, '4', 4L, 1550041292919L), (5L, 5L, '5', 5L, 1550041292919L), (6L, 6L, '6', 6L, 1550041292919L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:759, sql:[select a.*,b.* from test3 a,schema1.test1 b where a.pad=b.pad]===
+dble:[[(1L, 1L, '1', 1L, 1550041293947L, 1L, 1L, '1', 1L, 1550041293700L), (2L, 2L, '2', 2L, 1550041293947L, 2L, 2L, '2', 2L, 1550041293700L), (3L, 3L, '3', 3L, 1550041293947L, 3L, 3L, '3', 3L, 1550041293700L), (4L, 4L, '4', 4L, 1550041293947L, 4L, 4L, '4', 4L, 1550041293700L), (5L, 5L, '5', 5L, 1550041293947L, 5L, 5L, '5', 5L, 1550041293700L), (6L, 6L, '6', 6L, 1550041293947L, 6L, 6L, '6', 6L, 1550041293700L)]]
+mysql:[[(1L, 1L, '1', 1L, 1L, 1L, '1', 1L), (2L, 2L, '2', 2L, 2L, 2L, '2', 2L), (3L, 3L, '3', 3L, 3L, 3L, '3', 3L), (4L, 4L, '4', 4L, 4L, 4L, '4', 4L), (5L, 5L, '5', 5L, 5L, 5L, '5', 5L), (6L, 6L, '6', 6L, 6L, 6L, '6', 6L)]]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:761, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, 'test', 1L, 1550041294161L), (2L, 2L, 'test', 2L, 1550041294161L), (3L, 3L, 'test', 3L, 1550041294161L), (4L, 4L, 'test', 4L, 1550041294161L), (5L, 5L, 'test', 5L, 1550041294161L), (6L, 6L, 'test', 6L, 1550041294161L))]
+mysql:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:762, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041293700L), (2L, 2L, '2', 2L, 1550041293700L), (3L, 3L, '3', 3L, 1550041293700L), (4L, 4L, '4', 4L, 1550041293700L), (5L, 5L, '5', 5L, 1550041293700L), (6L, 6L, '6', 6L, 1550041293700L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:764, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, 'test', 1L, 1550041294161L), (2L, 2L, 'test', 2L, 1550041294161L), (3L, 3L, 'test', 3L, 1550041294161L), (4L, 4L, 'test', 4L, 1550041294161L), (5L, 5L, 'test', 5L, 1550041294161L), (6L, 6L, 'test', 6L, 1550041294161L))]
+mysql:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:765, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041293700L), (2L, 2L, '2', 2L, 1550041293700L), (3L, 3L, '3', 3L, 1550041293700L), (4L, 4L, '4', 4L, 1550041293700L), (5L, 5L, '5', 5L, 1550041293700L), (6L, 6L, '6', 6L, 1550041293700L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:775, sql:[select a.*,b.* from test3 a,schema1.test1 b where a.pad=b.pad]===
+dble:[[(1L, 1L, '1', 1L, 1550041295025L, 1L, 1L, '1', 1L, 1550041294812L), (2L, 2L, '2', 2L, 1550041295025L, 2L, 2L, '2', 2L, 1550041294812L), (3L, 3L, '3', 3L, 1550041295025L, 3L, 3L, '3', 3L, 1550041294812L), (4L, 4L, '4', 4L, 1550041295025L, 4L, 4L, '4', 4L, 1550041294812L), (5L, 5L, '5', 5L, 1550041295025L, 5L, 5L, '5', 5L, 1550041294812L), (6L, 6L, '6', 6L, 1550041295025L, 6L, 6L, '6', 6L, 1550041294812L)]]
+mysql:[[(1L, 1L, '1', 1L, 1L, 1L, '1', 1L), (2L, 2L, '2', 2L, 2L, 2L, '2', 2L), (3L, 3L, '3', 3L, 3L, 3L, '3', 3L), (4L, 4L, '4', 4L, 4L, 4L, '4', 4L), (5L, 5L, '5', 5L, 5L, 5L, '5', 5L), (6L, 6L, '6', 6L, 6L, 6L, '6', 6L)]]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:777, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, 'test', 1L, 1550041295268L), (2L, 2L, 'test', 2L, 1550041295268L), (3L, 3L, 'test', 3L, 1550041295268L), (4L, 4L, 'test', 4L, 1550041295268L), (5L, 5L, 'test', 5L, 1550041295268L), (6L, 6L, 'test', 6L, 1550041295268L))]
+mysql:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:778, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041294812L), (2L, 2L, '2', 2L, 1550041294812L), (3L, 3L, '3', 3L, 1550041294812L), (4L, 4L, '4', 4L, 1550041294812L), (5L, 5L, '5', 5L, 1550041294812L), (6L, 6L, '6', 6L, 1550041294812L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:780, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041295025L), (2L, 2L, '2', 2L, 1550041295025L), (3L, 3L, '3', 3L, 1550041295025L), (4L, 4L, '4', 4L, 1550041295025L), (5L, 5L, '5', 5L, 1550041295025L), (6L, 6L, '6', 6L, 1550041295025L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:781, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041294812L), (2L, 2L, '2', 2L, 1550041294812L), (3L, 3L, '3', 3L, 1550041294812L), (4L, 4L, '4', 4L, 1550041294812L), (5L, 5L, '5', 5L, 1550041294812L), (6L, 6L, '6', 6L, 1550041294812L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:793, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041296097L), (2L, 2L, '2', 2L, 1550041296097L), (3L, 3L, '3', 3L, 1550041296097L), (4L, 4L, '4', 4L, 1550041296097L), (5L, 5L, '5', 5L, 1550041296097L), (6L, 6L, '6', 6L, 1550041296097L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:794, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041296258L), (2L, 2L, '2', 200L, 1550041296258L), (3L, 3L, '3', 200L, 1550041296258L), (4L, 4L, '4', 200L, 1550041296258L), (5L, 5L, '5', 200L, 1550041296258L), (6L, 6L, '6', 200L, 1550041296258L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 200L), (3L, 3L, '3', 200L), (4L, 4L, '4', 200L), (5L, 5L, '5', 200L), (6L, 6L, '6', 200L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:796, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041296097L), (2L, 2L, '2', 2L, 1550041296097L), (3L, 3L, '3', 3L, 1550041296097L), (4L, 4L, '4', 4L, 1550041296097L), (5L, 5L, '5', 5L, 1550041296097L), (6L, 6L, '6', 6L, 1550041296097L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:797, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041296258L), (2L, 2L, '2', 200L, 1550041296258L), (3L, 3L, '3', 200L, 1550041296258L), (4L, 4L, '4', 200L, 1550041296258L), (5L, 5L, '5', 200L, 1550041296258L), (6L, 6L, '6', 200L, 1550041296258L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 200L), (3L, 3L, '3', 200L), (4L, 4L, '4', 200L), (5L, 5L, '5', 200L), (6L, 6L, '6', 200L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:809, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, 'test', 1L, 1550041297443L), (2L, 2L, 'test', 2L, 1550041297443L), (3L, 3L, 'test', 3L, 1550041297443L), (4L, 4L, 'test', 4L, 1550041297443L), (5L, 5L, 'test', 5L, 1550041297443L), (6L, 6L, 'test', 6L, 1550041297443L))]
+mysql:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:810, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 200L, 1550041297364L), (2L, 2L, '2', 200L, 1550041297364L), (3L, 3L, '3', 200L, 1550041297364L), (4L, 4L, '4', 200L, 1550041297364L), (5L, 5L, '5', 200L, 1550041297364L), (6L, 6L, '6', 200L, 1550041297364L))]
+mysql:[((1L, 1L, '1', 200L), (2L, 2L, '2', 200L), (3L, 3L, '3', 200L), (4L, 4L, '4', 200L), (5L, 5L, '5', 200L), (6L, 6L, '6', 200L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:812, sql:[select * from test3 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041297201L), (2L, 2L, '2', 2L, 1550041297201L), (3L, 3L, '3', 3L, 1550041297201L), (4L, 4L, '4', 4L, 1550041297201L), (5L, 5L, '5', 5L, 1550041297201L), (6L, 6L, '6', 6L, 1550041297201L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:813, sql:[select * from schema1.test1 order by id]===
+dble:[((1L, 1L, '1', 1L, 1550041296987L), (2L, 2L, '2', 2L, 1550041296987L), (3L, 3L, '3', 3L, 1550041296987L), (4L, 4L, '4', 4L, 1550041296987L), (5L, 5L, '5', 5L, 1550041296987L), (6L, 6L, '6', 6L, 1550041296987L))]
+mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
