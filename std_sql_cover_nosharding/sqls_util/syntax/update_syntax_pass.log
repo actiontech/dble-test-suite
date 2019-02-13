@@ -1,0 +1,100 @@
+===file:sqls_util/syntax/update_syntax.sql, id:5, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:6, sql:[CREATE TABLE test1 (id INT(11) PRIMARY KEY,R_REGIONKEY INT(11),R_NAME VARCHAR(50),R_COMMENT VARCHAR(50))]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:7, sql:[INSERT INTO test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) VALUES (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:10, sql:[UPDATE test1 SET R_REGIONKEY=1,R_NAME='test1',R_COMMENT="test11"]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:11, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test1', 'test11'), (2L, 1L, 'test1', 'test11'), (3L, 1L, 'test1', 'test11'), (4L, 1L, 'test1', 'test11')]]
+===file:sqls_util/syntax/update_syntax.sql, id:12, sql:[UPDATE test1 SET R_REGIONKEY=R_REGIONKEY+10]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:13, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(1L, 11L), (2L, 11L), (3L, 11L), (4L, 11L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:14, sql:[UPDATE LOW_PRIORITY test1 SET R_REGIONKEY=R_REGIONKEY+10]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:15, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(1L, 21L), (2L, 21L), (3L, 21L), (4L, 21L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:16, sql:[UPDATE IGNORE test1 SET R_REGIONKEY=R_REGIONKEY+10]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:17, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:19, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:20, sql:[UPDATE test1 SET id=id-1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:21, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:22, sql:[UPDATE test1 SET id=10 WHERE id=4 OR id=1 AND id=3]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:23, sql:[SELECT id,R_REGIONKEY FROM test1]===
+dble:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:26, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:27, sql:[CREATE TABLE test1 (id INT(11) NOT NULL DEFAULT 1,R_REGIONKEY INT(11),R_NAME VARCHAR(50) DEFAULT 'test',R_COMMENT VARCHAR(50))]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:28, sql:[INSERT INTO test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) VALUES (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:31, sql:[UPDATE test1 SET R_NAME=DEFAULT,R_REGIONKEY=1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:32, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (2L, 1L, 'test', 'test002'), (3L, 1L, 'test', 'test003'), (4L, 1L, 'test', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:35, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:36, sql:[CREATE TABLE test1 (id INT(11) NOT NULL DEFAULT 1,test INT,detail VARCHAR(20) DEFAULT 'test')]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:37, sql:[INSERT INTO test1 (id,test,detail) VALUES (1,1,'mydetail'),(2,2,'mydetail'),(3,3,'mydetail'),(4,4,'mydetail'),(12,12,'mydetail')]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:38, sql:[UPDATE test1 SET detail=DEFAULT WHERE test<10]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:39, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test'), (2L, 2L, 'test'), (3L, 3L, 'test'), (4L, 4L, 'test'), (12L, 12L, 'mydetail')]]
+===file:sqls_util/syntax/update_syntax.sql, id:40, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:41, sql:[CREATE TABLE test1 (id INT(11),R_REGIONKEY INT(11) PRIMARY KEY,R_NAME VARCHAR(50),R_COMMENT VARCHAR(50))]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:42, sql:[INSERT INTO test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) VALUES (1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:43, sql:[UPDATE test1 SET R_REGIONKEY=10 WHERE R_REGIONKEY=4 OR R_REGIONKEY=1 AND R_REGIONKEY=3]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:44, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 10L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:45, sql:[UPDATE test1 SET R_NAME='aly' WHERE id>0]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:46, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'aly', 'test001'), (2L, 2L, 'aly', 'test002'), (3L, 3L, 'aly', 'test003'), (4L, 10L, 'aly', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:47, sql:[UPDATE test1 SET R_NAME='test' WHERE id=1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:48, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (2L, 2L, 'aly', 'test002'), (3L, 3L, 'aly', 'test003'), (4L, 10L, 'aly', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:49, sql:[UPDATE test1 SET R_NAME='test1' WHERE id IN (1,2,3)]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:50, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test1', 'test001'), (2L, 2L, 'test1', 'test002'), (3L, 3L, 'test1', 'test003'), (4L, 10L, 'aly', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:51, sql:[UPDATE test1 SET R_NAME='test1' WHERE id NOT IN (1,2,3)]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:52, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test1', 'test001'), (2L, 2L, 'test1', 'test002'), (3L, 3L, 'test1', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:53, sql:[UPDATE test1 SET R_NAME='test2' WHERE id BETWEEN 1 AND 3]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:54, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:55, sql:[UPDATE test1 SET R_REGIONKEY=200 WHERE R_NAME='test']===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:56, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:57, sql:[UPDATE test1 SET R_REGIONKEY=401 WHERE R_NAME LIKE '%aly%']===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:58, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:59, sql:[UPDATE test1 SET R_REGIONKEY=R_REGIONKEY+10 WHERE R_REGIONKEY>=2 order by R_NAME LIMIT 1]===
+dble:[()]
+===file:sqls_util/syntax/update_syntax.sql, id:60, sql:[SELECT * FROM test1]===
+dble:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 20L, 'test1', 'test004')]]
+===file:sqls_util/syntax/update_syntax.sql, id:61, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:65, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/update_syntax.sql, id:66, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]

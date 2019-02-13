@@ -1,0 +1,4 @@
+===file:sqls_util/select/select.sql, id:182, sql:[select id,k,c,pad from test1 where id=@var1 := 1]===
+dble:[None]
+mysql:[((1L, 1L, 'id1', 1L),)]
+[02:17:06.924805]dble err :(1064, 'sql syntax error, no terminated. COLONEQ')

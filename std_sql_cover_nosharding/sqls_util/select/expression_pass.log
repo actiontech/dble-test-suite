@@ -1,0 +1,228 @@
+===file:sqls_util/select/expression.sql, id:3, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:4, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:5, sql:[insert into test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string','test001'),(3,3, 'another string','test003'),(2,2, 'a\nstring','test002'),(4,4, '中','test004'),(5,5, 'a\'string\'','test005'),(6,6, 'a\""string\""','test006'),(7,7, 'a\bstring','test007'),(8,8, 'a\nstring','test008'),(9,9, 'a\rstring','test009'),(10,10, 'a\tstring','test010'),(11,11, 'a\zstring','test011'),(12,12, 'a\\string','test012'),(13,13, 'a\%string','test013'),(14,14, 'a\_string','test014'),(15,15, 'MySQL','test015'),(16,16, 'binary','test016'),(65,16, 'binary','test016'),(17,12345678901234567890123.4567890,17,17),(18,18, 'A','test018'),(19,19, '','test019')]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:7, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a string']===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
+===file:sqls_util/select/expression.sql, id:8, sql:[select id,'a  string' from test1]===
+dble:[[(1L, 'a  string'), (2L, 'a  string'), (3L, 'a  string'), (4L, 'a  string'), (5L, 'a  string'), (6L, 'a  string'), (7L, 'a  string'), (8L, 'a  string'), (9L, 'a  string'), (10L, 'a  string'), (11L, 'a  string'), (12L, 'a  string'), (13L, 'a  string'), (14L, 'a  string'), (15L, 'a  string'), (16L, 'a  string'), (17L, 'a  string'), (18L, 'a  string'), (19L, 'a  string'), (65L, 'a  string')]]
+===file:sqls_util/select/expression.sql, id:9, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME="another string"]===
+dble:[[(3L, 3.0, 'another string', 'test003')]]
+===file:sqls_util/select/expression.sql, id:10, sql:[select id,"another string" from test1]===
+dble:[[(1L, 'another string'), (2L, 'another string'), (3L, 'another string'), (4L, 'another string'), (5L, 'another string'), (6L, 'another string'), (7L, 'another string'), (8L, 'another string'), (9L, 'another string'), (10L, 'another string'), (11L, 'another string'), (12L, 'another string'), (13L, 'another string'), (14L, 'another string'), (15L, 'another string'), (16L, 'another string'), (17L, 'another string'), (18L, 'another string'), (19L, 'another string'), (65L, 'another string')]]
+===file:sqls_util/select/expression.sql, id:11, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a' ' ' 'string']===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
+===file:sqls_util/select/expression.sql, id:12, sql:[select id,'a' ' ' 'string' from test1]===
+dble:[[(1L, 'a string'), (2L, 'a string'), (3L, 'a string'), (4L, 'a string'), (5L, 'a string'), (6L, 'a string'), (7L, 'a string'), (8L, 'a string'), (9L, 'a string'), (10L, 'a string'), (11L, 'a string'), (12L, 'a string'), (13L, 'a string'), (14L, 'a string'), (15L, 'a string'), (16L, 'a string'), (17L, 'a string'), (18L, 'a string'), (19L, 'a string'), (65L, 'a string')]]
+===file:sqls_util/select/expression.sql, id:13, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_utf8'中']===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:14, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,_utf8'中' from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', '?'), (2L, 2.0, 'a\nstring', 'test002', '?'), (3L, 3.0, 'another string', 'test003', '?'), (4L, 4.0, '\xe4\xb8\xad', 'test004', '?'), (5L, 5.0, "a'string'", 'test005', '?'), (6L, 6.0, 'a""string""', 'test006', '?'), (7L, 7.0, 'a\x08string', 'test007', '?'), (8L, 8.0, 'a\nstring', 'test008', '?'), (9L, 9.0, 'a\rstring', 'test009', '?'), (10L, 10.0, 'a\tstring', 'test010', '?'), (11L, 11.0, 'azstring', 'test011', '?'), (12L, 12.0, 'a\\string', 'test012', '?'), (13L, 13.0, 'a\\%string', 'test013', '?'), (14L, 14.0, 'a\\_string', 'test014', '?'), (15L, 15.0, 'MySQL', 'test015', '?'), (16L, 16.0, 'binary', 'test016', '?'), (17L, 1.23457e+22, '17', '17', '?'), (18L, 18.0, 'A', 'test018', '?'), (19L, 19.0, '', 'test019', '?'), (65L, 16.0, 'binary', 'test016', '?')]]
+===file:sqls_util/select/expression.sql, id:15, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_utf8'中'COLLATE utf8_danish_ci]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:16, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,_utf8'中'COLLATE utf8_danish_ci from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', '?'), (2L, 2.0, 'a\nstring', 'test002', '?'), (3L, 3.0, 'another string', 'test003', '?'), (4L, 4.0, '\xe4\xb8\xad', 'test004', '?'), (5L, 5.0, "a'string'", 'test005', '?'), (6L, 6.0, 'a""string""', 'test006', '?'), (7L, 7.0, 'a\x08string', 'test007', '?'), (8L, 8.0, 'a\nstring', 'test008', '?'), (9L, 9.0, 'a\rstring', 'test009', '?'), (10L, 10.0, 'a\tstring', 'test010', '?'), (11L, 11.0, 'azstring', 'test011', '?'), (12L, 12.0, 'a\\string', 'test012', '?'), (13L, 13.0, 'a\\%string', 'test013', '?'), (14L, 14.0, 'a\\_string', 'test014', '?'), (15L, 15.0, 'MySQL', 'test015', '?'), (16L, 16.0, 'binary', 'test016', '?'), (17L, 1.23457e+22, '17', '17', '?'), (18L, 18.0, 'A', 'test018', '?'), (19L, 19.0, '', 'test019', '?'), (65L, 16.0, 'binary', 'test016', '?')]]
+===file:sqls_util/select/expression.sql, id:17, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\'string\'']===
+dble:[[(5L, 5.0, "a'string'", 'test005')]]
+===file:sqls_util/select/expression.sql, id:18, sql:[select id,'\'string\'',R_NAME from test1]===
+dble:[[(1L, "'string'", 'a string'), (2L, "'string'", 'a\nstring'), (3L, "'string'", 'another string'), (4L, "'string'", '\xe4\xb8\xad'), (5L, "'string'", "a'string'"), (6L, "'string'", 'a""string""'), (7L, "'string'", 'a\x08string'), (8L, "'string'", 'a\nstring'), (9L, "'string'", 'a\rstring'), (10L, "'string'", 'a\tstring'), (11L, "'string'", 'azstring'), (12L, "'string'", 'a\\string'), (13L, "'string'", 'a\\%string'), (14L, "'string'", 'a\\_string'), (15L, "'string'", 'MySQL'), (16L, "'string'", 'binary'), (17L, "'string'", '17'), (18L, "'string'", 'A'), (19L, "'string'", ''), (65L, "'string'", 'binary')]]
+===file:sqls_util/select/expression.sql, id:19, sql:[select * from test1 where R_NAME='a\"string\"']===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:20, sql:[select id,'\"string\"',R_NAME from test1]===
+dble:[[(1L, '"string"', 'a string'), (2L, '"string"', 'a\nstring'), (3L, '"string"', 'another string'), (4L, '"string"', '\xe4\xb8\xad'), (5L, '"string"', "a'string'"), (6L, '"string"', 'a""string""'), (7L, '"string"', 'a\x08string'), (8L, '"string"', 'a\nstring'), (9L, '"string"', 'a\rstring'), (10L, '"string"', 'a\tstring'), (11L, '"string"', 'azstring'), (12L, '"string"', 'a\\string'), (13L, '"string"', 'a\\%string'), (14L, '"string"', 'a\\_string'), (15L, '"string"', 'MySQL'), (16L, '"string"', 'binary'), (17L, '"string"', '17'), (18L, '"string"', 'A'), (19L, '"string"', ''), (65L, '"string"', 'binary')]]
+===file:sqls_util/select/expression.sql, id:21, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\bstring']===
+dble:[[(7L, 7.0, 'a\x08string', 'test007')]]
+===file:sqls_util/select/expression.sql, id:22, sql:[select id,'\b',R_NAME from test1]===
+dble:[[(1L, '\x08', 'a string'), (2L, '\x08', 'a\nstring'), (3L, '\x08', 'another string'), (4L, '\x08', '\xe4\xb8\xad'), (5L, '\x08', "a'string'"), (6L, '\x08', 'a""string""'), (7L, '\x08', 'a\x08string'), (8L, '\x08', 'a\nstring'), (9L, '\x08', 'a\rstring'), (10L, '\x08', 'a\tstring'), (11L, '\x08', 'azstring'), (12L, '\x08', 'a\\string'), (13L, '\x08', 'a\\%string'), (14L, '\x08', 'a\\_string'), (15L, '\x08', 'MySQL'), (16L, '\x08', 'binary'), (17L, '\x08', '17'), (18L, '\x08', 'A'), (19L, '\x08', ''), (65L, '\x08', 'binary')]]
+===file:sqls_util/select/expression.sql, id:23, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\nstring']===
+dble:[[(2L, 2.0, 'a\nstring', 'test002'), (8L, 8.0, 'a\nstring', 'test008')]]
+===file:sqls_util/select/expression.sql, id:24, sql:[select id,'\n',R_NAME from test1]===
+dble:[[(1L, '\n', 'a string'), (2L, '\n', 'a\nstring'), (3L, '\n', 'another string'), (4L, '\n', '\xe4\xb8\xad'), (5L, '\n', "a'string'"), (6L, '\n', 'a""string""'), (7L, '\n', 'a\x08string'), (8L, '\n', 'a\nstring'), (9L, '\n', 'a\rstring'), (10L, '\n', 'a\tstring'), (11L, '\n', 'azstring'), (12L, '\n', 'a\\string'), (13L, '\n', 'a\\%string'), (14L, '\n', 'a\\_string'), (15L, '\n', 'MySQL'), (16L, '\n', 'binary'), (17L, '\n', '17'), (18L, '\n', 'A'), (19L, '\n', ''), (65L, '\n', 'binary')]]
+===file:sqls_util/select/expression.sql, id:25, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\rstring']===
+dble:[[(9L, 9.0, 'a\rstring', 'test009')]]
+===file:sqls_util/select/expression.sql, id:26, sql:[select id,'\r',R_NAME from test1]===
+dble:[[(1L, '\r', 'a string'), (2L, '\r', 'a\nstring'), (3L, '\r', 'another string'), (4L, '\r', '\xe4\xb8\xad'), (5L, '\r', "a'string'"), (6L, '\r', 'a""string""'), (7L, '\r', 'a\x08string'), (8L, '\r', 'a\nstring'), (9L, '\r', 'a\rstring'), (10L, '\r', 'a\tstring'), (11L, '\r', 'azstring'), (12L, '\r', 'a\\string'), (13L, '\r', 'a\\%string'), (14L, '\r', 'a\\_string'), (15L, '\r', 'MySQL'), (16L, '\r', 'binary'), (17L, '\r', '17'), (18L, '\r', 'A'), (19L, '\r', ''), (65L, '\r', 'binary')]]
+===file:sqls_util/select/expression.sql, id:27, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\tstring']===
+dble:[[(10L, 10.0, 'a\tstring', 'test010')]]
+===file:sqls_util/select/expression.sql, id:28, sql:[select id,'\t',R_NAME from test1]===
+dble:[[(1L, '\t', 'a string'), (2L, '\t', 'a\nstring'), (3L, '\t', 'another string'), (4L, '\t', '\xe4\xb8\xad'), (5L, '\t', "a'string'"), (6L, '\t', 'a""string""'), (7L, '\t', 'a\x08string'), (8L, '\t', 'a\nstring'), (9L, '\t', 'a\rstring'), (10L, '\t', 'a\tstring'), (11L, '\t', 'azstring'), (12L, '\t', 'a\\string'), (13L, '\t', 'a\\%string'), (14L, '\t', 'a\\_string'), (15L, '\t', 'MySQL'), (16L, '\t', 'binary'), (17L, '\t', '17'), (18L, '\t', 'A'), (19L, '\t', ''), (65L, '\t', 'binary')]]
+===file:sqls_util/select/expression.sql, id:29, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\zstring']===
+dble:[[(11L, 11.0, 'azstring', 'test011')]]
+===file:sqls_util/select/expression.sql, id:30, sql:[select id,'\z',R_NAME from test1]===
+dble:[[(1L, 'z', 'a string'), (2L, 'z', 'a\nstring'), (3L, 'z', 'another string'), (4L, 'z', '\xe4\xb8\xad'), (5L, 'z', "a'string'"), (6L, 'z', 'a""string""'), (7L, 'z', 'a\x08string'), (8L, 'z', 'a\nstring'), (9L, 'z', 'a\rstring'), (10L, 'z', 'a\tstring'), (11L, 'z', 'azstring'), (12L, 'z', 'a\\string'), (13L, 'z', 'a\\%string'), (14L, 'z', 'a\\_string'), (15L, 'z', 'MySQL'), (16L, 'z', 'binary'), (17L, 'z', '17'), (18L, 'z', 'A'), (19L, 'z', ''), (65L, 'z', 'binary')]]
+===file:sqls_util/select/expression.sql, id:31, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\\string']===
+dble:[[(12L, 12.0, 'a\\string', 'test012')]]
+===file:sqls_util/select/expression.sql, id:32, sql:[select id,'\\',R_NAME from test1]===
+dble:[[(1L, '\\', 'a string'), (2L, '\\', 'a\nstring'), (3L, '\\', 'another string'), (4L, '\\', '\xe4\xb8\xad'), (5L, '\\', "a'string'"), (6L, '\\', 'a""string""'), (7L, '\\', 'a\x08string'), (8L, '\\', 'a\nstring'), (9L, '\\', 'a\rstring'), (10L, '\\', 'a\tstring'), (11L, '\\', 'azstring'), (12L, '\\', 'a\\string'), (13L, '\\', 'a\\%string'), (14L, '\\', 'a\\_string'), (15L, '\\', 'MySQL'), (16L, '\\', 'binary'), (17L, '\\', '17'), (18L, '\\', 'A'), (19L, '\\', ''), (65L, '\\', 'binary')]]
+===file:sqls_util/select/expression.sql, id:33, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\%string']===
+dble:[[(13L, 13.0, 'a\\%string', 'test013')]]
+===file:sqls_util/select/expression.sql, id:34, sql:[select id,'\%',R_NAME from test1]===
+dble:[[(1L, '\\%', 'a string'), (2L, '\\%', 'a\nstring'), (3L, '\\%', 'another string'), (4L, '\\%', '\xe4\xb8\xad'), (5L, '\\%', "a'string'"), (6L, '\\%', 'a""string""'), (7L, '\\%', 'a\x08string'), (8L, '\\%', 'a\nstring'), (9L, '\\%', 'a\rstring'), (10L, '\\%', 'a\tstring'), (11L, '\\%', 'azstring'), (12L, '\\%', 'a\\string'), (13L, '\\%', 'a\\%string'), (14L, '\\%', 'a\\_string'), (15L, '\\%', 'MySQL'), (16L, '\\%', 'binary'), (17L, '\\%', '17'), (18L, '\\%', 'A'), (19L, '\\%', ''), (65L, '\\%', 'binary')]]
+===file:sqls_util/select/expression.sql, id:35, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME='a\_string']===
+dble:[[(14L, 14.0, 'a\\_string', 'test014')]]
+===file:sqls_util/select/expression.sql, id:36, sql:[select id,'\_',R_NAME from test1]===
+dble:[[(1L, '\\_', 'a string'), (2L, '\\_', 'a\nstring'), (3L, '\\_', 'another string'), (4L, '\\_', '\xe4\xb8\xad'), (5L, '\\_', "a'string'"), (6L, '\\_', 'a""string""'), (7L, '\\_', 'a\x08string'), (8L, '\\_', 'a\nstring'), (9L, '\\_', 'a\rstring'), (10L, '\\_', 'a\tstring'), (11L, '\\_', 'azstring'), (12L, '\\_', 'a\\string'), (13L, '\\_', 'a\\%string'), (14L, '\\_', 'a\\_string'), (15L, '\\_', 'MySQL'), (16L, '\\_', 'binary'), (17L, '\\_', '17'), (18L, '\\_', 'A'), (19L, '\\_', ''), (65L, '\\_', 'binary')]]
+===file:sqls_util/select/expression.sql, id:37, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=(select X'4D7953514C')]===
+dble:[[(15L, 15.0, 'MySQL', 'test015')]]
+===file:sqls_util/select/expression.sql, id:38, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,X'4D7953514C' from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', 'MySQL'), (2L, 2.0, 'a\nstring', 'test002', 'MySQL'), (3L, 3.0, 'another string', 'test003', 'MySQL'), (4L, 4.0, '\xe4\xb8\xad', 'test004', 'MySQL'), (5L, 5.0, "a'string'", 'test005', 'MySQL'), (6L, 6.0, 'a""string""', 'test006', 'MySQL'), (7L, 7.0, 'a\x08string', 'test007', 'MySQL'), (8L, 8.0, 'a\nstring', 'test008', 'MySQL'), (9L, 9.0, 'a\rstring', 'test009', 'MySQL'), (10L, 10.0, 'a\tstring', 'test010', 'MySQL'), (11L, 11.0, 'azstring', 'test011', 'MySQL'), (12L, 12.0, 'a\\string', 'test012', 'MySQL'), (13L, 13.0, 'a\\%string', 'test013', 'MySQL'), (14L, 14.0, 'a\\_string', 'test014', 'MySQL'), (15L, 15.0, 'MySQL', 'test015', 'MySQL'), (16L, 16.0, 'binary', 'test016', 'MySQL'), (17L, 1.23457e+22, '17', '17', 'MySQL'), (18L, 18.0, 'A', 'test018', 'MySQL'), (19L, 19.0, '', 'test019', 'MySQL'), (65L, 16.0, 'binary', 'test016', 'MySQL')]]
+===file:sqls_util/select/expression.sql, id:39, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=(select CHARSET(X'4D7953514C'))]===
+dble:[[(16L, 16.0, 'binary', 'test016'), (65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:40, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id=(select X'41'+0)]===
+dble:[[(65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:41, sql:[select id,R_REGIONKEY+0 from test1]===
+dble:[[(1L, 1.0), (2L, 2.0), (3L, 3.0), (4L, 4.0), (5L, 5.0), (6L, 6.0), (7L, 7.0), (8L, 8.0), (9L, 9.0), (10L, 10.0), (11L, 11.0), (12L, 12.0), (13L, 13.0), (14L, 14.0), (15L, 15.0), (16L, 16.0), (17L, 1.2345679377913908e+22), (18L, 18.0), (19L, 19.0), (65L, 16.0)]]
+===file:sqls_util/select/expression.sql, id:42, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=(SELECT CHARSET(b''))]===
+dble:[[(16L, 16.0, 'binary', 'test016'), (65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:43, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,b'' from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', ''), (2L, 2.0, 'a\nstring', 'test002', ''), (3L, 3.0, 'another string', 'test003', ''), (4L, 4.0, '\xe4\xb8\xad', 'test004', ''), (5L, 5.0, "a'string'", 'test005', ''), (6L, 6.0, 'a""string""', 'test006', ''), (7L, 7.0, 'a\x08string', 'test007', ''), (8L, 8.0, 'a\nstring', 'test008', ''), (9L, 9.0, 'a\rstring', 'test009', ''), (10L, 10.0, 'a\tstring', 'test010', ''), (11L, 11.0, 'azstring', 'test011', ''), (12L, 12.0, 'a\\string', 'test012', ''), (13L, 13.0, 'a\\%string', 'test013', ''), (14L, 14.0, 'a\\_string', 'test014', ''), (15L, 15.0, 'MySQL', 'test015', ''), (16L, 16.0, 'binary', 'test016', ''), (17L, 1.23457e+22, '17', '17', ''), (18L, 18.0, 'A', 'test018', ''), (19L, 19.0, '', 'test019', ''), (65L, 16.0, 'binary', 'test016', '')]]
+===file:sqls_util/select/expression.sql, id:48, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id=(select true)]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
+===file:sqls_util/select/expression.sql, id:49, sql:[select true from test1]===
+dble:[[(1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,)]]
+===file:sqls_util/select/expression.sql, id:50, sql:[select TRUE from test1]===
+dble:[[(1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,)]]
+===file:sqls_util/select/expression.sql, id:51, sql:[select false from test1]===
+dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,)]]
+===file:sqls_util/select/expression.sql, id:52, sql:[select FALSE from test1]===
+dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,)]]
+===file:sqls_util/select/expression.sql, id:53, sql:[select R_NAME from test1]===
+dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/select/expression.sql, id:54, sql:[select test1.R_NAME from test1]===
+dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/select/expression.sql, id:55, sql:[select schema1.test1.R_NAME from test1]===
+dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/select/expression.sql, id:56, sql:[select R_NAME as a from test1]===
+dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/select/expression.sql, id:57, sql:[select R_NAME a from test1]===
+dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/select/expression.sql, id:58, sql:[SELECT (@aa:=id) AS a, (@aa+3) AS b FROM test1]===
+dble:[[(1L, 4.0), (2L, 5.0), (3L, 6.0), (4L, 7.0), (5L, 8.0), (6L, 9.0), (7L, 10.0), (8L, 11.0), (9L, 12.0), (10L, 13.0), (11L, 14.0), (12L, 15.0), (13L, 16.0), (14L, 17.0), (15L, 18.0), (16L, 19.0), (17L, 20.0), (18L, 21.0), (19L, 22.0), (65L, 68.0)]]
+===file:sqls_util/select/expression.sql, id:59, sql:[SELECT @@global.sql_mode]===
+dble:[[('STRICT_TRANS_TABLES,NO_ENGINE_SUBSTITUTION',)]]
+===file:sqls_util/select/expression.sql, id:60, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id=1||id=3]===
+dble:[[(1L, 1.0, 'a string', 'test001'), (3L, 3.0, 'another string', 'test003')]]
+===file:sqls_util/select/expression.sql, id:61, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where +id=1]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
+===file:sqls_util/select/expression.sql, id:62, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where ~id=1]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:63, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where !id=1]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:64, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where ~(id=1)]===
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:65, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where !(id=10)]===
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:66, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where binary id=1]===
+dble:[[(1L, 1.0, 'a string', 'test001')]]
+===file:sqls_util/select/expression.sql, id:67, sql:[select a.id,a.R_REGIONKEY,a.R_NAME,a.R_COMMENT from (select * from test1)a]===
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:68, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where exists(select * from test1 where id>1)]===
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
+===file:sqls_util/select/expression.sql, id:69, sql:[select R_name name from test1]===
+dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/select/expression.sql, id:70, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
+dble:[[(datetime.date(2019, 1, 2),)]]
+===file:sqls_util/select/expression.sql, id:71, sql:[select * from test1 where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:123, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' + interval 30 day)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:124, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' + interval 30 day) from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', None), (2L, 2.0, 'a\nstring', 'test002', None), (3L, 3.0, 'another string', 'test003', None), (4L, 4.0, '\xe4\xb8\xad', 'test004', None), (5L, 5.0, "a'string'", 'test005', None), (6L, 6.0, 'a""string""', 'test006', None), (7L, 7.0, 'a\x08string', 'test007', None), (8L, 8.0, 'a\nstring', 'test008', None), (9L, 9.0, 'a\rstring', 'test009', None), (10L, 10.0, 'a\tstring', 'test010', None), (11L, 11.0, 'azstring', 'test011', None), (12L, 12.0, 'a\\string', 'test012', None), (13L, 13.0, 'a\\%string', 'test013', None), (14L, 14.0, 'a\\_string', 'test014', None), (15L, 15.0, 'MySQL', 'test015', None), (16L, 16.0, 'binary', 'test016', None), (17L, 1.23457e+22, '17', '17', None), (18L, 18.0, 'A', 'test018', None), (19L, 19.0, '', 'test019', None), (65L, 16.0, 'binary', 'test016', None)]]
+===file:sqls_util/select/expression.sql, id:125, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 + interval 1 year)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:126, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 + interval 1 year) from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', None), (2L, 2.0, 'a\nstring', 'test002', None), (3L, 3.0, 'another string', 'test003', None), (4L, 4.0, '\xe4\xb8\xad', 'test004', None), (5L, 5.0, "a'string'", 'test005', None), (6L, 6.0, 'a""string""', 'test006', None), (7L, 7.0, 'a\x08string', 'test007', None), (8L, 8.0, 'a\nstring', 'test008', None), (9L, 9.0, 'a\rstring', 'test009', None), (10L, 10.0, 'a\tstring', 'test010', None), (11L, 11.0, 'azstring', 'test011', None), (12L, 12.0, 'a\\string', 'test012', None), (13L, 13.0, 'a\\%string', 'test013', None), (14L, 14.0, 'a\\_string', 'test014', None), (15L, 15.0, 'MySQL', 'test015', None), (16L, 16.0, 'binary', 'test016', None), (17L, 1.23457e+22, '17', '17', None), (18L, 18.0, 'A', 'test018', None), (19L, 19.0, '', 'test019', None), (65L, 16.0, 'binary', 'test016', None)]]
+===file:sqls_util/select/expression.sql, id:127, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' - interval 30 day)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:128, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' - interval 30 day) from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', None), (2L, 2.0, 'a\nstring', 'test002', None), (3L, 3.0, 'another string', 'test003', None), (4L, 4.0, '\xe4\xb8\xad', 'test004', None), (5L, 5.0, "a'string'", 'test005', None), (6L, 6.0, 'a""string""', 'test006', None), (7L, 7.0, 'a\x08string', 'test007', None), (8L, 8.0, 'a\nstring', 'test008', None), (9L, 9.0, 'a\rstring', 'test009', None), (10L, 10.0, 'a\tstring', 'test010', None), (11L, 11.0, 'azstring', 'test011', None), (12L, 12.0, 'a\\string', 'test012', None), (13L, 13.0, 'a\\%string', 'test013', None), (14L, 14.0, 'a\\_string', 'test014', None), (15L, 15.0, 'MySQL', 'test015', None), (16L, 16.0, 'binary', 'test016', None), (17L, 1.23457e+22, '17', '17', None), (18L, 18.0, 'A', 'test018', None), (19L, 19.0, '', 'test019', None), (65L, 16.0, 'binary', 'test016', None)]]
+===file:sqls_util/select/expression.sql, id:129, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 - interval 1 year)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:130, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 - interval 1 year) from test1]===
+dble:[[(1L, 1.0, 'a string', 'test001', None), (2L, 2.0, 'a\nstring', 'test002', None), (3L, 3.0, 'another string', 'test003', None), (4L, 4.0, '\xe4\xb8\xad', 'test004', None), (5L, 5.0, "a'string'", 'test005', None), (6L, 6.0, 'a""string""', 'test006', None), (7L, 7.0, 'a\x08string', 'test007', None), (8L, 8.0, 'a\nstring', 'test008', None), (9L, 9.0, 'a\rstring', 'test009', None), (10L, 10.0, 'a\tstring', 'test010', None), (11L, 11.0, 'azstring', 'test011', None), (12L, 12.0, 'a\\string', 'test012', None), (13L, 13.0, 'a\\%string', 'test013', None), (14L, 14.0, 'a\\_string', 'test014', None), (15L, 15.0, 'MySQL', 'test015', None), (16L, 16.0, 'binary', 'test016', None), (17L, 1.23457e+22, '17', '17', None), (18L, 18.0, 'A', 'test018', None), (19L, 19.0, '', 'test019', None), (65L, 16.0, 'binary', 'test016', None)]]
+===file:sqls_util/select/expression.sql, id:134, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:135, sql:[create table test1 (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:136, sql:[insert into test1 (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:137, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'1000001' not in (select R_NAME from test1 where id =1)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:138, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'1000001'  in (select R_NAME from test1 where id =18)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:139, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where 0b01  in (select R_NAME from test1 where id =18)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:140, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'01' not in (1,'string')]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:141, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'01' not in (10,'string')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:142, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where 0b01 in (1,'string')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:143, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where 0b01 in (10,'string')]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:144, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where HEX(R_bit) not between 0b11+0 and (select HEX(R_bit) from test1 where HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:145, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test1 where HEX(R_bit) not in (1,2,3))]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:146, sql:[select HEX(R_bit) not like (select 1) from test1]===
+dble:[[(0L,), (1L,), (1L,), (1L,)]]
+===file:sqls_util/select/expression.sql, id:147, sql:[select HEX(R_bit) like (select 1) from test1]===
+dble:[[(0L,), (0L,), (0L,), (1L,)]]
+===file:sqls_util/select/expression.sql, id:148, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where HEX(R_bit) like (select '%A%') escape (select '%')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:149, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where HEX(R_bit) not like (select '%A%') escape (select '%')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:150, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where HEX(R_bit)  not regexp '^A']===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:151, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where HEX(R_bit)  regexp '^A']===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:155, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true is not null]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:156, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false is null]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:157, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true <=> (HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:158, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true = (HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:159, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true >= (HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:160, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test1 where HEX(R_bit) not in (1,2,3)))]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:161, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true <=(select HEX(R_bit) not like (select 2) from test1 limit 1)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:162, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false <(select HEX(R_bit) like (select 1) a from test1 order by a limit 1)]===
+dble:[()]
+===file:sqls_util/select/expression.sql, id:163, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false <> (select HEX(R_bit) from test1 where HEX(R_bit)  not regexp '^A' limit 1 )]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:164, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true != (select HEX(R_bit) from test1 where HEX(R_bit) regexp '^A' limit 1 )]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:165, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true is not true]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:166, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where !(true is not true)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:167, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false is false]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:168, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where !(false is false)]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:169, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true is unknown]===
+dble:[[]]
+===file:sqls_util/select/expression.sql, id:170, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where !(true is unknown)]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:174, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where (HEX(R_bit) like (select 1))or(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:175, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where (HEX(R_bit) like (select 1))||(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:176, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where (HEX(R_bit) like (select 1))XOR(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:177, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where (HEX(R_bit) not like (select 1))and(HEX(R_bit) regexp '^A')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:178, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where (HEX(R_bit) not like (select 1))&&(HEX(R_bit) regexp '^A')]===
+dble:[[(4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:179, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where not(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:180, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where !(HEX(R_bit) regexp '^A')]===
+dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001')]]
+===file:sqls_util/select/expression.sql, id:184, sql:[drop table if exists test1]===
+dble:[[]]
