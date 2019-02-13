@@ -1,0 +1,120 @@
+===file:sqls_util/syntax/sys_function_util.sql, id:3, sql:[drop table if exists test1;]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:4, sql:[CREATE TABLE test1 (i INT);]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:5, sql:[INSERT INTO test1 VALUES(1),(2),(3);]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:6, sql:[SELECT i, RAND() FROM test1 /*allow_diff*/]===
+dble:[[(1L, 0.618428493494567), (2L, 0.3784896371685803), (3L, 0.037162736092845663)]]
+mysql:[[(1L, 0.036666538600499315), (2L, 0.9525926224445855), (3L, 0.6529635271550748)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:7, sql:[SELECT i, RAND(3) FROM test1]===
+dble:[[(1L, 0.9057697559760601), (2L, 0.37307905813034536), (3L, 0.14808605345719125)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:9, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:10, sql:[create table test1(a json, b int)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:11, sql:[insert into test1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:13, sql:[SELECT a, JSON_EXTRACT(a, "$.id"), b FROM test1 WHERE JSON_EXTRACT(a, "$.id") > 1 ORDER BY JSON_EXTRACT(a, "$.name")]===
+dble:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
+===file:sqls_util/syntax/sys_function_util.sql, id:18, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:19, sql:[create table test1 (ID int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:20, sql:[insert into test1 (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(3,3,'Northern','test003'),(2,2,'Western','test002'),(4,4,'Southern','test004')]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:22, sql:[SELECT ROW_COUNT()/*allow_diff*/]===
+dble:[[(0L,)]]
+mysql:[[(0L,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:24, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:25, sql:[CREATE TABLE `test1` ( `c` json DEFAULT NULL, `g` int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:26, sql:[insert into test1 values ('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:29, sql:[ALTER TABLE test1 ADD COLUMN n INT;]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:30, sql:[UPDATE test1 SET n=1 WHERE c->"$.id" = "4"]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:32, sql:[DELETE FROM test1 WHERE c->"$.id" = "4"]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:35, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:36, sql:[CREATE TABLE test1 (a JSON, b INT)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:37, sql:[INSERT INTO test1 VALUES ("[3,10,5,17,44]", 33), ("[3,10,5,17,[22,44,66]]", 0)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:39, sql:[SELECT a,b FROM test1 WHERE a->"$[0]" = 3]===
+dble:[[('[3, 10, 5, 17, 44]', 33L), ('[3, 10, 5, 17, [22, 44, 66]]', 0L)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:40, sql:[SELECT a,b FROM test1 WHERE a->"$[4][1]" IS NOT NULL]===
+dble:[[('[3, 10, 5, 17, [22, 44, 66]]', 0L)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:42, sql:[SELECT JSON_EXTRACT(a, "$[4][1]") FROM test1]===
+dble:[[(None,), ('44',)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:43, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:46, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:47, sql:[create table test1(a json, b int default 0)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:48, sql:[insert into test1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Bearney"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:49, sql:[select a, max(b) from test1 group by(b)]===
+dble:[[('{"id": "2", "name": "Wilma"}', 2L), ('{"id": "3", "name": "Barney"}', 3L)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:50, sql:[select any_value(a), max(b) from test1 group by(b)]===
+dble:[[('{"id": "2", "name": "Wilma"}', 2L), ('{"id": "3", "name": "Barney"}', 3L)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:51, sql:[UPDATE test1 SET b = DEFAULT(b)+1 WHERE b < 100]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:52, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:54, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:55, sql:[create table test1(a int, b int, c int)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:56, sql:[INSERT INTO test1 (a,b,c) VALUES (1,2,3),(4,5,6) ON DUPLICATE KEY UPDATE c=VALUES(a)+VALUES(b)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:58, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:59, sql:[create table test1 (id int, test_score int)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:60, sql:[insert into test1 values(1,1),(2,2),(3,1),(4,8),(5,2)]===
+dble:[[]]
+===file:sqls_util/syntax/sys_function_util.sql, id:61, sql:[SELECT id, AVG(test_score) FROM test1 GROUP BY id]===
+dble:[[(1L, Decimal('1.0000')), (2L, Decimal('2.0000')), (3L, Decimal('1.0000')), (4L, Decimal('8.0000')), (5L, Decimal('2.0000'))]]
+===file:sqls_util/syntax/sys_function_util.sql, id:62, sql:[SELECT id, AVG(distinct test_score) FROM test1 GROUP BY id]===
+dble:[[(1L, Decimal('1.0000')), (2L, Decimal('2.0000')), (3L, Decimal('1.0000')), (4L, Decimal('8.0000')), (5L, Decimal('2.0000'))]]
+===file:sqls_util/syntax/sys_function_util.sql, id:63, sql:[select count(distinct test_score) from test1]===
+dble:[[(3L,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:64, sql:[select count(distinct id, test_score) from test1]===
+dble:[[(5L,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:65, sql:[select id, group_concat(test_score) from test1 group by id]===
+dble:[[(1L, '1'), (2L, '2'), (3L, '1'), (4L, '8'), (5L, '2')]]
+===file:sqls_util/syntax/sys_function_util.sql, id:67, sql:[select bit_and(test_score) from test1 group by id]===
+dble:[[(1L,), (1L,), (2L,), (2L,), (8L,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:68, sql:[select bit_or(test_score) from test1 group by id]===
+dble:[[(1L,), (1L,), (2L,), (2L,), (8L,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:69, sql:[select bit_xor(test_score) from test1 group by id]===
+dble:[[(1L,), (1L,), (2L,), (2L,), (8L,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:70, sql:[select min(test_score), max(test_score) from test1]===
+dble:[[(1L, 8L)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:71, sql:[select std(test_score) from test1]===
+dble:[[(2.6381811916545836,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:72, sql:[select stddev(test_score) from test1]===
+dble:[[(2.6381811916545836,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:73, sql:[select stddev_pop(test_score) from test1]===
+dble:[[(2.6381811916545836,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:74, sql:[select stddev_samp(test_score) from test1]===
+dble:[[(2.949576240750525,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:75, sql:[select sum(test_score) from test1]===
+dble:[[(Decimal('14'),)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:76, sql:[select sum(distinct test_score) from test1]===
+dble:[[(Decimal('11'),)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:77, sql:[select var_pop(test_score) from test1]===
+dble:[[(6.959999999999999,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:78, sql:[select var_samp(test_score) from test1]===
+dble:[[(8.7,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:79, sql:[select variance(test_score) from test1]===
+dble:[[(6.959999999999999,)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:80, sql:[SELECT id, FLOOR(test_score/100) AS val from test1 group by val, id]===
+dble:[[(1L, 0L), (2L, 0L), (3L, 0L), (4L, 0L), (5L, 0L)]]
+===file:sqls_util/syntax/sys_function_util.sql, id:84, sql:[drop table if exists test1]===
+dble:[[]]
