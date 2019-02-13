@@ -265,8 +265,8 @@ select avg(R_REGIONKEY) from test1
 drop table if exists test1
 create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT date)
 insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')
-insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')
-insert into test1 values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')
+insert into test1 values (2,1, 'a','1983-01-02')
+insert into test1 values(3,3,'','1983-01-01'),(4,4,'a1','1967-09-12'),(5,3,'b1','1776-04-30'),(6,4,'b','1963-12-09')
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME
 select R_NAME,max(R_REGIONKEY) from test1 group by R_name
