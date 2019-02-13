@@ -1,0 +1,3 @@
+===file:sqls_util/syntax/create_table_definition.sql, id:586, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=FIXED]===
+mysql err:(1031, "Table storage engine for 'test1' doesn't have this option")
+dble err[06:49:08.099417] :(1031, "Table storage engine for 'test1' doesn't have this option")

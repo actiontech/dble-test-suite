@@ -1,0 +1,90 @@
+===file:sqls_util/syntax/data_types_1.sql, id:342, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:347, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:353, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:364, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:370, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:376, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:382, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:390, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:395, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:401, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:412, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:418, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:424, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:430, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:438, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:447, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:453, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:459, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(5,3) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(5,3) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:465, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:471, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:477, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:483, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:491, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:500, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:506, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:512, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(5,3) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(5,3) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:518, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:524, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:530, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+===file:sqls_util/syntax/data_types_1.sql, id:536, sql:[desc test1]===
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
+mysql:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
