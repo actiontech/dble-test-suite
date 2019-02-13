@@ -1,0 +1,278 @@
+===file:sqls_util/syntax/alter_table.sql, id:3, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:4, sql:[CREATE TABLE test1 (id int(11),R_REGIONKEY int(11),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:5, sql:[DROP TABLE IF EXISTS schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:6, sql:[CREATE TABLE schema2.test2 (id int(11),R_REGIONKEY int(11),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:36, sql:[ALTER TABLE test1 ADD KEY id_index USING BTREE (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:37, sql:[drop index id_index on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:38, sql:[ALTER TABLE test1 ADD KEY id_index USING HASH (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:39, sql:[drop index id_index on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:40, sql:[ALTER TABLE test1 ADD KEY id_index USING BTREE (id,R_COMMENT,R_NAME)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:41, sql:[drop index id_index on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:42, sql:[ALTER TABLE test1 ADD KEY id_index USING BTREE (id ASC,R_COMMENT(2) ASC,R_NAME(2) DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:43, sql:[drop index id_index on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:48, sql:[drop index idx on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:49, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING HASH]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:50, sql:[drop index idx on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:53, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) comment 'testing']===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:54, sql:[drop index idx on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:59, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:60, sql:[CREATE TABLE test1 (id int(11),R_REGIONKEY int(11),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:61, sql:[ALTER TABLE test1 ADD name CHAR(5)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:62, sql:[INSERT INTO test1 VALUES (1,1,'aaa','aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:64, sql:[ALTER TABLE test1 ADD COLUMN name2 CHAR(5)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:65, sql:[INSERT INTO test1 VALUES (2,1,'aaa','aaa','aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:67, sql:[ALTER TABLE test1 ADD COLUMN name3 CHAR(5) FIRST]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:68, sql:[INSERT INTO test1 VALUES ('aaa',3,1,'aaa','aaa','aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:70, sql:[ALTER TABLE test1 ADD COLUMN name4 CHAR(5) AFTER  R_REGIONKEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:71, sql:[INSERT INTO test1 VALUES ('aaa',4,1,'aaa','aaa','aaa','aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:73, sql:[ALTER TABLE test1 ADD COLUMN (name5 CHAR(5) ,name6 char(6))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:74, sql:[INSERT INTO test1 VALUES ('aaa',5,1,'aaa','aaa','aaa','aaa','aaa','aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:76, sql:[ALTER TABLE test1 ADD COLUMN (name7 enum('node1','node2','node3') DEFAULT 'node3',name8 varchar(6) NOT NULL)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:77, sql:[INSERT INTO test1 VALUES ('aaa',6,1,'aaa','aaa','aaa','aaa','aaa','aaa','aaa','node1','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:79, sql:[ALTER TABLE test1 DROP column name,DROP column name2,DROP column name3,DROP column name4,DROP column name5]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:80, sql:[INSERT INTO test1 VALUES (7,1,'aaa','aaa','aaa','node1','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:81, sql:[ALTER TABLE test1 DROP name6]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:82, sql:[INSERT INTO test1 VALUES (8,1,'aaa','aaa','node1','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:83, sql:[ALTER TABLE test1 DROP COLUMN name7]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:84, sql:[INSERT INTO test1 VALUES (9,1,'aaa','aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:85, sql:[ALTER TABLE test1 DROP COLUMN name8]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:86, sql:[INSERT INTO test1 VALUES (10,1,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:88, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'aaa', 'aaa'), (2L, 1L, 'aaa', 'aaa'), (3L, 1L, 'aaa', 'aaa'), (4L, 1L, 'aaa', 'aaa'), (5L, 1L, 'aaa', 'aaa'), (6L, 1L, 'aaa', 'aaa'), (7L, 1L, 'aaa', 'aaa'), (8L, 1L, 'aaa', 'aaa'), (9L, 1L, 'aaa', 'aaa'), (10L, 1L, 'aaa', 'aaa')]]
+===file:sqls_util/syntax/alter_table.sql, id:93, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:94, sql:[CREATE TABLE test1 (id int(11),R_REGIONKEY int(11),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:95, sql:[ALTER TABLE test1 ADD INDEX (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:96, sql:[SHOW INDEX FROM test1]===
+dble:[[('test1', 1L, 'id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/alter_table.sql, id:97, sql:[INSERT INTO test1 VALUES (1,1,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:98, sql:[ALTER TABLE test1 DROP INDEX id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:100, sql:[ALTER TABLE test1 ADD INDEX idx (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:101, sql:[INSERT INTO test1 VALUES (2,2,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:103, sql:[ALTER TABLE test1 DROP KEY idx]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:105, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:106, sql:[INSERT INTO test1 VALUES (3,3,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:108, sql:[ALTER TABLE test1 DROP KEY idx]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:110, sql:[ALTER TABLE test1 ADD INDEX idx (id ASC,R_COMMENT(2) ASC,R_NAME(2) DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:111, sql:[INSERT INTO test1 VALUES (4,4,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:113, sql:[ALTER TABLE test1 DROP KEY idx]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:115, sql:[ALTER TABLE test1 ADD KEY (id ASC,R_NAME DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:116, sql:[INSERT INTO test1 VALUES (5,5,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:119, sql:[ALTER TABLE test1 ADD KEY idx (id ASC,R_COMMENT(2) ASC,R_NAME(2) DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:120, sql:[INSERT INTO test1 VALUES (6,6,'aaa','aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:122, sql:[ALTER TABLE test1 DROP KEY idx]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:124, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'aaa', 'aaa'), (2L, 2L, 'aaa', 'aaa'), (3L, 3L, 'aaa', 'aaa'), (4L, 4L, 'aaa', 'aaa'), (5L, 5L, 'aaa', 'aaa'), (6L, 6L, 'aaa', 'aaa')]]
+===file:sqls_util/syntax/alter_table.sql, id:128, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:129, sql:[CREATE TABLE test1(id int(11),data int,Code char(3))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:130, sql:[ALTER TABLE test1 ADD PRIMARY KEY (code)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:131, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:133, sql:[ALTER TABLE test1 DROP PRIMARY KEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:134, sql:[ALTER TABLE test1 ADD PRIMARY KEY (id,data)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:135, sql:[INSERT INTO test1 VALUES (2,2,'bbb')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:137, sql:[ALTER TABLE test1 DROP PRIMARY KEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:138, sql:[ALTER TABLE test1 ADD PRIMARY KEY USING HASH (code)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:139, sql:[INSERT INTO test1 VALUES (4,4,'ddd')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:141, sql:[ALTER TABLE test1 DROP PRIMARY KEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:142, sql:[ALTER TABLE test1 ADD PRIMARY KEY USING BTREE (code)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:143, sql:[INSERT INTO test1 VALUES (5,5,'eee')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:145, sql:[ALTER TABLE test1 DROP PRIMARY KEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:146, sql:[ALTER TABLE test1 ADD CONSTRAINT pK_id PRIMARY KEY (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:147, sql:[INSERT INTO test1 VALUES (6,6,'fff')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:149, sql:[ALTER TABLE test1 DROP PRIMARY KEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:150, sql:[SELECT id,data,Code FROM test1]===
+dble:[[(1L, 1L, 'aaa'), (2L, 2L, 'bbb'), (4L, 4L, 'ddd'), (5L, 5L, 'eee'), (6L, 6L, 'fff')]]
+===file:sqls_util/syntax/alter_table.sql, id:162, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:163, sql:[CREATE TABLE test1(id int(11),data int,Code char(3))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:164, sql:[ALTER TABLE test1 ADD UNIQUE (code)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:165, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:167, sql:[ALTER TABLE test1 DROP KEY Code]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:168, sql:[ALTER TABLE test1 ADD UNIQUE up_id (id ASC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:169, sql:[INSERT INTO test1 VALUES (2,2,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:171, sql:[ALTER TABLE test1 DROP KEY up_id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:172, sql:[ALTER TABLE test1 ADD UNIQUE KEY (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:173, sql:[INSERT INTO test1 VALUES (3,3,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:175, sql:[ALTER TABLE test1 DROP KEY id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:176, sql:[ALTER TABLE test1 ADD UNIQUE KEY (id,data)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:177, sql:[INSERT INTO test1 VALUES (4,4,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:179, sql:[ALTER TABLE test1 DROP KEY id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:180, sql:[ALTER TABLE test1 ADD UNIQUE KEY (id ASC,data DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:181, sql:[INSERT INTO test1 VALUES (5,5,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:183, sql:[ALTER TABLE test1 DROP KEY id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:184, sql:[ALTER TABLE test1 ADD UNIQUE KEY uk_id (id ASC,data DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:185, sql:[INSERT INTO test1 VALUES (6,6,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:187, sql:[ALTER TABLE test1 DROP KEY uk_id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:188, sql:[ALTER TABLE test1 ADD UNIQUE INDEX (id)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:189, sql:[INSERT INTO test1 VALUES (7,7,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:191, sql:[ALTER TABLE test1 DROP INDEX id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:192, sql:[ALTER TABLE test1 ADD UNIQUE INDEX (id ASC,data DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:193, sql:[INSERT INTO test1 VALUES (8,8,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:195, sql:[ALTER TABLE test1 DROP INDEX id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:196, sql:[ALTER TABLE test1 ADD UNIQUE INDEX idxs (id asc,code DESC)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:197, sql:[INSERT INTO test1 VALUES (9,9,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:199, sql:[SELECT id,data,code FROM test1]===
+dble:[[(1L, 1L, 'aaa'), (2L, 2L, 'aaa'), (3L, 3L, 'aaa'), (4L, 4L, 'aaa'), (5L, 5L, 'aaa'), (6L, 6L, 'aaa'), (7L, 7L, 'aaa'), (8L, 8L, 'aaa'), (9L, 9L, 'aaa')]]
+===file:sqls_util/syntax/alter_table.sql, id:204, sql:[drop index idxs on test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:206, sql:[ALTER TABLE test1 ADD UNIQUE (id) COMMENT 'string']===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:207, sql:[ALTER TABLE test1 ADD UNIQUE KEY idxs USING HASH (id asc,code DESC) comment 'string']===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:219, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:220, sql:[CREATE TABLE test1 (id int(11),col1 varchar(11),col2 int(10),col3 varchar(50),col4 int(10),col5 varchar(50),col6 date,col7 double(12,6))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:221, sql:[ALTER TABLE test1 CHANGE col1 ID1 INTEGER  NOT NULL DEFAULT 10 COMMENT 'my column1']===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:222, sql:[INSERT INTO test1 VALUES (1,1,1,'aaa',1,'aaa','2017-5-5',12.7)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:224, sql:[ALTER TABLE test1 CHANGE COLUMN col7 ID2 INTEGER FIRST]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:225, sql:[INSERT INTO test1 VALUES (2,2,2,2,'aaa',2,'aaa','2017-5-5')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:227, sql:[ALTER TABLE test1 CHANGE col6 ID4 VARCHAR(10) AFTER id]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:228, sql:[INSERT INTO test1 VALUES (3,3,'aaa',3,3,'aaa',3,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:231, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:232, sql:[CREATE TABLE test1 (id int,data int)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:233, sql:[ALTER TABLE test1 CHANGE COLUMN data data VARCHAR(10)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:234, sql:[INSERT INTO test1 VALUES (3,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:240, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:241, sql:[CREATE TABLE test1 (id int(11),R_REGIONKEY int(11),R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:242, sql:[ALTER TABLE test1 MODIFY R_COMMENT BIGINT NOT NULL]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:243, sql:[INSERT INTO test1 VALUES (1,1,'aaa',1)]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:245, sql:[ALTER TABLE test1 MODIFY R_COMMENT BIGINT UNSIGNED DEFAULT 1 COMMENT 'my column' AFTER R_REGIONKEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:246, sql:[INSERT INTO test1 VALUES (2,2,2,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:248, sql:[ALTER TABLE test1 MODIFY R_REGIONKEY BIGINT UNSIGNED NOT NULL DEFAULT 10 COMMENT 'my column1' FIRST]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:249, sql:[INSERT INTO test1 VALUES (3,3,3,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:251, sql:[ALTER TABLE test1 MODIFY COLUMN R_COMMENT BIGINT UNSIGNED UNIQUE DEFAULT 1 COMMENT 'my column2' AFTER R_REGIONKEY]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:252, sql:[INSERT INTO test1 VALUES (4,4,4,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:255, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:256, sql:[create table test1(a int(4))]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:257, sql:[alter table test1 add 01a boolean]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:259, sql:[alter table test1 add `011` boolean]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:269, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/alter_table.sql, id:270, sql:[DROP TABLE IF EXISTS schema2.test2]===
+dble:[[]]
