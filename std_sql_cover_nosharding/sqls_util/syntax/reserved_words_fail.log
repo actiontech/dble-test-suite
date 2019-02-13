@@ -1,0 +1,8 @@
+===file:sqls_util/syntax/reserved_words.sql, id:73, sql:[select id,`OUTFILE` from test1 order by `OUTFILE` limit 10]===
+dble:[None]
+mysql:[((1L, 1L), (2L, 3L), (3L, 4L), (4L, 5L))]
+[02:21:45.620099]dble err :(1064, 'sql syntax error, no terminated. LITERAL_INT')
+===file:sqls_util/syntax/reserved_words.sql, id:976, sql:[drop table if exists `drop`]===
+dble:[None]
+mysql:[()]
+[02:22:45.650287]dble err :(1064, " View 'drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
