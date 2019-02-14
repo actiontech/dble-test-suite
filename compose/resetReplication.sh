@@ -1,4 +1,6 @@
 #!/bin/bash
+base_dir=$( dirname ${BASH_SOURCE[0]} )
+echo ${base_dir}
 #clean mysqld before testing, including: drop none-sys databases, reset replication relation, prepare uproxy wanted database and table for delay checking
 mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3")
 
@@ -9,7 +11,7 @@ count=${#mysql_install[@]}
 for((i=0; i<count; i=i+1)); do
 	echo "restart mysql and delete none-sys dbs in ${mysql_install[$i]}"
 	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/support-files/mysql.server restart" \
-	&& docker cp deleteDb.sql "${mysql_install[$i]}:/" \
+	&& docker cp ${base_dir}/deleteDb.sql "${mysql_install[$i]}:/" \
 	&& sleep 5s \
 	&& docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 < /deleteDb.sql"
 done
