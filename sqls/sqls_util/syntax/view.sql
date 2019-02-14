@@ -25,32 +25,17 @@ drop view view_test
 create view view_test as select sum(id) a,R_COMMENT from test1 group by R_COMMENT having R_COMMENT<6 order by a limit 3 
 select * from view_test
 drop view view_test
-drop table if exists test1
-drop table if exists schema2.test2
-drop table if exists schema3.test3
-CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))
-CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))
-CREATE TABLE schema3.test3(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))
-insert into test1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3)
-insert into schema2.test2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
-create view view_test as select test1.id,test1.name,schema2.test2.pad from test1,schema2.test2 where test1.id=schema2.test2.id
+####################The features of distributed view###########
+create view view_test as select R_NAME from test1
+select * from view_test
+alter table test1 change R_NAME name varchar(50)
+select * from view_test
+alter table test1 change name R_NAME varchar(50)
+select * from view_test
+alter table test1 drop R_NAME
 select * from view_test
 drop view view_test
-create view view_test as select test1.id,test1.name,schema2.test2.pad,schema3.test3.m_id from test1,schema2.test2,schema3.test3 where test1.id=schema2.test2.id and test1.pad=schema3.test3.pad
-select * from view_test
-drop view view_test
-create view view_test as select test1.id,test1.name,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2
-select * from view_test
-drop view view_test
-create view view_test as select a.id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id
-select * from view_test
-drop view view_test
-create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id
-select * from view_test
-drop view view_test
-create view view_test as select * from test1 union select * from schema2.test2
-select * from view_test
-drop view view_test
+alter table test1 add R_NAME varchar(50)
 ####################################view grammar#######################
 create or replace view view_test as select * from test1
 select * from view_test
@@ -74,6 +59,32 @@ drop view view_test
 #create view view_test as select * from test1 with check option
 #create view view_test as select * from test1 with cascaded check option
 #create view view_test as select * from test1 with local check option
+drop table if exists test1
+drop table if exists schema2.test2
+drop table if exists schema3.test3
+CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARACTER SET = utf8
+CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARACTER SET = utf8
+CREATE TABLE schema3.test3(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARACTER SET = utf8
+insert into test1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3)
+insert into schema2.test2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
+create view view_test as select test1.id,test1.name,schema2.test2.pad from test1,schema2.test2 where test1.id=schema2.test2.id
+select * from view_test
+drop view view_test
+create view view_test as select test1.id,test1.name,schema2.test2.pad,schema3.test3.m_id from test1,schema2.test2,schema3.test3 where test1.id=schema2.test2.id and test1.pad=schema3.test3.pad
+select * from view_test
+drop view view_test
+create view view_test as select test1.id,test1.name,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2
+select * from view_test
+drop view view_test
+create view view_test as select a.id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id
+select * from view_test
+drop view view_test
+create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id
+select * from view_test
+drop view view_test
+create view view_test as select * from test1 union select * from schema2.test2
+select * from view_test
+drop view view_test
 ######################alter view ###################################
 create or replace view view_test as select * from test1
 alter view view_test as select * from schema2.test2
@@ -110,16 +121,6 @@ select * from schema2.test2 a join view_test b where a.pad=b.pad
 select count(*) from (select * from view_test) a
 select * from schema2.test2 union select * from view_test
 select * from schema2.test2 where id<(select count(*) from view_test)
-drop view view_test
-####################The features of distributed view###########
-create view view_test as select R_NAME from test1
-select * from view_test
-alter table test1 change R_NAME name varchar(50)
-select * from view_test
-alter table test1 change name R_NAME varchar(50)
-select * from view_test
-alter table test1 drop R_NAME
-select * from view_test
 drop view view_test
 #
 #clear tables

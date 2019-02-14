@@ -1,0 +1,7 @@
+===file:sqls_util/syntax/set_server_var_util.sql, id:25, sql:[insert into test1 (data) values ('bbb')]===
+dble:[None]
+mysql:[()]
+[06:53:41.376010]dble err :(1062, "Duplicate entry '0' for key 'PRIMARY'")
+===file:sqls_util/syntax/set_server_var_util.sql, id:26, sql:[select id,data from test1 where id is null]===
+dble:[[]]
+mysql:[[(2L, 'bbb')]]

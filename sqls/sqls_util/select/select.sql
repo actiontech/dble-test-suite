@@ -19,7 +19,7 @@ select BIT_OR(pad) from test1
 select BIT_XOR(pad) from test1
 select count(pad) from test1
 select count(distinct pad) from test1
-select group_concat(pad) from test1
+select group_concat(pad) from test1 group by pad
 select max(pad) from test1
 select min(pad) from test1
 select std(pad) from test1
@@ -59,7 +59,7 @@ select BIT_OR(id),pad from test1 group by pad
 select BIT_XOR(id),pad from test1 group by pad
 select count(id),pad from test1 group by pad
 select count(distinct pad) from test1 group by pad
-select group_concat(id),pad from test1 group by pad
+select group_concat(id),pad from test1 group by pad order by pad
 select max(id),pad from test1 group by pad
 select min(id),pad from test1 group by pad
 select std(id),pad from test1 group by pad
@@ -265,14 +265,14 @@ select avg(R_REGIONKEY) from test1
 drop table if exists test1
 create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT date)
 insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')
-insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')
-insert into test1 values(3,3,'','1983-01-01'),(4,4,'a','1967-09-12'),(5,3,'','1776-04-30'),(6,4,'b','1963-12-09')
+insert into test1 values (2,1, 'a','1983-01-02')
+insert into test1 values(3,3,'','1983-01-01'),(4,4,'a1','1967-09-12'),(5,3,'b1','1776-04-30'),(6,4,'b','1963-12-09')
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME
 select R_NAME,max(R_REGIONKEY) from test1 group by R_name
-select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 limit 2,3
-select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 limit 1,1
-select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 limit 1,2
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 2,3
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,1
+select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,2
 select id,R_REGIONKEY from test1 order by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test1 group by id,R_REGIONKEY limit 2,3
 select id,R_REGIONKEY from test1 group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3

@@ -1,7 +1,7 @@
 # Created by zhaohongjie at 2018/12/7
 Feature: test "create databsae @@datanode='dn1,dn2,...'"
 
-  @regression
+  @NORMAL
   Scenario: "create database @@..." for all used datanode #1
      Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
      """
@@ -41,7 +41,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
         | test | 111111 | conn_0 | True     | drop database if exists da1 | success  |        |
         | test | 111111 | conn_0 | True     | drop database if exists da2 | success  |        |
 
-
+  @NORMAL
   Scenario: "create database @@..." for part of used datanode #2
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
     """
@@ -91,7 +91,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
         | test | 111111 | conn_0 | True     | drop database if exists da11 | success  |         |
         | test | 111111 | conn_0 | True     | drop database if exists da21 | success  |         |
 
-  @regression
+  @NORMAL
   Scenario: "create database @@..." for datanode of style 'dn$x-y' #3
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -99,7 +99,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
-        <schema dataNode="dn5" name="mytest" sqlMaxLimit="100">
+        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn10,dn11,dn20,dn21" name="test" rule="hash-four" />
         </schema>
 

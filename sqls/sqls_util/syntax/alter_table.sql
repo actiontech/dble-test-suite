@@ -34,24 +34,24 @@ ALTER TABLE test1 UNION (schema2.test2);
 #
 #ADD {INDEX|KEY} ... [index_type] ... (not SUPPORTED)
 ALTER TABLE test1 ADD KEY id_index USING BTREE (id)
-drop index id_idx on test1
+drop index id_index on test1
 ALTER TABLE test1 ADD KEY id_index USING HASH (id)
-drop index id_idx on test1
+drop index id_index on test1
 ALTER TABLE test1 ADD KEY id_index USING BTREE (id,R_COMMENT,R_NAME)
-drop index id_idx on test1
+drop index id_index on test1
 ALTER TABLE test1 ADD KEY id_index USING BTREE (id ASC,R_COMMENT(2) ASC,R_NAME(2) DESC)
-drop index id_idx on test1
+drop index id_index on test1
 #
 #ADD {INDEX|KEY} ... [index_option]... (not SUPPORTED)
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) key_block_size = 100
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING BTREE
-drop index id_idx on test1
+drop index idx on test1
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING HASH
-drop index id_idx on test1
+drop index idx on test1
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) with parser parser_name
-drop index id_idx on test1
+drop index idx on test1
 ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) comment 'testing'
-drop index id_idx on test1
+drop index idx on test1
 #
 #
 #ADD [COLUMN] col_name column_definition
@@ -201,6 +201,7 @@ SELECT id,data,code FROM test1
 #[index_type] not supported
 #[index_option] not supported
 #CONSTRAINT UNIQUE KEY: not supported
+drop index idxs on test1
 ALTER TABLE test1 ADD UNIQUE USING HASH (id)
 ALTER TABLE test1 ADD UNIQUE (id) COMMENT 'string'
 ALTER TABLE test1 ADD UNIQUE KEY idxs USING HASH (id asc,code DESC) comment 'string'
@@ -254,7 +255,7 @@ DESC test1
 DROP TABLE IF EXISTS test1
 create table test1(a int(4))
 alter table test1 add 01a boolean
-alter table test1 drop column sharding_4_t1.01a
+alter table test1 drop column test1.01a
 alter table test1 add `011` boolean
 alter table test1 add $ boolean
 alter table test1 add _ boolean

@@ -1,0 +1,6 @@
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:820, sql:[select * from test1 order by id]===
+mysql err:(1146, "Table 'schema1.test1' doesn't exist")
+dble err[03:20:09.106102] :(1105, "table test1 doesn't exist!You should create it OR reload metadata")
+===file:sqls_util/transaction/trx_ddl_dml.sql, id:828, sql:[select * from test1 order by id]===
+mysql err:(1146, "Table 'schema1.test1' doesn't exist")
+dble err[03:20:09.587953] :(1105, "table test1 doesn't exist!You should create it OR reload metadata")

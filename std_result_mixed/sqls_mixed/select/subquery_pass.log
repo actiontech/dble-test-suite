@@ -1,0 +1,184 @@
+===file:sqls_mixed/select/subquery.sql, id:5, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:6, sql:[drop table if exists schema2.sharding_4_t2]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:7, sql:[drop table if exists schema3.sharding_4_t3]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:8, sql:[CREATE TABLE sharding_4_t1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:9, sql:[CREATE TABLE schema2.sharding_4_t2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:10, sql:[CREATE TABLE schema3.sharding_4_t3(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:11, sql:[insert into sharding_4_t1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:12, sql:[insert into schema2.sharding_4_t2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:13, sql:[insert into schema3.sharding_4_t3 values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:14, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select all * from schema2.sharding_4_t2) b where a.t_id=b.o_id]===
+dble:[[(1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L), (4L, 4L, 4L, 4L), (5L, 5L, 1L, 5L)]]
+===file:sqls_mixed/select/subquery.sql, id:15, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select distinct * from schema2.sharding_4_t2) b where a.t_id=b.o_id]===
+dble:[[(1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L), (4L, 4L, 4L, 4L), (5L, 5L, 1L, 5L)]]
+===file:sqls_mixed/select/subquery.sql, id:16, sql:[select * from (select * from schema2.sharding_4_t2 a group by a.id) a]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:17, sql:[select * from (select pad,count(*) from schema2.sharding_4_t2 a group by pad) a]===
+dble:[[(1L, 2L), (2L, 1L), (3L, 1L), (4L, 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:18, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.sharding_4_t2 having pad>3) b where a.t_id=b.o_id]===
+dble:[[(4L, 4L, 4L, 4L)]]
+===file:sqls_mixed/select/subquery.sql, id:19, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.sharding_4_t2 where pad>3 order by id) b where a.t_id=b.o_id]===
+dble:[((4L, 4L, 4L, 4L),)]
+===file:sqls_mixed/select/subquery.sql, id:20, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.sharding_4_t2 order by id limit 3) b where a.t_id=b.o_id]===
+dble:[((1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L))]
+===file:sqls_mixed/select/subquery.sql, id:21, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.sharding_4_t2 order by id limit 3) b where a.t_id=b.o_id limit 2]===
+dble:[((1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L))]
+===file:sqls_mixed/select/subquery.sql, id:22, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.sharding_4_t2 where pad>3) b where a.t_id=b.o_id]===
+dble:[[(4L, 4L, 4L, 4L)]]
+===file:sqls_mixed/select/subquery.sql, id:23, sql:[select * from (select schema2.sharding_4_t2.pad from sharding_4_t1 left join schema2.sharding_4_t2 on sharding_4_t1.pad=schema2.sharding_4_t2.pad) a]===
+dble:[[(None,), (1L,), (1L,), (1L,), (1L,), (2L,), (3L,), (4L,)]]
+===file:sqls_mixed/select/subquery.sql, id:24, sql:[select * from (select * from sharding_4_t1 union select * from schema2.sharding_4_t2) a where a.id >3]===
+dble:[[(4L, 4L, '$order$4', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:25, sql:[select id,pad from sharding_4_t1 where pad=(select min(id) from schema2.sharding_4_t2)]===
+dble:[[(1L, 1L), (5L, 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:26, sql:[select (select name from sharding_4_t1 order by id limit 1)]===
+dble:[(('test\xe4\xb8\xadid\xe4\xb8\xba1',),)]
+===file:sqls_mixed/select/subquery.sql, id:27, sql:[select (select name from sharding_4_t1 order by id limit 1),id from schema2.sharding_4_t2 order by id]===
+dble:[(('test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), ('test\xe4\xb8\xadid\xe4\xb8\xba1', 2L), ('test\xe4\xb8\xadid\xe4\xb8\xba1', 3L), ('test\xe4\xb8\xadid\xe4\xb8\xba1', 4L), ('test\xe4\xb8\xadid\xe4\xb8\xba1', 5L))]
+===file:sqls_mixed/select/subquery.sql, id:28, sql:[select upper('test'),id from schema2.sharding_4_t2]===
+dble:[[('TEST', 1L), ('TEST', 2L), ('TEST', 3L), ('TEST', 4L), ('TEST', 5L)]]
+===file:sqls_mixed/select/subquery.sql, id:29, sql:[select id,pad,name from (select * from sharding_4_t1 where pad>2) a where id<5]===
+dble:[[(3L, 4L, 'test\xe4\xb8\xadid\xe4\xb8\xba3'), (4L, 3L, '$test$4')]]
+===file:sqls_mixed/select/subquery.sql, id:30, sql:[select pad,count(*) from (select * from sharding_4_t1 where pad>2) a group by pad]===
+dble:[[(3L, 1L), (4L, 1L), (6L, 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:31, sql:[select pad,count(*) from (select * from sharding_4_t1 where pad>2) a group by pad order by pad]===
+dble:[((3L, 1L), (4L, 1L), (6L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:32, sql:[select count(*) from (select pad,count(*) a from sharding_4_t1 group by pad) a]===
+dble:[[(5L,)]]
+===file:sqls_mixed/select/subquery.sql, id:33, sql:[select * from sharding_4_t1 where pad<(select pad from schema2.sharding_4_t2 where id=3)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (5L, 5L, 'test...5', 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:34, sql:[select * from sharding_4_t1 having pad<(select pad from schema2.sharding_4_t2 where id=3)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (5L, 5L, 'test...5', 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:35, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.sharding_4_t2 where pad>3) b where a.t_id=b.o_id]===
+dble:[[(4L, 4L, 4L, 4L)]]
+===file:sqls_mixed/select/subquery.sql, id:36, sql:[select id,pad,name from (select * from sharding_4_t1 where pad>2) as a]===
+dble:[[(3L, 4L, 'test\xe4\xb8\xadid\xe4\xb8\xba3'), (4L, 3L, '$test$4'), (6L, 6L, 'test6')]]
+===file:sqls_mixed/select/subquery.sql, id:37, sql:[select * from (select * from sharding_4_t1 where id<3) a,(select * from schema2.sharding_4_t2 where id>3) b]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 4L, 4L, '$order$4', 4L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 5L, 5L, 'order...5', 1L), (2L, 2L, 'test_2', 2L, 4L, 4L, '$order$4', 4L), (2L, 2L, 'test_2', 2L, 5L, 5L, 'order...5', 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:38, sql:[select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select schema3.sharding_4_t3.id,schema3.sharding_4_t3.pad from sharding_4_t1 join schema3.sharding_4_t3 where sharding_4_t1.pad=schema3.sharding_4_t3.pad) b,(select * from schema2.sharding_4_t2 where id>3) c where a.pad=b.pad and c.pad=b.pad]===
+dble:[[(1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (3L, 4L, 4L, 3L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L)]]
+===file:sqls_mixed/select/subquery.sql, id:39, sql:[select id,name,(select count(*) from schema2.sharding_4_t2) count from sharding_4_t1]===
+dble:[[(1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 5L), (2L, 'test_2', 5L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 5L), (4L, '$test$4', 5L), (5L, 'test...5', 5L), (6L, 'test6', 5L)]]
+===file:sqls_mixed/select/subquery.sql, id:40, sql:[select * from sharding_4_t1 where pad like (select pad from schema2.sharding_4_t2 where id=3)]===
+dble:[[(4L, 4L, '$test$4', 3L)]]
+===file:sqls_mixed/select/subquery.sql, id:41, sql:[select id,pad from sharding_4_t1 where pad>(select pad from sharding_4_t1 where id=2)]===
+dble:[[(3L, 4L), (4L, 3L), (6L, 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:42, sql:[select * from sharding_4_t1 where 2 >any(select id from sharding_4_t1 where pad>1)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:43, sql:[select id,pad from sharding_4_t1 where pad<(select pad from sharding_4_t1 where id=2)]===
+dble:[[(1L, 1L), (5L, 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:44, sql:[select * from sharding_4_t1 where 'test_2'=(select name from schema2.sharding_4_t2 where id=2)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:45, sql:[select * from sharding_4_t1 where 5=(select count(*) from schema2.sharding_4_t2)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:46, sql:[select id,pad from sharding_4_t1 where pad=(select pad from sharding_4_t1 where id=2)]===
+dble:[[(2L, 2L)]]
+===file:sqls_mixed/select/subquery.sql, id:47, sql:[select id,pad from sharding_4_t1 where pad>=(select pad from sharding_4_t1 where id=2)]===
+dble:[[(2L, 2L), (3L, 4L), (4L, 3L), (6L, 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:48, sql:[select id,pad from sharding_4_t1 where pad<=(select pad from sharding_4_t1 where id=2)]===
+dble:[[(1L, 1L), (2L, 2L), (5L, 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:49, sql:[select id,pad from sharding_4_t1 where pad<>(select pad from sharding_4_t1 where id=2)]===
+dble:[[(1L, 1L), (3L, 4L), (4L, 3L), (5L, 1L), (6L, 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:50, sql:[select id,pad from sharding_4_t1 where pad !=(select pad from sharding_4_t1 where id=2)]===
+dble:[[(1L, 1L), (3L, 4L), (4L, 3L), (5L, 1L), (6L, 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:51, sql:[select * from sharding_4_t1 where exists(select * from sharding_4_t1 where pad>1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:52, sql:[select * from sharding_4_t1 where not exists(select * from sharding_4_t1 where pad>1)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:53, sql:[select * from sharding_4_t1 where pad not in(select id from sharding_4_t1 where pad>1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L)]]
+===file:sqls_mixed/select/subquery.sql, id:54, sql:[select * from sharding_4_t1 where 2 in(select id from sharding_4_t1 where pad>1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:55, sql:[select * from sharding_4_t1 where pad in(select id from sharding_4_t1 where pad>1)]===
+dble:[[(2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:56, sql:[select * from sharding_4_t1 where pad=some(select id from sharding_4_t1 where pad>1)]===
+dble:[[(2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:57, sql:[select * from sharding_4_t1 where 2<>some(select id from sharding_4_t1 where pad>1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:58, sql:[select * from sharding_4_t1 where pad=any(select id from sharding_4_t1 where pad>1)]===
+dble:[[(2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:59, sql:[select * from sharding_4_t1 where pad !=any(select id from sharding_4_t1 where pad=3)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:60, sql:[select * from sharding_4_t1 where pad>all(select id from sharding_4_t1 where pad<1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:61, sql:[select * from sharding_4_t1 where 2>all(select id from sharding_4_t1 where pad<1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:62, sql:[select * from sharding_4_t1 where 'test_2' like(select name from schema2.sharding_4_t2 where id=2)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:63, sql:[select * from sharding_4_t1 where name like(select name from schema2.sharding_4_t2 where id=2)]===
+dble:[[(2L, 2L, 'test_2', 2L)]]
+===file:sqls_mixed/select/subquery.sql, id:64, sql:[select a.id,b.id,b.pad,a.t_id from (select sharding_4_t1.id,sharding_4_t1.pad,sharding_4_t1.t_id from sharding_4_t1 join schema2.sharding_4_t2 where sharding_4_t1.pad=schema2.sharding_4_t2.pad ) a,(select schema3.sharding_4_t3.id,schema3.sharding_4_t3.pad from sharding_4_t1 join schema3.sharding_4_t3 where sharding_4_t1.pad=schema3.sharding_4_t3.pad) b where a.pad=b.pad]===
+dble:[[(1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 4L, 4L, 3L), (4L, 3L, 3L, 4L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L)]]
+===file:sqls_mixed/select/subquery.sql, id:65, sql:[select * from sharding_4_t1 where pad>(select pad from sharding_4_t1 where pad=2)]===
+dble:[[(3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:66, sql:[select * from sharding_4_t1,(select * from sharding_4_t1 where id>3 union select * from schema2.sharding_4_t2 where id<2) a where a.id >3 and sharding_4_t1.pad=a.pad]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 5L, 5L, 'test...5', 1L), (4L, 4L, '$test$4', 3L, 4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L, 5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L, 6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:67, sql:[select count(*) from (select * from sharding_4_t1 where pad=(select pad from schema2.sharding_4_t2 where id=1)) a]===
+dble:[[(2L,)]]
+===file:sqls_mixed/select/subquery.sql, id:68, sql:[select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from sharding_4_t1)as tb where co1>1]===
+dble:[[(2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery.sql, id:79, sql:[select * from (select pad,count(id) t from sharding_4_t1 group by pad having t>1)a join (select pad,count(id) t from schema2.sharding_4_t2 group by pad order by pad)b]===
+dble:[((1L, 2L, 1L, 2L), (1L, 2L, 2L, 1L), (1L, 2L, 3L, 1L), (1L, 2L, 4L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:80, sql:[select * from (select pad,count(id) t from sharding_4_t1 group by pad having t>1)a join (select pad,count(id) t from schema2.sharding_4_t2 group by pad order by pad)b where a.t>b.t]===
+dble:[((1L, 2L, 2L, 1L), (1L, 2L, 3L, 1L), (1L, 2L, 4L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:81, sql:[select a.pad,b.pad,count(*) from (select pad,count(id) t from sharding_4_t1 group by pad having t>1)a join (select pad,count(id) t from schema2.sharding_4_t2 group by pad order by pad)b group by b.pad order by b.pad]===
+dble:[((1L, 1L, 1L), (1L, 2L, 1L), (1L, 3L, 1L), (1L, 4L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:82, sql:[(select pad,count(id) t from sharding_4_t1 group by pad having t>1)union(select pad,count(id) t from schema2.sharding_4_t2 group by pad order by pad)]===
+dble:[((1L, 2L), (2L, 1L), (3L, 1L), (4L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:83, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:84, sql:[CREATE TABLE sharding_4_t1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:85, sql:[insert into sharding_4_t1 values(1,1,'id1',1),(2,2,'id2',2),(3,3,'id3',3),(4,4,'id4',4),(5,5,'id5',1),(6,6,'id6',2),(7,7,'id7',3),(8,8,'$id8$',4),(9,9,'test',3),(10,10,'中',3),(11,11,'i_',4),(12,12,'_g',5),(13,13,'y_u',6),(14,14,'20%',14),(15,15,'a_1',15),(16,16,16,-1),(0,0,0,0),(17,17,'new*\n*line',17),(18,18,'a',18)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:86, sql:[insert into sharding_4_t1(id,k,pad) values(19,19,19)]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:87, sql:[select pad,count(id) t from sharding_4_t1 group by pad having t>1]===
+dble:[[(1L, 2L), (2L, 2L), (3L, 4L), (4L, 3L)]]
+===file:sqls_mixed/select/subquery.sql, id:88, sql:[select pad,count(id) t from sharding_4_t1 group by pad order by pad]===
+dble:[((-1L, 1L), (0L, 1L), (1L, 2L), (2L, 2L), (3L, 4L), (4L, 3L), (5L, 1L), (6L, 1L), (14L, 1L), (15L, 1L), (17L, 1L), (18L, 1L), (19L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:89, sql:[select pad,count(id) t from sharding_4_t1 group by pad having t>1 order by id/*allow_diff_sequence*/]===
+dble:[[(1L, 2L), (2L, 2L), (3L, 4L), (4L, 3L)]]
+===file:sqls_mixed/select/subquery.sql, id:90, sql:[select count(distinct id),pad from sharding_4_t1 group by pad having pad >0 order by pad]===
+dble:[((2L, 1L), (2L, 2L), (4L, 3L), (3L, 4L), (1L, 5L), (1L, 6L), (1L, 14L), (1L, 15L), (1L, 17L), (1L, 18L), (1L, 19L))]
+===file:sqls_mixed/select/subquery.sql, id:91, sql:[select * from sharding_4_t1 where pad >(select count(id) t from sharding_4_t1 group by pad having t>3)]===
+dble:[[(12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
+===file:sqls_mixed/select/subquery.sql, id:92, sql:[select * from sharding_4_t1 where pad >(select count(id) t from sharding_4_t1 group by pad order by pad limit 1) order by id]===
+dble:[((2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L))]
+===file:sqls_mixed/select/subquery.sql, id:93, sql:[select * from sharding_4_t1 where pad>(select count(id) t from sharding_4_t1 group by pad having t>3 order by id) order by id]===
+dble:[((12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L))]
+===file:sqls_mixed/select/subquery.sql, id:94, sql:[select * from sharding_4_t1 where pad>(select count(distinct id)t from sharding_4_t1 group by pad having t >3) order by pad]===
+dble:[((12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L))]
+===file:sqls_mixed/select/subquery.sql, id:95, sql:[select * from (select pad,count(id) t from sharding_4_t1 group by pad having t>1) a where a.pad>3]===
+dble:[[(4L, 3L)]]
+===file:sqls_mixed/select/subquery.sql, id:96, sql:[select * from (select pad,count(id) t from sharding_4_t1 group by pad order by pad)a where a.pad>1]===
+dble:[((2L, 2L), (3L, 4L), (4L, 3L), (5L, 1L), (6L, 1L), (14L, 1L), (15L, 1L), (17L, 1L), (18L, 1L), (19L, 1L))]
+===file:sqls_mixed/select/subquery.sql, id:97, sql:[select * from (select pad,count(id) t from sharding_4_t1 group by pad having t>1 order by id)a where a.pad>1/*allow_diff_sequence*/]===
+dble:[[(2L, 2L), (3L, 4L), (4L, 3L)]]
+===file:sqls_mixed/select/subquery.sql, id:98, sql:[select * from (select count(distinct id),pad from sharding_4_t1 group by pad having pad >0 order by pad)a where a.pad>2]===
+dble:[((4L, 3L), (3L, 4L), (1L, 5L), (1L, 6L), (1L, 14L), (1L, 15L), (1L, 17L), (1L, 18L), (1L, 19L))]
+===file:sqls_mixed/select/subquery.sql, id:99, sql:[select (select count(id) t from sharding_4_t1 group by pad having t>3) from sharding_4_t1]===
+dble:[[(4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,)]]
+===file:sqls_mixed/select/subquery.sql, id:100, sql:[select (select count(id) t from sharding_4_t1 group by pad order by pad limit 1) from sharding_4_t1]===
+dble:[((1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,), (1L,))]
+===file:sqls_mixed/select/subquery.sql, id:101, sql:[select (select count(id) t from sharding_4_t1 group by pad having t>3 order by id) from sharding_4_t1]===
+dble:[((4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,))]
+===file:sqls_mixed/select/subquery.sql, id:102, sql:[select (select count(distinct id)t from sharding_4_t1 group by pad having t >3 order by pad) from sharding_4_t1]===
+dble:[((4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,))]
+===file:sqls_mixed/select/subquery.sql, id:106, sql:[select * from sharding_4_t1 order by (select pad from schema2.sharding_4_t2 order by id limit 1)]===
+dble:[((0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L))]
+===file:sqls_mixed/select/subquery.sql, id:111, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:112, sql:[drop table if exists schema2.sharding_4_t2]===
+dble:[[]]
+===file:sqls_mixed/select/subquery.sql, id:113, sql:[drop table if exists schema3.sharding_4_t3]===
+dble:[[]]

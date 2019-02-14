@@ -1,0 +1,24 @@
+===file:sqls_util/syntax/set_names_character.sql, id:15, sql:[select * from test1]===
+dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1550040811129L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1550040811129L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1550040811129L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1550040811129L)]]
+mysql:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951'), (2L, '\xe6\xb5\x8b\xe8\xaf\x952'), (3L, '\xe6\xb5\x8b\xe8\xaf\x953'), (4L, '\xe6\xb5\x8b\xe8\xaf\x954')]]
+===file:sqls_util/syntax/set_names_character.sql, id:17, sql:[select * from test1]===
+dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1550040811129L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1550040811129L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1550040811129L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1550040811129L)]]
+mysql:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951'), (2L, '\xe6\xb5\x8b\xe8\xaf\x952'), (3L, '\xe6\xb5\x8b\xe8\xaf\x953'), (4L, '\xe6\xb5\x8b\xe8\xaf\x954')]]
+===file:sqls_util/syntax/set_names_character.sql, id:19, sql:[select * from test1]===
+dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1550040811129L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1550040811129L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1550040811129L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1550040811129L)]]
+mysql:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951'), (2L, '\xe6\xb5\x8b\xe8\xaf\x952'), (3L, '\xe6\xb5\x8b\xe8\xaf\x953'), (4L, '\xe6\xb5\x8b\xe8\xaf\x954')]]
+===file:sqls_util/syntax/set_names_character.sql, id:36, sql:[select * from test1]===
+dble:[[(3L, '??3', 1550040812392L)]]
+mysql:[[(3L, '??3')]]
+===file:sqls_util/syntax/set_names_character.sql, id:42, sql:[select * from test1]===
+dble:[[(3L, '??3', 1550040812392L)]]
+mysql:[[(3L, '??3')]]
+===file:sqls_util/syntax/set_names_character.sql, id:44, sql:[select * from test1]===
+dble:[[(3L, '??3', 1550040812392L)]]
+mysql:[[(3L, '??3')]]
+===file:sqls_util/syntax/set_names_character.sql, id:47, sql:[select * from test1]===
+dble:[[(3L, '??3', 1550040812392L)]]
+mysql:[[(3L, '??3')]]
+===file:sqls_util/syntax/set_names_character.sql, id:52, sql:[select * from test1]===
+dble:[[(3L, '??3', 1550040812392L)]]
+mysql:[[(3L, '??3')]]

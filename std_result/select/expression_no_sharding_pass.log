@@ -100,7 +100,7 @@ dble:[[(0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L,), (0L
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
 ===file:select/expression_no_sharding.sql, id:54, sql:[select test_no_shard.R_NAME from test_no_shard]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
-===file:select/expression_no_sharding.sql, id:55, sql:[select mytest.test_no_shard.R_NAME from test_no_shard]===
+===file:select/expression_no_sharding.sql, id:55, sql:[select schema1.test_no_shard.R_NAME from test_no_shard]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
 ===file:select/expression_no_sharding.sql, id:56, sql:[select R_NAME as a from test_no_shard]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]

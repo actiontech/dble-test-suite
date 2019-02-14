@@ -1228,21 +1228,21 @@ dble:[[]]
 dble:[[]]
 ===file:transaction/D_langues.sql, id:757, sql:[begin]===
 dble:[[]]
-===file:transaction/D_langues.sql, id:758, sql:[select a.*,b.* from tb_test a,mytest.aly_test b where a.pad=b.pad]===
+===file:transaction/D_langues.sql, id:758, sql:[select a.*,b.* from tb_test a,schema1.aly_test b where a.pad=b.pad]===
 dble:[[(1L, 1L, '1', 1L, 1L, 1L, '1', 1L), (2L, 2L, '2', 2L, 2L, 2L, '2', 2L), (3L, 3L, '3', 3L, 3L, 3L, '3', 3L), (4L, 4L, '4', 4L, 4L, 4L, '4', 4L), (5L, 5L, '5', 5L, 5L, 5L, '5', 5L), (6L, 6L, '6', 6L, 6L, 6L, '6', 6L)]]
 ===file:transaction/D_langues.sql, id:759, sql:[update tb_test set c='test']===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:760, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
-===file:transaction/D_langues.sql, id:761, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:761, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:transaction/D_langues.sql, id:762, sql:[commit]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:763, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
-===file:transaction/D_langues.sql, id:764, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:764, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
-===file:transaction/D_langues.sql, id:765, sql:[use mytest]===
+===file:transaction/D_langues.sql, id:765, sql:[use auto]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:768, sql:[delete from aly_test]===
 dble:[[]]
@@ -1256,21 +1256,21 @@ dble:[[]]
 dble:[[]]
 ===file:transaction/D_langues.sql, id:773, sql:[begin]===
 dble:[[]]
-===file:transaction/D_langues.sql, id:774, sql:[select a.*,b.* from tb_test a,mytest.aly_test b where a.pad=b.pad]===
+===file:transaction/D_langues.sql, id:774, sql:[select a.*,b.* from tb_test a,schema1.aly_test b where a.pad=b.pad]===
 dble:[[(1L, 1L, '1', 1L, 1L, 1L, '1', 1L), (2L, 2L, '2', 2L, 2L, 2L, '2', 2L), (3L, 3L, '3', 3L, 3L, 3L, '3', 3L), (4L, 4L, '4', 4L, 4L, 4L, '4', 4L), (5L, 5L, '5', 5L, 5L, 5L, '5', 5L), (6L, 6L, '6', 6L, 6L, 6L, '6', 6L)]]
 ===file:transaction/D_langues.sql, id:775, sql:[update tb_test set c='test']===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:776, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
-===file:transaction/D_langues.sql, id:777, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:777, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:transaction/D_langues.sql, id:778, sql:[rollback]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:779, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
-===file:transaction/D_langues.sql, id:780, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:780, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
-===file:transaction/D_langues.sql, id:781, sql:[use mytest]===
+===file:transaction/D_langues.sql, id:781, sql:[use schema1]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:784, sql:[delete from aly_test]===
 dble:[[]]
@@ -1284,21 +1284,21 @@ dble:[[]]
 dble:[[]]
 ===file:transaction/D_langues.sql, id:789, sql:[begin]===
 dble:[[]]
-===file:transaction/D_langues.sql, id:790, sql:[update mytest.aly_test set pad=200]===
+===file:transaction/D_langues.sql, id:790, sql:[update schema1.aly_test set pad=200]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:791, sql:[update tb_test set c='test']===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:792, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
-===file:transaction/D_langues.sql, id:793, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:793, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 200L), (2L, 2L, '2', 200L), (3L, 3L, '3', 200L), (4L, 4L, '4', 200L), (5L, 5L, '5', 200L), (6L, 6L, '6', 200L))]
 ===file:transaction/D_langues.sql, id:794, sql:[commit]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:795, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
-===file:transaction/D_langues.sql, id:796, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:796, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 200L), (2L, 2L, '2', 200L), (3L, 3L, '3', 200L), (4L, 4L, '4', 200L), (5L, 5L, '5', 200L), (6L, 6L, '6', 200L))]
-===file:transaction/D_langues.sql, id:797, sql:[use mytest]===
+===file:transaction/D_langues.sql, id:797, sql:[use schema1]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:800, sql:[delete from aly_test]===
 dble:[[]]
@@ -1312,21 +1312,21 @@ dble:[[]]
 dble:[[]]
 ===file:transaction/D_langues.sql, id:805, sql:[begin]===
 dble:[[]]
-===file:transaction/D_langues.sql, id:806, sql:[update mytest.aly_test set pad=200]===
+===file:transaction/D_langues.sql, id:806, sql:[update schema1.aly_test set pad=200]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:807, sql:[update tb_test set c='test']===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:808, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, 'test', 1L), (2L, 2L, 'test', 2L), (3L, 3L, 'test', 3L), (4L, 4L, 'test', 4L), (5L, 5L, 'test', 5L), (6L, 6L, 'test', 6L))]
-===file:transaction/D_langues.sql, id:809, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:809, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 200L), (2L, 2L, '2', 200L), (3L, 3L, '3', 200L), (4L, 4L, '4', 200L), (5L, 5L, '5', 200L), (6L, 6L, '6', 200L))]
 ===file:transaction/D_langues.sql, id:810, sql:[rollback]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:811, sql:[select * from tb_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
-===file:transaction/D_langues.sql, id:812, sql:[select * from mytest.aly_test order by id]===
+===file:transaction/D_langues.sql, id:812, sql:[select * from schema1.aly_test order by id]===
 dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
-===file:transaction/D_langues.sql, id:813, sql:[use mytest]===
+===file:transaction/D_langues.sql, id:813, sql:[use schema1]===
 dble:[[]]
 ===file:transaction/D_langues.sql, id:816, sql:[begin]===
 dble:[[]]
