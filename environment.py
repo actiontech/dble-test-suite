@@ -4,7 +4,8 @@ import sys
 
 from lib.Node import get_ssh, get_sftp
 from lib.utils import setup_logging ,load_yaml_config, get_nodes
-from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node
+from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+    install_dble_in_all_nodes
 
 logger = logging.getLogger('environment')
 
@@ -61,6 +62,8 @@ def before_all(context):
             context.need_download = False
         else:
             context.need_download = True
+
+        install_dble_in_all_nodes(context)
     else:
         replace_config(context, context.dble_conf)
 
