@@ -11,10 +11,10 @@ logger = logging.getLogger('environment')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
-    if para_dble_conf_lower in ["sql_cover", "sql_cover_global", "template", "sql_cover_nosharding"]:
+    if para_dble_conf_lower in ["sql_cover_mixed", "sql_cover_global", "template", "sql_cover_nosharding","sql_cover_sharding"]:
         conf = "{0}{1}".format(context.cfg_dble['conf_dir'], para_dble_conf_lower)
     else:
-        assert False, 'cmdline dble_conf\'s value can only be one of ["sql_cover", "sql_cover_global", "template", "sql_cover_no_sharding"]'
+        assert False, 'cmdline dble_conf\'s value can only be one of ["template", "sql_cover_mixed", "sql_cover_global", "sql_cover_nosharding","sql_cover_sharding"]'
 
     context.dble_conf = conf
 
@@ -93,6 +93,12 @@ def after_all(context):
 def before_feature(context, feature):
     logger.info('*' * 30)
     logger.info('Feature start: <{0}>'.format(feature.name))
+
+    if "setup" in feature.tags:
+        # delete the begin and end """
+        for desc in feature.description[1:-1]:
+            logger.info(desc)
+            context.execute_steps(desc)
 
 def after_feature(context, feature):
     logger.info('Feature end: <{0}>'.format(feature.name))

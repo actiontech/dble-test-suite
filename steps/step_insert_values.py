@@ -11,7 +11,7 @@ def step_impl(context):
     port = context.cfg_dble['client_port']
 
     sql = "drop table if exists test_table"
-    do_exec_sql(context, ip, "test", "111111", "mytest", port, sql, False, "conn_0", "success")
+    do_exec_sql(context, ip, "test", "111111", "schema1", port, sql, False, "conn_0", "success")
 
     sql="""CREATE TABLE `test_table` (
         `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
@@ -21,7 +21,7 @@ def step_impl(context):
         PRIMARY KEY (`id`),
         KEY `k_1` (`k`)
         )"""
-    do_exec_sql(context, ip, "test", "111111", "mytest", port, sql, True, "conn_0", "success")
+    do_exec_sql(context, ip, "test", "111111", "schema1", port, sql, True, "conn_0", "success")
 
 @Then('insert "{num}" rows at one time')
 def step_impl(context, num):
@@ -39,5 +39,5 @@ def step_impl(context, num):
 
     ip = context.cfg_dble['dble']['ip']
     port = context.cfg_dble['client_port']
-    do_exec_sql(context, ip, "test", "111111", "mytest", port, sql, True, "conn_0", "success")
+    do_exec_sql(context, ip, "test", "111111", "schema1", port, sql, True, "conn_0", "success")
 

@@ -1,0 +1,678 @@
+===file:sqls_util/syntax/create_table_definition.sql, id:3, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:4, sql:[CREATE TABLE test1(id int,data varchar(10))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:6, sql:[CREATE TABLE IF NOT EXISTS test1(id int,data varchar(10),test varchar(10))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:12, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:13, sql:[CREATE TABLE test1(id int NOT NULL,data varchar(10))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:15, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:16, sql:[CREATE TABLE test1(id int,data varchar(10) NULL)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:18, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:19, sql:[CREATE TABLE test1(id int,data varchar(10) NOT NULL DEFAULT 'abc')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:21, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:22, sql:[CREATE TABLE test1(id int,data varchar(10) NULL DEFAULT 'abc')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:24, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:25, sql:[CREATE TABLE test1(id int, data char(20) DEFAULT 'abcde')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:27, sql:[INSERT INTO test1 VALUES (1,'a'),(2,DEFAULT),(3,NULL)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:28, sql:[SELECT id,data FROM test1]===
+dble:[[(1L, 'a'), (2L, 'abcde'), (3L, None)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:38, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:39, sql:[CREATE TABLE test1(id int, data char(20) UNIQUE)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:40, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:42, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:43, sql:[CREATE TABLE test1(id int, data char(20) UNIQUE KEY)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:44, sql:[INSERT INTO test1 VALUES (2,'bbb')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:46, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:47, sql:[CREATE TABLE test1(id int, data char(20) PRIMARY KEY)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:48, sql:[INSERT INTO test1 VALUES (3,'ccc')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:50, sql:[SELECT id,data FROM test1]===
+dble:[[(3L, 'ccc')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:54, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:55, sql:[CREATE TABLE test1(id int PRIMARY KEY, data char(20) COMMENT 'test COMMENT')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:56, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:58, sql:[SELECT id,data FROM test1]===
+dble:[[(1L, 'aaa')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:66, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:67, sql:[CREATE TABLE test1(id int, data char(20) STORAGE DISK)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:68, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:70, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:71, sql:[CREATE TABLE test1(id int, data char(20) STORAGE MEMORY)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:72, sql:[INSERT INTO test1 VALUES (2,'bbb')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:74, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:75, sql:[CREATE TABLE test1(id int, data char(20) STORAGE DEFAULT)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:76, sql:[INSERT INTO test1 VALUES (3,'ccc')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:78, sql:[SELECT id,data FROM test1]===
+dble:[[(3L, 'ccc')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:82, sql:[DROP TABLE IF EXISTS schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:83, sql:[CREATE TABLE schema2.test2(id int,test int UNIQUE KEY,data varchar(10) )]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:84, sql:[INSERT INTO schema2.test2 VALUES (3,1,'ccc')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:86, sql:[SELECT id,data FROM schema2.test2]===
+dble:[[(3L, 'ccc')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:87, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:88, sql:[CREATE TABLE test1(id int, data int references schema2.test2 (data))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:89, sql:[INSERT INTO test1 VALUES (3,1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:91, sql:[SELECT id,data FROM test1]===
+dble:[[(3L, 1L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:98, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:105, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:110, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:117, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:122, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:129, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:136, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:141, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:149, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:159, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:160, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),PRIMARY KEY (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:161, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:163, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:164, sql:[CREATE TABLE test1 ( id int(11),test int(11),detail varchar(20),PRIMARY KEY (id,test))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:165, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:167, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:168, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT PK_id PRIMARY KEY (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:169, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:171, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:172, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT PRIMARY KEY (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:173, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:180, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:181, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),PRIMARY KEY USING BTREE (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:182, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:184, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:185, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT PRIMARY KEY USING BTREE (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:186, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:188, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:189, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT PRIMARY KEY USING HASH (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:190, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:192, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:193, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT PK_id PRIMARY KEY USING HASH (id,test))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:194, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:205, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:206, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),PRIMARY KEY (id) COMMENT 'testing')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:207, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:209, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:210, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),PRIMARY KEY (id) USING HASH)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:211, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:216, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:217, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),KEY (id) )]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:218, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:219, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:220, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),KEY key_id (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:221, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:223, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:224, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id (id,test,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:225, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:227, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:228, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id (id ASC,test,detail(10) DESC))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:234, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:235, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id using btree (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:236, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:238, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:239, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id using hash (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:240, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:246, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:247, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id (id) USING BTREE)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:248, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:250, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:251, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id (id) USING HASH)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:252, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:254, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:255, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),KEY key_id (id) COMMENT 'string')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:256, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:265, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:266, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,index (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:267, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:269, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:270, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,test int,index id_index (id,test))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:271, sql:[INSERT INTO test1 VALUES (1,1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:273, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:274, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),INDEX key_id (id ASC,test,detail(10) DESC))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:275, sql:[INSERT INTO test1 VALUES (1,1,'a')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:279, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:280, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),INDEX key_id USING HASH (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:281, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:282, sql:[SHOW index FROM test1]===
+dble:[[('test1', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:283, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:284, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),INDEX key_id USING BTREE (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:285, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:286, sql:[SHOW index FROM test1]===
+dble:[[('test1', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:287, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:288, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),INDEX USING BTREE (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:289, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:290, sql:[SHOW index FROM test1]===
+dble:[[('test1', 1L, 'id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:294, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:295, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),INDEX key_id (id) USING BTREE)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:296, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:297, sql:[SHOW index FROM test1]===
+dble:[[('test1', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:298, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:299, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),INDEX key_id (id) USING HASH)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:300, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:301, sql:[SHOW index FROM test1]===
+dble:[[('test1', 1L, 'key_id', 1L, 'id', 'A', 1L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:310, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:311, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:312, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:314, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:315, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE (id ASC,detail DESC))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:316, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:318, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:319, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE un_id (id ASC,detail DESC))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:320, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:322, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:323, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT UNIQUE un_id (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:324, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:326, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:327, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT u_id UNIQUE un_id (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:328, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:333, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:334, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE un_id USING HASH (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:335, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:337, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:338, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE un_id USING BTREE (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:339, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:343, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:344, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT UNIQUE un_id USING BTREE (id ,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:345, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:347, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:348, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT co_id UNIQUE un_id USING BTREE (id ,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:349, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:353, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:354, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE (id,detail) USING HASH)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:355, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:366, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:367, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE INDEX (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:368, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:370, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:371, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE INDEX ind_id (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:372, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:374, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:375, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE INDEX ind_id (id ASC,detail DESC))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:376, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:378, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:379, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT UNIQUE INDEX unique_id (id,test,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:380, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:382, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:383, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT UNIQUE INDEX (id,test,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:384, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:386, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:387, sql:[CREATE TABLE test1 ( id int(11),test int,detail varchar(20),CONSTRAINT u_id UNIQUE INDEX unique_id USING HASH (id ,test,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:388, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:390, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:391, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE INDEX ind_id USING HASH(id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:392, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:396, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:397, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE INDEX idx_id (id,detail) USING HASH )]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:398, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:400, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:401, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE INDEX idx_id (id,detail) USING BTREE)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:402, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:410, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:411, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE KEY (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:412, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:414, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:415, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE KEY ind_id (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:416, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:418, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:419, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE KEY ind_id (id ASC,detail DESC))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:420, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:422, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:423, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT UNIQUE KEY unique_id (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:424, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:426, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:427, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT u_id UNIQUE KEY (id,detail))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:428, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:430, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:431, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,CONSTRAINT id_pk UNIQUE KEY (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:432, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:433, sql:[SHOW index FROM test1]===
+dble:[[('test1', 0L, 'id_pk', 1L, 'id', 'A', 1L, None, None, '', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:434, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:435, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE KEY unique_id USING HASH(id,detail ))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:436, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:442, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:443, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE KEY (id,detail) USING HASH)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:444, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:446, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:447, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),UNIQUE KEY (id,detail) USING BTREE)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:448, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:450, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:451, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT u_id UNIQUE KEY unique_id (id,detail) USING BTREE)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:452, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:454, sql:[DROP TABLE IF EXISTS  test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:455, sql:[CREATE TABLE test1 ( id int(11),detail varchar(20),CONSTRAINT UNIQUE KEY unique_id USING HASH (id))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:456, sql:[INSERT INTO test1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:460, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:461, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,INDEX id_index (id) USING HASH,CONSTRAINT id_pk UNIQUE KEY (id) )]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:462, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:463, sql:[SHOW index FROM test1]===
+dble:[[('test1', 0L, 'id_pk', 1L, 'id', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'id_index', 1L, 'id', 'A', 1L, None, None, '', 'BTREE', '', '')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:477, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:478, sql:[CREATE TABLE test1 ( id int(11),data int,detail varchar(20),CHECK (data > 0))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:479, sql:[INSERT INTO test1 VALUES (1,1,'aaa')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:480, sql:[SELECT id,data,detail FROM test1]===
+dble:[[(1L, 1L, 'aaa')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:486, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:487, sql:[CREATE TABLE test1 (id int) engine=innodb]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:488, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:490, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:491, sql:[CREATE TABLE test1 (id int) engine innodb]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:492, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:496, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:497, sql:[CREATE TABLE test1 (id int) DEFAULT CHARSET=utf8 COLLATE = utf8_bin]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:498, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:500, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:501, sql:[CREATE TABLE test1 (id int) CHARSET=utf8 COLLATE = utf8_bin]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:502, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:504, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:505, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,PRIMARY KEY (id)) DEFAULT CHARACTER SET = utf8]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:506, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:508, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:509, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,PRIMARY KEY (id)) CHARACTER SET = gbk]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:510, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:512, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:513, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,PRIMARY KEY (id)) CHARACTER SET gbk]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:514, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:516, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:517, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,PRIMARY KEY (id)) COLLATE utf8_bin]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:518, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:520, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:521, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,PRIMARY KEY (id)) DEFAULT COLLATE  gbk_chinese_ci]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:522, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:526, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:527, sql:[CREATE TABLE test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) COMMENT='test11 TABLE']===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:528, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:530, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:533, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) KEY_BLOCK_SIZE=2]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:534, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:536, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:537, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) KEY_BLOCK_SIZE 2]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:538, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:540, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:543, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) DELAY_KEY_WRITE=0]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:544, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:546, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:547, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) DELAY_KEY_WRITE=1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:548, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:550, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:554, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'Y']===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:555, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:557, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:558, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'N']===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:559, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:563, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:564, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) INSERT_METHOD = NO]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:565, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:567, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:568, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) INSERT_METHOD = FIRST]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:569, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:571, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:572, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) INSERT_METHOD = LAST]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:573, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:577, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:578, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=DEFAULT]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:579, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:581, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:582, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=DYNAMIC]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:583, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:585, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:589, sql:[DROP TABLE if EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:590, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=COMPRESSED]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:591, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:593, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:594, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=REDUNDANT]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:595, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:597, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:598, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=COMPACT]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:599, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:603, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:604, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) STATS_AUTO_RECALC = DEFAULT]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:605, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:607, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:608, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) STATS_AUTO_RECALC = 0]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:609, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:611, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:612, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) STATS_AUTO_RECALC = 1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:613, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:617, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:618, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) STATS_PERSISTENT = DEFAULT]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:619, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:621, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:622, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) STATS_PERSISTENT = 0]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:623, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:625, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:626, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) STATS_PERSISTENT = 1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:627, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:631, sql:[DROP TABLE test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:632, sql:[CREATE TABLE test1( id int(11) NOT NULL ,PRIMARY KEY (id)) STATS_SAMPLE_PAGES = 100]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:633, sql:[INSERT INTO test1 VALUES (1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:637, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:638, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int UNIQUE KEY COMMENT 'test')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:639, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:641, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[(1L, 1L, 1L, None)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:645, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]

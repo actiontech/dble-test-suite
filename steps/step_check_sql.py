@@ -44,6 +44,9 @@ def get_read_dest_cmd(context):
     cmd = "sed '1,{0}d' {1}|grep 'routing query to mysqld' | grep -o -e {2}".format(context.log_linenu, logpath, regIP)
     return cmd
 
+@Given('set sql cover log dir "{logdir}"')
+def step_impl(context, logdir):
+    context.cfg_dble['sql_cover_log'] = logdir
 
 @Given('init read-write-split data')
 def step_impl(context):
@@ -53,7 +56,7 @@ def step_impl(context):
     if context.sql_file.find("/") == -1:
         sql_file_name = context.sql_file
     else:
-        group = context.sql_file.partition("/");
+        group = context.sql_file.rpartition("/")
         sql_file_name = group[2]
         subdir = subdir + group[0]
         if not os.path.exists(subdir):
@@ -71,7 +74,7 @@ def step_impl(context):
     context.cur_serious_warn_log = "{0}/{1}_serious_warn.log".format(subdir, sql_file_name)
 
 
-def get_compare_conn(context, default_db="mytest"):
+def get_compare_conn(context, default_db="schema1"):
     m_ip = context.cfg_mysql['compare_mysql']['master1']['ip']
     m_port = context.cfg_mysql['compare_mysql']['master1']['port']
     m_user = context.cfg_mysql['user']
@@ -272,6 +275,17 @@ def step_impl(context, sql_cover_log):
     if os.path.exists(sql_cover_log):
         shutil.rmtree(sql_cover_log)
 
+@Given('reset replication and none system databases')
+def step_impl(context):
+    import subprocess
+    try:
+        out_bytes = subprocess.check_output(['bash', 'compose/resetReplication.sh'])
+    except subprocess.CalledProcessError as e:
+        out_bytes = e.output  # Output generated before error
+        context.logger.info(out_bytes.decode('utf-8'))
+    finally:
+        context.logger.info(out_bytes.decode('utf-8'))
+
 @Then('execute sql in file "{filename}"')
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')
 def step_impl(context, filename):
@@ -290,7 +304,11 @@ def step_impl(context, filename):
         lines = fp.readlines()
         total_lines = len(lines)
         line_nu = 0
-        default_db = context.cfg_sys['default_db']
+        if lines[0].startswith("#!default_db:"):
+            default_db = lines[0].split(':')[1]
+            default_db = default_db.strip()
+        else:
+            default_db = context.cfg_sys['default_db']
         step_len = 1;
         next_line = lines[0].strip()
         for idx in range(0, total_lines):
@@ -469,11 +487,11 @@ def step_impl(context):
     #     ssh.close_ssh()
 
 
-@When('compare results with the standard results in "{dirname}"')
-def step_impl(context,dirname):
+@When('compare results in "{real_res}" with the standard results in "{std_res}"')
+def step_impl(context,real_res, std_res):
     import subprocess
     try:
-        out_bytes = subprocess.check_output(['bash', 'compare_result.sh', dirname])
+        out_bytes = subprocess.check_output(['bash', 'compare_result.sh', std_res, real_res])
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
         out_text = out_bytes.decode('utf-8')

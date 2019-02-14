@@ -130,11 +130,11 @@ mysql:[()]
 dble:[None]
 mysql:[()]
 [02:28:16.484518]dble err :(1064, 'error pos 30, line 1, column 26, token BEGIN')
-===file:syntax/identifiers.sql, id:206, sql:[drop table if exists mytest.interval]===
+===file:syntax/identifiers.sql, id:206, sql:[drop table if exists schema1.interval]===
 dble:[None]
 mysql:[()]
 [02:28:16.538020]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'interval' at line 1")
-===file:syntax/identifiers.sql, id:207, sql:[CREATE TABLE mytest.interval (begin INT, end INT)]===
+===file:syntax/identifiers.sql, id:207, sql:[CREATE TABLE schema1.interval (begin INT, end INT)]===
 dble:[None]
 mysql:[()]
 [02:28:16.589455]dble err :(1064, 'error pos 35, line 1, column 31, token BEGIN')
@@ -157,7 +157,7 @@ mysql:[()]
 dble:[None]
 mysql:[()]
 [02:28:18.063232]dble err :(1064, 'error pos 13, line 1, column 12, token DOT')
-===file:syntax/identifiers.sql, id:232, sql:[insert into .drop(mytest.drop.order, mytest.drop.add) values(1,1)]===
+===file:syntax/identifiers.sql, id:232, sql:[insert into .drop(schema1.drop.order, schema1.drop.add) values(1,1)]===
 dble:[None]
 mysql:[()]
 [02:28:18.146376]dble err :(1064, 'error pos 13, line 1, column 12, token DOT')

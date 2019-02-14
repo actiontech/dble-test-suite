@@ -1,0 +1,160 @@
+===file:sqls_util/syntax/view.sql, id:2, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:3, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT int(11))]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:4, sql:[insert into test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string',1),(3,3, 'another',3),(2,2, 'a\nstring',3),(4,4, '中',2),(5,5, 'a\'string\'',5),(6,6, 'a\""string\""',5),(7,7, 'a\bstring',5),(8,8, 'a\nstring',6),(9,9, 'a\rstring',6),(10,10, 'a\tstring',2)]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:6, sql:[drop view if exists view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:7, sql:[create view view_test as select 1*4]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:8, sql:[select * from view_test]===
+dble:[[(4L,)]]
+===file:sqls_util/syntax/view.sql, id:9, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:10, sql:[create view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:12, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:13, sql:[create view view_test as select * from test1 where R_NAME like'%string%']===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:15, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:16, sql:[create view view_test as select sum(id),R_COMMENT from test1 group by R_COMMENT]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:17, sql:[select * from view_test]===
+dble:[[(Decimal('1'), 1L), (Decimal('5'), 3L), (Decimal('14'), 2L), (Decimal('17'), 6L), (Decimal('18'), 5L)]]
+===file:sqls_util/syntax/view.sql, id:18, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:19, sql:[create view view_test as select sum(id) a,R_COMMENT from test1 group by R_COMMENT order by a]===
+dble:[()]
+===file:sqls_util/syntax/view.sql, id:20, sql:[select * from view_test]===
+dble:[[(Decimal('1'), 1L), (Decimal('5'), 3L), (Decimal('14'), 2L), (Decimal('17'), 6L), (Decimal('18'), 5L)]]
+===file:sqls_util/syntax/view.sql, id:21, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:22, sql:[create view view_test as select sum(id) a,R_COMMENT from test1 group by R_COMMENT having R_COMMENT<6 order by a]===
+dble:[()]
+===file:sqls_util/syntax/view.sql, id:23, sql:[select * from view_test]===
+dble:[[(Decimal('1'), 1L), (Decimal('5'), 3L), (Decimal('14'), 2L), (Decimal('18'), 5L)]]
+===file:sqls_util/syntax/view.sql, id:24, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:25, sql:[create view view_test as select sum(id) a,R_COMMENT from test1 group by R_COMMENT having R_COMMENT<6 order by a limit 3]===
+dble:[()]
+===file:sqls_util/syntax/view.sql, id:26, sql:[select * from view_test]===
+dble:[[(Decimal('1'), 1L), (Decimal('5'), 3L), (Decimal('14'), 2L)]]
+===file:sqls_util/syntax/view.sql, id:27, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:29, sql:[create view view_test as select R_NAME from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:30, sql:[select * from view_test]===
+dble:[[('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('another',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/syntax/view.sql, id:31, sql:[alter table test1 change R_NAME name varchar(50)]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:33, sql:[alter table test1 change name R_NAME varchar(50)]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:34, sql:[select * from view_test]===
+dble:[[('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('another',), ('\xe4\xb8\xad',)]]
+===file:sqls_util/syntax/view.sql, id:35, sql:[alter table test1 drop R_NAME]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:37, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:38, sql:[alter table test1 add R_NAME varchar(50)]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:40, sql:[create or replace view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:42, sql:[create or replace view view_test as select * from test1 where R_NAME like'%string%']===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:43, sql:[select * from view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:44, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:62, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:63, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:64, sql:[drop table if exists schema3.test3]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:65, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARACTER SET = utf8]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:66, sql:[CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARACTER SET = utf8]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:67, sql:[CREATE TABLE schema3.test3(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARACTER SET = utf8]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:68, sql:[insert into test1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3)]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:69, sql:[insert into schema2.test2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:70, sql:[create view view_test as select test1.id,test1.name,schema2.test2.pad from test1,schema2.test2 where test1.id=schema2.test2.id]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:72, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:73, sql:[create view view_test as select test1.id,test1.name,schema2.test2.pad,schema3.test3.m_id from test1,schema2.test2,schema3.test3 where test1.id=schema2.test2.id and test1.pad=schema3.test3.pad]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:74, sql:[select * from view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:75, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:76, sql:[create view view_test as select test1.id,test1.name,test1.pad,schema2.test2.name as a_name from test1 inner join schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:77, sql:[select * from view_test]===
+dble:[[(1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, '$order$4'), (1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 'order...5'), (1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1'), (1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba3'), (1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 'test_2'), (2L, 'test_2', 2L, '$order$4'), (2L, 'test_2', 2L, 'order...5'), (2L, 'test_2', 2L, 'order\xe4\xb8\xadid\xe4\xb8\xba1'), (2L, 'test_2', 2L, 'order\xe4\xb8\xadid\xe4\xb8\xba3'), (2L, 'test_2', 2L, 'test_2'), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, '$order$4'), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 'order...5'), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 'order\xe4\xb8\xadid\xe4\xb8\xba1'), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 'order\xe4\xb8\xadid\xe4\xb8\xba3'), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 'test_2'), (4L, '$test$4', 3L, '$order$4'), (4L, '$test$4', 3L, 'order...5'), (4L, '$test$4', 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba1'), (4L, '$test$4', 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3'), (4L, '$test$4', 3L, 'test_2')]]
+===file:sqls_util/syntax/view.sql, id:78, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:79, sql:[create view view_test as select a.id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:80, sql:[select * from view_test]===
+dble:[[(1L, 1L, 1L), (2L, 2L, 2L), (3L, 3L, 3L), (4L, 4L, 4L)]]
+===file:sqls_util/syntax/view.sql, id:81, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:82, sql:[create view view_test as select a.id,b.id as b_id,b.pad,a.t_id from test1 a,(select all * from schema2.test2) b where a.t_id=b.o_id]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:83, sql:[select * from view_test]===
+dble:[[(1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L), (4L, 4L, 4L, 4L)]]
+===file:sqls_util/syntax/view.sql, id:84, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:85, sql:[create view view_test as select * from test1 union select * from schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:87, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:89, sql:[create or replace view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:90, sql:[alter view view_test as select * from schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:92, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:93, sql:[create or replace view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:94, sql:[alter view view_test(name) as select name from schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:95, sql:[select * from view_test]===
+dble:[[('$order$4',), ('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('order\xe4\xb8\xadid\xe4\xb8\xba3',), ('test_2',)]]
+===file:sqls_util/syntax/view.sql, id:96, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:98, sql:[create view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:100, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:101, sql:[create view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:102, sql:[create view view_test1 as select * from schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:104, sql:[drop view view_test,view_test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:112, sql:[drop view if exists view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:114, sql:[create view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:116, sql:[drop view if exists view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:119, sql:[create view view_test as select * from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:121, sql:[select count(*) from (select * from view_test) a]===
+dble:[[(4L,)]]
+===file:sqls_util/syntax/view.sql, id:124, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:128, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:129, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:130, sql:[drop table if exists schema3.test3]===
+dble:[[]]
