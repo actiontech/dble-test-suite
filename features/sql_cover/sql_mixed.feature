@@ -1,6 +1,10 @@
 # -*- coding=utf-8 -*-
+@setup
 Feature: mixed type tables sql cover test
-
+"""
+Given rm old logs "sql_cover_mixed" if exists
+Given reset replication and none system databases
+"""
     Scenario Outline:sql cover for mixed table types #2
       Given set sql cover log dir "sql_cover_mixed"
       Then execute sql in file "<filename>"
