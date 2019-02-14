@@ -2,7 +2,7 @@
 @setup
 Feature: sharding table sql cover test
 """
-Given rm old logs "sql_cover_mixed" if exists
+Given rm old logs "sql_cover_sharding" if exists
 Given reset replication and none system databases
 """
 
