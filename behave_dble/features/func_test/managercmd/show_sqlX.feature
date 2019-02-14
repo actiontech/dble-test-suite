@@ -42,7 +42,7 @@ Feature: show @@sql, show @@sql.resultset
     Then get resultset of admin cmd "show @@sql.resultset" named "sql_rs_B"
     Then check resultset "sql_rs_B" has lines with following column values
         | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
-        | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1183             |
+        | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1185             |
         | test   |         1   | SELECT * FROM ta WHERE id = ? LIMIT ? | 1604             |
     Given delete the following xml segment
       |file        | parent           | child             |
