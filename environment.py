@@ -94,6 +94,12 @@ def before_feature(context, feature):
     logger.info('*' * 30)
     logger.info('Feature start: <{0}>'.format(feature.name))
 
+    if "setup" in feature.tags:
+        # delete the begin and end """
+        for desc in feature.description[1:-1]:
+            logger.info(desc)
+            context.execute_steps(desc)
+
 def after_feature(context, feature):
     logger.info('Feature end: <{0}>'.format(feature.name))
     logger.info('*' * 30)
