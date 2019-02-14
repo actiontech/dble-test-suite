@@ -139,6 +139,7 @@ Feature: test "check full @@metadata...'"
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                         | expect     | db      |
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='mytest' | success    |         |
