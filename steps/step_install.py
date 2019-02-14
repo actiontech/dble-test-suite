@@ -191,13 +191,11 @@ def check_dble_exist(ssh_client, dble_install_path):
     return dble_pid_exist, dble_dir_exist
 
 def restart_dbles(context, nodes):
-    for node in nodes:
-        LOGGER.debug("***debug try to restart dble:{0}".format(node.host_name))
-        restart_dble(context, node)
-
     if len(nodes) > 1:
         config_zk_in_dble_nodes(context)
-        restart_zk_service(context)
+        reset_zk_nodes(context)
+
+    start_dble_in_order(context)
 
 @Then('restart dble in "{hostname}" failed for')
 def check_restart_dble_failed(context,hostname):
@@ -328,7 +326,7 @@ def replace_config_in_node(context, sourceCfgDir, node):
         node.sftp_conn.sftp_put(remote_file, local_file)
 
 @Given('reset dble registered nodes in zk')
-def step_impl(context):
+def reset_zk_nodes(context):
     resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh rmr /dble".format(context.cfg_dble["install_dir"])
     ssh_client = get_ssh(context.dbles, "dble-1")
     ssh_client.exec_command(resetCmd)
