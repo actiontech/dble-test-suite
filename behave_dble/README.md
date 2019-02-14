@@ -28,7 +28,9 @@ jdbc 5.1.39
  behave 自定义命令行参数说明（change in behave.ini as you need）：
  - -D tar_local={true|false}, default false
  - -D test_config={auto_dble_test.yaml}
- - -D reinstall=true, default false, true if for install related features
+ - -D reinstall=true, default false, true if need reinstall before features start
+ - -D reset=true, reset dble config files and restart dble before features start
+ 
  
 ##according to allure-behave, case severity enum values:
 BLOCKER
@@ -38,7 +40,7 @@ MINOR
 TRIVIAL
 
 ##通过ftp包安装单节点并启动
-behave -Dreinstall=true features/install_uninstall/install_dble.feature
+behave -Dreset=false features/install_uninstall/install_dble.feature
 
 ##通过ftp包解压安装到所有节点，配置使用zk，启动所有节点,集群到单节点转换
 behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
