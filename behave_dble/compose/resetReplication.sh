@@ -37,7 +37,7 @@ docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p11111
 docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database testdb\" "
 #docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database tpccdb\" "
 
-for((i=0; i<3; i=i+1)); do
+for((i=0; i<4; i=i+1)); do
     echo "add some user and database in ${mysql_install[$i]}"
     docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"drop user if exists 'test'@'%';create user 'test'@'%' identified by '111111'\" "
 		docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
