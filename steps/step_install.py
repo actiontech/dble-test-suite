@@ -32,7 +32,7 @@ def unistall_dble_by_hostname(context, hostname):
 def install_dble_in_node(context, node):
     ssh_client =node.ssh_conn
     if context.need_download:
-        context.execute_steps(u'Given download dble')
+        download_dble(context)
     dble_packget = "{0}".format(context.cfg_dble['packet_name'])
 
     cmd = "cd {0} && rm -rf {1}".format(context.cfg_dble['install_dir'], dble_packget)
