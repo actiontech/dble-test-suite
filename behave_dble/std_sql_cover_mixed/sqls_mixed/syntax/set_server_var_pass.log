@@ -1,0 +1,882 @@
+===file:sqls_mixed/syntax/set_server_var.sql, id:5, sql:[set @@auto_increment_increment=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:6, sql:[select @@auto_increment_increment]===
+dble:[[(10L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:7, sql:[set session auto_increment_increment=11]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:8, sql:[select @@auto_increment_increment]===
+dble:[[(11L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:9, sql:[set @@session.auto_increment_increment=12]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:10, sql:[select @@auto_increment_increment]===
+dble:[[(12L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:15, sql:[set @@auto_increment_offset=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:16, sql:[select @@auto_increment_offset]===
+dble:[[(10L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:17, sql:[set session auto_increment_offset=11]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:18, sql:[select @@auto_increment_offset]===
+dble:[[(11L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:19, sql:[set @@session.auto_increment_offset=12]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:20, sql:[select @@auto_increment_offset]===
+dble:[[(12L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:21, sql:[set @@session.auto_increment_offset=10,@@session.auto_increment_increment=11]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:25, sql:[set @@big_tables=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:26, sql:[select @@big_tables]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:27, sql:[set session big_tables=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:28, sql:[select @@big_tables]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:29, sql:[set @@session.big_tables=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:30, sql:[select @@big_tables]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:31, sql:[set @@session.big_tables=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:32, sql:[select @@big_tables]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:33, sql:[set @@session.big_tables=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:34, sql:[select @@big_tables]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:40, sql:[set @@binlog_direct_non_transactional_updates=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:41, sql:[select @@binlog_direct_non_transactional_updates]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:42, sql:[set session binlog_direct_non_transactional_updates=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:43, sql:[select @@binlog_direct_non_transactional_updates]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:44, sql:[set @@session.binlog_direct_non_transactional_updates=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:45, sql:[select @@binlog_direct_non_transactional_updates]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:46, sql:[set session binlog_direct_non_transactional_updates=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:47, sql:[select @@binlog_direct_non_transactional_updates]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:54, sql:[set @@binlog_format='row']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:55, sql:[select @@binlog_format]===
+dble:[[('ROW',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:56, sql:[set session binlog_format='statement']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:57, sql:[select @@binlog_format]===
+dble:[[('STATEMENT',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:58, sql:[set @@session.binlog_format='mixed']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:59, sql:[select @@binlog_format]===
+dble:[[('MIXED',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:63, sql:[set @@binlog_row_image='full']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:64, sql:[select @@binlog_row_image]===
+dble:[[('FULL',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:65, sql:[set session binlog_row_image='minimal']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:66, sql:[select @@binlog_row_image]===
+dble:[[('MINIMAL',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:67, sql:[set @@session.binlog_row_image='noblob']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:68, sql:[select @@binlog_row_image]===
+dble:[[('NOBLOB',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:73, sql:[set @@binlog_rows_query_log_events=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:74, sql:[select @@binlog_rows_query_log_events]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:75, sql:[set session binlog_rows_query_log_events=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:76, sql:[select @@binlog_rows_query_log_events]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:77, sql:[set @@binlog_rows_query_log_events=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:78, sql:[select @@binlog_rows_query_log_events]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:82, sql:[set @@block_encryption_mode='aes-256-cbc']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:83, sql:[select @@block_encryption_mode]===
+dble:[[('aes-256-cbc',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:84, sql:[set session block_encryption_mode='aes-128-ecb']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:85, sql:[select @@block_encryption_mode]===
+dble:[[('aes-128-ecb',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:86, sql:[set @@session.block_encryption_mode='aes-256-cbc']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:87, sql:[select @@block_encryption_mode]===
+dble:[[('aes-256-cbc',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:94, sql:[set @@completion_type=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:95, sql:[select @@completion_type]===
+dble:[[('CHAIN',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:96, sql:[set @@completion_type=2]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:97, sql:[select @@completion_type]===
+dble:[[('RELEASE',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:98, sql:[set @@completion_type='NO_CHAIN']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:99, sql:[select @@completion_type]===
+dble:[[('NO_CHAIN',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:100, sql:[set @@completion_type='RELEASE']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:101, sql:[select @@completion_type]===
+dble:[[('RELEASE',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:102, sql:[set @@completion_type='CHAIN']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:103, sql:[select @@completion_type]===
+dble:[[('CHAIN',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:104, sql:[set session completion_type=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:105, sql:[select @@completion_type]===
+dble:[[('NO_CHAIN',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:106, sql:[set @@session.completion_type=2]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:107, sql:[select @@completion_type]===
+dble:[[('RELEASE',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:111, sql:[set @@default_storage_engine='myisam']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:112, sql:[select @@default_storage_engine]===
+dble:[[('MyISAM',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:113, sql:[set session default_storage_engine='innodb']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:114, sql:[select @@default_storage_engine]===
+dble:[[('InnoDB',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:115, sql:[set @@session.default_storage_engine='myisam']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:116, sql:[select @@default_storage_engine]===
+dble:[[('MyISAM',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:120, sql:[set @@default_tmp_storage_engine='myisam']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:121, sql:[select @@default_tmp_storage_engine]===
+dble:[[('MyISAM',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:122, sql:[set session default_tmp_storage_engine='memory']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:123, sql:[select @@default_tmp_storage_engine]===
+dble:[[('MEMORY',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:124, sql:[set @@session.default_tmp_storage_engine='innodb']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:125, sql:[select @@default_tmp_storage_engine]===
+dble:[[('InnoDB',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:130, sql:[set @@default_week_format=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:131, sql:[select @@default_week_format]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:132, sql:[select week('2008-02-20')]===
+dble:[[(8L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:133, sql:[set @@default_week_format=2]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:134, sql:[select @@default_week_format]===
+dble:[[(2L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:135, sql:[select week('2008-02-20')]===
+dble:[[(7L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:136, sql:[set session default_week_format=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:137, sql:[select @@default_week_format]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:138, sql:[select week('2000-01-01')]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:142, sql:[set @@div_precision_increment=12]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:143, sql:[select @@div_precision_increment]===
+dble:[[(12L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:144, sql:[select 1/7]===
+dble:[[(Decimal('0.142857142857'),)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:145, sql:[set @@session.div_precision_increment=6]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:146, sql:[select @@div_precision_increment]===
+dble:[[(6L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:147, sql:[select 1/7]===
+dble:[[(Decimal('0.142857'),)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:148, sql:[set session div_precision_increment=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:149, sql:[select @@div_precision_increment]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:150, sql:[select 1/7]===
+dble:[[(Decimal('0.1429'),)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:154, sql:[set @@end_markers_in_json=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:155, sql:[select @@end_markers_in_json]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:156, sql:[set @@session.end_markers_in_json=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:157, sql:[select @@end_markers_in_json]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:158, sql:[set session end_markers_in_json=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:159, sql:[select @@end_markers_in_json]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:163, sql:[set @@eq_range_index_dive_limit=100]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:164, sql:[select @@eq_range_index_dive_limit]===
+dble:[[(100L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:165, sql:[set session eq_range_index_dive_limit=150]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:166, sql:[select @@eq_range_index_dive_limit]===
+dble:[[(150L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:167, sql:[set @@session.eq_range_index_dive_limit=200]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:168, sql:[select @@eq_range_index_dive_limit]===
+dble:[[(200L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:172, sql:[set @@foreign_key_checks=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:173, sql:[select @@foreign_key_checks]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:174, sql:[set @@session.foreign_key_checks=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:175, sql:[select @@foreign_key_checks]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:176, sql:[set session foreign_key_checks=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:177, sql:[select @@foreign_key_checks]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:182, sql:[set @@group_concat_max_len=2048]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:183, sql:[select @@group_concat_max_len]===
+dble:[[(2048L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:184, sql:[set @@session.group_concat_max_len=3072]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:185, sql:[select @@group_concat_max_len]===
+dble:[[(3072L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:186, sql:[set session group_concat_max_len=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:187, sql:[select @@group_concat_max_len]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:194, sql:[set @@gtid_next='AUTOMATIC']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:195, sql:[select @@gtid_next]===
+dble:[[('AUTOMATIC',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:203, sql:[set @@innodb_strict_mode=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:204, sql:[select @@innodb_strict_mode]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:205, sql:[set session innodb_strict_mode=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:206, sql:[select @@innodb_strict_mode]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:207, sql:[set @@session.innodb_strict_mode=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:208, sql:[select @@innodb_strict_mode]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:213, sql:[set @@innodb_support_xa=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:214, sql:[select @@innodb_support_xa]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:215, sql:[set @@session.innodb_support_xa=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:216, sql:[select @@innodb_support_xa]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:220, sql:[set @@innodb_table_locks=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:221, sql:[select @@innodb_table_locks]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:222, sql:[set session innodb_table_locks=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:223, sql:[select @@innodb_table_locks]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:227, sql:[set @@interactive_timeout=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:228, sql:[select @@interactive_timeout]===
+dble:[[(10L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:229, sql:[set session interactive_timeout=100]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:230, sql:[select @@interactive_timeout]===
+dble:[[(100L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:231, sql:[set @@session.interactive_timeout=28800]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:232, sql:[select @@interactive_timeout]===
+dble:[[(28800L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:236, sql:[select @@join_buffer_size]===
+dble:[[(262144L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:237, sql:[set @@join_buffer_size=1000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:238, sql:[select @@join_buffer_size]===
+dble:[[(896L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:239, sql:[set @@session.join_buffer_size=2000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:240, sql:[select @@join_buffer_size]===
+dble:[[(1920L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:241, sql:[set session join_buffer_size=262144]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:247, sql:[select @@lc_messages]===
+dble:[[('en_US',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:248, sql:[set @@lc_messages='fr_FR']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:249, sql:[select @@lc_messages]===
+dble:[[('fr_FR',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:250, sql:[set session lc_messages='en_AU']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:251, sql:[select @@lc_messages]===
+dble:[[('en_AU',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:252, sql:[set @@session.lc_messages='en_US']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:253, sql:[select @@lc_messages]===
+dble:[[('en_US',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:258, sql:[select @@lc_time_names]===
+dble:[[('en_US',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:259, sql:[SELECT DAYNAME('2010-01-01'), MONTHNAME('2010-01-01')]===
+dble:[[('Friday', 'January')]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:260, sql:[SELECT DATE_FORMAT('2010-01-01','%W %a %M %b')]===
+dble:[[('Friday Fri January Jan',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:261, sql:[SET lc_time_names = 'es_MX']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:262, sql:[select @@lc_time_names]===
+dble:[[('es_MX',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:263, sql:[SELECT DAYNAME('2010-01-01'), MONTHNAME('2010-01-01')]===
+dble:[[('viernes', 'enero')]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:264, sql:[SELECT DATE_FORMAT('2010-01-01','%W %a %M %b')]===
+dble:[[('viernes vie enero ene',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:265, sql:[set @@session.lc_time_names='zh_CN']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:266, sql:[select @@lc_time_names]===
+dble:[[('zh_CN',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:267, sql:[set session lc_time_names='en_US']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:268, sql:[select @@lc_time_names]===
+dble:[[('en_US',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:272, sql:[set @@long_query_time=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:273, sql:[select @@long_query_time]===
+dble:[[(5.0,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:274, sql:[set @@session.long_query_time=3]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:275, sql:[select @@long_query_time]===
+dble:[[(3.0,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:276, sql:[set session long_query_time=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:277, sql:[select @@long_query_time]===
+dble:[[(10.0,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:281, sql:[set @@max_error_count=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:282, sql:[select @@max_error_count]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:283, sql:[set @@session.max_error_count=3]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:284, sql:[select @@max_error_count]===
+dble:[[(3L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:285, sql:[set session max_error_count=64]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:286, sql:[select @@max_error_count]===
+dble:[[(64L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:290, sql:[set @@max_execution_time=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:291, sql:[select @@max_execution_time]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:292, sql:[set @@session.max_execution_time=3]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:293, sql:[select @@max_execution_time]===
+dble:[[(3L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:294, sql:[set session max_execution_time=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:295, sql:[select @@max_execution_time]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:299, sql:[set @@max_join_size=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:300, sql:[select @@max_join_size]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:301, sql:[set @@session.max_join_size=3]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:302, sql:[select @@max_join_size]===
+dble:[[(3L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:303, sql:[set session max_join_size=18446744073709551615]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:304, sql:[select @@max_join_size]===
+dble:[[(18446744073709551615L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:308, sql:[set @@max_length_for_sort_data=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:309, sql:[select @@max_length_for_sort_data]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:310, sql:[set @@session.max_length_for_sort_data=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:311, sql:[select @@max_length_for_sort_data]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:312, sql:[set session max_length_for_sort_data=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:313, sql:[select @@max_length_for_sort_data]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:317, sql:[set @@max_seeks_for_key=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:318, sql:[select @@max_seeks_for_key]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:319, sql:[set @@session.max_seeks_for_key=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:320, sql:[select @@max_seeks_for_key]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:321, sql:[set session max_seeks_for_key=4294967295]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:322, sql:[select @@max_seeks_for_key]===
+dble:[[(4294967295L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:325, sql:[set @@max_sort_length=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:326, sql:[select @@max_sort_length]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:327, sql:[set @@session.max_sort_length=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:328, sql:[select @@max_sort_length]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:329, sql:[set session max_sort_length=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:330, sql:[select @@max_sort_length]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:334, sql:[set @@max_sp_recursion_depth=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:335, sql:[select @@max_sp_recursion_depth]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:336, sql:[set @@session.max_sp_recursion_depth=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:337, sql:[select @@max_sp_recursion_depth]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:338, sql:[set session max_sp_recursion_depth=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:339, sql:[select @@max_sp_recursion_depth]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:343, sql:[set @@min_examined_row_limit=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:344, sql:[select @@min_examined_row_limit]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:345, sql:[set @@session.min_examined_row_limit=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:346, sql:[select @@min_examined_row_limit]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:347, sql:[set session min_examined_row_limit=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:348, sql:[select @@min_examined_row_limit]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:352, sql:[set @@net_read_timeout=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:353, sql:[select @@net_read_timeout]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:354, sql:[set @@session.net_read_timeout=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:355, sql:[select @@net_read_timeout]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:356, sql:[set session net_read_timeout=30]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:357, sql:[select @@net_read_timeout]===
+dble:[[(30L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:361, sql:[set @@net_retry_count=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:362, sql:[select @@net_retry_count]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:363, sql:[set @@session.net_retry_count=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:364, sql:[select @@net_retry_count]===
+dble:[[(4L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:365, sql:[set session net_retry_count=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:366, sql:[select @@net_retry_count]===
+dble:[[(10L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:370, sql:[set @@net_read_timeout=5]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:371, sql:[select @@net_write_timeout]===
+dble:[[(60L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:372, sql:[set @@session.net_write_timeout=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:373, sql:[select @@net_read_timeout]===
+dble:[[(5L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:374, sql:[set session net_write_timeout=60]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:375, sql:[select @@net_write_timeout]===
+dble:[[(60L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:379, sql:[set @@new=OFF]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:380, sql:[select @@new]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:381, sql:[set @@session.new=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:382, sql:[select @@new]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:383, sql:[set session new=OFF]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:384, sql:[select @@new]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:388, sql:[set @@old_alter_table=OFF]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:389, sql:[select @@old_alter_table]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:390, sql:[set @@session.old_alter_table=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:391, sql:[select @@old_alter_table]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:392, sql:[set session old_alter_table=OFF]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:393, sql:[select @@old_alter_table]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:398, sql:[select @@old_passwords]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:399, sql:[set @@session.old_passwords=2]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:400, sql:[select @@old_passwords]===
+dble:[[(2L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:401, sql:[set session old_passwords=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:402, sql:[select @@old_passwords]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:406, sql:[set @@optimizer_prune_level=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:407, sql:[select @@optimizer_prune_level]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:408, sql:[set @@session.optimizer_prune_level=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:409, sql:[select @@optimizer_prune_level]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:410, sql:[set session optimizer_prune_level=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:411, sql:[select @@optimizer_prune_level]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:415, sql:[set @@optimizer_search_depth=30]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:416, sql:[select @@optimizer_search_depth]===
+dble:[[(30L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:417, sql:[set @@session.optimizer_search_depth=40]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:418, sql:[select @@optimizer_search_depth]===
+dble:[[(40L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:419, sql:[set session optimizer_search_depth=64]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:420, sql:[select @@optimizer_search_depth]===
+dble:[[(62L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:424, sql:[set @@optimizer_switch='index_merge=off']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:425, sql:[select @@optimizer_switch]===
+dble:[[('index_merge=off,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,engine_condition_pushdown=on,index_condition_pushdown=on,mrr=on,mrr_cost_based=on,block_nested_loop=on,batched_key_access=off,materialization=on,semijoin=on,loosescan=on,firstmatch=on,duplicateweedout=on,subquery_materialization_cost_based=on,use_index_extensions=on,condition_fanout_filter=on,derived_merge=on',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:426, sql:[set @@session.optimizer_switch='index_merge_union=off']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:428, sql:[set session optimizer_switch='index_merge=on,index_merge_union=on']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:429, sql:[select @@optimizer_switch]===
+dble:[[('index_merge=on,index_merge_union=on,index_merge_sort_union=on,index_merge_intersection=on,engine_condition_pushdown=on,index_condition_pushdown=on,mrr=on,mrr_cost_based=on,block_nested_loop=on,batched_key_access=off,materialization=on,semijoin=on,loosescan=on,firstmatch=on,duplicateweedout=on,subquery_materialization_cost_based=on,use_index_extensions=on,condition_fanout_filter=on,derived_merge=on',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:437, sql:[set @@optimizer_trace='enabled=on']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:438, sql:[select @@optimizer_trace]===
+dble:[[('enabled=on,one_line=off',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:439, sql:[set session optimizer_trace='enabled=off']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:440, sql:[select @@optimizer_trace]===
+dble:[[('enabled=off,one_line=off',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:441, sql:[set @@optimizer_trace_features='greedy_search=off,range_optimizer=off']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:442, sql:[select @@optimizer_trace_features]===
+dble:[[('greedy_search=off,range_optimizer=off,dynamic_range=on,repeated_subselect=on',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:443, sql:[set @@session.optimizer_trace_features='greedy_search=on,range_optimizer=on']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:444, sql:[select @@optimizer_trace_features]===
+dble:[[('greedy_search=on,range_optimizer=on,dynamic_range=on,repeated_subselect=on',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:445, sql:[set @@optimizer_trace_limit=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:446, sql:[select @@optimizer_trace_limit]===
+dble:[[(10L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:447, sql:[set session optimizer_trace_limit=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:448, sql:[select @@optimizer_trace_limit]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:449, sql:[set @@optimizer_trace_max_mem_size=1000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:450, sql:[select @@optimizer_trace_max_mem_size]===
+dble:[[(1000L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:451, sql:[set @@session.optimizer_trace_max_mem_size=10000000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:452, sql:[select @@optimizer_trace_max_mem_size]===
+dble:[[(10000000L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:453, sql:[set @@optimizer_trace_offset=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:454, sql:[select @@optimizer_trace_offset]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:455, sql:[set session optimizer_trace_offset=-1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:456, sql:[select @@optimizer_trace_offset]===
+dble:[[(-1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:460, sql:[set @@parser_max_mem_size=10000000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:461, sql:[select @@parser_max_mem_size]===
+dble:[[(10000000L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:462, sql:[set @@session.parser_max_mem_size=10000002]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:463, sql:[select @@parser_max_mem_size]===
+dble:[[(10000002L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:464, sql:[set session parser_max_mem_size=18446744073709551615]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:465, sql:[select @@parser_max_mem_size]===
+dble:[[(18446744073709551615L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:469, sql:[set @@preload_buffer_size=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:470, sql:[select @@preload_buffer_size]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:471, sql:[set @@session.preload_buffer_size=2048]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:472, sql:[select @@preload_buffer_size]===
+dble:[[(2048L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:473, sql:[set session preload_buffer_size=32768]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:474, sql:[select @@preload_buffer_size]===
+dble:[[(32768L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:478, sql:[set @@profiling=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:479, sql:[select @@profiling]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:480, sql:[set @@session.profiling=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:481, sql:[select @@profiling]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:482, sql:[set session profiling=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:483, sql:[select @@profiling]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:487, sql:[set @@profiling_history_size=16]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:488, sql:[select @@profiling_history_size]===
+dble:[[(16L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:489, sql:[set @@session.profiling_history_size=17]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:490, sql:[select @@profiling_history_size]===
+dble:[[(17L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:491, sql:[set session profiling_history_size=15]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:492, sql:[select @@profiling_history_size]===
+dble:[[(15L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:496, sql:[set @@pseudo_slave_mode=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:497, sql:[select @@pseudo_slave_mode]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:498, sql:[set session pseudo_slave_mode=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:499, sql:[select @@pseudo_slave_mode]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:500, sql:[set @@pseudo_thread_id=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:501, sql:[select @@pseudo_thread_id]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:502, sql:[set @@session.pseudo_thread_id=2]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:503, sql:[select @@pseudo_thread_id]===
+dble:[[(2L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:504, sql:[set session pseudo_thread_id=2445]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:505, sql:[select @@pseudo_thread_id]===
+dble:[[(2445L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:509, sql:[set @@query_alloc_block_size=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:510, sql:[select @@query_alloc_block_size]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:511, sql:[set session query_alloc_block_size=8192]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:512, sql:[select @@query_alloc_block_size]===
+dble:[[(8192L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:524, sql:[set @@query_prealloc_size=9216]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:525, sql:[select @@query_prealloc_size]===
+dble:[[(9216L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:526, sql:[set @@session.query_prealloc_size=8192]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:527, sql:[select @@query_prealloc_size]===
+dble:[[(8192L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:535, sql:[set @@range_alloc_block_size=8192]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:536, sql:[select @@range_alloc_block_size]===
+dble:[[(8192L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:537, sql:[set session range_alloc_block_size=4096]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:538, sql:[select @@range_alloc_block_size]===
+dble:[[(4096L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:539, sql:[set @@range_optimizer_max_mem_size=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:540, sql:[select @@range_optimizer_max_mem_size]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:541, sql:[set @@session.range_optimizer_max_mem_size=8388608]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:542, sql:[select @@range_optimizer_max_mem_size]===
+dble:[[(8388608L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:543, sql:[set @@rbr_exec_mode='idempotent']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:544, sql:[select @@rbr_exec_mode]===
+dble:[[('IDEMPOTENT',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:545, sql:[set session rbr_exec_mode='strict']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:546, sql:[select @@rbr_exec_mode]===
+dble:[[('STRICT',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:550, sql:[set session session_track_gtids='own_gtid']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:551, sql:[select @@session_track_gtids]===
+dble:[[('OWN_GTID',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:552, sql:[set @@session_track_gtids='all_gtids']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:553, sql:[select @@session_track_gtids]===
+dble:[[('ALL_GTIDS',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:554, sql:[set session session_track_gtids='off']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:555, sql:[select @@session_track_gtids]===
+dble:[[('OFF',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:559, sql:[set session session_track_schema=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:560, sql:[select @@session.session_track_schema]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:561, sql:[set @@session.session_track_schema=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:562, sql:[select @@session_track_schema]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:566, sql:[set session session_track_state_change=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:567, sql:[select @@session_track_state_change]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:568, sql:[set @@session.session_track_state_change=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:569, sql:[select @@session_track_state_change]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:570, sql:[set @@session_track_schema=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:571, sql:[select @@session_track_state_change]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:575, sql:[set @@session_track_system_variables='time_zone']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:576, sql:[select @@session_track_system_variables]===
+dble:[[('time_zone',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:577, sql:[set session session_track_system_variables='autocommit']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:578, sql:[select @@session_track_system_variables]===
+dble:[[('autocommit',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:579, sql:[set @@session.session_track_system_variables='time_zone, autocommit, character_set_client, character_set_results, character_set_connection']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:580, sql:[select @@session_track_system_variables]===
+dble:[[('time_zone, autocommit, character_set_client, character_set_results, character_set_connection',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:584, sql:[set session show_old_temporals=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:585, sql:[select @@show_old_temporals]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:586, sql:[set @@session.show_old_temporals=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:587, sql:[select @@show_old_temporals]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:588, sql:[set @@show_old_temporals=off]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:589, sql:[select @@show_old_temporals]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:593, sql:[set @@sort_buffer_size=32768]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:594, sql:[select @@sort_buffer_size]===
+dble:[[(32768L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:595, sql:[set @@session.sort_buffer_size=262144]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:596, sql:[select @@sort_buffer_size]===
+dble:[[(262144L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:600, sql:[set @@sql_big_selects=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:601, sql:[select @@sql_big_selects]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:602, sql:[set session sql_big_selects=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:603, sql:[select @@sql_big_selects]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:607, sql:[set @@sql_buffer_result=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:608, sql:[select @@sql_buffer_result]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:609, sql:[set @@session.sql_buffer_result=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:610, sql:[select @@sql_buffer_result]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:614, sql:[set @@sql_log_off=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:615, sql:[select @@sql_log_off]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:616, sql:[set @@session.sql_log_off=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:617, sql:[select @@sql_log_off]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:621, sql:[set @@sql_notes=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:622, sql:[select @@sql_notes]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:623, sql:[set session sql_notes=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:624, sql:[select @@sql_notes]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:628, sql:[set @@sql_quote_show_create=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:629, sql:[select @@sql_quote_show_create]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:630, sql:[set session sql_quote_show_create=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:631, sql:[select @@sql_quote_show_create]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:635, sql:[set @@sql_safe_updates=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:636, sql:[select @@sql_safe_updates]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:637, sql:[set session sql_safe_updates=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:638, sql:[select @@sql_safe_updates]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:642, sql:[set @@sql_select_limit=4294967295]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:643, sql:[select @@sql_select_limit]===
+dble:[[(4294967295L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:644, sql:[set session sql_select_limit=18446744073709551615]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:645, sql:[select @@sql_select_limit]===
+dble:[[(18446744073709551615L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:649, sql:[set @@sql_warnings=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:650, sql:[select @@sql_warnings]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:651, sql:[set session sql_warnings=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:652, sql:[select @@sql_warnings]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:656, sql:[set @@time_zone='+00:00']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:657, sql:[select @@time_zone]===
+dble:[[('+00:00',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:658, sql:[set session time_zone='system']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:659, sql:[select @@time_zone]===
+dble:[[('SYSTEM',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:663, sql:[set @@timestamp=123076799]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:664, sql:[select @@timestamp]===
+dble:[[(123076799.0,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:665, sql:[set session timestamp=1508403167.668069]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:666, sql:[select @@timestamp]===
+dble:[[(1508403167.668069,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:670, sql:[set @@transaction_alloc_block_size=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:671, sql:[select @@transaction_alloc_block_size]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:672, sql:[set session transaction_alloc_block_size=8192]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:673, sql:[select @@transaction_alloc_block_size]===
+dble:[[(8192L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:677, sql:[set @@transaction_prealloc_size=1024]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:678, sql:[select @@transaction_prealloc_size]===
+dble:[[(1024L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:679, sql:[set session transaction_prealloc_size=4096]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:680, sql:[select @@transaction_prealloc_size]===
+dble:[[(4096L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:685, sql:[set @@unique_checks=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:686, sql:[select @@unique_checks]===
+dble:[[(0L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:687, sql:[set @@session.unique_checks=on]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:688, sql:[select @@unique_checks]===
+dble:[[(1L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:692, sql:[set @@updatable_views_with_limit=0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:693, sql:[select @@updatable_views_with_limit]===
+dble:[[('NO',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:694, sql:[set session updatable_views_with_limit=`yes`]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:695, sql:[select @@updatable_views_with_limit]===
+dble:[[('YES',)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:699, sql:[set @@wait_timeout=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:700, sql:[select @@wait_timeout]===
+dble:[[(10L,)]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:701, sql:[set session wait_timeout=28800]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_server_var.sql, id:702, sql:[select @@wait_timeout]===
+dble:[[(28800L,)]]
