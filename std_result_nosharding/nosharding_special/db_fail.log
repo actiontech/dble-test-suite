@@ -1,9 +1,0 @@
-===file:nosharding_special/db.sql, id:18, sql:[select * from schema2.test2 join schema3.test2;]===
-dble:[[(2L,)]]
-mysql:[[(2L, 3L)]]
-===file:nosharding_special/db.sql, id:19, sql:[select * from schema1.test1 join schema2.test2 join schema3.test2;]===
-dble:[[(1L, 2L)]]
-mysql:[[(1L, 2L, 3L)]]
-===file:nosharding_special/db.sql, id:22, sql:[select * from test1 join schema2.test2 join schema3.test2;]===
-dble:[[(1L, 2L)]]
-mysql:[[(1L, 2L, 3L)]]
