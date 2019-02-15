@@ -1,0 +1,96 @@
+===file:sqls_util/syntax/create_table_definition.sql, id:99, sql:[CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))]===
+dble:[None]
+mysql:[()]
+[03:07:54.440153]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:100, sql:[INSERT INTO test1 (id,data1,data2)  VALUES (1,'aaa1','aaa2')]===
+dble:[None]
+mysql:[()]
+[03:07:54.474968]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:102, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 'aaa1', 'aaa2', 'aaa1 aaa2')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:106, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) virtual)]===
+dble:[None]
+mysql:[()]
+[03:07:54.750498]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:107, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:54.786124]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:109, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:111, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) stored)]===
+dble:[None]
+mysql:[()]
+[03:07:55.046798]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:112, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:55.081501]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:114, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:118, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE)]===
+dble:[None]
+mysql:[()]
+[03:07:55.358876]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:119, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:55.393811]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:121, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:123, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY)]===
+dble:[None]
+mysql:[()]
+[03:07:55.699806]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:124, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:55.735565]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:126, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:130, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY COMMENT 'test')]===
+dble:[None]
+mysql:[()]
+[03:07:56.009864]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:131, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:56.042569]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:133, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:137, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NOT NULL)]===
+dble:[None]
+mysql:[()]
+[03:07:56.324826]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:138, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:56.353156]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:140, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:142, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NULL)]===
+dble:[None]
+mysql:[()]
+[03:07:56.626738]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:143, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:56.662399]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:145, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[]]
+mysql:[[(1L, 1L, 1L, 2L)]]
+===file:sqls_util/syntax/create_table_definition.sql, id:150, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) STORED PRIMARY KEY)]===
+dble:[None]
+mysql:[()]
+[03:07:56.969536]dble err :(-1, 'error totally whack')
+===file:sqls_util/syntax/create_table_definition.sql, id:151, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[None]
+mysql:[()]
+[03:07:57.005749]dble err :(-1, 'error totally whack')

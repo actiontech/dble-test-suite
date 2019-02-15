@@ -1,0 +1,26 @@
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:6, sql:[set character set ascii]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:7, sql:[select @@character_set_client]===
+dble:[[('ascii',)]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:8, sql:[select @@character_set_results]===
+dble:[[('ascii',)]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:9, sql:[set character set DEFAULT]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:12, sql:[set charset ascii]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:13, sql:[select @@character_set_client]===
+dble:[[('ascii',)]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:14, sql:[select @@character_set_results]===
+dble:[[('ascii',)]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:15, sql:[set charset DEFAULT]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:18, sql:[set names default]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:22, sql:[set names 'ascii' collate 'ascii_general_ci']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:23, sql:[select @@character_set_client]===
+dble:[[('ascii',)]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:24, sql:[select @@character_set_results]===
+dble:[[('ascii',)]]
+===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:25, sql:[select @@character_set_connection]===
+dble:[[('ascii',)]]
