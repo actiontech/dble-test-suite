@@ -1,0 +1,90 @@
+===file:sqls_mixed/syntax/set_user_var.sql, id:4, sql:[SET @t1=1, @t2=2, @t3:=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:5, sql:[SELECT @t1, @t2, @t3, @t4 := @t1+@t2+@t3]===
+dble:[[(None, None, None, None)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:6, sql:[SET @v1 = X'41']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:7, sql:[SET @v2 = X'41'+0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:8, sql:[SET @v3 = CAST(X'41' AS UNSIGNED)]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:9, sql:[SELECT @v1, @v2, @v3]===
+dble:[[(None, None, None)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:10, sql:[SET @v1 = b'1000001']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:11, sql:[SET @v2 = b'1000001'+0]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:12, sql:[SET @v3 = CAST(b'1000001' AS UNSIGNED)]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:13, sql:[SELECT @v1, @v2, @v3]===
+dble:[[(None, None, None)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:15, sql:[SELECT @@error_count / @@warning_count]===
+dble:[[(None,)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:16, sql:[SELECT REPEAT('a',1) UNION SELECT REPEAT('b',10)]===
+dble:[[('a',), ('bbbbbbbbbb',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:18, sql:[set @abc123=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:19, sql:[set @123abc=2]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:20, sql:[set @abc=3]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:21, sql:[set @123=4]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:24, sql:[set @_=7]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:27, sql:[set @`-`=10]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:28, sql:[set @uv:=11]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:29, sql:[set @a:=1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:30, sql:[set @a:=@a+1]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:39, sql:[SET SESSION sort_buffer_size = 1000000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:40, sql:[SET @@local.sort_buffer_size = 1000000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:41, sql:[SET sort_buffer_size = 1000000]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:42, sql:[SET @@session.max_join_size=DEFAULT]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:44, sql:[set character set ascii]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:45, sql:[select @@character_set_client]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:46, sql:[select @@character_set_results]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:47, sql:[set character set DEFAULT]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:48, sql:[select @@character_set_client]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:49, sql:[select @@character_set_results]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:50, sql:[set charset ascii]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:51, sql:[select @@character_set_client]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:52, sql:[select @@character_set_results]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:53, sql:[set charset DEFAULT]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:54, sql:[select @@character_set_client]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:55, sql:[select @@character_set_results]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:57, sql:[set names default]===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:58, sql:[select @@character_set_client]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:59, sql:[select @@character_set_results]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:60, sql:[select @@character_set_connection]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:61, sql:[set names 'ascii' collate 'ascii_general_ci']===
+dble:[[]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:62, sql:[select @@character_set_client]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:63, sql:[select @@character_set_results]===
+dble:[[('latin1',)]]
+===file:sqls_mixed/syntax/set_user_var.sql, id:64, sql:[select @@character_set_connection]===
+dble:[[('latin1',)]]
