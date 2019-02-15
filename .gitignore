@@ -2,6 +2,6 @@
 .gitignore
 .idea/
 .DS_Store
-dble_conf/.DS_Store
-dble_conf/sql_cover/.DS_Store
+behave_dble/dble_conf/.DS_Store
+behave_dble/dble_conf/sql_cover/.DS_Store
 features/.DS_Store

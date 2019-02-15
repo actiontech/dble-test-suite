@@ -1,3 +1,0 @@
-===file:sqls_mixed/select/subquery_dev.sql, id:21, sql:[select * from schema2.sharding_4_t2 where id > (select id from sharding_4_t1 order by id) order by id;]===
-mysql err:(1242, 'Subquery returns more than 1 row')
-dble err[01:29:58.547479] :(1242, 'Subquery returns more than 1 row')
