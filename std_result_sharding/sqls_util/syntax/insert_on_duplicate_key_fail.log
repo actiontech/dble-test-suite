@@ -1,3 +1,0 @@
-===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:29, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
-dble:[[(1L, 1L, 'test', 'test'), (1L, 4L, 'Eastern', 'test001'), (2L, 2L, 'test', 'test'), (3L, 3L, 'test', 'test'), (4L, 4L, 'test', 'test')]]
-mysql:[[(1L, 1L, 'test', 'test'), (2L, 2L, 'test', 'test'), (3L, 3L, 'test', 'test'), (4L, 5L, 'test', 'test')]]
