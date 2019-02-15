@@ -1,0 +1,34 @@
+===file:sqls_util/syntax/show_dble.sql, id:2, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:3, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120),`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:4, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:5, sql:[CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`k`))DEFAULT CHARSET=UTF8]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:8, sql:[show tables]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show_dble.sql, id:9, sql:[show full tables]===
+dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show_dble.sql, id:10, sql:[show tables from schema1]===
+dble:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show_dble.sql, id:11, sql:[show full tables from schema1 like 'test%']===
+dble:[[('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show_dble.sql, id:16, sql:[show columns from test1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:17, sql:[show columns in test1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:18, sql:[show columns from test1 from schema1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:20, sql:[show columns in test1 in schema1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:21, sql:[show columns from test1 in schema1]===
+dble:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+===file:sqls_util/syntax/show_dble.sql, id:22, sql:[show full fields from test1 from schema1 like '%i%']===
+dble:[[('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', '')]]
+===file:sqls_util/syntax/show_dble.sql, id:23, sql:[show full fields from test1 from schema1 where true]===
+dble:[[('c', 'char(120)', 'utf8_general_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('k', 'int(10) unsigned', None, 'NO', 'UNI', '0', '', 'select,insert,update,references', ''), ('pad', 'int(11)', None, 'NO', '', None, '', 'select,insert,update,references', '')]]
+===file:sqls_util/syntax/show_dble.sql, id:31, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/show_dble.sql, id:32, sql:[drop table if exists schema2.test2]===
+dble:[[]]
