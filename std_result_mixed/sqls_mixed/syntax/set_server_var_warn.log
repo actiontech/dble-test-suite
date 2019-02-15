@@ -1,3 +1,0 @@
-===file:sqls_mixed/syntax/set_server_var.sql, id:397, sql:[set @@old_passwords=1]===
-mysql err:(1231, "Variable 'old_passwords' can't be set to the value of '1'")
-dble err[01:32:14.121056] :(1231, "Variable 'old_passwords' can't be set to the value of '1'")
