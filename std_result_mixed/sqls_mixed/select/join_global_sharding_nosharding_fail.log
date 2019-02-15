@@ -1,4 +1,0 @@
-===file:sqls_mixed/select/join_global_sharding_nosharding.sql, id:17, sql:[select a.id,b.id,b.pad,a.t_id from schema2.global_4_t1 a,(select sharding_4_t1.id,sharding_4_t1.pad from schema2.global_4_t1 join sharding_4_t1 where schema2.global_4_t1.pad=sharding_4_t1.pad) b,(select * from noshard_t1 where id>3) c where a.pad=b.pad and c.pad=b.pad]===
-dble:[None]
-mysql:[((1L, 1L, 1L, 1L), (5L, 1L, 1L, 5L), (1L, 1L, 1L, 1L), (5L, 1L, 1L, 5L), (3L, 3L, 3L, 3L))]
-[01:28:59.605618]dble err :(-1, 'error totally whack')
