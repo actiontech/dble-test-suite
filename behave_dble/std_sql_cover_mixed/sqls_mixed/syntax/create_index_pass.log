@@ -1,0 +1,102 @@
+===file:sqls_mixed/syntax/create_index.sql, id:14, sql:[DROP TABLE IF EXISTS sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:15, sql:[CREATE TABLE sharding_4_t1(id int,data varchar(10))]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:16, sql:[CREATE UNIQUE INDEX idx_id ON sharding_4_t1 (id)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:17, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 0L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:18, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:19, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:20, sql:[CREATE UNIQUE INDEX idx_id ON sharding_4_t1 (id,data)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:21, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 0L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 0L, 'idx_id', 2L, 'data', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:22, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:23, sql:[CREATE UNIQUE INDEX idx_id ON sharding_4_t1 (id,data(3) ASC)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:24, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 0L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 0L, 'idx_id', 2L, 'data', 'A', 0L, 3L, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:25, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:26, sql:[CREATE UNIQUE INDEX idx_id USING BTREE ON sharding_4_t1 (id,data(3) ASC)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:27, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 0L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 0L, 'idx_id', 2L, 'data', 'A', 0L, 3L, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:28, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:29, sql:[CREATE UNIQUE INDEX idx_id USING HASH ON sharding_4_t1 (id,data(3) ASC)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:30, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 0L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 0L, 'idx_id', 2L, 'data', 'A', 0L, 3L, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:31, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:35, sql:[DROP TABLE IF EXISTS sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:36, sql:[CREATE TABLE sharding_4_t1(id int,data varchar(10))]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:37, sql:[CREATE FULLTEXT INDEX idx_id ON sharding_4_t1 (data(3))]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:38, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'idx_id', 1L, 'data', None, 0L, None, None, 'YES', 'FULLTEXT', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:40, sql:[DROP TABLE IF EXISTS sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:41, sql:[CREATE TABLE sharding_4_t1(id int,data varchar(10))]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:42, sql:[CREATE INDEX inx_id ON sharding_4_t1 (id)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:43, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:44, sql:[INSERT INTO sharding_4_t1 VALUES (1,'aaa')]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:45, sql:[DROP INDEX inx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:46, sql:[CREATE INDEX inx_id ON sharding_4_t1 (id,data)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:47, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 1L, 'inx_id', 2L, 'data', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:48, sql:[INSERT INTO sharding_4_t1 VALUES (2,'bbb')]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:49, sql:[DROP INDEX inx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:50, sql:[CREATE INDEX idx_id ON sharding_4_t1 (id ASC,data(3) DESC)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:51, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 1L, 'idx_id', 2L, 'data', 'A', 0L, 3L, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:52, sql:[INSERT INTO sharding_4_t1 VALUES (5,'eee')]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:53, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:54, sql:[CREATE INDEX idx_id USING HASH ON sharding_4_t1 (id ASC,data(3) DESC)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:55, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'idx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', ''), ('sharding_4_t1', 1L, 'idx_id', 2L, 'data', 'A', 0L, 3L, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:56, sql:[INSERT INTO sharding_4_t1 VALUES (6,'fff')]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:59, sql:[DROP INDEX idx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:60, sql:[CREATE INDEX inx_id USING BTREE ON sharding_4_t1 (id)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:61, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:62, sql:[INSERT INTO sharding_4_t1 VALUES (3,'ccc')]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:63, sql:[DROP INDEX inx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:64, sql:[CREATE INDEX inx_id USING HASH ON sharding_4_t1 (id)]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:65, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
+===file:sqls_mixed/syntax/create_index.sql, id:66, sql:[INSERT INTO sharding_4_t1 VALUES (4,'ddd')]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:67, sql:[DROP INDEX inx_id ON sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:68, sql:[CREATE INDEX inx_id ON sharding_4_t1 (id) comment '测试']===
+dble:[[]]
+===file:sqls_mixed/syntax/create_index.sql, id:69, sql:[SHOW INDEX FROM sharding_4_t1]===
+dble:[[('sharding_4_t1', 1L, 'inx_id', 1L, 'id', 'A', 0L, None, None, 'YES', 'BTREE', '', '\xe6\xb5\x8b\xe8\xaf\x95')]]
+===file:sqls_mixed/syntax/create_index.sql, id:73, sql:[DROP TABLE IF EXISTS sharding_4_t1]===
+dble:[[]]
