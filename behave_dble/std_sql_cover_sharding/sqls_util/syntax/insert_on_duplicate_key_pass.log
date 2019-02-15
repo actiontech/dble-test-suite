@@ -1,0 +1,124 @@
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:3, sql:[DROP TABLE if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:4, sql:[DROP TABLE if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:5, sql:[create TABLE test1 (id int(11),R_REGIONKEY int(11) primary key default 10,R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:6, sql:[create table schema2.test2 (id int(11),R_REGIONKEY int(11) primary key,R_NAME varchar(50),R_COMMENT varchar(50))]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:7, sql:[INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004') ON DUPLICATE KEY UPDATE R_NAME='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:8, sql:[insert into schema2.test2 (id,R_REGIONKEY,R_NAME,R_COMMENT) values(0,1,'test','test')]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:9, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:10, sql:[INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,5, 'Northern','test003'),(2,6, 'Western','test002'),(4,7, 'Southern','test004') ON DUPLICATE KEY UPDATE R_NAME='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:11, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (2L, 2L, 'Western', 'test002'), (2L, 6L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (3L, 5L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004'), (4L, 7L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:12, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_NAME='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:13, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (1L, 8L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (2L, 6L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (3L, 5L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004'), (4L, 7L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:14, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:15, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (1L, 9L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (2L, 6L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (3L, 5L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004'), (4L, 7L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:16, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:17, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (1L, 8L, 'Eastern', 'test001'), (1L, 9L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (2L, 6L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (3L, 5L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004'), (4L, 7L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:18, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=default(R_REGIONKEY)+10]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:19, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (1L, 9L, 'Eastern', 'test001'), (1L, 20L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (2L, 6L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (3L, 5L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004'), (4L, 7L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:20, sql:[INSERT INTO test1 VALUES(1,9, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=default]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:21, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test001'), (1L, 10L, 'Eastern', 'test001'), (1L, 20L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (2L, 6L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (3L, 5L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004'), (4L, 7L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:23, sql:[DELETE FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:24, sql:[INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004') ON DUPLICATE KEY UPDATE R_NAME='test',R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:25, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:26, sql:[INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004') ON DUPLICATE KEY UPDATE R_NAME='test',R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:27, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'test', 'test'), (2L, 2L, 'test', 'test'), (3L, 3L, 'test', 'test'), (4L, 4L, 'test', 'test')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:28, sql:[INSERT INTO test1 VALUES(1,4, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:30, sql:[DELETE FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:31, sql:[INSERT INTO test1 VALUES(1,1, 'Eastern','test001'),(3,3, 'Northern','test003'),(2,2, 'Western','test002'),(4,4, 'Southern','test004')]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:32, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_NAME='test',R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:33, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (1L, 8L, 'Eastern', 'test001'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:34, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:35, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (1L, 9L, 'Eastern', 'test'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:36, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:37, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (1L, 8L, 'Eastern', 'test001'), (1L, 9L, 'Eastern', 'test'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:38, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=default(R_REGIONKEY)+10,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:39, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (1L, 9L, 'Eastern', 'test'), (1L, 20L, 'Eastern', 'test'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:40, sql:[INSERT INTO test1 VALUES(1,9, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=default,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:41, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 1L, 'Eastern', 'test001'), (1L, 10L, 'Eastern', 'test'), (1L, 20L, 'Eastern', 'test'), (2L, 2L, 'Western', 'test002'), (3L, 3L, 'Northern', 'test003'), (4L, 4L, 'Southern', 'test004')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:43, sql:[DELETE FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:44, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:45, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:46, sql:[INSERT INTO test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:47, sql:[insert ignore into test1 VALUES(1,8, 'Eastern','test001') ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='test']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:48, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 8L, 'Eastern', 'test001'), (1L, 9L, 'Eastern', 'test')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:50, sql:[DELETE FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:51, sql:[INSERT INTO test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_NAME='new',R_COMMENT='new']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:52, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'test', 'test')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:53, sql:[INSERT INTO test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_NAME='new',R_COMMENT='new']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:54, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'new', 'new')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:56, sql:[DELETE FROM test1]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:57, sql:[INSERT INTO test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='new']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:58, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'test', 'test')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:59, sql:[INSERT INTO test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='new']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:60, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 11L, 'test', 'new')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:61, sql:[INSERT INTO test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='new']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:62, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'test', 'test'), (1L, 11L, 'test', 'new')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:63, sql:[insert ignore into test1 set id=1,R_REGIONKEY=default,R_NAME='test',R_COMMENT='test' ON DUPLICATE KEY UPDATE R_REGIONKEY=R_REGIONKEY+1,R_COMMENT='new']===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:64, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'test', 'test'), (1L, 11L, 'test', 'new')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:65, sql:[insert IGNORE schema2.test2(id,R_REGIONKEY,R_NAME,R_COMMENT) values(13,26,'test','test'),(15,30,'test','test') ON DUPLICATE KEY UPDATE R_REGIONKEY=(select max(R_REGIONKEY) from test1)]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:66, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'test', 'test'), (1L, 11L, 'test', 'new')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:67, sql:[insert IGNORE schema2.test2(id,R_REGIONKEY,R_NAME,R_COMMENT) values(1,(select min(R_REGIONKEY) from test1) ,'test','test'),(2,14,'test','test') ON DUPLICATE KEY UPDATE R_REGIONKEY=(select max(R_REGIONKEY) from test1)]===
+dble:[[]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:68, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM test1]===
+dble:[[(1L, 10L, 'test', 'test'), (1L, 11L, 'test', 'new')]]
+===file:sqls_util/syntax/insert_on_duplicate_key.sql, id:72, sql:[DROP TABLE if exists test1]===
+dble:[[]]
