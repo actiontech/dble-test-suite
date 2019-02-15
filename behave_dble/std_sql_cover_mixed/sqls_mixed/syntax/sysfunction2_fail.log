@@ -1,0 +1,24 @@
+===file:sqls_mixed/syntax/sysfunction2.sql, id:38, sql:[SELECT @i, ExtractValue(@xml, '//b[$@i]')]===
+dble:[[(1L, 'x')]]
+mysql:[[(1L, 'X')]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:39, sql:[SELECT @j, ExtractValue(@xml, '//b[$@j]')]===
+dble:[[(2L, 'y')]]
+mysql:[[(2L, 'Y')]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:77, sql:[SELECT CONNECTION_ID()]===
+dble:[[(7208L,)]]
+mysql:[[(102144L,)]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:78, sql:[SELECT CURRENT_USER()]===
+dble:[[('test@172.100.9.253',)]]
+mysql:[[('test@%',)]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:81, sql:[select schema()]===
+dble:[[('db3',)]]
+mysql:[[('schema1',)]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:82, sql:[SELECT SESSION_USER()]===
+dble:[[('test@dble-1.compose_net',)]]
+mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:83, sql:[SELECT USER()]===
+dble:[[('test@172.100.9.253',)]]
+mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
+===file:sqls_mixed/syntax/sysfunction2.sql, id:85, sql:[SELECT VERSION()]===
+dble:[[('5.6.29-dble-9.9.9.9-1147e4a2bb4d36a5fcc06351dd1c374f07f415f5-20190130100950',)]]
+mysql:[[('5.7.13',)]]
