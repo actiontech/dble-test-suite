@@ -1,0 +1,664 @@
+===file:sqls_util/transaction/trx_isolation.sql, id:2, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:3, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`k` int(10) unsigned NOT NULL DEFAULT '0',`c` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY (`k`))]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:6, sql:[SET @@session.autocommit = ON]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:7, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:8, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:9, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:10, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:12, sql:[SET @@session.autocommit = ON]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:13, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:14, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:15, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:16, sql:[select * from test1]===
+dble:[[(1L, 1L, '1', 1L)]]
+===file:sqls_util/transaction/trx_isolation.sql, id:18, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:20, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:22, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:23, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:24, sql:[select * from test1]===
+dble:[[(1L, 1L, '1', 1L)]]
+===file:sqls_util/transaction/trx_isolation.sql, id:27, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:28, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:29, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:30, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:32, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:33, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:34, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:35, sql:[select * from test1]===
+dble:[[(1L, 1L, '1', 1L)]]
+===file:sqls_util/transaction/trx_isolation.sql, id:37, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:39, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:41, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:42, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:43, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:46, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:47, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:48, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:49, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:51, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:52, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:53, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:54, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:56, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:58, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:60, sql:[select * from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:61, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:62, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:65, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:66, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:67, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:68, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:70, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:71, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:72, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:73, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:75, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:77, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:79, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:80, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:81, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:84, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:85, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:86, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:87, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:89, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:90, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:91, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:92, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:94, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:96, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:98, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:99, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:100, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:103, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:104, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:105, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:106, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:108, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:109, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:110, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:111, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:113, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:115, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:117, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:118, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:119, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:122, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:123, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:124, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:125, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:127, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:128, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:129, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:130, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:132, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:134, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:136, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:137, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:138, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:141, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:142, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:143, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:144, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:146, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:147, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:148, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:149, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:151, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:153, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:155, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:156, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:157, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:160, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:161, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:162, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:163, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:165, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:166, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:167, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:168, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:170, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:172, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:174, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:175, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:176, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:179, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:180, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:181, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:182, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:184, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:185, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:186, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:187, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:189, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:191, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:193, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:194, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:195, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:198, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:199, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:200, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:201, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:203, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:204, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:205, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:206, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:208, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:210, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:212, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:213, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:214, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:217, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:218, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:219, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:220, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:222, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:223, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:224, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:225, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:227, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:229, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:231, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:232, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:233, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:236, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:237, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:238, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:239, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:241, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:242, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:243, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:244, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:246, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:248, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:250, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:251, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:252, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:255, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:256, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:257, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:258, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:260, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:261, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:262, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:263, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:265, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:267, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:269, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:270, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:271, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:274, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:275, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:276, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:277, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:279, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:280, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:281, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:282, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:284, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:286, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:288, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:289, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:290, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:293, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:294, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:295, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:296, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:298, sql:[set session transaction isolation level READ COMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:299, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:300, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:301, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:303, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:305, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:307, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:308, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:309, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:312, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:313, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:314, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:315, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:317, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:318, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:319, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:320, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:322, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:324, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:326, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:327, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:328, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:331, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:332, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:333, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:334, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:336, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:337, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:338, sql:[insert into test1 values(1,1,1,1)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:339, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:341, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L),)]
+===file:sqls_util/transaction/trx_isolation.sql, id:343, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:345, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:346, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:347, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:350, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:351, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:352, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:353, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:355, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:356, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:357, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:358, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:360, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:362, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:364, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:365, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:366, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:369, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:370, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:371, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:372, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:374, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:375, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:376, sql:[insert into test1 values(1,1,1,1),(2,2,2,2)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:377, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:379, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:381, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:383, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:384, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:385, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:388, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:389, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:390, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:391, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:393, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:394, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:395, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:396, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:398, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:400, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:402, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:403, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:404, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:407, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:408, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:409, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:410, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:412, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:413, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:414, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:415, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:417, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:419, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:421, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:422, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:423, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:426, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:427, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:428, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:429, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:431, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:432, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:433, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:434, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:436, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:438, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:440, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:441, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:442, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:445, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:446, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:447, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:448, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:450, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:451, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:452, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:453, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:455, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:457, sql:[rollback]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:459, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:460, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:461, sql:[select * from test1 order by id]===
+dble:[()]
+===file:sqls_util/transaction/trx_isolation.sql, id:464, sql:[delete from test1]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:465, sql:[set session transaction isolation level REPEATABLE READ]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:466, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:467, sql:[insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:468, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:470, sql:[set session transaction isolation level READ UNCOMMITTED]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:471, sql:[begin]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:472, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:473, sql:[update test1 set pad='2']===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:475, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:477, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:478, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:480, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:481, sql:[commit]===
+dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:482, sql:[select * from test1 order by id]===
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+===file:sqls_util/transaction/trx_isolation.sql, id:486, sql:[drop table if exists test1]===
+dble:[[]]
