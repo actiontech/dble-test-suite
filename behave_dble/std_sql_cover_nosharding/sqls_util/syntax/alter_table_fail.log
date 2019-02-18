@@ -1,95 +1,95 @@
 ===file:sqls_util/syntax/alter_table.sql, id:9, sql:[ALTER TABLE test1 ENGINE = InnoDB;]===
 dble:[None]
 mysql:[()]
-[02:17:30.766876]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tENGINE = InnoDB')
+[04:14:58.607380]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tENGINE = InnoDB')
 ===file:sqls_util/syntax/alter_table.sql, id:10, sql:[ALTER TABLE test1 AUTO_INCREMENT = 1000;]===
 dble:[None]
 mysql:[()]
-[02:17:30.815588]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tAUTO_INCREMENT = 1000')
+[04:14:58.659590]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tAUTO_INCREMENT = 1000')
 ===file:sqls_util/syntax/alter_table.sql, id:11, sql:[ALTER TABLE test1 AVG_ROW_LENGTH = 1000;]===
 dble:[None]
 mysql:[()]
-[02:17:30.900924]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:58.745511]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:12, sql:[ALTER TABLE test1 DEFAULT CHARACTER SET = utf8;]===
 dble:[None]
 mysql:[()]
-[02:17:30.951269]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tCHARACTER SET = utf8')
+[04:14:58.794338]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tCHARACTER SET = utf8')
 ===file:sqls_util/syntax/alter_table.sql, id:13, sql:[ALTER TABLE test1 CHECKSUM = 0;]===
 dble:[None]
 mysql:[()]
-[02:17:31.000152]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:58.875895]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:14, sql:[ALTER TABLE test1 DEFAULT COLLATE = utf8_bin;]===
 dble:[None]
 mysql:[()]
-[02:17:31.080359]dble err :(1064, 'TODO pos 33, line 1, column 26, token IDENTIFIER COLLATE')
+[04:14:58.957531]dble err :(1064, 'TODO pos 33, line 1, column 26, token IDENTIFIER COLLATE')
 ===file:sqls_util/syntax/alter_table.sql, id:15, sql:[ALTER TABLE test1 COMMENT = 'string';]===
 dble:[None]
 mysql:[()]
-[02:17:31.161757]dble err :(1064, "The DDL is not supported, sql:ALTER TABLE test1\n\tCOMMENT = 'string'")
+[04:14:59.039475]dble err :(1064, "The DDL is not supported, sql:ALTER TABLE test1\n\tCOMMENT = 'string'")
 ===file:sqls_util/syntax/alter_table.sql, id:16, sql:[ALTER TABLE test1 COMPRESSION = 'ZLIB';]===
 dble:[None]
 mysql:[()]
-[02:17:31.215145]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.120166]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:17, sql:[ALTER TABLE test1 CONNECTION = 'connect_string';]===
 dble:[None]
 mysql:[()]
-[02:17:31.263674]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.200808]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:18, sql:[ALTER TABLE test1 DATA DIRECTORY = '/tmp/']===
 dble:[None]
 mysql:[()]
-[02:17:31.345017]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.281330]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:19, sql:[ALTER TABLE test1 DELAY_KEY_WRITE = 1;]===
 dble:[None]
 mysql:[()]
-[02:17:31.427055]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.362861]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:20, sql:[ALTER TABLE test1 ENCRYPTION='N';]===
 dble:[None]
 mysql:[()]
-[02:17:31.508442]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.445945]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:21, sql:[ALTER TABLE test1 INDEX DIRECTORY = '/tmp/';]===
 dble:[None]
 mysql:[()]
-[02:17:31.590386]dble err :(1064, 'sql syntax error, no terminated. INDEX')
+[04:14:59.496577]dble err :(1064, 'sql syntax error, no terminated. INDEX')
 ===file:sqls_util/syntax/alter_table.sql, id:22, sql:[ALTER TABLE test1 INSERT_METHOD = NO;]===
 dble:[None]
 mysql:[()]
-[02:17:31.672476]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.577585]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:24, sql:[ALTER TABLE test1 MAX_ROWS = 100;]===
 dble:[None]
 mysql:[()]
-[02:17:31.835158]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.740477]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:25, sql:[ALTER TABLE test1 MIN_ROWS = 100;]===
 dble:[None]
 mysql:[()]
-[02:17:31.916345]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.823098]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:26, sql:[ALTER TABLE test1 PACK_KEYS = 0;]===
 dble:[None]
 mysql:[()]
-[02:17:31.997891]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tPACK_KEYS = PACK_KEYS')
+[04:14:59.905608]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tPACK_KEYS = PACK_KEYS')
 ===file:sqls_util/syntax/alter_table.sql, id:27, sql:[ALTER TABLE test1 PASSWORD = 'test';]===
 dble:[None]
 mysql:[()]
-[02:17:32.078128]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:14:59.986697]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:29, sql:[ALTER TABLE test1 STATS_AUTO_RECALC = DEFAULT;]===
 dble:[None]
 mysql:[()]
-[02:17:32.238620]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:15:00.149007]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:30, sql:[ALTER TABLE test1 STATS_PERSISTENT = DEFAULT;]===
 dble:[None]
 mysql:[()]
-[02:17:32.319810]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:15:00.230304]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:31, sql:[ALTER TABLE test1 STATS_SAMPLE_PAGES = 1;]===
 dble:[None]
 mysql:[()]
-[02:17:32.399988]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:15:00.313539]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:33, sql:[ALTER TABLE test1 UNION (schema2.test2);]===
 dble:[None]
 mysql:[()]
-[02:17:32.561305]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tUNION = (schema2.test2)')
+[04:15:00.484324]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tUNION = (schema2.test2)')
 ===file:sqls_util/syntax/alter_table.sql, id:46, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) key_block_size = 100]===
 dble:[None]
 mysql:[()]
-[02:17:33.091477]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+[04:15:00.995501]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:47, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING BTREE]===
 dble:[()]
 mysql:[None]
@@ -97,7 +97,7 @@ mysql err:(1061, "Duplicate key name 'idx'")
 ===file:sqls_util/syntax/alter_table.sql, id:154, sql:[ALTER TABLE test1 ADD PRIMARY KEY (id ASC,data DESC)]===
 dble:[None]
 mysql:[()]
-[02:17:39.799978]dble err :(1064, 'syntax error, expect RPAREN, actual ASC pos 41, line 1, column 38, token ASC')
+[04:15:07.736141]dble err :(1064, 'syntax error, expect RPAREN, actual ASC pos 41, line 1, column 38, token ASC')
 ===file:sqls_util/syntax/alter_table.sql, id:155, sql:[ALTER TABLE test1 ADD CONSTRAINT PRIMARY KEY (id)]===
 dble:[()]
 mysql:[None]
@@ -105,15 +105,15 @@ mysql err:(1068, 'Multiple primary key defined')
 ===file:sqls_util/syntax/alter_table.sql, id:205, sql:[ALTER TABLE test1 ADD UNIQUE USING HASH (id)]===
 dble:[None]
 mysql:[()]
-[02:17:42.638464]dble err :(1064, "syntax error, error in :'SING HASH (id)', expect LPAREN, actual IDENTIFIER pos 39, line 1, column 35, token IDENTIFIER HASH")
+[04:15:10.549130]dble err :(1064, "syntax error, error in :'SING HASH (id)', expect LPAREN, actual IDENTIFIER pos 39, line 1, column 35, token IDENTIFIER HASH")
 ===file:sqls_util/syntax/alter_table.sql, id:208, sql:[ALTER TABLE test1 ADD CONSTRAINT UNIQUE KEY (id)]===
 dble:[None]
 mysql:[()]
-[02:17:42.811188]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tADD UNIQUE (id)')
+[04:15:10.729276]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tADD UNIQUE (id)')
 ===file:sqls_util/syntax/alter_table.sql, id:258, sql:[alter table test1 drop column test1.01a]===
 dble:[None]
 mysql:[()]
-[02:17:45.247529]dble err :(1064, 'sql syntax error, no terminated. LITERAL_FLOAT')
+[04:15:13.330043]dble err :(1064, 'sql syntax error, no terminated. LITERAL_FLOAT')
 ===file:sqls_util/syntax/alter_table.sql, id:265, sql:[desc test1]===
 dble:[[('$', 'tinyint(1)', 'YES', '', None, ''), ('011', 'tinyint(1)', 'YES', '', None, ''), ('01a', 'tinyint(1)', 'YES', '', None, ''), ('_', 'tinyint(1)', 'YES', '', None, ''), ('a', 'int(4)', 'YES', '', None, ''), ('abc89ABC', 'varchar(1)', 'YES', '', None, ''), ('abcABC', 'varchar(1)', 'YES', '', None, ''), ('select', 'int(4)', 'YES', '', None, '')]]
 mysql:[[('$', 'tinyint(1)', 'YES', '', None, ''), ('011', 'tinyint(1)', 'YES', '', None, ''), ('_', 'tinyint(1)', 'YES', '', None, ''), ('a', 'int(4)', 'YES', '', None, ''), ('abc89ABC', 'varchar(1)', 'YES', '', None, ''), ('abcABC', 'varchar(1)', 'YES', '', None, ''), ('select', 'int(4)', 'YES', '', None, '')]]
