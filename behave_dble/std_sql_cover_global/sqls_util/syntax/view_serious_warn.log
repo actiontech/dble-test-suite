@@ -1,6 +1,6 @@
 ===file:sqls_util/syntax/view.sql, id:32, sql:[select * from view_test]===
 mysql err:(1356, "View 'schema1.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[06:55:23.140993] :(1003, "Unknown column 'test1.R_NAME' in 'field list'")
+dble err[02:12:12.778186] :(1003, "Unknown column 'test1.R_NAME' in 'field list'")
 ===file:sqls_util/syntax/view.sql, id:36, sql:[select * from view_test]===
 mysql err:(1356, "View 'schema1.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
-dble err[06:55:23.470377] :(1003, "Unknown column 'test1.R_NAME' in 'field list'")
+dble err[02:12:13.164658] :(1003, "Unknown column 'test1.R_NAME' in 'field list'")
