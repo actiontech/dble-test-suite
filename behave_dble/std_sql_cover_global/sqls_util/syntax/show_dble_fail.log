@@ -4,27 +4,30 @@ mysql:[[('db1',), ('db2',), ('db3',), ('db4',), ('information_schema',), ('mysql
 ===file:sqls_util/syntax/show_dble.sql, id:7, sql:[show schemas]===
 dble:[[('schema1',), ('schema2',), ('schema3',)]]
 mysql:[[('db1',), ('db2',), ('db3',), ('db4',), ('information_schema',), ('mysql',), ('performance_schema',), ('schema1',), ('schema2',), ('schema3',), ('sys',), ('testdb',)]]
+===file:sqls_util/syntax/show_dble.sql, id:8, sql:[show tables]===
+dble:[[('test1',)]]
+mysql:[[('drop',), ('test1',)]]
+===file:sqls_util/syntax/show_dble.sql, id:9, sql:[show full tables]===
+dble:[[('test1', 'BASE TABLE')]]
+mysql:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+===file:sqls_util/syntax/show_dble.sql, id:10, sql:[show tables from schema1]===
+dble:[[('test1',)]]
+mysql:[[('drop',), ('test1',)]]
 ===file:sqls_util/syntax/show_dble.sql, id:12, sql:[show table status]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them"), ('test1', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 16384L, 0L, None, datetime.datetime(2019, 2, 13, 14, 54, 6), None, None, 'utf8_general_ci', None, '', '')]]
+mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them"), ('test1', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 16384L, 0L, None, datetime.datetime(2019, 2, 18, 10, 10, 45), None, None, 'utf8_general_ci', None, '', '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:16, sql:[show columns from test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:17, sql:[show columns in test1]===
-dble:[None]
-mysql:[(('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('c', 'char(120)', 'YES', '', None, ''), ('pad', 'int(11)', 'NO', '', None, ''))]
-[06:54:07.332215]dble err :(1064, "java.sql.SQLSyntaxErrorException: syntax error, error in :'umns in test1', expect IN, actual IN pos 15, line 1, column 13, token IN")
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:18, sql:[show columns from test1 from schema1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/show_dble.sql, id:19, sql:[show columns from test1 from schema2]===
-dble:[(('id', 'int(11)', 'YES', '', None, ''),)]
-mysql:[None]
-mysql err:(1146, "Table 'schema2.test1' doesn't exist")
 ===file:sqls_util/syntax/show_dble.sql, id:20, sql:[show columns in test1 in schema1]===
-dble:[None]
-mysql:[(('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('c', 'char(120)', 'YES', '', None, ''), ('pad', 'int(11)', 'NO', '', None, ''))]
-[06:54:07.542326]dble err :(1064, "java.sql.SQLSyntaxErrorException: syntax error, error in :'umns in test1 in schema1', expect IN, actual IN pos 15, line 1, column 13, token IN")
+dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
+mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:21, sql:[show columns from test1 in schema1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
@@ -35,6 +38,6 @@ mysql:[[('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,u
 dble:[[('_dble_op_time', 'bigint(20)', None, 'YES', '', None, '', 'select,insert,update,references', 'field for checking consistency'), ('c', 'char(120)', 'utf8_general_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('k', 'int(10) unsigned', None, 'NO', 'UNI', '0', '', 'select,insert,update,references', ''), ('pad', 'int(11)', None, 'NO', '', None, '', 'select,insert,update,references', '')]]
 mysql:[[('c', 'char(120)', 'utf8_general_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('k', 'int(10) unsigned', None, 'NO', 'UNI', '0', '', 'select,insert,update,references', ''), ('pad', 'int(11)', None, 'NO', '', None, '', 'select,insert,update,references', '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:27, sql:[show all tables]===
-dble:[(('drop', 'VIEW'), ('test1', 'GLOBAL TABLE'))]
+dble:[(('test1', 'GLOBAL TABLE'),)]
 mysql:[None]
 mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'all tables' at line 1")
