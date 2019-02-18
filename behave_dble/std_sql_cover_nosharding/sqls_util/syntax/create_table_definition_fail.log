@@ -1,36 +1,36 @@
 ===file:sqls_util/syntax/create_table_definition.sql, id:99, sql:[CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))]===
 dble:[None]
 mysql:[()]
-[02:17:56.466025]dble err :(-1, 'error totally whack')
+[04:15:24.710257]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:106, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) virtual)]===
 dble:[None]
 mysql:[()]
-[02:17:56.826901]dble err :(-1, 'error totally whack')
+[04:15:25.023705]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:111, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) stored)]===
 dble:[None]
 mysql:[()]
-[02:17:57.179314]dble err :(-1, 'error totally whack')
+[04:15:25.333211]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:118, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE)]===
 dble:[None]
 mysql:[()]
-[02:17:57.530092]dble err :(-1, 'error totally whack')
+[04:15:25.664345]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:123, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY)]===
 dble:[None]
 mysql:[()]
-[02:17:57.884313]dble err :(-1, 'error totally whack')
+[04:15:26.024135]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:130, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY COMMENT 'test')]===
 dble:[None]
 mysql:[()]
-[02:17:58.203665]dble err :(-1, 'error totally whack')
+[04:15:26.358280]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:137, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NOT NULL)]===
 dble:[None]
 mysql:[()]
-[02:17:58.553124]dble err :(-1, 'error totally whack')
+[04:15:26.718943]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:142, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NULL)]===
 dble:[None]
 mysql:[()]
-[02:17:58.901248]dble err :(-1, 'error totally whack')
+[04:15:27.052852]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:150, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) STORED PRIMARY KEY)]===
 dble:[None]
 mysql:[()]
-[02:17:59.256924]dble err :(-1, 'error totally whack')
+[04:15:27.410989]dble err :(-1, 'error totally whack')

@@ -1,6 +1,6 @@
 ===file:sqls_util/transaction/trx_ddl_dml.sql, id:820, sql:[select * from test1 order by id]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[02:31:14.230362] :(1146, "Table 'db3.test1' doesn't exist")
+dble err[04:28:51.070275] :(1146, "Table 'db3.test1' doesn't exist")
 ===file:sqls_util/transaction/trx_ddl_dml.sql, id:828, sql:[select * from test1 order by id]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[02:31:14.659519] :(1146, "Table 'db3.test1' doesn't exist")
+dble err[04:28:51.496356] :(1146, "Table 'db3.test1' doesn't exist")

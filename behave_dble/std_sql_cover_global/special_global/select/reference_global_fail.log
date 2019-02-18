@@ -1,4 +1,0 @@
-===file:special_global/select/reference_global.sql, id:15, sql:[select a.id,b.id,b.pad,a.t_id from test1 a,(select schema3.test3.id,schema3.test3.pad from test1 join schema3.test3 where test1.pad=schema3.test3.pad) b,(select * from schema2.test2 where id>3) c where a.pad=b.pad and c.pad=b.pad]===
-dble:[None]
-mysql:[((1L, 1L, 1L, 1L), (5L, 1L, 1L, 5L), (3L, 4L, 4L, 3L), (1L, 1L, 1L, 1L), (5L, 1L, 1L, 5L))]
-[07:03:23.822526]dble err :(1003, "Unknown column 'schema3.test3.pad' in 'where clause'")
