@@ -987,6 +987,7 @@ show index from `select`
 create or replace view `drop` as select id from `select`
 show create view `drop` /*allow_diff*/
 drop index `create` on `select`
+drop view if exists `drop`
 #
 #clear tables
 #
