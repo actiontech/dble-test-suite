@@ -4,6 +4,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:4, sql:[insert into test1 (ID,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1,'Eastern','test001'),(2,2,'Western','test002'),(3,3,'Northern','test003'),(4,4,'Southern','test004')]===
 dble:[[]]
+===file:sqls_util/syntax/show.sql, id:5, sql:[show columns in test1]===
+dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'NO', 'PRI', None, '')]]
 ===file:sqls_util/syntax/show.sql, id:6, sql:[show columns from test1 from schema1]===
 dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'NO', 'PRI', None, '')]]
 ===file:sqls_util/syntax/show.sql, id:7, sql:[show full columns from test1 from schema1]===
@@ -14,7 +16,7 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:10, sql:[show table status/*allow_diff*/]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', ''), ('test2', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them"), ('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 1, 10, 23, 18), datetime.datetime(2019, 2, 1, 10, 23, 18), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them"), ('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 18, 12, 20, 50), datetime.datetime(2019, 2, 18, 12, 20, 50), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/show.sql, id:11, sql:[show table status like 'aly_o%'/*allow_diff*/]===
 dble:[[]]
 mysql:[[]]
