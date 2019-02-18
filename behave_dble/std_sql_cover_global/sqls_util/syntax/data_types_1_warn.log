@@ -1,330 +1,330 @@
 ===file:sqls_util/syntax/data_types_1.sql, id:6, sql:[INSERT INTO test1 VALUES (2,2)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[06:49:18.035870] :(1406, "Data too long for column 'data' at row 1")
+dble err[02:05:56.119126] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:11, sql:[INSERT INTO test1 VALUES (1,01010)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[06:49:18.318275] :(1406, "Data too long for column 'data' at row 1")
+dble err[02:05:56.393406] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:32, sql:[INSERT INTO test1 ( id,data) VALUES (1,-129)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:19.409086] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:57.507977] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:33, sql:[INSERT INTO test1 ( id,data) VALUES (2,128)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:19.458020] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:57.557992] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:34, sql:[INSERT INTO test1 ( id,data) VALUES (222,-129),(222,-128),(222,0),(222,127),(222,128)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:19.538723] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:57.607276] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:43, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:20.128154] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:58.184107] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:44, sql:[INSERT INTO test1 ( id,data) VALUES (2,256)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:20.179252] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:58.265739] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:45, sql:[INSERT INTO test1 ( id,data) VALUES (111,-1),(112,0),(113,256)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:20.260510] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:58.347054] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:54, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,-10000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:20.849790] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:58.950396] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:55, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,255),(114,256),(1112,2555),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:20.937524] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:05:59.033785] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:64, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,-10000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:21.488945] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:05:59.592239] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:65, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,255),(114,256),(1112,2555),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:21.541042] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:05:59.676615] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:76, sql:[INSERT INTO test1 ( id,data) VALUES (1,-32769)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:22.100975] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:00.233152] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:77, sql:[INSERT INTO test1 ( id,data) VALUES (2,32768)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:22.182087] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:00.283301] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:78, sql:[INSERT INTO test1 ( id,data) VALUES (222,-32769),(222,-32768),(222,0),(222,32767),(222,32768)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:22.262572] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:00.365727] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:87, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:22.852636] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:00.967903] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:88, sql:[INSERT INTO test1 ( id,data) VALUES (2,65536)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:22.934302] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:01.019403] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:89, sql:[INSERT INTO test1 ( id,data) VALUES (111,-1),(112,0),(113,65536)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:23.016923] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:01.104898] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:98, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,-65536)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:23.568127] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:01.662704] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:99, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,65535),(114,655355),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:23.652084] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:01.747218] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:108, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,-65536)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:24.194268] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:02.305734] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:109, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,65535),(114,655355),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:24.277757] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:02.390190] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:120, sql:[INSERT INTO test1 ( id,data) VALUES (1,-8388609)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:24.824807] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:02.945662] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:122, sql:[INSERT INTO test1 ( id,data) VALUES (222,-8388609),(222,-8388608),(222,0),(222,8388607),(222,8388608)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:24.957513] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:03.078365] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:131, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:25.540281] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:03.660369] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:132, sql:[INSERT INTO test1 ( id,data) VALUES (2,16777216)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:25.595748] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:03.745130] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:133, sql:[INSERT INTO test1 ( id,data) VALUES (111,-1),(112,0),(113,16777216)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:25.645390] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:03.797306] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:142, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,16777216)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:26.228583] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:04.390468] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:143, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,16777215),(114,16777216),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:26.283889] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:04.473962] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:152, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,16777216)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:26.853843] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:05.043902] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:153, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,16777215),(114,16777216),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:26.908450] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:05.128052] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:164, sql:[INSERT INTO test1 ( id,data) VALUES (1,-2147483649)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:27.479098] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:05.686845] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:165, sql:[INSERT INTO test1 ( id,data) VALUES (2,2147483648)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:27.559788] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:05.770803] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:166, sql:[INSERT INTO test1 ( id,data) VALUES (222,-2147483649),(222,-2147483648),(222,0),(222,2147483647),(222,2147483648)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:27.645519] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:05.854100] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:175, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:28.239359] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:06.460770] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:176, sql:[INSERT INTO test1 ( id,data) VALUES (2,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:28.322608] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:06.542492] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:177, sql:[INSERT INTO test1 ( id,data) VALUES (111,-1),(112,0),(113,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:28.408338] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:06.624787] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:186, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,-10000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:29.000815] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:07.217593] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:187, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,10000),(114,100000),(115,-1),(116,-10000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 5")
-dble err[06:49:29.057962] :(1264, "Out of range value for column 'data' at row 5")
+dble err[02:06:07.301999] :(1264, "Out of range value for column 'data' at row 5")
 ===file:sqls_util/syntax/data_types_1.sql, id:196, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:29.596500] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:07.862067] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:197, sql:[INSERT INTO test1 ( id,data) VALUES (2,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:29.680562] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:07.943618] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:198, sql:[INSERT INTO test1 ( id,data) VALUES (3,-1),(4,0),(5,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:29.730762] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:08.026281] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:199, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,10),(114,-1000),(115,-10000),(116,-100000),(117,10000),(118,4294967295)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:29.817294] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:08.110567] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:203, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,10),(114,-1000),(115,-10000),(116,-100000),(117,10000),(118,4294967295)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:30.070439] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:08.362551] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:209, sql:[INSERT INTO test1 ( id,data) VALUES (1,-2147483649)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:30.311610] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:08.617568] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:210, sql:[INSERT INTO test1 ( id,data) VALUES (2,2147483648)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:30.397325] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:08.702175] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:211, sql:[INSERT INTO test1 ( id,data) VALUES (222,-2147483649),(222,-2147483648),(222,0),(222,2147483647),(222,2147483648)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:30.481683] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:08.754899] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:220, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:31.082312] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:09.314117] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:221, sql:[INSERT INTO test1 ( id,data) VALUES (2,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:31.164832] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:09.363319] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:222, sql:[INSERT INTO test1 ( id,data) VALUES (111,-1),(112,0),(113,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:31.247037] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:09.447025] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:231, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,-10000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:31.861860] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:10.045944] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:232, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,10000),(114,100000),(115,-1),(116,-10000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 5")
-dble err[06:49:31.945783] :(1264, "Out of range value for column 'data' at row 5")
+dble err[02:06:10.130805] :(1264, "Out of range value for column 'data' at row 5")
 ===file:sqls_util/syntax/data_types_1.sql, id:241, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:32.517717] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:10.697374] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:242, sql:[INSERT INTO test1 ( id,data) VALUES (2,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:32.600329] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:10.779224] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:243, sql:[INSERT INTO test1 ( id,data) VALUES (3,-1),(4,0),(5,4294967296)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:32.683387] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:10.861012] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:254, sql:[INSERT INTO test1 ( id,data) VALUES (1,-9223372036854775809)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:33.281218] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:11.462927] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:255, sql:[INSERT INTO test1 ( id,data) VALUES (2,9223372036854775808)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:33.331392] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:11.545267] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:256, sql:[INSERT INTO test1 ( id,data) VALUES (222,-9223372036854775809),(222,-9223372036854775808),(222,0),(222,9223372036854775807),(222,9223372036854775808)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:33.413673] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:11.628622] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:265, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:34.051250] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:12.226364] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:266, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:34.133719] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:12.283855] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:267, sql:[INSERT INTO test1 ( id,data) VALUES (111,-1),(112,0),(113,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:34.217087] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:12.335277] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:276, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,18446744073709551615)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:34.810039] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:12.934046] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:277, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,18446744073709551615),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:34.894258] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:13.020197] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:286, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1),(2,18446744073709551615)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:35.455449] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:13.579652] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:287, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1),(113,18446744073709551615),(115,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 4")
-dble err[06:49:35.541123] :(1264, "Out of range value for column 'data' at row 4")
+dble err[02:06:13.668079] :(1264, "Out of range value for column 'data' at row 4")
 ===file:sqls_util/syntax/data_types_1.sql, id:299, sql:[INSERT INTO test1 ( id,data) VALUES (2,1234567890123456789012345678901234567890.1234567890)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:36.176741] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:14.290768] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:300, sql:[INSERT INTO test1 ( id,data) VALUES (222,-1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.1234567890123),(222,0),(222,1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.12345678901234)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:36.258966] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:14.377054] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:305, sql:[INSERT INTO test1 ( id,data) VALUES (221,0.7777),(222,7777.777),(223,77777.77),(224,0),(225,7777777),(226,777777)]===
 mysql err:(1264, "Out of range value for column 'data' at row 3")
-dble err[06:49:36.605685] :(1264, "Out of range value for column 'data' at row 3")
+dble err[02:06:14.690533] :(1264, "Out of range value for column 'data' at row 3")
 ===file:sqls_util/syntax/data_types_1.sql, id:310, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:36.913728] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:14.997205] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:315, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:37.263824] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:15.336508] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:320, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:37.606966] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:15.667740] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:325, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:37.971522] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:16.005390] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:330, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:38.310516] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:16.370089] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:335, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:38.657868] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:16.701949] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:348, sql:[INSERT INTO test1 ( id,data) VALUES (221,0.7777),(222,7777.777),(223,77777.77),(224,0),(225,7777777),(226,777777)]===
 mysql err:(1264, "Out of range value for column 'data' at row 3")
-dble err[06:49:39.423310] :(1264, "Out of range value for column 'data' at row 3")
+dble err[02:06:17.461558] :(1264, "Out of range value for column 'data' at row 3")
 ===file:sqls_util/syntax/data_types_1.sql, id:354, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:39.818105] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:17.858838] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:359, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:40.159720] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:18.206703] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:365, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:40.591935] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:18.642812] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:371, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:41.020394] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:19.079220] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:377, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:41.482403] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:19.501760] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:383, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:41.904331] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:19.930913] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:391, sql:[INSERT INTO test1 ( id,data) VALUES (1111,-1234567890123456789012345678901234567890.1234567890123),(1112,0),(1113,1234567890123456789012345678901234567890.1234567890123)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:42.339306] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:20.369349] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:396, sql:[INSERT INTO test1 ( id,data) VALUES (221,0.7777),(222,7777.777),(223,77777.77),(224,0),(225,7777777),(226,777777)]===
 mysql err:(1264, "Out of range value for column 'data' at row 3")
-dble err[06:49:42.717018] :(1264, "Out of range value for column 'data' at row 3")
+dble err[02:06:20.729735] :(1264, "Out of range value for column 'data' at row 3")
 ===file:sqls_util/syntax/data_types_1.sql, id:402, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:43.113459] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:21.135269] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:403, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616),(3,0)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:43.199382] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:21.221335] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:407, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:43.490304] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:21.492786] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:413, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:43.948490] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:21.949854] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:419, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:44.367090] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:22.390465] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:425, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:44.823981] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:22.811167] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:431, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:45.248290] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:23.241157] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:439, sql:[INSERT INTO test1 ( id,data) VALUES (1,'a')]===
 mysql err:(1366, "Incorrect decimal value: 'a' for column 'data' at row 1")
-dble err[06:49:45.663046] :(1366, "Incorrect decimal value: 'a' for column 'data' at row 1")
+dble err[02:06:23.657324] :(1366, "Incorrect decimal value: 'a' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:440, sql:[INSERT INTO test1 ( id,data) VALUES (2,1234567890123456789012345678901234567890123456789012345678901234567)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:45.716235] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:23.739431] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:442, sql:[INSERT INTO test1 ( id,data) VALUES (222,-1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.1234567890123),(222,0),(222,1234567890123456789012345678901234567890.12345678901234),(222,-1234567890123456789012345678901234567890.12345678901234)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:45.852916] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:23.879615] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:443, sql:[INSERT INTO test1 ( id,data) VALUES (1111,-12345678901234567890123.4567890),(1112,0),(1113,12345678901234567890123.4567890)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:45.937731] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:23.963329] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:448, sql:[INSERT INTO test1 ( id,data) VALUES (221,0.7777),(222,7777.777),(223,77777.77),(224,0),(225,7777777),(226,777777)]===
 mysql err:(1264, "Out of range value for column 'data' at row 3")
-dble err[06:49:46.309219] :(1264, "Out of range value for column 'data' at row 3")
+dble err[02:06:24.342137] :(1264, "Out of range value for column 'data' at row 3")
 ===file:sqls_util/syntax/data_types_1.sql, id:454, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:46.706549] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:24.734321] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:455, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616),(3,0)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:46.789531] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:24.817482] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:460, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:47.167466] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:25.192551] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:466, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:47.610668] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:25.635460] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:472, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:48.038883] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:26.059148] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:478, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:48.466314] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:26.486274] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:484, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:48.885431] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:26.912007] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:492, sql:[INSERT INTO test1 ( id,data) VALUES (1,'a')]===
 mysql err:(1265, "Data truncated for column 'data' at row 1")
-dble err[06:49:49.321788] :(1265, "Data truncated for column 'data' at row 1")
+dble err[02:06:27.326014] :(1265, "Data truncated for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:501, sql:[INSERT INTO test1 ( id,data) VALUES (221,0.7777),(222,7777.777),(223,77777.77),(224,0),(225,7777777),(226,777777)]===
 mysql err:(1264, "Out of range value for column 'data' at row 3")
-dble err[06:49:49.915666] :(1264, "Out of range value for column 'data' at row 3")
+dble err[02:06:27.982565] :(1264, "Out of range value for column 'data' at row 3")
 ===file:sqls_util/syntax/data_types_1.sql, id:507, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:50.311984] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:28.367681] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:513, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:50.742460] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:28.787803] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:519, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:51.180530] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:29.235159] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:525, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:51.603185] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:29.658841] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:531, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:52.033091] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:30.079402] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_1.sql, id:537, sql:[INSERT INTO test1 ( id,data) VALUES (1,-1)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[06:49:52.457745] :(1264, "Out of range value for column 'data' at row 1")
+dble err[02:06:30.502765] :(1264, "Out of range value for column 'data' at row 1")
