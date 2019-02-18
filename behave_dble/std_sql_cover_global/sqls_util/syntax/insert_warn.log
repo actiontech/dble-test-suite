@@ -1,3 +1,3 @@
 ===file:sqls_util/syntax/insert.sql, id:110, sql:[INSERT test1 SET id=1,R_REGIONKEY=5,R_NAME='test',R_COMMENT='test'/*Duplicate entry '1' for key 'PRIMARY'*/]===
 mysql err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
-dble err[06:50:52.590864] :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err[02:07:30.878856] :(1062, "Duplicate entry '1' for key 'PRIMARY'")
