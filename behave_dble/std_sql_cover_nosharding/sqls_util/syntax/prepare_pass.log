@@ -97,7 +97,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:64, sql:[alter table test1 add index (R_COMMENT)]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:65, sql:[show index from test1]===
-dble:[[('test1', 0L, 'id', 1L, 'id', 'A', 20L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'R_COMMENT', 1L, 'R_COMMENT', 'A', 19L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'id', 1L, 'id', 'A', 9L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'R_COMMENT', 1L, 'R_COMMENT', 'A', 11L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/prepare.sql, id:66, sql:[prepare pre_test from 'alter table test1 drop R_COMMENT']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:67, sql:[execute pre_test]===
