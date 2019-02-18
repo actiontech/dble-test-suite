@@ -1,0 +1,46 @@
+===file:sqls_util/syntax/loaddata.sql, id:3, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:4, sql:[create table test1(id int, c1 char(30), c2 bool, c3 binary, c4 float,c5 datetime)ENGINE=InnoDB DEFAULT CHARSET=utf8]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:6, sql:[load data local infile "./test1.txt" into table test1 fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:7, sql:[select id,c1,c2,c3,c4,c5 from test1 order by id]===
+dble:[()]
+===file:sqls_util/syntax/loaddata.sql, id:8, sql:[truncate table test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:9, sql:[load data infile "./test1.txt" into table test1 fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:10, sql:[select id,c1,c2,c3,c4,c5 from test1 order by id]===
+dble:[()]
+===file:sqls_util/syntax/loaddata.sql, id:11, sql:[truncate table test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:13, sql:[load data local infile "./test2.txt" into table test1 fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:14, sql:[select id,c1,c2,c3,c4,c5 from test1 order by id]===
+dble:[()]
+===file:sqls_util/syntax/loaddata.sql, id:15, sql:[truncate table test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:16, sql:[load data infile "./test2.txt" into table test1 fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:17, sql:[select id,c1,c2,c3,c4,c5 from test1 order by id]===
+dble:[()]
+===file:sqls_util/syntax/loaddata.sql, id:18, sql:[truncate table test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:20, sql:[load data local infile "./test3.txt" into table test1 character set 'utf8' fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:21, sql:[select id,c1,c2,c3,c4,c5 from test1 order by id]===
+dble:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (2L, '?', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (3L, '$%\'";:@#^&*_+-=|<.>/?`~', 5, '0', 0.001, datetime.datetime(2018, 9, 5, 0, 0)))]
+===file:sqls_util/syntax/loaddata.sql, id:22, sql:[truncate table test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:23, sql:[load data infile "./test3.txt" into table test1 character set 'utf8' fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:24, sql:[select id,c1,c2,c3,c4,c5 from test1 order by id]===
+dble:[((1L, 'aaa', 0, '0', 3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (2L, '?', 1, '1', -3.1415, datetime.datetime(2018, 9, 5, 12, 15, 30)), (3L, '$%\'";:@#^&*_+-=|<.>/?`~', 5, '0', 0.001, datetime.datetime(2018, 9, 5, 0, 0)))]
+===file:sqls_util/syntax/loaddata.sql, id:26, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:27, sql:[create table test1(id int, c1 char(5), c2 char(5), c3 char(5));]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:28, sql:[load data infile "./test4.txt" replace into table test1 fields terminated by ',' lines terminated by '\n' (id,c1) set c2='c2', c3='c3';]===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:29, sql:[select id,c1,c2,c3 from test1;]===
+dble:[[(1L, '1', 'c2', 'c3')]]

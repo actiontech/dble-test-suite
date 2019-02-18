@@ -86,6 +86,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:70, sql:[create view view_test as select test1.id,test1.name,schema2.test2.pad from test1,schema2.test2 where test1.id=schema2.test2.id]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:71, sql:[select * from view_test]===
+dble:[[(1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, '$test$4', 4L)]]
 ===file:sqls_util/syntax/view.sql, id:72, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:73, sql:[create view view_test as select test1.id,test1.name,schema2.test2.pad,schema3.test3.m_id from test1,schema2.test2,schema3.test3 where test1.id=schema2.test2.id and test1.pad=schema3.test3.pad]===

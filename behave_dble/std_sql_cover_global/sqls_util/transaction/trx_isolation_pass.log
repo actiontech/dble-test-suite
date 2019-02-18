@@ -24,6 +24,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/transaction/trx_isolation.sql, id:20, sql:[commit]===
 dble:[[]]
+===file:sqls_util/transaction/trx_isolation.sql, id:22, sql:[select * from test1]===
+dble:[[]]
 ===file:sqls_util/transaction/trx_isolation.sql, id:23, sql:[commit]===
 dble:[[]]
 ===file:sqls_util/transaction/trx_isolation.sql, id:27, sql:[delete from test1]===

@@ -1,6 +1,6 @@
 ===file:sqls_util/syntax/create_table_definition.sql, id:587, sql:[INSERT INTO test1 VALUES (1)]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[06:49:08.148666] :(-1, 'error totally whack')
+dble err[02:05:46.173948] :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:588, sql:[SHOW CREATE TABLE  test1]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[06:49:08.230289] :(1146, "Table 'db1.test1' doesn't exist")
+dble err[02:05:46.254831] :(1146, "Table 'db1.test1' doesn't exist")
