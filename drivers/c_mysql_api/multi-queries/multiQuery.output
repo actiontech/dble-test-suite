@@ -1,6 +1,6 @@
 ==>c_api_quick_test 
     *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
-multi-sqls to execute: use schema1;                     DROP TABLE IF EXISTS aly_test;                    CREATE TABLE aly_test(id INT);                    begin;                     INSERT INTO aly_test VALUES(10);                    INSERT INTO aly_test VALUES(20);                    commit;                    select * from aly_test order by id
+multi-sqls to execute: use schema1;                     DROP TABLE IF EXISTS aly_test;                    CREATE TABLE aly_test(id INT);                    begin;                     INSERT INTO aly_test VALUES(10);                    INSERT INTO aly_test VALUES(20);                    commit;                    select * from aly_test order by id 
         print multi resultsets:
 =====sql index 0 result: =====
         0 rows affected
@@ -40,7 +40,7 @@ field 0: dble Server (ActionTech), length:24
 =====sql index 1 result: =====
 result field 0:  DATABASE()
 Number of rows 1
-field 0: schema1              , length:6
+field 0: schema1             , length:7
         More results exist
 =====sql index 2 result: =====
 result field 0:  USER()
@@ -97,6 +97,6 @@ field 0: id                  , length:2field 1: int(11)             , length:7fi
 =====sql index 4 result: =====
 result field 0:  DATABASE
 Number of rows 1
-field 0: schema1              , length:6
+field 0: schema1             , length:7
         More results exist
 Could not get next result
