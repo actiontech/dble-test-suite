@@ -332,7 +332,7 @@ SELECT SESSION_USER() union select id from  test1
 SELECT USER() union select id from  test1
 SELECT LAST_INSERT_id() union select id from  test1
 SELECT ROW_COUNT() union select id from  test1
-SELECT VERSION() union select id from  test1
+SELECT VERSION() union select id from  test1 /*allow_diff*/
 SELECT GET_LOCK('lock1',10) union select id from  test1
 SELECT RELEASE_LOCK('lock2') union select id from  test1
 SELECT INET_ATON('10.0.5.9') union select id from  test1
