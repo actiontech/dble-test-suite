@@ -1,7 +1,7 @@
 ===file:sqls_util/syntax/set_user_var_util.sql, id:28, sql:[SELECT @min_price:=MIN(price),@max_price:=MAX(price) FROM test1]===
 dble:[None]
 mysql:[((1.25, 234.25),)]
-[04:23:06.594625]dble err :(1064, 'not support assignment')
+[09:45:34.077606]dble err :(1064, 'not support assignment')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:29, sql:[SELECT * FROM test1 WHERE price=@min_price OR price=@max_price]===
 dble:[[]]
 mysql:[[(1L, 'D', 234.25), (3L, 'D', 1.25)]]
@@ -11,7 +11,7 @@ mysql:[[(1L, 1L)]]
 ===file:sqls_util/syntax/set_user_var_util.sql, id:39, sql:[SET @total_tax = (SELECT SUM(id) FROM test1)]===
 dble:[None]
 mysql:[()]
-[04:23:07.183792]dble err :(-1, 'error totally whack')
+[09:45:34.623535]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:40, sql:[SELECT @total_tax]===
 dble:[[(None,)]]
 mysql:[[(Decimal('17'),)]]
