@@ -1,99 +1,99 @@
 ===file:sqls_util/syntax/insert_value.sql, id:477, sql:[insert into test1 values (3,b'10')]===
 mysql err:(1406, "Data too long for column 'bit_column' at row 1")
-dble err[10:14:52.935294] :(1406, "Data too long for column 'bit_column' at row 1")
+dble err[14:39:04.139072] :(1406, "Data too long for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:479, sql:[insert into test1 values (5,2)]===
 mysql err:(1406, "Data too long for column 'bit_column' at row 1")
-dble err[10:14:53.100397] :(1406, "Data too long for column 'bit_column' at row 1")
+dble err[14:39:04.302142] :(1406, "Data too long for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:480, sql:[insert into test1 values (6,-1)]===
 mysql err:(1406, "Data too long for column 'bit_column' at row 1")
-dble err[10:14:53.180178] :(1406, "Data too long for column 'bit_column' at row 1")
+dble err[14:39:04.382614] :(1406, "Data too long for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:488, sql:[insert into test1 values (4,b'111110')]===
 mysql err:(1406, "Data too long for column 'bit_5_column' at row 1")
-dble err[10:14:53.696677] :(1406, "Data too long for column 'bit_5_column' at row 1")
+dble err[14:39:04.896135] :(1406, "Data too long for column 'bit_5_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:490, sql:[insert into test1 values (6,32)]===
 mysql err:(1406, "Data too long for column 'bit_5_column' at row 1")
-dble err[10:14:53.857070] :(1406, "Data too long for column 'bit_5_column' at row 1")
+dble err[14:39:05.056908] :(1406, "Data too long for column 'bit_5_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:491, sql:[insert into test1 values (7,-1)]===
 mysql err:(1406, "Data too long for column 'bit_5_column' at row 1")
-dble err[10:14:53.938151] :(1406, "Data too long for column 'bit_5_column' at row 1")
+dble err[14:39:05.137286] :(1406, "Data too long for column 'bit_5_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:500, sql:[insert into test1 values(4,b'11111111111111111111111111111111111111111111111111111111111111110');]===
 mysql err:(1264, "Out of range value for column 'bit_column' at row 1")
-dble err[10:14:54.371343] :(1264, "Out of range value for column 'bit_column' at row 1")
+dble err[14:39:05.566270] :(1264, "Out of range value for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:506, sql:[insert into test1 values (10,18446744073709551616)]===
 mysql err:(1264, "Out of range value for column 'bit_column' at row 1")
-dble err[10:14:54.861920] :(1264, "Out of range value for column 'bit_column' at row 1")
+dble err[14:39:06.051384] :(1264, "Out of range value for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:507, sql:[insert into test1 values (11,18446744073709552045)]===
 mysql err:(1264, "Out of range value for column 'bit_column' at row 1")
-dble err[10:14:54.941267] :(1264, "Out of range value for column 'bit_column' at row 1")
+dble err[14:39:06.133005] :(1264, "Out of range value for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:508, sql:[insert into test1 values (12,18446744073709552046)]===
 mysql err:(1264, "Out of range value for column 'bit_column' at row 1")
-dble err[10:14:55.020724] :(1264, "Out of range value for column 'bit_column' at row 1")
+dble err[14:39:06.212698] :(1264, "Out of range value for column 'bit_column' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:516, sql:[insert into test1 values (4,'')]===
 mysql err:(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
-dble err[10:14:55.534441] :(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
+dble err[14:39:06.725449] :(1292, "Incorrect date value: '' for column 'date_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:526, sql:[insert into test1 values (4,107)]===
 mysql err:(1264, "Out of range value for column 'year4_columns' at row 1")
-dble err[10:14:56.185352] :(1264, "Out of range value for column 'year4_columns' at row 1")
+dble err[14:39:07.395453] :(1264, "Out of range value for column 'year4_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:527, sql:[insert into test1 values (5,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
-dble err[10:14:56.264718] :(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
+dble err[14:39:07.475546] :(1366, "Incorrect integer value: '' for column 'year4_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:546, sql:[insert into test1 values (3,'9999-12-31 23:59:59.999999')]===
 mysql err:(1441, 'Datetime function: datetime field overflow')
-dble err[10:14:57.547166] :(1441, 'Datetime function: datetime field overflow')
+dble err[14:39:08.700870] :(1441, 'Datetime function: datetime field overflow')
 ===file:sqls_util/syntax/insert_value.sql, id:549, sql:[insert into test1 values (6,'')]===
 mysql err:(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
-dble err[10:14:57.788577] :(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
+dble err[14:39:08.940873] :(1292, "Incorrect datetime value: '' for column 'datetime_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:559, sql:[insert into test1 values (4,'')]===
 mysql err:(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
-dble err[10:14:58.465257] :(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
+dble err[14:39:09.614828] :(1292, "Incorrect datetime value: '' for column 'timestamp_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:570, sql:[insert into test1 values (5,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
-dble err[10:14:59.225365] :(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
+dble err[14:39:10.367780] :(1366, "Incorrect integer value: '' for column 'tinyint_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:578, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
-dble err[10:14:59.747105] :(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
+dble err[14:39:10.908358] :(1366, "Incorrect integer value: '' for column 'tinyint_unsigned_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:588, sql:[insert into test1 values (5,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
-dble err[10:15:00.428307] :(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
+dble err[14:39:11.578477] :(1366, "Incorrect integer value: '' for column 'smallint_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:596, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
-dble err[10:15:00.942989] :(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
+dble err[14:39:12.087399] :(1366, "Incorrect integer value: '' for column 'smallint_unsigned_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:604, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
-dble err[10:15:01.462125] :(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
+dble err[14:39:12.602705] :(1366, "Incorrect integer value: '' for column 'mediumint_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:612, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
-dble err[10:15:01.982106] :(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
+dble err[14:39:13.147968] :(1366, "Incorrect integer value: '' for column 'mediumint_unsigned_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:621, sql:[insert into test1 values (4,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
-dble err[10:15:02.554655] :(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
+dble err[14:39:13.744291] :(1366, "Incorrect integer value: '' for column 'int_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:629, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
-dble err[10:15:03.041394] :(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
+dble err[14:39:14.260292] :(1366, "Incorrect integer value: '' for column 'int_unsigned_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:638, sql:[insert into test1 values (4,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
-dble err[10:15:03.636280] :(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
+dble err[14:39:14.853085] :(1366, "Incorrect integer value: '' for column 'bigint_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:646, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
-dble err[10:15:04.149957] :(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
+dble err[14:39:15.365722] :(1366, "Incorrect integer value: '' for column 'bigint_unsigned_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:656, sql:[insert into test1 values (5,'')]===
 mysql err:(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
-dble err[10:15:04.833036] :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
+dble err[14:39:16.042045] :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:664, sql:[insert into test1 values (3,'')]===
 mysql err:(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
-dble err[10:15:05.347023] :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
+dble err[14:39:16.553821] :(1366, "Incorrect decimal value: '' for column 'decimal_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:674, sql:[insert into test1 values (5,'')]===
 mysql err:(1265, "Data truncated for column 'float_columns' at row 1")
-dble err[10:15:06.021432] :(1265, "Data truncated for column 'float_columns' at row 1")
+dble err[14:39:17.229655] :(1265, "Data truncated for column 'float_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:682, sql:[insert into test1 values (3,'')]===
 mysql err:(1265, "Data truncated for column 'float_columns' at row 1")
-dble err[10:15:06.539989] :(1265, "Data truncated for column 'float_columns' at row 1")
+dble err[14:39:17.744345] :(1265, "Data truncated for column 'float_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:692, sql:[insert into test1 values (5,'')]===
 mysql err:(1265, "Data truncated for column 'double_columns' at row 1")
-dble err[10:15:07.188915] :(1265, "Data truncated for column 'double_columns' at row 1")
+dble err[14:39:18.392910] :(1265, "Data truncated for column 'double_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:700, sql:[insert into test1 values (3,'')]===
 mysql err:(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
-dble err[10:15:07.701287] :(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
+dble err[14:39:18.908388] :(1265, "Data truncated for column 'double_unsigned_columns' at row 1")
 ===file:sqls_util/syntax/insert_value.sql, id:709, sql:[insert into test1 values (4,'')]===
 mysql err:(1265, "Data truncated for column 'enum_columns' at row 1")
-dble err[10:15:08.305422] :(1265, "Data truncated for column 'enum_columns' at row 1")
+dble err[14:39:19.497658] :(1265, "Data truncated for column 'enum_columns' at row 1")
