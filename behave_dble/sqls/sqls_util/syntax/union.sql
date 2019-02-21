@@ -260,7 +260,7 @@ select id from  test1 union SELECT 4 >> 2
 select id from  test1 union SELECT AES_DECRYPT('text',UNHEX('F3229A0B371ED2D9441B830D21A390C3'))
 select id from  test1 union SELECT LENGTH(COMPRESS(REPEAT('a',1000)))
 select id from  test1 union select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')
-select id from  test1 union SELECT ENCRYPT('hello')
+select id from  test1 union SELECT ENCRYPT('hello') /*allow_diff*/
 select id from  test1 union SELECT ENCRYPT('hello','abc')
 select id from  test1 union SELECT MD5('testing')
 select id from  test1 union SELECT PASSWORD('mypass')
