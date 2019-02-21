@@ -1,15 +1,15 @@
 ===file:sqls_util/syntax/set_names_character.sql, id:29, sql:[insert into test1 values (1,'测试1')]===
 mysql err:(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
-dble err[04:20:25.224559] :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+dble err[02:51:30.743592] :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
 ===file:sqls_util/syntax/set_names_character.sql, id:32, sql:[insert into test1 values (2,'测试2')]===
 mysql err:(1366, "Incorrect string value: '\\xB2\\xE2\\xCA\\xD42' for column 'data' at row 1")
-dble err[04:20:25.460886] :(1366, "Incorrect string value: '\\xB2\\xE2\\xCA\\xD42' for column 'data' at row 1")
+dble err[02:51:30.980019] :(1366, "Incorrect string value: '\\xB2\\xE2\\xCA\\xD42' for column 'data' at row 1")
 ===file:sqls_util/syntax/set_names_character.sql, id:41, sql:[insert into test1 values (4,'测试4')]===
 mysql err:(1366, "Incorrect string value: '\\xE5\\xA8\\xB4\\xE5\\xAC\\xAD...' for column 'data' at row 1")
-dble err[04:20:26.141233] :(1366, "Incorrect string value: '\\xE5\\xA8\\xB4\\xE5\\xAC\\xAD...' for column 'data' at row 1")
+dble err[02:51:31.666723] :(1366, "Incorrect string value: '\\xE5\\xA8\\xB4\\xE5\\xAC\\xAD...' for column 'data' at row 1")
 ===file:sqls_util/syntax/set_names_character.sql, id:46, sql:[insert into test1 values (5,'测试5')]===
 mysql err:(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
-dble err[04:20:26.530323] :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+dble err[02:51:32.059153] :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
 ===file:sqls_util/syntax/set_names_character.sql, id:51, sql:[insert into test1 value (6,'测试6')]===
 mysql err:(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
-dble err[04:20:26.920676] :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")
+dble err[02:51:32.450143] :(1366, "Incorrect string value: '\\xE6\\xB5\\x8B\\xE8\\xAF\\x95...' for column 'data' at row 1")

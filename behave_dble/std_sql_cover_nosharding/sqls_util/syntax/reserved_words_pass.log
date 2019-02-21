@@ -1948,10 +1948,10 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/reserved_words.sql, id:978, sql:[show tables /*allow_diff*/]===
 dble:[[('select',), ('test1',)]]
-mysql:[[('drop',), ('select',), ('test1',)]]
+mysql:[[('select',), ('test1',)]]
 ===file:sqls_util/syntax/reserved_words.sql, id:979, sql:[show table status /*allow_diff*/]===
 dble:[[('select', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', ''), ('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, 'VIEW'), ('select', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 18, 12, 20, 16), None, None, 'latin1_swedish_ci', None, '', ''), ('test1', 'InnoDB', 10L, 'Dynamic', 3L, 5461L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 18, 12, 20, 16), datetime.datetime(2019, 2, 18, 12, 20, 16), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('select', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 21, 10, 51, 21), None, None, 'latin1_swedish_ci', None, '', ''), ('test1', 'InnoDB', 10L, 'Dynamic', 3L, 5461L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 21, 10, 51, 21), datetime.datetime(2019, 2, 21, 10, 51, 21), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/reserved_words.sql, id:980, sql:[show columns from `select`]===
 dble:[[('id', 'int(11)', 'YES', '', None, ''), ('key', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/reserved_words.sql, id:981, sql:[show create table `select`]===
@@ -1960,12 +1960,16 @@ dble:[[('select', 'CREATE TABLE `select` (\n  `id` int(11) DEFAULT NULL,\n  `key
 dble:[[]]
 ===file:sqls_util/syntax/reserved_words.sql, id:983, sql:[show index from `select`]===
 dble:[[('select', 1L, 'create', 1L, 'key', 'A', 0L, None, None, 'YES', 'BTREE', '', '')]]
-===file:sqls_util/syntax/reserved_words.sql, id:987, sql:[create or replace view `drop` as select id from `select`]===
+===file:sqls_util/syntax/reserved_words.sql, id:984, sql:[drop view if exists `drop`]===
 dble:[[]]
-===file:sqls_util/syntax/reserved_words.sql, id:988, sql:[show create view `drop` /*allow_diff*/]===
+===file:sqls_util/syntax/reserved_words.sql, id:986, sql:[create or replace view `drop` as select id from `select`]===
+dble:[[]]
+===file:sqls_util/syntax/reserved_words.sql, id:987, sql:[show create view `drop`/*allow_diff*/]===
 dble:[[('drop', 'create view drop as  select id from `select`', 'latin1', 'latin1_swedish_ci')]]
 mysql:[[('drop', 'CREATE ALGORITHM=UNDEFINED DEFINER=`test`@`%` SQL SECURITY DEFINER VIEW `drop` AS select `select`.`id` AS `id` from `select`', 'latin1', 'latin1_swedish_ci')]]
-===file:sqls_util/syntax/reserved_words.sql, id:989, sql:[drop index `create` on `select`]===
+===file:sqls_util/syntax/reserved_words.sql, id:988, sql:[drop index `create` on `select`]===
+dble:[[]]
+===file:sqls_util/syntax/reserved_words.sql, id:989, sql:[drop view if exists `drop`]===
 dble:[[]]
 ===file:sqls_util/syntax/reserved_words.sql, id:993, sql:[drop table if exists test1]===
 dble:[[]]
