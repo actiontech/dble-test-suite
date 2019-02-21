@@ -1951,7 +1951,7 @@ dble:[[('select',), ('test1',)]]
 mysql:[[('select',), ('test1',)]]
 ===file:sqls_util/syntax/reserved_words.sql, id:979, sql:[show table status /*allow_diff*/]===
 dble:[[('select', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', ''), ('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('select', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 21, 10, 51, 21), None, None, 'latin1_swedish_ci', None, '', ''), ('test1', 'InnoDB', 10L, 'Dynamic', 3L, 5461L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 21, 10, 51, 21), datetime.datetime(2019, 2, 21, 10, 51, 21), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('select', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 21, 18, 16, 39), None, None, 'latin1_swedish_ci', None, '', ''), ('test1', 'InnoDB', 10L, 'Dynamic', 3L, 5461L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 2, 21, 18, 16, 38), datetime.datetime(2019, 2, 21, 18, 16, 38), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/reserved_words.sql, id:980, sql:[show columns from `select`]===
 dble:[[('id', 'int(11)', 'YES', '', None, ''), ('key', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/reserved_words.sql, id:981, sql:[show create table `select`]===
