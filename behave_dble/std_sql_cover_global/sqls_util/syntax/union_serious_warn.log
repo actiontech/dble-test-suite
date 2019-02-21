@@ -1,9 +1,9 @@
 ===file:sqls_util/syntax/union.sql, id:268, sql:[select id from  test1 union SELECT OLD_PASSWORD('mypass')]===
 mysql err:(1305, 'FUNCTION schema1.OLD_PASSWORD does not exist')
-dble err[02:11:33.301143] :(1003, 'FUNCTION db2.OLD_PASSWORD does not exist')
+dble err[04:24:10.797997] :(1003, 'FUNCTION db1.OLD_PASSWORD does not exist')
 ===file:sqls_util/syntax/union.sql, id:317, sql:[SELECT OLD_PASSWORD('mypass') union select id from  test1]===
 mysql err:(1305, 'FUNCTION schema1.OLD_PASSWORD does not exist')
-dble err[02:11:39.259214] :(1003, 'FUNCTION db2.OLD_PASSWORD does not exist')
+dble err[04:24:16.695596] :(1003, 'FUNCTION db1.OLD_PASSWORD does not exist')
 ===file:sqls_util/syntax/union.sql, id:354, sql:[select id from  test1 union SELECT OLD_PASSWORD('mypass')]===
 mysql err:(1305, 'FUNCTION schema1.OLD_PASSWORD does not exist')
-dble err[02:11:54.347165] :(1003, 'FUNCTION db2.OLD_PASSWORD does not exist')
+dble err[04:24:31.870537] :(1003, 'FUNCTION db2.OLD_PASSWORD does not exist')

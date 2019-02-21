@@ -1,12 +1,12 @@
 ===file:special_nosharding/select/subquery_no_sharding.sql, id:64, sql:[select * from noshard_t1 where (id,pad)=(select id,pad from noshard_t2 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[04:30:50.041811]dble err :(1064, 'Row Subqueries is not supported')
+[03:01:59.168526]dble err :(1064, 'Row Subqueries is not supported')
 ===file:special_nosharding/select/subquery_no_sharding.sql, id:66, sql:[select id,name,pad from noshard_t1 where (id,pad)in(select id,pad from noshard_t2)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
-[04:30:50.168778]dble err :(1064, 'Row Subqueries is not supported')
+[03:01:59.299470]dble err :(1064, 'Row Subqueries is not supported')
 ===file:special_nosharding/select/subquery_no_sharding.sql, id:67, sql:[select id,name,pad from noshard_t1 where (1,1)in(select id,pad from noshard_t2)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
-[04:30:50.247252]dble err :(1064, 'Row Subqueries is not supported')
+[03:01:59.379861]dble err :(1064, 'Row Subqueries is not supported')
