@@ -1,552 +1,552 @@
 ===file:sqls_util/syntax/insert_value.sql, id:318, sql:[insert into test1 values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.122123]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:52.282186]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:319, sql:[insert into test1 values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.169473]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
+[14:38:52.329661]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:320, sql:[insert into test1 values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.250061]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
+[14:38:52.408618]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:321, sql:[insert into test1 values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.330798]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
+[14:38:52.488330]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:322, sql:[insert into test1 values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.410277]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:52.567282]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:323, sql:[insert into test1 values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.490472]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:52.646723]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:324, sql:[insert into test1 values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.571369]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
+[14:38:52.726946]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:325, sql:[insert into test1 values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.652587]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
+[14:38:52.806449]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:326, sql:[insert into test1 values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.735400]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:52.887948]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:327, sql:[insert into test1 values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.817737]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
+[14:38:52.967765]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:328, sql:[insert into test1 values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.901613]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
+[14:38:53.048993]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:329, sql:[insert into test1 values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:41.987853]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:53.128772]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:330, sql:[insert into test1 values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.038327]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
+[14:38:53.209502]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:331, sql:[insert into test1 values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.118822]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.288583]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:332, sql:[insert into test1 values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.198787]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.368666]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:333, sql:[insert into test1 values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.279368]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.448856]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:334, sql:[insert into test1 values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.359391]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.529145]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:335, sql:[insert into test1 values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.438753]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.608475]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:336, sql:[insert into test1 values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.519150]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.690204]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:337, sql:[insert into test1 values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.598482]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.770150]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:338, sql:[insert into test1 values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.680217]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.851837]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:339, sql:[insert into test1 values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.760537]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:53.932233]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:340, sql:[insert into test1 values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:42.841430]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:54.012582]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:344, sql:[insert into test1 values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.032281]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:54.200814]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:345, sql:[insert into test1 values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.112421]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
+[14:38:54.283606]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:346, sql:[insert into test1 values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.192235]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
+[14:38:54.368361]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:347, sql:[insert into test1 values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.275297]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
+[14:38:54.453305]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:348, sql:[insert into test1 values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.355652]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:54.536453]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:349, sql:[insert into test1 values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.444966]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:54.619348]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:350, sql:[insert into test1 values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.493325]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
+[14:38:54.701988]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:351, sql:[insert into test1 values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.575776]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
+[14:38:54.783248]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:352, sql:[insert into test1 values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.625628]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:54.862968]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:353, sql:[insert into test1 values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.705731]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
+[14:38:54.942953]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:354, sql:[insert into test1 values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.784961]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
+[14:38:55.023578]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:355, sql:[insert into test1 values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.865416]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:55.103812]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:356, sql:[insert into test1 values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:43.945248]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
+[14:38:55.184057]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:357, sql:[insert into test1 values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.025980]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.278443]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:358, sql:[insert into test1 values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.105806]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.326730]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:359, sql:[insert into test1 values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.185087]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.406401]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:360, sql:[insert into test1 values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.265690]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.485807]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:361, sql:[insert into test1 values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.344639]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.564617]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:362, sql:[insert into test1 values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.424296]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.643771]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:363, sql:[insert into test1 values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.502668]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.723365]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:364, sql:[insert into test1 values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.584925]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.802692]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:365, sql:[insert into test1 values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.642511]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.882458]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:366, sql:[insert into test1 values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.721438]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:55.962061]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:370, sql:[insert into test1 values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.909967]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:56.147653]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:371, sql:[insert into test1 values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:44.990963]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
+[14:38:56.227119]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:372, sql:[insert into test1 values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.069765]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
+[14:38:56.307316]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:373, sql:[insert into test1 values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.148627]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
+[14:38:56.387445]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:374, sql:[insert into test1 values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.227914]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:56.466759]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:375, sql:[insert into test1 values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.306654]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:56.547093]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:376, sql:[insert into test1 values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.386271]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
+[14:38:56.626956]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:377, sql:[insert into test1 values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.467453]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
+[14:38:56.707146]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:378, sql:[insert into test1 values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.546904]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:56.786692]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:379, sql:[insert into test1 values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.626073]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
+[14:38:56.867223]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:380, sql:[insert into test1 values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.705584]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
+[14:38:56.946403]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:381, sql:[insert into test1 values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.785056]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:57.025612]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:382, sql:[insert into test1 values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.865402]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
+[14:38:57.104587]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:383, sql:[insert into test1 values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:45.945309]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.184811]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:384, sql:[insert into test1 values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.025802]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.263635]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:385, sql:[insert into test1 values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.108967]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.342464]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:386, sql:[insert into test1 values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.189100]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.423184]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:387, sql:[insert into test1 values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.268919]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.502153]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:388, sql:[insert into test1 values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.348054]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.582266]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:389, sql:[insert into test1 values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.428884]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.661920]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:390, sql:[insert into test1 values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.508272]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.741161]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:391, sql:[insert into test1 values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.587664]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.822295]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:392, sql:[insert into test1 values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.666548]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:57.902650]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:396, sql:[insert into test1 values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.854589]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:58.089452]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:397, sql:[insert into test1 values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:46.933877]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
+[14:38:58.169576]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:398, sql:[insert into test1 values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.014299]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
+[14:38:58.249591]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:399, sql:[insert into test1 values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.093301]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
+[14:38:58.330295]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:400, sql:[insert into test1 values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.173158]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:58.410000]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:401, sql:[insert into test1 values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.253523]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:38:58.490102]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:402, sql:[insert into test1 values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.333020]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
+[14:38:58.570590]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:403, sql:[insert into test1 values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.413719]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
+[14:38:58.652506]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:404, sql:[insert into test1 values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.494860]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:58.733313]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:405, sql:[insert into test1 values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.575607]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
+[14:38:58.813736]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:406, sql:[insert into test1 values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.656645]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
+[14:38:58.893804]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:407, sql:[insert into test1 values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.736920]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:38:58.973285]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:408, sql:[insert into test1 values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.819508]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
+[14:38:59.054663]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:409, sql:[insert into test1 values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.901534]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.137419]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:410, sql:[insert into test1 values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:47.981654]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.218080]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:411, sql:[insert into test1 values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.061326]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.298553]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:412, sql:[insert into test1 values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.140312]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.378277]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:413, sql:[insert into test1 values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.220492]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.458324]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:414, sql:[insert into test1 values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.300447]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.537409]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:415, sql:[insert into test1 values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.380226]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.616646]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:416, sql:[insert into test1 values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.460560]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.695770]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:417, sql:[insert into test1 values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.543102]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.775137]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:418, sql:[insert into test1 values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.623415]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:38:59.855880]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:422, sql:[insert into test1 values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.817804]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:00.040924]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:423, sql:[insert into test1 values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.898361]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
+[14:39:00.120419]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:424, sql:[insert into test1 values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:48.980132]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
+[14:39:00.199888]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:425, sql:[insert into test1 values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.060611]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
+[14:39:00.279136]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:426, sql:[insert into test1 values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.141580]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:39:00.358025]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:427, sql:[insert into test1 values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.222124]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:39:00.437004]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:428, sql:[insert into test1 values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.302114]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
+[14:39:00.517013]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:429, sql:[insert into test1 values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.383233]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
+[14:39:00.597233]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:430, sql:[insert into test1 values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.463633]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:39:00.677153]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:431, sql:[insert into test1 values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.544415]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
+[14:39:00.757298]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:432, sql:[insert into test1 values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.625109]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
+[14:39:00.836420]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:433, sql:[insert into test1 values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.707315]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:39:00.919738]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:434, sql:[insert into test1 values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.786786]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
+[14:39:01.002041]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:435, sql:[insert into test1 values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.865914]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.084374]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:436, sql:[insert into test1 values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:49.945676]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.167698]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:437, sql:[insert into test1 values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.026696]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.249970]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:438, sql:[insert into test1 values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.106692]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.332166]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:439, sql:[insert into test1 values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.186449]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.413220]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:440, sql:[insert into test1 values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.265580]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.494321]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:441, sql:[insert into test1 values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.344532]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.573800]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:442, sql:[insert into test1 values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.424437]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.653814]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:443, sql:[insert into test1 values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.504145]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.733437]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:444, sql:[insert into test1 values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.582978]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:01.813760]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:448, sql:[insert into test1 values (100, convert(NULL, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.771031]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:02.002376]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:449, sql:[insert into test1 values (101, convert('', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.851692]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
+[14:39:02.083659]dble err :(1064, 'ERROR. pos 50, line 1, column 50, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:450, sql:[insert into test1 values (102, convert(' ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:50.931942]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
+[14:39:02.162825]dble err :(1064, 'ERROR. pos 51, line 1, column 51, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:451, sql:[insert into test1 values (103, convert('a a a ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.012145]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
+[14:39:02.243478]dble err :(1064, 'ERROR. pos 56, line 1, column 56, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:452, sql:[insert into test1 values (104, convert('abcdefghijklmnopqrstuvwxyz', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.093989]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:39:02.323725]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:453, sql:[insert into test1 values (105, convert('ABCDEFGHIJKLMNOPQRSTUVWXYZ', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.174434]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
+[14:39:02.404102]dble err :(1064, 'ERROR. pos 76, line 1, column 76, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:454, sql:[insert into test1 values (106, convert('~`!@#$%^&*()-=_+{}[]|:/* uproxy_dest_expect:M */<>,.?/', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.253651]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
+[14:39:02.484444]dble err :(1064, 'ERROR. pos 104, line 1, column 104, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:455, sql:[insert into test1 values (107, convert('1234567890', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.333622]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
+[14:39:02.565295]dble err :(1064, 'ERROR. pos 60, line 1, column 60, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:456, sql:[insert into test1 values (108, convert(1234567890, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.412803]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:39:02.645925]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:457, sql:[insert into test1 values (109, convert('数据库sql测试', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.493328]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
+[14:39:02.725423]dble err :(1064, 'ERROR. pos 68, line 1, column 68, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:458, sql:[insert into test1 values (110, convert('·~！@#￥%……&*（）-=——+{}【】、|；‘：“，。/《》？', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.573221]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
+[14:39:02.805252]dble err :(1064, 'ERROR. pos 125, line 1, column 125, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:459, sql:[insert into test1 values (111, convert(0x5061756c, binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.653377]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
+[14:39:02.885596]dble err :(1064, 'ERROR. pos 58, line 1, column 58, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:460, sql:[insert into test1 values (112, convert(x'4D7953514C', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.734331]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
+[14:39:02.964800]dble err :(1064, 'ERROR. pos 61, line 1, column 61, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:461, sql:[insert into test1 values (113, convert('\0', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.814058]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.047126]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:462, sql:[insert into test1 values (114, convert('\n', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.893303]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.127651]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:463, sql:[insert into test1 values (115, convert('\t', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:51.973486]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.208719]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:464, sql:[insert into test1 values (116, convert('\r', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.053163]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.288134]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:465, sql:[insert into test1 values (117, convert('\b', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.131994]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.368384]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:466, sql:[insert into test1 values (118, convert('\'', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.211700]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.447490]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:467, sql:[insert into test1 values (119, convert('\"', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.292614]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.528586]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:468, sql:[insert into test1 values (120, convert('''', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.373054]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.608659]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:469, sql:[insert into test1 values (121, convert("""", binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.453389]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.688985]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
 ===file:sqls_util/syntax/insert_value.sql, id:470, sql:[insert into test1 values (122, convert('\\', binary))]===
 dble:[None]
 mysql:[()]
-[10:14:52.532715]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
+[14:39:03.769010]dble err :(1064, 'ERROR. pos 52, line 1, column 52, token RPAREN')
