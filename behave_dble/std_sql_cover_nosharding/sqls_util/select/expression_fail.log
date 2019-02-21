@@ -1,208 +1,208 @@
 ===file:sqls_util/select/expression.sql, id:44, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_latin1 b'1000001']===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[04:13:56.585387]dble err :(1064, 'sql syntax error, no terminated. BITS')
+[02:45:00.575335]dble err :(1064, 'sql syntax error, no terminated. BITS')
 ===file:sqls_util/select/expression.sql, id:45, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci]===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[04:13:56.633910]dble err :(1064, 'sql syntax error, no terminated. BITS')
+[02:45:00.623660]dble err :(1064, 'sql syntax error, no terminated. BITS')
 ===file:sqls_util/select/expression.sql, id:46, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,_latin1 b'1000001' from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 'A'), (2L, 2.0, 'a\nstring', 'test002', 'A'), (3L, 3.0, 'another string', 'test003', 'A'), (4L, 4.0, '\xe4\xb8\xad', 'test004', 'A'), (5L, 5.0, "a'string'", 'test005', 'A'), (6L, 6.0, 'a""string""', 'test006', 'A'), (7L, 7.0, 'a\x08string', 'test007', 'A'), (8L, 8.0, 'a\nstring', 'test008', 'A'), (9L, 9.0, 'a\rstring', 'test009', 'A'), (10L, 10.0, 'a\tstring', 'test010', 'A'), (11L, 11.0, 'azstring', 'test011', 'A'), (12L, 12.0, 'a\\string', 'test012', 'A'), (13L, 13.0, 'a\\%string', 'test013', 'A'), (14L, 14.0, 'a\\_string', 'test014', 'A'), (15L, 15.0, 'MySQL', 'test015', 'A'), (16L, 16.0, 'binary', 'test016', 'A'), (17L, 1.23457e+22, '17', '17', 'A'), (18L, 18.0, 'A', 'test018', 'A'), (19L, 19.0, '', 'test019', 'A'), (65L, 16.0, 'binary', 'test016', 'A'))]
-[04:13:56.713485]dble err :(1064, 'sql syntax error, no terminated. BITS')
+[02:45:00.702918]dble err :(1064, 'sql syntax error, no terminated. BITS')
 ===file:sqls_util/select/expression.sql, id:47, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=B'1000001']===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[04:13:56.793894]dble err :(1064, 'sql syntax error, no terminated. LITERAL_CHARS')
+[02:45:00.784755]dble err :(1064, 'sql syntax error, no terminated. LITERAL_CHARS')
 ===file:sqls_util/select/expression.sql, id:75, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' | B'11')]===
 dble:[None]
 mysql:[((3L, 3.0, 'another string', 'test003'),)]
-[04:13:58.797593]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:02.647605]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:76, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' | B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 3L), (2L, 2.0, 'a\nstring', 'test002', 3L), (3L, 3.0, 'another string', 'test003', 3L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 3L), (5L, 5.0, "a'string'", 'test005', 3L), (6L, 6.0, 'a""string""', 'test006', 3L), (7L, 7.0, 'a\x08string', 'test007', 3L), (8L, 8.0, 'a\nstring', 'test008', 3L), (9L, 9.0, 'a\rstring', 'test009', 3L), (10L, 10.0, 'a\tstring', 'test010', 3L), (11L, 11.0, 'azstring', 'test011', 3L), (12L, 12.0, 'a\\string', 'test012', 3L), (13L, 13.0, 'a\\%string', 'test013', 3L), (14L, 14.0, 'a\\_string', 'test014', 3L), (15L, 15.0, 'MySQL', 'test015', 3L), (16L, 16.0, 'binary', 'test016', 3L), (17L, 1.23457e+22, '17', '17', 3L), (18L, 18.0, 'A', 'test018', 3L), (19L, 19.0, '', 'test019', 3L), (65L, 16.0, 'binary', 'test016', 3L))]
-[04:13:58.879075]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:02.730390]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:77, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 | B'11')]===
 dble:[None]
 mysql:[((3L, 3.0, 'another string', 'test003'),)]
-[04:13:58.961073]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:02.811948]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:78, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 | B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 3L), (2L, 2.0, 'a\nstring', 'test002', 3L), (3L, 3.0, 'another string', 'test003', 3L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 3L), (5L, 5.0, "a'string'", 'test005', 3L), (6L, 6.0, 'a""string""', 'test006', 3L), (7L, 7.0, 'a\x08string', 'test007', 3L), (8L, 8.0, 'a\nstring', 'test008', 3L), (9L, 9.0, 'a\rstring', 'test009', 3L), (10L, 10.0, 'a\tstring', 'test010', 3L), (11L, 11.0, 'azstring', 'test011', 3L), (12L, 12.0, 'a\\string', 'test012', 3L), (13L, 13.0, 'a\\%string', 'test013', 3L), (14L, 14.0, 'a\\_string', 'test014', 3L), (15L, 15.0, 'MySQL', 'test015', 3L), (16L, 16.0, 'binary', 'test016', 3L), (17L, 1.23457e+22, '17', '17', 3L), (18L, 18.0, 'A', 'test018', 3L), (19L, 19.0, '', 'test019', 3L), (65L, 16.0, 'binary', 'test016', 3L))]
-[04:13:59.043119]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:02.894111]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:79, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' & B'11')]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001'),)]
-[04:13:59.125431]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:02.973237]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:80, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' & B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 1L), (2L, 2.0, 'a\nstring', 'test002', 1L), (3L, 3.0, 'another string', 'test003', 1L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1L), (5L, 5.0, "a'string'", 'test005', 1L), (6L, 6.0, 'a""string""', 'test006', 1L), (7L, 7.0, 'a\x08string', 'test007', 1L), (8L, 8.0, 'a\nstring', 'test008', 1L), (9L, 9.0, 'a\rstring', 'test009', 1L), (10L, 10.0, 'a\tstring', 'test010', 1L), (11L, 11.0, 'azstring', 'test011', 1L), (12L, 12.0, 'a\\string', 'test012', 1L), (13L, 13.0, 'a\\%string', 'test013', 1L), (14L, 14.0, 'a\\_string', 'test014', 1L), (15L, 15.0, 'MySQL', 'test015', 1L), (16L, 16.0, 'binary', 'test016', 1L), (17L, 1.23457e+22, '17', '17', 1L), (18L, 18.0, 'A', 'test018', 1L), (19L, 19.0, '', 'test019', 1L), (65L, 16.0, 'binary', 'test016', 1L))]
-[04:13:59.207328]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:03.053668]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:81, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 & B'11')]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001'),)]
-[04:13:59.288035]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:03.132637]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:82, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 & B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 1L), (2L, 2.0, 'a\nstring', 'test002', 1L), (3L, 3.0, 'another string', 'test003', 1L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1L), (5L, 5.0, "a'string'", 'test005', 1L), (6L, 6.0, 'a""string""', 'test006', 1L), (7L, 7.0, 'a\x08string', 'test007', 1L), (8L, 8.0, 'a\nstring', 'test008', 1L), (9L, 9.0, 'a\rstring', 'test009', 1L), (10L, 10.0, 'a\tstring', 'test010', 1L), (11L, 11.0, 'azstring', 'test011', 1L), (12L, 12.0, 'a\\string', 'test012', 1L), (13L, 13.0, 'a\\%string', 'test013', 1L), (14L, 14.0, 'a\\_string', 'test014', 1L), (15L, 15.0, 'MySQL', 'test015', 1L), (16L, 16.0, 'binary', 'test016', 1L), (17L, 1.23457e+22, '17', '17', 1L), (18L, 18.0, 'A', 'test018', 1L), (19L, 19.0, '', 'test019', 1L), (65L, 16.0, 'binary', 'test016', 1L))]
-[04:13:59.368932]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:03.212366]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:83, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' << B'11')]===
 dble:[None]
 mysql:[((8L, 8.0, 'a\nstring', 'test008'),)]
-[04:13:59.451234]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
+[02:45:03.291988]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:84, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' << B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 8L), (2L, 2.0, 'a\nstring', 'test002', 8L), (3L, 3.0, 'another string', 'test003', 8L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 8L), (5L, 5.0, "a'string'", 'test005', 8L), (6L, 6.0, 'a""string""', 'test006', 8L), (7L, 7.0, 'a\x08string', 'test007', 8L), (8L, 8.0, 'a\nstring', 'test008', 8L), (9L, 9.0, 'a\rstring', 'test009', 8L), (10L, 10.0, 'a\tstring', 'test010', 8L), (11L, 11.0, 'azstring', 'test011', 8L), (12L, 12.0, 'a\\string', 'test012', 8L), (13L, 13.0, 'a\\%string', 'test013', 8L), (14L, 14.0, 'a\\_string', 'test014', 8L), (15L, 15.0, 'MySQL', 'test015', 8L), (16L, 16.0, 'binary', 'test016', 8L), (17L, 1.23457e+22, '17', '17', 8L), (18L, 18.0, 'A', 'test018', 8L), (19L, 19.0, '', 'test019', 8L), (65L, 16.0, 'binary', 'test016', 8L))]
-[04:13:59.533051]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
+[02:45:03.372964]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:85, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 << B'11')]===
 dble:[None]
 mysql:[((8L, 8.0, 'a\nstring', 'test008'),)]
-[04:13:59.613480]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:03.452959]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:86, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 << B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 8L), (2L, 2.0, 'a\nstring', 'test002', 8L), (3L, 3.0, 'another string', 'test003', 8L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 8L), (5L, 5.0, "a'string'", 'test005', 8L), (6L, 6.0, 'a""string""', 'test006', 8L), (7L, 7.0, 'a\x08string', 'test007', 8L), (8L, 8.0, 'a\nstring', 'test008', 8L), (9L, 9.0, 'a\rstring', 'test009', 8L), (10L, 10.0, 'a\tstring', 'test010', 8L), (11L, 11.0, 'azstring', 'test011', 8L), (12L, 12.0, 'a\\string', 'test012', 8L), (13L, 13.0, 'a\\%string', 'test013', 8L), (14L, 14.0, 'a\\_string', 'test014', 8L), (15L, 15.0, 'MySQL', 'test015', 8L), (16L, 16.0, 'binary', 'test016', 8L), (17L, 1.23457e+22, '17', '17', 8L), (18L, 18.0, 'A', 'test018', 8L), (19L, 19.0, '', 'test019', 8L), (65L, 16.0, 'binary', 'test016', 8L))]
-[04:13:59.695144]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:03.506186]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:87, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' >> B'11')]===
 dble:[None]
 mysql:[()]
-[04:13:59.775491]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
+[02:45:03.585206]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:88, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' >> B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 0L), (2L, 2.0, 'a\nstring', 'test002', 0L), (3L, 3.0, 'another string', 'test003', 0L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 0L), (5L, 5.0, "a'string'", 'test005', 0L), (6L, 6.0, 'a""string""', 'test006', 0L), (7L, 7.0, 'a\x08string', 'test007', 0L), (8L, 8.0, 'a\nstring', 'test008', 0L), (9L, 9.0, 'a\rstring', 'test009', 0L), (10L, 10.0, 'a\tstring', 'test010', 0L), (11L, 11.0, 'azstring', 'test011', 0L), (12L, 12.0, 'a\\string', 'test012', 0L), (13L, 13.0, 'a\\%string', 'test013', 0L), (14L, 14.0, 'a\\_string', 'test014', 0L), (15L, 15.0, 'MySQL', 'test015', 0L), (16L, 16.0, 'binary', 'test016', 0L), (17L, 1.23457e+22, '17', '17', 0L), (18L, 18.0, 'A', 'test018', 0L), (19L, 19.0, '', 'test019', 0L), (65L, 16.0, 'binary', 'test016', 0L))]
-[04:13:59.856054]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
+[02:45:03.664798]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:89, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 >> B'11')]===
 dble:[None]
 mysql:[()]
-[04:13:59.940698]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:03.744501]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:90, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 >> B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 0L), (2L, 2.0, 'a\nstring', 'test002', 0L), (3L, 3.0, 'another string', 'test003', 0L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 0L), (5L, 5.0, "a'string'", 'test005', 0L), (6L, 6.0, 'a""string""', 'test006', 0L), (7L, 7.0, 'a\x08string', 'test007', 0L), (8L, 8.0, 'a\nstring', 'test008', 0L), (9L, 9.0, 'a\rstring', 'test009', 0L), (10L, 10.0, 'a\tstring', 'test010', 0L), (11L, 11.0, 'azstring', 'test011', 0L), (12L, 12.0, 'a\\string', 'test012', 0L), (13L, 13.0, 'a\\%string', 'test013', 0L), (14L, 14.0, 'a\\_string', 'test014', 0L), (15L, 15.0, 'MySQL', 'test015', 0L), (16L, 16.0, 'binary', 'test016', 0L), (17L, 1.23457e+22, '17', '17', 0L), (18L, 18.0, 'A', 'test018', 0L), (19L, 19.0, '', 'test019', 0L), (65L, 16.0, 'binary', 'test016', 0L))]
-[04:14:00.027225]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:03.824699]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:91, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' + B'11')]===
 dble:[None]
 mysql:[((4L, 4.0, '\xe4\xb8\xad', 'test004'),)]
-[04:14:00.109848]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:03.904151]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:92, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' + B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 4L), (2L, 2.0, 'a\nstring', 'test002', 4L), (3L, 3.0, 'another string', 'test003', 4L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 4L), (5L, 5.0, "a'string'", 'test005', 4L), (6L, 6.0, 'a""string""', 'test006', 4L), (7L, 7.0, 'a\x08string', 'test007', 4L), (8L, 8.0, 'a\nstring', 'test008', 4L), (9L, 9.0, 'a\rstring', 'test009', 4L), (10L, 10.0, 'a\tstring', 'test010', 4L), (11L, 11.0, 'azstring', 'test011', 4L), (12L, 12.0, 'a\\string', 'test012', 4L), (13L, 13.0, 'a\\%string', 'test013', 4L), (14L, 14.0, 'a\\_string', 'test014', 4L), (15L, 15.0, 'MySQL', 'test015', 4L), (16L, 16.0, 'binary', 'test016', 4L), (17L, 1.23457e+22, '17', '17', 4L), (18L, 18.0, 'A', 'test018', 4L), (19L, 19.0, '', 'test019', 4L), (65L, 16.0, 'binary', 'test016', 4L))]
-[04:14:00.192036]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:03.987472]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:93, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 + B'11')]===
 dble:[None]
 mysql:[((4L, 4.0, '\xe4\xb8\xad', 'test004'),)]
-[04:14:00.274048]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:04.068332]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:94, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 + B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 4L), (2L, 2.0, 'a\nstring', 'test002', 4L), (3L, 3.0, 'another string', 'test003', 4L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 4L), (5L, 5.0, "a'string'", 'test005', 4L), (6L, 6.0, 'a""string""', 'test006', 4L), (7L, 7.0, 'a\x08string', 'test007', 4L), (8L, 8.0, 'a\nstring', 'test008', 4L), (9L, 9.0, 'a\rstring', 'test009', 4L), (10L, 10.0, 'a\tstring', 'test010', 4L), (11L, 11.0, 'azstring', 'test011', 4L), (12L, 12.0, 'a\\string', 'test012', 4L), (13L, 13.0, 'a\\%string', 'test013', 4L), (14L, 14.0, 'a\\_string', 'test014', 4L), (15L, 15.0, 'MySQL', 'test015', 4L), (16L, 16.0, 'binary', 'test016', 4L), (17L, 1.23457e+22, '17', '17', 4L), (18L, 18.0, 'A', 'test018', 4L), (19L, 19.0, '', 'test019', 4L), (65L, 16.0, 'binary', 'test016', 4L))]
-[04:14:00.356624]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:04.148074]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:95, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' - B'11')]===
 dble:[None]
 mysql:[()]
-[04:14:00.439724]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:04.227178]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:96, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' - B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', -2L), (2L, 2.0, 'a\nstring', 'test002', -2L), (3L, 3.0, 'another string', 'test003', -2L), (4L, 4.0, '\xe4\xb8\xad', 'test004', -2L), (5L, 5.0, "a'string'", 'test005', -2L), (6L, 6.0, 'a""string""', 'test006', -2L), (7L, 7.0, 'a\x08string', 'test007', -2L), (8L, 8.0, 'a\nstring', 'test008', -2L), (9L, 9.0, 'a\rstring', 'test009', -2L), (10L, 10.0, 'a\tstring', 'test010', -2L), (11L, 11.0, 'azstring', 'test011', -2L), (12L, 12.0, 'a\\string', 'test012', -2L), (13L, 13.0, 'a\\%string', 'test013', -2L), (14L, 14.0, 'a\\_string', 'test014', -2L), (15L, 15.0, 'MySQL', 'test015', -2L), (16L, 16.0, 'binary', 'test016', -2L), (17L, 1.23457e+22, '17', '17', -2L), (18L, 18.0, 'A', 'test018', -2L), (19L, 19.0, '', 'test019', -2L), (65L, 16.0, 'binary', 'test016', -2L))]
-[04:14:00.522206]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:04.306176]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:97, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 - B'11')]===
 dble:[None]
 mysql:[()]
-[04:14:00.603189]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:04.386808]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:98, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 - B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', -2L), (2L, 2.0, 'a\nstring', 'test002', -2L), (3L, 3.0, 'another string', 'test003', -2L), (4L, 4.0, '\xe4\xb8\xad', 'test004', -2L), (5L, 5.0, "a'string'", 'test005', -2L), (6L, 6.0, 'a""string""', 'test006', -2L), (7L, 7.0, 'a\x08string', 'test007', -2L), (8L, 8.0, 'a\nstring', 'test008', -2L), (9L, 9.0, 'a\rstring', 'test009', -2L), (10L, 10.0, 'a\tstring', 'test010', -2L), (11L, 11.0, 'azstring', 'test011', -2L), (12L, 12.0, 'a\\string', 'test012', -2L), (13L, 13.0, 'a\\%string', 'test013', -2L), (14L, 14.0, 'a\\_string', 'test014', -2L), (15L, 15.0, 'MySQL', 'test015', -2L), (16L, 16.0, 'binary', 'test016', -2L), (17L, 1.23457e+22, '17', '17', -2L), (18L, 18.0, 'A', 'test018', -2L), (19L, 19.0, '', 'test019', -2L), (65L, 16.0, 'binary', 'test016', -2L))]
-[04:14:00.685011]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:04.467359]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:99, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' * B'11')]===
 dble:[None]
 mysql:[((3L, 3.0, 'another string', 'test003'),)]
-[04:14:00.766102]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:04.547771]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:100, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' * B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 3L), (2L, 2.0, 'a\nstring', 'test002', 3L), (3L, 3.0, 'another string', 'test003', 3L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 3L), (5L, 5.0, "a'string'", 'test005', 3L), (6L, 6.0, 'a""string""', 'test006', 3L), (7L, 7.0, 'a\x08string', 'test007', 3L), (8L, 8.0, 'a\nstring', 'test008', 3L), (9L, 9.0, 'a\rstring', 'test009', 3L), (10L, 10.0, 'a\tstring', 'test010', 3L), (11L, 11.0, 'azstring', 'test011', 3L), (12L, 12.0, 'a\\string', 'test012', 3L), (13L, 13.0, 'a\\%string', 'test013', 3L), (14L, 14.0, 'a\\_string', 'test014', 3L), (15L, 15.0, 'MySQL', 'test015', 3L), (16L, 16.0, 'binary', 'test016', 3L), (17L, 1.23457e+22, '17', '17', 3L), (18L, 18.0, 'A', 'test018', 3L), (19L, 19.0, '', 'test019', 3L), (65L, 16.0, 'binary', 'test016', 3L))]
-[04:14:00.846611]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:04.627219]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:101, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 * B'11')]===
 dble:[None]
 mysql:[((3L, 3.0, 'another string', 'test003'),)]
-[04:14:00.928408]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:04.707241]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:102, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 * B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 3L), (2L, 2.0, 'a\nstring', 'test002', 3L), (3L, 3.0, 'another string', 'test003', 3L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 3L), (5L, 5.0, "a'string'", 'test005', 3L), (6L, 6.0, 'a""string""', 'test006', 3L), (7L, 7.0, 'a\x08string', 'test007', 3L), (8L, 8.0, 'a\nstring', 'test008', 3L), (9L, 9.0, 'a\rstring', 'test009', 3L), (10L, 10.0, 'a\tstring', 'test010', 3L), (11L, 11.0, 'azstring', 'test011', 3L), (12L, 12.0, 'a\\string', 'test012', 3L), (13L, 13.0, 'a\\%string', 'test013', 3L), (14L, 14.0, 'a\\_string', 'test014', 3L), (15L, 15.0, 'MySQL', 'test015', 3L), (16L, 16.0, 'binary', 'test016', 3L), (17L, 1.23457e+22, '17', '17', 3L), (18L, 18.0, 'A', 'test018', 3L), (19L, 19.0, '', 'test019', 3L), (65L, 16.0, 'binary', 'test016', 3L))]
-[04:14:01.009894]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:04.787393]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:103, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' / B'11')]===
 dble:[None]
 mysql:[()]
-[04:14:01.092017]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:04.867009]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:104, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' / B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', Decimal('0.3333')), (2L, 2.0, 'a\nstring', 'test002', Decimal('0.3333')), (3L, 3.0, 'another string', 'test003', Decimal('0.3333')), (4L, 4.0, '\xe4\xb8\xad', 'test004', Decimal('0.3333')), (5L, 5.0, "a'string'", 'test005', Decimal('0.3333')), (6L, 6.0, 'a""string""', 'test006', Decimal('0.3333')), (7L, 7.0, 'a\x08string', 'test007', Decimal('0.3333')), (8L, 8.0, 'a\nstring', 'test008', Decimal('0.3333')), (9L, 9.0, 'a\rstring', 'test009', Decimal('0.3333')), (10L, 10.0, 'a\tstring', 'test010', Decimal('0.3333')), (11L, 11.0, 'azstring', 'test011', Decimal('0.3333')), (12L, 12.0, 'a\\string', 'test012', Decimal('0.3333')), (13L, 13.0, 'a\\%string', 'test013', Decimal('0.3333')), (14L, 14.0, 'a\\_string', 'test014', Decimal('0.3333')), (15L, 15.0, 'MySQL', 'test015', Decimal('0.3333')), (16L, 16.0, 'binary', 'test016', Decimal('0.3333')), (17L, 1.23457e+22, '17', '17', Decimal('0.3333')), (18L, 18.0, 'A', 'test018', Decimal('0.3333')), (19L, 19.0, '', 'test019', Decimal('0.3333')), (65L, 16.0, 'binary', 'test016', Decimal('0.3333')))]
-[04:14:01.174019]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:04.946434]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:105, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 / B'11')]===
 dble:[None]
 mysql:[()]
-[04:14:01.256961]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:05.027413]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:106, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 / B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', Decimal('0.3333')), (2L, 2.0, 'a\nstring', 'test002', Decimal('0.3333')), (3L, 3.0, 'another string', 'test003', Decimal('0.3333')), (4L, 4.0, '\xe4\xb8\xad', 'test004', Decimal('0.3333')), (5L, 5.0, "a'string'", 'test005', Decimal('0.3333')), (6L, 6.0, 'a""string""', 'test006', Decimal('0.3333')), (7L, 7.0, 'a\x08string', 'test007', Decimal('0.3333')), (8L, 8.0, 'a\nstring', 'test008', Decimal('0.3333')), (9L, 9.0, 'a\rstring', 'test009', Decimal('0.3333')), (10L, 10.0, 'a\tstring', 'test010', Decimal('0.3333')), (11L, 11.0, 'azstring', 'test011', Decimal('0.3333')), (12L, 12.0, 'a\\string', 'test012', Decimal('0.3333')), (13L, 13.0, 'a\\%string', 'test013', Decimal('0.3333')), (14L, 14.0, 'a\\_string', 'test014', Decimal('0.3333')), (15L, 15.0, 'MySQL', 'test015', Decimal('0.3333')), (16L, 16.0, 'binary', 'test016', Decimal('0.3333')), (17L, 1.23457e+22, '17', '17', Decimal('0.3333')), (18L, 18.0, 'A', 'test018', Decimal('0.3333')), (19L, 19.0, '', 'test019', Decimal('0.3333')), (65L, 16.0, 'binary', 'test016', Decimal('0.3333')))]
-[04:14:01.338957]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:05.110279]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:107, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' div B'11')]===
 dble:[None]
 mysql:[()]
-[04:14:01.422393]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 100, line 1, column 97, token LITERAL_CHARS 11')
+[02:45:05.190638]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 100, line 1, column 97, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:108, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' div B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 0L), (2L, 2.0, 'a\nstring', 'test002', 0L), (3L, 3.0, 'another string', 'test003', 0L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 0L), (5L, 5.0, "a'string'", 'test005', 0L), (6L, 6.0, 'a""string""', 'test006', 0L), (7L, 7.0, 'a\x08string', 'test007', 0L), (8L, 8.0, 'a\nstring', 'test008', 0L), (9L, 9.0, 'a\rstring', 'test009', 0L), (10L, 10.0, 'a\tstring', 'test010', 0L), (11L, 11.0, 'azstring', 'test011', 0L), (12L, 12.0, 'a\\string', 'test012', 0L), (13L, 13.0, 'a\\%string', 'test013', 0L), (14L, 14.0, 'a\\_string', 'test014', 0L), (15L, 15.0, 'MySQL', 'test015', 0L), (16L, 16.0, 'binary', 'test016', 0L), (17L, 1.23457e+22, '17', '17', 0L), (18L, 18.0, 'A', 'test018', 0L), (19L, 19.0, '', 'test019', 0L), (65L, 16.0, 'binary', 'test016', 0L))]
-[04:14:01.504447]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 79, line 1, column 76, token LITERAL_CHARS 11')
+[02:45:05.271735]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 79, line 1, column 76, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:109, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 div B'11')]===
 dble:[None]
 mysql:[()]
-[04:14:01.586277]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
+[02:45:05.351707]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:110, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 div B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 0L), (2L, 2.0, 'a\nstring', 'test002', 0L), (3L, 3.0, 'another string', 'test003', 0L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 0L), (5L, 5.0, "a'string'", 'test005', 0L), (6L, 6.0, 'a""string""', 'test006', 0L), (7L, 7.0, 'a\x08string', 'test007', 0L), (8L, 8.0, 'a\nstring', 'test008', 0L), (9L, 9.0, 'a\rstring', 'test009', 0L), (10L, 10.0, 'a\tstring', 'test010', 0L), (11L, 11.0, 'azstring', 'test011', 0L), (12L, 12.0, 'a\\string', 'test012', 0L), (13L, 13.0, 'a\\%string', 'test013', 0L), (14L, 14.0, 'a\\_string', 'test014', 0L), (15L, 15.0, 'MySQL', 'test015', 0L), (16L, 16.0, 'binary', 'test016', 0L), (17L, 1.23457e+22, '17', '17', 0L), (18L, 18.0, 'A', 'test018', 0L), (19L, 19.0, '', 'test019', 0L), (65L, 16.0, 'binary', 'test016', 0L))]
-[04:14:01.668430]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
+[02:45:05.432224]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:111, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' mod B'11')]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001'),)]
-[04:14:01.751410]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 100, line 1, column 97, token LITERAL_CHARS 11')
+[02:45:05.514992]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 100, line 1, column 97, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:112, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' mod B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 1L), (2L, 2.0, 'a\nstring', 'test002', 1L), (3L, 3.0, 'another string', 'test003', 1L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1L), (5L, 5.0, "a'string'", 'test005', 1L), (6L, 6.0, 'a""string""', 'test006', 1L), (7L, 7.0, 'a\x08string', 'test007', 1L), (8L, 8.0, 'a\nstring', 'test008', 1L), (9L, 9.0, 'a\rstring', 'test009', 1L), (10L, 10.0, 'a\tstring', 'test010', 1L), (11L, 11.0, 'azstring', 'test011', 1L), (12L, 12.0, 'a\\string', 'test012', 1L), (13L, 13.0, 'a\\%string', 'test013', 1L), (14L, 14.0, 'a\\_string', 'test014', 1L), (15L, 15.0, 'MySQL', 'test015', 1L), (16L, 16.0, 'binary', 'test016', 1L), (17L, 1.23457e+22, '17', '17', 1L), (18L, 18.0, 'A', 'test018', 1L), (19L, 19.0, '', 'test019', 1L), (65L, 16.0, 'binary', 'test016', 1L))]
-[04:14:01.834438]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 79, line 1, column 76, token LITERAL_CHARS 11')
+[02:45:05.597125]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 79, line 1, column 76, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:113, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 mod B'11')]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001'),)]
-[04:14:01.916446]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
+[02:45:05.679304]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 99, line 1, column 96, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:114, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 mod B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 1L), (2L, 2.0, 'a\nstring', 'test002', 1L), (3L, 3.0, 'another string', 'test003', 1L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1L), (5L, 5.0, "a'string'", 'test005', 1L), (6L, 6.0, 'a""string""', 'test006', 1L), (7L, 7.0, 'a\x08string', 'test007', 1L), (8L, 8.0, 'a\nstring', 'test008', 1L), (9L, 9.0, 'a\rstring', 'test009', 1L), (10L, 10.0, 'a\tstring', 'test010', 1L), (11L, 11.0, 'azstring', 'test011', 1L), (12L, 12.0, 'a\\string', 'test012', 1L), (13L, 13.0, 'a\\%string', 'test013', 1L), (14L, 14.0, 'a\\_string', 'test014', 1L), (15L, 15.0, 'MySQL', 'test015', 1L), (16L, 16.0, 'binary', 'test016', 1L), (17L, 1.23457e+22, '17', '17', 1L), (18L, 18.0, 'A', 'test018', 1L), (19L, 19.0, '', 'test019', 1L), (65L, 16.0, 'binary', 'test016', 1L))]
-[04:14:01.999292]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
+[02:45:05.762787]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 78, line 1, column 75, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:115, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' % B'11')]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001'),)]
-[04:14:02.087690]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:05.845058]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:116, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' % B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 1L), (2L, 2.0, 'a\nstring', 'test002', 1L), (3L, 3.0, 'another string', 'test003', 1L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1L), (5L, 5.0, "a'string'", 'test005', 1L), (6L, 6.0, 'a""string""', 'test006', 1L), (7L, 7.0, 'a\x08string', 'test007', 1L), (8L, 8.0, 'a\nstring', 'test008', 1L), (9L, 9.0, 'a\rstring', 'test009', 1L), (10L, 10.0, 'a\tstring', 'test010', 1L), (11L, 11.0, 'azstring', 'test011', 1L), (12L, 12.0, 'a\\string', 'test012', 1L), (13L, 13.0, 'a\\%string', 'test013', 1L), (14L, 14.0, 'a\\_string', 'test014', 1L), (15L, 15.0, 'MySQL', 'test015', 1L), (16L, 16.0, 'binary', 'test016', 1L), (17L, 1.23457e+22, '17', '17', 1L), (18L, 18.0, 'A', 'test018', 1L), (19L, 19.0, '', 'test019', 1L), (65L, 16.0, 'binary', 'test016', 1L))]
-[04:14:02.137897]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:05.926116]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:117, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 % B'11')]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001'),)]
-[04:14:02.218094]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:06.007270]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:118, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 % B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 1L), (2L, 2.0, 'a\nstring', 'test002', 1L), (3L, 3.0, 'another string', 'test003', 1L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1L), (5L, 5.0, "a'string'", 'test005', 1L), (6L, 6.0, 'a""string""', 'test006', 1L), (7L, 7.0, 'a\x08string', 'test007', 1L), (8L, 8.0, 'a\nstring', 'test008', 1L), (9L, 9.0, 'a\rstring', 'test009', 1L), (10L, 10.0, 'a\tstring', 'test010', 1L), (11L, 11.0, 'azstring', 'test011', 1L), (12L, 12.0, 'a\\string', 'test012', 1L), (13L, 13.0, 'a\\%string', 'test013', 1L), (14L, 14.0, 'a\\_string', 'test014', 1L), (15L, 15.0, 'MySQL', 'test015', 1L), (16L, 16.0, 'binary', 'test016', 1L), (17L, 1.23457e+22, '17', '17', 1L), (18L, 18.0, 'A', 'test018', 1L), (19L, 19.0, '', 'test019', 1L), (65L, 16.0, 'binary', 'test016', 1L))]
-[04:14:02.297590]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:06.085946]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:119, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' ^ B'11')]===
 dble:[None]
 mysql:[((2L, 2.0, 'a\nstring', 'test002'),)]
-[04:14:02.377400]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
+[02:45:06.165875]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 98, line 1, column 95, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:120, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(b'01' ^ B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 2L), (2L, 2.0, 'a\nstring', 'test002', 2L), (3L, 3.0, 'another string', 'test003', 2L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 2L), (5L, 5.0, "a'string'", 'test005', 2L), (6L, 6.0, 'a""string""', 'test006', 2L), (7L, 7.0, 'a\x08string', 'test007', 2L), (8L, 8.0, 'a\nstring', 'test008', 2L), (9L, 9.0, 'a\rstring', 'test009', 2L), (10L, 10.0, 'a\tstring', 'test010', 2L), (11L, 11.0, 'azstring', 'test011', 2L), (12L, 12.0, 'a\\string', 'test012', 2L), (13L, 13.0, 'a\\%string', 'test013', 2L), (14L, 14.0, 'a\\_string', 'test014', 2L), (15L, 15.0, 'MySQL', 'test015', 2L), (16L, 16.0, 'binary', 'test016', 2L), (17L, 1.23457e+22, '17', '17', 2L), (18L, 18.0, 'A', 'test018', 2L), (19L, 19.0, '', 'test019', 2L), (65L, 16.0, 'binary', 'test016', 2L))]
-[04:14:02.459079]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
+[02:45:06.245305]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 77, line 1, column 74, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:121, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (0b01 ^ B'11')]===
 dble:[None]
 mysql:[((2L, 2.0, 'a\nstring', 'test002'),)]
-[04:14:02.539900]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
+[02:45:06.326236]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 97, line 1, column 94, token LITERAL_CHARS 11')
 ===file:sqls_util/select/expression.sql, id:122, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 ^ B'11') from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 2L), (2L, 2.0, 'a\nstring', 'test002', 2L), (3L, 3.0, 'another string', 'test003', 2L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 2L), (5L, 5.0, "a'string'", 'test005', 2L), (6L, 6.0, 'a""string""', 'test006', 2L), (7L, 7.0, 'a\x08string', 'test007', 2L), (8L, 8.0, 'a\nstring', 'test008', 2L), (9L, 9.0, 'a\rstring', 'test009', 2L), (10L, 10.0, 'a\tstring', 'test010', 2L), (11L, 11.0, 'azstring', 'test011', 2L), (12L, 12.0, 'a\\string', 'test012', 2L), (13L, 13.0, 'a\\%string', 'test013', 2L), (14L, 14.0, 'a\\_string', 'test014', 2L), (15L, 15.0, 'MySQL', 'test015', 2L), (16L, 16.0, 'binary', 'test016', 2L), (17L, 1.23457e+22, '17', '17', 2L), (18L, 18.0, 'A', 'test018', 2L), (19L, 19.0, '', 'test019', 2L), (65L, 16.0, 'binary', 'test016', 2L))]
-[04:14:02.620057]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
+[02:45:06.406949]dble err :(1064, 'syntax error, expect RPAREN, actual LITERAL_CHARS pos 76, line 1, column 73, token LITERAL_CHARS 11')
