@@ -5,8 +5,8 @@ dble:[[]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:5, sql:[INSERT INTO test1 VALUES(1),(2),(3);]===
 dble:[[]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:6, sql:[SELECT i, RAND() FROM test1 /*allow_diff*/]===
-dble:[[(1L, 0.19393626897962415), (2L, 0.5116794030290837), (3L, 0.9765882389401908)]]
-mysql:[[(1L, 0.5274117426270728), (2L, 0.5538890553208897), (3L, 0.18721007945687518)]]
+dble:[[(1L, 0.3805867427779238), (2L, 0.6017847038822106), (3L, 0.8671633218109266)]]
+mysql:[[(1L, 0.7849011260875511), (2L, 0.25757358992246315), (3L, 0.9331646020833073)]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:7, sql:[SELECT i, RAND(3) FROM test1]===
 dble:[[(1L, 0.9057697559760601), (2L, 0.37307905813034536), (3L, 0.14808605345719125)]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:9, sql:[drop table if exists test1]===
