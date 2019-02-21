@@ -1,3 +1,6 @@
+===file:sqls_util/syntax/create_table_definition.sql, id:554, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'Y']===
+mysql err:(-1, 'error totally whack')
+dble err[10:12:09.085275] :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:586, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ROW_FORMAT=FIXED]===
 mysql err:(1031, "Table storage engine for 'test1' doesn't have this option")
-dble err[02:46:52.086009] :(1031, "Table storage engine for 'test1' doesn't have this option")
+dble err[10:12:11.092631] :(1031, "Table storage engine for 'test1' doesn't have this option")
