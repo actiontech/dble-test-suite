@@ -1,32 +1,32 @@
 ===file:sqls_util/syntax/sys_function_util.sql, id:15, sql:[SELECT JSON_UNQUOTE(a->'$.name') AS name FROM test1 WHERE b > 2]===
 dble:[None]
 mysql:[(('Barney',), ('Betty',))]
-[09:45:59.832468]dble err :(1064, 'not supported kind expression:SubGt')
+[14:10:44.788023]dble err :(1064, 'not supported kind expression:SubGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:16, sql:[SELECT a->>'$.name' AS name FROM test1 WHERE b > 2]===
 dble:[None]
 mysql:[(('Barney',), ('Betty',))]
-[09:45:59.881601]dble err :(1064, 'not supported kind expression:SubGtGt')
+[14:10:44.836126]dble err :(1064, 'not supported kind expression:SubGtGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:27, sql:[SELECT c, c->"$.id", g FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"]===
 dble:[None]
 mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
-[09:46:00.410626]dble err :(-1, 'error totally whack')
+[14:10:45.326270]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/sys_function_util.sql, id:28, sql:[SELECT c, c->"$.id", g FROM test1 WHERE c->"$.id" > 1 ORDER BY c->"$.name"]===
 dble:[None]
 mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
-[09:46:00.491758]dble err :(-1, 'error totally whack')
+[14:10:45.405330]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/sys_function_util.sql, id:31, sql:[SELECT c, c->"$.id", g, n FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"]===
 dble:[None]
 mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L, None), ('{"id": "4", "name": "Betty"}', '"4"', 3L, 1L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L, None))]
-[09:46:00.753837]dble err :(-1, 'error totally whack')
+[14:10:45.651026]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/sys_function_util.sql, id:33, sql:[SELECT c->>'$.name' AS name FROM test1 WHERE g > 2]===
 dble:[None]
 mysql:[(('Barney',),)]
-[09:46:00.895349]dble err :(1064, 'not supported kind expression:SubGtGt')
+[14:10:45.782967]dble err :(1064, 'not supported kind expression:SubGtGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:38, sql:[SELECT a->"$[4]" FROM test1]===
 dble:[None]
 mysql:[(('44',), ('[22, 44, 66]',))]
-[09:46:01.136143]dble err :(1064, 'not supported kind expression:SubGt')
+[14:10:46.035321]dble err :(1064, 'not supported kind expression:SubGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:41, sql:[SELECT a->"$[4][1]" FROM test1]===
 dble:[None]
 mysql:[((None,), ('44',))]
-[09:46:01.380954]dble err :(1064, 'not supported kind expression:SubGt')
+[14:10:46.276947]dble err :(1064, 'not supported kind expression:SubGt')
