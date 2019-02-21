@@ -564,12 +564,6 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:550, sql:[DROP TABLE test1]===
 dble:[[]]
-===file:sqls_util/syntax/create_table_definition.sql, id:554, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'Y']===
-dble:[[]]
-===file:sqls_util/syntax/create_table_definition.sql, id:555, sql:[INSERT INTO test1 VALUES (1)]===
-dble:[[]]
-===file:sqls_util/syntax/create_table_definition.sql, id:557, sql:[DROP TABLE test1]===
-dble:[[]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:558, sql:[CREATE TABLE  test1 ( id int(11) NOT NULL ,PRIMARY KEY (id) ) ENCRYPTION = 'N']===
 dble:[[]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:559, sql:[INSERT INTO test1 VALUES (1)]===
