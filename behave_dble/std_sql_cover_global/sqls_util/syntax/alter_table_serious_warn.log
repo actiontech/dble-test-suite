@@ -1,15 +1,15 @@
 ===file:sqls_util/syntax/alter_table.sql, id:23, sql:[ALTER TABLE test1 KEY_BLOCK_SIZE = 1000;]===
 mysql err:(1478, "Table storage engine 'InnoDB' does not support the create option 'COMPRESSION'")
-dble err[04:17:33.977751] :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err[09:40:01.342159] :(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:28, sql:[ALTER TABLE test1 ROW_FORMAT = COMPRESSED;]===
 mysql err:(1478, "Table storage engine 'InnoDB' does not support the create option 'COMPRESSION'")
-dble err[04:17:34.387890] :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tROW_FORMAT = COMPRESSED')
+dble err[09:40:01.730293] :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tROW_FORMAT = COMPRESSED')
 ===file:sqls_util/syntax/alter_table.sql, id:32, sql:[ALTER TABLE test1 TABLESPACE aly_test1 STORAGE DISK;]===
 mysql err:(1812, 'InnoDB: A general tablespace named `aly_test1` cannot be found.')
-dble err[04:17:34.713458] :(1064, 'sql syntax error, no terminated. TABLESPACE')
+dble err[09:40:02.002195] :(1064, 'sql syntax error, no terminated. TABLESPACE')
 ===file:sqls_util/syntax/alter_table.sql, id:51, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) with parser parser_name]===
 mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'parser parser_name' at line 1")
-dble err[04:17:35.621625] :(1064, 'sql syntax error, no terminated. WITH')
+dble err[09:40:02.878122] :(1064, 'sql syntax error, no terminated. WITH')
 ===file:sqls_util/syntax/alter_table.sql, id:156, sql:[ALTER TABLE test1 ADD CONSTRAINT PRIMARY KEY (id asc,code DESC)]===
 mysql err:(1068, 'Multiple primary key defined')
-dble err[04:17:42.235625] :(1064, 'syntax error, expect RPAREN, actual ASC pos 52, line 1, column 49, token ASC')
+dble err[09:40:09.438819] :(1064, 'syntax error, expect RPAREN, actual ASC pos 52, line 1, column 49, token ASC')

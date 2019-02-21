@@ -49,11 +49,11 @@ mysql:[[('data', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', N
 ===file:sqls_util/syntax/create_table_definition.sql, id:99, sql:[CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))]===
 dble:[None]
 mysql:[()]
-[04:17:58.868380]dble err :(-1, 'error totally whack')
+[09:40:26.108401]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:100, sql:[INSERT INTO test1 (id,data1,data2)  VALUES (1,'aaa1','aaa2')]===
 dble:[None]
 mysql:[()]
-[04:17:58.906266]dble err :(-1, 'error totally whack')
+[09:40:26.142235]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:101, sql:[DESC test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data1', 'varchar(10)', 'YES', '', None, ''), ('data2', 'varchar(10)', 'YES', '', None, ''), ('data3', 'varchar(20)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data1', 'varchar(10)', 'YES', '', None, ''), ('data2', 'varchar(10)', 'YES', '', None, ''), ('data3', 'varchar(20)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
@@ -63,11 +63,11 @@ mysql:[[(1L, 'aaa1', 'aaa2', 'aaa1 aaa2')]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:106, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) virtual)]===
 dble:[None]
 mysql:[()]
-[04:17:59.200141]dble err :(-1, 'error totally whack')
+[09:40:26.407220]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:107, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:17:59.224915]dble err :(-1, 'error totally whack')
+[09:40:26.440350]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:108, sql:[DESC test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'VIRTUAL GENERATED'), ('id', 'int(11)', 'YES', '', None, '')]]
@@ -77,111 +77,111 @@ mysql:[[(1L, 1L, 1L, 2L)]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:111, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) stored)]===
 dble:[None]
 mysql:[()]
-[04:17:59.538681]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SORTED,  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checking consisten' at line 1")
+[09:40:26.753943]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'SORTED,  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checking consisten' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:112, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:17:59.591493]dble err :(-1, 'error totally whack')
+[09:40:26.809661]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:113, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'STORED GENERATED'))]
-[04:17:59.671352]dble err :(1146, "Table 'db1.test1' doesn't exist")
+[09:40:26.859338]dble err :(1146, "Table 'db1.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:114, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[None]
 mysql:[((1L, 1L, 1L, 2L),)]
-[04:17:59.750855]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:26.942328]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:118, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE)]===
 dble:[None]
 mysql:[()]
-[04:17:59.895070]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+[09:40:27.097891]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:119, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:17:59.942377]dble err :(-1, 'error totally whack')
+[09:40:27.149059]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:120, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, 'VIRTUAL GENERATED'))]
-[04:18:00.022840]dble err :(1146, "Table 'db1.test1' doesn't exist")
+[09:40:27.232490]dble err :(1146, "Table 'db1.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:121, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[None]
 mysql:[((1L, 1L, 1L, 2L),)]
-[04:18:00.103553]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:27.316639]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:123, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY)]===
 dble:[None]
 mysql:[()]
-[04:18:00.246567]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+[09:40:27.471169]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:124, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:18:00.296810]dble err :(-1, 'error totally whack')
+[09:40:27.522100]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:125, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, 'VIRTUAL GENERATED'))]
-[04:18:00.378858]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:27.605592]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:126, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[None]
 mysql:[((1L, 1L, 1L, 2L),)]
-[04:18:00.459505]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:27.687291]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:130, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) UNIQUE KEY COMMENT 'test')]===
 dble:[None]
 mysql:[()]
-[04:18:00.606069]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+[09:40:27.832489]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:131, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:18:00.653830]dble err :(-1, 'error totally whack')
+[09:40:27.881034]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:132, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, 'VIRTUAL GENERATED'))]
-[04:18:00.734562]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:27.963590]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:133, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[None]
 mysql:[((1L, 1L, 1L, 2L),)]
-[04:18:00.815386]dble err :(1146, "Table 'db1.test1' doesn't exist")
+[09:40:28.047979]dble err :(1146, "Table 'db1.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:137, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NOT NULL)]===
 dble:[None]
 mysql:[()]
-[04:18:00.960879]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+[09:40:28.161716]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:138, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:18:01.011340]dble err :(-1, 'error totally whack')
+[09:40:28.211507]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:139, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'NO', '', None, 'VIRTUAL GENERATED'))]
-[04:18:01.094516]dble err :(1146, "Table 'db1.test1' doesn't exist")
+[09:40:28.293752]dble err :(1146, "Table 'db1.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:140, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[None]
 mysql:[((1L, 1L, 1L, 2L),)]
-[04:18:01.175636]dble err :(1146, "Table 'db1.test1' doesn't exist")
+[09:40:28.375579]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:142, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) NULL)]===
 dble:[None]
 mysql:[()]
-[04:18:01.321143]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
+[09:40:28.567559]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2),  _dble_op_time bigint DEFAULT NULL COMMENT 'field for checki' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:143, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:18:01.370477]dble err :(-1, 'error totally whack')
+[09:40:28.618461]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:144, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', '', None, 'VIRTUAL GENERATED'))]
-[04:18:01.423072]dble err :(1146, "Table 'db1.test1' doesn't exist")
+[09:40:28.699087]dble err :(1146, "Table 'db1.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:145, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[None]
 mysql:[((1L, 1L, 1L, 2L),)]
-[04:18:01.503238]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:28.779144]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:150, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) STORED PRIMARY KEY)]===
 dble:[None]
 mysql:[()]
-[04:18:01.644829]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2) SORTED,  _dble_op_time bigint DEFAULT NULL COMMENT 'field for' at line 1")
+[09:40:28.924490]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'AS (data1 + data2) SORTED,  _dble_op_time bigint DEFAULT NULL COMMENT 'field for' at line 1")
 ===file:sqls_util/syntax/create_table_definition.sql, id:151, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
 dble:[None]
 mysql:[()]
-[04:18:01.693217]dble err :(-1, 'error totally whack')
+[09:40:28.972568]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:152, sql:[DESC test1]===
 dble:[None]
 mysql:[(('id', 'int(11)', 'YES', '', None, ''), ('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'NO', 'PRI', None, 'STORED GENERATED'))]
-[04:18:01.774483]dble err :(1146, "Table 'db2.test1' doesn't exist")
+[09:40:29.052778]dble err :(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:162, sql:[DESC test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
 mysql:[[('detail', 'varchar(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
@@ -377,9 +377,6 @@ mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY K
 ===file:sqls_util/syntax/create_table_definition.sql, id:549, sql:[SHOW CREATE TABLE  test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 DELAY_KEY_WRITE=1")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 DELAY_KEY_WRITE=1')]]
-===file:sqls_util/syntax/create_table_definition.sql, id:556, sql:[SHOW CREATE TABLE  test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='Y'")]]
-mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='Y'")]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:560, sql:[SHOW CREATE TABLE  test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='N'")]]
 mysql:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1 ENCRYPTION='N'")]]
