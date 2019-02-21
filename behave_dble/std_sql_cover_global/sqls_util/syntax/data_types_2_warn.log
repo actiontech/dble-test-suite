@@ -1,75 +1,75 @@
 ===file:sqls_util/syntax/data_types_2.sql, id:8, sql:[INSERT INTO test1 ( id,data) VALUES (2,10)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:37.518625] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:13.984029] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:10, sql:[INSERT INTO test1 ( id,data) VALUES (3,'aaaaaaaaaaaa,aaaaaaaaaaaa_aaaaaaaaa%%aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa*aa')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:37.627340] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:14.086104] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:16, sql:[INSERT INTO test1 ( id,data) VALUES (2,10)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:38.025678] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:14.474894] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:22, sql:[INSERT INTO test1 ( id,data) VALUES (1,123456)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:38.430771] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:14.887745] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:23, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcdef')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:38.511566] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:14.975462] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:40, sql:[INSERT INTO test1 ( id,data) VALUES (1,123456)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:39.510845] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:15.918497] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:41, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcdef')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:39.592451] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:15.999287] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:42, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcde')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:39.674537] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:16.080229] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:46, sql:[INSERT INTO test1 ( id,data) VALUES (1,123456)]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:39.954909] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:16.367438] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:47, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcdef')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:40.005579] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:16.450016] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:48, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcde')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:40.087317] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:16.531728] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:53, sql:[INSERT INTO test1 ( id,data) VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaabcdefg')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:40.427807] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:16.865151] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:59, sql:[INSERT INTO test1 ( id,data) VALUES (1,'aaaaaaaaaaaaaaaaaaaaaaaaabcdefg')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:40.816312] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:17.265205] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:81, sql:[INSERT INTO test1 ( id,data) VALUES (1,'201411-11')]===
 mysql err:(1292, "Incorrect date value: '201411-11' for column 'data' at row 1")
-dble err[02:06:41.984280] :(1292, "Incorrect date value: '201411-11' for column 'data' at row 1")
+dble err[04:19:18.468390] :(1292, "Incorrect date value: '201411-11' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:86, sql:[INSERT INTO test1 ( id,data) VALUES (6,'aaaa-01-01')]===
 mysql err:(1292, "Incorrect date value: 'aaaa-01-01' for column 'data' at row 1")
-dble err[02:06:42.279429] :(1292, "Incorrect date value: 'aaaa-01-01' for column 'data' at row 1")
+dble err[04:19:18.746121] :(1292, "Incorrect date value: 'aaaa-01-01' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:89, sql:[INSERT INTO test1 ( id,data) VALUES (9,'10000-01-01')]===
 mysql err:(1292, "Incorrect date value: '10000-01-01' for column 'data' at row 1")
-dble err[02:06:42.463172] :(1292, "Incorrect date value: '10000-01-01' for column 'data' at row 1")
+dble err[04:19:18.931168] :(1292, "Incorrect date value: '10000-01-01' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:90, sql:[INSERT INTO test1 ( id,data) VALUES (10,'9999-01-100')]===
 mysql err:(1292, "Incorrect date value: '9999-01-100' for column 'data' at row 1")
-dble err[02:06:42.544141] :(1292, "Incorrect date value: '9999-01-100' for column 'data' at row 1")
+dble err[04:19:19.015093] :(1292, "Incorrect date value: '9999-01-100' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:101, sql:[INSERT INTO test1 ( id,data) VALUES (1,'201411-11')]===
 mysql err:(1292, "Incorrect time value: '201411-11' for column 'data' at row 1")
-dble err[02:06:43.131746] :(1292, "Incorrect time value: '201411-11' for column 'data' at row 1")
+dble err[04:19:19.548546] :(1292, "Incorrect time value: '201411-11' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:117, sql:[INSERT INTO test1 ( id,data) VALUES (1,'1970-01-01 00:00:01'),(2,'2038-01-19 03:14:07')]===
 mysql err:(1292, "Incorrect datetime value: '1970-01-01 00:00:01' for column 'data' at row 1")
-dble err[02:06:43.971474] :(1292, "Incorrect datetime value: '1970-01-01 00:00:01' for column 'data' at row 1")
+dble err[04:19:20.396740] :(1292, "Incorrect datetime value: '1970-01-01 00:00:01' for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:136, sql:[INSERT INTO test1 ( id,data) VALUES (1,1900)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[02:06:44.986303] :(1264, "Out of range value for column 'data' at row 1")
+dble err[04:19:21.379401] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:137, sql:[INSERT INTO test1 ( id,data) VALUES (2,2156)]===
 mysql err:(1264, "Out of range value for column 'data' at row 1")
-dble err[02:06:45.036411] :(1264, "Out of range value for column 'data' at row 1")
+dble err[04:19:21.430403] :(1264, "Out of range value for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:138, sql:[INSERT INTO test1 ( id,data) VALUES (3,'2038-01-19 03:14:07')]===
 mysql err:(1265, "Data truncated for column 'data' at row 1")
-dble err[02:06:45.118694] :(1265, "Data truncated for column 'data' at row 1")
+dble err[04:19:21.512520] :(1265, "Data truncated for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:139, sql:[INSERT INTO test1 ( id,data) VALUES (4,1901),(5,2156),(6,0000)]===
 mysql err:(1264, "Out of range value for column 'data' at row 2")
-dble err[02:06:45.203534] :(1264, "Out of range value for column 'data' at row 2")
+dble err[04:19:21.566381] :(1264, "Out of range value for column 'data' at row 2")
 ===file:sqls_util/syntax/data_types_2.sql, id:233, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcdef')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:48.999995] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:25.455618] :(1406, "Data too long for column 'data' at row 1")
 ===file:sqls_util/syntax/data_types_2.sql, id:241, sql:[INSERT INTO test1 ( id,data) VALUES (1,'abcdef')]===
 mysql err:(1406, "Data too long for column 'data' at row 1")
-dble err[02:06:49.426415] :(1406, "Data too long for column 'data' at row 1")
+dble err[04:19:25.850579] :(1406, "Data too long for column 'data' at row 1")
