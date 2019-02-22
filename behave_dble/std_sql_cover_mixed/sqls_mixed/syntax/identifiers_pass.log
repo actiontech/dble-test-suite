@@ -46,149 +46,149 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_mixed/syntax/identifiers.sql, id:31, sql:[drop view abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:34, sql:[select 1 as abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl]===
+===file:sqls_mixed/syntax/identifiers.sql, id:35, sql:[select 1 as abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl]===
 dble:[[(1L,)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:35, sql:[select 2 as abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm]===
+===file:sqls_mixed/syntax/identifiers.sql, id:36, sql:[select 2 as abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm]===
 dble:[[(2L,)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:36, sql:[set @abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl='schema1']===
+===file:sqls_mixed/syntax/identifiers.sql, id:37, sql:[set @abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl='schema1']===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:39, sql:[select id from sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:40, sql:[select id from sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:40, sql:[select sharding_4_t1.id from sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:41, sql:[select sharding_4_t1.id from sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:41, sql:[select `sharding_4_t1`.`id` from sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:42, sql:[select `sharding_4_t1`.`id` from sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:42, sql:[select sharding_4_t1.`id` from sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:43, sql:[select sharding_4_t1.`id` from sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:43, sql:[select schema1.sharding_4_t1.id from sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:44, sql:[select schema1.sharding_4_t1.id from sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:44, sql:[select `schema1`.`sharding_4_t1`.`id` from sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:45, sql:[select `schema1`.`sharding_4_t1`.`id` from sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:46, sql:[drop table sharding_4_t1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:47, sql:[drop table sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:48, sql:[drop table if EXISTS ADDDATE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:49, sql:[drop table if EXISTS ADDDATE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:49, sql:[create table ADDDATE (i int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:50, sql:[create table ADDDATE (i int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:50, sql:[drop table if EXISTS BIT_AND]===
+===file:sqls_mixed/syntax/identifiers.sql, id:51, sql:[drop table if EXISTS BIT_AND]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:52, sql:[drop table if EXISTS BIT_OR]===
+===file:sqls_mixed/syntax/identifiers.sql, id:53, sql:[drop table if EXISTS BIT_OR]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:54, sql:[drop table if EXISTS BIT_XOR]===
+===file:sqls_mixed/syntax/identifiers.sql, id:55, sql:[drop table if EXISTS BIT_XOR]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:58, sql:[drop table if EXISTS CURDATE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:59, sql:[drop table if EXISTS CURDATE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:60, sql:[drop table if EXISTS CURTIME]===
+===file:sqls_mixed/syntax/identifiers.sql, id:61, sql:[drop table if EXISTS CURTIME]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:62, sql:[drop table if EXISTS DATE_ADD]===
+===file:sqls_mixed/syntax/identifiers.sql, id:63, sql:[drop table if EXISTS DATE_ADD]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:64, sql:[drop table if EXISTS DATE_SUB]===
+===file:sqls_mixed/syntax/identifiers.sql, id:65, sql:[drop table if EXISTS DATE_SUB]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:66, sql:[drop table if EXISTS EXTRACT]===
+===file:sqls_mixed/syntax/identifiers.sql, id:67, sql:[drop table if EXISTS EXTRACT]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:68, sql:[drop table if EXISTS GROUP_CONCAT]===
+===file:sqls_mixed/syntax/identifiers.sql, id:69, sql:[drop table if EXISTS GROUP_CONCAT]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:70, sql:[drop table if EXISTS MAX]===
+===file:sqls_mixed/syntax/identifiers.sql, id:71, sql:[drop table if EXISTS MAX]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:72, sql:[drop table if EXISTS MID]===
+===file:sqls_mixed/syntax/identifiers.sql, id:73, sql:[drop table if EXISTS MID]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:74, sql:[drop table if EXISTS MIN]===
+===file:sqls_mixed/syntax/identifiers.sql, id:75, sql:[drop table if EXISTS MIN]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:76, sql:[drop table if EXISTS NOW]===
+===file:sqls_mixed/syntax/identifiers.sql, id:77, sql:[drop table if EXISTS NOW]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:78, sql:[drop table if EXISTS POSITION]===
+===file:sqls_mixed/syntax/identifiers.sql, id:79, sql:[drop table if EXISTS POSITION]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:80, sql:[drop table if EXISTS SESSION_USER]===
+===file:sqls_mixed/syntax/identifiers.sql, id:81, sql:[drop table if EXISTS SESSION_USER]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:81, sql:[create table SESSION_USER (i int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:82, sql:[create table SESSION_USER (i int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:82, sql:[drop table if EXISTS STD]===
+===file:sqls_mixed/syntax/identifiers.sql, id:83, sql:[drop table if EXISTS STD]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:84, sql:[drop table if EXISTS STDDEV]===
+===file:sqls_mixed/syntax/identifiers.sql, id:85, sql:[drop table if EXISTS STDDEV]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:86, sql:[drop table if EXISTS STDDEV_POP]===
+===file:sqls_mixed/syntax/identifiers.sql, id:87, sql:[drop table if EXISTS STDDEV_POP]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:88, sql:[drop table if EXISTS STDDEV_SAMP]===
+===file:sqls_mixed/syntax/identifiers.sql, id:89, sql:[drop table if EXISTS STDDEV_SAMP]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:90, sql:[drop table if EXISTS SUBDATE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:91, sql:[drop table if EXISTS SUBDATE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:91, sql:[create table SUBDATE (i int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:92, sql:[create table SUBDATE (i int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:92, sql:[drop table if EXISTS SUBSTR]===
+===file:sqls_mixed/syntax/identifiers.sql, id:93, sql:[drop table if EXISTS SUBSTR]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:94, sql:[drop table if EXISTS SUBSTRING]===
+===file:sqls_mixed/syntax/identifiers.sql, id:95, sql:[drop table if EXISTS SUBSTRING]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:96, sql:[drop table if EXISTS SUM]===
+===file:sqls_mixed/syntax/identifiers.sql, id:97, sql:[drop table if EXISTS SUM]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:98, sql:[drop table if EXISTS SYSDATE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:99, sql:[drop table if EXISTS SYSDATE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:100, sql:[drop table if EXISTS SYSTEM_USER]===
+===file:sqls_mixed/syntax/identifiers.sql, id:101, sql:[drop table if EXISTS SYSTEM_USER]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:101, sql:[create table SYSTEM_USER (i int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:102, sql:[create table SYSTEM_USER (i int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:102, sql:[drop table if EXISTS TRIM]===
+===file:sqls_mixed/syntax/identifiers.sql, id:103, sql:[drop table if EXISTS TRIM]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:104, sql:[drop table if EXISTS VARIANCE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:105, sql:[drop table if EXISTS VARIANCE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:106, sql:[drop table if EXISTS VAR_POP]===
+===file:sqls_mixed/syntax/identifiers.sql, id:107, sql:[drop table if EXISTS VAR_POP]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:108, sql:[drop table if EXISTS VAR_SAMP]===
+===file:sqls_mixed/syntax/identifiers.sql, id:109, sql:[drop table if EXISTS VAR_SAMP]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:110, sql:[drop table if EXISTS ADDDATE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:111, sql:[drop table if EXISTS ADDDATE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:111, sql:[create table ADDDATE(i int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:112, sql:[create table ADDDATE(i int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:112, sql:[drop table if EXISTS count]===
+===file:sqls_mixed/syntax/identifiers.sql, id:113, sql:[drop table if EXISTS count]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:113, sql:[create table `count`(id int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:114, sql:[create table `count`(id int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:114, sql:[SELECT COUNT(*) FROM count]===
+===file:sqls_mixed/syntax/identifiers.sql, id:115, sql:[SELECT COUNT(*) FROM count]===
 dble:[[(0L,)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:115, sql:[drop table if EXISTS ascii]===
+===file:sqls_mixed/syntax/identifiers.sql, id:116, sql:[drop table if EXISTS ascii]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:116, sql:[create table ascii(i INT)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:117, sql:[create table ascii(i INT)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:117, sql:[drop table ascii]===
+===file:sqls_mixed/syntax/identifiers.sql, id:118, sql:[drop table ascii]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:118, sql:[create table ascii (i INT)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:119, sql:[create table ascii (i INT)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:119, sql:[drop table ascii]===
+===file:sqls_mixed/syntax/identifiers.sql, id:120, sql:[drop table ascii]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:121, sql:[SET sql_mode = 'IGNORE_SPACE']===
+===file:sqls_mixed/syntax/identifiers.sql, id:122, sql:[SET sql_mode = 'IGNORE_SPACE']===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:122, sql:[drop table if exists count]===
+===file:sqls_mixed/syntax/identifiers.sql, id:123, sql:[drop table if exists count]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:123, sql:[create table `count`(id int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:124, sql:[create table `count`(id int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:124, sql:[drop table if exists count]===
+===file:sqls_mixed/syntax/identifiers.sql, id:125, sql:[drop table if exists count]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:126, sql:[drop table if exists `interval`]===
+===file:sqls_mixed/syntax/identifiers.sql, id:127, sql:[drop table if exists `interval`]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:131, sql:[drop table if exists t]===
+===file:sqls_mixed/syntax/identifiers.sql, id:132, sql:[drop table if exists t]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:132, sql:[create table t(c1 int)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:133, sql:[create table t(c1 int)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:133, sql:[insert into t values(1),(2),(3)]===
+===file:sqls_mixed/syntax/identifiers.sql, id:134, sql:[insert into t values(1),(2),(3)]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:134, sql:[SET @c = "c1"]===
+===file:sqls_mixed/syntax/identifiers.sql, id:135, sql:[SET @c = "c1"]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:135, sql:[SET @s = CONCAT("SELECT ", @c, " FROM t")]===
+===file:sqls_mixed/syntax/identifiers.sql, id:136, sql:[SET @s = CONCAT("SELECT ", @c, " FROM t")]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:136, sql:[PREPARE stmt FROM @s]===
+===file:sqls_mixed/syntax/identifiers.sql, id:137, sql:[PREPARE stmt FROM @s]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:138, sql:[DEALLOCATE PREPARE stmt]===
+===file:sqls_mixed/syntax/identifiers.sql, id:139, sql:[DEALLOCATE PREPARE stmt]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:140, sql:[set sql_mode=PIPES_AS_CONCAT]===
+===file:sqls_mixed/syntax/identifiers.sql, id:141, sql:[set sql_mode=PIPES_AS_CONCAT]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:141, sql:[select 'a'||'b']===
+===file:sqls_mixed/syntax/identifiers.sql, id:142, sql:[select 'a'||'b']===
 dble:[[('ab',)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:142, sql:[select not ! 1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:143, sql:[select not ! 1]===
 dble:[[(1L,)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:144, sql:[set sql_mode=HIGH_NOT_PRECEDENCE]===
+===file:sqls_mixed/syntax/identifiers.sql, id:145, sql:[set sql_mode=HIGH_NOT_PRECEDENCE]===
 dble:[[]]
-===file:sqls_mixed/syntax/identifiers.sql, id:145, sql:[select ! not 1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:146, sql:[select ! not 1]===
 dble:[[(1L,)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:146, sql:[select not ! 1]===
+===file:sqls_mixed/syntax/identifiers.sql, id:147, sql:[select not ! 1]===
 dble:[[(1L,)]]
-===file:sqls_mixed/syntax/identifiers.sql, id:149, sql:[drop table if exists `drop`]===
+===file:sqls_mixed/syntax/identifiers.sql, id:150, sql:[drop table if exists `drop`]===
 dble:[[]]
