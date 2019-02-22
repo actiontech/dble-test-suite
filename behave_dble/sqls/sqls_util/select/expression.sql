@@ -158,7 +158,7 @@ select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true <
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true = (HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true >= (HEX(R_bit) not in (select HEX(R_bit) from test1 where id <4))
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true > (HEX(R_bit) between 0b10+0 and (select HEX(R_bit) from test1 where HEX(R_bit) not in (1,2,3)))
-select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true <=(select HEX(R_bit) not like (select 2) from test1 limit 1)
+select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true <=(select HEX(R_bit) not like (select 2) from test1 order by id limit 1) order by test1.id
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false <(select HEX(R_bit) like (select 1) a from test1 order by a limit 1)
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where false <> (select HEX(R_bit) from test1 where HEX(R_bit)  not regexp '^A' limit 1 )
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where true != (select HEX(R_bit) from test1 where HEX(R_bit) regexp '^A' limit 1 )
