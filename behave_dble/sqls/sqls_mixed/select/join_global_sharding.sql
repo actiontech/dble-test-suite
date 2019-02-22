@@ -24,7 +24,7 @@ select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from sharding_4_t1 a in
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from sharding_4_t1 a cross join schema2.global_4_t1 b order by a.id,b.id
 select a.id,a.name,a.pad,b.name from sharding_4_t1 a straight_join schema2.global_4_t1 b on a.pad=b.pad
 select a.id,a.t_id,a.name,a.pad,b.id,b.o_id,b.name,b.pad from sharding_4_t1 a,schema2.global_4_t1 b where a.pad=b.pad
-select sharding_4_t1.id,sharding_4_t1.t_id,sharding_4_t1.name,sharding_4_t1.pad,schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from sharding_4_t1,schema2.global_4_t1 where sharding_4_t1.pad=schema2.global_4_t1.pad
+select sharding_4_t1.id,sharding_4_t1.t_id,sharding_4_t1.name,sharding_4_t1.pad,schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from sharding_4_t1,schema2.global_4_t1 where sharding_4_t1.pad=schema2.global_4_t1.pad order by sharding_4_t1.id,schema2.global_4_t1.id
 select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.global_4_t1 where pad>3) b where a.t_id=b.o_id
 select a.id,b.id,b.pad,a.t_id from (select id,t_id from sharding_4_t1) a,(select * from schema2.global_4_t1) b where a.t_id=b.o_id
 select sharding_4_t1.id,sharding_4_t1.name,a.name from sharding_4_t1,(select name from schema2.global_4_t1) a
