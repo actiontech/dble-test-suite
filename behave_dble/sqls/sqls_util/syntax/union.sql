@@ -260,7 +260,7 @@ select id from  test1 union SELECT 4 >> 2
 select id from  test1 union SELECT AES_DECRYPT('text',UNHEX('F3229A0B371ED2D9441B830D21A390C3'))
 select id from  test1 union SELECT LENGTH(COMPRESS(REPEAT('a',1000)))
 select id from  test1 union select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')
-select id from  test1 union SELECT ENCRYPT('hello')
+select id from  test1 union SELECT ENCRYPT('hello') /*allow_diff*/
 select id from  test1 union SELECT ENCRYPT('hello','abc')
 select id from  test1 union SELECT MD5('testing')
 select id from  test1 union SELECT PASSWORD('mypass')
@@ -283,7 +283,7 @@ select id from  test1 union SELECT SESSION_USER()
 select id from  test1 union SELECT USER()
 select id from  test1 union SELECT LAST_INSERT_id()
 select id from  test1 union SELECT ROW_COUNT()
-select id from  test1 union SELECT VERSION()
+select id from  test1 union SELECT VERSION() /*allow_diff*/
 select id from  test1 union SELECT GET_LOCK('lock1',10)
 select id from  test1 union SELECT RELEASE_LOCK('lock2')
 select id from  test1 union SELECT INET_ATON('10.0.5.9')
@@ -332,7 +332,7 @@ SELECT SESSION_USER() union select id from  test1
 SELECT USER() union select id from  test1
 SELECT LAST_INSERT_id() union select id from  test1
 SELECT ROW_COUNT() union select id from  test1
-SELECT VERSION() union select id from  test1
+SELECT VERSION() union select id from  test1 /*allow_diff*/
 SELECT GET_LOCK('lock1',10) union select id from  test1
 SELECT RELEASE_LOCK('lock2') union select id from  test1
 SELECT INET_ATON('10.0.5.9') union select id from  test1
