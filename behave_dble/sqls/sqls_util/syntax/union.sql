@@ -283,7 +283,7 @@ select id from  test1 union SELECT SESSION_USER()
 select id from  test1 union SELECT USER()
 select id from  test1 union SELECT LAST_INSERT_id()
 select id from  test1 union SELECT ROW_COUNT()
-select id from  test1 union SELECT VERSION()
+select id from  test1 union SELECT VERSION() /*allow_diff*/
 select id from  test1 union SELECT GET_LOCK('lock1',10)
 select id from  test1 union SELECT RELEASE_LOCK('lock2')
 select id from  test1 union SELECT INET_ATON('10.0.5.9')
