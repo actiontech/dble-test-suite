@@ -42,19 +42,22 @@ TRIVIAL
 ##通过ftp包安装单节点并启动
 behave -Dreset=false features/install_uninstall/install_dble.feature
 
-##通过ftp包解压安装到所有节点，配置使用zk，启动所有节点,集群到单节点转换
-behave -Dreinstall=true -Dis_cluster=true features/install_uninstall/install_dble_and_zk.feature
+##通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点
+behave -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature
+
+##通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换
+behave -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
 
 ##使用特定配置启动dble
-behave --stop -D dble_conf={sql_cover|sql_cover_global|template} features/setup.feature
+behave --stop -D dble_conf={sql_cover_sharding | sql_cover_nosharding | sql_cover_global | sql_cover_mixed | template} features/setup.feature
 
-##sql覆盖, manual do rm -rf sql_cover_log if not running by ci
+##sql覆盖
 sqls_mixed: 用于默认sql覆盖，包含混合表类型
 sqls_util: 所有表类型的sql覆盖都需要分别覆盖
 
-behave -D dble_conf=sql_cover features/sql_cover/sql.feature 
-behave -D dble_conf=sql_cover features/sql_cover/subquery_plan_optimize.feature
-behave -D dble_conf=sql_cover features/sql_cover/manager.feature
+behave -D dble_conf=sql_cover_mixed features/sql_cover/sql.feature 
+behave -D dble_conf=sql_cover_mixed features/sql_cover/subquery_plan_optimize.feature
+behave -D dble_conf=sql_cover_mixed features/sql_cover/manager.feature
 
 ###全局表sql覆盖
 behave -Ddble_conf=sql_cover_global features/sql_cover/sql_global.feature
