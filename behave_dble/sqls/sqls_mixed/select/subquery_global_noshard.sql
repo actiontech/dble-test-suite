@@ -50,6 +50,8 @@ select a.id,b.id,b.pad,a.t_id from (select schema2.global_4_t1.id,schema2.global
 select id,t_id,name,pad from schema2.global_4_t1 where pad>(select pad from schema2.global_4_t1 where pad=2);
 select b.id,b.t_id,b.name,b.pad,a.id,a.id,a.pad,a.t_id from schema2.global_4_t1 b,(select id,t_id,name,pad from schema2.global_4_t1 where id>3 union select * from noshard_t1 where id<2) a where a.id >3 and b.pad=a.pad;
 select count(*) from (select * from schema2.global_4_t1 where pad=(select pad from noshard_t1 where id=1)) a;
+#961
+select id,pad from schema2.global_4_t1 where pad=1 and pad in (select id from noshard_t1) and id in (select id from noshard_t1);
 #
 #Second supplement
 #
