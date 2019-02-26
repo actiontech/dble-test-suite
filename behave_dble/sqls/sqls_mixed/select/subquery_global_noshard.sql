@@ -50,9 +50,6 @@ select a.id,b.id,b.pad,a.t_id from (select schema2.global_4_t1.id,schema2.global
 select id,t_id,name,pad from schema2.global_4_t1 where pad>(select pad from schema2.global_4_t1 where pad=2);
 select b.id,b.t_id,b.name,b.pad,a.id,a.id,a.pad,a.t_id from schema2.global_4_t1 b,(select id,t_id,name,pad from schema2.global_4_t1 where id>3 union select * from noshard_t1 where id<2) a where a.id >3 and b.pad=a.pad;
 select count(*) from (select * from schema2.global_4_t1 where pad=(select pad from noshard_t1 where id=1)) a;
-#961
-select id,pad from schema2.global_4_t1 where pad=1 and pad in (select id from noshard_t1) and id in (select id from noshard_t1);
-#
 #Second supplement
 #
 select (select name from schema2.global_4_t1 limit 1)
@@ -70,6 +67,9 @@ select id,name,pad from schema2.global_4_t1 where (1,1)in(select id,pad from nos
 SELECT pad FROM schema2.global_4_t1 AS x WHERE x.id = (SELECT pad FROM noshard_t1 AS y WHERE x.id = (SELECT pad FROM sharding_4_t1 WHERE y.id = sharding_4_t1.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from schema2.global_4_t1)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from schema2.global_4_t1 group by pad) as t1
+#961
+select id,pad from schema2.global_4_t1 where pad=1 and pad in (select id from noshard_t1) and id in (select id from noshard_t1);
+#
 #
 #clear tables
 #
