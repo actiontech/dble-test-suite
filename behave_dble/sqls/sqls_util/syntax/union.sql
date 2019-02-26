@@ -195,7 +195,7 @@ select id from  test1 union SELECT EXTRACT(MICROSECOND FROM '2003-01-02 10:30:00
 select id from  test1 union SELECT FROM_DAYS(730669)
 select id from  test1 union SELECT FROM_UNIXTIME(1447430881)
 select id from  test1 union SELECT FROM_UNIXTIME(1447430881) + 0
-select id from  test1 union SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x')
+select id from  test1 union SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x') /*allow_10%_diff*/
 select id from  test1 union SELECT DATE_FORMAT('2003-10-03',GET_FORMAT(DATE,'EUR'))
 select id from  test1 union SELECT STR_TO_DATE('10.31.2003',GET_FORMAT(DATE,'USA'))
 select id from  test1 union SELECT HOUR('10:05:03')
