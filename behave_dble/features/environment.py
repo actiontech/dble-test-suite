@@ -62,7 +62,7 @@ def before_all(context):
 
     logger.info("run test with environment reinstall: {0}, reset: {1}, new install: {2}".format(reinstall, reset, not reinstall or reset))
 
-    context.need_download = reinstall and context.config.userdata["tar_local"].lower() != "true"
+    context.need_download = context.config.userdata["tar_local"].lower() != "true"
 
     if reinstall:
         install_dble_in_all_nodes(context)
