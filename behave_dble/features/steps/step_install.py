@@ -275,7 +275,7 @@ def conf_zk_in_node(context, node):
     zk_server_port=context.cfg_zookeeper['port']
 
     myid = node.host_name.split("-")[1]
-    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}/g' -e 's/port=.*/port={3}/g' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
+    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{3}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
