@@ -80,6 +80,8 @@ dble:[[(2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), 
 dble:[[(2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (6L, 6L, 'test6', 6L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:48, sql:[select id,t_id,name,pad from schema2.global_4_t1 where pad !=any(select id from schema2.global_4_t1 where pad=3);]===
 dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:49, sql:[select a.id,b.id,b.pad,a.t_id from (select schema2.global_4_t1.id,schema2.global_4_t1.pad,schema2.global_4_t1.t_id from schema2.global_4_t1 join noshard_t1 where schema2.global_4_t1.pad=noshard_t1.pad ) a,(select sharding_4_t1.id,sharding_4_t1.pad from schema2.global_4_t1 join sharding_4_t1 where schema2.global_4_t1.pad=sharding_4_t1.pad) b where a.pad=b.pad;]===
+dble:[[(1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 4L, 4L, 3L), (4L, 3L, 3L, 4L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L), (5L, 1L, 1L, 5L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:50, sql:[select id,t_id,name,pad from schema2.global_4_t1 where pad>(select pad from schema2.global_4_t1 where pad=2);]===
 dble:[[(3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (6L, 6L, 'test6', 6L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:51, sql:[select b.id,b.t_id,b.name,b.pad,a.id,a.id,a.pad,a.t_id from schema2.global_4_t1 b,(select id,t_id,name,pad from schema2.global_4_t1 where id>3 union select * from noshard_t1 where id<2) a where a.id >3 and b.pad=a.pad;]===
@@ -102,9 +104,11 @@ dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), 
 dble:[[(2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:70, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from schema2.global_4_t1 group by pad) as t1]===
 dble:[[(Decimal('4.2000'),)]]
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:74, sql:[drop table if exists schema2.global_4_t1]===
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:72, sql:[select id,pad from schema2.global_4_t1 where pad=1 and pad in (select id from noshard_t1) and id in (select id from noshard_t1);]===
+dble:[[(1L, 1L), (5L, 1L)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:77, sql:[drop table if exists schema2.global_4_t1]===
 dble:[[]]
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:75, sql:[drop table if exists noshard_t1]===
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:78, sql:[drop table if exists noshard_t1]===
 dble:[[]]
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:76, sql:[drop table if exists sharding_4_t1]===
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:79, sql:[drop table if exists sharding_4_t1]===
 dble:[[]]
