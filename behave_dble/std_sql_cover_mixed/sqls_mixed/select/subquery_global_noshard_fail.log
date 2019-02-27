@@ -1,40 +1,20 @@
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:30, sql:[select id,t_id,name,pad from schema2.global_4_t1 where pad<(select pad from noshard_t1 where id=3);]===
-dble:[None]
-mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (5L, 5L, 'test...5', 1L))]
-[02:21:12.605321]dble err :(1064, " Table 'schema2.noshard_t1' doesn't exist")
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:31, sql:[select id,t_id,name,pad from schema2.global_4_t1 having pad<(select pad from noshard_t1 where id=3);]===
-dble:[None]
-mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (5L, 5L, 'test...5', 1L))]
-[02:21:12.654695]dble err :(1064, " Table 'schema2.noshard_t1' doesn't exist")
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:34, sql:[select id,t_id,name,pad from schema2.global_4_t1 where pad like (select pad from noshard_t1 where id=3);]===
-dble:[None]
-mysql:[((4L, 4L, '$test$4', 3L),)]
-[02:21:12.835724]dble err :(1064, " Table 'schema2.noshard_t1' doesn't exist")
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:57, sql:[select id,t_id,name,pad from schema2.global_4_t1 where 'test_2'=(select name from noshard_t1 where id=2)]===
-dble:[None]
-mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[02:21:13.953372]dble err :(1064, " Table 'schema2.noshard_t1' doesn't exist")
-===file:sqls_mixed/select/subquery_global_noshard.sql, id:59, sql:[select id,t_id,name,pad from schema2.global_4_t1 where 'test_2' like(select name from noshard_t1 where id=2)]===
-dble:[None]
-mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L))]
-[02:21:14.084397]dble err :(1064, " Table 'schema2.noshard_t1' doesn't exist")
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:64, sql:[select id,t_id,name,pad from schema2.global_4_t1 where (id,pad)=(select id,pad from noshard_t1 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[02:21:14.375292]dble err :(1064, 'Row Subqueries is not supported')
+[08:48:21.190974]dble err :(1064, 'Row Subqueries is not supported')
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:65, sql:[select id,t_id,name,pad from schema2.global_4_t1 where row(id,pad)=(select id,pad from noshard_t1 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[02:21:14.492205]dble err :(1241, 'Operand should contain 1 column(s)')
+[08:48:21.271804]dble err :(1241, 'Operand should contain 1 column(s)')
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:66, sql:[select id,name,pad from schema2.global_4_t1 where (id,pad)in(select id,pad from noshard_t1)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
-[02:21:14.509343]dble err :(1064, 'Row Subqueries is not supported')
+[08:48:21.290737]dble err :(1064, 'Row Subqueries is not supported')
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:67, sql:[select id,name,pad from schema2.global_4_t1 where (1,1)in(select id,pad from noshard_t1)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
-[02:21:14.588351]dble err :(1064, 'Row Subqueries is not supported')
+[08:48:21.370609]dble err :(1064, 'Row Subqueries is not supported')
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:68, sql:[SELECT pad FROM schema2.global_4_t1 AS x WHERE x.id = (SELECT pad FROM noshard_t1 AS y WHERE x.id = (SELECT pad FROM sharding_4_t1 WHERE y.id = sharding_4_t1.id))]===
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
-[02:21:14.671551]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[08:48:21.454865]dble err :(1105, 'Correlated Sub Queries is not supported ')
