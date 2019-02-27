@@ -1,3 +1,0 @@
-===file:select/subquery_dev.sql, id:20, sql:[select * from aly_order where id > (select id from aly_test order by id) order by id;]===
-mysql err:(1242, 'Subquery returns more than 1 row')
-dble err[02:47:02.922502] :(1242, 'Subquery returns more than 1 row')
