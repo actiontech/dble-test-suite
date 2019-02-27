@@ -48,10 +48,16 @@ dble:[[(3L, 1L), (4L, 1L), (6L, 1L)]]
 dble:[((3L, 1L), (4L, 1L), (6L, 1L))]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:29, sql:[select count(*) from (select pad,count(*) a from schema2.global_4_t1 group by pad) a;]===
 dble:[[(5L,)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:30, sql:[select id,t_id,name,pad from schema2.global_4_t1 where pad<(select pad from noshard_t1 where id=3);]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (5L, 5L, 'test...5', 1L)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:31, sql:[select id,t_id,name,pad from schema2.global_4_t1 having pad<(select pad from noshard_t1 where id=3);]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (5L, 5L, 'test...5', 1L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:32, sql:[select a.id,b.id,b.pad,a.t_id from schema2.global_4_t1 a,(select * from noshard_t1 where pad>3) b where a.t_id=b.o_id;]===
 dble:[[(4L, 4L, 4L, 4L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:33, sql:[select id,name,(select count(*) from noshard_t1) count from schema2.global_4_t1;]===
 dble:[[(1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 5L), (2L, 'test_2', 5L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 5L), (4L, '$test$4', 5L), (5L, 'test...5', 5L), (6L, 'test6', 5L)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:34, sql:[select id,t_id,name,pad from schema2.global_4_t1 where pad like (select pad from noshard_t1 where id=3);]===
+dble:[[(4L, 4L, '$test$4', 3L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:35, sql:[select id,pad from schema2.global_4_t1 where pad>(select pad from schema2.global_4_t1 where id=2);]===
 dble:[[(3L, 4L), (4L, 3L), (6L, 6L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:36, sql:[select id,pad from schema2.global_4_t1 where pad<(select pad from schema2.global_4_t1 where id=2);]===
@@ -90,7 +96,11 @@ dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 5L, 5L, 1L, 5L), (4L, 4L,
 dble:[[(2L,)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:56, sql:[select (select name from schema2.global_4_t1 limit 1)]===
 dble:[[('test\xe4\xb8\xadid\xe4\xb8\xba1',)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:57, sql:[select id,t_id,name,pad from schema2.global_4_t1 where 'test_2'=(select name from noshard_t1 where id=2)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:58, sql:[select id,t_id,name,pad from schema2.global_4_t1 where 5=(select count(*) from noshard_t1)]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:sqls_mixed/select/subquery_global_noshard.sql, id:59, sql:[select id,t_id,name,pad from schema2.global_4_t1 where 'test_2' like(select name from noshard_t1 where id=2)]===
 dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
 ===file:sqls_mixed/select/subquery_global_noshard.sql, id:60, sql:[select id,t_id,name,pad from schema2.global_4_t1 where 2 >any(select id from schema2.global_4_t1 where pad>1)]===
 dble:[[]]
