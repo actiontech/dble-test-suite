@@ -1,7 +1,7 @@
 ===file:sqls_mixed/syntax/character.sql, id:15, sql:[select CONCAT(_ucs2 X'0041', _ucs2 X'0042')]===
 dble:[None]
 mysql:[(('AB',),)]
-[01:30:52.722789]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER pos 21, line 1, column 20, token IDENTIFIER X')
+[02:21:53.184511]dble err :(1064, 'syntax error, expect RPAREN, actual IDENTIFIER pos 21, line 1, column 20, token IDENTIFIER X')
 ===file:sqls_mixed/syntax/character.sql, id:33, sql:[SELECT HEX('à\n'), HEX(_latin1'à\n')]===
 dble:[[('C33F0A', 'C33F0A')]]
 mysql:[[('C3A00A', 'C3A00A')]]
@@ -20,7 +20,7 @@ mysql:[[('hello?',)]]
 ===file:sqls_mixed/syntax/character.sql, id:50, sql:[alter table sharding_4_t1 change c c national character varying(20)]===
 dble:[None]
 mysql:[()]
-[01:30:54.615608]dble err :(1064, 'syntax error, expect SET, actual IDENTIFIER pos 63, line 1, column 56, token IDENTIFIER varying')
+[02:21:55.247469]dble err :(1064, 'syntax error, expect SET, actual IDENTIFIER pos 63, line 1, column 56, token IDENTIFIER varying')
 ===file:sqls_mixed/syntax/character.sql, id:63, sql:[insert into sharding_4_t1 values(3,'你')]===
 dble:[()]
 mysql:[None]
