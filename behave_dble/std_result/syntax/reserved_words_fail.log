@@ -1,4 +1,0 @@
-===file:syntax/reserved_words.sql, id:72, sql:[select * from aly_test order by `OUTFILE` limit 10]===
-dble:[None]
-mysql:[((1L, 1L), (2L, 3L), (3L, 4L), (4L, 5L))]
-[22:50:41.420998]dble err :(1064, 'sql syntax error, no terminated. LITERAL_INT')

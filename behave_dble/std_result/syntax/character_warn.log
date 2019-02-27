@@ -1,3 +1,0 @@
-===file:syntax/character.sql, id:24, sql:[insert into t values('你')]===
-mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
-dble err[01:44:26.785679] :(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
