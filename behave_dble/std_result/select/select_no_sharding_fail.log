@@ -1,4 +1,0 @@
-===file:select/select_no_sharding.sql, id:184, sql:[select * from test_no_shard where id=@var1 := 1]===
-dble:[None]
-mysql:[((1L, 1L, 'id1', 1L),)]
-[23:02:39.398507]dble err :(1064, 'sql syntax error, no terminated. COLONEQ')
