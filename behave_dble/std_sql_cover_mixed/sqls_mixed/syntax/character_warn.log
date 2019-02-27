@@ -1,3 +1,3 @@
 ===file:sqls_mixed/syntax/character.sql, id:25, sql:[insert into sharding_4_t1 values(1,'你')]===
 mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
-dble err[01:30:53.216356] :(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
+dble err[02:21:53.695392] :(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
