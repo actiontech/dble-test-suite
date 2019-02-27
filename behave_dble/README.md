@@ -42,11 +42,11 @@ TRIVIAL
 ##通过ftp包安装单节点并启动
 behave -Dreset=false features/install_uninstall/install_dble.feature
 
-##通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点
-behave -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature
+##通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点(-Dreset=false 参数仅为初始安装dble的必要参数)
+behave -Dreset=false -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature 
 
-##通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换
-behave -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
+##通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换(-Dreset=false 参数仅为初始安装dble的必要参数)
+behave -Dreset=false -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
 
 ##使用特定配置启动dble
 behave --stop -D dble_conf={sql_cover_sharding | sql_cover_nosharding | sql_cover_global | sql_cover_mixed | template} features/setup.feature
