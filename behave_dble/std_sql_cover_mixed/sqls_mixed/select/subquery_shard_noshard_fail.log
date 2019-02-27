@@ -1,23 +1,23 @@
 ===file:sqls_mixed/select/subquery_shard_noshard.sql, id:64, sql:[select * from sharding_4_t1 where (id,pad)=(select id,pad from noshard_t1 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[02:21:45.555434]dble err :(1064, 'Row Subqueries is not supported')
+[08:48:52.323090]dble err :(1064, 'Row Subqueries is not supported')
 ===file:sqls_mixed/select/subquery_shard_noshard.sql, id:65, sql:[select * from sharding_4_t1 where row(id,pad)=(select id,pad from noshard_t1 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[02:21:45.636376]dble err :(1241, 'Operand should contain 1 column(s)')
+[08:48:52.404467]dble err :(1241, 'Operand should contain 1 column(s)')
 ===file:sqls_mixed/select/subquery_shard_noshard.sql, id:66, sql:[select id,name,pad from sharding_4_t1 where (id,pad)in(select id,pad from noshard_t1)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
-[02:21:45.652840]dble err :(1064, 'Row Subqueries is not supported')
+[08:48:52.420962]dble err :(1064, 'Row Subqueries is not supported')
 ===file:sqls_mixed/select/subquery_shard_noshard.sql, id:67, sql:[select id,name,pad from sharding_4_t1 where (1,1)in(select id,pad from noshard_t1)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
-[02:21:45.731742]dble err :(1064, 'Row Subqueries is not supported')
+[08:48:52.500902]dble err :(1064, 'Row Subqueries is not supported')
 ===file:sqls_mixed/select/subquery_shard_noshard.sql, id:68, sql:[SELECT pad FROM sharding_4_t1 AS x WHERE x.id = (SELECT pad FROM noshard_t1 AS y WHERE x.id = (SELECT pad FROM schema2.sharding_4_t2 WHERE y.id = schema2.sharding_4_t2.id))]===
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
-[02:21:45.815602]dble err :(1105, 'Correlated Sub Queries is not supported ')
+[08:48:52.584840]dble err :(1105, 'Correlated Sub Queries is not supported ')
 ===file:sqls_mixed/select/subquery_shard_noshard.sql, id:70, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from sharding_4_t1 group by pad) as t1]===
 dble:[[(4.2,)]]
 mysql:[[(Decimal('4.2000'),)]]
