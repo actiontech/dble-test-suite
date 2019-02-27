@@ -134,12 +134,20 @@ dble:[((3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 4L, 4L, '$order$4', 4L),)
 dble:[((2L, 2L, 2L, 'test_2', None, None, None), (4L, 3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 4L, '$order$4'), (3L, 4L, 4L, '$test$4', None, None, None), (6L, 6L, 6L, 'test6', None, None, None))]
 ===file:sqls_mixed/select/join_shardings.sql, id:87, sql:[select * from sharding_4_t1 natural left join schema2.sharding_4_t2]===
 dble:[[(1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 3L, None), (4L, '$test$4', 3L, 4L, None), (5L, 'test...5', 1L, 5L, None), (6L, 'test6', 6L, 6L, None)]]
+===file:sqls_mixed/select/join_shardings.sql, id:88, sql:[select * from sharding_4_t1 natural right join schema2.sharding_4_t2]===
+dble:[[(1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, 2L), (3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 3L, None), (4L, '$order$4', 4L, 4L, None), (5L, 'order...5', 1L, 5L, None)]]
 ===file:sqls_mixed/select/join_shardings.sql, id:89, sql:[select * from sharding_4_t1 natural left outer join schema2.sharding_4_t2]===
 dble:[[(1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 3L, None), (4L, '$test$4', 3L, 4L, None), (5L, 'test...5', 1L, 5L, None), (6L, 'test6', 6L, 6L, None)]]
+===file:sqls_mixed/select/join_shardings.sql, id:90, sql:[select * from sharding_4_t1 natural right outer join schema2.sharding_4_t2]===
+dble:[[(1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, 2L), (3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 3L, None), (4L, '$order$4', 4L, 4L, None), (5L, 'order...5', 1L, 5L, None)]]
 ===file:sqls_mixed/select/join_shardings.sql, id:91, sql:[select * from sharding_4_t1 a natural left join schema2.sharding_4_t2 b order by a.id,b.id]===
 dble:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 3L, None), (4L, '$test$4', 3L, 4L, None), (5L, 'test...5', 1L, 5L, None), (6L, 'test6', 6L, 6L, None))]
+===file:sqls_mixed/select/join_shardings.sql, id:92, sql:[select * from sharding_4_t1 a natural right join schema2.sharding_4_t2 b order by a.id,b.id]===
+dble:[((1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 3L, None), (4L, '$order$4', 4L, 4L, None), (5L, 'order...5', 1L, 5L, None), (2L, 'test_2', 2L, 2L, 2L))]
 ===file:sqls_mixed/select/join_shardings.sql, id:93, sql:[select * from sharding_4_t1 a natural left outer join schema2.sharding_4_t2 b order by a.id,b.id]===
 dble:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 3L, None), (4L, '$test$4', 3L, 4L, None), (5L, 'test...5', 1L, 5L, None), (6L, 'test6', 6L, 6L, None))]
+===file:sqls_mixed/select/join_shardings.sql, id:94, sql:[select * from sharding_4_t1 a natural right outer join schema2.sharding_4_t2 b order by a.id,b.id]===
+dble:[((1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 3L, None), (4L, '$order$4', 4L, 4L, None), (5L, 'order...5', 1L, 5L, None), (2L, 'test_2', 2L, 2L, 2L))]
 ===file:sqls_mixed/select/join_shardings.sql, id:95, sql:[select * from sharding_4_t1 a natural left join (select * from schema2.sharding_4_t2 where pad>2) b order by a.id,b.id]===
 dble:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, None), (2L, 'test_2', 2L, 2L, None), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 3L, None), (4L, '$test$4', 3L, 4L, None), (5L, 'test...5', 1L, 5L, None), (6L, 'test6', 6L, 6L, None))]
 ===file:sqls_mixed/select/join_shardings.sql, id:96, sql:[select * from sharding_4_t1 a natural right join (select * from schema2.sharding_4_t2 where pad>2) b order by a.id,b.id]===
