@@ -1,6 +1,0 @@
-===file:syntax/sysfunction3.sql, id:31, sql:[SELECT UUID()]===
-dble:[[('1738ea5a-cd1b-11e8-b8fd-0242ac640905',)]]
-mysql:[[('17381561-cd1b-11e8-8fc0-0242ac640904',)]]
-===file:syntax/sysfunction3.sql, id:32, sql:[SELECT UUID_SHORT()]===
-dble:[[(386110700411420672L,)]]
-mysql:[[(169936546022031360L,)]]
