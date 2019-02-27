@@ -1,6 +1,6 @@
 ===file:sqls_mixed/syntax/sysfunction3.sql, id:24, sql:[SELECT UUID()]===
-dble:[[('da5f1e65-3a36-11e9-af3e-0242ac640905',)]]
-mysql:[[('da5ee639-3a36-11e9-bff2-0242ac640904',)]]
+dble:[[('ee9e9a3d-3a6c-11e9-9064-0242ac640905',)]]
+mysql:[[('ee9e6742-3a6c-11e9-829e-0242ac640904',)]]
 ===file:sqls_mixed/syntax/sysfunction3.sql, id:25, sql:[SELECT UUID_SHORT()]===
-dble:[[(242198167246864384L,)]]
-mysql:[[(170140573041164288L,)]]
+dble:[[(242198556948037632L,)]]
+mysql:[[(170140962742337536L,)]]
