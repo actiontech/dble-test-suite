@@ -50,9 +50,9 @@ Feature: check lower_case_table_names works right for dble
         | user | passwd | conn   | toClose | sql                                                                  | expect               | db     |
         | test | 111111 | conn_0 | True    |                                                                       | success              | DBTest |
         | test | 111111 | conn_0 | False   | drop table if exists Test_Table                                  | success             | DbTest |
-        | test | 111111 | conn_0 | False   | create table TEst_Table(id int)                                  | success             | DbTest |
-        | test | 111111 | conn_0 | False   | insert into test_table value(1)                                  | success             | DbTest |
-        | test | 111111 | conn_0 | False   | insert into Test_Table value(1)                                  | success             | DbTest |
+        | test | 111111 | conn_0 | False   | create table TEst_Table(id int,name char(10))                  | success             | DbTest |
+        | test | 111111 | conn_0 | False   | insert into test_table(id) value(1)                             | success             | DbTest |
+        | test | 111111 | conn_0 | False   | insert into Test_Table(id) value(1)                             | success             | DbTest |
         | test | 111111 | conn_0 | False   | select test_table.id from Test_Table                            | success             | DbTest |
         | test | 111111 | conn_0 | False   | select Test_Table.id from test_table                            | success             | DbTest |
         | test | 111111 | conn_0 | False   | select Test_Table.id from test_table                            | success             | DbTest |
@@ -75,7 +75,8 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
         | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test) |success | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test) |success | schema1 |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test) |success| schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test) |success | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'            |success | schema1 |
     Given restart mysql in "mysql-master1" with options
       """
       /lower_case_table_names/d
@@ -136,9 +137,9 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_0 | True    |                                                                                   | Unknown database 'DBTest'     | DBTest |
         | test | 111111 | conn_0 | False   | drop table if exists Test_Table                                              | success               | DbTest |
         | test | 111111 | conn_0 | False   | create table TEst_Table(id int)                                              | doesn't exist        | DbTest |
-        | test | 111111 | conn_0 | False   | create table Test_Table(id int)                                              | success               | DbTest |
-        | test | 111111 | conn_0 | False   | insert into test_table value(1)                                              | doesn't exist        | DbTest |
-        | test | 111111 | conn_0 | False   | insert into Test_Table value(1)                                              | success               | DbTest |
+        | test | 111111 | conn_0 | False   | create table Test_Table(id int,name char(20))                              | success               | DbTest |
+        | test | 111111 | conn_0 | False   | insert into test_table(id) value(1)                                         | doesn't exist        | DbTest |
+        | test | 111111 | conn_0 | False   | insert into Test_Table(id) value(1)                                         | success               | DbTest |
         | test | 111111 | conn_0 | False   | select test_table.id from Test_Table                                        | Unknown column       | DbTest |
         | test | 111111 | conn_0 | False   | select Test_Table.id from test_table                                        | doesn't exist        | DbTest |
         | test | 111111 | conn_0 | False   | select Test_Table.id from test_table                                        | doesn't exist        | DbTest |
@@ -161,3 +162,4 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)          |success               | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                   |success               | schema1 |
