@@ -77,7 +77,7 @@ Feature: set charset in server.xml,check backend charsets are as set
         | test | 111111  | conn_2 | True    | select name from aly_test           | has{('中')} | schema1 |utf8  |
 
   Scenario: dble should map MySQL's utfmb4 character to utf8.
-             In other words,non-ASCII sharding column should be routed to the same datanode whether client character-set is utfmb4 or utf8
+             In other words,non-ASCII sharding column should be routed to the same datanode whether client character-set is utfmb4 or utf8 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
