@@ -18,6 +18,12 @@
             <algorithm>four-long</algorithm>
         </rule>
     </tableRule>
+    <tableRule name="hash-string" >
+    <rule>
+        <columns>id</columns>
+        <algorithm>hash-into-two</algorithm>
+    </rule>
+    </tableRule>
     <function class="Hash" name="two-long">
         <property name="partitionCount">2</property>
         <property name="partitionLength">1</property>
@@ -30,4 +36,8 @@
 		<property name="partitionCount">4</property>
 		<property name="partitionLength">1</property>
 	</function>
+    <function name="hash-into-two" class="StringHash">
+    <property name="partitionCount">2</property>
+    <property name="partitionLength">1</property>
+    </function>
 </dble:rule>
