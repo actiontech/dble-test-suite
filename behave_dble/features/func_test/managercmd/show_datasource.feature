@@ -2,11 +2,11 @@
 Feature: show_datasource
 
   Scenario: verify manage-cmd show @@datasource
-             requirment from github issue #942: result should not display negative number for "ACTIVE" column
+             requirment from github issue #942: result should not display negative number for "ACTIVE" column #1
     
      Given stop mysql in host "mysql-master1"
-     Given Restart dble in "dble-1" success
-     Then execute sql in "dble-1" in "admin" mode
-        | user  | passwd    | conn   | toClose | sql                     | expect                                                                               | db  |
-        | root  | 111111    | conn_0 | True    | show @@datasource     | has{('hostM1', '172.100.9.5', 3306L, 'W', 0L, 0L, 1000L, 0L, 0L, 0L)}       |     |
+     Then get resultset of admin cmd "show @@datasource" named "sql_rs"
+     Then check resultset "sql_rs" has lines with following column values
+        | NAME-0 | HOST-1         |  PORT-2 | ACTIVE-4  |
+        | hostM1 | 172.100.9.5   | 3306     |    0      |
      Given start mysql in host "mysql-master1"
