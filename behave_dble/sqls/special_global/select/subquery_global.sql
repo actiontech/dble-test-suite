@@ -67,6 +67,10 @@ select id,name,pad from test1 where (1,1)in(select id,pad from schema3.test3)
 SELECT pad FROM test1 AS x WHERE x.id = (SELECT pad FROM schema3.test3 AS y WHERE x.id = (SELECT pad FROM schema2.test2 WHERE y.id = schema2.test2.id))
 select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from test1)as tb where co1>1
 select avg(sum_column1) from (select sum(id) as sum_column1 from test1 group by pad) as t1
+#issue:1022
+select * from (select m.id,n.pad from test1 m,schema2.test2 n where m.id=n.id AND m.name='test中id为1' and m.pad>7 and m.pad<10)a;
+#issue:1030
+select * from test1 where id in (select id from test1 where id in ( select id from test1 where id in (select id from test1 where id =0) or id not in(select id from test1 where id =1)))  ;
 #
 #clear tables
 #
