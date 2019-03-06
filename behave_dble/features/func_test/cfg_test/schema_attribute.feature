@@ -200,3 +200,46 @@ Feature: test some import nodes attr in schema.xml
     Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
         | root | 111111 | conn_0 | True     | show @@cache                                                  | length{(2)}   |        |
+
+   Scenario: Use the RocksDB database engine as a cache implementation  issue:1029  author: maofei #8
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4"  rule="hash-four" />
+    """
+    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    """
+    s/encache/rocksdb/
+    s/ehcache/rocksdb/
+    s/10000,1800/10000,0/
+    """
+    Given create filder content "/opt/dble/rocksdb" in "dble-1"
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1"
+    """
+    s/debug/info/
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
+        | test | 111111 | conn_0 | True     |drop table if exists test_table                             | success        | schema1 |
+        | test | 111111 | conn_0 | True     |create table test_table(id int)                             | success        | schema1 |
+        | test | 111111 | conn_0 | True     |insert into test_table values(1)                            | success        | schema1 |
+        | test | 111111 | conn_0 | True     |select * from test_table                                     | success        | schema1 |
+        | test | 111111 | conn_0 | True     |select * from test_table                                     | success        | schema1 |
+    Then get resultset of admin cmd "show @@cache" named "cache_rs_A"
+    Then check resultset "cache_rs_A" has lines with following column values
+      | CACHE-0               | HIT-4   |
+      | SQLRouteCache        | 1        |
+    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    """
+    s/rocksdb/encache/
+    s/=rocksdb/=ehcache/
+    """
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1"
+    """
+    s/info/debug/
+    """
+    Given delete file "/opt/dble/rocksdb" on "dble-1"
+
+
+
+
