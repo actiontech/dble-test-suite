@@ -129,6 +129,17 @@ def step_impl(context):
       """   
     ''')
 
+@Given('create filder content "{fildername}" in "{hostname}"')
+def step_impl(context, fildername,hostname):
+    cmd = "mkdir {0}".format(fildername)
+    context.logger.info("sed cmd is :{0}".format(cmd))
+    if hostname.startswith('dble'):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    assert_that(len(stderr) == 0, "create filder content with:{1}, got err:{0}".format(stderr, cmd))
+
 @Given('create local and server file "{filename}" and fill with text')
 def step_impl(context, filename):
     LOGGER.debug("*** debug context.text:{0}".format(context.text))
