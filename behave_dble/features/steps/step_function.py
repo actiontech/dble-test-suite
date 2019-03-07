@@ -126,7 +126,7 @@ def step_impl(context):
 
 @Given('create local and server file "{filename}" and fill with text')
 def step_impl(context, filename):
-    LOGGER.info("*** zhj debug context.text:{0}".format(context.text))
+    LOGGER.debug("*** debug context.text:{0}".format(context.text))
 
     # remove old file in behave resides server
     if os.path.exists(filename):
@@ -136,13 +136,13 @@ def step_impl(context, filename):
         fp.write(context.text)
 
     # cp file to dble
-    remove_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
-    context.ssh_sftp.sftp_put(remove_file,filename)
+    remote_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
+    context.ssh_sftp.sftp_put(filename, remote_file)
 
     # create file in compare mysql
-    remove_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
+    remote_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
     compare_mysql_sftp = get_sftp(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
-    compare_mysql_sftp.sftp_put(remove_file, filename)
+    compare_mysql_sftp.sftp_put(filename, remote_file)
 
 @Given('clean loaddata.sql used data')
 def step_impl(context):
