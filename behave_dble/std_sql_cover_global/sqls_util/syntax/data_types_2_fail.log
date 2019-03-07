@@ -2,49 +2,49 @@
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(1)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'char(1)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:11, sql:[SELECT * FROM test1]===
-dble:[[(1L, '0', 1552011723940L), (2L, 'a', 1552011724232L)]]
+dble:[[(1L, '0', 1551963800277L), (2L, 'a', 1551963800529L)]]
 mysql:[[(1L, '0'), (2L, 'a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:14, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(1)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'char(1)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:18, sql:[SELECT * FROM test1]===
-dble:[[(1L, '0', 1552011725152L), (2L, 'a', 1552011725429L)]]
+dble:[[(1L, '0', 1551963801203L), (2L, 'a', 1551963801447L)]]
 mysql:[[(1L, '0'), (2L, 'a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:21, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(5)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'char(5)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:25, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'abcde', 1552011726515L)]]
+dble:[[(1L, 'abcde', 1551963802327L)]]
 mysql:[[(1L, 'abcde')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:28, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(255)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'char(255)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:30, sql:[SELECT * FROM test1]===
-dble:[[(111L, '', 1552011727161L), (112L, 'a', 1552011727161L), (113L, '0', 1552011727161L), (114L, '1_23', 1552011727161L), (115L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011727161L)]]
+dble:[[(111L, '', 1551963802987L), (112L, 'a', 1551963802987L), (113L, '0', 1551963802987L), (114L, '1_23', 1551963802987L), (115L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963802987L)]]
 mysql:[[(111L, ''), (112L, 'a'), (113L, '0'), (114L, '1_23'), (115L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:33, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'char(255)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'char(255)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:35, sql:[SELECT * FROM test1]===
-dble:[[(111L, '', 1552011727790L), (112L, 'a', 1552011727790L), (113L, '0', 1552011727790L), (114L, '1_23', 1552011727790L), (115L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011727790L)]]
+dble:[[(111L, '', 1551963803562L), (112L, 'a', 1551963803562L), (113L, '0', 1551963803562L), (114L, '1_23', 1551963803562L), (115L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963803562L)]]
 mysql:[[(111L, ''), (112L, 'a'), (113L, '0'), (114L, '1_23'), (115L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:55, sql:[SELECT * FROM test1]===
-dble:[[(1L, '123456', 1552011730221L), (1L, 'aaaaaaaaaaaaaaaaaaaaaaaaabcdef', 1552011730454L)]]
+dble:[[(1L, '123456', 1551963805688L), (1L, 'aaaaaaaaaaaaaaaaaaaaaaaaabcdef', 1551963805905L)]]
 mysql:[[(1L, '123456'), (1L, 'aaaaaaaaaaaaaaaaaaaaaaaaabcdef')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:61, sql:[SELECT * FROM test1]===
-dble:[[(1L, '123456', 1552011731167L), (1L, 'aaaaaaaaaaaaaaaaaaaaaaaaabcdef', 1552011731339L)]]
+dble:[[(1L, '123456', 1551963806457L), (1L, 'aaaaaaaaaaaaaaaaaaaaaaaaabcdef', 1551963806732L)]]
 mysql:[[(1L, '123456'), (1L, 'aaaaaaaaaaaaaaaaaaaaaaaaabcdef')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:80, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'date', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'date', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:95, sql:[SELECT * FROM test1]===
-dble:[[(2L, datetime.date(2014, 11, 11), 1552011734125L), (3L, datetime.date(2014, 11, 11), 1552011734262L), (4L, datetime.date(2014, 11, 11), 1552011734364L), (5L, datetime.date(2014, 11, 11), 1552011734496L), (7L, datetime.date(999, 1, 1), 1552011734752L), (8L, None, 1552011734837L), (11L, datetime.date(1000, 1, 1), 1552011735168L), (12L, datetime.date(9999, 12, 31), 1552011735281L), (13L, datetime.date(2017, 2, 1), 1552011735392L), (14L, datetime.date(2017, 2, 2), 1552011735502L)]]
+dble:[[(2L, datetime.date(2014, 11, 11), 1551963809629L), (3L, datetime.date(2014, 11, 11), 1551963809734L), (4L, datetime.date(2014, 11, 11), 1551963809877L), (5L, datetime.date(2014, 11, 11), 1551963810013L), (7L, datetime.date(999, 1, 1), 1551963810240L), (8L, None, 1551963810348L), (11L, datetime.date(1000, 1, 1), 1551963810664L), (12L, datetime.date(9999, 12, 31), 1551963810825L), (13L, datetime.date(2017, 2, 1), 1551963810956L), (14L, datetime.date(2017, 2, 2), 1551963811070L)]]
 mysql:[[(2L, datetime.date(2014, 11, 11)), (3L, datetime.date(2014, 11, 11)), (4L, datetime.date(2014, 11, 11)), (5L, datetime.date(2014, 11, 11)), (7L, datetime.date(999, 1, 1)), (8L, None), (11L, datetime.date(1000, 1, 1)), (12L, datetime.date(9999, 12, 31)), (13L, datetime.date(2017, 2, 1)), (14L, datetime.date(2017, 2, 2))]]
 ===file:sqls_util/syntax/data_types_2.sql, id:100, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'time', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'time', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:111, sql:[SELECT * FROM test1]===
-dble:[[(2L, datetime.timedelta(0), 1552011736223L), (2L, datetime.timedelta(0), 1552011736355L), (3L, datetime.timedelta(0, 43932), 1552011736481L), (4L, datetime.timedelta(0, 35999), 1552011736598L), (5L, datetime.timedelta(0, 86399), 1552011736785L), (6L, datetime.timedelta(1), 1552011736914L), (7L, datetime.timedelta(1, 1), 1552011737027L), (8L, datetime.timedelta(0), 1552011737166L), (9L, datetime.timedelta(0, 86399), 1552011737289L)]]
+dble:[[(2L, datetime.timedelta(0), 1551963811955L), (2L, datetime.timedelta(0), 1551963812093L), (3L, datetime.timedelta(0, 43932), 1551963812208L), (4L, datetime.timedelta(0, 35999), 1551963812383L), (5L, datetime.timedelta(0, 86399), 1551963812517L), (6L, datetime.timedelta(1), 1551963812652L), (7L, datetime.timedelta(1, 1), 1551963812813L), (8L, datetime.timedelta(0), 1551963812934L), (9L, datetime.timedelta(0, 86399), 1551963813014L)]]
 mysql:[[(2L, datetime.timedelta(0)), (2L, datetime.timedelta(0)), (3L, datetime.timedelta(0, 43932)), (4L, datetime.timedelta(0, 35999)), (5L, datetime.timedelta(0, 86399)), (6L, datetime.timedelta(1)), (7L, datetime.timedelta(1, 1)), (8L, datetime.timedelta(0)), (9L, datetime.timedelta(0, 86399))]]
 ===file:sqls_util/syntax/data_types_2.sql, id:116, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'timestamp', 'NO', '', 'CURRENT_TIMESTAMP', 'on update CURRENT_TIMESTAMP'), ('id', 'int(11)', 'YES', '', None, '')]]
@@ -53,13 +53,13 @@ mysql:[[('data', 'timestamp', 'NO', '', 'CURRENT_TIMESTAMP', 'on update CURRENT_
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'datetime', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'datetime', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:125, sql:[SELECT * FROM test1]===
-dble:[[(1L, datetime.datetime(1000, 1, 1, 0, 0), 1552011738631L), (2L, datetime.datetime(9999, 12, 31, 23, 59, 59), 1552011738631L)]]
+dble:[[(1L, datetime.datetime(1000, 1, 1, 0, 0), 1551963814465L), (2L, datetime.datetime(9999, 12, 31, 23, 59, 59), 1551963814465L)]]
 mysql:[[(1L, datetime.datetime(1000, 1, 1, 0, 0)), (2L, datetime.datetime(9999, 12, 31, 23, 59, 59))]]
 ===file:sqls_util/syntax/data_types_2.sql, id:128, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data1', 'time(2)', 'YES', '', None, ''), ('data2', 'datetime(2)', 'YES', '', None, ''), ('data3', 'timestamp(2)', 'NO', '', 'CURRENT_TIMESTAMP(2)', 'on update CURRENT_TIMESTAMP(2)'), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data1', 'time(2)', 'YES', '', None, ''), ('data2', 'datetime(2)', 'YES', '', None, ''), ('data3', 'timestamp(2)', 'NO', '', 'CURRENT_TIMESTAMP(2)', 'on update CURRENT_TIMESTAMP(2)'), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:130, sql:[SELECT * FROM test1]===
-dble:[[(1L, datetime.timedelta(0, 64264, 780000), datetime.datetime(2014, 9, 8, 17, 51, 4, 780000), datetime.datetime(2014, 9, 8, 17, 51, 4, 780000), 1552011739340L)]]
+dble:[[(1L, datetime.timedelta(0, 64264, 780000), datetime.datetime(2014, 9, 8, 17, 51, 4, 780000), datetime.datetime(2014, 9, 8, 17, 51, 4, 780000), 1551963815086L)]]
 mysql:[[(1L, datetime.timedelta(0, 64264, 780000), datetime.datetime(2014, 9, 8, 17, 51, 4, 780000), datetime.datetime(2014, 9, 8, 17, 51, 4, 780000))]]
 ===file:sqls_util/syntax/data_types_2.sql, id:135, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'year(4)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
@@ -68,163 +68,163 @@ mysql:[[('data', 'year(4)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', N
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'binary(1)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'binary(1)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:229, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'a', 1552011748044L)]]
+dble:[[(1L, 'a', 1551963824358L)]]
 mysql:[[(1L, 'a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:232, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'binary(5)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'binary(5)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:235, sql:[SELECT * FROM test1]===
-dble:[[(2L, 'abcde', 1552011748767L)]]
+dble:[[(2L, 'abcde', 1551963825190L)]]
 mysql:[[(2L, 'abcde')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:240, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varbinary(5)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'varbinary(5)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:243, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'abcde', 1552011749615L)]]
+dble:[[(1L, 'abcde', 1551963825996L)]]
 mysql:[[(1L, 'abcde')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:248, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'tinyblob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'tinyblob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:250, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011750349L), (2L, 'abc', 1552011750349L), (3L, '123', 1552011750349L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011750349L)]]
+dble:[[(1L, '', 1551963826773L), (2L, 'abc', 1551963826773L), (3L, '123', 1551963826773L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963826773L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:255, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'blob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'blob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:257, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011751057L), (2L, 'abc', 1552011751057L), (3L, '123', 1552011751057L), (4L, 'a..a', 1552011751057L)]]
+dble:[[(1L, '', 1551963827463L), (2L, 'abc', 1551963827463L), (3L, '123', 1551963827463L), (4L, 'a..a', 1551963827463L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:262, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'mediumblob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'mediumblob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:264, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011751852L), (2L, 'abc', 1552011751852L), (3L, '123', 1552011751852L), (4L, 'a..a', 1552011751852L), (5L, 'abc 1', 1552011751852L), (6L, 'a_bcdeg', 1552011751852L), (7L, '__%%%\\', 1552011751852L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011751852L)]]
+dble:[[(1L, '', 1551963828195L), (2L, 'abc', 1551963828195L), (3L, '123', 1551963828195L), (4L, 'a..a', 1551963828195L), (5L, 'abc 1', 1551963828195L), (6L, 'a_bcdeg', 1551963828195L), (7L, '__%%%\\', 1551963828195L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963828195L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:269, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'longblob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'longblob', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:271, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011752587L), (2L, 'abc', 1552011752587L), (3L, '123', 1552011752587L), (4L, 'a..a', 1552011752587L), (5L, 'abc 1', 1552011752587L), (6L, 'a_bcdeg', 1552011752587L), (7L, '__%%%\\', 1552011752587L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011752587L)]]
+dble:[[(1L, '', 1551963828923L), (2L, 'abc', 1551963828923L), (3L, '123', 1551963828923L), (4L, 'a..a', 1551963828923L), (5L, 'abc 1', 1551963828923L), (6L, 'a_bcdeg', 1551963828923L), (7L, '__%%%\\', 1551963828923L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963828923L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:276, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'tinytext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'tinytext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:278, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011753259L), (2L, 'abc', 1552011753259L), (3L, '123', 1552011753259L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011753259L)]]
+dble:[[(1L, '', 1551963829619L), (2L, 'abc', 1551963829619L), (3L, '123', 1551963829619L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963829619L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:281, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'tinytext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'tinytext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:283, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011753964L), (2L, 'abc', 1552011753964L), (3L, '123', 1552011753964L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011753964L)]]
+dble:[[(1L, '', 1551963830296L), (2L, 'abc', 1551963830296L), (3L, '123', 1551963830296L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963830296L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:286, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'tinytext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'tinytext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:288, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011754625L), (2L, 'abc', 1552011754625L), (3L, '123', 1552011754625L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011754625L)]]
+dble:[[(1L, '', 1551963830922L), (2L, 'abc', 1551963830922L), (3L, '123', 1551963830922L), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963830922L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:293, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'text', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'text', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:295, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011755218L), (2L, 'abc', 1552011755218L), (3L, '123', 1552011755218L), (4L, 'a..a', 1552011755218L)]]
+dble:[[(1L, '', 1551963831767L), (2L, 'abc', 1551963831767L), (3L, '123', 1551963831767L), (4L, 'a..a', 1551963831767L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:298, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'text', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'text', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:300, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011755819L), (2L, 'abc', 1552011755819L), (3L, '123', 1552011755819L), (4L, 'a..a', 1552011755819L)]]
+dble:[[(1L, '', 1551963832359L), (2L, 'abc', 1551963832359L), (3L, '123', 1551963832359L), (4L, 'a..a', 1551963832359L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:303, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'text', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'text', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:305, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011756736L), (2L, 'abc', 1552011756736L), (3L, '123', 1552011756736L), (4L, 'a..a', 1552011756736L), (5L, 'abc 1', 1552011756736L), (6L, 'a_bcdeg', 1552011756736L), (7L, '__%%%\\', 1552011756736L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011756736L)]]
+dble:[[(1L, '', 1551963833313L), (2L, 'abc', 1551963833313L), (3L, '123', 1551963833313L), (4L, 'a..a', 1551963833313L), (5L, 'abc 1', 1551963833313L), (6L, 'a_bcdeg', 1551963833313L), (7L, '__%%%\\', 1551963833313L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963833313L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:310, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'mediumtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'mediumtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:312, sql:[SELECT * FROM test1 ORDER BY id]===
-dble:[((1L, '', 1552011757353L), (2L, 'abc', 1552011757353L), (3L, '123', 1552011757353L), (4L, 'a..a', 1552011757353L), (5L, 'abc 1', 1552011757353L), (6L, 'a_bcdeg', 1552011757353L), (7L, '__%%%\\', 1552011757353L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011757353L))]
+dble:[((1L, '', 1551963834139L), (2L, 'abc', 1551963834139L), (3L, '123', 1551963834139L), (4L, 'a..a', 1551963834139L), (5L, 'abc 1', 1551963834139L), (6L, 'a_bcdeg', 1551963834139L), (7L, '__%%%\\', 1551963834139L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963834139L))]
 mysql:[((1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))]
 ===file:sqls_util/syntax/data_types_2.sql, id:315, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'mediumtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'mediumtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:317, sql:[SELECT * FROM test1 ORDER BY id]===
-dble:[((1L, '', 1552011758187L), (2L, 'abc', 1552011758187L), (3L, '123', 1552011758187L), (4L, 'a..a', 1552011758187L), (5L, 'abc 1', 1552011758187L), (6L, 'a_bcdeg', 1552011758187L), (7L, '__%%%\\', 1552011758187L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011758187L))]
+dble:[((1L, '', 1551963834951L), (2L, 'abc', 1551963834951L), (3L, '123', 1551963834951L), (4L, 'a..a', 1551963834951L), (5L, 'abc 1', 1551963834951L), (6L, 'a_bcdeg', 1551963834951L), (7L, '__%%%\\', 1551963834951L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963834951L))]
 mysql:[((1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa'))]
 ===file:sqls_util/syntax/data_types_2.sql, id:320, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'mediumtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'mediumtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:322, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011758845L), (2L, 'abc', 1552011758845L), (3L, '123', 1552011758845L), (4L, 'a..a', 1552011758845L), (5L, 'abc 1', 1552011758845L), (6L, 'a_bcdeg', 1552011758845L), (7L, '__%%%\\', 1552011758845L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011758845L)]]
+dble:[[(1L, '', 1551963835738L), (2L, 'abc', 1551963835738L), (3L, '123', 1551963835738L), (4L, 'a..a', 1551963835738L), (5L, 'abc 1', 1551963835738L), (6L, 'a_bcdeg', 1551963835738L), (7L, '__%%%\\', 1551963835738L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963835738L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:327, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'longtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'longtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:329, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011759545L), (2L, 'abc', 1552011759545L), (3L, '123', 1552011759545L), (4L, 'a..a', 1552011759545L), (5L, 'abc 1', 1552011759545L), (6L, 'a_bcdeg', 1552011759545L), (7L, '__%%%\\', 1552011759545L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011759545L)]]
+dble:[[(1L, '', 1551963836402L), (2L, 'abc', 1551963836402L), (3L, '123', 1551963836402L), (4L, 'a..a', 1551963836402L), (5L, 'abc 1', 1551963836402L), (6L, 'a_bcdeg', 1551963836402L), (7L, '__%%%\\', 1551963836402L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963836402L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:332, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'longtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'longtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:334, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011760249L), (2L, 'abc', 1552011760249L), (3L, '123', 1552011760249L), (4L, 'a..a', 1552011760249L), (5L, 'abc 1', 1552011760249L), (6L, 'a_bcdeg', 1552011760249L), (7L, '__%%%\\', 1552011760249L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011760249L)]]
+dble:[[(1L, '', 1551963837176L), (2L, 'abc', 1551963837176L), (3L, '123', 1551963837176L), (4L, 'a..a', 1551963837176L), (5L, 'abc 1', 1551963837176L), (6L, 'a_bcdeg', 1551963837176L), (7L, '__%%%\\', 1551963837176L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963837176L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:337, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'longtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', 'longtext', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:339, sql:[SELECT * FROM test1]===
-dble:[[(1L, '', 1552011760875L), (2L, 'abc', 1552011760875L), (3L, '123', 1552011760875L), (4L, 'a..a', 1552011760876L), (5L, 'abc 1', 1552011760876L), (6L, 'a_bcdeg', 1552011760876L), (7L, '__%%%\\', 1552011760876L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1552011760876L)]]
+dble:[[(1L, '', 1551963837935L), (2L, 'abc', 1551963837935L), (3L, '123', 1551963837935L), (4L, 'a..a', 1551963837935L), (5L, 'abc 1', 1551963837935L), (6L, 'a_bcdeg', 1551963837935L), (7L, '__%%%\\', 1551963837935L), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 1551963837935L)]]
 mysql:[[(1L, ''), (2L, 'abc'), (3L, '123'), (4L, 'a..a'), (5L, 'abc 1'), (6L, 'a_bcdeg'), (7L, '__%%%\\'), (8L, 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:344, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', "enum('enum1','enum2','test_%%%00','enum3','abcd_007')", 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', "enum('enum1','enum2','test_%%%00','enum3','abcd_007')", 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:346, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'enum1', 1552011761561L), (2L, 'test_%%%00', 1552011761561L), (3L, 'abcd_007', 1552011761561L)]]
+dble:[[(1L, 'enum1', 1551963838704L), (2L, 'test_%%%00', 1551963838704L), (3L, 'abcd_007', 1551963838704L)]]
 mysql:[[(1L, 'enum1'), (2L, 'test_%%%00'), (3L, 'abcd_007')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:351, sql:[desc test1]===
 dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', "set('enum1','enum2','test_%%%00','enum3','abcd_007')", 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 mysql:[[('data', "set('enum1','enum2','test_%%%00','enum3','abcd_007')", 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:353, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'enum1', 1552011762233L), (2L, 'test_%%%00', 1552011762233L), (3L, 'abcd_007', 1552011762233L)]]
+dble:[[(1L, 'enum1', 1551963839409L), (2L, 'test_%%%00', 1551963839409L), (3L, 'abcd_007', 1551963839409L)]]
 mysql:[[(1L, 'enum1'), (2L, 'test_%%%00'), (3L, 'abcd_007')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:361, sql:[SELECT * FROM test1]===
-dble:[[(1L, '["12:18:29.000000", "2015-07-29", "2015-07-29 12:18:29.000000"]', 1552011763093L), (1L, '["abc", 10, null, true, false]', 1552011762835L), (1L, '{"k1": "value", "k2": 10}', 1552011762976L)]]
+dble:[[(1L, '["12:18:29.000000", "2015-07-29", "2015-07-29 12:18:29.000000"]', 1551963840369L), (1L, '["abc", 10, null, true, false]', 1551963840067L), (1L, '{"k1": "value", "k2": 10}', 1551963840223L)]]
 mysql:[[(1L, '["12:18:29.000000", "2015-07-29", "2015-07-29 12:18:29.000000"]'), (1L, '["abc", 10, null, true, false]'), (1L, '{"k1": "value", "k2": 10}')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:367, sql:[SELECT * FROM test1]===
-dble:[[(1L, '\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00.@\x00\x00\x00\x00\x00\x004@', 1552011763765L)]]
+dble:[[(1L, '\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00.@\x00\x00\x00\x00\x00\x004@', 1551963840933L)]]
 mysql:[[(1L, '\x00\x00\x00\x00\x01\x01\x00\x00\x00\x00\x00\x00\x00\x00\x00.@\x00\x00\x00\x00\x00\x004@')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:373, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET ascii DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET ascii DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:375, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'a', 1552011764497L), (2L, "'", 1552011764497L)]]
+dble:[[(1L, 'a', 1551963841606L), (2L, "'", 1551963841606L)]]
 mysql:[[(1L, 'a'), (2L, "'")]]
 ===file:sqls_util/syntax/data_types_2.sql, id:378, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=utf8")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:380, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'a', 1552011765104L), (2L, "'", 1552011765104L)]]
+dble:[[(1L, 'a', 1551963842250L), (2L, "'", 1551963842250L)]]
 mysql:[[(1L, 'a'), (2L, "'")]]
 ===file:sqls_util/syntax/data_types_2.sql, id:383, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET ascii DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=utf8")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET ascii DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:385, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'a', 1552011765707L), (2L, "'", 1552011765707L)]]
+dble:[[(1L, 'a', 1551963842965L), (2L, "'", 1551963842965L)]]
 mysql:[[(1L, 'a'), (2L, "'")]]
 ===file:sqls_util/syntax/data_types_2.sql, id:388, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET ascii DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET ascii DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:390, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'a', 1552011766389L), (2L, "'", 1552011766389L)]]
+dble:[[(1L, 'a', 1551963843645L), (2L, "'", 1551963843645L)]]
 mysql:[[(1L, 'a'), (2L, "'")]]
 ===file:sqls_util/syntax/data_types_2.sql, id:393, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET big5 DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET big5 DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:398, sql:[SELECT * FROM test1]===
-dble:[[(1L, 'a', 'b', 'c', 'd', 1552011767636L)]]
+dble:[[(1L, 'a', 'b', 'c', 'd', 1551963844937L)]]
 mysql:[[(1L, 'a', 'b', 'c', 'd')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:399, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data1` varchar(50) CHARACTER SET dec8 DEFAULT NULL,\n  `data2` varchar(50) CHARACTER SET cp850 DEFAULT NULL,\n  `data3` varchar(50) CHARACTER SET hp8 DEFAULT NULL,\n  `data4` varchar(50) CHARACTER SET koi8r DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
@@ -260,19 +260,19 @@ mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET latin5 DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET latin5 DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:433, sql:[SELECT * FROM test1 where data = 'a']===
-dble:[[(1L, 'a', 1552011773054L)]]
+dble:[[(1L, 'a', 1551963850150L)]]
 mysql:[[(1L, 'a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:434, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET utf8 DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET utf8 DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:438, sql:[SELECT * FROM test1 where data = 'a']===
-dble:[[(1L, 'a', 1552011773808L)]]
+dble:[[(1L, 'a', 1551963850876L)]]
 mysql:[[(1L, 'a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:439, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
 mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET utf8 COLLATE utf8_bin DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:443, sql:[SELECT * FROM test1 where data = 'a']===
-dble:[[(1L, 'a', 1552011774428L)]]
+dble:[[(1L, 'a', 1551963851569L)]]
 mysql:[[(1L, 'a')]]
 ===file:sqls_util/syntax/data_types_2.sql, id:444, sql:[SHOW CREATE TABLE test1]===
 dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
