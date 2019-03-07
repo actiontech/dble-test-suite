@@ -466,3 +466,68 @@ Feature: test "check full @@metadata...'"
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
       | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`mytest_auto_test1`}   | schema1 |
+
+  Scenario: add filter for reload @@metadata #7
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <user name="test">
+        <property name="password">111111</property>
+        <property name="schemas">schema1,schema2</property>
+    </user>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <table name="test1" dataNode="dn1,dn3" rule="hash-two"/>
+    <table name="test11" dataNode="dn1,dn3" rule="hash-two"/>
+    </schema>
+    <schema name="schema2" sqlMaxLimit="100" dataNode="dn5">
+    <table name="test2" dataNode="dn2,dn4" type="global"/>
+    </schema>
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                               | expect   | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists test1                   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test11                   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test2                   | success  | schema2 |
+      | test | 111111 | conn_0 | True    | CREATE TABLE test1 (id int,clientNum CHAR(20) NOT NULL ) | success  | schema1 |
+      | test | 111111 | conn_0 | True    | CREATE TABLE test11 (id int,clientNum CHAR(20) NOT NULL ) | success  | schema1 |
+      | test | 111111 | conn_0 | True    | CREATE TABLE test2 (id int,clientNum CHAR(20) NOT NULL ) | success  | schema2 |
+    Then execute sql in "mysql-master1"
+      | user | passwd | conn   | toClose  | sql                                     | expect   | db      |
+      | test | 111111 | conn_0 | True     |alter table test1 add name char(20)  | success  | db1     |
+      | test | 111111 | conn_0 | True     |alter table test1 add name char(20)  | success  | db2     |
+      | test | 111111 | conn_0 | True     |alter table test11 add age int  | success  | db1     |
+      | test | 111111 | conn_0 | True     |alter table test11 add age int  | success  | db2     |
+    Then execute sql in "mysql-master2"
+      | user | passwd | conn   | toClose  | sql                                     | expect   | db      |
+      | test | 111111 | conn_0 | True     |alter table test2 add student char(20)  | success  | db1     |
+      | test | 111111 | conn_0 | True     |alter table test2 add student char(20)  | success  | db2     |
+    Then execute sql in "dble-1" in "admin" mode
+      | user  | passwd | conn   | toClose | sql                                                                  | expect    | db     |
+      | root  | 111111 | conn_0 | True    | reload @@metadata where schema='schema1' and table='test1'    | success  | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasStr{name}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasNoStr{age}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema2'       | hasNoStr{student}   | schema1 |
+      | root  | 111111 | conn_0 | True    | reload @@metadata where schema='schema2'            | success  | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasNoStr{age}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema2'       | hasStr{student}   | schema1 |
+    Then execute sql in "mysql-master1"
+      | user | passwd | conn   | toClose  | sql                             | expect   | db      |
+      | test | 111111 | conn_0 | True     |alter table test1 drop name   | success  | db1     |
+      | test | 111111 | conn_0 | True     |alter table test1 drop name   | success  | db2     |
+    Then execute sql in "mysql-master2"
+      | user | passwd | conn   | toClose  | sql                                | expect   | db      |
+      | test | 111111 | conn_0 | True     |alter table test2 drop student  | success  | db1     |
+      | test | 111111 | conn_0 | True     |alter table test2 drop student  | success  | db2     |
+    Then execute sql in "dble-1" in "admin" mode
+      | user  | passwd | conn   | toClose | sql                                                     | expect    | db     |
+      | root  | 111111 | conn_0 | True    | reload @@metadata where table in('schema1.test11','schema2.test2')    | success  | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasStr{name}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasStr{age}   | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema2'       | hasNoStr{student}   | schema1 |
+      | root  | 111111 | conn_0 | True    | reload @@metadata where table in('schema1.test1') | success  | schema1 |
+      | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasNoStr{name}   | schema1 |
+      | root  | 111111 | conn_0 | True    | reload @@metadata where schema=schema2              | reload @@metadata [where schema='?' [and table='?']   | schema1 |
+
