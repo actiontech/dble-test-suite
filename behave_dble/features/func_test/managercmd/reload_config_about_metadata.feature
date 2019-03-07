@@ -105,6 +105,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | root  | 111111 | conn_0 | True    | check full @@metadata      | hasNoStr{test2}  | schema1 |
     Then execute sql in "mysql-master2"
       | user | passwd | conn   | toClose | sql                           | expect   | db  |
+      | test | 111111 | conn_0 | True    | drop table if exists test3 | success  | db1 |
       | test | 111111 | conn_0 | True    | create table test3(id int) | success  | db1 |
     #schema的默认datanode发生变更
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
