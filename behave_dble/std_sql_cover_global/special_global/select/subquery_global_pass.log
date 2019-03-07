@@ -114,9 +114,11 @@ dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), 
 dble:[[(2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L)]]
 ===file:special_global/select/subquery_global.sql, id:69, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from test1 group by pad) as t1]===
 dble:[[(Decimal('4.2000'),)]]
-===file:special_global/select/subquery_global.sql, id:73, sql:[drop table if exists test1]===
+===file:special_global/select/subquery_global.sql, id:71, sql:[select * from (select m.id,n.pad from test1 m,schema2.test2 n where m.id=n.id AND m.name='test中id为1' and m.pad>7 and m.pad<10)a;]===
 dble:[[]]
-===file:special_global/select/subquery_global.sql, id:74, sql:[drop table if exists schema3.test3]===
+===file:special_global/select/subquery_global.sql, id:77, sql:[drop table if exists test1]===
 dble:[[]]
-===file:special_global/select/subquery_global.sql, id:75, sql:[drop table if exists schema2.test2]===
+===file:special_global/select/subquery_global.sql, id:78, sql:[drop table if exists schema3.test3]===
+dble:[[]]
+===file:special_global/select/subquery_global.sql, id:79, sql:[drop table if exists schema2.test2]===
 dble:[[]]
