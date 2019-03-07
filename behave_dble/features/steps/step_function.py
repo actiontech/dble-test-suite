@@ -121,19 +121,39 @@ def step_impl(context):
       Given create local and server file "test4.txt" and fill with text
       """
       1,1,,
+      """    
+      #1.5 more than 1w lines in file
+      Given create local and server file "test.txt" and fill with text
       """
+      10000+lines
+      """   
     ''')
 
 @Given('create local and server file "{filename}" and fill with text')
 def step_impl(context, filename):
     LOGGER.debug("*** debug context.text:{0}".format(context.text))
 
+    text = context.text
+
     # remove old file in behave resides server
     if os.path.exists(filename):
         os.remove(filename)
 
-    with open(filename, 'w') as fp:
-        fp.write(context.text)
+    if cmp(text,'10000+lines')==0:
+        with open(filename, 'w') as fp:
+            col1 = 1
+            col2 = col1 +1
+            col3 = "abcd"
+            col4 = "1234"
+            for i in xrange(15000):
+                data = str(col1)+','+str(col2)+','+str(col3)+','+str(col4)
+                fp.write(data + '\n')
+                col1= col1+1
+                col2 = col2+1
+
+    else:
+        with open(filename, 'w') as fp:
+            fp.write(context.text)
 
     # cp file to dble
     remote_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
