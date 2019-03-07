@@ -1,3 +1,3 @@
 ===file:sqls_util/syntax/reserved_words.sql, id:985, sql:[show create view `drop`]===
 mysql err:(1146, "Table 'schema1.drop' doesn't exist")
-dble err:(1064, "Table 'schema1.drop' doesn't exist")
+dble err[21:09:58.230240] :(1064, "Table 'schema1.drop' doesn't exist")

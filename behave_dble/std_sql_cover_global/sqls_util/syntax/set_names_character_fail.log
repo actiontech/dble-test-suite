@@ -1,24 +1,24 @@
 ===file:sqls_util/syntax/set_names_character.sql, id:15, sql:[select * from test1]===
-dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1552012136218L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1552012136219L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1552012136219L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1552012136219L)]]
+dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1551964208396L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1551964208396L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1551964208396L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1551964208396L)]]
 mysql:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951'), (2L, '\xe6\xb5\x8b\xe8\xaf\x952'), (3L, '\xe6\xb5\x8b\xe8\xaf\x953'), (4L, '\xe6\xb5\x8b\xe8\xaf\x954')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:17, sql:[select * from test1]===
-dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1552012136218L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1552012136219L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1552012136219L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1552012136219L)]]
+dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1551964208396L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1551964208396L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1551964208396L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1551964208396L)]]
 mysql:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951'), (2L, '\xe6\xb5\x8b\xe8\xaf\x952'), (3L, '\xe6\xb5\x8b\xe8\xaf\x953'), (4L, '\xe6\xb5\x8b\xe8\xaf\x954')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:19, sql:[select * from test1]===
-dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1552012136218L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1552012136219L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1552012136219L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1552012136219L)]]
+dble:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951', 1551964208396L), (2L, '\xe6\xb5\x8b\xe8\xaf\x952', 1551964208396L), (3L, '\xe6\xb5\x8b\xe8\xaf\x953', 1551964208396L), (4L, '\xe6\xb5\x8b\xe8\xaf\x954', 1551964208396L)]]
 mysql:[[(1L, '\xe6\xb5\x8b\xe8\xaf\x951'), (2L, '\xe6\xb5\x8b\xe8\xaf\x952'), (3L, '\xe6\xb5\x8b\xe8\xaf\x953'), (4L, '\xe6\xb5\x8b\xe8\xaf\x954')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:36, sql:[select * from test1]===
-dble:[[(3L, '??3', 1552012138318L)]]
+dble:[[(3L, '??3', 1551964210317L)]]
 mysql:[[(3L, '??3')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:42, sql:[select * from test1]===
-dble:[[(3L, '??3', 1552012138318L)]]
+dble:[[(3L, '??3', 1551964210317L)]]
 mysql:[[(3L, '??3')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:44, sql:[select * from test1]===
-dble:[[(3L, '??3', 1552012138318L)]]
+dble:[[(3L, '??3', 1551964210317L)]]
 mysql:[[(3L, '??3')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:47, sql:[select * from test1]===
-dble:[[(3L, '??3', 1552012138318L)]]
+dble:[[(3L, '??3', 1551964210317L)]]
 mysql:[[(3L, '??3')]]
 ===file:sqls_util/syntax/set_names_character.sql, id:52, sql:[select * from test1]===
-dble:[[(3L, '??3', 1552012138318L)]]
+dble:[[(3L, '??3', 1551964210317L)]]
 mysql:[[(3L, '??3')]]
