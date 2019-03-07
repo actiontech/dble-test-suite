@@ -41,6 +41,7 @@ cfg_dble:
 cfg_mysql:
   user: test
   password: 111111
+  client_port: 3306
   install_path: /usr/local/mysql
   group1:
     master1:
