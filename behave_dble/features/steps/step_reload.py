@@ -113,11 +113,11 @@ def delete_xml_segment(context):
 
 @When('Add some data in "{mapFile}"')
 def add_file(context,mapFile):
-    remove_txt = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
     text = str(context.text)
-    cmd = "echo '{0}' > {1}".format(text, remove_txt)
-    rc, sto, re = context.ssh_client.exec_command(cmd)
-    assert_that(re, is_(''), "expect re is empty, but re is: {0}".format(re))
+    cmd = "echo '{0}' > {1}".format(text, targetFile)
+    rc, sto, err = context.ssh_client.exec_command(cmd)
+    assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
 @When('Execute "{cmd}" on the managerment client and check system property with "{name}","{text}"')
 def check_sys_property(context, cmd, name, text):
@@ -136,8 +136,8 @@ def get_abs_path(context, file):
 
 def upload_and_replace_conf(context, filename):
     local_file = get_abs_path(context, filename)
-    remove_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'],filename)
-    context.ssh_sftp.sftp_put(remove_file,local_file)
+    remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'],filename)
+    context.ssh_sftp.sftp_put(local_file, remote_file)
 
 def get_encrypt(context, string):
     cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
