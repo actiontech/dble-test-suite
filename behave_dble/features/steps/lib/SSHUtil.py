@@ -26,10 +26,6 @@ class SSHClient(Logging):
                           'Return code <{2}>, Stdout[0:200]: <{3}>, Stderr <{4}>'.format(self._host, command, rc, sto[0:200], ste))
         return rc, sto, ste
 
-    def open_sftp(self):
-        self.logger.info('<{0}>: open sftp'.format(self._host))
-        return self._ssh.open_sftp()
-
     def close(self):
         self.logger.info('<{0}>: close ssh client'.format(self._host))
         if self._ssh:
@@ -54,15 +50,17 @@ class SFTPClient(Logging):
         except Exception, e:
             raise
 
-    def sftp_put(self, remote_path, local_path):
+    def sftp_put(self, local_path, remote_path):
         try:
+            self.logger.info('sftp put local_path:{1}, remote_path:{0}'.format(remote_path, local_path))
             self._sftp_ssh.put(local_path, remote_path)
         except Exception, e:
             raise
 
     def sftp_get(self, remote_path, local_path):
         try:
-            self._sftp_ssh.get(local_path, remote_path)
+            self.logger.info('sftp get remote_path:{0}, local_path:{1}'.format(remote_path, local_path))
+            self._sftp_ssh.get(remote_path, local_path)
         except Exception, e:
             raise
 

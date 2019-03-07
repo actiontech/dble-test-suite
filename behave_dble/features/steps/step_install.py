@@ -62,7 +62,8 @@ def download_dble(context):
     rpm_ftp_url = "{0}{1}".format(context.cfg_dble['ftp_path'],
                               context.cfg_dble['packet_name'])
     cmd = 'rm -rf {0}'.format(rpm_local_path)
-    os.system(cmd)
+    exit_status = os.system(cmd)
+    LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
 
     cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_agent'],
                                                                     rpm_ftp_url)
@@ -340,7 +341,7 @@ def replace_config_in_node(context, node):
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
         LOGGER.info("sftp from: {0} to {1}".format(local_file, remote_file))
-        node.sftp_conn.sftp_put(remote_file, local_file)
+        node.sftp_conn.sftp_put(local_file, remote_file)
 
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
