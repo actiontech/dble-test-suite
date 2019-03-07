@@ -34,6 +34,7 @@ public class testJDBC {
             msqluserName = "test";
             mysqluserPwd = "111111";
         }else{
+            System.out.println("run in online mode!");
             Config cfg = com.actiontech.yamlParser.getConfig(args[1]);
             dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8";
             dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8";
@@ -45,6 +46,7 @@ public class testJDBC {
             dbleuserPwd = cfg.dble_password;
             msqluserName = cfg.mysql_user;
             mysqluserPwd = cfg.mysql_password;
+            System.out.println("init connection parameters over!");
         }
 
 
