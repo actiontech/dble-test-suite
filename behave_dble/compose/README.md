@@ -6,20 +6,18 @@
 
 #2.所有容器安装mysql 5.7.13,账户初始设置，复制关系设置等, 并在dble所在容器安装zookeeper 3.4.9, jdk-8u121
   
-  准备安装文件:
-  2.1 在compose目录下新建sources目录：mkdir sources
-  2.2 将mysql， zookeeper，jdk的相应linux安装文件放在sources目录下
-  2.3 sources目录下同一应用安装文件不能有多份：eg,不能有2份mysql开头的安装文件， 安装文件命名格式满足：
-  mysql-xxx.tar.gz
-  zookeeper-xxx.tar.gz
-  jdk-xxx.tar.gz
-      
-  ssh-keygen -t rsa
-  chmod +x env_dble.sh
-  ./env_dble.sh
-  
-  if used for ci, change own: 
-  chown -R go:go /opt/auto_build
+  准备安装文件:   
+  + 2.1 在compose目录下新建sources目录：mkdir sources  
+  + 2.2 将mysql， zookeeper，jdk的相应linux安装文件放在sources目录下   
+  + 2.3 sources目录下同一应用安装文件不能有多份：eg,不能有2份mysql开头的安装文件， 安装文件命名格式满足：  
+  mysql-xxx.tar.gz  
+  zookeeper-xxx.tar.gz  
+  jdk-xxx.tar.gz  
+  ssh-keygen -t rsa  
+  chmod +x env_dble.sh  
+  ./env_dble.sh  
+  if used for ci, change own:   
+  chown -R go:go /opt/auto_build  
 
 #3.使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
 ```
