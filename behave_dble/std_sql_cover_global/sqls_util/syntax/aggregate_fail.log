@@ -1,6 +1,6 @@
 ===file:sqls_util/syntax/aggregate.sql, id:45, sql:[select *, group_concat(name order by name) from test1 group by id;]===
-dble:[((None, 'b', 1550757870715L, 'b,b,b,c,c'), (1L, 'a', 1550757870715L, 'a,d'), (2L, None, 1550757870715L, None), (3L, 'a', 1550757870715L, 'a'))]
+dble:[((None, 'b', 1552011508145L, 'b,b,b,c,c'), (1L, 'a', 1552011508145L, 'a,d'), (2L, None, 1552011508145L, None), (3L, 'a', 1552011508145L, 'a'))]
 mysql:[((None, 'b', 'b,b,b,c,c'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
 ===file:sqls_util/syntax/aggregate.sql, id:46, sql:[select *, group_concat(distinct name order by name desc separator ':') from test1 group by id;]===
-dble:[((None, 'b', 1550757870715L, 'c:b'), (1L, 'a', 1550757870715L, 'd:a'), (2L, None, 1550757870715L, None), (3L, 'a', 1550757870715L, 'a'))]
+dble:[((None, 'b', 1552011508145L, 'c:b'), (1L, 'a', 1552011508145L, 'd:a'), (2L, None, 1552011508145L, None), (3L, 'a', 1552011508145L, 'a'))]
 mysql:[((None, 'b', 'c:b'), (1L, 'a', 'd:a'), (2L, None, None), (3L, 'a', 'a'))]

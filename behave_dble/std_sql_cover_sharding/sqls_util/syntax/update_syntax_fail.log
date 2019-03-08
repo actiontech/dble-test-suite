@@ -1,14 +1,14 @@
 ===file:sqls_util/syntax/update_syntax.sql, id:20, sql:[UPDATE test1 SET id=id-1]===
 dble:[None]
 mysql:[()]
-[03:14:11.035458]dble err :(1064, "Sharding column can't be updated test1->ID")
+[17:00:44.417641]dble err :(1064, "Sharding column can't be updated test1->ID")
 ===file:sqls_util/syntax/update_syntax.sql, id:21, sql:[SELECT id,R_REGIONKEY FROM test1]===
 dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
 mysql:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
 ===file:sqls_util/syntax/update_syntax.sql, id:22, sql:[UPDATE test1 SET id=10 WHERE id=4 OR id=1 AND id=3]===
 dble:[None]
 mysql:[()]
-[03:14:11.195111]dble err :(1064, "Sharding column can't be updated test1->ID")
+[17:00:44.640278]dble err :(1064, "Sharding column can't be updated test1->ID")
 ===file:sqls_util/syntax/update_syntax.sql, id:23, sql:[SELECT id,R_REGIONKEY FROM test1]===
 dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
 mysql:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
