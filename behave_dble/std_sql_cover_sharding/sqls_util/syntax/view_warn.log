@@ -1,9 +1,9 @@
 ===file:sqls_util/syntax/view.sql, id:105, sql:[select * from view_test1/*table doesn't exist*/]===
 mysql err:(1146, "Table 'schema1.view_test1' doesn't exist")
-dble err[03:14:24.717966] :(1146, "Table 'schema1.view_test1' doesn't exist")
+dble err[17:01:06.925550] :(1146, "Table 'schema1.view_test1' doesn't exist")
 ===file:sqls_util/syntax/view.sql, id:113, sql:[select * from view_test/*table doesn't exist*/]===
 mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
-dble err[03:14:24.853337] :(1146, "Table 'schema1.view_test' doesn't exist")
+dble err[17:01:07.187245] :(1146, "Table 'schema1.view_test' doesn't exist")
 ===file:sqls_util/syntax/view.sql, id:117, sql:[select * from view_test/*table doesn't exist*/]===
 mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
-dble err[03:14:25.126180] :(1146, "Table 'schema1.view_test' doesn't exist")
+dble err[17:01:07.593287] :(1146, "Table 'schema1.view_test' doesn't exist")
