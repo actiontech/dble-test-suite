@@ -1,7 +1,7 @@
 ===file:sqls_util/syntax/set_user_var_util.sql, id:12, sql:[(SELECT @vara:=id FROM test1 WHERE id=10 AND B=1) UNION (SELECT @varb:=B FROM schema2.test2 WHERE id=@vara AND B=2) UNION (SELECT id FROM schema3.test3 WHERE id=@vara+@varb AND B=1)]===
 dble:[None]
 mysql:[((10L,), (2L,), (12L,))]
-[14:41:17.220832]dble err :(-1, 'error totally whack')
+[17:27:31.394714]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:29, sql:[SELECT * FROM test1 WHERE price=@min_price OR price=@max_price]===
 dble:[[]]
 mysql:[[(1L, 'D', 234.25), (3L, 'D', 1.25)]]
@@ -11,7 +11,7 @@ mysql:[[(1L, 1L)]]
 ===file:sqls_util/syntax/set_user_var_util.sql, id:39, sql:[SET @total_tax = (SELECT SUM(id) FROM test1)]===
 dble:[None]
 mysql:[()]
-[14:41:18.699740]dble err :(-1, 'error totally whack')
+[17:27:33.957807]dble err :(-1, 'error totally whack')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:40, sql:[SELECT @total_tax]===
 dble:[[(None,)]]
 mysql:[[(Decimal('17'),)]]

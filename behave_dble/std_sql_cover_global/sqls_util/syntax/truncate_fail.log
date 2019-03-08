@@ -1,33 +1,33 @@
 ===file:sqls_util/syntax/truncate.sql, id:5, sql:[select * from test1]===
-dble:[[(0L, 1L, 'test', 'test', 1550758255145L)]]
+dble:[[(0L, 1L, 'test', 'test', 1552012211962L)]]
 mysql:[[(0L, 1L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:8, sql:[select * from test1]===
-dble:[[(1L, 100L, 'test', None, 1550758255319L)]]
+dble:[[(1L, 100L, 'test', None, 1552012212514L)]]
 mysql:[[(1L, 100L, 'test', None)]]
 ===file:sqls_util/syntax/truncate.sql, id:11, sql:[select * from test1 where R_COMMENT='xi''an']===
-dble:[[(1L, 2L, 'yang', "xi'an", 1550758255514L)]]
+dble:[[(1L, 2L, 'yang', "xi'an", 1552012212906L)]]
 mysql:[[(1L, 2L, 'yang', "xi'an")]]
 ===file:sqls_util/syntax/truncate.sql, id:14, sql:[select * from test1]===
-dble:[[(1L, 4L, 'test', 'test', 1550758255688L), (2L, 5L, 'test', 'test', 1550758255688L)]]
+dble:[[(1L, 4L, 'test', 'test', 1552012213323L), (2L, 5L, 'test', 'test', 1552012213323L)]]
 mysql:[[(1L, 4L, 'test', 'test'), (2L, 5L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:17, sql:[select * from test1]===
-dble:[[(1L, 8L, 'test', 'test', 1550758255882L), (2L, 10L, 'test', 'test', 1550758255882L)]]
+dble:[[(1L, 8L, 'test', 'test', 1552012213747L), (2L, 10L, 'test', 'test', 1552012213747L)]]
 mysql:[[(1L, 8L, 'test', 'test'), (2L, 10L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:20, sql:[select * from test1]===
-dble:[[(1L, 5L, 'test', 'test', 1550758256078L), (2L, 6L, 'test', 'test', 1550758256078L)]]
+dble:[[(1L, 5L, 'test', 'test', 1552012214158L), (2L, 6L, 'test', 'test', 1552012214158L)]]
 mysql:[[(1L, 5L, 'test', 'test'), (2L, 6L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:22, sql:[select * from test1]===
-dble:[[(1L, 5L, 'test', 'test', 1550758256078L), (1L, 7L, 'test', 'test', 1550758256210L), (2L, 6L, 'test', 'test', 1550758256078L), (2L, 8L, 'test', 'test', 1550758256210L)]]
+dble:[[(1L, 5L, 'test', 'test', 1552012214158L), (1L, 7L, 'test', 'test', 1552012214380L), (2L, 6L, 'test', 'test', 1552012214158L), (2L, 8L, 'test', 'test', 1552012214380L)]]
 mysql:[[(1L, 5L, 'test', 'test'), (1L, 7L, 'test', 'test'), (2L, 6L, 'test', 'test'), (2L, 8L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:25, sql:[select * from test1]===
-dble:[[(6L, 12L, 'test', 'test', 1550758256403L), (7L, 13L, 'test', 'test', 1550758256404L)]]
+dble:[[(6L, 12L, 'test', 'test', 1552012214779L), (7L, 13L, 'test', 'test', 1552012214779L)]]
 mysql:[[(6L, 12L, 'test', 'test'), (7L, 13L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:28, sql:[select * from test1]===
-dble:[[(2L, 5L, 'test', 'test', 1550758256570L), (3L, 6L, 'test', 'test', 1550758256570L)]]
+dble:[[(2L, 5L, 'test', 'test', 1552012215236L), (3L, 6L, 'test', 'test', 1552012215236L)]]
 mysql:[[(2L, 5L, 'test', 'test'), (3L, 6L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:31, sql:[select * from test1]===
-dble:[[(5L, 7L, 'test', 'test', 1550758256767L), (6L, 22L, 'test', 'test', 1550758256767L)]]
+dble:[[(5L, 7L, 'test', 'test', 1552012215709L), (6L, 22L, 'test', 'test', 1552012215709L)]]
 mysql:[[(5L, 7L, 'test', 'test'), (6L, 22L, 'test', 'test')]]
 ===file:sqls_util/syntax/truncate.sql, id:34, sql:[select * from test1]===
-dble:[[(100L, 999L, 'test', 'test', 1550758256963L)]]
+dble:[[(100L, 999L, 'test', 'test', 1552012216201L)]]
 mysql:[[(100L, 999L, 'test', 'test')]]
