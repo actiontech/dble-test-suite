@@ -16,22 +16,22 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:10, sql:[show table status/*allow_diff*/]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('drop', None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, None, "View 'schema1.drop' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them"), ('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 1, 31, 16, 13, 2), datetime.datetime(2019, 1, 31, 16, 13, 3), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 3, 8, 16, 58, 48), datetime.datetime(2019, 3, 8, 16, 58, 48), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/show.sql, id:11, sql:[show table status like 'aly_o%'/*allow_diff*/]===
 dble:[[]]
 mysql:[[]]
 ===file:sqls_util/syntax/show.sql, id:12, sql:[show tables]===
-dble:[[('drop',), ('test1',)]]
+dble:[[('test1',)]]
 ===file:sqls_util/syntax/show.sql, id:13, sql:[show full tables]===
-dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+dble:[[('test1', 'BASE TABLE')]]
 ===file:sqls_util/syntax/show.sql, id:14, sql:[show tables from schema1]===
-dble:[[('drop',), ('test1',)]]
+dble:[[('test1',)]]
 ===file:sqls_util/syntax/show.sql, id:15, sql:[show tables in schema1]===
-dble:[[('drop',), ('test1',)]]
+dble:[[('test1',)]]
 ===file:sqls_util/syntax/show.sql, id:16, sql:[show full tables from schema1]===
-dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+dble:[[('test1', 'BASE TABLE')]]
 ===file:sqls_util/syntax/show.sql, id:17, sql:[show full tables in schema1]===
-dble:[[('drop', 'VIEW'), ('test1', 'BASE TABLE')]]
+dble:[[('test1', 'BASE TABLE')]]
 ===file:sqls_util/syntax/show.sql, id:18, sql:[show tables like 'aly_o%']===
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:19, sql:[show full tables from schema1 like 'aly%']===
