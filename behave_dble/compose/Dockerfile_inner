@@ -1,0 +1,26 @@
+From centos:centos7
+RUN yum install -y compat-libstdc++ libXtst.i686 gtk2.i686 vi less which wget net-tools fontconfig libaio hwloc libpciaccess lsof perl-Data-Dumper perl lz4 libunwind
+RUN curl -s https://packagecloud.io/install/repositories/akopytov/sysbench/script.rpm.sh | bash
+RUN echo "finish script.rpm.sh" 
+RUN yum -y install sysbench
+    
+RUN wget ftp://ftp:ftp@10.186.18.20/housekeep/jdk-8u121-linux-x64.tar.gz 
+RUN mkdir /opt/jdk 
+RUN tar -zxvf jdk-8u121-linux-x64.tar.gz -C /opt/jdk --strip-components=1 
+RUN echo "export JAVA_HOME=/usr/jdk">>/etc/bashrc 
+    
+RUN wget ftp://ftp:ftp@10.186.18.20/mysql-tarball/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
+RUN mkdir /usr/local/mysql 
+RUN tar -zxvf mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz -C /usr/local/mysql --strip-components=1 
+RUN echo "export PATH=/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc    
+    
+RUN wget ftp://ftp:ftp@10.186.18.20/housekeep/btrace-bin-1.3.11.tgz.tar.gz 
+RUN mkdir /opt/btrace 
+RUN tar -zxvf btrace-bin-1.3.11.tgz.tar.gz -C /opt/btrace
+RUN rm -r *.tar.gz
+
+
+VOLUME /opt
+
+CMD ["/bin/bash"]
+
