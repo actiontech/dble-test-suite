@@ -1,15 +1,15 @@
 ===file:sqls_mixed/syntax/character.sql, id:19, sql:[insert into sharding_4_t1 select user()]===
 mysql err:(1136, "Column count doesn't match value count at row 1")
-dble err[08:49:00.359741] :(1064, 'Insert syntax error,no values in sql')
+dble err[11:46:37.342440] :(1064, 'Insert syntax error,no values in sql')
 ===file:sqls_mixed/syntax/character.sql, id:26, sql:[select sleep(3) union select `c` int not null` from sharding_4_t1]===
 mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'int not null` from sharding_4_t1' at line 1")
-dble err[08:49:00.769878] :(1064, 'sql syntax error, no terminated. NOT')
+dble err[11:46:38.131464] :(1064, 'sql syntax error, no terminated. NOT')
 ===file:sqls_mixed/syntax/character.sql, id:58, sql:[insert into sharding_4_t1 values(1,'a你')]===
 mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
-dble err[08:49:02.628158] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
+dble err[11:46:40.981311] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
 ===file:sqls_mixed/syntax/character.sql, id:59, sql:[insert into sharding_4_t1 values(2,_utf8'a你')]===
 mysql err:(1366, "Incorrect string value: '\\xE4\\xBD\\xA0' for column 'c' at row 1")
-dble err[08:49:02.708956] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
+dble err[11:46:41.089102] :(1366, "Incorrect string value: '\\xE4\\xBD?' for column 'c' at row 1")
 ===file:sqls_mixed/syntax/character.sql, id:67, sql:[insert into sharding_4_t1 values("e")]===
 mysql err:(1136, "Column count doesn't match value count at row 1")
-dble err[08:49:03.240170] :(1064, 'columnValue:e Please eliminate any quote and non number within it.')
+dble err[11:46:42.099405] :(1064, 'columnValue:e Please eliminate any quote and non number within it.')
