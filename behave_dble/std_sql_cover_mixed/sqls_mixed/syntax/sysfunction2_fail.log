@@ -5,7 +5,7 @@ mysql:[[(1L, 'X')]]
 dble:[[(2L, 'y')]]
 mysql:[[(2L, 'Y')]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:77, sql:[SELECT CONNECTION_ID()]===
-dble:[[(333L,)]]
+dble:[[(326L,)]]
 mysql:[[(2200L,)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:78, sql:[SELECT CURRENT_USER()]===
 dble:[[('test@172.100.9.253',)]]
@@ -20,5 +20,5 @@ mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
 dble:[[('test@172.100.9.253',)]]
 mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:85, sql:[SELECT VERSION()]===
-dble:[[('5.6.29-dble-9.9.9.9-b806e03eb05270f537a92be0ecf38f21a30b9997-20190227073000',)]]
+dble:[[('5.6.29-dble-9.9.9.9-89ec430f46ccadc8d6f126ade4d62ada7cf440ce-20190307084418',)]]
 mysql:[[('5.7.13',)]]

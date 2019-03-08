@@ -1,174 +1,174 @@
 ===file:sqls_util/transaction/trx_isolation.sql, id:16, sql:[select * from test1]===
-dble:[[(1L, 1L, '1', 1L, 1550758704742L)]]
+dble:[[(1L, 1L, '1', 1L, 1552012716874L)]]
 mysql:[[(1L, 1L, '1', 1L)]]
 ===file:sqls_util/transaction/trx_isolation.sql, id:24, sql:[select * from test1]===
-dble:[[(1L, 1L, '1', 1L, 1550758704742L)]]
+dble:[[(1L, 1L, '1', 1L, 1552012716874L)]]
 mysql:[[(1L, 1L, '1', 1L)]]
 ===file:sqls_util/transaction/trx_isolation.sql, id:35, sql:[select * from test1]===
-dble:[[(1L, 1L, '1', 1L, 1550758705772L)]]
+dble:[[(1L, 1L, '1', 1L, 1552012718279L)]]
 mysql:[[(1L, 1L, '1', 1L)]]
 ===file:sqls_util/transaction/trx_isolation.sql, id:54, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758706774L), (2L, 2L, '2', 2L, 1550758706774L))]
+dble:[((1L, 1L, '1', 1L, 1552012719604L), (2L, 2L, '2', 2L, 1552012719605L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:62, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758706774L), (2L, 2L, '2', 2L, 1550758706774L))]
+dble:[((1L, 1L, '1', 1L, 1552012719604L), (2L, 2L, '2', 2L, 1552012719605L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:73, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758707798L), (2L, 2L, '2', 2L, 1550758707798L))]
+dble:[((1L, 1L, '1', 1L, 1552012721053L), (2L, 2L, '2', 2L, 1552012721053L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:92, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758708834L), (2L, 2L, '2', 2L, 1550758708834L), (3L, 3L, '3', 3L, 1550758708834L))]
+dble:[((1L, 1L, '1', 1L, 1552012722456L), (2L, 2L, '2', 2L, 1552012722456L), (3L, 3L, '3', 3L, 1552012722456L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:100, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758708834L), (2L, 2L, '2', 2L, 1550758708834L), (3L, 3L, '3', 3L, 1550758708834L))]
+dble:[((1L, 1L, '1', 1L, 1552012722456L), (2L, 2L, '2', 2L, 1552012722456L), (3L, 3L, '3', 3L, 1552012722456L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:111, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758709872L), (2L, 2L, '2', 2L, 1550758709872L), (3L, 3L, '3', 3L, 1550758709872L))]
+dble:[((1L, 1L, '1', 1L, 1552012723925L), (2L, 2L, '2', 2L, 1552012723925L), (3L, 3L, '3', 3L, 1552012723925L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:130, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758710892L), (2L, 2L, '2', 2L, 1550758710892L), (3L, 3L, '3', 3L, 1550758710892L), (4L, 4L, '4', 4L, 1550758710892L))]
+dble:[((1L, 1L, '1', 1L, 1552012725280L), (2L, 2L, '2', 2L, 1552012725280L), (3L, 3L, '3', 3L, 1552012725280L), (4L, 4L, '4', 4L, 1552012725280L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:138, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758710892L), (2L, 2L, '2', 2L, 1550758710892L), (3L, 3L, '3', 3L, 1550758710892L), (4L, 4L, '4', 4L, 1550758710892L))]
+dble:[((1L, 1L, '1', 1L, 1552012725280L), (2L, 2L, '2', 2L, 1552012725280L), (3L, 3L, '3', 3L, 1552012725280L), (4L, 4L, '4', 4L, 1552012725280L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:149, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758711926L), (2L, 2L, '2', 2L, 1550758711926L), (3L, 3L, '3', 3L, 1550758711926L), (4L, 4L, '4', 4L, 1550758711926L))]
+dble:[((1L, 1L, '1', 1L, 1552012726677L), (2L, 2L, '2', 2L, 1552012726677L), (3L, 3L, '3', 3L, 1552012726677L), (4L, 4L, '4', 4L, 1552012726677L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:168, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758712953L),)]
+dble:[((1L, 1L, '1', 1L, 1552012728059L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:174, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758712953L),)]
+dble:[((1L, 1L, '1', 1L, 1552012728059L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:176, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758712953L),)]
+dble:[((1L, 1L, '1', 1L, 1552012728059L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:187, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758713986L),)]
+dble:[((1L, 1L, '1', 1L, 1552012729501L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:206, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758715030L), (2L, 2L, '2', 2L, 1550758715030L))]
+dble:[((1L, 1L, '1', 1L, 1552012730830L), (2L, 2L, '2', 2L, 1552012730830L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:212, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758715030L), (2L, 2L, '2', 2L, 1550758715030L))]
+dble:[((1L, 1L, '1', 1L, 1552012730830L), (2L, 2L, '2', 2L, 1552012730830L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:214, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758715030L), (2L, 2L, '2', 2L, 1550758715030L))]
+dble:[((1L, 1L, '1', 1L, 1552012730830L), (2L, 2L, '2', 2L, 1552012730830L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:225, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758716065L), (2L, 2L, '2', 2L, 1550758716065L))]
+dble:[((1L, 1L, '1', 1L, 1552012732281L), (2L, 2L, '2', 2L, 1552012732281L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:244, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758717093L), (2L, 2L, '2', 2L, 1550758717093L), (3L, 3L, '3', 3L, 1550758717093L))]
+dble:[((1L, 1L, '1', 1L, 1552012733688L), (2L, 2L, '2', 2L, 1552012733688L), (3L, 3L, '3', 3L, 1552012733688L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:250, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758717093L), (2L, 2L, '2', 2L, 1550758717093L), (3L, 3L, '3', 3L, 1550758717093L))]
+dble:[((1L, 1L, '1', 1L, 1552012733688L), (2L, 2L, '2', 2L, 1552012733688L), (3L, 3L, '3', 3L, 1552012733688L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:252, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758717093L), (2L, 2L, '2', 2L, 1550758717093L), (3L, 3L, '3', 3L, 1550758717093L))]
+dble:[((1L, 1L, '1', 1L, 1552012733688L), (2L, 2L, '2', 2L, 1552012733688L), (3L, 3L, '3', 3L, 1552012733688L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:263, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758718120L), (2L, 2L, '2', 2L, 1550758718120L), (3L, 3L, '3', 3L, 1550758718120L))]
+dble:[((1L, 1L, '1', 1L, 1552012735104L), (2L, 2L, '2', 2L, 1552012735104L), (3L, 3L, '3', 3L, 1552012735104L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:282, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758719142L), (2L, 2L, '2', 2L, 1550758719142L), (3L, 3L, '3', 3L, 1550758719142L), (4L, 4L, '4', 4L, 1550758719142L))]
+dble:[((1L, 1L, '1', 1L, 1552012736586L), (2L, 2L, '2', 2L, 1552012736586L), (3L, 3L, '3', 3L, 1552012736586L), (4L, 4L, '4', 4L, 1552012736586L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:288, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758719142L), (2L, 2L, '2', 2L, 1550758719142L), (3L, 3L, '3', 3L, 1550758719142L), (4L, 4L, '4', 4L, 1550758719142L))]
+dble:[((1L, 1L, '1', 1L, 1552012736586L), (2L, 2L, '2', 2L, 1552012736586L), (3L, 3L, '3', 3L, 1552012736586L), (4L, 4L, '4', 4L, 1552012736586L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:290, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758719142L), (2L, 2L, '2', 2L, 1550758719142L), (3L, 3L, '3', 3L, 1550758719142L), (4L, 4L, '4', 4L, 1550758719142L))]
+dble:[((1L, 1L, '1', 1L, 1552012736586L), (2L, 2L, '2', 2L, 1552012736586L), (3L, 3L, '3', 3L, 1552012736586L), (4L, 4L, '4', 4L, 1552012736586L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:301, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758720165L), (2L, 2L, '2', 2L, 1550758720165L), (3L, 3L, '3', 3L, 1550758720165L), (4L, 4L, '4', 4L, 1550758720165L))]
+dble:[((1L, 1L, '1', 1L, 1552012737912L), (2L, 2L, '2', 2L, 1552012737912L), (3L, 3L, '3', 3L, 1552012737912L), (4L, 4L, '4', 4L, 1552012737912L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:320, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758721189L),)]
+dble:[((1L, 1L, '1', 1L, 1552012739254L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:322, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758721189L),)]
+dble:[((1L, 1L, '1', 1L, 1552012739254L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:326, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758721189L),)]
+dble:[((1L, 1L, '1', 1L, 1552012739254L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:328, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758721189L),)]
+dble:[((1L, 1L, '1', 1L, 1552012739254L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:339, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758722217L),)]
+dble:[((1L, 1L, '1', 1L, 1552012740668L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:341, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758722217L),)]
+dble:[((1L, 1L, '1', 1L, 1552012740668L),)]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_isolation.sql, id:358, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758723242L), (2L, 2L, '2', 2L, 1550758723242L))]
+dble:[((1L, 1L, '1', 1L, 1552012742023L), (2L, 2L, '2', 2L, 1552012742023L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:360, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758723242L), (2L, 2L, '2', 2L, 1550758723242L))]
+dble:[((1L, 1L, '1', 1L, 1552012742023L), (2L, 2L, '2', 2L, 1552012742023L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:364, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758723242L), (2L, 2L, '2', 2L, 1550758723242L))]
+dble:[((1L, 1L, '1', 1L, 1552012742023L), (2L, 2L, '2', 2L, 1552012742023L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:366, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758723242L), (2L, 2L, '2', 2L, 1550758723242L))]
+dble:[((1L, 1L, '1', 1L, 1552012742023L), (2L, 2L, '2', 2L, 1552012742023L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:377, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758724266L), (2L, 2L, '2', 2L, 1550758724266L))]
+dble:[((1L, 1L, '1', 1L, 1552012743372L), (2L, 2L, '2', 2L, 1552012743372L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:379, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758724266L), (2L, 2L, '2', 2L, 1550758724266L))]
+dble:[((1L, 1L, '1', 1L, 1552012743372L), (2L, 2L, '2', 2L, 1552012743372L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:396, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758725289L), (2L, 2L, '2', 2L, 1550758725289L), (3L, 3L, '3', 3L, 1550758725289L))]
+dble:[((1L, 1L, '1', 1L, 1552012744731L), (2L, 2L, '2', 2L, 1552012744731L), (3L, 3L, '3', 3L, 1552012744731L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:398, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758725289L), (2L, 2L, '2', 2L, 1550758725289L), (3L, 3L, '3', 3L, 1550758725289L))]
+dble:[((1L, 1L, '1', 1L, 1552012744731L), (2L, 2L, '2', 2L, 1552012744731L), (3L, 3L, '3', 3L, 1552012744731L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:402, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758725289L), (2L, 2L, '2', 2L, 1550758725289L), (3L, 3L, '3', 3L, 1550758725289L))]
+dble:[((1L, 1L, '1', 1L, 1552012744731L), (2L, 2L, '2', 2L, 1552012744731L), (3L, 3L, '3', 3L, 1552012744731L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:404, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758725289L), (2L, 2L, '2', 2L, 1550758725289L), (3L, 3L, '3', 3L, 1550758725289L))]
+dble:[((1L, 1L, '1', 1L, 1552012744731L), (2L, 2L, '2', 2L, 1552012744731L), (3L, 3L, '3', 3L, 1552012744731L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:415, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758726330L), (2L, 2L, '2', 2L, 1550758726331L), (3L, 3L, '3', 3L, 1550758726331L))]
+dble:[((1L, 1L, '1', 1L, 1552012746086L), (2L, 2L, '2', 2L, 1552012746086L), (3L, 3L, '3', 3L, 1552012746086L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:417, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758726330L), (2L, 2L, '2', 2L, 1550758726331L), (3L, 3L, '3', 3L, 1550758726331L))]
+dble:[((1L, 1L, '1', 1L, 1552012746086L), (2L, 2L, '2', 2L, 1552012746086L), (3L, 3L, '3', 3L, 1552012746086L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:434, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758727344L), (2L, 2L, '2', 2L, 1550758727344L), (3L, 3L, '3', 3L, 1550758727344L), (4L, 4L, '4', 4L, 1550758727344L))]
+dble:[((1L, 1L, '1', 1L, 1552012747428L), (2L, 2L, '2', 2L, 1552012747428L), (3L, 3L, '3', 3L, 1552012747428L), (4L, 4L, '4', 4L, 1552012747428L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:436, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758727344L), (2L, 2L, '2', 2L, 1550758727344L), (3L, 3L, '3', 3L, 1550758727344L), (4L, 4L, '4', 4L, 1550758727344L))]
+dble:[((1L, 1L, '1', 1L, 1552012747428L), (2L, 2L, '2', 2L, 1552012747428L), (3L, 3L, '3', 3L, 1552012747428L), (4L, 4L, '4', 4L, 1552012747428L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:440, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758727344L), (2L, 2L, '2', 2L, 1550758727344L), (3L, 3L, '3', 3L, 1550758727344L), (4L, 4L, '4', 4L, 1550758727344L))]
+dble:[((1L, 1L, '1', 1L, 1552012747428L), (2L, 2L, '2', 2L, 1552012747428L), (3L, 3L, '3', 3L, 1552012747428L), (4L, 4L, '4', 4L, 1552012747428L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:442, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758727344L), (2L, 2L, '2', 2L, 1550758727344L), (3L, 3L, '3', 3L, 1550758727344L), (4L, 4L, '4', 4L, 1550758727344L))]
+dble:[((1L, 1L, '1', 1L, 1552012747428L), (2L, 2L, '2', 2L, 1552012747428L), (3L, 3L, '3', 3L, 1552012747428L), (4L, 4L, '4', 4L, 1552012747428L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:453, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758728392L), (2L, 2L, '2', 2L, 1550758728392L), (3L, 3L, '3', 3L, 1550758728392L), (4L, 4L, '4', 4L, 1550758728392L))]
+dble:[((1L, 1L, '1', 1L, 1552012748768L), (2L, 2L, '2', 2L, 1552012748768L), (3L, 3L, '3', 3L, 1552012748768L), (4L, 4L, '4', 4L, 1552012748768L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:455, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758728392L), (2L, 2L, '2', 2L, 1550758728392L), (3L, 3L, '3', 3L, 1550758728392L), (4L, 4L, '4', 4L, 1550758728392L))]
+dble:[((1L, 1L, '1', 1L, 1552012748768L), (2L, 2L, '2', 2L, 1552012748768L), (3L, 3L, '3', 3L, 1552012748768L), (4L, 4L, '4', 4L, 1552012748768L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:468, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758729186L), (2L, 2L, '2', 2L, 1550758729186L), (3L, 3L, '3', 3L, 1550758729186L), (4L, 4L, '4', 4L, 1550758729186L))]
+dble:[((1L, 1L, '1', 1L, 1552012749760L), (2L, 2L, '2', 2L, 1552012749760L), (3L, 3L, '3', 3L, 1552012749760L), (4L, 4L, '4', 4L, 1552012749760L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:472, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758729186L), (2L, 2L, '2', 2L, 1550758729186L), (3L, 3L, '3', 3L, 1550758729186L), (4L, 4L, '4', 4L, 1550758729186L))]
+dble:[((1L, 1L, '1', 1L, 1552012749760L), (2L, 2L, '2', 2L, 1552012749760L), (3L, 3L, '3', 3L, 1552012749760L), (4L, 4L, '4', 4L, 1552012749760L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:475, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758729186L), (2L, 2L, '2', 2L, 1550758729186L), (3L, 3L, '3', 3L, 1550758729186L), (4L, 4L, '4', 4L, 1550758729186L))]
+dble:[((1L, 1L, '1', 1L, 1552012749760L), (2L, 2L, '2', 2L, 1552012749760L), (3L, 3L, '3', 3L, 1552012749760L), (4L, 4L, '4', 4L, 1552012749760L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:477, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758729186L), (2L, 2L, '2', 2L, 1550758729186L), (3L, 3L, '3', 3L, 1550758729186L), (4L, 4L, '4', 4L, 1550758729186L))]
+dble:[((1L, 1L, '1', 1L, 1552012749760L), (2L, 2L, '2', 2L, 1552012749760L), (3L, 3L, '3', 3L, 1552012749760L), (4L, 4L, '4', 4L, 1552012749760L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:480, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758729186L), (2L, 2L, '2', 2L, 1550758729186L), (3L, 3L, '3', 3L, 1550758729186L), (4L, 4L, '4', 4L, 1550758729186L))]
+dble:[((1L, 1L, '1', 1L, 1552012749760L), (2L, 2L, '2', 2L, 1552012749760L), (3L, 3L, '3', 3L, 1552012749760L), (4L, 4L, '4', 4L, 1552012749760L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_isolation.sql, id:482, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1550758729186L), (2L, 2L, '2', 2L, 1550758729186L), (3L, 3L, '3', 3L, 1550758729186L), (4L, 4L, '4', 4L, 1550758729186L))]
+dble:[((1L, 1L, '1', 1L, 1552012749760L), (2L, 2L, '2', 2L, 1552012749760L), (3L, 3L, '3', 3L, 1552012749760L), (4L, 4L, '4', 4L, 1552012749760L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
