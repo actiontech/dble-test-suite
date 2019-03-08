@@ -94,10 +94,28 @@ dble:[[]]
 dble:[[(3L, 1L)]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:98, sql:[DROP TABLE IF EXISTS test1]===
 dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:99, sql:[CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:100, sql:[INSERT INTO test1 (id,data1,data2)  VALUES (1,'aaa1','aaa2')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:102, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[(1L, 'aaa1', 'aaa2', 'aaa1 aaa2')]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:105, sql:[DROP TABLE IF EXISTS test1]===
 dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:106, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) virtual)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:107, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:109, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[(1L, 1L, 1L, 2L)]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:110, sql:[DROP TABLE IF EXISTS test1]===
 dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:111, sql:[CREATE TABLE test1(id int, data1 int,data2 int,data3 int as (data1+data2) stored)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:112, sql:[INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:114, sql:[SELECT id,data1,data2,data3 FROM test1]===
+dble:[[(1L, 1L, 1L, 2L)]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:117, sql:[DROP TABLE IF EXISTS test1]===
 dble:[[]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:122, sql:[DROP TABLE IF EXISTS test1]===
