@@ -26,7 +26,7 @@ public class testJDBC {
             dbleURL = "jdbc:mysql://10.186.60.61:7131/schema1?characterEncoding=utf8";
             dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/schema1?characterEncoding=utf8";
             mysqlURL = "jdbc:mysql://10.186.60.61:7144/schema1?characterEncoding=utf8";
-            sqlfile = "D:\\Jconnector\\sql_cover\\driver_test_client.sql";
+            sqlfile = "D:\\branch\\dble\\drivers\\Connector-J\\assets\\sql\\driver_test_client.sql";
             dblemanageruserName = "root";
             dblemanageruserPwd = "111111";
             dbleuserName = "test";
