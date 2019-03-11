@@ -80,7 +80,7 @@ public class execandCompare {
                                 dblerslist.add(dbleboolstr);
                             }
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                             String dbleErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             dblerslist.add(dbleErrorMsg);
                         }
@@ -100,7 +100,7 @@ public class execandCompare {
                                 mysqlrslist.add(mysqlboolstr);
                                 }
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                             String mysqlErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             mysqlrslist.add(mysqlErrorMsg);
                         }
