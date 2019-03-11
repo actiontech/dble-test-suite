@@ -18,6 +18,3 @@ mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 't
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
 [21:22:55.826015]dble err :(1105, 'Correlated Sub Queries is not supported ')
-===file:special_global/select/subquery_global.sql, id:73, sql:[select * from test1 where id in (select id from test1 where id in ( select id from test1 where id in (select id from test1 where id =0) or id not in(select id from test1 where id =1)))  ;]===
-dble:[[(2L, 2L, 'test_2', 2L, 1551964969630L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 1551964969630L), (4L, 4L, '$test$4', 3L, 1551964969630L), (5L, 5L, 'test...5', 1L, 1551964969630L), (6L, 6L, 'test6', 6L, 1551964969630L)]]
-mysql:[[(2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
