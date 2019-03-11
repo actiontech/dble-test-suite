@@ -70,7 +70,7 @@ select avg(sum_column1) from (select sum(id) as sum_column1 from test1 group by 
 #issue:1022
 select * from (select m.id,n.pad from test1 m,schema2.test2 n where m.id=n.id AND m.name='test中id为1' and m.pad>7 and m.pad<10)a;
 #issue:1030
-select * from test1 where id in (select id from test1 where id in ( select id from test1 where id in (select id from test1 where id =0) or id not in(select id from test1 where id =1)))  ;
+select id,t_id,name,pad from test1 where id in (select id from test1 where id in ( select id from test1 where id in (select id from test1 where id =0) or id not in(select id from test1 where id =1)))  ;
 #
 #clear tables
 #
