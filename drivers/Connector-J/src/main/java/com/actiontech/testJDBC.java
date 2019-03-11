@@ -57,8 +57,8 @@ public class testJDBC {
                 try {
                     dblemanagerstmt = dblemanagerconn.createStatement();
                 } catch (SQLException e) {
-                    //e.printStackTrace();
                     System.out.println("dble create statement failed!");
+                    e.printStackTrace();
                     stmterr = true;
                 } finally {
                     if (stmterr == true) {
@@ -85,8 +85,8 @@ public class testJDBC {
                 try {
                     dblestmt = dbleconn.createStatement();
                 } catch (SQLException e) {
-                    //e.printStackTrace();
                     System.out.println("dble create statement failed!");
+                    e.printStackTrace();
                     dblestmterr = true;
                 } finally {
                     if (dblestmterr == true) {
@@ -99,8 +99,8 @@ public class testJDBC {
                 try {
                     mysqlstmt = mysqlconn.createStatement();
                 } catch (SQLException e) {
-                    //e.printStackTrace();
                     System.out.println("mysql create statement failed!");
+                    e.printStackTrace();
                     mysqlstmterr = true;
                 } finally {
                     if (mysqlstmterr == true) {
