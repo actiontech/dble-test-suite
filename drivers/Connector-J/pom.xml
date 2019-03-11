@@ -6,7 +6,7 @@
 
     <groupId>com.actiontech</groupId>
     <artifactId>Jconnector</artifactId>
-    <version>9.9.9.9</version>
+    <version>5.1.35</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
