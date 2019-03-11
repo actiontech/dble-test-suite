@@ -18,8 +18,8 @@ public class setUp {
         try{
             loadfile.createNewFile();
         }catch(Exception fe){
-            //fe.printStackTrace();
             System.out.println("create："+ filename + " failed！");
+            fe.printStackTrace();
             return;
         }
 
@@ -37,8 +37,8 @@ public class setUp {
             try {
                 bw.write(datalist[i] + '\n');
             }catch (IOException e){
-                //e.printStackTrace();
                 System.out.println("write to ："+ datalist[i] + " failed！");
+                e.printStackTrace();
             }
         }
         try {
