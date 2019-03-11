@@ -77,7 +77,7 @@ public class executeManager {
                                 passbw.write(passstr);
                             }
                         } catch (SQLException e) {
-                            e.printStackTrace();
+                            //e.printStackTrace();
                             String dbleErrorMsg = "(" + e.getErrorCode() + "): " + e.getMessage();
                             dblerslist.add(dbleErrorMsg);
                             String failstr = dblerslist + "\r\n";
