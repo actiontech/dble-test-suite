@@ -61,7 +61,7 @@ public class createFileUtil {
                     System.exit(-1);
                 }
             } catch (IOException e) {
-                //e.printStackTrace();
+                e.printStackTrace();
                 System.out.println("create " + destFileNames[i] + " failed！" + e.getMessage());
                 //return null;
                 System.exit(-1);
