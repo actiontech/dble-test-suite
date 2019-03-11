@@ -14,10 +14,10 @@ public class conn {
             System.out.println("Connection Successful!");
             //return conn;
         } catch (ClassNotFoundException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             System.exit(-1);
         } catch (SQLException e) {
-            //e.printStackTrace();
+            e.printStackTrace();
             System.out.println(e.getMessage());
             try {
                 if (conn != null) {
@@ -26,7 +26,7 @@ public class conn {
                     System.exit(-1);
                 }
             } catch (SQLException ce){
-                //ce.printStackTrace();
+                ce.printStackTrace();
                 System.exit(-1);
             }
         }
