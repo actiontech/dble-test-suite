@@ -6,7 +6,7 @@ from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
 from lib.Node import get_node
-from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, add_child_in_xml
+from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, add_child_in_xml,change_node_properties
 
 LOGGER = logging.getLogger('steps.reload')
 
@@ -81,6 +81,13 @@ def add_xml_segment(context, kv_map_str, file):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
     add_child_in_text(fullpath, kv_map, context.text)
+    upload_and_replace_conf(context, file)
+
+@Given('add attribute "{kv_map_str}" to rootnode in "{file}"')
+def add_attr_to_node(context, file, kv_map_str):
+    fullpath = get_abs_path(context, file)
+    kv_map = eval(kv_map_str)
+    change_node_properties(fullpath, kv_map)
     upload_and_replace_conf(context, file)
 
 @Given('delete the following xml segment')
