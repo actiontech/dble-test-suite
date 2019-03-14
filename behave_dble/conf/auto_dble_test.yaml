@@ -73,4 +73,9 @@ cfg_mysql:
 cfg_zookeeper:
   home: /opt/zookeeper
   port: 2181
-  ip: 127.0.0.1
+  zookeeper-1:
+    ip: 172.100.9.1
+  zookeeper-2:
+    ip: 172.100.9.2
+  zookeeper-3:
+    ip: 172.100.9.3
