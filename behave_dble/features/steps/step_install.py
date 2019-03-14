@@ -35,7 +35,7 @@ def install_dble_in_node(context, node):
     ssh_client =node.ssh_conn
     dble_packget = "{0}".format(context.cfg_dble['packet_name'])
 
-    cmd = "cd {0} && rm -rf {1}".format(context.cfg_dble['install_dir'], dble_packget)
+    cmd = "cd {0} && rm -rf {1} dble".format(context.cfg_dble['install_dir'], dble_packget)
     ssh_client.exec_command(cmd)
 
     cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packget,
