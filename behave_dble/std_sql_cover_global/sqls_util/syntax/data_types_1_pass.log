@@ -496,6 +496,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:341, sql:[CREATE TABLE  test1( id int,data double)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:342, sql:[desc test1]===
+dble:[[('data', 'double', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:343, sql:[INSERT INTO test1 ( id,data) VALUES (1111,-1234567890123456789012345678901234567890.1234567890123),(1112,0),(1113,1234567890123456789012345678901234567890.1234567890123)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:344, sql:[SELECT id, data FROM test1]===
@@ -504,6 +506,8 @@ dble:[[(1111L, -1.2345678901234568e+39), (1112L, 0.0), (1113L, 1.234567890123456
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:346, sql:[CREATE TABLE  test1( id int,data double(7,3))]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:347, sql:[desc test1]===
+dble:[[('data', 'double(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:349, sql:[INSERT INTO test1 ( id,data) VALUES (1111,0.7777),(1112,7777.777),(1114,0),(1116,7777)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:350, sql:[SELECT id, data FROM test1]===
@@ -512,6 +516,8 @@ dble:[[(1111L, 0.778), (1112L, 7777.777), (1114L, 0.0), (1116L, 7777.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:352, sql:[CREATE TABLE  test1( id int,data double UNSIGNED)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:353, sql:[desc test1]===
+dble:[[('data', 'double unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:355, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616),(3,0)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:356, sql:[SELECT id, data FROM test1]===
@@ -528,6 +534,8 @@ dble:[[(3L, 0.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:363, sql:[CREATE TABLE  test1( id int,data double(6,1) ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:364, sql:[desc test1]===
+dble:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:366, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:367, sql:[SELECT id, data FROM test1]===
@@ -536,6 +544,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:369, sql:[CREATE TABLE  test1( id int,data double ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:370, sql:[desc test1]===
+dble:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:372, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:373, sql:[SELECT id, data FROM test1]===
@@ -544,6 +554,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:375, sql:[CREATE TABLE  test1( id int,data double(6,1) UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:376, sql:[desc test1]===
+dble:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:378, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:379, sql:[SELECT id, data FROM test1]===
@@ -552,6 +564,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:381, sql:[CREATE TABLE  test1( id int,data double UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:382, sql:[desc test1]===
+dble:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:384, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:385, sql:[SELECT id, data FROM test1]===
@@ -560,12 +574,16 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:389, sql:[CREATE TABLE  test1( id int,data decimal)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:390, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:392, sql:[SELECT id, data FROM test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:393, sql:[DROP TABLE IF EXISTS  test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:394, sql:[CREATE TABLE  test1( id int,data decimal(7,3))]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:395, sql:[desc test1]===
+dble:[[('data', 'decimal(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:397, sql:[INSERT INTO test1 ( id,data) VALUES (1111,0.7777),(1112,7777.777),(1114,0),(1116,7777)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:398, sql:[SELECT id, data FROM test1]===
@@ -574,6 +592,8 @@ dble:[[(1111L, Decimal('0.778')), (1112L, Decimal('7777.777')), (1114L, Decimal(
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:400, sql:[CREATE TABLE  test1( id int,data decimal UNSIGNED)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:401, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:404, sql:[SELECT id, data FROM test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:405, sql:[DROP TABLE IF EXISTS  test1]===
@@ -588,6 +608,8 @@ dble:[[(3L, Decimal('0.000'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:411, sql:[CREATE TABLE  test1( id int,data decimal(6,1) ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:412, sql:[desc test1]===
+dble:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:414, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:415, sql:[SELECT id, data FROM test1]===
@@ -596,6 +618,8 @@ dble:[[(111L, Decimal('0.0')), (112L, Decimal('1.0'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:417, sql:[CREATE TABLE  test1( id int,data decimal ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:418, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:420, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:421, sql:[SELECT id, data FROM test1]===
@@ -604,6 +628,8 @@ dble:[[(111L, Decimal('0')), (112L, Decimal('1'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:423, sql:[CREATE TABLE  test1( id int,data decimal(6,1) UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:424, sql:[desc test1]===
+dble:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:426, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:427, sql:[SELECT id, data FROM test1]===
@@ -612,6 +638,8 @@ dble:[[(111L, Decimal('0.0')), (112L, Decimal('1.0'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:429, sql:[CREATE TABLE  test1( id int,data decimal UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:430, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:432, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:433, sql:[SELECT id, data FROM test1]===
@@ -620,6 +648,8 @@ dble:[[(111L, Decimal('0')), (112L, Decimal('1'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:437, sql:[CREATE TABLE  test1( id int,data numeric)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:438, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:441, sql:[INSERT INTO test1 ( id,data) VALUES (2,0.012345678901234567890123456789)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:444, sql:[SELECT id, data FROM test1]===
@@ -628,6 +658,8 @@ dble:[[(2L, Decimal('0'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:446, sql:[CREATE TABLE  test1( id int,data numeric(7,3))]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:447, sql:[desc test1]===
+dble:[[('data', 'decimal(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:449, sql:[INSERT INTO test1 ( id,data) VALUES (1111,0.7777),(1112,7777.777),(1114,0),(1116,7777)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:450, sql:[SELECT id, data FROM test1]===
@@ -636,12 +668,16 @@ dble:[[(1111L, Decimal('0.778')), (1112L, Decimal('7777.777')), (1114L, Decimal(
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:452, sql:[CREATE TABLE  test1( id int,data numeric UNSIGNED)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:453, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:456, sql:[SELECT id, data FROM test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:457, sql:[DROP TABLE IF EXISTS  test1]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:458, sql:[CREATE TABLE  test1( id int,data numeric(5,3) UNSIGNED)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:459, sql:[desc test1]===
+dble:[[('data', 'decimal(5,3) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:461, sql:[INSERT INTO test1 ( id,data) VALUES (3,0)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:462, sql:[SELECT id, data FROM test1]===
@@ -650,6 +686,8 @@ dble:[[(3L, Decimal('0.000'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:464, sql:[CREATE TABLE  test1( id int,data numeric(6,1) ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:465, sql:[desc test1]===
+dble:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:467, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:468, sql:[SELECT id, data FROM test1]===
@@ -658,6 +696,8 @@ dble:[[(111L, Decimal('0.0')), (112L, Decimal('1.0'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:470, sql:[CREATE TABLE  test1( id int,data numeric ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:471, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:473, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:474, sql:[SELECT id, data FROM test1]===
@@ -666,6 +706,8 @@ dble:[[(111L, Decimal('0')), (112L, Decimal('1'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:476, sql:[CREATE TABLE  test1( id int,data numeric(6,1) UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:477, sql:[desc test1]===
+dble:[[('data', 'decimal(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:479, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:480, sql:[SELECT id, data FROM test1]===
@@ -674,6 +716,8 @@ dble:[[(111L, Decimal('0.0')), (112L, Decimal('1.0'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:482, sql:[CREATE TABLE  test1( id int,data numeric UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:483, sql:[desc test1]===
+dble:[[('data', 'decimal(10,0) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:485, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:486, sql:[SELECT id, data FROM test1]===
@@ -682,6 +726,8 @@ dble:[[(111L, Decimal('0')), (112L, Decimal('1'))]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:490, sql:[CREATE TABLE  test1( id int,data real)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:491, sql:[desc test1]===
+dble:[[('data', 'double', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:493, sql:[INSERT INTO test1 ( id,data) VALUES (2,1234567890123456789012345678901234567890123456789012345678901234567)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:494, sql:[INSERT INTO test1 ( id,data) VALUES (2,0.012345678901234567890123456789)]===
@@ -696,6 +742,8 @@ dble:[[(2L, 0.012345678901234568), (2L, 1.2345678901234567e+66), (222L, -1.23456
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:499, sql:[CREATE TABLE  test1( id int,data real(7,3))]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:500, sql:[desc test1]===
+dble:[[('data', 'double(7,3)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:502, sql:[INSERT INTO test1 ( id,data) VALUES (1111,0.7777),(1112,7777.777),(1114,0),(1116,7777)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:503, sql:[SELECT id, data FROM test1]===
@@ -704,6 +752,8 @@ dble:[[(1111L, 0.778), (1112L, 7777.777), (1114L, 0.0), (1116L, 7777.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:505, sql:[CREATE TABLE  test1( id int,data real UNSIGNED)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:506, sql:[desc test1]===
+dble:[[('data', 'double unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:508, sql:[INSERT INTO test1 ( id,data) VALUES (2,18446744073709551616),(3,0)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:509, sql:[SELECT id, data FROM test1]===
@@ -712,6 +762,8 @@ dble:[[(2L, 1.8446744073709552e+19), (3L, 0.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:511, sql:[CREATE TABLE  test1( id int,data real(5,3) UNSIGNED)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:512, sql:[desc test1]===
+dble:[[('data', 'double(5,3) unsigned', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:514, sql:[INSERT INTO test1 ( id,data) VALUES (3,0)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:515, sql:[SELECT id, data FROM test1]===
@@ -720,6 +772,8 @@ dble:[[(3L, 0.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:517, sql:[CREATE TABLE  test1( id int,data real(6,1) ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:518, sql:[desc test1]===
+dble:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:520, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:521, sql:[SELECT id, data FROM test1]===
@@ -728,6 +782,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:523, sql:[CREATE TABLE  test1( id int,data real ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:524, sql:[desc test1]===
+dble:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:526, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:527, sql:[SELECT id, data FROM test1]===
@@ -736,6 +792,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:529, sql:[CREATE TABLE  test1( id int,data real(6,1) UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:530, sql:[desc test1]===
+dble:[[('data', 'double(6,1) unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:532, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:533, sql:[SELECT id, data FROM test1]===
@@ -744,6 +802,8 @@ dble:[[(111L, 0.0), (112L, 1.0)]]
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:535, sql:[CREATE TABLE  test1( id int,data real UNSIGNED ZEROFILL)]===
 dble:[[]]
+===file:sqls_util/syntax/data_types_1.sql, id:536, sql:[desc test1]===
+dble:[[('data', 'double unsigned zerofill', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/data_types_1.sql, id:538, sql:[INSERT INTO test1 ( id,data) VALUES (111,0),(112,1)]===
 dble:[[]]
 ===file:sqls_util/syntax/data_types_1.sql, id:539, sql:[SELECT id, data FROM test1]===
