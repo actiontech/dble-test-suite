@@ -192,7 +192,7 @@ def restart_dbles(context, nodes):
     stop_dbles(context)
 
     if len(nodes) > 1:
-        config_zk_in_dble_nodes(context)
+        config_zk_in_dble_nodes(context,"all zookeeper hosts")
         reset_zk_nodes(context)
 
     start_dble_in_order(context)
@@ -261,21 +261,31 @@ def restart_zk_service(context):
     for node in context.dbles:
         check_zk_status(context, node)
 
-@Given('config zookeeper cluster in all dble nodes')
-def config_zk_in_dble_nodes(context):
+@Given('config zookeeper cluster in all dble nodes with "{hosts_form}"')
+def config_zk_in_dble_nodes(context,hosts_form):
     for node in context.dbles:
-        conf_zk_in_node(context, node)
+        conf_zk_in_node(context, node,hosts_form)
 
     restart_zk_service(context)
 
-def conf_zk_in_node(context, node):
+def conf_zk_in_node(context,node,hosts_form):
     ssh_client = node.ssh_conn
     conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
-    zk_server_ip=context.cfg_zookeeper['ip']
+    # zk_server_ip=context.cfg_zookeeper['ip']
     zk_server_port=context.cfg_zookeeper['port']
 
     myid = node.host_name.split("-")[1]
-    cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{3}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
+    zk_server_id = "zookeeper-{0}".format(myid)
+    zk_server_ip = context.cfg_zookeeper[zk_server_id]['ip']
+    # LOGGER.info("zk_server_ip:{0}".format(zk_server_ip))
+    if hosts_form == "local zookeeper host":
+        cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{3}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
+    else:
+        zk_server_ip_1 = context.cfg_zookeeper['zookeeper-1']['ip']
+        zk_server_ip_2 = context.cfg_zookeeper['zookeeper-2']['ip']
+        zk_server_ip_3 = context.cfg_zookeeper['zookeeper-3']['ip']
+        cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{5},{3}:{5},{4}:{5}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip_1,zk_server_ip_2,zk_server_ip_3,zk_server_port)
+
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
@@ -337,3 +347,23 @@ def reset_zk_nodes(context):
     resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh rmr /dble".format(context.cfg_dble["install_dir"])
     ssh_client = get_ssh(context.dbles, "dble-1")
     ssh_client.exec_command(resetCmd)
+
+@Then ('Monitored folling nodes online')
+def step_impl(context):
+    text = context.text.strip().encode('utf-8')
+    expectNodes = text.splitlines()
+    realNodes = []
+
+    cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online ".format(context.cfg_zookeeper['home'])
+    cmd_ssh=get_ssh(context.dbles,"dble-1")
+    rc, sto, ste = cmd_ssh.exec_command(cmd)
+
+    sub_sto = re.findall(r'[[](.*)[]]',sto[-15:])
+    nodes = sub_sto[0].replace(","," ").split()
+
+    for id in nodes:
+        LOGGER.info("id:{0}".format(id))
+        hostname = "dble-{0}".format(id)
+        realNodes.append(hostname)
+
+    assert expectNodes==realNodes,"expectNodes is different from realNodes,expectNodes:{0},realNodes:{1}".format(expectNodes,realNodes)
