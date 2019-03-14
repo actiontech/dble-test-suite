@@ -1,9 +1,5 @@
 import os
 import threading
-
-import math
-
-from behave_dble.features.steps.lib.DBUtil import DBUtil
 from behave_dble.features.steps.lib.Node import get_node
 
 coding= 'utf8'
@@ -12,7 +8,6 @@ from behave import *
 from hamcrest import *
 
 from step_reload import get_dble_conn
-from lib.generate_util import generate
 
 LOGGER = logging.getLogger('steps.sequence')
 
