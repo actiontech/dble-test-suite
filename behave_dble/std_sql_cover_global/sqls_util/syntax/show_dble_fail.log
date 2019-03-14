@@ -6,28 +6,7 @@ dble:[[('schema1',), ('schema2',), ('schema3',)]]
 mysql:[[('db1',), ('db2',), ('db3',), ('db4',), ('information_schema',), ('mysql',), ('performance_schema',), ('schema1',), ('schema2',), ('schema3',), ('sys',), ('testdb',)]]
 ===file:sqls_util/syntax/show_dble.sql, id:12, sql:[show table status]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 16384L, 0L, None, datetime.datetime(2019, 3, 7, 21, 10, 56), None, None, 'utf8_general_ci', None, '', '')]]
-===file:sqls_util/syntax/show_dble.sql, id:16, sql:[show columns from test1]===
-dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/show_dble.sql, id:17, sql:[show columns in test1]===
-dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/show_dble.sql, id:18, sql:[show columns from test1 from schema1]===
-dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/show_dble.sql, id:20, sql:[show columns in test1 in schema1]===
-dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/show_dble.sql, id:21, sql:[show columns from test1 in schema1]===
-dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-mysql:[[('c', 'char(120)', 'YES', '', None, ''), ('id', 'int(10) unsigned', 'NO', 'PRI', None, ''), ('k', 'int(10) unsigned', 'NO', 'UNI', '0', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/show_dble.sql, id:22, sql:[show full fields from test1 from schema1 like '%i%']===
-dble:[[('_dble_op_time', 'bigint(20)', None, 'YES', '', None, '', 'select,insert,update,references', 'field for checking consistency'), ('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', '')]]
-mysql:[[('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', '')]]
-===file:sqls_util/syntax/show_dble.sql, id:23, sql:[show full fields from test1 from schema1 where true]===
-dble:[[('_dble_op_time', 'bigint(20)', None, 'YES', '', None, '', 'select,insert,update,references', 'field for checking consistency'), ('c', 'char(120)', 'utf8_general_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('k', 'int(10) unsigned', None, 'NO', 'UNI', '0', '', 'select,insert,update,references', ''), ('pad', 'int(11)', None, 'NO', '', None, '', 'select,insert,update,references', '')]]
-mysql:[[('c', 'char(120)', 'utf8_general_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('id', 'int(10) unsigned', None, 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('k', 'int(10) unsigned', None, 'NO', 'UNI', '0', '', 'select,insert,update,references', ''), ('pad', 'int(11)', None, 'NO', '', None, '', 'select,insert,update,references', '')]]
+mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 0L, 0L, 16384L, 0L, 16384L, 0L, None, datetime.datetime(2019, 3, 19, 10, 12, 37), None, None, 'utf8_general_ci', None, '', '')]]
 ===file:sqls_util/syntax/show_dble.sql, id:27, sql:[show all tables]===
 dble:[(('test1', 'GLOBAL TABLE'),)]
 mysql:[None]
