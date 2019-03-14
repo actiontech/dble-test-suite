@@ -1,265 +1,119 @@
 ===file:sqls_util/syntax/alter_table.sql, id:9, sql:[ALTER TABLE test1 ENGINE = InnoDB;]===
 dble:[None]
 mysql:[()]
-[20:59:21.357874]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tENGINE = InnoDB')
+dble err:(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tENGINE = InnoDB')
 ===file:sqls_util/syntax/alter_table.sql, id:10, sql:[ALTER TABLE test1 AUTO_INCREMENT = 1000;]===
 dble:[None]
 mysql:[()]
-[20:59:21.497031]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tAUTO_INCREMENT = 1000')
+dble err:(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tAUTO_INCREMENT = 1000')
 ===file:sqls_util/syntax/alter_table.sql, id:11, sql:[ALTER TABLE test1 AVG_ROW_LENGTH = 1000;]===
 dble:[None]
 mysql:[()]
-[20:59:21.699190]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:12, sql:[ALTER TABLE test1 DEFAULT CHARACTER SET = utf8;]===
 dble:[None]
 mysql:[()]
-[20:59:21.866922]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tCHARACTER SET = utf8')
+dble err:(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tCHARACTER SET = utf8')
 ===file:sqls_util/syntax/alter_table.sql, id:13, sql:[ALTER TABLE test1 CHECKSUM = 0;]===
 dble:[None]
 mysql:[()]
-[20:59:22.061272]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:14, sql:[ALTER TABLE test1 DEFAULT COLLATE = utf8_bin;]===
 dble:[None]
 mysql:[()]
-[20:59:22.172067]dble err :(1064, 'TODO pos 33, line 1, column 26, token IDENTIFIER COLLATE')
+dble err:(1064, 'TODO pos 33, line 1, column 26, token IDENTIFIER COLLATE')
 ===file:sqls_util/syntax/alter_table.sql, id:15, sql:[ALTER TABLE test1 COMMENT = 'string';]===
 dble:[None]
 mysql:[()]
-[20:59:22.340337]dble err :(1064, "The DDL is not supported, sql:ALTER TABLE test1\n\tCOMMENT = 'string'")
+dble err:(1064, "The DDL is not supported, sql:ALTER TABLE test1\n\tCOMMENT = 'string'")
 ===file:sqls_util/syntax/alter_table.sql, id:16, sql:[ALTER TABLE test1 COMPRESSION = 'ZLIB';]===
 dble:[None]
 mysql:[()]
-[20:59:22.460257]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:17, sql:[ALTER TABLE test1 CONNECTION = 'connect_string';]===
 dble:[None]
 mysql:[()]
-[20:59:22.544213]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:18, sql:[ALTER TABLE test1 DATA DIRECTORY = '/tmp/']===
 dble:[None]
 mysql:[()]
-[20:59:22.728146]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:19, sql:[ALTER TABLE test1 DELAY_KEY_WRITE = 1;]===
 dble:[None]
 mysql:[()]
-[20:59:22.888147]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:20, sql:[ALTER TABLE test1 ENCRYPTION='N';]===
 dble:[None]
 mysql:[()]
-[20:59:23.047124]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:21, sql:[ALTER TABLE test1 INDEX DIRECTORY = '/tmp/';]===
 dble:[None]
 mysql:[()]
-[20:59:23.191487]dble err :(1064, 'sql syntax error, no terminated. INDEX')
+dble err:(1064, 'sql syntax error, no terminated. INDEX')
 ===file:sqls_util/syntax/alter_table.sql, id:22, sql:[ALTER TABLE test1 INSERT_METHOD = NO;]===
 dble:[None]
 mysql:[()]
-[20:59:23.343059]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:24, sql:[ALTER TABLE test1 MAX_ROWS = 100;]===
 dble:[None]
 mysql:[()]
-[20:59:23.601778]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:25, sql:[ALTER TABLE test1 MIN_ROWS = 100;]===
 dble:[None]
 mysql:[()]
-[20:59:23.716786]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:26, sql:[ALTER TABLE test1 PACK_KEYS = 0;]===
 dble:[None]
 mysql:[()]
-[20:59:23.818061]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tPACK_KEYS = PACK_KEYS')
+dble err:(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tPACK_KEYS = PACK_KEYS')
 ===file:sqls_util/syntax/alter_table.sql, id:27, sql:[ALTER TABLE test1 PASSWORD = 'test';]===
 dble:[None]
 mysql:[()]
-[20:59:23.946148]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:29, sql:[ALTER TABLE test1 STATS_AUTO_RECALC = DEFAULT;]===
 dble:[None]
 mysql:[()]
-[20:59:24.262941]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:30, sql:[ALTER TABLE test1 STATS_PERSISTENT = DEFAULT;]===
 dble:[None]
 mysql:[()]
-[20:59:24.392156]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:31, sql:[ALTER TABLE test1 STATS_SAMPLE_PAGES = 1;]===
 dble:[None]
 mysql:[()]
-[20:59:24.550233]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:33, sql:[ALTER TABLE test1 UNION (schema2.test2);]===
 dble:[None]
 mysql:[()]
-[20:59:24.929080]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tUNION = (schema2.test2)')
+dble err:(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tUNION = (schema2.test2)')
 ===file:sqls_util/syntax/alter_table.sql, id:46, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) key_block_size = 100]===
 dble:[None]
 mysql:[()]
-[20:59:27.573681]dble err :(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 ===file:sqls_util/syntax/alter_table.sql, id:47, sql:[ALTER TABLE test1 ADD INDEX idx (id,R_COMMENT,R_NAME) USING BTREE]===
 dble:[()]
 mysql:[None]
 mysql err:(1061, "Duplicate key name 'idx'")
-===file:sqls_util/syntax/alter_table.sql, id:63, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:66, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:69, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:72, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, ''), ('name4', 'char(5)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, ''), ('name4', 'char(5)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:75, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, ''), ('name4', 'char(5)', 'YES', '', None, ''), ('name5', 'char(5)', 'YES', '', None, ''), ('name6', 'char(6)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, ''), ('name4', 'char(5)', 'YES', '', None, ''), ('name5', 'char(5)', 'YES', '', None, ''), ('name6', 'char(6)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:78, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, ''), ('name4', 'char(5)', 'YES', '', None, ''), ('name5', 'char(5)', 'YES', '', None, ''), ('name6', 'char(6)', 'YES', '', None, ''), ('name7', "enum('node1','node2','node3')", 'YES', '', 'node3', ''), ('name8', 'varchar(6)', 'NO', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, ''), ('name', 'char(5)', 'YES', '', None, ''), ('name2', 'char(5)', 'YES', '', None, ''), ('name3', 'char(5)', 'YES', '', None, ''), ('name4', 'char(5)', 'YES', '', None, ''), ('name5', 'char(5)', 'YES', '', None, ''), ('name6', 'char(6)', 'YES', '', None, ''), ('name7', "enum('node1','node2','node3')", 'YES', '', 'node3', ''), ('name8', 'varchar(6)', 'NO', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:87, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:99, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:102, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `idx` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  KEY `idx` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:104, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:107, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `idx` (`id`,`R_COMMENT`,`R_NAME`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  KEY `idx` (`id`,`R_COMMENT`,`R_NAME`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:109, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:112, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `idx` (`id`,`R_COMMENT`(2),`R_NAME`(2))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  KEY `idx` (`id`,`R_COMMENT`(2),`R_NAME`(2))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:114, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:117, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `id` (`id`,`R_NAME`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  KEY `id` (`id`,`R_NAME`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:121, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `id` (`id`,`R_NAME`),\n  KEY `idx` (`id`,`R_COMMENT`(2),`R_NAME`(2))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  KEY `id` (`id`,`R_NAME`),\n  KEY `idx` (`id`,`R_COMMENT`(2),`R_NAME`(2))\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:123, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  KEY `id` (`id`,`R_NAME`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` int(11) DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  KEY `id` (`id`,`R_NAME`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:132, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`Code`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) NOT NULL,\n  PRIMARY KEY (`Code`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:136, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  PRIMARY KEY (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:140, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`Code`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  PRIMARY KEY (`Code`) USING HASH\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:144, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`Code`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  PRIMARY KEY (`Code`) USING BTREE\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:148, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  PRIMARY KEY (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:151, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `data` int(11) NOT NULL,\n  `Code` char(3) NOT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/alter_table.sql, id:154, sql:[ALTER TABLE test1 ADD PRIMARY KEY (id ASC,data DESC)]===
 dble:[None]
 mysql:[()]
-[20:59:52.859772]dble err :(1064, 'syntax error, expect RPAREN, actual ASC pos 41, line 1, column 38, token ASC')
+dble err:(1064, 'syntax error, expect RPAREN, actual ASC pos 41, line 1, column 38, token ASC')
 ===file:sqls_util/syntax/alter_table.sql, id:155, sql:[ALTER TABLE test1 ADD CONSTRAINT PRIMARY KEY (id)]===
 dble:[()]
 mysql:[None]
 mysql err:(1068, 'Multiple primary key defined')
-===file:sqls_util/syntax/alter_table.sql, id:166, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `Code` (`Code`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `Code` (`Code`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:170, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `up_id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `up_id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:174, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:178, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:182, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:186, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `uk_id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `uk_id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:190, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:194, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`,`data`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
-===file:sqls_util/syntax/alter_table.sql, id:198, sql:[SHOW CREATE TABLE test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `idxs` (`id`,`Code`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
-mysql:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `data` int(11) DEFAULT NULL,\n  `Code` char(3) DEFAULT NULL,\n  UNIQUE KEY `idxs` (`id`,`Code`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/alter_table.sql, id:205, sql:[ALTER TABLE test1 ADD UNIQUE USING HASH (id)]===
 dble:[None]
 mysql:[()]
-[21:00:02.865189]dble err :(1064, "syntax error, error in :'SING HASH (id)', expect LPAREN, actual IDENTIFIER pos 39, line 1, column 35, token IDENTIFIER HASH")
+dble err:(1064, "syntax error, error in :'SING HASH (id)', expect LPAREN, actual IDENTIFIER pos 39, line 1, column 35, token IDENTIFIER HASH")
 ===file:sqls_util/syntax/alter_table.sql, id:208, sql:[ALTER TABLE test1 ADD CONSTRAINT UNIQUE KEY (id)]===
 dble:[None]
 mysql:[()]
-[21:00:03.744089]dble err :(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tADD UNIQUE (id)')
-===file:sqls_util/syntax/alter_table.sql, id:223, sql:[DESC test1]===
-dble:[[('ID1', 'int(11)', 'NO', '', '10', ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('col2', 'int(10)', 'YES', '', None, ''), ('col3', 'varchar(50)', 'YES', '', None, ''), ('col4', 'int(10)', 'YES', '', None, ''), ('col5', 'varchar(50)', 'YES', '', None, ''), ('col6', 'date', 'YES', '', None, ''), ('col7', 'double(12,6)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('ID1', 'int(11)', 'NO', '', '10', ''), ('col2', 'int(10)', 'YES', '', None, ''), ('col3', 'varchar(50)', 'YES', '', None, ''), ('col4', 'int(10)', 'YES', '', None, ''), ('col5', 'varchar(50)', 'YES', '', None, ''), ('col6', 'date', 'YES', '', None, ''), ('col7', 'double(12,6)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:226, sql:[DESC test1]===
-dble:[[('ID1', 'int(11)', 'NO', '', '10', ''), ('ID2', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('col2', 'int(10)', 'YES', '', None, ''), ('col3', 'varchar(50)', 'YES', '', None, ''), ('col4', 'int(10)', 'YES', '', None, ''), ('col5', 'varchar(50)', 'YES', '', None, ''), ('col6', 'date', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('ID1', 'int(11)', 'NO', '', '10', ''), ('ID2', 'int(11)', 'YES', '', None, ''), ('col2', 'int(10)', 'YES', '', None, ''), ('col3', 'varchar(50)', 'YES', '', None, ''), ('col4', 'int(10)', 'YES', '', None, ''), ('col5', 'varchar(50)', 'YES', '', None, ''), ('col6', 'date', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:229, sql:[DESC test1]===
-dble:[[('ID1', 'int(11)', 'NO', '', '10', ''), ('ID2', 'int(11)', 'YES', '', None, ''), ('ID4', 'varchar(10)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('col2', 'int(10)', 'YES', '', None, ''), ('col3', 'varchar(50)', 'YES', '', None, ''), ('col4', 'int(10)', 'YES', '', None, ''), ('col5', 'varchar(50)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('ID1', 'int(11)', 'NO', '', '10', ''), ('ID2', 'int(11)', 'YES', '', None, ''), ('ID4', 'varchar(10)', 'YES', '', None, ''), ('col2', 'int(10)', 'YES', '', None, ''), ('col3', 'varchar(50)', 'YES', '', None, ''), ('col4', 'int(10)', 'YES', '', None, ''), ('col5', 'varchar(50)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:230, sql:[SELECT * FROM test1]===
-dble:[[(2L, 2L, '2017-05-05', 2L, 2L, 'aaa', 2L, 'aaa', 1551963605664L), (3L, 3L, 'aaa', 3L, 3L, 'aaa', 3L, 'aaa', 1551963606607L), (13L, 1L, '2017-05-05', 1L, 1L, 'aaa', 1L, 'aaa', 1551963604961L)]]
-mysql:[[(2L, 2L, '2017-05-05', 2L, 2L, 'aaa', 2L, 'aaa'), (3L, 3L, 'aaa', 3L, 3L, 'aaa', 3L, 'aaa'), (13L, 1L, '2017-05-05', 1L, 1L, 'aaa', 1L, 'aaa')]]
-===file:sqls_util/syntax/alter_table.sql, id:235, sql:[DESC test1]===
-dble:[[('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('data', 'varchar(10)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:244, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'bigint(20)', 'NO', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'bigint(20)', 'NO', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:247, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'bigint(20) unsigned', 'YES', '', '1', ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'bigint(20) unsigned', 'YES', '', '1', ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:250, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'bigint(20) unsigned', 'YES', '', '1', ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'bigint(20) unsigned', 'NO', '', '10', ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'bigint(20) unsigned', 'YES', '', '1', ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'bigint(20) unsigned', 'NO', '', '10', ''), ('id', 'int(11)', 'YES', '', None, '')]]
-===file:sqls_util/syntax/alter_table.sql, id:253, sql:[SELECT * FROM test1]===
-dble:[[(1L, 1L, 1L, 'aaa', 1551963609511L), (2L, 2L, 2L, 'aaa', 1551963610492L), (3L, 3L, 3L, 'aaa', 1551963611302L), (4L, 4L, 4L, 'aaa', 1551963612140L)]]
-mysql:[[(1L, 1L, 1L, 'aaa'), (2L, 2L, 2L, 'aaa'), (3L, 3L, 3L, 'aaa'), (4L, 4L, 4L, 'aaa')]]
-===file:sqls_util/syntax/alter_table.sql, id:254, sql:[DESC test1]===
-dble:[[('R_COMMENT', 'bigint(20) unsigned', 'YES', 'UNI', '1', ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'bigint(20) unsigned', 'NO', '', '10', ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
-mysql:[[('R_COMMENT', 'bigint(20) unsigned', 'YES', 'UNI', '1', ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'bigint(20) unsigned', 'NO', '', '10', ''), ('id', 'int(11)', 'YES', '', None, '')]]
+dble err:(1064, 'The DDL is not supported, sql:ALTER TABLE test1\n\tADD UNIQUE (id)')
 ===file:sqls_util/syntax/alter_table.sql, id:258, sql:[alter table test1 drop column test1.01a]===
 dble:[None]
 mysql:[()]
-[21:00:13.919142]dble err :(1064, 'sql syntax error, no terminated. LITERAL_FLOAT')
-===file:sqls_util/syntax/alter_table.sql, id:260, sql:[alter table test1 add $ boolean]===
-dble:[None]
-mysql:[()]
-[21:00:14.545233]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '011' at line 1")
-===file:sqls_util/syntax/alter_table.sql, id:261, sql:[alter table test1 add _ boolean]===
-dble:[None]
-mysql:[()]
-[21:00:14.787378]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '011' at line 1")
-===file:sqls_util/syntax/alter_table.sql, id:262, sql:[alter table test1 add abcABC varchar(1)]===
-dble:[None]
-mysql:[()]
-[21:00:15.040224]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '011' at line 1")
-===file:sqls_util/syntax/alter_table.sql, id:263, sql:[alter table test1 add abc89ABC varchar(1)]===
-dble:[None]
-mysql:[()]
-[21:00:15.214401]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '011' at line 1")
-===file:sqls_util/syntax/alter_table.sql, id:264, sql:[alter table test1 add `select` int(4)]===
-dble:[None]
-mysql:[()]
-[21:00:15.496123]dble err :(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '011' at line 1")
+dble err:(1064, 'sql syntax error, no terminated. LITERAL_FLOAT')
 ===file:sqls_util/syntax/alter_table.sql, id:265, sql:[desc test1]===
-dble:[[('011', 'tinyint(1)', 'YES', '', None, ''), ('01a', 'tinyint(1)', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('a', 'int(4)', 'YES', '', None, '')]]
+dble:[[('$', 'tinyint(1)', 'YES', '', None, ''), ('011', 'tinyint(1)', 'YES', '', None, ''), ('01a', 'tinyint(1)', 'YES', '', None, ''), ('_', 'tinyint(1)', 'YES', '', None, ''), ('a', 'int(4)', 'YES', '', None, ''), ('abc89ABC', 'varchar(1)', 'YES', '', None, ''), ('abcABC', 'varchar(1)', 'YES', '', None, ''), ('select', 'int(4)', 'YES', '', None, '')]]
 mysql:[[('$', 'tinyint(1)', 'YES', '', None, ''), ('011', 'tinyint(1)', 'YES', '', None, ''), ('_', 'tinyint(1)', 'YES', '', None, ''), ('a', 'int(4)', 'YES', '', None, ''), ('abc89ABC', 'varchar(1)', 'YES', '', None, ''), ('abcABC', 'varchar(1)', 'YES', '', None, ''), ('select', 'int(4)', 'YES', '', None, '')]]

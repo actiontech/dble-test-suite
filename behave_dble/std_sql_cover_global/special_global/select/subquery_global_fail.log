@@ -1,20 +1,20 @@
 ===file:special_global/select/subquery_global.sql, id:63, sql:[select id,t_id,name,pad from test1 where (id,pad)=(select id,pad from schema3.test3 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[21:22:55.337346]dble err :(1064, 'Row Subqueries is not supported')
+dble err:(1064, 'Row Subqueries is not supported')
 ===file:special_global/select/subquery_global.sql, id:64, sql:[select id,t_id,name,pad from test1 where row(id,pad)=(select id,pad from schema3.test3 limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
-[21:22:55.544939]dble err :(1241, 'Operand should contain 1 column(s)')
+dble err:(1241, 'Operand should contain 1 column(s)')
 ===file:special_global/select/subquery_global.sql, id:65, sql:[select id,name,pad from test1 where (id,pad)in(select id,pad from schema3.test3)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (5L, 'test...5', 1L))]
-[21:22:55.650254]dble err :(1064, 'Row Subqueries is not supported')
+dble err:(1064, 'Row Subqueries is not supported')
 ===file:special_global/select/subquery_global.sql, id:66, sql:[select id,name,pad from test1 where (1,1)in(select id,pad from schema3.test3)]===
 dble:[None]
 mysql:[((1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L))]
-[21:22:55.725125]dble err :(1064, 'Row Subqueries is not supported')
+dble err:(1064, 'Row Subqueries is not supported')
 ===file:special_global/select/subquery_global.sql, id:67, sql:[SELECT pad FROM test1 AS x WHERE x.id = (SELECT pad FROM schema3.test3 AS y WHERE x.id = (SELECT pad FROM schema2.test2 WHERE y.id = schema2.test2.id))]===
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
-[21:22:55.826015]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')

@@ -68,6 +68,10 @@ dble:[[(None,)]]
 dble:[()]
 ===file:sqls_util/syntax/aggregate.sql, id:44, sql:[insert into test1 values(1,'a'),(null,'b'),(2,null),(1,'d'),(null,'c'),(3,'a'),(null,'b'),(null,'c'),(null,'b');]===
 dble:[[]]
+===file:sqls_util/syntax/aggregate.sql, id:45, sql:[select *, group_concat(name order by name) from test1 group by id;]===
+dble:[((None, 'b', 'b,b,b,c,c'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
+===file:sqls_util/syntax/aggregate.sql, id:46, sql:[select *, group_concat(distinct name order by name desc separator ':') from test1 group by id;]===
+dble:[((None, 'b', 'c:b'), (1L, 'a', 'd:a'), (2L, None, None), (3L, 'a', 'a'))]
 ===file:sqls_util/syntax/aggregate.sql, id:48, sql:[select min(id), max(id) from test1;]===
 dble:[[(1L, 3L)]]
 ===file:sqls_util/syntax/aggregate.sql, id:49, sql:[select max(DISTINCT id) from test1;]===
