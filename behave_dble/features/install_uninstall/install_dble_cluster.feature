@@ -7,6 +7,6 @@ Feature: install_dble_cluster.feature:to config dble in zk cluster
     Given a clean environment in all dble nodes
     Given install dble in all dble nodes
     Given replace config files in all dbles with command line config
-    Given config zookeeper cluster in all dble nodes
+    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
     Then start dble in order
