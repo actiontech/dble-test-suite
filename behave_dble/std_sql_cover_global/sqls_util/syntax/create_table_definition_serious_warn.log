@@ -1,15 +1,15 @@
 ===file:sqls_util/syntax/create_table_definition.sql, id:555, sql:[INSERT INTO test1 VALUES (1)]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[10:20:24.335247] :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:556, sql:[SHOW CREATE TABLE  test1]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[10:20:24.468944] :(1146, "Table 'db2.test1' doesn't exist")
+dble err:(1146, "Table 'db2.test1' doesn't exist")
 ===file:sqls_util/syntax/create_table_definition.sql, id:557, sql:[DROP TABLE test1]===
 mysql err:(1051, "Unknown table 'schema1.test1'")
-dble err[10:20:24.597214] :(1051, "Unknown table 'db2.test1'")
+dble err:(1051, "Unknown table 'db2.test1'")
 ===file:sqls_util/syntax/create_table_definition.sql, id:587, sql:[INSERT INTO test1 VALUES (1)]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[10:20:28.382852] :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:588, sql:[SHOW CREATE TABLE  test1]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err[10:20:28.500691] :(1146, "Table 'db1.test1' doesn't exist")
+dble err:(1146, "Table 'db1.test1' doesn't exist")
