@@ -12,7 +12,7 @@ from hamcrest import *
 from step_reload import get_dble_conn
 
 from lib.DBUtil import DBUtil
-from lib.SqlThread import MyThread
+from lib.MyThread import MyThread
 
 global sql_queues
 global sql_threads
@@ -185,7 +185,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
             if err2 is None:
                 isdbleSynErr = None
             else:
-                isdbleSynErr = err2[1].find('Syntax error or unsupported sql by uproxy') != -1
+                isdbleSynErr = err2[1].find('Syntax error or unsupported sql') != -1
             if err1 == err2 or (isMysqlSynErr and isdbleSynErr):
                 log_file = context.cur_warn_log
             else:
@@ -335,21 +335,21 @@ def step_impl(context, filename):
 
                 if line.find('#!share_conn') != -1:
                     r = re.search('share_conn_?\d*', line)
-                    uproxy_conn_name = r.group()
-                    mysql_conn_name = "{0}_mysql".format(uproxy_conn_name)
-                    if not hasattr(context, uproxy_conn_name):
+                    dble_conn_name = r.group()
+                    mysql_conn_name = "{0}_mysql".format(dble_conn_name)
+                    if not hasattr(context, dble_conn_name):
                         conn_mysql, conn_dble = get_compare_conn(context, default_db)
-                        setattr(context, uproxy_conn_name, conn_dble)
+                        setattr(context, dble_conn_name, conn_dble)
                         setattr(context, mysql_conn_name, conn_mysql)
                     is_share_conn = True
 
                 if line.startswith("#!sql_thread_"):
                     r = re.search('sql_thread_?\d*', line)
-                    uproxy_conn_name = r.group()
-                    mysql_conn_name = "{0}_mysql".format(uproxy_conn_name)
-                    if not hasattr(context, uproxy_conn_name):
+                    dble_conn_name = r.group()
+                    mysql_conn_name = "{0}_mysql".format(dble_conn_name)
+                    if not hasattr(context, dble_conn_name):
                         conn_mysql, conn_dble = get_compare_conn(context, default_db)
-                        setattr(context, uproxy_conn_name, conn_dble)
+                        setattr(context, dble_conn_name, conn_dble)
                         setattr(context, mysql_conn_name, conn_mysql)
                     is_sub_thread = True
                 elif line.startswith("#!"):
@@ -380,20 +380,20 @@ def step_impl(context, filename):
                 context.logger.info("is_share_conn: {0}, is_sub_thread: {1}".format(is_share_conn, is_sub_thread))
                 if is_share_conn:
                     context.conn_mysql = getattr(context, mysql_conn_name)
-                    context.conn_dble = getattr(context, uproxy_conn_name)
+                    context.conn_dble = getattr(context, dble_conn_name)
                     # connection names such as share_conn_n is closed when a complete sql file is executed over
                     # context.logger.info("is_next_line_milestone:{0}".format(is_next_line_milestone))
-                    # context.logger.info("uproxy_conn_name:{0}".format(uproxy_conn_name))
-                    to_close = is_next_line_milestone and uproxy_conn_name == "share_conn"
+                    # context.logger.info("dble_conn_name:{0}".format(dble_conn_name))
+                    to_close = is_next_line_milestone and dble_conn_name == "share_conn"
                 elif is_sub_thread:
                     context.logger.info(
-                        "input sql into queue: {2}".format(line_nu, sql, uproxy_conn_name))
+                        "input sql into queue: {2}".format(line_nu, sql, dble_conn_name))
                     sql_item = {"line": line_nu, "sql": sql}
-                    dble_sql_queue = sql_queues.get(uproxy_conn_name, None)
+                    dble_sql_queue = sql_queues.get(dble_conn_name, None)
                     mysql_sql_queue = sql_queues.get(mysql_conn_name, None)
                     if dble_sql_queue is None:
                         dble_sql_queue = Queue()
-                        sql_queues[uproxy_conn_name] = dble_sql_queue
+                        sql_queues[dble_conn_name] = dble_sql_queue
                     dble_sql_queue.put(sql_item)
 
                     if mysql_sql_queue is None:
@@ -423,9 +423,9 @@ def step_impl(context, filename):
                     context.logger.info("is_sql_thread_end: {0}".format(is_sql_thread_end))
                     if not is_next_line_exist or is_sql_thread_end:
                         context.conn_mysql = getattr(context, mysql_conn_name)
-                        context.conn_dble = getattr(context, uproxy_conn_name)
+                        context.conn_dble = getattr(context, dble_conn_name)
 
-                        do_query_in_thread(context, uproxy_conn_name)
+                        do_query_in_thread(context, dble_conn_name)
 
                     sql = ''
                     is_multiline = False
@@ -441,7 +441,7 @@ def step_impl(context, filename):
                 # This is just for #!share_conn connections
                 if is_share_conn and to_close:
                     delattr(context, mysql_conn_name)
-                    delattr(context, uproxy_conn_name)
+                    delattr(context, dble_conn_name)
                 sql = ''
                 is_multiline = False
     destroy_share_n_conn(context)
@@ -556,6 +556,7 @@ def do_query_in_thread(context, dble_thread_tag, interval=5):
         sql_threads[mysql_thd_tag] = thd_mysql
         thd_mysql.start()
 
+    # wait for current sql list
     max_wait_time = sql_queue_size * interval
     time_passed=0
     time_step = 2
@@ -567,6 +568,7 @@ def do_query_in_thread(context, dble_thread_tag, interval=5):
         else:
             break
 
+    # wait for last unfinished sqls
     if last_sql_queue_size > 0:
         context.logger.info("last_sql_queue_size > 0, last queue is blocked!")
         blocked_sql_num = last_sql_queue_size - last_dble_sql_res_queue.qsize()
