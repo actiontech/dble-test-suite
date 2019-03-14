@@ -1,448 +1,193 @@
-===file:sqls_util/transaction/trx_syntax.sql, id:11, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964830381L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:13, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964830381L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:16, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964830789L),)]
-mysql:[((1L, 1L, '1', 10L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:23, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964831319L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:35, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964832420L), (2L, 2L, '2', 2L, 1551964832420L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:37, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964832420L), (2L, 2L, '2', 2L, 1551964832420L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:40, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964832844L), (2L, 2L, '2', 10L, 1551964832844L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:47, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964833457L), (2L, 2L, '2', 2L, 1551964833457L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:59, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964834518L), (2L, 2L, '2', 2L, 1551964834518L), (3L, 3L, '3', 3L, 1551964834518L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:61, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964834518L), (2L, 2L, '2', 2L, 1551964834518L), (3L, 3L, '3', 3L, 1551964834518L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:64, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964834910L), (2L, 2L, '2', 10L, 1551964834910L), (3L, 3L, '3', 10L, 1551964834910L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:71, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964835573L), (2L, 2L, '2', 2L, 1551964835573L), (3L, 3L, '3', 3L, 1551964835573L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:83, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964836555L), (2L, 2L, '2', 2L, 1551964836555L), (3L, 3L, '3', 3L, 1551964836555L), (4L, 4L, '4', 4L, 1551964836555L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:85, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964836555L), (2L, 2L, '2', 2L, 1551964836555L), (3L, 3L, '3', 3L, 1551964836555L), (4L, 4L, '4', 4L, 1551964836555L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:88, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964837016L), (2L, 2L, '2', 10L, 1551964837016L), (3L, 3L, '3', 10L, 1551964837016L), (4L, 4L, '4', 10L, 1551964837016L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:95, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964837650L), (2L, 2L, '2', 2L, 1551964837650L), (3L, 3L, '3', 3L, 1551964837650L), (4L, 4L, '4', 4L, 1551964837650L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:104, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:38.527710]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:107, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964838709L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:109, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964838709L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:112, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964839191L),)]
-mysql:[((1L, 1L, '1', 10L),)]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:116, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:39.627967]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:119, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964839790L),)]
-mysql:[((1L, 1L, '1', 1L),)]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:121, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964839790L),)]
+dble:[((1L, 1L, '1', 1L),)]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:124, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964840193L),)]
+dble:[((1L, 1L, '1', 10L),)]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:128, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:40.589073]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:131, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964840778L), (2L, 2L, '2', 2L, 1551964840778L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:133, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964840778L), (2L, 2L, '2', 2L, 1551964840778L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:136, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964841209L), (2L, 2L, '2', 10L, 1551964841209L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:140, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:41.597661]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:143, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964841818L), (2L, 2L, '2', 2L, 1551964841818L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:145, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964841818L), (2L, 2L, '2', 2L, 1551964841818L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:148, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964842229L), (2L, 2L, '2', 10L, 1551964842229L))]
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:152, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:42.686681]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:155, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964842922L), (2L, 2L, '2', 2L, 1551964842922L), (3L, 3L, '3', 3L, 1551964842922L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:157, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964842922L), (2L, 2L, '2', 2L, 1551964842922L), (3L, 3L, '3', 3L, 1551964842922L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:160, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964843337L), (2L, 2L, '2', 10L, 1551964843337L), (3L, 3L, '3', 10L, 1551964843337L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:164, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:43.797669]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:167, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964844011L), (2L, 2L, '2', 2L, 1551964844011L), (3L, 3L, '3', 3L, 1551964844011L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:169, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964844011L), (2L, 2L, '2', 2L, 1551964844011L), (3L, 3L, '3', 3L, 1551964844011L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:172, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964844401L), (2L, 2L, '2', 10L, 1551964844401L), (3L, 3L, '3', 10L, 1551964844401L))]
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:176, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:44.840635]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:179, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964845042L), (2L, 2L, '2', 2L, 1551964845042L), (3L, 3L, '3', 3L, 1551964845042L), (4L, 4L, '4', 4L, 1551964845042L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:181, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964845042L), (2L, 2L, '2', 2L, 1551964845042L), (3L, 3L, '3', 3L, 1551964845042L), (4L, 4L, '4', 4L, 1551964845042L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:184, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964845489L), (2L, 2L, '2', 10L, 1551964845489L), (3L, 3L, '3', 10L, 1551964845489L), (4L, 4L, '4', 10L, 1551964845489L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:188, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[21:20:45.972290]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
-===file:sqls_util/transaction/trx_syntax.sql, id:191, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964846189L), (2L, 2L, '2', 2L, 1551964846189L), (3L, 3L, '3', 3L, 1551964846189L), (4L, 4L, '4', 4L, 1551964846189L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:193, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964846189L), (2L, 2L, '2', 2L, 1551964846189L), (3L, 3L, '3', 3L, 1551964846189L), (4L, 4L, '4', 4L, 1551964846189L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:196, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964846624L), (2L, 2L, '2', 10L, 1551964846624L), (3L, 3L, '3', 10L, 1551964846624L), (4L, 4L, '4', 10L, 1551964846624L))]
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
 mysql:[()]
-===file:sqls_util/transaction/trx_syntax.sql, id:203, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964847239L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:205, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964847239L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:208, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964847701L),)]
-mysql:[((1L, 1L, '1', 10L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:215, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964848323L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:227, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964849428L), (2L, 2L, '2', 2L, 1551964849428L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:229, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964849428L), (2L, 2L, '2', 2L, 1551964849428L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:232, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964849833L), (2L, 2L, '2', 10L, 1551964849833L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:239, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964850496L), (2L, 2L, '2', 2L, 1551964850496L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:251, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964851530L), (2L, 2L, '2', 2L, 1551964851530L), (3L, 3L, '3', 3L, 1551964851530L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:253, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964851530L), (2L, 2L, '2', 2L, 1551964851530L), (3L, 3L, '3', 3L, 1551964851530L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:256, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964851949L), (2L, 2L, '2', 10L, 1551964851949L), (3L, 3L, '3', 10L, 1551964851949L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:263, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964852523L), (2L, 2L, '2', 2L, 1551964852523L), (3L, 3L, '3', 3L, 1551964852523L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:275, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964853525L), (2L, 2L, '2', 2L, 1551964853525L), (3L, 3L, '3', 3L, 1551964853525L), (4L, 4L, '4', 4L, 1551964853525L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:277, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964853525L), (2L, 2L, '2', 2L, 1551964853525L), (3L, 3L, '3', 3L, 1551964853525L), (4L, 4L, '4', 4L, 1551964853525L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:280, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964853986L), (2L, 2L, '2', 10L, 1551964853986L), (3L, 3L, '3', 10L, 1551964853986L), (4L, 4L, '4', 10L, 1551964853986L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4', 10L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:287, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964854633L), (2L, 2L, '2', 2L, 1551964854633L), (3L, 3L, '3', 3L, 1551964854633L), (4L, 4L, '4', 4L, 1551964854633L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:299, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964855646L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:301, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964855646L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:304, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964855646L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:312, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964856731L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:325, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964857876L), (2L, 2L, '2', 2L, 1551964857876L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:327, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964857876L), (2L, 2L, '2', 2L, 1551964857876L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:330, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964857876L), (2L, 2L, '2', 2L, 1551964857876L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:338, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964859025L), (2L, 2L, '2', 2L, 1551964859025L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:351, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964860086L), (2L, 2L, '2', 2L, 1551964860086L), (3L, 3L, '3', 3L, 1551964860086L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:353, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964860086L), (2L, 2L, '2', 2L, 1551964860086L), (3L, 3L, '3', 3L, 1551964860086L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:356, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964860086L), (2L, 2L, '2', 2L, 1551964860086L), (3L, 3L, '3', 3L, 1551964860086L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:364, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964861229L), (2L, 2L, '2', 2L, 1551964861229L), (3L, 3L, '3', 3L, 1551964861229L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:377, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964862394L), (2L, 2L, '2', 2L, 1551964862394L), (3L, 3L, '3', 3L, 1551964862394L), (4L, 4L, '4', 4L, 1551964862394L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:379, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964862394L), (2L, 2L, '2', 2L, 1551964862394L), (3L, 3L, '3', 3L, 1551964862394L), (4L, 4L, '4', 4L, 1551964862394L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:382, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964862394L), (2L, 2L, '2', 2L, 1551964862394L), (3L, 3L, '3', 3L, 1551964862394L), (4L, 4L, '4', 4L, 1551964862394L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:390, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964863582L), (2L, 2L, '2', 2L, 1551964863582L), (3L, 3L, '3', 3L, 1551964863582L), (4L, 4L, '4', 4L, 1551964863582L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:403, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964864759L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:405, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964864759L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:408, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964864759L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:416, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964865887L),)]
-mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:429, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964867124L), (2L, 2L, '2', 2L, 1551964867124L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:431, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964867124L), (2L, 2L, '2', 2L, 1551964867124L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:434, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964867124L), (2L, 2L, '2', 2L, 1551964867124L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:442, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964868286L), (2L, 2L, '2', 2L, 1551964868286L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:455, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964869498L), (2L, 2L, '2', 2L, 1551964869498L), (3L, 3L, '3', 3L, 1551964869498L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:457, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964869498L), (2L, 2L, '2', 2L, 1551964869498L), (3L, 3L, '3', 3L, 1551964869498L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:460, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964869498L), (2L, 2L, '2', 2L, 1551964869498L), (3L, 3L, '3', 3L, 1551964869498L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:468, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964870744L), (2L, 2L, '2', 2L, 1551964870744L), (3L, 3L, '3', 3L, 1551964870744L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:481, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964871915L), (2L, 2L, '2', 2L, 1551964871915L), (3L, 3L, '3', 3L, 1551964871915L), (4L, 4L, '4', 4L, 1551964871915L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:483, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964871915L), (2L, 2L, '2', 2L, 1551964871915L), (3L, 3L, '3', 3L, 1551964871915L), (4L, 4L, '4', 4L, 1551964871915L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:486, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964871915L), (2L, 2L, '2', 2L, 1551964871915L), (3L, 3L, '3', 3L, 1551964871915L), (4L, 4L, '4', 4L, 1551964871915L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:494, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964873010L), (2L, 2L, '2', 2L, 1551964873010L), (3L, 3L, '3', 3L, 1551964873010L), (4L, 4L, '4', 4L, 1551964873010L))]
-mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:504, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:13.934873]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:509, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:14.381633]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:510, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964874164L),)]
+dble:[((1L, 1L, '1', 1L),)]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:515, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964874861L), (5L, 5L, '5', 5L, 1551964874610L))]
+dble:[((1L, 1L, '1', 10L), (5L, 5L, '5', 5L))]
 mysql:[((1L, 1L, '1', 10L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:518, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964874861L), (5L, 5L, '5', 5L, 1551964874610L))]
-mysql:[((1L, 1L, '1', 10L), (5L, 5L, '5', 5L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:522, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:15.375490]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:526, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:15.690054]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:527, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964875582L),)]
+dble:[((1L, 1L, '1', 1L),)]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:531, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[21:21:16.120174]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:532, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964875582L), (5L, 5L, '5', 5L, 1551964875902L))]
+dble:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
 mysql:[((1L, 1L, '1', 1L),)]
-===file:sqls_util/transaction/trx_syntax.sql, id:535, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964875582L), (5L, 5L, '5', 5L, 1551964875902L))]
-mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:539, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:16.610716]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:543, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:16.939500]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:544, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964876828L), (2L, 2L, '2', 2L, 1551964876828L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:549, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964877390L), (2L, 2L, '2', 2L, 1551964876828L), (5L, 5L, '5', 5L, 1551964877154L), (6L, 6L, '6', 6L, 1551964877154L))]
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:552, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964877390L), (2L, 2L, '2', 2L, 1551964876828L), (5L, 5L, '5', 5L, 1551964877154L), (6L, 6L, '6', 6L, 1551964877154L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:556, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:17.946562]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:560, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:18.227586]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:561, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964878139L), (2L, 2L, '2', 2L, 1551964878139L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:565, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[21:21:18.636864]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:566, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964878139L), (2L, 2L, '2', 2L, 1551964878139L), (5L, 5L, '5', 5L, 1551964878431L), (6L, 6L, '6', 6L, 1551964878431L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_syntax.sql, id:569, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964878139L), (2L, 2L, '2', 2L, 1551964878139L), (5L, 5L, '5', 5L, 1551964878431L), (6L, 6L, '6', 6L, 1551964878431L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:573, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:19.190617]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:577, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:19.525613]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:578, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964879415L), (2L, 2L, '2', 2L, 1551964879415L), (3L, 3L, '3', 3L, 1551964879415L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:583, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964879923L), (2L, 2L, '2', 2L, 1551964879415L), (3L, 3L, '3', 3L, 1551964879415L), (5L, 5L, '5', 5L, 1551964879716L), (6L, 6L, '6', 6L, 1551964879716L), (7L, 7L, '7', 7L, 1551964879716L))]
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:586, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964879923L), (2L, 2L, '2', 2L, 1551964879415L), (3L, 3L, '3', 3L, 1551964879415L), (5L, 5L, '5', 5L, 1551964879716L), (6L, 6L, '6', 6L, 1551964879716L), (7L, 7L, '7', 7L, 1551964879716L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:590, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:20.427157]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:594, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:20.718382]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:595, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964880625L), (2L, 2L, '2', 2L, 1551964880625L), (3L, 3L, '3', 3L, 1551964880625L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:599, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[21:21:21.112134]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:600, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964880625L), (2L, 2L, '2', 2L, 1551964880625L), (3L, 3L, '3', 3L, 1551964880625L), (5L, 5L, '5', 5L, 1551964880910L), (6L, 6L, '6', 6L, 1551964880910L), (7L, 7L, '7', 7L, 1551964880910L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_syntax.sql, id:603, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964880625L), (2L, 2L, '2', 2L, 1551964880625L), (3L, 3L, '3', 3L, 1551964880625L), (5L, 5L, '5', 5L, 1551964880910L), (6L, 6L, '6', 6L, 1551964880910L), (7L, 7L, '7', 7L, 1551964880910L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:607, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:21.647655]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:611, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:21.994021]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:612, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964881881L), (2L, 2L, '2', 2L, 1551964881881L), (3L, 3L, '3', 3L, 1551964881881L), (4L, 4L, '4', 4L, 1551964881881L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:617, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964882394L), (2L, 2L, '2', 2L, 1551964881881L), (3L, 3L, '3', 3L, 1551964881881L), (4L, 4L, '4', 4L, 1551964881881L), (5L, 5L, '5', 5L, 1551964882171L), (6L, 6L, '6', 6L, 1551964882171L), (7L, 7L, '7', 7L, 1551964882171L), (8L, 8L, '8', 8L, 1551964882171L))]
+dble:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
 mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
-===file:sqls_util/transaction/trx_syntax.sql, id:620, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 10L, 1551964882394L), (2L, 2L, '2', 2L, 1551964881881L), (3L, 3L, '3', 3L, 1551964881881L), (4L, 4L, '4', 4L, 1551964881881L), (5L, 5L, '5', 5L, 1551964882171L), (6L, 6L, '6', 6L, 1551964882171L), (7L, 7L, '7', 7L, 1551964882171L), (8L, 8L, '8', 8L, 1551964882171L))]
-mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:624, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:22.922366]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:628, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[21:21:23.263630]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:629, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964883157L), (2L, 2L, '2', 2L, 1551964883157L), (3L, 3L, '3', 3L, 1551964883157L), (4L, 4L, '4', 4L, 1551964883157L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:633, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[21:21:23.680095]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:634, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964883157L), (2L, 2L, '2', 2L, 1551964883157L), (3L, 3L, '3', 3L, 1551964883157L), (4L, 4L, '4', 4L, 1551964883157L), (5L, 5L, '5', 5L, 1551964883483L), (6L, 6L, '6', 6L, 1551964883483L), (7L, 7L, '7', 7L, 1551964883483L), (8L, 8L, '8', 8L, 1551964883483L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
 mysql:[((1L, 1L, '1', 1L),)]
 ===file:sqls_util/transaction/trx_syntax.sql, id:637, sql:[select * from test1 order by id]===
-dble:[((1L, 1L, '1', 1L, 1551964883157L), (2L, 2L, '2', 2L, 1551964883157L), (3L, 3L, '3', 3L, 1551964883157L), (4L, 4L, '4', 4L, 1551964883157L), (5L, 5L, '5', 5L, 1551964883483L), (6L, 6L, '6', 6L, 1551964883483L), (7L, 7L, '7', 7L, 1551964883483L), (8L, 8L, '8', 8L, 1551964883483L))]
+dble:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
 mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7L), (8L, 8L, '8', 8L))]
