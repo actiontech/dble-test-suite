@@ -14,10 +14,14 @@ dble:[[(4L,)]]
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:10, sql:[create view view_test as select * from test1]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:11, sql:[select * from view_test]===
+dble:[[(1L, 1.0, 'a string', 1L), (2L, 2.0, 'a\nstring', 3L), (3L, 3.0, 'another', 3L), (4L, 4.0, '\xe4\xb8\xad', 2L), (5L, 5.0, "a'string'", 5L), (6L, 6.0, 'a""string""', 5L), (7L, 7.0, 'a\x08string', 5L), (8L, 8.0, 'a\nstring', 6L), (9L, 9.0, 'a\rstring', 6L), (10L, 10.0, 'a\tstring', 2L)]]
 ===file:sqls_util/syntax/view.sql, id:12, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:13, sql:[create view view_test as select * from test1 where R_NAME like'%string%']===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:14, sql:[select * from view_test]===
+dble:[[(1L, 1.0, 'a string', 1L), (2L, 2.0, 'a\nstring', 3L), (5L, 5.0, "a'string'", 5L), (6L, 6.0, 'a""string""', 5L), (7L, 7.0, 'a\x08string', 5L), (8L, 8.0, 'a\nstring', 6L), (9L, 9.0, 'a\rstring', 6L), (10L, 10.0, 'a\tstring', 2L)]]
 ===file:sqls_util/syntax/view.sql, id:15, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:16, sql:[create view view_test as select sum(id),R_COMMENT from test1 group by R_COMMENT]===
@@ -62,6 +66,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:40, sql:[create or replace view view_test as select * from test1]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:41, sql:[select * from view_test]===
+dble:[[(1L, 1.0, 1L, None), (2L, 2.0, 3L, None), (3L, 3.0, 3L, None), (4L, 4.0, 2L, None), (5L, 5.0, 5L, None), (6L, 6.0, 5L, None), (7L, 7.0, 5L, None), (8L, 8.0, 6L, None), (9L, 9.0, 6L, None), (10L, 10.0, 2L, None)]]
 ===file:sqls_util/syntax/view.sql, id:42, sql:[create or replace view view_test as select * from test1 where R_NAME like'%string%']===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:43, sql:[select * from view_test]===
@@ -116,12 +122,16 @@ dble:[[(1L, 1L, 1L, 1L), (2L, 2L, 2L, 2L), (3L, 3L, 3L, 3L), (4L, 4L, 4L, 4L)]]
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:85, sql:[create view view_test as select * from test1 union select * from schema2.test2]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:86, sql:[select * from view_test]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$order$4', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'order...5', 1L)]]
 ===file:sqls_util/syntax/view.sql, id:87, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:89, sql:[create or replace view view_test as select * from test1]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:90, sql:[alter view view_test as select * from schema2.test2]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:91, sql:[select * from view_test]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (4L, 4L, '$order$4', 4L), (5L, 5L, 'order...5', 1L)]]
 ===file:sqls_util/syntax/view.sql, id:92, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:93, sql:[create or replace view view_test as select * from test1]===
@@ -134,24 +144,36 @@ dble:[[('$order$4',), ('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('o
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:98, sql:[create view view_test as select * from test1]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:99, sql:[select * from view_test]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L)]]
 ===file:sqls_util/syntax/view.sql, id:100, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:101, sql:[create view view_test as select * from test1]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:102, sql:[create view view_test1 as select * from schema2.test2]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:103, sql:[select * from view_test]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L)]]
 ===file:sqls_util/syntax/view.sql, id:104, sql:[drop view view_test,view_test1]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:112, sql:[drop view if exists view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:114, sql:[create view view_test as select * from test1]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:115, sql:[select * from view_test]===
+dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L)]]
 ===file:sqls_util/syntax/view.sql, id:116, sql:[drop view if exists view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:119, sql:[create view view_test as select * from test1]===
 dble:[[]]
+===file:sqls_util/syntax/view.sql, id:120, sql:[select * from schema2.test2 a join view_test b where a.pad=b.pad]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L, 1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L, 2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L, 4L, 4L, '$test$4', 3L), (4L, 4L, '$order$4', 4L, 3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (5L, 5L, 'order...5', 1L, 1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L)]]
 ===file:sqls_util/syntax/view.sql, id:121, sql:[select count(*) from (select * from view_test) a]===
 dble:[[(4L,)]]
+===file:sqls_util/syntax/view.sql, id:122, sql:[select * from schema2.test2 union select * from view_test]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$order$4', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'order...5', 1L)]]
+===file:sqls_util/syntax/view.sql, id:123, sql:[select * from schema2.test2 where id<(select count(*) from view_test)]===
+dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L)]]
 ===file:sqls_util/syntax/view.sql, id:124, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:128, sql:[drop table if exists test1]===
