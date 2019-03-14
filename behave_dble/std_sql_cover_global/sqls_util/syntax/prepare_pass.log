@@ -9,7 +9,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:11, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:12, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `age` int(10) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `age` int(10) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:13, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:14, sql:[prepare pre_test from 'alter table test1 drop age']===
@@ -17,7 +17,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:15, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:16, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:17, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:18, sql:[prepare pre_test from 'alter table test1 add index (R_NAME)']===
@@ -45,7 +45,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:29, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:30, sql:[desc test1]===
-dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'float', 'YES', '', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
+dble:[[('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'float', 'YES', '', None, ''), ('id', 'int(11)', 'NO', 'PRI', None, '')]]
 ===file:sqls_util/syntax/prepare.sql, id:31, sql:[alter table test1 drop primary key]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:32, sql:[drop prepare pre_test]===
@@ -55,7 +55,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:34, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:35, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:36, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:46, sql:[prepare pre_test from 'alter table test1 change R_NAME name varchar(50)']===
@@ -63,7 +63,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:47, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:48, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `name` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `name` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:49, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:50, sql:[prepare pre_test from 'alter table test1 modify name varchar(60)']===
@@ -71,7 +71,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:51, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:52, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `name` varchar(60) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `name` varchar(60) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:53, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:54, sql:[prepare pre_test from 'alter table test1 drop name']===
@@ -79,19 +79,19 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:55, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:56, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:57, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:58, sql:[alter table test1 add primary key (id)]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:59, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  PRIMARY KEY (`id`),\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:60, sql:[prepare pre_test from 'alter table test1 drop primary key']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:61, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:62, sql:[show create table test1]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency',\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) NOT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  UNIQUE KEY `id` (`id`)\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:63, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:64, sql:[alter table test1 add index (R_COMMENT)]===
@@ -153,7 +153,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:98, sql:[prepare pre_test from 'select * from test1 where id=3']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:99, sql:[execute pre_test]===
-dble:[[(3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, 1551964019014L)]]
+dble:[[(3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L)]]
 ===file:sqls_util/syntax/prepare.sql, id:100, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:104, sql:[drop table if exists test1]===
@@ -171,7 +171,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:111, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:115, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'a string', 'test001', 1551964020198L), (2L, 2.0, 'a\nstring', 'test002', 1551964020198L), (3L, 3.0, 'another string', 'test003', 1551964020198L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964020198L), (5L, 5.0, "a'string'", 'test005', 1551964020198L), (6L, 6.0, 'a""string""', 'test006', 1551964020198L), (7L, 7.0, 'a\x08string', 'test007', 1551964020198L), (8L, 8.0, 'a\nstring', 'test008', 1551964020198L), (9L, 9.0, 'a\rstring', 'test009', 1551964020198L), (10L, 10.0, 'a\tstring', 'test010', 1551964020198L), (11L, 11.0, 'azstring', 'test011', 1551964020198L), (12L, 12.0, 'a\\string', 'test012', 1551964020198L), (13L, 13.0, 'a\\%string', 'test013', 1551964020198L), (14L, 14.0, 'a\\_string', 'test014', 1551964020198L), (15L, 15.0, 'MySQL', 'test015', 1551964020198L), (16L, 16.0, 'binary', 'test016', 1551964020198L), (17L, 1.23457e+22, '17', '17', 1551964020198L), (18L, 18.0, 'A', 'test018', 1551964020198L), (19L, 19.0, '', 'test019', 1551964020198L), (65L, 16.0, 'binary', 'test016', 1551964020198L)]]
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:116, sql:[prepare pre_test from 'delete from test1']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:117, sql:[execute pre_test]===
@@ -187,7 +187,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:122, sql:[execute pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:123, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'a string', 'test001', 1551964020913L), (2L, 2.0, 'a\nstring', 'test002', 1551964020913L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964020913L), (5L, 5.0, "a'string'", 'test005', 1551964020913L), (6L, 6.0, 'a""string""', 'test006', 1551964020913L), (7L, 7.0, 'a\x08string', 'test007', 1551964020913L), (8L, 8.0, 'a\nstring', 'test008', 1551964020913L), (9L, 9.0, 'a\rstring', 'test009', 1551964020913L), (10L, 10.0, 'a\tstring', 'test010', 1551964020913L), (11L, 11.0, 'azstring', 'test011', 1551964020913L), (12L, 12.0, 'a\\string', 'test012', 1551964020913L), (13L, 13.0, 'a\\%string', 'test013', 1551964020913L), (14L, 14.0, 'a\\_string', 'test014', 1551964020913L), (15L, 15.0, 'MySQL', 'test015', 1551964020913L), (16L, 16.0, 'binary', 'test016', 1551964020913L), (17L, 1.23457e+22, '17', '17', 1551964020913L), (18L, 18.0, 'A', 'test018', 1551964020913L), (19L, 19.0, '', 'test019', 1551964020913L), (65L, 16.0, 'binary', 'test016', 1551964020913L)]]
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:124, sql:[delete from test1]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:125, sql:[insert into test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string','test001'),(3,3, 'another string','test003'),(2,2, 'a\nstring','test002'),(4,4, '中','test004'),(5,5, 'a\'string\'','test005'),(6,6, 'a\""string\""','test006'),(7,7, 'a\bstring','test007'),(8,8, 'a\nstring','test008'),(9,9, 'a\rstring','test009'),(10,10, 'a\tstring','test010'),(11,11, 'a\zstring','test011'),(12,12, 'a\\string','test012'),(13,13, 'a\%string','test013'),(14,14, 'a\_string','test014'),(15,15, 'MySQL','test015'),(16,16, 'binary','test016'),(65,16, 'binary','test016'),(17,12345678901234567890123.4567890,17,17),(18,18, 'A','test018'),(19,19, '','test019')]===
@@ -201,13 +201,13 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:132, sql:[execute pre_test using @a,@b,@c,@d]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:133, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'a string', 'test001', 1551964021065L), (2L, 2.0, 'a\nstring', 'test002', 1551964021065L), (3L, 3.0, 'another string', 'test003', 1551964021065L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964021065L), (5L, 5.0, "a'string'", 'test005', 1551964021065L), (6L, 6.0, 'a""string""', 'test006', 1551964021065L), (7L, 7.0, 'a\x08string', 'test007', 1551964021065L), (8L, 8.0, 'a\nstring', 'test008', 1551964021065L), (9L, 9.0, 'a\rstring', 'test009', 1551964021065L), (10L, 10.0, 'a\tstring', 'test010', 1551964021065L), (11L, 11.0, 'azstring', 'test011', 1551964021065L), (12L, 12.0, 'a\\string', 'test012', 1551964021065L), (13L, 13.0, 'a\\%string', 'test013', 1551964021065L), (14L, 14.0, 'a\\_string', 'test014', 1551964021065L), (15L, 15.0, 'MySQL', 'test015', 1551964021065L), (16L, 16.0, 'binary', 'test016', 1551964021065L), (17L, 1.23457e+22, '17', '17', 1551964021065L), (18L, 18.0, 'A', 'test018', 1551964021065L), (19L, 19.0, '', 'test019', 1551964021065L), (20L, 20.0, 'test', 'test20', 1551964021244L), (65L, 16.0, 'binary', 'test016', 1551964021065L)]]
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (20L, 20.0, 'test', 'test20'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:134, sql:[set @a=21,@b=21,@c='test',@d='test21']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:135, sql:[execute pre_test using @a,@b,@c,@d]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:136, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'a string', 'test001', 1551964021065L), (2L, 2.0, 'a\nstring', 'test002', 1551964021065L), (3L, 3.0, 'another string', 'test003', 1551964021065L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964021065L), (5L, 5.0, "a'string'", 'test005', 1551964021065L), (6L, 6.0, 'a""string""', 'test006', 1551964021065L), (7L, 7.0, 'a\x08string', 'test007', 1551964021065L), (8L, 8.0, 'a\nstring', 'test008', 1551964021065L), (9L, 9.0, 'a\rstring', 'test009', 1551964021065L), (10L, 10.0, 'a\tstring', 'test010', 1551964021065L), (11L, 11.0, 'azstring', 'test011', 1551964021065L), (12L, 12.0, 'a\\string', 'test012', 1551964021065L), (13L, 13.0, 'a\\%string', 'test013', 1551964021065L), (14L, 14.0, 'a\\_string', 'test014', 1551964021065L), (15L, 15.0, 'MySQL', 'test015', 1551964021065L), (16L, 16.0, 'binary', 'test016', 1551964021065L), (17L, 1.23457e+22, '17', '17', 1551964021065L), (18L, 18.0, 'A', 'test018', 1551964021065L), (19L, 19.0, '', 'test019', 1551964021065L), (20L, 20.0, 'test', 'test20', 1551964021244L), (21L, 21.0, 'test', 'test21', 1551964021469L), (65L, 16.0, 'binary', 'test016', 1551964021065L)]]
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (20L, 20.0, 'test', 'test20'), (21L, 21.0, 'test', 'test21'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:137, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:141, sql:[prepare pre_test from 'replace into test1 values(?,?,?,?)']===
@@ -217,7 +217,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:143, sql:[execute pre_test using @a,@b,@c,@d]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:144, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'a string', 'test001', 1551964021065L), (2L, 2.0, 'a\nstring', 'test002', 1551964021065L), (3L, 3.0, 'another string', 'test003', 1551964021065L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964021065L), (5L, 5.0, "a'string'", 'test005', 1551964021065L), (6L, 6.0, 'a""string""', 'test006', 1551964021065L), (7L, 7.0, 'a\x08string', 'test007', 1551964021065L), (8L, 8.0, 'a\nstring', 'test008', 1551964021065L), (9L, 9.0, 'a\rstring', 'test009', 1551964021065L), (10L, 10.0, 'a\tstring', 'test010', 1551964021065L), (11L, 11.0, 'azstring', 'test011', 1551964021065L), (12L, 12.0, 'a\\string', 'test012', 1551964021065L), (13L, 13.0, 'a\\%string', 'test013', 1551964021065L), (14L, 14.0, 'a\\_string', 'test014', 1551964021065L), (15L, 15.0, 'MySQL', 'test015', 1551964021065L), (16L, 16.0, 'binary', 'test016', 1551964021065L), (17L, 1.23457e+22, '17', '17', 1551964021065L), (18L, 18.0, 'A', 'test018', 1551964021065L), (19L, 19.0, '', 'test019', 1551964021065L), (20L, 20.0, 'test', 'test20', 1551964021244L), (20L, 20.0, 'test_new', 'test20', 1551964021878L), (21L, 21.0, 'test', 'test21', 1551964021469L), (65L, 16.0, 'binary', 'test016', 1551964021065L)]]
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (20L, 20.0, 'test', 'test20'), (20L, 20.0, 'test_new', 'test20'), (21L, 21.0, 'test', 'test21'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:145, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:149, sql:[prepare pre_test from 'set @a=?']===
@@ -233,11 +233,11 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:157, sql:[prepare pre_test from 'show create table test1']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:158, sql:[execute pre_test]===
-dble:[[('test1', "CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL,\n  `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency'\n) ENGINE=InnoDB DEFAULT CHARSET=latin1")]]
+dble:[[('test1', 'CREATE TABLE `test1` (\n  `id` int(11) DEFAULT NULL,\n  `R_REGIONKEY` float DEFAULT NULL,\n  `R_NAME` varchar(50) DEFAULT NULL,\n  `R_COMMENT` varchar(50) DEFAULT NULL\n) ENGINE=InnoDB DEFAULT CHARSET=latin1')]]
 ===file:sqls_util/syntax/prepare.sql, id:159, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:169, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'a string', 'test001', 1551964021065L), (2L, 2.0, 'a\nstring', 'test002', 1551964021065L), (3L, 3.0, 'another string', 'test003', 1551964021065L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964021065L), (5L, 5.0, "a'string'", 'test005', 1551964021065L), (6L, 6.0, 'a""string""', 'test006', 1551964021065L), (7L, 7.0, 'a\x08string', 'test007', 1551964021065L), (8L, 8.0, 'a\nstring', 'test008', 1551964021065L), (9L, 9.0, 'a\rstring', 'test009', 1551964021065L), (10L, 10.0, 'a\tstring', 'test010', 1551964021065L), (11L, 11.0, 'azstring', 'test011', 1551964021065L), (12L, 12.0, 'a\\string', 'test012', 1551964021065L), (13L, 13.0, 'a\\%string', 'test013', 1551964021065L), (14L, 14.0, 'a\\_string', 'test014', 1551964021065L), (15L, 15.0, 'MySQL', 'test015', 1551964021065L), (16L, 16.0, 'binary', 'test016', 1551964021065L), (17L, 1.23457e+22, '17', '17', 1551964021065L), (18L, 18.0, 'A', 'test018', 1551964021065L), (19L, 19.0, '', 'test019', 1551964021065L), (20L, 20.0, 'test', 'test20', 1551964021244L), (20L, 20.0, 'test_new', 'test20', 1551964021878L), (21L, 21.0, 'test', 'test21', 1551964021469L), (65L, 16.0, 'binary', 'test016', 1551964021065L)]]
+dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (20L, 20.0, 'test', 'test20'), (20L, 20.0, 'test_new', 'test20'), (21L, 21.0, 'test', 'test21'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:170, sql:[prepare pre_test from 'truncate table test1']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:171, sql:[execute pre_test]===
@@ -253,7 +253,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:179, sql:[execute pre_test using @a,@b]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:180, sql:[select * from test1]===
-dble:[[(1L, 1.0, 'test', 'test001', 1551964022710L), (2L, 2.0, 'a\nstring', 'test002', 1551964022557L), (3L, 3.0, 'another string', 'test003', 1551964022557L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964022557L), (5L, 5.0, "a'string'", 'test005', 1551964022557L), (6L, 6.0, 'a""string""', 'test006', 1551964022557L), (7L, 7.0, 'a\x08string', 'test007', 1551964022557L), (8L, 8.0, 'a\nstring', 'test008', 1551964022557L), (9L, 9.0, 'a\rstring', 'test009', 1551964022557L), (10L, 10.0, 'a\tstring', 'test010', 1551964022557L), (11L, 11.0, 'azstring', 'test011', 1551964022557L), (12L, 12.0, 'a\\string', 'test012', 1551964022557L), (13L, 13.0, 'a\\%string', 'test013', 1551964022557L), (14L, 14.0, 'a\\_string', 'test014', 1551964022557L), (15L, 15.0, 'MySQL', 'test015', 1551964022557L), (16L, 16.0, 'binary', 'test016', 1551964022557L), (17L, 1.23457e+22, '17', '17', 1551964022557L), (18L, 18.0, 'A', 'test018', 1551964022557L), (19L, 19.0, '', 'test019', 1551964022557L), (65L, 16.0, 'binary', 'test016', 1551964022557L)]]
+dble:[[(1L, 1.0, 'test', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:181, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:185, sql:[prepare pre_test from 'select * from test1 where id=?']===
@@ -265,7 +265,7 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:188, sql:[execute pre_set using @b]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:189, sql:[execute pre_test using @b]===
-dble:[[(1L, 1.0, 'test', 'test001', 1551964022710L)]]
+dble:[[(1L, 1.0, 'test', 'test001')]]
 ===file:sqls_util/syntax/prepare.sql, id:190, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:194, sql:[prepare pre_test from 'select * from test1 where id=1']===
@@ -273,14 +273,14 @@ dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:195, sql:[prepare pre_test from 'select * from test1 where id=2']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:196, sql:[execute pre_test]===
-dble:[[(2L, 2.0, 'a\nstring', 'test002', 1551964022557L)]]
+dble:[[(2L, 2.0, 'a\nstring', 'test002')]]
 ===file:sqls_util/syntax/prepare.sql, id:197, sql:[drop prepare pre_test]===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:201, sql:[prepare pre_test from 'select * from test1 w']===
 dble:[[]]
 ===file:sqls_util/syntax/prepare.sql, id:202, sql:[execute pre_test]===
-dble:[[(1L, 1.0, 'test', 'test001', 1551964022710L), (2L, 2.0, 'a\nstring', 'test002', 1551964022557L), (3L, 3.0, 'another string', 'test003', 1551964022557L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964022557L), (5L, 5.0, "a'string'", 'test005', 1551964022557L), (6L, 6.0, 'a""string""', 'test006', 1551964022557L), (7L, 7.0, 'a\x08string', 'test007', 1551964022557L), (8L, 8.0, 'a\nstring', 'test008', 1551964022557L), (9L, 9.0, 'a\rstring', 'test009', 1551964022557L), (10L, 10.0, 'a\tstring', 'test010', 1551964022557L), (11L, 11.0, 'azstring', 'test011', 1551964022557L), (12L, 12.0, 'a\\string', 'test012', 1551964022557L), (13L, 13.0, 'a\\%string', 'test013', 1551964022557L), (14L, 14.0, 'a\\_string', 'test014', 1551964022557L), (15L, 15.0, 'MySQL', 'test015', 1551964022557L), (16L, 16.0, 'binary', 'test016', 1551964022557L), (17L, 1.23457e+22, '17', '17', 1551964022557L), (18L, 18.0, 'A', 'test018', 1551964022557L), (19L, 19.0, '', 'test019', 1551964022557L), (65L, 16.0, 'binary', 'test016', 1551964022557L)]]
+dble:[[(1L, 1.0, 'test', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:204, sql:[execute pre_test]===
-dble:[[(1L, 1.0, 'test', 'test001', 1551964022710L), (2L, 2.0, 'a\nstring', 'test002', 1551964022557L), (3L, 3.0, 'another string', 'test003', 1551964022557L), (4L, 4.0, '\xe4\xb8\xad', 'test004', 1551964022557L), (5L, 5.0, "a'string'", 'test005', 1551964022557L), (6L, 6.0, 'a""string""', 'test006', 1551964022557L), (7L, 7.0, 'a\x08string', 'test007', 1551964022557L), (8L, 8.0, 'a\nstring', 'test008', 1551964022557L), (9L, 9.0, 'a\rstring', 'test009', 1551964022557L), (10L, 10.0, 'a\tstring', 'test010', 1551964022557L), (11L, 11.0, 'azstring', 'test011', 1551964022557L), (12L, 12.0, 'a\\string', 'test012', 1551964022557L), (13L, 13.0, 'a\\%string', 'test013', 1551964022557L), (14L, 14.0, 'a\\_string', 'test014', 1551964022557L), (15L, 15.0, 'MySQL', 'test015', 1551964022557L), (16L, 16.0, 'binary', 'test016', 1551964022557L), (17L, 1.23457e+22, '17', '17', 1551964022557L), (18L, 18.0, 'A', 'test018', 1551964022557L), (19L, 19.0, '', 'test019', 1551964022557L), (65L, 16.0, 'binary', 'test016', 1551964022557L)]]
+dble:[[(1L, 1.0, 'test', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L, 3.0, 'another string', 'test003'), (4L, 4.0, '\xe4\xb8\xad', 'test004'), (5L, 5.0, "a'string'", 'test005'), (6L, 6.0, 'a""string""', 'test006'), (7L, 7.0, 'a\x08string', 'test007'), (8L, 8.0, 'a\nstring', 'test008'), (9L, 9.0, 'a\rstring', 'test009'), (10L, 10.0, 'a\tstring', 'test010'), (11L, 11.0, 'azstring', 'test011'), (12L, 12.0, 'a\\string', 'test012'), (13L, 13.0, 'a\\%string', 'test013'), (14L, 14.0, 'a\\_string', 'test014'), (15L, 15.0, 'MySQL', 'test015'), (16L, 16.0, 'binary', 'test016'), (17L, 1.23457e+22, '17', '17'), (18L, 18.0, 'A', 'test018'), (19L, 19.0, '', 'test019'), (65L, 16.0, 'binary', 'test016')]]
 ===file:sqls_util/syntax/prepare.sql, id:209, sql:[drop table if exists test1]===
 dble:[[]]
