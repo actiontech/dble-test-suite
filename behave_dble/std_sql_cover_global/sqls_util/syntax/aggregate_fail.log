@@ -1,6 +1,0 @@
-===file:sqls_util/syntax/aggregate.sql, id:45, sql:[select *, group_concat(name order by name) from test1 group by id;]===
-dble:[((None, 'b', 1551963548156L, 'b,b,b,c,c'), (1L, 'a', 1551963548156L, 'a,d'), (2L, None, 1551963548156L, None), (3L, 'a', 1551963548156L, 'a'))]
-mysql:[((None, 'b', 'b,b,b,c,c'), (1L, 'a', 'a,d'), (2L, None, None), (3L, 'a', 'a'))]
-===file:sqls_util/syntax/aggregate.sql, id:46, sql:[select *, group_concat(distinct name order by name desc separator ':') from test1 group by id;]===
-dble:[((None, 'b', 1551963548156L, 'c:b'), (1L, 'a', 1551963548156L, 'd:a'), (2L, None, 1551963548156L, None), (3L, 'a', 1551963548156L, 'a'))]
-mysql:[((None, 'b', 'c:b'), (1L, 'a', 'd:a'), (2L, None, None), (3L, 'a', 'a'))]
