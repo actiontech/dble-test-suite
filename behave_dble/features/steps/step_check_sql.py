@@ -194,7 +194,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
             with open(log_file, 'a') as fpW:
                 fpW.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(id, sql, context.sql_file))
                 fpW.writelines("mysql err:{0}\n".format(err1))
-                fpW.writelines("dble err[{1}] :{0}\n".format(err2, datetime.datetime.now().strftime('%H:%M:%S.%f')))
+                fpW.writelines("dble err:{0}\n".format(err2))
 
 
             context.logger.info("mysql_err: {0}".format(err1))
