@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ostream>
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include <algorithm> //transform
 #include "mysql_connection.h"
 #include "mysql_driver.h"
@@ -23,25 +24,25 @@ using namespace sql;
 
 typedef list<string> LISTSTRING;
 
-int client_exec(const char *sqlfile, const char *logpath, Connection *dble_conn, Connection *mysql_conn)
+int client_exec(const char *sqlFile, const char *logPath, Connection *dbleConn, Connection *mysqlConn)
 {
 	ifstream sqls;
 	ofstream pass;
 	ofstream fail;
-	string filename;
+	string fileName;
 	string line;
 	int idNum = 1;
-	Statement *dble_stmt;
-	Statement *mysql_stmt;
+	Statement *dbleStmt;
+	Statement *mysqlStmt;
 	//ResultSetMetaData * 
-	//¸ù¾ÝsqlÎÄ¼þÃû»ñÈ¡logÎÄ¼þÃû
-	string sqlf = string(sqlfile);
-	string sqlfilename = sqlf.substr(sqlf.rfind("/") + 1);
-	sqlfilename = sqlfilename.substr(0, sqlfilename.find("."));
-	string logpass = string(logpath) + "/" + sqlfilename + "_pass.log";
-	string logfail = string(logpath) + "/" + sqlfilename + "_fail.log";
-	cout << "logpass: " + logpass << endl;
-	cout << "logfail: " + logfail << endl;
+	//ï¿½ï¿½ï¿½ï¿½sqlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½È¡logï¿½Ä¼ï¿½ï¿½ï¿½
+	string sqlf = string(sqlFile);
+	string sqlFileName = sqlf.substr(sqlf.rfind("/") + 1);
+	sqlFileName = sqlFileName.substr(0, sqlFileName.find("."));
+	string logPass = string(logPath) + "/" + sqlFileName + "_pass.log";
+	string logFail = string(logPath) + "/" + sqlFileName + "_fail.log";
+	cout << "logPass: " + logPass << endl;
+	cout << "logFail: " + logFail << endl;
 
 
 	try {
@@ -49,31 +50,30 @@ int client_exec(const char *sqlfile, const char *logpath, Connection *dble_conn,
 	}
 	catch (exception e) {
 		cout << "open file " + sqlf + " failed!" << endl;
-		//close_fstream(&sqls);
 		sqls.close();
 		exit(1);
 	}
 
 	try {
-		pass.open(logpass, ios::out | ios::app);
+		pass.open(logPass, ios::out | ios::app);
 	}
 	catch (exception e) {
-		cout << "open file " + logpass + " failed!" << endl;
+		cout << "open file " + logPass + " failed!" << endl;
 		pass.close();
 		exit(1);
 	}
 	try {
-		fail.open(logfail, ios::out | ios::app);
+		fail.open(logFail, ios::out | ios::app);
 	}
 	catch (exception e) {
-		cout << "open file " + logfail + " failed!" << endl;
+		cout << "open file " + logFail + " failed!" << endl;
 		fail.close();
 		exit(1);
 	}
 
 
 	try {
-		dble_stmt = dble_conn->createStatement();
+		dbleStmt = dbleConn->createStatement();
 	}
 	catch (SQLException &e) {
 		cout << e.what() << endl;
@@ -81,48 +81,49 @@ int client_exec(const char *sqlfile, const char *logpath, Connection *dble_conn,
 	}
 
 	try {
-		mysql_stmt = mysql_conn->createStatement();
+		mysqlStmt = mysqlConn->createStatement();
 	}
 	catch (SQLException &e) {
 		cout << e.what() << endl;
 		exit(1);
 	}
 
-	while (getline(sqls, line)) // lineÖÐ²»°üÀ¨Ã¿ÐÐµÄ»»ÐÐ·û
+	while (getline(sqls, line)) // lineï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ÐµÄ»ï¿½ï¿½Ð·ï¿½
 	{
 		if (line.find('#') != 0) {
 			cout << line << endl;
-			string exec = "===File:" + string(sqlfile) + ",id:" + to_string(idNum) + ",sql:" + line + "==="; 
+			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line + "===";
 			bool allow_diff_sequence = false;
 			if (findSubstr(line,"allow_diff_sequence"))
 			{
 				allow_diff_sequence = true;
 			}
 			transform(line.begin(), line.end(), line.begin(), ::tolower);
-			LISTSTRING dblerslist;
-			LISTSTRING mysqlrslist;
+			boost::trim(line);
+			LISTSTRING dbleResultSetList;
+			LISTSTRING mysqlResultSetList;
 			//dble&mysql
-			dblerslist = exec_sql(dble_stmt, line);
-			mysqlrslist = exec_sql(mysql_stmt, line);
+			dbleResultSetList = exec_sql(dbleStmt, line);
+			mysqlResultSetList = exec_sql(mysqlStmt, line);
 			//compare rs
-			bool flag = compareList(dblerslist, mysqlrslist, allow_diff_sequence);
-			if (flag) {
-				string passstr = convertList(dblerslist);
+			bool sameResultSet = compareList(dbleResultSetList, mysqlResultSetList, allow_diff_sequence);
+			if (sameResultSet) {
+				string passString = convertListToString(dbleResultSetList);
 				pass << exec << endl;
-				pass << "dble: [(" + passstr + ")]" << endl;
+				pass << "dble: [(" + passString + ")]" << endl;
 			}
 			else {
-				string dblefailstr = convertList(dblerslist);
-				string mysqlfailstr = convertList(mysqlrslist);
-				string failstr = "dble: [(" + dblefailstr + ")]\nmysql: [(" + mysqlfailstr + ")]";
+				string dbleFailString = convertListToString(dbleResultSetList);
+				string mysqlFailString = convertListToString(mysqlResultSetList);
+				string failString = "dble: [(" + dbleFailString + ")]\nmysql: [(" + mysqlFailString + ")]";
 				fail << exec << endl;
-				fail << failstr << endl;
+				fail << failString << endl;
 			}
 		}
 		idNum++;
 	}
-	delete mysql_stmt;
-	delete dble_stmt;
+	delete mysqlStmt;
+	delete dbleStmt;
 	fail.close();
 	pass.close();
 	sqls.close();

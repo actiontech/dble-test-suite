@@ -2,7 +2,7 @@
 docker pull ubuntu:18.04
 docker run -it --privileged ubuntu:18.04
 apt update && apt install -y wget vim build-essential libboost1.65-dev gdb git
-mkdir /opt/cpp (move all srs code in this directory)
+mkdir /opt/cpp (and move all srs code to this directory)
 
 2. Get mysql-connector-c++-1.1.11(source version) and build
 cd /opt
@@ -25,4 +25,4 @@ cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
 4.Compile and run
 cd /opt/cpp
 g++ *.cpp -l mysqlcppconn -l yaml-cpp
-./a.out "" "/opt/cpp/conf/cfg.yaml" "driver_test_manager.sql"
+./a.out "" "/opt/cpp/conf/cfg.yaml" "m" "driver_test_manager.sql"
