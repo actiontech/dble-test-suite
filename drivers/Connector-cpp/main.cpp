@@ -18,90 +18,99 @@ using namespace sql;
 
 int main(int argc, char *argv[])
 {
-	Connection *dbleMcon;
-	Connection *dblecon;
-	Connection *mysqlcon;
-	char *MhostName;
-	const char *MuserName;
-	const char *Mpassword;
-	char *ChostName;
-	const char *CuserName;
-	const char *Cpassword;
-	char *MysqlhostName;
-	const char *MysqluserName;
-	const char *Mysqlpassword;
-	string sqlfilename;
-	const char *sqlfile;
+	Connection *dbleManagerConn;
+	Connection *dbleConn;
+	Connection *mysqlConn;
+	char *managerHostName;
+	const char *managerUserName;
+	const char *managerPassword;
+	char *clientHostName;
+	const char *clientUserName;
+	const char *clientPassword;
+	char *mysqlHostName;
+	const char *mysqlUserName;
+	const char *mysqlPassword;
+	string sqlFileName;
+	const char *sqlFile;
 	//get current path
 	char buffer[MAX_PATH];
-	const char *curpath = getcwd(buffer, MAX_PATH);
+	const char *currentPath = getcwd(buffer, MAX_PATH);
 	//get current timestampt
 	unsigned long stime = time(0);
 	string strtime = to_string(stime);
-	string path = string(curpath) + '/' + strtime;
-	const char *logpath = path.c_str();
-	createdir(logpath);
+	string path = string(currentPath) + '/' + strtime;
+	const char *logPath = path.c_str();
+	createDir(logPath);
 	Config cfg;
-	cfg = YParse(string(argv[2]));
+	cfg = YamlParse(string(argv[2]));
 	//string(argv[3]) = "driver_test_manager.sql";
 	if (string(argv[1]) == "test") {
-		MhostName = "tcp://10.186.60.61:7171";
-		MuserName = "root";
-		Mpassword = "111111";
-		ChostName = "tcp://10.186.60.61:7131";
-		CuserName = "test";
-		Cpassword = "111111";
-		MysqlhostName = "tcp://10.186.60.61:7144";
-		MysqluserName = "test";
-		Mysqlpassword = "111111";
+		string managerDbleHost = "tcp://10.186.60.61:7171";
+		managerHostName = new char[50];
+		strcpy(managerHostName, managerDbleHost.c_str());
+		managerUserName = "root";
+		managerPassword = "111111";
+		string clientDbleHost = "tcp://10.186.60.61:7131";
+		clientHostName = new char[50];
+		strcpy(clientHostName, clientDbleHost.c_str());
+		clientUserName = "test";
+		clientPassword = "111111";
+		string mysqlHost = "tcp://10.186.60.61:7144";
+		mysqlHostName = new char[50];
+		strcpy(mysqlHostName, mysqlHost.c_str());
+		mysqlUserName = "test";
+		mysqlPassword = "111111";
 
-		sqlfilename = string(curpath) + "/assets/sql/driver_test_manager.sql";
-		//sqlfilename = string(curpath) + "/assets/sql/driver_test_client.sql";
-		sqlfile = sqlfilename.c_str();
-		//cout << string(sqlfile) << endl;
+		sqlFileName = string(currentPath) + "/assets/sql/driver_test_manager.sql";
+		//sqlFileName = string(currentPath) + "/assets/sql/driver_test_client.sql";
+		sqlFile = sqlFileName.c_str();
+		//cout << string(sqlFile) << endl;
 	}
 	else {
-		string Mdblehost = "tcp://" + cfg.MhostName + ":" + cfg.MhostPort;
-		MhostName = new char[50];
-		strcpy(MhostName, Mdblehost.c_str());
-		MuserName = cfg.MuserName.c_str();
-		Mpassword = cfg.Mpassword.c_str();
-		string Cdblehost = "tcp://" + cfg.ChostName + ":" + cfg.ChostPort;
-		ChostName = new char[50];
-		strcpy(ChostName, Cdblehost.c_str());
-		//ChostName = Cdblehost.c_str();
-		CuserName = cfg.CuserName.c_str();
-		Cpassword = cfg.Cpassword.c_str();
-		string Mysqlhost = "tcp://" + cfg.MysqlhostName + ":" + cfg.MysqlhostPort;
-		MysqlhostName = new char[50];
-		strcpy(MysqlhostName, Mysqlhost.c_str());
-		//MysqlhostName = Mysqlhost.c_str();
-		MysqluserName = cfg.MysqluserName.c_str();
-		Mysqlpassword = cfg.Mysqlpassword.c_str();
-		sqlfilename = string(curpath) + cfg.sqlpath.substr(1, cfg.sqlpath.length() - 1) + "/" + argv[3];
-		sqlfile = sqlfilename.c_str();
-		cout << string(sqlfile) << endl;
-		cout << string(MhostName) << endl;
-		cout << string(MuserName) << endl;
-		cout << string(Mpassword) << endl;
+		string managerDbleHost = "tcp://" + cfg.managerHostName + ":" + cfg.managerHostPort;
+		managerHostName = new char[50];
+		strcpy(managerHostName, managerDbleHost.c_str());
+		managerUserName = cfg.managerUserName.c_str();
+		managerPassword = cfg.managerPassword.c_str();
+		string clientDbleHost = "tcp://" + cfg.clientHostName + ":" + cfg.clientHostPort;
+		clientHostName = new char[50];
+		strcpy(clientHostName, clientDbleHost.c_str());
+		//clientHostName = clientDbleHost.c_str();
+		clientUserName = cfg.clientUserName.c_str();
+		clientPassword = cfg.clientPassword.c_str();
+		string mysqlHost = "tcp://" + cfg.mysqlHostName + ":" + cfg.mysqlHostPort;
+		mysqlHostName = new char[50];
+		strcpy(mysqlHostName, mysqlHost.c_str());
+		//mysqlHostName = mysqlHost.c_str();
+		mysqlUserName = cfg.mysqlUserName.c_str();
+		mysqlPassword = cfg.mysqlPassword.c_str();
+		sqlFileName = string(currentPath) + cfg.sqlPath.substr(1, cfg.sqlPath.length() - 1) + "/" + argv[4];
+		sqlFile = sqlFileName.c_str();
+		cout << string(sqlFile) << endl;
+		//cout << string(managerHostName) << endl;
+		//cout << string(managerUserName) << endl;
+		//cout << string(managerPassword) << endl;
 	}
 
 
-	if (findSubstr(sqlfilename, "manager")) {
-		dbleMcon = createConn(MhostName, MuserName, Mpassword);
-		manager_exec(sqlfile, logpath, dbleMcon);
-		delete dbleMcon;
+	if (string(argv[3]) == "m") {
+		dbleManagerConn = createConn(managerHostName, managerUserName, managerPassword);
+		manager_exec(sqlFile, logPath, dbleManagerConn);
+		delete dbleManagerConn;
 	}
-	if (findSubstr(sqlfilename, "client")) {
-		string loadpath = string(curpath) + "/test1.txt";
-		const char *loadfile = loadpath.c_str();
-		WriteLoadData("test1.txt");
-		dblecon = createConn(ChostName, CuserName, Cpassword);
-		mysqlcon = createConn(MysqlhostName, MysqluserName, Mysqlpassword);
-		client_exec(sqlfile, logpath, dblecon, mysqlcon);
-		delete dblecon;
-		delete mysqlcon;
-		RmFile(loadfile);
+	if (string(argv[3]) == "b") {
+		string loadPath = string(currentPath) + "/test1.txt";
+		const char *loadDataFile = loadPath.c_str();
+		writeLoadData("test1.txt");
+		cout << string(clientHostName) << endl;
+		cout << string(clientUserName) << endl;
+		cout << string(clientPassword) << endl;
+		dbleConn = createConn(clientHostName, clientUserName, clientPassword);
+		mysqlConn = createConn(mysqlHostName, mysqlUserName, mysqlPassword);
+		client_exec(sqlFile, logPath, dbleConn, mysqlConn);
+		delete dbleConn;
+		delete mysqlConn;
+		removeFile(loadDataFile);
 	}
 
 	exit(0);
