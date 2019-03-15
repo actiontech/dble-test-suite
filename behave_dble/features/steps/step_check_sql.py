@@ -287,6 +287,17 @@ def step_impl(context):
     finally:
         context.logger.info(out_bytes.decode('utf-8'))
 
+@Given('reset views in "{dblelist}" if exists')
+def step_impl(context, dblelist):
+    import subprocess
+    try:
+        out_bytes = subprocess.check_output(['bash', 'compose/resetView.sh', dblelist])
+    except subprocess.CalledProcessError as e:
+        out_bytes = e.output  # Output generated before error
+        context.logger.info(out_bytes.decode('utf-8'))
+    finally:
+        context.logger.info(out_bytes.decode('utf-8'))
+
 @Then('execute sql in file "{filename}"')
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')
 def step_impl(context, filename):
