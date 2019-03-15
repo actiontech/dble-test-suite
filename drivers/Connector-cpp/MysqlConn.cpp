@@ -26,7 +26,8 @@ Connection *createConn(char *hostName, const char *userName, const char *passwor
 	}
 	catch (SQLException &e) {
 		cout << "Connect to " + string(hostName) + " failed!" << endl;
+		cout << e.what() << endl;
 		exit(1);
 	}
-	
+
 }

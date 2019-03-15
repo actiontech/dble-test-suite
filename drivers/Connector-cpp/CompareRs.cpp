@@ -6,20 +6,20 @@ using namespace std;
 
 
 
-bool compareList(list<string> dblerslist, list<string> mysqlrslist, bool allow_diff_sequence) {
-	if (dblerslist.size() != mysqlrslist.size()) {
+bool compareList(list<string> dbleResultSetList, list<string> mysqlResultSetList, bool allow_diff_sequence) {
+	if (dbleResultSetList.size() != mysqlResultSetList.size()) {
 		//cout << "not equal" << endl;
 		return false;
 	}
 
 	if (allow_diff_sequence) {
-		dblerslist.sort();
-		mysqlrslist.sort();
+		dbleResultSetList.sort();
+		mysqlResultSetList.sort();
 	}
 
 	list<string>::iterator iter1;
 	list<string>::iterator iter2;
-	for (iter1 = dblerslist.begin(), iter2 = mysqlrslist.begin(); iter1 != dblerslist.end(); iter1++, iter2++) {
+	for (iter1 = dbleResultSetList.begin(), iter2 = mysqlResultSetList.begin(); iter1 != dbleResultSetList.end(); iter1++, iter2++) {
 		if (*iter1 != *iter2) {
 			//cout << "not equal" << endl;
 			return false;
