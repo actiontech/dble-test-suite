@@ -26,7 +26,7 @@ def step_impl(context,hostname, logfile):
         if level == "WARNING":
             detail = detail.replace("[", "\[")
             detail = detail.replace("]", "\]")
-            str_to_find = "WARN \[WrapperSimpleAppMain\].*{0}".format(detail)
+            str_to_find = "WARN \[.*?\].*{0}".format(detail)
             found_in_log = re.search(str_to_find, sto, flags=re.IGNORECASE) is not None
             assert found_in_log, "warning {0} not found in log".format(row)
             context.logger.debug("warning is found in log:{0}".format(row))
