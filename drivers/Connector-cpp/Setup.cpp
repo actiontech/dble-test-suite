@@ -9,20 +9,20 @@
 #include <dirent.h>
 using namespace std;
 
-int WriteLoadData(string filename) {
-	ofstream loadfile;
+int writeLoadData(string fileName) {
+	ofstream loadFile;
 	try {
-		loadfile.open(filename, ios::out | ios::app);
+		loadFile.open(fileName, ios::out | ios::app);
 	}
 	catch (exception e) {
-		cout << "open file " + filename + " failed!" << endl;
-		loadfile.close();
+		cout << "open file " + fileName + " failed!" << endl;
+		loadFile.close();
 		exit(1);
 	}
-	loadfile << "10,10,'Vicky',10" << endl;
-	loadfile << "11,11,'Áõ¼Ò',11" << endl;
+	loadFile << "10,10,'Vicky',10" << endl;
+	loadFile << "11,11,'ï¿½ï¿½ï¿½ï¿½',11" << endl;
 
-	loadfile.close();
+	loadFile.close();
 
 	return 0;
 }
