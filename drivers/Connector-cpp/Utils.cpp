@@ -10,25 +10,25 @@
 #include <ctime>
 using namespace std;
 
-int createdir(const char *filepath)
+int createDir(const char *filePath)
 {
-	int mkdirflag;
-	int accessflag = access(filepath, 00);
-	if (accessflag == 0) {
-		rmdir(filepath);
+	int mkdirFlag;
+	int accessFlag = access(filePath, 00);
+	if (accessFlag == 0) {
+		rmdir(filePath);
 	}
 	try {
-		mkdirflag = mkdir(filepath, S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
+		mkdirFlag = mkdir(filePath, S_IRUSR | S_IWUSR | S_IXUSR | S_IRWXG | S_IRWXO);
 	}
 	catch (exception e) {
-		cout << "Create directory " + string(filepath) + " failed!";
+		cout << "Create directory " + string(filePath) + " failed!";
 		return -1;
-		exit(1)
+		exit(1);
 	}
 	return 0;
 }
 
-string convertList(list<string> lt) {
+string convertListToString(list<string> lt) {
 	string str;
 	list<string>::iterator iter;
 	for (iter = lt.begin(); iter != lt.end(); iter++)

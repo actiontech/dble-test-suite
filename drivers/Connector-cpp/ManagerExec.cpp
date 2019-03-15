@@ -3,6 +3,7 @@
 #include <fstream>
 #include <ostream>
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include <algorithm> 
 #include "mysql_connection.h"
 #include "mysql_driver.h"
@@ -23,26 +24,26 @@ using namespace sql;
 
 typedef list<string> LISTSTRING;
 
-int manager_exec(const char *sqlfile, const char *logpath, Connection *con)
+int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 {
 	ifstream sqls;
 	ofstream pass;
 	ofstream fail;
-	string filename;
+	string fileName;
 	string line;
 	int idNum = 1;
 	Statement *stmt;
 	ResultSet *res;
-	ResultSetMetaData *res_meta;
+	ResultSetMetaData *resultSetMetaData;
 	//ResultSetMetaData * 
-	//¸ù¾ÝsqlÎÄ¼þÃû»ñÈ¡logÎÄ¼þÃû
-	string sqlf = string(sqlfile);
-	string sqlfilename = sqlf.substr(sqlf.rfind("/") + 1);
-	sqlfilename = sqlfilename.substr(0, sqlfilename.find("."));
-	string logpass = string(logpath) + "/" + sqlfilename + "_pass.log";
-	string logfail = string(logpath) + "/" + sqlfilename + "_fail.log";
-	cout << "logpass: " + logpass << endl;
-	cout << "logfail: " + logfail << endl;
+	//ï¿½ï¿½ï¿½ï¿½sqlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½È¡logï¿½Ä¼ï¿½ï¿½ï¿½
+	string sqlf = string(sqlFile);
+	string sqlFileName = sqlf.substr(sqlf.rfind("/") + 1);
+	sqlFileName = sqlFileName.substr(0, sqlFileName.find("."));
+	string logPass = string(logPath) + "/" + sqlFileName + "_pass.log";
+	string logFail = string(logPath) + "/" + sqlFileName + "_fail.log";
+	cout << "logPass: " + logPass << endl;
+	cout << "logFail: " + logFail << endl;
 
 
 	try {
@@ -50,24 +51,23 @@ int manager_exec(const char *sqlfile, const char *logpath, Connection *con)
 	}
 	catch (exception e) {
 		cout << "open file " + sqlf + " failed!" << endl;
-		//close_fstream(&sqls);
 		sqls.close();
 		exit(1);
 	}
 
 	try {
-		pass.open(logpass, ios::out | ios::app);
+		pass.open(logPass, ios::out | ios::app);
 	}
 	catch (exception e) {
-		cout << "open file " + logpass + " failed!" << endl;
+		cout << "open file " + logPass + " failed!" << endl;
 		pass.close();
 		exit(1);
 	}
 	try {
-		fail.open(logfail, ios::out | ios::app);
+		fail.open(logFail, ios::out | ios::app);
 	}
 	catch (exception e) {
-		cout << "open file " + logfail + " failed!" << endl;
+		cout << "open file " + logFail + " failed!" << endl;
 		fail.close();
 		exit(1);
 	}
@@ -81,51 +81,53 @@ int manager_exec(const char *sqlfile, const char *logpath, Connection *con)
 		exit(1);
 	}
 
-	while (getline(sqls, line)) // lineÖÐ²»°üÀ¨Ã¿ÐÐµÄ»»ÐÐ·û
+	while (getline(sqls, line)) // lineï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ÐµÄ»ï¿½ï¿½Ð·ï¿½
 	{
 		cout << line << endl;
 		if (line.find('#') != 0) {
-			string exec = "===File:" + string(sqlfile) + ",id:" + to_string(idNum) + ",sql:" + line + "===";
+			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line + "===";
 			transform(line.begin(), line.end(), line.begin(), ::tolower);
+			boost::trim(line);
 			try {
 				string rs_str;
-				if (findSubstr(line, "select") || findSubstr(line, "show") || findSubstr(line, "check") || findSubstr(line, "file") || findSubstr(line, "log") ||findSubstr(line, "dryrun")) {
-					LISTSTRING dblerslist;
+				if (findSubstr(line, "select") || findSubstr(line, "show") || findSubstr(line, "check") || findSubstr(line, "file") || findSubstr(line, "log") || findSubstr(line, "dryrun")) {
+					//if ((line.find("select")==0) || (line.find("show")==0) || (line.find("check")==0) || (line.find("file")==0) || (line.find("log")==0) || (line.find("dryrun")==0)) {
+					LISTSTRING dbleResultSetList;
 					res = stmt->executeQuery(line);
-					string res_line;
+					string resultSetLine;
 					//int rowCount = 0;
 					if (res->rowsCount() == 0) {
-						dblerslist = {};
+						dbleResultSetList = {};
 					}
 					else {
 						try {
-							res_meta = res->getMetaData();
+							resultSetMetaData = res->getMetaData();
 						}
 						catch (SQLException &e) {
 							cout << "getMetaData failed!" << endl;
-							exit(1);
+							//cout << e.what() << endl;
 						}
-						int numcols = res_meta->getColumnCount();
+						int numcols = resultSetMetaData->getColumnCount();
 						while (res->next()) {
-							res_line = "";
+							resultSetLine = "";
 							for (int i = 1; i <= numcols; i++) {
 								string col_str = res->getString(i);
 								if (i != numcols) {
-									res_line.append(col_str + ",");
+									resultSetLine.append(col_str + ",");
 								}
 								else {
-									res_line.append(col_str);
+									resultSetLine.append(col_str);
 								}
 							}
-							dblerslist.push_back(res_line);
+							dbleResultSetList.push_back(resultSetLine);
 							//rowCount++;
 						}
 					}
-					if (dblerslist.size() == 0) {
+					if (dbleResultSetList.size() == 0) {
 						rs_str = " ";
 					}
 					else {
-						rs_str = convertList(dblerslist);
+						rs_str = convertListToString(dbleResultSetList);
 					}
 					delete res;
 				}
