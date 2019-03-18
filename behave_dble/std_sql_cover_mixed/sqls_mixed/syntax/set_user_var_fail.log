@@ -1,28 +1,28 @@
 ===file:sqls_mixed/syntax/set_user_var.sql, id:22, sql:[set @$=5]===
 dble:[None]
 mysql:[()]
-[11:49:05.850277]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER pos 6, line 1, column 6, token IDENTIFIER $')
+dble err:(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER pos 6, line 1, column 6, token IDENTIFIER $')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:23, sql:[set @.=6]===
 dble:[None]
 mysql:[()]
-[11:49:05.944049]dble err :(1064, 'java.sql.SQLSyntaxErrorException: error : pos 7, line 1, column 7, token EQ')
+dble err:(1064, 'java.sql.SQLSyntaxErrorException: error : pos 7, line 1, column 7, token EQ')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:25, sql:[set @.abc_123$=8]===
 dble:[None]
 mysql:[()]
-[11:49:06.130372]dble err :(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER pos 14, line 1, column 14, token IDENTIFIER $')
+dble err:(1064, 'java.sql.SQLSyntaxErrorException: syntax error, expect EQ, actual IDENTIFIER pos 14, line 1, column 14, token IDENTIFIER $')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:31, sql:[set @b='str', @c=4.4, @d={d'2012@12@31'}]===
 dble:[None]
 mysql:[()]
-[11:49:06.577258]dble err :(1064, 'java.sql.SQLSyntaxErrorException: ERROR. pos 26, line 1, column 26, token LBRACE')
+dble err:(1064, 'java.sql.SQLSyntaxErrorException: ERROR. pos 26, line 1, column 26, token LBRACE')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:32, sql:[SELECT @abc123, @123abc, @row_format=1, @$ := @t1+@t2+@t3]===
 dble:[None]
 mysql:[((None, None, None, None),)]
-[11:49:06.673188]dble err :(1064, 'sql syntax error, no terminated. COLONEQ')
+dble err:(1064, 'sql syntax error, no terminated. COLONEQ')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:34, sql:[set @cnt = (select 1);]===
 dble:[None]
 mysql:[()]
-[11:49:06.785380]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:sqls_mixed/syntax/set_user_var.sql, id:56, sql:[set @a=(select 'abc')]===
 dble:[None]
 mysql:[()]
-[11:49:08.428101]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')

@@ -49,7 +49,7 @@ mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4
 ===file:sqls_util/transaction/trx_syntax.sql, id:104, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:28.303367]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:107, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012768506L),)]
 mysql:[((1L, 1L, '1', 1L),)]
@@ -62,7 +62,7 @@ mysql:[((1L, 1L, '1', 10L),)]
 ===file:sqls_util/transaction/trx_syntax.sql, id:116, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:29.362183]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:119, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012769574L),)]
 mysql:[((1L, 1L, '1', 1L),)]
@@ -75,7 +75,7 @@ mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:128, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:30.366135]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:131, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012770549L), (2L, 2L, '2', 2L, 1552012770549L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
@@ -88,7 +88,7 @@ mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:140, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:31.408023]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:143, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012771605L), (2L, 2L, '2', 2L, 1552012771605L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L))]
@@ -101,7 +101,7 @@ mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:152, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:32.516334]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:155, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012772750L), (2L, 2L, '2', 2L, 1552012772750L), (3L, 3L, '3', 3L, 1552012772750L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
@@ -114,7 +114,7 @@ mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:164, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:33.538529]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:167, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012773779L), (2L, 2L, '2', 2L, 1552012773779L), (3L, 3L, '3', 3L, 1552012773779L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L))]
@@ -127,7 +127,7 @@ mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:176, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:34.578602]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:179, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012774853L), (2L, 2L, '2', 2L, 1552012774853L), (3L, 3L, '3', 3L, 1552012774853L), (4L, 4L, '4', 4L, 1552012774853L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
@@ -140,7 +140,7 @@ mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 10L), (3L, 3L, '3', 10L), (4L, 4L, '4'
 ===file:sqls_util/transaction/trx_syntax.sql, id:188, sql:[begin work]===
 dble:[None]
 mysql:[()]
-[10:39:35.677151]dble err :(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
+dble err:(1064, "syntax error, error in :'egin work', expect IDENTIFIER, actual IDENTIFIER pos 10, line 1, column 11, token IDENTIFIER work")
 ===file:sqls_util/transaction/trx_syntax.sql, id:191, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012775868L), (2L, 2L, '2', 2L, 1552012775868L), (3L, 3L, '3', 3L, 1552012775868L), (4L, 4L, '4', 4L, 1552012775868L))]
 mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4L))]
@@ -297,11 +297,11 @@ mysql:[((1L, 1L, '1', 1L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 4
 ===file:sqls_util/transaction/trx_syntax.sql, id:504, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:03.433056]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:509, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:03.878545]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:510, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012803608L),)]
 mysql:[()]
@@ -314,18 +314,18 @@ mysql:[((1L, 1L, '1', 10L), (5L, 5L, '5', 5L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:522, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:04.876473]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:526, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:05.185694]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:527, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012805083L),)]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:531, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[10:40:05.692920]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:532, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012805083L), (5L, 5L, '5', 5L, 1552012805397L))]
 mysql:[((1L, 1L, '1', 1L),)]
@@ -335,11 +335,11 @@ mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:539, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:06.164637]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:543, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:06.535920]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:544, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012806395L), (2L, 2L, '2', 2L, 1552012806395L))]
 mysql:[()]
@@ -352,18 +352,18 @@ mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (5L, 5L, '5', 5L), (6L, 6L, '6', 
 ===file:sqls_util/transaction/trx_syntax.sql, id:556, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:07.537646]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:560, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:07.864975]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:561, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012807753L), (2L, 2L, '2', 2L, 1552012807753L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:565, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[10:40:08.321748]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:566, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012807753L), (2L, 2L, '2', 2L, 1552012807753L), (5L, 5L, '5', 5L, 1552012808106L), (6L, 6L, '6', 6L, 1552012808106L))]
 mysql:[((1L, 1L, '1', 1L),)]
@@ -373,11 +373,11 @@ mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:573, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:08.838231]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:577, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:09.158173]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:578, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012809041L), (2L, 2L, '2', 2L, 1552012809041L), (3L, 3L, '3', 3L, 1552012809041L))]
 mysql:[()]
@@ -390,18 +390,18 @@ mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (5L, 5L, '5', 
 ===file:sqls_util/transaction/trx_syntax.sql, id:590, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:10.182932]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:594, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:10.458459]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:595, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012810357L), (2L, 2L, '2', 2L, 1552012810357L), (3L, 3L, '3', 3L, 1552012810357L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:599, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[10:40:10.913582]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:600, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012810357L), (2L, 2L, '2', 2L, 1552012810357L), (3L, 3L, '3', 3L, 1552012810357L), (5L, 5L, '5', 5L, 1552012810694L), (6L, 6L, '6', 6L, 1552012810694L), (7L, 7L, '7', 7L, 1552012810694L))]
 mysql:[((1L, 1L, '1', 1L),)]
@@ -411,11 +411,11 @@ mysql:[((1L, 1L, '1', 1L), (5L, 5L, '5', 5L), (6L, 6L, '6', 6L), (7L, 7L, '7', 7
 ===file:sqls_util/transaction/trx_syntax.sql, id:607, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:11.376406]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:611, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:11.704499]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:612, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012811601L), (2L, 2L, '2', 2L, 1552012811601L), (3L, 3L, '3', 3L, 1552012811601L), (4L, 4L, '4', 4L, 1552012811601L))]
 mysql:[()]
@@ -428,18 +428,18 @@ mysql:[((1L, 1L, '1', 10L), (2L, 2L, '2', 2L), (3L, 3L, '3', 3L), (4L, 4L, '4', 
 ===file:sqls_util/transaction/trx_syntax.sql, id:624, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:12.741495]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:628, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-[10:40:13.016971]dble err :(1003, 'Unsupported statement')
+dble err:(1003, 'Unsupported statement')
 ===file:sqls_util/transaction/trx_syntax.sql, id:629, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012812926L), (2L, 2L, '2', 2L, 1552012812926L), (3L, 3L, '3', 3L, 1552012812926L), (4L, 4L, '4', 4L, 1552012812926L))]
 mysql:[()]
 ===file:sqls_util/transaction/trx_syntax.sql, id:633, sql:[insert into test1 values(1,1,1,1)]===
 dble:[None]
 mysql:[()]
-[10:40:13.423354]dble err :(1062, "Duplicate entry '1' for key 'PRIMARY'")
+dble err:(1062, "Duplicate entry '1' for key 'PRIMARY'")
 ===file:sqls_util/transaction/trx_syntax.sql, id:634, sql:[select * from test1 order by id]===
 dble:[((1L, 1L, '1', 1L, 1552012812926L), (2L, 2L, '2', 2L, 1552012812926L), (3L, 3L, '3', 3L, 1552012812926L), (4L, 4L, '4', 4L, 1552012812926L), (5L, 5L, '5', 5L, 1552012813232L), (6L, 6L, '6', 6L, 1552012813232L), (7L, 7L, '7', 7L, 1552012813232L), (8L, 8L, '8', 8L, 1552012813232L))]
 mysql:[((1L, 1L, '1', 1L),)]

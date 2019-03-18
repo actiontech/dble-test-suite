@@ -1,7 +1,7 @@
 ===file:sqls_util/syntax/replace.sql, id:52, sql:[replace schema2.test2 select * from test1 where id =1]===
 dble:[None]
 mysql:[()]
-[10:26:04.089557]dble err :(1064, '`INSERT ... SELECT Syntax` is not supported!')
+dble err:(1064, '`INSERT ... SELECT Syntax` is not supported!')
 ===file:sqls_util/syntax/replace.sql, id:53, sql:[SELECT id,R_REGIONKEY,R_NAME,R_COMMENT FROM schema2.test2]===
 dble:[[]]
 mysql:[[(1L, 1L, 'Eastern', 'test001'), (1L, 11L, None, None)]]
