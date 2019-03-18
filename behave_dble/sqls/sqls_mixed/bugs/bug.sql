@@ -242,3 +242,13 @@ create table schema2.global_4_t1(id int,name varchar(30),role varchar(30))
 /* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM schema2 */
 drop table if exists schema2.global_4_t1
 drop view if exists view_tg
+#issue:1023
+drop table if exists sharding_4_t1
+drop table if exists sharding_1_t1
+drop table if exists schema2.global_4_t1
+create table sharding_4_t1(id int,name varchar(30))
+create table sharding_1_t1(id int,name varchar(30))
+create table schema2.global_4_t1(id int,name varchar(30))
+select a.id,b.id,c.id from schema2.global_4_t1 a,sharding_1_t1 b,sharding_4_t1 c order by a.id,c.id
+#issue:1027
+select a.id,b.name from schema2.global_4_t1 a,sharding_4_t1 b where a.id < (select id from sharding_1_t1 where id = 1);
