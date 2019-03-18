@@ -1,8 +1,8 @@
 ===file:sqls_util/select/select.sql, id:81, sql:[select pad,count(id) t from test1 group by pad with rollup]===
 dble:[None]
 mysql:[((-1L, 1L), (0L, 1L), (1L, 2L), (2L, 2L), (3L, 4L), (4L, 3L), (5L, 1L), (6L, 1L), (14L, 1L), (15L, 1L), (17L, 1L), (18L, 1L), (19L, 1L), (None, 20L))]
-[20:58:26.093806]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:sqls_util/select/select.sql, id:182, sql:[select id,k,c,pad from test1 where id=@var1 := 1]===
 dble:[None]
 mysql:[((1L, 1L, 'id1', 1L),)]
-[20:58:38.186236]dble err :(1064, 'sql syntax error, no terminated. COLONEQ')
+dble err:(1064, 'sql syntax error, no terminated. COLONEQ')
