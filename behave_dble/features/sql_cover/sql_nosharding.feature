@@ -4,6 +4,7 @@ Feature: nosharding table sql cover test
 """
 Given rm old logs "sql_cover_nosharding" if exists
 Given reset replication and none system databases
+Given reset views in "dble-1" if exists
 """
 
    Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
