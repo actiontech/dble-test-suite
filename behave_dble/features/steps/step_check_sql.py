@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 import datetime
 import difflib
 import os
@@ -209,7 +211,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
             if err1 is not None:
                 fpF.writelines("mysql err:{0}\n".format(err1))
             if err2 is not None:
-                fpF.writelines("[{1}]dble err :{0}\n".format(err2, datetime.datetime.now().strftime('%H:%M:%S.%f')))
+                fpF.writelines("dble err :{0}\n".format(err2))
         context.logger.info("isResultSame false.")
 
 
