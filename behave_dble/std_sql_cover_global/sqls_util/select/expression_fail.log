@@ -1,19 +1,19 @@
 ===file:sqls_util/select/expression.sql, id:44, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_latin1 b'1000001']===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[10:17:14.404527]dble err :(1064, 'sql syntax error, no terminated. BITS')
+dble err:(1064, 'sql syntax error, no terminated. BITS')
 ===file:sqls_util/select/expression.sql, id:45, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci]===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-[10:17:14.529047]dble err :(1064, 'sql syntax error, no terminated. BITS')
+dble err:(1064, 'sql syntax error, no terminated. BITS')
 ===file:sqls_util/select/expression.sql, id:46, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,_latin1 b'1000001' from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 'A'), (2L, 2.0, 'a\nstring', 'test002', 'A'), (3L, 3.0, 'another string', 'test003', 'A'), (4L, 4.0, '\xe4\xb8\xad', 'test004', 'A'), (5L, 5.0, "a'string'", 'test005', 'A'), (6L, 6.0, 'a""string""', 'test006', 'A'), (7L, 7.0, 'a\x08string', 'test007', 'A'), (8L, 8.0, 'a\nstring', 'test008', 'A'), (9L, 9.0, 'a\rstring', 'test009', 'A'), (10L, 10.0, 'a\tstring', 'test010', 'A'), (11L, 11.0, 'azstring', 'test011', 'A'), (12L, 12.0, 'a\\string', 'test012', 'A'), (13L, 13.0, 'a\\%string', 'test013', 'A'), (14L, 14.0, 'a\\_string', 'test014', 'A'), (15L, 15.0, 'MySQL', 'test015', 'A'), (16L, 16.0, 'binary', 'test016', 'A'), (17L, 1.23457e+22, '17', '17', 'A'), (18L, 18.0, 'A', 'test018', 'A'), (19L, 19.0, '', 'test019', 'A'), (65L, 16.0, 'binary', 'test016', 'A'))]
-[10:17:14.626133]dble err :(1064, 'sql syntax error, no terminated. BITS')
+dble err:(1064, 'sql syntax error, no terminated. BITS')
 ===file:sqls_util/select/expression.sql, id:58, sql:[SELECT (@aa:=id) AS a, (@aa+3) AS b FROM test1]===
 dble:[None]
 mysql:[((1L, 4.0), (2L, 5.0), (3L, 6.0), (4L, 7.0), (5L, 8.0), (6L, 9.0), (7L, 10.0), (8L, 11.0), (9L, 12.0), (10L, 13.0), (11L, 14.0), (12L, 15.0), (13L, 16.0), (14L, 17.0), (15L, 18.0), (16L, 19.0), (17L, 20.0), (18L, 21.0), (19L, 22.0), (65L, 68.0))]
-[10:17:15.892210]dble err :(1064, 'not support assignment')
+dble err:(1064, 'not support assignment')
 ===file:sqls_util/select/expression.sql, id:137, sql:[select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'1000001' not in (select R_NAME from test1 where id =1)]===
 dble:[[(1L, '\x00\x00\x00\x00\x00\x00\x00\x01', 'a', 'test001'), (2L, '\x00\x00\x00\x00\x00\x00\x00\x02', 'a string', 'test002'), (3L, '\x00\x00\x00\x00\x00\x00\x00\x03', '1', 'test001'), (4L, '\x00\x00\x00\x00\x00\x00\x00\n', '1', 'test001')]]
 mysql:[[]]
