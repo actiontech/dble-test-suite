@@ -1,93 +1,68 @@
-from step_reload import get_dble_conn
+import os
+import threading
+from behave_dble.features.steps.lib.Node import get_node
 
 coding= 'utf8'
 import logging
 from behave import *
 from hamcrest import *
-from lib.generate_util import generate
+
+from step_reload import get_dble_conn
 
 LOGGER = logging.getLogger('steps.sequence')
 
-@Then('Testing the global sequence can used in table')
+def insertOneRow(context, table, rowsPerThread):
+    conn = get_dble_conn(context)
+    sql = "insert into {0} values('abc')".format(table)
+    context.logger.debug("execute query in subthread")
+    for i in range(rowsPerThread):
+        res, errMsg = conn.query(sql)
+        assert errMsg is None, "expect '{0}' success, but get: {1}".format(sql, errMsg)
+    conn.close()
+
+@Then('insert "{totalsRowsInsert:d}" rows to global sequence table "{table}" in "{threadNum:d}" thread')
+def step_impl(context, totalsRowsInsert, table, threadNum):
+    realThreadNum = min(totalsRowsInsert, threadNum)
+    rowsPerThread = totalsRowsInsert/threadNum
+    roundantRows = totalsRowsInsert%threadNum
+
+    threadsList = []
+    for k in range(realThreadNum):
+        if k < roundantRows:
+            rowsPerThread = rowsPerThread + 1
+        LOGGER.debug("rowsPerThread to insert : {0}".format(rowsPerThread))
+        thd_name = "insert_thd_{0}".format(k)
+        thd = threading.Thread(target=insertOneRow, name=thd_name, args=(context, table, rowsPerThread))
+        threadsList.append(thd)
+
+    for i in range(realThreadNum):
+        threadsList[i].start()
+
+    for i in range(realThreadNum):
+        threadsList[i].join()
+
+@Then('execute sqlFile to initialize sequence table')
 def step_impl(context):
-    text = eval(context.text)
-    tb = text.get("table")
-    gen = generate()
-    rand_str = gen.rand_string(20)
-    dble_conn = get_dble_conn(context)
+    # copy dble's dbseq.sql to local
+    source_remote_file = "{0}/dble/conf/dbseq.sql".format(context.cfg_dble["install_dir"])
+    target_remote_file = "{0}/data/dbseq.sql".format(context.cfg_mysql["install_path"])
+    local_file  = "{0}/dbseq.sql".format(os.getcwd())
 
+    node = get_node(context.mysqls, "mysql-master1")
+    ssh_client = node.ssh_conn;
+
+    cmd="rm -rf {0}".format(local_file)
+    ssh_client.exec_command(cmd);
+
+    context.ssh_sftp.sftp_get(source_remote_file, local_file)
+    node.sftp_conn.sftp_put(local_file, target_remote_file)
+
+    cmd = "mysql -utest -p111111 db1 < {0}".format(target_remote_file)
+    ssh_client.exec_command(cmd)
+
+    #execute dbseq.sql at the node configed in sequence file
     context.execute_steps(u"""
-    Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | schema1 |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | schema1 |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                                          | success           | schema1 |
-        | test | 111111 | conn_0 | False   | insert into {0}(id,name) values(1, '{2}')    | In insert Syntax, you can't set value for Autoincrement column| schema1 |
-        | test | 111111 | conn_0 | False   | insert into {0} set id=1, name='{2}'         | In insert Syntax, you can't set value for Autoincrement column| schema1 |
-        | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | schema1 |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}'),('{2}'),('{2}')| success | schema1 |
-    """.format(tb, "bigint", rand_str))
-
-    sequnceHandlerType = text.get("sequnceHandlerType")
-    if "1" == sequnceHandlerType:
-        insertRow = 100
-        val = "('{0}')".format(gen.rand_string(20))
-        for i in range(insertRow):
-            val = val + ",('{0}')".format(gen.rand_string(20))
-
-        sql = "insert into {0} values ('{1}')".format(tb, gen.rand_string(20))
-        dble_conn.query(sql)
-
-        #check for no repeatable id, todo too little data is not able to capture the possible bug
-        sql = "select count(*) from {0} having count(*) > 1 group by id;".format(tb)
-        result, errMes = dble_conn.query(sql)
-        assert_that(result, is_(()))
-
-        #check for data distribution is reasonable
-        sql = "explain select * from {0}".format(tb)
-        result, errMes = dble_conn.query(sql)
-        if type(result) == tuple:
-            for i in range(len(result)):
-                sql = "/*!dble:dataNode={0}*/select count(*) from {1}".format(result[i][0], tb)
-                res, err = dble_conn.query(sql)
-                assert_that(int(res[0][0]), greater_than_or_equal_to(insertRow/4)) # 4 is default shardings
-
-    context.execute_steps(u"""
-    Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} , name varchar(20))  | success |mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} auto_increment, name varchar(20), primary key (id))| success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} set name='{2}'               | success | mytest |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(idd {1}, name varchar(20))  | success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey or incrementColumn | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | please make sure your table structure has primaryKey or incrementColumn | mytest |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                     | success | mytest |
-        | test | 111111 | conn_0 | False   | create table {0}(idd {1} auto_increment, name varchar(20), primary key(idd))| success | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                | please make sure your table structure has primaryKey or incrementColumn | mytest |
-        | test | 111111 | conn_0 | False   | insert into {0}(name) values('{2}')          | please make sure your table structure has primaryKey or incrementColumn | mytest |
-    """.format(tb, "bigint", rand_str))
-
-    #use int not bigint as global sequnce
-    rand_str = gen.rand_string(20)
-    context.execute_steps(u"""
-    Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose | sql                                                                    | expect            | db     |
-        | test | 111111 | conn_0 | False   | drop table if exists {0}                                               | success           | schema1 |
-        | test | 111111 | conn_0 | False   | create table {0}(id {1} primary key auto_increment, name varchar(20))  | success           | schema1 |
-        | test | 111111 | conn_0 | False   | insert into {0} values('{2}')                      | Out of range value for column | schema1 |
-        | test | 111111 | conn_0 | True    | insert into {0} values('{2}'),('{2}'),('{2}')      | Out of range value for column | schema1 |
-    """.format(tb, "int", rand_str))
-
-# Given('append "{line}" in {seq_file}')
-# def step_impl(context, line, seq_file):
-#     node = get_node(context, "dble-1")
-#     log = '{0}/dble/conf/log4j2.xml'.format(context.cfg_dble['install_dir'])
-#     cmd = "sed -i '$a {0} {1}' {2} ".format(line, seq_file)
-#     node.ssh_conn.exec_command(cmd)
+    Then execute sql in "mysql-master1"
+        | user | passwd | conn   | toClose | sql                                                               | expect  | db     |
+        | test | 111111 | conn_0 | True    | insert into DBLE_SEQUENCE values ('`schema1`.`test_auto`', 3, 1)  | success | db1    |
+    """)
