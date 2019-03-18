@@ -209,11 +209,7 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
             if err1 is not None:
                 fpF.writelines("mysql err:{0}\n".format(err1))
             if err2 is not None:
-<<<<<<< HEAD
                 fpF.writelines("dble err:{0}\n".format(err2))
-=======
-                fpF.writelines("dble err :{0}\n".format(err2))
->>>>>>> 2.19.01.0
         context.logger.info("isResultSame false.")
 
 
