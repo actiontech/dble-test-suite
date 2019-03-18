@@ -1,48 +1,48 @@
 ===file:special_global/select/select_global_old.sql, id:210, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[10:41:23.925620]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:special_global/select/select_global_old.sql, id:211, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[10:41:24.020174]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:special_global/select/select_global_old.sql, id:220, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[10:41:25.034139]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:special_global/select/select_global_old.sql, id:221, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-[10:41:25.157206]dble err :(-1, 'error totally whack')
+dble err:(-1, 'error totally whack')
 ===file:special_global/select/select_global_old.sql, id:250, sql:[select count(*) from schema2.test2 as a where a.c_CUSTKEY=(select max(C_CUSTKEY) from test1 where C_CUSTKEY=a.C_CUSTKEY)]===
 dble:[None]
 mysql:[((1L,),)]
-[10:41:28.418081]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')
 ===file:special_global/select/select_global_old.sql, id:251, sql:[select C_CUSTKEY  from schema2.test2 as a where (select count(*) from test1 where O_CUSTKEY=a.C_CUSTKEY)=2]===
 dble:[None]
 mysql:[(('CUSTKEY_003',),)]
-[10:41:28.506792]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')
 ===file:special_global/select/select_global_old.sql, id:254, sql:[select count(*) from schema2.test2 as a where 2>all(select count(*) from test1 where O_CUSTKEY=C_CUSTKEY)]===
 dble:[None]
 mysql:[((6L,),)]
-[10:41:28.837103]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')
 ===file:special_global/select/select_global_old.sql, id:255, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,O_CUSTKEY)=(select c_ORDERKEY,c_CUSTKEY from schema2.test2 where c_name='yanglu')]===
 dble:[None]
 mysql:[((6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L),)]
-[10:41:28.980306]dble err :(1064, 'Row Subqueries is not supported')
+dble err:(1064, 'Row Subqueries is not supported')
 ===file:special_global/select/select_global_old.sql, id:256, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,a.O_CUSTKEY) in (select c_ORDERKEY,c_CUSTKEY from schema2.test2) order by id,O_ORDERKEY,O_CUSTKEY,O_TOTALPRICE,MYDATE]===
 dble:[None]
 mysql:[((1L, 'CUSTKEY_003', 'ORDERKEY_001', 200000L), (4L, 'CUSTKEY_111', 'ORDERKEY_004', 500L), (5L, 'CUSTKEY_132', 'ORDERKEY_005', 100L), (6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L), (7L, 'CUSTKEY_980', 'ORDERKEY_007', 12000L), (10L, 'CUSTKEY_333', 'ORDERKEY_010', 88888888L), (11L, 'CUSTKEY_012', 'ORDERKEY_011', 323456L))]
-[10:41:29.060251]dble err :(1064, 'Row Subqueries is not supported')
+dble err:(1064, 'Row Subqueries is not supported')
 ===file:special_global/select/select_global_old.sql, id:257, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)]===
 dble:[None]
 mysql:[((1L, 'CUSTKEY_003', 'ORDERKEY_001', 200000L), (2L, 'CUSTKEY_003', 'ORDERKEY_002', 100000L), (4L, 'CUSTKEY_111', 'ORDERKEY_004', 500L), (5L, 'CUSTKEY_132', 'ORDERKEY_005', 100L), (6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L), (7L, 'CUSTKEY_980', 'ORDERKEY_007', 12000L), (10L, 'CUSTKEY_333', 'ORDERKEY_010', 88888888L), (11L, 'CUSTKEY_012', 'ORDERKEY_011', 323456L))]
-[10:41:29.185262]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')
 ===file:special_global/select/select_global_old.sql, id:258, sql:[select distinct O_ORDERKEY,O_CUSTKEY from test1 a where exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)]===
 dble:[None]
 mysql:[(('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003'), ('ORDERKEY_011', 'CUSTKEY_012'), ('ORDERKEY_004', 'CUSTKEY_111'), ('ORDERKEY_005', 'CUSTKEY_132'), ('ORDERKEY_010', 'CUSTKEY_333'), ('ORDERKEY_006', 'CUSTKEY_420'), ('ORDERKEY_007', 'CUSTKEY_980'))]
-[10:41:29.271549]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')
 ===file:special_global/select/select_global_old.sql, id:259, sql:[select count(*) from test1 a where not exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)]===
 dble:[None]
 mysql:[((0L,),)]
-[10:41:29.372146]dble err :(1105, 'Correlated Sub Queries is not supported ')
+dble err:(1105, 'Correlated Sub Queries is not supported ')
