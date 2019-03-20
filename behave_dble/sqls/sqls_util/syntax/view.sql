@@ -123,12 +123,11 @@ select * from schema2.test2 union select * from view_test
 select * from schema2.test2 where id<(select count(*) from view_test)
 drop view view_test
 ##################github issue 998#############################
-drop table if exists `select`
-drop table if exists `drop`
-create table `select`(id int,`key` int)
-create or replace view `drop` as select id from `select`
-drop table if exists `select`
-drop table if exists `drop`
+drop table if exists test1
+create or replace view test1 as select id from schema2.test2
+drop table if exists schema2.test2
+drop table if exists test1
+drop view test1
 #
 #clear tables
 #
