@@ -162,6 +162,12 @@ def step_impl(context, filename):
                 fp.write(data + '\n')
                 col1= col1+1
                 col2 = col2+1
+    elif text.find("68888") == 1:
+        s = "a"
+        with open(filename, 'w') as fp:
+            fp.writelines(s + ",")
+            for i in xrange(68888):
+                fp.writelines(s)
 
     else:
         with open(filename, 'w') as fp:
@@ -184,6 +190,7 @@ def step_impl(context):
       Given remove local and server file "test2.txt"
       Given remove local and server file "test3.txt"
       Given remove local and server file "test4.txt"
+      Given remove local and server file "test.txt"
     ''')
 
 @Given('remove local and server file "{filename}"')
