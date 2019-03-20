@@ -1,12 +1,3 @@
-===file:sqls_util/syntax/show.sql, id:5, sql:[show columns in test1]===
-dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'NO', 'PRI', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, '')]]
-mysql:[[('ID', 'int(11)', 'YES', '', None, ''), ('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'NO', 'PRI', None, '')]]
-===file:sqls_util/syntax/show.sql, id:6, sql:[show columns from test1 from schema1]===
-dble:[[('ID', 'int(11)', 'YES', '', None, ''), ('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'NO', 'PRI', None, ''), ('_dble_op_time', 'bigint(20)', 'YES', '', None, '')]]
-mysql:[[('ID', 'int(11)', 'YES', '', None, ''), ('R_COMMENT', 'varchar(50)', 'YES', '', None, ''), ('R_NAME', 'varchar(50)', 'YES', '', None, ''), ('R_REGIONKEY', 'int(11)', 'NO', 'PRI', None, '')]]
-===file:sqls_util/syntax/show.sql, id:7, sql:[show full columns from test1 from schema1]===
-dble:[[('ID', 'int(11)', None, 'YES', '', None, '', 'select,insert,update,references', ''), ('R_COMMENT', 'varchar(50)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('R_NAME', 'varchar(50)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('R_REGIONKEY', 'int(11)', None, 'NO', 'PRI', None, '', 'select,insert,update,references', ''), ('_dble_op_time', 'bigint(20)', None, 'YES', '', None, '', 'select,insert,update,references', 'field for checking consistency')]]
-mysql:[[('ID', 'int(11)', None, 'YES', '', None, '', 'select,insert,update,references', ''), ('R_COMMENT', 'varchar(50)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('R_NAME', 'varchar(50)', 'latin1_swedish_ci', 'YES', '', None, '', 'select,insert,update,references', ''), ('R_REGIONKEY', 'int(11)', None, 'NO', 'PRI', None, '', 'select,insert,update,references', '')]]
 ===file:sqls_util/syntax/show.sql, id:35, sql:[create database  if not exists schema1]===
 dble:[None]
 mysql:[()]
