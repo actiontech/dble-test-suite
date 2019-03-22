@@ -18,62 +18,64 @@ using namespace std;
 using namespace sql;
 
 list<string> exec_sql(Statement *stmt, string line) {
-	list<string> rslist;
+	list<string> resultSetList;
 	ResultSet *res;
-	ResultSetMetaData *res_meta;
+	ResultSetMetaData *resultSetMetaData;
 	try {
 		if (findSubstr(line, "select") || findSubstr(line, "show") || findSubstr(line, "check") || findSubstr(line, "union") || findSubstr(line, "explain") || findSubstr(line, "desc") || findSubstr(line, "@b")) {
+			//if ((line.find("select")==0) || (line.find("show")==0) || (line.find("check")==0) || (line.find("union")==0) || (line.find("explain")==0) || (line.find("desc")==0) || (line.find("@b")==0)) {
 			res = stmt->executeQuery(line);
-			string res_line;
+			string resultSetLine;
 			if (res->rowsCount() == 0) {
-				rslist = {};
+				resultSetList = {};
 			}
 			else {
 				try {
-					res_meta = res->getMetaData();
+					resultSetMetaData = res->getMetaData();
 				}
 				catch (SQLException &e) {
 					cout << "getMetaData failed!" << endl;
-					exit(1);
+					//cout << e.what() << endl;
 				}
-				int numcols = res_meta->getColumnCount();
+				int numcols = resultSetMetaData->getColumnCount();
 				while (res->next()) {
-					res_line = "";
+					resultSetLine = "";
 					for (int i = 1; i <= numcols; i++) {
 						string col_str = res->getString(i);
 						if (i != numcols) {
-							res_line.append(col_str + ",");
+							resultSetLine.append(col_str + ",");
 						}
 						else {
-							res_line.append(col_str);
+							resultSetLine.append(col_str);
 						}
 					}
-					rslist.push_back(res_line);
+					resultSetList.push_back(resultSetLine);
 				}
 			}
 			delete res;
 		}
 		else if (findSubstr(line, "insert") || findSubstr(line, "update") || findSubstr(line, "delete")) {
+			//else if ((line.find("insert")==0) || (line.find("update")==0) || (line.find("delete")==0)) {
 			int count = stmt->executeUpdate(line);
-			rslist.push_back(to_string(count));
+			resultSetList.push_back(to_string(count));
 		}
 		else {
 			bool success = stmt->execute(line);
-			string boolstr;
+			string boolString;
 			if (success) {
-				boolstr = "true";
+				boolString = "true";
 			}
 			else {
-				boolstr = "false";
+				boolString = "false";
 			}
-			rslist.push_back(boolstr);
+			resultSetList.push_back(boolString);
 		}
 	}
 	catch (SQLException &e) {
 		string errMsg = e.what();
 		string errCode = to_string(e.getErrorCode());
 		string err = "[(" + errCode + ": " + errMsg + ")]";
-		rslist.push_back(err);
+		resultSetList.push_back(err);
 	}
-	return rslist;
+	return resultSetList;
 }
