@@ -5,11 +5,11 @@
 
 using namespace std;
 
-int RmFile(const char *filepath){
+int removeFile(const char *filePath){
 	try {
-		int accessflag = access(filepath, F_OK);
-		if (accessflag == 0) {
-			remove(filepath);
+		int accessFlag = access(filePath, F_OK);
+		if (accessFlag == 0) {
+			remove(filePath);
 		}
 	}
 	catch (exception e) {
