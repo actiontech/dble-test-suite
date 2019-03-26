@@ -122,15 +122,13 @@ select count(*) from (select * from view_test) a
 select * from schema2.test2 union select * from view_test
 select * from schema2.test2 where id<(select count(*) from view_test)
 drop view view_test
-#####################issue:827###################################
-create view view_test as select name,pad from test1
-show create view view_test/*allow_diff*/
-SHOW COLUMNS FROM view_test
-drop view view_test
-#####################issue:825###################################
-create view view_test as select id,name from test1
-SHOW FULL TABLES WHERE Table_type = 'VIEW'
-drop view view_test
+##################github issue 998#############################
+drop table if exists `select`
+drop table if exists `drop`
+create table `select`(id int,`key` int)
+create or replace view `drop` as select id from `select`
+drop table if exists `select`
+drop table if exists `drop`
 #
 #clear tables
 #
