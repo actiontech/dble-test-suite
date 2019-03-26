@@ -7,6 +7,6 @@ Feature: show_datasource
      Given stop mysql in host "mysql-master1"
      Then get resultset of admin cmd "show @@datasource" named "sql_rs"
      Then check resultset "sql_rs" has lines with following column values
-        | NAME-0 | HOST-1         |  PORT-2 | ACTIVE-4  |
-        | hostM1 | 172.100.9.5   | 3306     |    0      |
+        | NAME-0 | HOST-1         |  PORT-2 | ACTIVE-4  | IDLE-5  |
+        | hostM1 | 172.100.9.5   | 3306     |    0      |      0     |
      Given start mysql in host "mysql-master1"
