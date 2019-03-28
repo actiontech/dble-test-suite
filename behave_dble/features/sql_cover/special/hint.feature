@@ -444,7 +444,7 @@ Feature: verify hint sql
         | test | 111111 | conn_0     | True     | /*!dble:sql=select id from test_shard where id =2*/call select_name          | has{[((2L, 'test_sp2'),)]} | schema1 |
 
   @regression
-  Scenario: routed node when index with hint    from issue: 892    author:maofei
+  Scenario: routed node when index with hint    from issue: 892    author:maofei #7
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                             | expect  | db     |
         | test | 111111 | conn_0 | True     | drop table if exists test_global            | success | schema1 |
@@ -458,3 +458,35 @@ Feature: verify hint sql
     """
     dn5{show index from test_global/*test*/}
     """
+
+  Scenario: sql from GUI CLient test    author:maofei #8
+    #from issue: 1032
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                                                                                                    | expect  | db       |
+        | test | 111111 | conn_0 | True     | drop table if exists test1                                                                                          | success | schema1 |
+        | test | 111111 | conn_0 | True     | create table test1(id int not null, name varchar(40), depart varchar(40),role varchar(30),code int(4))    | success | schema1 |
+        | test | 111111 | conn_0 | True     | create view view_tt as select name,depart,role from test1                                                       | success | schema1 |
+        | test | 111111 | conn_0 | True     | /* ApplicationName=DBeaver 5.2.4 - Main */drop view view_tt                                                     | success | schema1 |
+    #from issue: 842
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                      | expect                                    | db       |
+        | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t1   | success                                   | schema1 |
+        | test | 111111 | conn_0 | True     | drop table if exists test1            | success                                   | schema1 |
+        | test | 111111 | conn_0 | True     | drop table if exists test2            | success                                    | schema1 |
+        | test | 111111 | conn_0 | True     | drop table if exists test3            | success                                    | schema1 |
+        | test | 111111 | conn_0 | True     | create table sharding_4_t1(id int)   | success                                    | schema1 |
+        | test | 111111 | conn_0 | True     | create table test1(id int)            | success                                    | schema1 |
+        | test | 111111 | conn_0 | True     | create table test2(id int)            | success                                    | schema1 |
+        | test | 111111 | conn_0 | True     | create table test3(id int)            | success                                    | schema1 |
+        | test | 111111 | conn_0 | True     | SHOW FULL TABLES FROM `schema1`      | hasStr{sharding_4_t1}  | schema1 |
+        | test | 111111 | conn_0 | True     | SHOW FULL TABLES FROM schema1        | hasStr{sharding_4_t1}   | schema1 |
+    #from issue:829
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                                                                      | expect   | db      |
+        | test | 111111 | conn_0 | True     | /* ApplicationName=DBeaver 5.2.4 - Metadata */ SHOW FULL TABLES FROM schema1  | success  | schema1 |
+    #from issue:824
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                                            | expect       | db       |
+        | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t1                        | success      | schema1 |
+        | test | 111111 | conn_0 | True     | create table sharding_4_t1(id int,name varchar(30))    | success       | schema1 |
+        | test | 111111 | conn_0 | True     | show table status like 'sharding_4_t1'                   | length{(1)}  | schema1 |
