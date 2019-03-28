@@ -157,8 +157,10 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
 
         if (isContIndex or isAllowTenDiff):
             g = difflib.SequenceMatcher(None, str(dble_result), str(mysql_result)).ratio()
+            context.logger.info("in isAllowTen function and compare result is : {0};now isAllowTen is {1}".format(g,isAllowTen))
             if (g >0.9):
                 isAllowTen = True
+                context.logger.info("Meet the condition of g>0.9,and now isAllowTen is:{0}".format(isAllowTen))
 
     isResultSame = dble_result==mysql_result or (isNoErr and isAllowDiff) or (isNoErr and isAllowTen)
 
