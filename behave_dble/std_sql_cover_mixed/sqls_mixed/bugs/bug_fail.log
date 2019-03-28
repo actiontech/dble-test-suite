@@ -1,0 +1,4 @@
+===file:sqls_mixed/bugs/bug.sql, id:260, sql:[SHOW COLUMNS FROM view_tt;]===
+dble:[None]
+mysql:[(('name', 'varchar(40)', 'YES', '', None, ''), ('depart', 'varchar(40)', 'YES', '', None, ''), ('role', 'varchar(30)', 'YES', '', None, ''))]
+dble err:(1146, "Table 'schema1.view_tt' doesn't exist")
