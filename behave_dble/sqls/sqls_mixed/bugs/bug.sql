@@ -227,14 +227,14 @@ drop table if exists sharding_4_t1
 drop table if EXISTS sharding_3_t1
 CREATE  table sharding_3_t1(id int)
 insert into sharding_3_t1 values(null)
-select * from sharding_3_t1 a where a.id is null;
+select * from sharding_3_t1 a where a.id is null
 drop table if EXISTS sharding_3_t1
 #github issue 884
-drop table if exists sharding_4_t1;
-create table sharding_4_t1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),t datetime,b bool)DEFAULT CHARSET=UTF8;
-insert into sharding_4_t1 (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0);
+drop table if exists sharding_4_t1
+create table sharding_4_t1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),t datetime,b bool)DEFAULT CHARSET=UTF8
+insert into sharding_4_t1 (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0)
 select * from sharding_4_t1 where exists(select * from sharding_4_t1 where id=1||id=3)
-drop table if exists sharding_4_t1;
+drop table if exists sharding_4_t1
 #github issue 829
 drop table if exists schema2.global_4_t1
 create table schema2.global_4_t1(id int,name varchar(30),role varchar(30))
@@ -251,4 +251,17 @@ create table sharding_1_t1(id int,name varchar(30))
 create table schema2.global_4_t1(id int,name varchar(30))
 select a.id,b.id,c.id from schema2.global_4_t1 a,sharding_1_t1 b,sharding_4_t1 c order by a.id,c.id
 #issue:1027
-select a.id,b.name from schema2.global_4_t1 a,sharding_4_t1 b where a.id < (select id from sharding_1_t1 where id = 1);
+select a.id,b.name from schema2.global_4_t1 a,sharding_4_t1 b where a.id < (select id from sharding_1_t1 where id = 1)
+#issue:827
+drop table if exists test
+create table test(id int, name varchar(40), depart varchar(40),role varchar(30),company varchar(50),code int(4) not null,salary float(8,2))
+create view view_tt as select name,depart,role from test
+show create view view_tt/*allow_diff*/
+SHOW COLUMNS FROM view_tt
+drop view view_tt
+#issue:825
+drop table if exists sharding_4_t1
+create table sharding_4_t1(id int,name varchar(30))
+create view view_test as select id,name from sharding_4_t1
+SHOW FULL TABLES WHERE Table_type = 'VIEW'
+drop view view_test
