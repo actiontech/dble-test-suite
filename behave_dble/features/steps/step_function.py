@@ -90,12 +90,13 @@ def test_use_limit(context):
     conn.query(drop_sql)
 
 @Then('get query plan and make sure it is optimized')
+@then('execute query and get expect result count')
 def step_impl(context):
     for row in context.table:
         sql = row["query"]
         conn = get_dble_conn(context)
         res,err = conn.query(sql)
-        assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute plan seems not optimized, the plan:{1}".format(sql,res)
+        assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute result seems not as except, real result:{1}".format(sql,res)
 
 @Given('prepare loaddata.sql data for sql test')
 def step_impl(context):
