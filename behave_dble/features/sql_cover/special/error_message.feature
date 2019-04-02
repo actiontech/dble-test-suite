@@ -40,3 +40,23 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0  | True   | explain prepare pre_test from 'alter table test_shard add age int(10)'  |Inner command not route to MySQL:prepare pre_test from 'alter table test_shard add age int(10)'|schema1  |
       | test | 111111 | conn_0  | True   | explain select 1/*! test*/                                              |success                                                                                                    |schema1  |
       | test | 111111 | conn_0  | True   | explain load data infile my.sqll                                        |Inner command not route to MySQL:load data infile my.sqll                                            |schema1  |
+
+  @regression
+  Scenario: # correlated subquery in the SELECT clause will raise an error  from issue：1087
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn    | toClose| sql                                                                                                                                                                        | expect                                          |db     |
+      | test | 111111 | conn_0  | True   | drop table if exists sharding_4_t1                                                                                                                                     | success                                         |schema1  |
+      | test | 111111 | conn_0  | True   | CREATE TABLE `sharding_4_t1` (`id` bigint(19) NOT NULL,`SENDING_DATE` datetime DEFAULT NULL)                                                                   |success                                          |schema1  |
+      | test | 111111 | conn_0  | True   | SELECT COUNT(*) AS TEMP2,(SELECT COUNT(*) FROM sharding_4_t1 S WHERE MONTH(s.SENDING_DATE) = MONTH(t.SENDING_DATE)) AS TEMP1 FROM sharding_4_t1 t       |Correlated Sub Queries is not supported     |schema1  |
+
+  @regression
+  Scenario: # test Unfriendly tips for select query  from issue：1053
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn    | toClose| sql                                                                                                                           | expect                                    |db     |
+      | test | 111111 | conn_0  | True   | drop table if exists sharding_4_t1                                                                                       | success                                    |schema1  |
+      | test | 111111 | conn_0  | True   | drop table if exists sharding_1_t1                                                                                       | success                                    |schema1  |
+      | test | 111111 | conn_0  | True   | drop table if exists sharding_2_t1                                                                                       | success                                    |schema1  |
+      | test | 111111 | conn_0  | True   | create table sharding_1_t1(id int,name char)                                                                            | success                                    |schema1  |
+      | test | 111111 | conn_0  | True   | create table sharding_2_t1(id int,name char)                                                                            | success                                    |schema1  |
+      | test | 111111 | conn_0  | True   | create table sharding_4_t1(id int,name char)                                                                            | success                                    |schema1  |
+      | test | 111111 | conn_0  | True   | select * from sharding_1_t1 b,sharding_4_t1 c,(select * from sharding_2_t1) a on c.id=b.id and c.id=b.id       |You have an error in your SQL syntax     |schema1  |
