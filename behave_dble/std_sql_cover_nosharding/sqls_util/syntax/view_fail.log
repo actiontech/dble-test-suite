@@ -1,0 +1,4 @@
+===file:sqls_util/syntax/view.sql, id:128, sql:[SHOW COLUMNS FROM view_test]===
+dble:[None]
+mysql:[(('name', 'varchar(40)', 'YES', '', None, ''), ('depart', 'varchar(40)', 'YES', '', None, ''), ('role', 'varchar(30)', 'YES', '', None, ''))]
+dble err:(1146, "Table 'schema1.view_test' doesn't exist")
