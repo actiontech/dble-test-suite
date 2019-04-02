@@ -124,13 +124,13 @@ Feature: test read load balance
     | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then connect "dble-1" to execute "1000" of select for "test"
+    Then connect "dble-1" to execute "10000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{5000} |  |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{5000} |  |
 
   @CRITICAL
   Scenario: dataHost balance="2", do balance bewteen read host and write host according to their weight #4
@@ -175,13 +175,13 @@ Feature: test read load balance
     Then connect "dble-1" to execute "10000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{250}|  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{2500}|  |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{250} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{2500} |  |
     Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log whe0re argument like'SELECT name%FROM test%'        |  balance{500} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{5000} |  |
 
   @CRITICAL
   Scenario: dataHost balance="3", do balance bewteen read host #5
@@ -223,16 +223,16 @@ Feature: test read load balance
     | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
     | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
     | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then connect "dble-1" to execute "1000" of select for "test"
+    Then connect "dble-1" to execute "10000" of select for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} |  |
     Then execute sql in "mysql-slave2"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{500} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{5000} |  |
     Then execute sql in "mysql-slave1"
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{500} |  |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{5000} |  |
 
   @NORMAL
   Scenario: dataHost balance="3" and tempReadHostAvailable="1", do balance bewteen read host even writehost down #6
