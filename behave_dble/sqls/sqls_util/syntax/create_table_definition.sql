@@ -639,6 +639,11 @@ CREATE TABLE test1(id int, data1 int,data2 int,data3 int UNIQUE KEY COMMENT 'tes
 INSERT INTO test1 (id,data1,data2) VALUES (1,1,1)
 DESC test1
 SELECT id,data1,data2,data3 FROM test1
+####################issue:734########################################
+DROP TABLE IF EXISTS test1
+CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))
+INSERT INTO test1 (id,data1,data2)  VALUES (1,'aaa1','aaa2')
+SELECT id,data1,data2 FROM test1
 #
 #clear tables
 #
