@@ -128,6 +128,15 @@ create or replace view test1 as select id from schema2.test2
 drop table if exists schema2.test2
 drop table if exists test1
 drop view test1
+#####################issue:827###################################
+create view view_test as select name,pad from test1
+show create view view_test/*allow_diff*/
+SHOW COLUMNS FROM view_test
+drop view view_test
+#####################issue:825###################################
+create view view_test as select id,name from test1
+SHOW FULL TABLES WHERE Table_type = 'VIEW'
+drop view view_test
 #
 #clear tables
 #
