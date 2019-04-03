@@ -40,3 +40,17 @@ Feature: install dble cluster, degrade to single dble, recover to cluster
     dble-3
     """
     Given stop dble cluster and zk service
+
+  Scenario: verify dnindex.properties should not be empty after restart dble #3
+    Given stop dble cluster and zk service
+    Given a clean environment in all dble nodes
+    Given install dble in all dble nodes
+    Given replace config files in all dbles with command line config
+    Given config zookeeper cluster in all dble nodes with "all zookeeper hosts"
+    Given reset dble registered nodes in zk
+    Given Restart dble in "dble-1" success
+    Then check following " " exist in file "/opt/dble/conf/dnindex.properties" in "dble-1"
+    """
+    localhost1=0
+    """
+    Given stop dble cluster and zk service

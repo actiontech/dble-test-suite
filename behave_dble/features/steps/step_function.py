@@ -90,12 +90,13 @@ def test_use_limit(context):
     conn.query(drop_sql)
 
 @Then('get query plan and make sure it is optimized')
+@then('execute query and get expect result count')
 def step_impl(context):
     for row in context.table:
         sql = row["query"]
         conn = get_dble_conn(context)
         res,err = conn.query(sql)
-        assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute plan seems not optimized, the plan:{1}".format(sql,res)
+        assert len(res) == int(row["expect_result_count"]), "query: {0}'s execute result seems not as except, real result:{1}".format(sql,res)
 
 @Given('prepare loaddata.sql data for sql test')
 def step_impl(context):
@@ -161,6 +162,12 @@ def step_impl(context, filename):
                 fp.write(data + '\n')
                 col1= col1+1
                 col2 = col2+1
+    elif text.find("68888") == 1:
+        s = "a"
+        with open(filename, 'w') as fp:
+            fp.writelines(s + ",")
+            for i in xrange(68888):
+                fp.writelines(s)
 
     else:
         with open(filename, 'w') as fp:
@@ -183,6 +190,7 @@ def step_impl(context):
       Given remove local and server file "test2.txt"
       Given remove local and server file "test3.txt"
       Given remove local and server file "test4.txt"
+      Given remove local and server file "test.txt"
     ''')
 
 @Given('remove local and server file "{filename}"')
