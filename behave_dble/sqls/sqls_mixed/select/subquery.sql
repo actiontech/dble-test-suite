@@ -105,6 +105,8 @@ select (select count(distinct id)t from sharding_4_t1 group by pad having t >3 o
 #
 select * from sharding_4_t1 order by (select pad from schema2.sharding_4_t2 order by id limit 1)
 #select * from sharding_4_t1 order by (select pad from schema2.sharding_4_t2 limit 1)/*hang*/  #case for issue 13,waiting for fix
+#issue :1103
+select s.* from (select count(1) c from schema2.sharding_4_t2 t union all select count(1) c from sharding_4_t1 t  ) s where s.c>2;
 #
 #clear tables
 #
