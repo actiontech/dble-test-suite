@@ -5,6 +5,7 @@ import datetime
 import logging
 import random
 import re
+import time
 
 import MySQLdb
 from behave import *
@@ -348,4 +349,4 @@ def do_batch_sql(context, hostname, db, sql):
     finally:
         conn.close()
     assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
-
+    
