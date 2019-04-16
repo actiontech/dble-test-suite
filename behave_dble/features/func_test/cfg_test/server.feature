@@ -285,6 +285,32 @@ Feature: test config in server.xml
         | user     | passwd    | conn   | toClose | sql            | expect  | db     |
         | root     | 111111    | conn_2 | False   | show @@version | success | schema1 |
 
+  Scenario: test tableStructureCheckTask from issue:1098 #11
 
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+       <property name="checkTableConsistency">1</property>
+	    <property name="checkTableConsistencyPeriod">1000</property>
+    """
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn    | toClose | sql                                                     | expect          |db       |
+      | test  | 111111 | conn_0  | True    | create table test_table(id int,name char(20))           | success         | schema1 |
+    Then execute sql in "mysql-master1"
+      | user  | passwd | conn    | toClose | sql                                            | expect          |db       |
+      | test  | 111111 | conn_0  | True    | alter table test_table drop name           | success         | db1 |
+    Given sleep "2" seconds
+    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    """
+    structure are not consistent in different data node
+    are modified by other,Please Check IT
+    """
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn    | toClose | sql                                           | expect          |db       |
+      | test  | 111111 | conn_0  | True    | drop table if exists test_table           | success         | schema1 |
 
 
