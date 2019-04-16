@@ -60,3 +60,24 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0  | True   | create table sharding_2_t1(id int,name char)                                                                            | success                                    |schema1  |
       | test | 111111 | conn_0  | True   | create table sharding_4_t1(id int,name char)                                                                            | success                                    |schema1  |
       | test | 111111 | conn_0  | True   | select * from sharding_1_t1 b,sharding_4_t1 c,(select * from sharding_2_t1) a on c.id=b.id and c.id=b.id       |You have an error in your SQL syntax     |schema1  |
+
+  Scenario: # test a physical database that has not been created when starting xa  from issue：1106
+    Then execute sql in "mysql-master1"
+      | user  | passwd | conn   | toClose | sql                                  | expect  | db  |
+      | test  | 111111 | conn_0 | True    | drop database if exists db3       | success |     |
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn    | toClose | sql                                   | expect                                                                                           |db     |
+      | test | 111111 | conn_0  | False   | set autocommit=0                    | success                                                                                          |schema1  |
+      | test | 111111 | conn_0  | False   | set xa=on                            | success                                                                                          |schema1  |
+      | test | 111111 | conn_0  | False   | drop table if exists test1         | Unknown database 'db3'                                                                        |schema1  |
+      | test | 111111 | conn_0  | False   | drop table if exists test1         | Transaction error, need to rollback.Reason:[ errNo:1049 Unknown database 'db3']       |schema1  |
+    Then execute sql in "dble-1" in "admin" mode
+      | user  | passwd | conn   | toClose | sql                 | expect          | db    |
+      | root  | 111111 | conn_1 | True    | show @@session     | length{0}      |       |
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn    | toClose | sql                 | expect          |db       |
+      | test  | 111111 | conn_0  | True    | rollback           | success         | schema1 |
+    Then execute sql in "mysql-master1"
+      | user  | passwd  | conn   | toClose | sql                                     | expect  | db  |
+      | test  | 111111  | conn_0 | True    | create database if not exists db3   | success |     |
