@@ -82,8 +82,8 @@ reload @@query_cf
 reload @@query_cf=aly_test&id
 reload @@query_cf=NULL
 rollback @@config
-offline
-online
+#offline
+#online
 file @@list
 file @@show schema.xml
 #file @@upload schema.xml <table name="test_global11" 整个文件
@@ -91,7 +91,7 @@ log @@limit=0,5000
 log @@key='select *'
 log @@regex=from\saly_test$
 #log @@file=dble.log @@limit='0:5000' @@key='select *' @@regex='*from aly_test'
-dryrun
+#dryrun
 #pause @@DataNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10
 #RESUME
 show @@pause
