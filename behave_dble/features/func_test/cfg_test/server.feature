@@ -299,10 +299,10 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn    | toClose | sql                                                     | expect          |db       |
-      | test  | 111111 | conn_0  | True    | create table test_table(id int,name char(20))           | success         | schema1 |
+      | test  | 111111 | conn_0  | True    | create table test_table(id int,name char(20))     | success         | schema1 |
     Then execute sql in "mysql-master1"
       | user  | passwd | conn    | toClose | sql                                            | expect          |db       |
-      | test  | 111111 | conn_0  | True    | alter table test_table drop name           | success         | db1 |
+      | test  | 111111 | conn_0  | True    | alter table test_table drop name           | success         | db1     |
     Given sleep "2" seconds
     Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
     """
