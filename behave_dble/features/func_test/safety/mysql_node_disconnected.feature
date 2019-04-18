@@ -21,10 +21,9 @@ Feature: #mysql node disconnected,check the change of dble
     Then execute admin cmd "Reload @@config_all"
     Given stop mysql in host "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | user  | passwd    | conn   | toClose | sql      | expect  | db       |
-      | root  | 111111    | conn_0 | True    | dryrun   | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected} |  |
-      | root  | 111111    | conn_0 | True    | dryrun   | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected} |  |
-      | root  | 111111    | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any data host, because all of data host can't connect to MySQL correctly |  |
+      | user  | passwd    | conn   | toClose | sql                      | expect                                                                                                                                                 | db  |
+      | root  | 111111    | conn_0 | True    | dryrun                  | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected}                                                                  |     |
+      | root  | 111111    | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any data host, because all of data host can't connect to MySQL correctly |     |
     Then restart dble in "dble-1" failed for
     """
     Can't get variables from data node
