@@ -24,7 +24,7 @@ namespace netdriver
                     String passlogname = sqlfilename + "_pass.log";
                     String faillogname = sqlfilename + "_fail.log";
                     String[] logfilenames = { passlogname, faillogname };
-                    String[] logfiles = CreateFile.CreateFiles(logpath, logfilenames);
+                    String[] logfiles = CreateFile.CreateFiles(logpath, logfilenames,true);
 
                     SetUp.IniFile("test1.txt");
                     //excute the sqls, compare and write the results to log files
