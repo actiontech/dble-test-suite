@@ -1,9 +1,11 @@
 cfg_sys:
-  docker_compose_path: ./compose/docker-compose.yml
+  docker_compose_path: compose/docker-compose.yml
   share_path_agent: /opt/auto_build
   share_path_docker: /init_assets
   ssh_user: root
   ssh_password: sshpass
+  default_db: schema1
+  sql_source: assets/sql
 cfg_dble:
   install_dir: /opt
   conf_dir: dble_conf/
@@ -33,11 +35,14 @@ cfg_dble:
 #    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.07.0/
 #  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.09.1/
 #  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.10.1/
+#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.12.0/
+#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.01.0/
   ftp_path: ftp://10.186.18.20/actiontech-dble/qa/9.9.9.9/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   user: test
   password: 111111
+  client_port: 3306
   install_path: /usr/local/mysql
   group1:
     master1:
@@ -70,4 +75,9 @@ cfg_mysql:
 cfg_zookeeper:
   home: /opt/zookeeper
   port: 2181
-  ip: 127.0.0.1
+  zookeeper-1:
+    ip: 172.100.9.1
+  zookeeper-2:
+    ip: 172.100.9.2
+  zookeeper-3:
+    ip: 172.100.9.3
