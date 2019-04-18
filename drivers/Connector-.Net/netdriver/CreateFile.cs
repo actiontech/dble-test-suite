@@ -9,12 +9,12 @@ namespace netdriver
 {
     class CreateFile
     {
-        public static String[] CreateFiles(String path, String[] filenames)
+        public static String[] CreateFiles(String path, String[] filenames,bool isDelete)
         {
-            //if (Directory.Exists(path))
-            //{
-            //    Directory.Delete(path);
-            //}
+            if (Directory.Exists(path) && isDelete)
+            {
+                Directory.Delete(path,true);
+            }
             if (!Directory.Exists(path))
             {
                 try
