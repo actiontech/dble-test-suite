@@ -23,7 +23,7 @@ namespace netdriver
                     String passlogname = sqlfilename + "_pass.log";
                     String faillogname = sqlfilename + "_fail.log";
                     String[] logfilenames = { passlogname, faillogname };
-                    String[] logfiles = CreateFile.CreateFiles(logpath, logfilenames);
+                    String[] logfiles = CreateFile.CreateFiles(logpath, logfilenames,false);
 
                     ExecuteManager.Execute(Msqlfiles[i], logfiles, dblemanagerconn);
                 }
