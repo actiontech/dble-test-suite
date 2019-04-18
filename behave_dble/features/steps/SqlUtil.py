@@ -344,9 +344,13 @@ def do_batch_sql(context, hostname, db, sql):
     try:
         conn = DBUtil(ip, user, passwd, db, port, context)
         res, err = conn.query(sql)
-    except:
-        context.logger.info("create connection error when excute batch_select sql :{0}".format(sql))
+    except MySQLdb.Error,e:
+        errMsg = e.args
+        context.logger.info("try to create conn and exec sql:{0} failed:{1}".format(sql,errMsg))
     finally:
-        conn.close()
+        try:
+            conn.close()
+        except:
+            context.logger.info("close conn failed!")
     assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
     
