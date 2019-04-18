@@ -324,6 +324,8 @@ def step_impl(context,hostname,num, tablename,dbname="schema1"):
 def step_impl(context, hostname, num, tablename="", dbname="schema1"):
     end = int(num)
     for i in range(1, end + 1):
+        if 0 == i % 1000:
+            time.sleep(60)
         if context.text:
             sql = context.text.strip()
         else:
@@ -343,6 +345,7 @@ def do_batch_sql(context, hostname, db, sql):
         res, err = conn.query(sql)
     except:
         context.logger.info("create connection error when excute batch_select sql :{0}".format(sql))
-    
+    finally:
+        conn.close()
     assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
-    conn.close()
+
