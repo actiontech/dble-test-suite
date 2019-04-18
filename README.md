@@ -3,7 +3,7 @@
 参考：./behave_dble/compose/README.md
 
 ## 二、对connector/c中接口的支持度测试
-参考：drivers/c_mysql_api下对应README.md
+参考：drivers/c_mysql_api下对应文件夹中的README.md
 
 ## 三、对connector/j中接口及sql的支持度测试
 环境(already configured in agent docker)：
@@ -16,15 +16,15 @@ jdbc 5.1.39
 
 > under folder drivers/java/ there are 3 jars, jsch-0.1.54.jar is a ssh-similar-func jar,mysql-connector-java-5.1.39-bin.jar is the jdbc jar, test.jar is exported for test
 
-+ step1:open drivers/java-project in eclipse, then export read_write_split.jar to drivers/java
+1. open drivers/java-project in eclipse, then export read_write_split.jar to drivers/java
       how: right click->export->java/JAR file->input destination->next check MANIFEST is the right one->finish
-+ step2: cd drivers/java && bash ln.sh
-+ Step3:cd drivers/java 执行
+2. cd drivers/java && bash ln.sh
+3. cd drivers/java 执行
 	java -jar read_write_split.jar | tee output.log 2>&1
     java -jar interface_test.jar | tee output.log 2>&1
 	如果打印调试信息：java -jar interface_test.jar debug| tee output.log 2>&1
 
-## 四、使用behave测试dble
+## 四、使用behave测试dble(以下涉及的behave命令需要在behave_dble目录下执行)
 ### behave 自定义命令行参数说明（change in behave.ini as your need）：
  - -D tar_local={true|false}, default false
  - -D test_config={auto_dble_test.yaml}
@@ -32,7 +32,7 @@ jdbc 5.1.39
  - -D reset=true, reset dble config files and restart dble before features start
  
  
-### according to allure-behave, case severity enum values:
+### behave_dble下的用例按照 allure-behave将用例优先级由高到低分为以下5类:
 - BLOCKER
 - CRITICAL
 - NORMAL
