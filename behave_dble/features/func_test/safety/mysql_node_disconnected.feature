@@ -2,7 +2,7 @@
 Feature: #mysql node disconnected,check the change of dble
   # Enter feature description here
 
-  Scenario: # only one mysql noed and it was disconnected    #1
+  Scenario: # only one mysql node and it was disconnected    #1
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
