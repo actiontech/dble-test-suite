@@ -176,9 +176,11 @@ dble:[((4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L
 dble:[((4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,), (4L,))]
 ===file:sqls_mixed/select/subquery.sql, id:106, sql:[select * from sharding_4_t1 order by (select pad from schema2.sharding_4_t2 order by id limit 1)]===
 dble:[((0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L))]
-===file:sqls_mixed/select/subquery.sql, id:111, sql:[drop table if exists sharding_4_t1]===
+===file:sqls_mixed/select/subquery.sql, id:109, sql:[select s.* from (select count(1) c from schema2.sharding_4_t2 t union all select count(1) c from sharding_4_t1 t  ) s where s.c>2;]===
+dble:[[(5L,), (20L,)]]
+===file:sqls_mixed/select/subquery.sql, id:113, sql:[drop table if exists sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/select/subquery.sql, id:112, sql:[drop table if exists schema2.sharding_4_t2]===
+===file:sqls_mixed/select/subquery.sql, id:114, sql:[drop table if exists schema2.sharding_4_t2]===
 dble:[[]]
-===file:sqls_mixed/select/subquery.sql, id:113, sql:[drop table if exists schema3.sharding_4_t3]===
+===file:sqls_mixed/select/subquery.sql, id:115, sql:[drop table if exists schema3.sharding_4_t3]===
 dble:[[]]
