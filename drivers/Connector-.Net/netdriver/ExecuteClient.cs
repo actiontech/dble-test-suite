@@ -55,10 +55,10 @@ namespace netdriver
             {
                 if (!line.StartsWith("#"))
                 {
-                    bool allow_diff_sequence = false;
-                    if (line.Contains("allow_diff_sequence"))
+                    bool allow_diff = false;
+                    if (line.Contains("allow_diff"))
                     {
-                        allow_diff_sequence = true;
+                        allow_diff = true;
                     }
 
                     String exec = "===File:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
@@ -248,7 +248,7 @@ namespace netdriver
                     }
 
                     //compare and write to logs
-                    bool same = CompareRs.CompareRS(dblerslist, mysqlrslist, allow_diff_sequence);
+                    bool same = CompareRs.CompareRS(dblerslist, mysqlrslist, allow_diff);
                     if (same)
                     {
                         passsw.WriteLine(exec);
