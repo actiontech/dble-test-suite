@@ -1,11 +1,11 @@
 
-# 一、环境搭建
-参考：compose/README.txt
+## 一、环境搭建
+参考：./behave_dble/compose/README.md
 
-# 二、对connector/c中接口的支持度测试
-参考：drivers/c_mysql_api下对应README
+## 二、对connector/c中接口的支持度测试
+参考：drivers/c_mysql_api下对应README.md
 
-# 三、对connector/j中接口及sql的支持度测试
+## 三、对connector/j中接口及sql的支持度测试
 环境(already configured in agent docker)：
 java version "1.8.0_111"
 Java(TM) SE Runtime Environment (build 1.8.0_111-b14)
@@ -24,81 +24,80 @@ jdbc 5.1.39
     java -jar interface_test.jar | tee output.log 2>&1
 	如果打印调试信息：java -jar interface_test.jar debug| tee output.log 2>&1
 
-# 四、使用MySQLdb驱动测试dble对sql的支持度（use behave)
- behave 自定义命令行参数说明（change in behave.ini as you need）：
+## 四、使用behave测试dble
+### behave 自定义命令行参数说明（change in behave.ini as your need）：
  - -D tar_local={true|false}, default false
  - -D test_config={auto_dble_test.yaml}
  - -D reinstall=true, default false, true if need reinstall before features start
  - -D reset=true, reset dble config files and restart dble before features start
  
  
-## according to allure-behave, case severity enum values:
-BLOCKER
-CRITICAL
-NORMAL
-MINOR
-TRIVIAL
+### according to allure-behave, case severity enum values:
+- BLOCKER
+- CRITICAL
+- NORMAL
+- MINOR
+- TRIVIAL
 
-## 通过ftp包安装单节点并启动
+### 测试命令集
+#### 1.通过ftp包安装单节点并启动
 behave -Dreset=false features/install_uninstall/install_dble.feature
 
-## 通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点(-Dreset=false 参数仅为初始安装dble的必要参数)
+#### 2.通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点(-Dreset=false 参数仅为初始安装dble的必要参数)
 behave -Dreset=false -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature 
 
-## 通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换(-Dreset=false 参数仅为初始安装dble的必要参数)
+#### 3.通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换(-Dreset=false 参数仅为初始安装dble的必要参数)
 behave -Dreset=false -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
 
-## 使用特定配置启动dble
+#### 4.使用特定配置启动dble
 behave --stop -D dble_conf={sql_cover_sharding | sql_cover_nosharding | sql_cover_global | sql_cover_mixed | template} features/setup.feature
 
-## sql覆盖
-sqls_mixed: 用于默认sql覆盖，包含混合表类型
-sqls_util: 所有表类型的sql覆盖都需要分别覆盖
+#### 5.各种表类型的sql覆盖测试
+- sqls_mixed: 用于默认sql覆盖，包含混合表类型
+- sqls_util: 所有表类型的sql覆盖都需要分别覆盖
 
-behave -D dble_conf=sql_cover_mixed features/sql_cover/sql.feature 
-behave -D dble_conf=sql_cover_mixed features/sql_cover/subquery_plan_optimize.feature
-behave -D dble_conf=sql_cover_mixed features/sql_cover/manager.feature
+#### 6.不适合批量测试的特殊sql语句的测试专项覆盖
+behave -D dble_conf=sql_cover_mixed features/sql_cover/special/
 
-### 全局表sql覆盖
+#### 7.全局表sql测试套件覆盖
 behave -Ddble_conf=sql_cover_global features/sql_cover/sql_global.feature
 
-### 混合类型表sql覆盖
+#### 8.混合类型表sql测试套件覆盖
 behave -Ddble_conf=sql_cover_mixed features/sql_cover/sql_mixed.feature
 
-### 分片表sql覆盖
+#### 9.分片表sql测试套件覆盖
 behave -Ddble_conf=sql_cover_sharding features/sql_cover/sql_sharding.feature
 
-### 非分片表sql覆盖
+#### 10.非分片表sql测试套件覆盖
 behave --stop -Ddble_conf=sql_cover_nosharding features/sql_cover/sql_nosharding.feature
 
-## 算法
-behave -D dble_conf=template features/sharding_func_test/
+#### 11.分片算法测试套件覆盖
+behave -D dble_conf=template features/func_test/sharding_func_test/
 
-## 配置
-behave -D dble_conf=template features/cfg_test/
+#### 12.配置测试套件覆盖
+behave -D dble_conf=template features/func_test/cfg_test/
 
-## 全局序列(本地文件)
-behave -D dble_conf=template features/sequence/sequence.feature
+#### 13.全局序列功能测试
+behave -D dble_conf=template features/func_test/sequence/sequence.feature
 
-## 安全性
-behave -D dble_conf=template features/safety/safety.feature
+#### 14.安全性测试套件覆盖
+behave -D dble_conf=template features/func_test/safety/safety.feature
 
-## 运维命令
-behave -D dble_conf=template features/managercmd/
+#### 15.运维命令测试套件覆盖
+behave -D dble_conf=template features/func_test/managercmd/
 
-# zk 使用说明
-- 1.dble/conf/myid.properties配置：
+### zk 使用说明
+#### 1.更新dble/conf/myid.properties配置：
 ```
 #set false if not use cluster ucore/zk
 cluster=zk
 #client info
-ipAddress=127.0.0.1
-port=2181
+ipAddress=127.0.0.1:2181
 #cluster namespace, please use the same one in one cluster
 clusterId=cluster-1
 #it must be different for every node in cluster
 ```
-- 2.zookeeper/conf/zoo.cfg配置:
+#### 2.zookeeper/conf/zoo.cfg配置:
 ```
 tickTime=2000
 initLimit=10
@@ -110,14 +109,14 @@ server.1=dble-1:2888:3888
 server.2=dble-2:2888:3888
 server.3=dble-3:2888:3888
 ```
-- 3.under zookeeper/data, create myid file, content eg:
+#### 3.under zookeeper/data, create myid file, fill content eg:
 ```
 2
 ```
 
-- 4,start all zk servers by "zkServer.sh start" before view status with 'zkServer.sh status'
+#### 4.start all zk servers by "zkServer.sh start", then view status with 'zkServer.sh status'
 
-# todo:
-2会话并发交替
-1, block确认
-2, hang后超时多久连接重建
+### ToDo list:
+两会话并发交替问题：
+1. block确认
+2. hang后超时多久连接重建
