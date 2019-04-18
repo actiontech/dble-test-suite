@@ -71,7 +71,7 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0  | False   | set autocommit=0                    | success                                                                                          |schema1  |
       | test | 111111 | conn_0  | False   | set xa=on                            | success                                                                                          |schema1  |
       | test | 111111 | conn_0  | False   | drop table if exists test1         | Unknown database 'db3'                                                                        |schema1  |
-      | test | 111111 | conn_0  | False   | drop table if exists test1         | Transaction error, need to rollback.Reason:[ errNo:1049 Unknown database 'db3']       |schema1  |
+      | test | 111111 | conn_0  | False   | commit                                | Transaction error, need to rollback.Reason:[ errNo:1049 Unknown database 'db3']       |schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | user  | passwd | conn   | toClose | sql                 | expect          | db    |
       | root  | 111111 | conn_1 | True    | show @@session     | length{0}      |       |
