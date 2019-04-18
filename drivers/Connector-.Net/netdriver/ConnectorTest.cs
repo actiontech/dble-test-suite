@@ -29,7 +29,8 @@ namespace netdriver
 
             //get timestamp
             TimeSpan ts = DateTime.Now - new DateTime(1970, 1, 1, 0, 0, 0, 0);
-            String tsp = Convert.ToInt64(ts.TotalSeconds).ToString();
+//            String tsp = Convert.ToInt64(ts.TotalSeconds).ToString();
+            String tsp = "sql_logs";
             //String curpath = Directory.GetCurrentDirectory();
             String curpath = Environment.CurrentDirectory;
             String logpath = Path.Combine(curpath, tsp);
