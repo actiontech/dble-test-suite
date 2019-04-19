@@ -299,6 +299,7 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn    | toClose | sql                                                     | expect          |db       |
+      | test  | 111111 | conn_0  | True    | drop table if exists test_table                     | success         | schema1 |
       | test  | 111111 | conn_0  | True    | create table test_table(id int,name char(20))     | success         | schema1 |
     Then execute sql in "mysql-master1"
       | user  | passwd | conn    | toClose | sql                                            | expect          |db       |
