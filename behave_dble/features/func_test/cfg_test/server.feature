@@ -135,7 +135,7 @@ Feature: test config in server.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | user         | passwd | conn   | toClose | sql      | expect  | db     |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |success | schema1 |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table_12(id int) |success | schema1 |
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
@@ -176,7 +176,7 @@ Feature: test config in server.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
+        | user         | passwd | conn   | toClose | sql      | expect  | db     |
         | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |error totally whack | schema1 |
         | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
         | test         | 111111 | conn_0 | False    | show tables |error totally whack | schema1 |
@@ -205,8 +205,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose  | sql      | expect  | db     |
-        | test         | 111111       | conn_0 | False    | select 1 | success | schema1 |
-        | test         | 111111       | new    | True     | select 1 | Access denied for user 'test',too many connections for this user | schema1 |
+        | test         | 111111    | conn_0 | False    | select 1 | success | schema1 |
+        | test         | 111111    | new    | True     | select 1 | Access denied for user 'test',too many connections for this user | schema1 |
         | action       | action    | conn_1 | False    | select 1 | success | schema1 |
         | action       | action    | new    | True     | select 1 | Access denied for user 'action',too many connections for this user | schema1 |
     Then execute sql in "dble-1" in "admin" mode
@@ -238,8 +238,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111       | conn_4 | False   | select 1 | success | schema1 |
-        | test         | 111111       | conn_5 | False   | select 1 | success | schema1 |
+        | test         | 111111    | conn_4 | False   | select 1 | success | schema1 |
+        | test         | 111111    | conn_5 | False   | select 1 | success | schema1 |
         | action       | action    | conn_6 | False   | select 1 | success | schema1 |
         | action       | action    | conn_7 | False   | select 1 | success | schema1 |
 
@@ -278,8 +278,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111       | conn_0 | False   | select 1 | success | schema1 |
-        | test         | 111111       | new    | False   | select 1 | too many connections for this user | schema1 |
+        | test         | 111111    | conn_0 | False   | select 1 | success | schema1 |
+        | test         | 111111    | new    | False   | select 1 | too many connections for this user | schema1 |
         | action       | action    | conn_1 | False   | select 1 | too many connections for dble server | schema1 |
     Then execute sql in "dble-1" in "admin" mode
         | user     | passwd    | conn   | toClose | sql            | expect  | db     |
@@ -299,6 +299,7 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn    | toClose | sql                                                     | expect          |db       |
+      | test  | 111111 | conn_0  | True    | drop table if exists test_table                     | success         | schema1 |
       | test  | 111111 | conn_0  | True    | create table test_table(id int,name char(20))     | success         | schema1 |
     Then execute sql in "mysql-master1"
       | user  | passwd | conn    | toClose | sql                                            | expect          |db       |
