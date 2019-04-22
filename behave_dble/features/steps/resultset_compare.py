@@ -93,6 +93,9 @@ def step_impl(context, rs_name):
                     context.logger.info("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
                 else:
                     expect_col = expect_row[i]
+                    if (expect_row[i].rfind('$') != -1):
+                        dble_version =  context.cfg_dble['ftp_path'].split('/')[-2]
+                        expect_col = expect_col.replace("${version}",dble_version)
                     isFound = unicode(real_col) == unicode(expect_col)
                     # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
