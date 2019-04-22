@@ -1,6 +1,7 @@
 # Created by WuJinling at 2019/3/6
 Feature: test "check xml version warning message in dble.log and dryrun"
   # details please refer to github issue #986
+  @skip
   Scenario: check xml version warning  message in dryrun and dble.log #1
     #Given add xml segment to node with attribute "{'tag':'dble',{"version":"9.9.9.0"}}" in "server.xml"
     Given add attribute "{"version":"9.9.9.0"}" to rootnode in "server.xml"
