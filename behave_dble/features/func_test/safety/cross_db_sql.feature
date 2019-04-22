@@ -1,5 +1,5 @@
 # Created by zhaohongjie at 2018/11/27
-Feature: test default db change right; cross db table not affected by others; and cross db sql works right
+Feature: test default db change right; cross db table with same name not affected by others; and cross db sql works right
 
   Background: config for this test suites
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
