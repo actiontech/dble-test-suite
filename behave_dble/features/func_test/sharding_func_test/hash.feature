@@ -36,7 +36,7 @@ Feature:
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | schema1 |
         | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(null)/*dest_node:dn1*/    | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(null)/*dest_node:dn1*/  | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into hash_table values(-1)/*dest_node:dn4*/    | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into hash_table values(-2)/*dest_node:dn3*/    | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into hash_table values(0)/*dest_node:dn1*/     | success | schema1 |
