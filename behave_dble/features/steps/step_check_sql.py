@@ -368,14 +368,6 @@ def step_impl(context, filename):
                 elif line.startswith("#!"):
                     is_sub_thread = False
 
-                if line.startswith('#!restart-mysql'):
-                    options = line.partition("::")[2].strip()
-                    context.execute_steps(
-                        u'Given restart mysql with options "{0}" and reconnect success'.format(options))
-                elif line.startswith('#!restart-dble'):
-                    options = line.partition("::")[2].strip()
-                    context.execute_steps(u"Given restart dble with options '{0}'".format(options))
-
                 if line.find('#!multiline') != -1:
                     is_multiline = True
 
