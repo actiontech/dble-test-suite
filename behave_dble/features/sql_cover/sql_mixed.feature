@@ -13,7 +13,7 @@ Given reset views in "dble-1" if exists
 
       Examples:Types
         | filename                                               |
-#        | sqls_mixed/select/join_different_rules_shardings.sql   |
+        | sqls_mixed/select/join_different_rules_shardings.sql   |
         | sqls_mixed/select/join_global_nosharding.sql           |
         | sqls_mixed/select/join_global_sharding.sql             |
         | sqls_mixed/select/join_global_sharding_nosharding.sql  |
