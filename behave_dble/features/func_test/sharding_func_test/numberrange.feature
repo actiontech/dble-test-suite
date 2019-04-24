@@ -1,6 +1,6 @@
 Feature: numberrange sharding function test suits
 
-  @BLOCKER
+  @BLOCKER @skip
   Scenario: numberrange function #1
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
