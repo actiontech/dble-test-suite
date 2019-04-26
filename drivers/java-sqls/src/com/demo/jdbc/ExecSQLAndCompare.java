@@ -209,7 +209,7 @@ public class ExecSQLAndCompare {
 //	private void updateConns() {
 //		String precmd = Config.getUproxyAdminCmd();
 //
-//		String cmd1 = precmd + "uproxy update_conns '" + Config.TEST_USER + "' masters '" + Config.Host_Master + ":"
+//		String cmd1 = precmd + "uproxy update_conns '" + Config.TEST_USER + "' masters '" + Config.HOST_MASTER + ":"
 //				+ Config.MYSQL_PORT + "'\"";
 //		String cmd2 = precmd + "uproxy update_conns '" + Config.TEST_USER + "' slaves '" + Config.Host_Slave1 + ":"
 //				+ Config.MYSQL_PORT + "'\"";

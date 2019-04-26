@@ -11,27 +11,19 @@ void case_mysql_change_user(MYSQL* conn){
 	cout << "==>mysql_change_user test suits" << endl;
 
     char sql[100];
-    strcpy(sql, "drop database if exists db_test1");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
-
-    strcpy(sql, "create database db_test1");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
 
     strcpy(sql, "PREPARE stmt1 FROM 'SELECT SQRT(POW(?,2) + POW(?,2)) AS hypotenuse'");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    myquery(conn, sql);
 
     strcpy(sql, "set @a=3");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    myquery(conn, sql);
 
     strcpy(sql, "set @b=4");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    myquery(conn, sql);
 
-    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "db_test1")){
+    printf("debug 1\n");
+
+    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema2")){
         fprintf(stderr, "Failed to change user.  Error: %s\n", mysql_error(conn));
         exit(1);
     }else{
@@ -40,7 +32,7 @@ void case_mysql_change_user(MYSQL* conn){
         //case:mysql_change_user change default db
         strcpy(sql, "select * from ");
         strcat(sql, TEST_TABLE);
-//        printf("query: %s\n", sql);
+
         if(mysql_query(conn, sql)){
            printf("    pass! After change user, the new db has no tables\n");
         }else{
@@ -50,13 +42,13 @@ void case_mysql_change_user(MYSQL* conn){
 
         //case:user variables is on old connection are released
         strcpy(sql, "select @a");
-//        printf("query: %s\n", sql);
+
         doQueryWithExpectInt(conn, sql, -9999);
         printf("    pass! After change user, uv set before is no longer available.\n");
 
         //case:prepare statement on old connection are released
         strcpy(sql, "EXECUTE stmt1 USING @a, @b");
-//        printf("query: %s\n", sql);
+
         if(mysql_query(conn, sql)){
             fprintf(stderr, "    pass! execute ps created before change user failed. Error: %s\n", mysql_error(conn));
         }else{
@@ -65,17 +57,17 @@ void case_mysql_change_user(MYSQL* conn){
         }
     }
 
-    strcpy(sql, "create table tx_tb(id int)");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    strcpy(sql, "drop table if exists sharding_4_t1");
+    myquery(conn, sql);
+
+    strcpy(sql, "create table sharding_4_t1(id int)");
+    myquery(conn, sql);
 
     strcpy(sql, "start transaction");
-//    printf("    query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    myquery(conn, sql);
 
-    strcpy(sql, "insert into tx_tb values(1)");
-//    printf("    query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    strcpy(sql, "insert into sharding_4_t1 values(1)");
+    myquery(conn, sql);
 
     if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, NULL)){
         fprintf(stderr, "Failed to change user without default db.  Error: %s\n", mysql_error(conn));
@@ -85,7 +77,7 @@ void case_mysql_change_user(MYSQL* conn){
 
         //case:mysql_change_user with no default db success
         strcpy(sql, "show tables");
-//        printf("    query: %s\n", sql);
+
         if(mysql_query(conn, sql)){
             fprintf(stderr, "    pass! after change user, show tables failed. Error: %s\n", mysql_error(conn));
         }else{
@@ -94,22 +86,22 @@ void case_mysql_change_user(MYSQL* conn){
         }
 
         //case:check mysql_change_user, always performs a ROLLBACK of any active transactions
-        strcpy(sql, "select count(*) from db_test1.tx_tb");
-//        printf("    query: %s\n", sql);
+        strcpy(sql, "select count(*) from schema1.sharding_4_t1");
+
         doQueryWithExpectInt(conn, sql, 0);
         printf("    pass! select x from a_table_rows_filled_in_uncommited_trx get 0 rows. \n");
 
         strcpy(sql, "select 1 /*uproxy_dest_expect:S*/");
-//        printf("    query: %s\n", sql);
+
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
     }
 
-    strcpy(sql, "create temporary table db_test1.tmp_tb(id int)");
-//    printf("    query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    strcpy(sql, "create temporary table schema1.tmp_tb(id int)");
 
-    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "db_test1")){
+    myquery(conn, sql);
+
+    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema1")){
         fprintf(stderr, "Failed to change user.  Error: %s\n", mysql_error(conn));
         exit(1);
     }else{
@@ -117,12 +109,12 @@ void case_mysql_change_user(MYSQL* conn){
 
         //case:mysql_change_user drops all temporary tables
         strcpy(sql, "select 1 /*uproxy_dest_expect:S*/");
-//        printf("    query: %s\n", sql);
+
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
 
-        strcpy(sql, "select * from db_test1.tmp_tb");
-//        printf("    query: %s\n", sql);
+        strcpy(sql, "select * from schema1.tmp_tb");
+
         if(mysql_query(conn, sql)){
             fprintf(stderr, "    pass! a tmp table created before change user is no longer exist! Error: %s\n", mysql_error(conn));
         }else{
@@ -131,37 +123,34 @@ void case_mysql_change_user(MYSQL* conn){
         }
     }
 
-    strcpy(sql, "create table db_test1.lock_tb(id int)");
-//    printf("    query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    strcpy(sql, "create table schema1.lock_tb(id int)");
+    myquery(conn, sql);
 
-    strcpy(sql, "lock table db_test1.lock_tb write");
-//    printf("    query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    strcpy(sql, "lock table schema1.lock_tb write");
+    myquery(conn, sql);
 
-    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "db_test1")){
+    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema1")){
         fprintf(stderr, "Failed to change user.  Error: %s\n", mysql_error(conn));
         exit(1);
     }else{
         printf("    *****pass! change user success after lock table!*****\n");
         //case:mysql_change_user unlocks all locked tables
-        strcpy(sql, "insert into db_test1.lock_tb values(1)");
-//        printf("    query: %s\n", sql);
-        myquery(mysql_query(conn, sql), conn);
+        strcpy(sql, "insert into schema1.lock_tb values(1)");
+
+        myquery(conn, sql);
         printf("    pass! after change user, the lock on the table before change user is released! \n");
 
         //case:restore read-write-split
         strcpy(sql, "select 1 /*uproxy_dest_expect:S*/");
-//        printf("query: %s\n", sql);
+
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
     }
 
     strcpy(sql, "set @@session.bulk_insert_buffer_size=8389632");
-//    printf("    query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+    myquery(conn, sql);
 
-    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "db_test1")){
+    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema1")){
         fprintf(stderr, "Failed to change user.  Error: %s\n", mysql_error(conn));
         exit(1);
     }else{
@@ -169,7 +158,7 @@ void case_mysql_change_user(MYSQL* conn){
 
         //case:Session system variables are reset to the values of the corresponding global system variables
         strcpy(sql, "select @@session.bulk_insert_buffer_size");
-//        printf("query: %s\n", sql);
+
         doQueryWithExpectInt(conn, sql, 8388608);
         printf("    pass! after change user,a session variable changed before change user is reset to default value\n");
     }
