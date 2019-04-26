@@ -129,7 +129,7 @@ public class Setup {
 //	private void addGroupAndMysqld() {
 //		String precmd = Config.getUproxyAdminCmd();
 //		String cmd1 = precmd + "uproxy add_group '" + Config.TEST_USER + "' '" + Config.TEST_USER_PASSWD + "'\"";
-//		String cmd2 = precmd + "uproxy add_mysqlds '" + Config.TEST_USER + "' masters '" + Config.Host_Master + ":"
+//		String cmd2 = precmd + "uproxy add_mysqlds '" + Config.TEST_USER + "' masters '" + Config.HOST_MASTER + ":"
 //				+ Config.MYSQL_PORT + "'\"";
 //		String cmd3 = precmd + "uproxy add_mysqlds '" + Config.TEST_USER + "' slaves '" + Config.Host_Slave1 + ":"
 //				+ Config.MYSQL_PORT + "' '" + Config.Host_Slave2 + ":" + Config.MYSQL_PORT + "'\"";

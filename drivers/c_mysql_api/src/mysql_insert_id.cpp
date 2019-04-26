@@ -10,9 +10,9 @@
 void case_mysql_insert_id(MYSQL* conn){
 	printf("==>mysql_insert_id test suites\n");
 
-	myquery(mysql_query(conn, "drop table if exists global_table1"), conn);
-	myquery(mysql_query(conn, "create table global_table1(id int auto_increment primary key, name varchar(30))"), conn);
-	myquery(mysql_query(conn, "insert into global_table1(name) values('a'),('b'),('c')"), conn);
+	myquery(conn, "drop table if exists sharding_4_t1");
+	myquery(conn, "create table sharding_4_t1(id int auto_increment primary key, name varchar(30))");
+	myquery(conn, "insert into sharding_4_t1(name) values('a'),('b'),('c')");
 
 	//mysql_insert_id
 	unsigned long long ist_id = mysql_insert_id(conn);
