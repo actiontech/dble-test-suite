@@ -22,7 +22,7 @@ void doRTest(){
 //******case1 end
 
 //******case2:during read prepare, sqls that should be sent to master should still be sent to master
-	myquery(mysql_query(conn, "insert into test_table(col1,col2,col3) values(1,'abc',2) /*uproxy_dest_expect:M*/"),conn);
+	myquery(conn, "insert into test_table(col1,col2,col3) values(1,'abc',2) /*uproxy_dest_expect:M*/");
     printf("    pass! before read ps deallocate, queries should be sent to master should still be sent to master.\n");
 //******case2 end
 
@@ -44,12 +44,12 @@ void doRTest(){
 //*****case4:read prepare should correctly change from one slave to master if needed
     printf("    *****read ps should correctly change from one slave to master if needed*****\n");
     printf("    start transaction.\n");
-	myquery(mysql_query(conn, "start transaction;"),conn);
+	myquery(conn, "start transaction;");
 
 	execStmtAndCmp(stmt,conn, "hello stmt");
 
     printf("    commit.\n");
-	myquery(mysql_query(conn, "commit;"),conn);
+	myquery(conn, "commit;");
 
 	execStmtAndCmp(stmt,conn, "hello stmt");
 //*****case4 end
@@ -57,7 +57,7 @@ void doRTest(){
 //*****case5 diffenent ps on diffenent conns will not affected by each other.
     printf("    *****diffenent ps on diffenent conns will not affected by each other*****\n");
 	//case5-step1
-	myquery(mysql_query(conn, "start transaction read only;"),conn);
+	myquery(conn, "start transaction read only;");
 
 	//case5-step2
 	MYSQL *conn2 = getConn();
@@ -67,10 +67,10 @@ void doRTest(){
 	//case5-step3
 	MYSQL *conn3 = getConn();
 
-	myquery(mysql_query(conn3, "start transaction read only;"),conn);
+	myquery(conn3, "start transaction read only;");
 
 	//case5-step4
-	myquery(mysql_query(conn, "commit;"),conn);
+	myquery(conn, "commit;");
 
 	//case5-step5
 	execStmtAndCmp(stmt3,conn2, "hello stmt3");
@@ -80,10 +80,10 @@ void doRTest(){
 
 	//case5-step6
 	MYSQL *conn4 = getConn();
-	myquery(mysql_query(conn4, "start transaction read only;"),conn);
+	myquery(conn4, "start transaction read only;");
 
 	//case5-step7
-	myquery(mysql_query(conn3, "commit;"),conn);
+	myquery(conn3, "commit;");
 	mysql_close(conn3);
 
 	//case5-step8
@@ -105,15 +105,15 @@ void ps_multi_test(){
 
 	MYSQL* con = getConn();
 
-	myquery(mysql_query(con, "drop procedure if exists schema1.sp;"),con);
+	myquery(con, "drop procedure if exists mytest.sp;");
 
-	myquery(mysql_query(con,
+	myquery(con,
 			"create procedure sp()"
 			"begin "
 		    "    select 1,2;"
 		    "    select 3,4;"
 			"end"
-	), con);
+	);
 
     MYSQL_STMT *stmt = mysql_stmt_init(con);
     if (stmt == NULL) {
