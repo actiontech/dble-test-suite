@@ -15,7 +15,6 @@ void case_mysql_field_count(MYSQL* mysql);
 void case_mysql_get_host_info(MYSQL* mysql);
 void case_mysql_insert_id(MYSQL* mysql);
 void case_mysql_list_dbs(MYSQL *mysql);
-void case_mysql_info(MYSQL* mysql);
 void case_mysql_options4(MYSQL* conn);
 void case_mysql_real_connect(MYSQL* conn);
 void case_mysql_real_escape_string(MYSQL* mysql);
