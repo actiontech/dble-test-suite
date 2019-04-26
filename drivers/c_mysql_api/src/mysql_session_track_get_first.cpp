@@ -11,15 +11,10 @@ void case_mysql_session_track_get_first(MYSQL* conn){
 	printf("==>mysql_session_track_get_first && mysql_session_track_get_next test suites\n");
 	createAndFillTable(conn);
 
-	const char * stmt_str = "use schema1/*master*/";
+	const char * stmt_str = "use schema1";
 //	printf("    Execute: %s\n", stmt_str);
 
-	if (mysql_query(conn, stmt_str) != 0)
-	{
-	  fprintf(stderr, "Error %u: %s\n",
-	           mysql_errno(conn), mysql_error(conn));
-	  exit(1);
-	}
+	myquery(conn, stmt_str);
 
 	MYSQL_RES *result = mysql_store_result(conn);
 	if (result) /* there is a result set to fetch */

@@ -18,27 +18,28 @@
 
 #define KEYVALLEN 100
 
-extern char Host_Single_MySQL[50];
-extern char Host_Test[50];
-extern char Host_Master[50];
-extern char Host_Slave1[50];
-extern char Host_Slave2[50];
+extern char HOST_DBLE[50];
+extern char HOST_MASTER[50];
+//extern char Host_Slave1[50];
+//extern char Host_Slave2[50];
 //static String[] mysql_hosts = new String[4];
-extern char TEST_ADMIN[100];
-extern char TEST_ADMIN_PASSWD[100];
+extern char ADMIN[100];
+extern char ADMIN_PASSWD[100];
 
 extern char TEST_USER[100];
 extern char TEST_USER_PASSWD[100];
 extern char TEST_DB[50];
-extern unsigned int TEST_PORT;
+extern unsigned int DBLE_PORT;
+extern unsigned int DBLE_ADMIN_PORT;
+
 //static unsigned int MYSQL_PORT = 3306;
 
-extern char SSH_USER[50];
-extern char SSH_PASSWORD[50];
-
-extern char MYSQL_INSTALL_PATH[150];
-extern char TEST_INSTALL_PATH[150];
-extern char ROOT_PATH[50];
+//extern char SSH_USER[50];
+//extern char SSH_PASSWORD[50];
+//
+//extern char MYSQL_INSTALL_PATH[150];
+//extern char UPROXY_INSTALL_PATH[150];
+//extern char ROOT_PATH[50];
 extern char SQLS_CONFIG[100];
 
 #define TEST_TABLE "test_table"

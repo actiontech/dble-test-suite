@@ -17,7 +17,7 @@ void case_mysql_use_result(MYSQL* mysql){
     unsigned int  i;
     MYSQL_FIELD *field;
 
-	myquery(mysql_query(mysql, "SELECT * FROM test_table/*master*/"), mysql);
+	myquery(mysql, "SELECT * FROM test_table/*master*/");
 	MYSQL_RES  *result = mysql_use_result(mysql);
 	printf("    pass! mysql_use_result \n");
 	unsigned int num_fields = mysql_field_count(mysql);

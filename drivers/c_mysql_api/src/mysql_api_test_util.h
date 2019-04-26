@@ -41,8 +41,15 @@ static void print_error(MYSQL *l_mysql)
      fprintf(stdout, "[%d] %s\n", mysql_errno(l_mysql), mysql_error(l_mysql));
    }
 }
-
-static void myquery(int RES, MYSQL* conn){ int r= (RES);  if (r) print_error(conn); DIE_UNLESS(r == 0);}
+MYSQL* createConn();
+static void myquery( MYSQL* conn, const char* sql){
+	if(IS_DEBUG) printf("sql:%s\n",sql);
+	int r= (mysql_query(conn, sql));
+	if (r) {
+		print_error(conn);
+	}
+	DIE_UNLESS(r == 0);
+}
 
 void doQueryWithExpectInt(MYSQL* conn, char* sql, int expect);
 MYSQL* getConn();
