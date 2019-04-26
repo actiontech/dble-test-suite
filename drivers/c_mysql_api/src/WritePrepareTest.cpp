@@ -19,13 +19,15 @@ void wPrepareTest() {
 
     MYSQL_STMT *stmt = create_wstmt_and_prepare(conn);
 
-//*****case1:during master prepare, select should be sent to master
-    myquery(mysql_query(conn, slave_sql),conn);
+//*****case1:during master prepare, select should be sent to slave
+    printf("debug 1\n");
+    myquery(conn, slave_sql);
+    printf("debug 2\n");
 
     MYSQL_RES  *res;
     res = mysql_store_result(conn);
     mysql_free_result(res);
-    printf("    pass! during write prepare, select should be sent to master.\n");
+    printf("    pass! during write prepare, select should be sent to slave.\n");
 //*****case1 end
 //*****case2:basic write prepare executed successfully
 	execWStmtAndCmp(stmt, 1, 1);
@@ -38,13 +40,13 @@ void wPrepareTest() {
     char sql[50];
     strcpy(sql, "truncate ");
     strcat(sql, TEST_TABLE);
-    myquery(mysql_query(conn, sql),conn);
+    myquery(conn, sql);
     MYSQL_STMT *rstmt = create_stmt_and_prepare(conn, "hello ", "stmt");
     execStmtAndCmp(rstmt,conn, "hello stmt");
     printf("    start transaction read only\n");
-    myquery(mysql_query(conn, "start transaction read only"),conn);
+    myquery(conn, "start transaction read only");
     execWStmtAndCmp(stmt, 3, 2);
-    myquery(mysql_query(conn, "commit"),conn);
+    myquery(conn, "commit");
     printf("    commit trx\n");
     execWStmtAndCmp(stmt, 1, 2);
     execStmtAndCmp(rstmt,conn, "hello stmt");
@@ -64,7 +66,7 @@ void wPrepareTest() {
 
 //*****case4 end
 //*****case5:after master prepare close, select should be sent to slave
-    myquery(mysql_query(conn, slave_sql),conn);
+    myquery(conn, slave_sql);
     printf("    pass! after write ps close, select should be sent to slave.\n");
 
     res = mysql_store_result(conn);

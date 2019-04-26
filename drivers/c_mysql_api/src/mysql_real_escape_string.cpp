@@ -11,8 +11,8 @@
 void case_mysql_real_escape_string(MYSQL* conn){
 	printf("==>mysql_real_escape_string test suites\n");
 
-	myquery(mysql_query(conn, "drop table if exists test_table"), conn);
-	myquery(mysql_query(conn, "create table test_table(str1 varchar(50), str2 varchar(50))"), conn);
+	myquery(conn, "drop table if exists sharding_4_t1");
+	myquery(conn, "create table sharding_4_t1(str1 varchar(50), str2 varchar(50))");
 
 	char query[1000];
 	char *end;

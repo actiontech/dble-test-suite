@@ -14,7 +14,7 @@
 using namespace std;
 
 int IS_DEBUG=0;
-char Host_Master[50] = "172.100.9.4";
+char HOST_MASTER[50] = "172.100.9.4";
 char Host_Dble[50] = "172.100.9.1";
 char TEST_USER[100]="test";
 char TEST_USER_PASSWD[100]="111111";
@@ -77,7 +77,7 @@ void case_mysql_real_connect(const char* sqls){
     mysql_options(test_conn,MYSQL_READ_DEFAULT_GROUP,"odbc");
     mysql_options(test_conn,MYSQL_INIT_COMMAND,"SET autocommit=1");
     if(IS_DEBUG){
-        mysql_real_connect(test_conn, Host_Master, TEST_USER, TEST_USER_PASSWD, TEST_DB, PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        mysql_real_connect(test_conn, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, TEST_DB, PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
     }else{
         mysql_real_connect(test_conn, Host_Dble, TEST_USER, TEST_USER_PASSWD, TEST_DB, DPORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
     }
