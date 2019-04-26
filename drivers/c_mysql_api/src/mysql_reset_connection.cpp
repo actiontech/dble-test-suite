@@ -12,17 +12,17 @@ void case_mysql_reset_connection(MYSQL* conn){
 	printf("==>mysql_reset_connection test suites\n");
 	char sql[100];
 
-    strcpy(sql, "drop table if exists tx_tb");
-    myquery(mysql_query(conn, sql),conn);
+    strcpy(sql, "drop table if exists sharding_4_t1");
+    myquery(conn, sql);
 
-    strcpy(sql, "create table tx_tb(id int)");
-    myquery(mysql_query(conn, sql),conn);
+    strcpy(sql, "create table sharding_4_t1(id int)");
+    myquery(conn, sql);
 
     strcpy(sql, "set @@autocommit = 0");
-    myquery(mysql_query(conn, sql),conn);
+    myquery(conn, sql);
 
-	strcpy(sql, "insert into tx_tb values(1)");
-    myquery(mysql_query(conn, sql),conn);
+	strcpy(sql, "insert into sharding_4_t1 values(1)");
+    myquery(conn, sql);
 
 	//case:Any active transactions are rolled back and autocommit mode is reset.
     if (mysql_reset_connection(conn)){
@@ -31,7 +31,7 @@ void case_mysql_reset_connection(MYSQL* conn){
     }else{
         printf("    *****pass! mysql_reset_connection success!*****\n");
         //case:check mysql_change_user, always performs a ROLLBACK of any active transactions
-        strcpy(sql, "select count(*) from tx_tb");
+        strcpy(sql, "select count(*) from sharding_4_t1");
         doQueryWithExpectInt(conn, sql, 0);
         printf("    pass! after reset conn, insert in uncommited trx before is not readable: %s\n", sql);
 
