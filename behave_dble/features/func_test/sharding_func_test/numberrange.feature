@@ -1,6 +1,6 @@
 Feature: numberrange sharding function test suits
 
-  @BLOCKER @skip
+  @BLOCKER
   Scenario: numberrange function #1
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -41,8 +41,8 @@ Feature: numberrange sharding function test suits
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(501)/*dest_node:dn3*/  | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(755)/*dest_node:dn3*/  | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(756)/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into numberrange_table values(1000)/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | True     | insert into numberrange_table values(1001)/*dest_node:dn1*/ | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into numberrange_table values(1000)/*dest_node:dn4*/ | success | schema1 |
+        | test | 111111 | conn_0 | True     | insert into numberrange_table values(1001)/*dest_node:dn4*/ | success | schema1 |
 
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
@@ -68,8 +68,8 @@ Feature: numberrange sharding function test suits
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(501)/*dest_node:dn3*/  | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(755)/*dest_node:dn3*/  | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(756)/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into numberrange_table values(1000)/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | True     | insert into numberrange_table values(1001)/*dest_node:dn1*/ | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into numberrange_table values(1000)/*dest_node:dn4*/ | success | schema1 |
+        | test | 111111 | conn_0 | True     | insert into numberrange_table values(1001) | can't find any valid data node | schema1 |
         | test | 111111 | conn_0 | False    | insert into numberrange_table values(null)                  | can't find any valid data node | schema1 |
         | test | 111111 | conn_0 | True     | insert into numberrange_table values(-1)                    | can't find any valid data node | schema1 |
         | test | 111111 | conn_0 | True     | insert into numberrange_table values(-2)                    | can't find any valid data node | schema1 |
