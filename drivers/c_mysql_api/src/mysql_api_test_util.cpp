@@ -8,77 +8,48 @@
 
 #include "mysql_api_test_util.h"
 
-MYSQL* getConn(){
+MYSQL* createConn(){
 	printf("    create new conn! \n");
 	MYSQL* conn = mysql_init(NULL);
     if(IS_DEBUG){
-		printf("    host:%s, use:%s, passwd:%s, port:%d \n", Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, MYSQL_PORT);
-        mysql_real_connect(conn, Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, "", MYSQL_PORT,NULL, CLIENT_DEPRECATE_EOF);
+		printf("    host:%s, use:%s, passwd:%s, port:%d \n", HOST_MASTER, TEST_USER, TEST_USER_PASSWD, MYSQL_PORT);
+        mysql_real_connect(conn, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, "", MYSQL_PORT,NULL, CLIENT_DEPRECATE_EOF);
     }else{
-		printf("    host:%s, use:%s, passwd:%s, port:%d \n", Host_Test, TEST_USER, TEST_USER_PASSWD, TEST_PORT);
-        mysql_real_connect(conn, Host_Test, TEST_USER, TEST_USER_PASSWD, "", TEST_PORT,NULL, CLIENT_DEPRECATE_EOF);
+		printf("    host:%s, use:%s, passwd:%s, port:%d \n", HOST_DBLE, TEST_USER, TEST_USER_PASSWD, DBLE_PORT);
+        mysql_real_connect(conn, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, "", DBLE_PORT,NULL, CLIENT_DEPRECATE_EOF);
 	}
     if (conn == NULL) {
         printf("Error connecting to database: %s\n", mysql_error(conn));
         exit(1);
     }
+    return conn;
+}
 
-    if(IS_DEBUG){
-        if(mysql_query(conn, "drop database if exists schema1")){
-		printf("'drop database if exists schema1' err: %s\n", mysql_error(conn));
-		exit(1);
-	    }else{
-		    printf("    'drop database if exists schema1'\n");
-	    }
-
-	    if(mysql_query(conn, "create database schema1")){
-		    printf("'create database schema1' err: %s\n", mysql_error(conn));
-		    exit(1);
-	    }else{
-		    printf("    'create database schema1'\n");
-	    }
-    }
-
-
-	if(mysql_query(conn, "use schema1")){
-		printf("'use schema1' err: %s\n", mysql_error(conn));
-		exit(1);
-	}else{
-		printf("    'use schema1'\n");
-	}
-
+MYSQL* getConn(){
+	MYSQL* conn = createConn();
+	char sql[50] = "use schema1";
+	myquery(conn, sql);
     return conn;
 }
 
 void createTable(MYSQL* mysql){
-	  if (mysql_query(mysql, DROP_SAMPLE_TABLE))
-	  {
-	    fprintf(stderr, " DROP TABLE failed\n");
-	    fprintf(stderr, " %s\n", mysql_error(mysql));
-	    exit(1);
-	  }
-
-	  if (mysql_query(mysql, CREATE_SAMPLE_TABLE))
-	  {
-	    fprintf(stderr, " CREATE TABLE failed\n");
-	    fprintf(stderr, " %s\n", mysql_error(mysql));
-	    exit(1);
-	  }
+	myquery(mysql, DROP_SAMPLE_TABLE);
+	myquery(mysql, CREATE_SAMPLE_TABLE);
  }
 
 void createAndFillTable(MYSQL* mysql){
 	char sql[100];
-    strcpy(sql, "drop table if exists test_table");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(mysql, sql), mysql);
+    strcpy(sql, "drop table if exists sharding_4_t1");
 
-    strcpy(sql, "create table test_table(id int)");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(mysql, sql), mysql);
+    myquery(mysql, sql);
 
-    strcpy(sql, "insert into test_table values(1),(2),(3)");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(mysql, sql), mysql);
+    strcpy(sql, "create table sharding_4_t1(id int)");
+
+    myquery(mysql, sql);
+
+    strcpy(sql, "insert into sharding_4_t1 values(1),(2),(3)");
+
+    myquery(mysql, sql);
 }
 
 int doPrintResult(MYSQL* mysql, MYSQL_RES  *res){
@@ -136,7 +107,7 @@ int printResult(MYSQL* mysql){
 void doQueryWithExpectInt(MYSQL* conn, char* sql, int expect){
 	MYSQL_ROW  row;
 
-    myquery(mysql_query(conn, sql),conn);
+    myquery(conn, sql);
     MYSQL_RES  *res=mysql_store_result(conn);
 	if(row=mysql_fetch_row(res)){
         char *field = row[0];
