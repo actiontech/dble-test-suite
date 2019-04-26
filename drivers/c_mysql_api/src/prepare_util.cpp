@@ -39,7 +39,7 @@ MYSQL_STMT * create_stmt_and_prepare(MYSQL* conn, char* param1, char* param2){
     bind[1].buffer_length = strlen(param2);
 
     mysql_stmt_bind_param(stmt, bind);
-    printf("    create new ps success!");
+    printf("    create new ps success!\n");
     return stmt;
  }
 

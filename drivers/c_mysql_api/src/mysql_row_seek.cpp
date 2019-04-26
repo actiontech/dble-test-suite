@@ -14,8 +14,8 @@ void case_mysql_row_seek(MYSQL* conn){
 	createAndFillTable(conn);
 
     strcpy(sql, "select * from test_table/*master*/");
-//    printf("query: %s\n", sql);
-    myquery(mysql_query(conn, sql), conn);
+
+    myquery(conn, sql);
 
     MYSQL_RES  *res;
 

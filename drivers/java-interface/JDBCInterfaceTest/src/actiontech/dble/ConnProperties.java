@@ -34,7 +34,7 @@ public class ConnProperties {
 		}else{//uproxy
 			this.serverName = Config.Host_Test;
 			this.portNumber = Config.TEST_PORT;
-			//this.master = Config.Host_Master;
+			//this.master = Config.HOST_MASTER;
 			//this.slave1 = Config.Host_Slave1;
 			this.defaultPort = Config.MYSQL_PORT;
 		}
