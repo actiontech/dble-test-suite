@@ -16,9 +16,9 @@ void case_mysql_real_connect(MYSQL* conn){
 	mysql_options(test_conn,MYSQL_READ_DEFAULT_GROUP,"odbc");
 	mysql_options(test_conn,MYSQL_INIT_COMMAND,"SET autocommit=0");
 	if(IS_DEBUG){
-        mysql_real_connect(test_conn, Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, NULL, 0,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        mysql_real_connect(test_conn, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, NULL, 0,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
 	}else{
-        mysql_real_connect(test_conn, Host_Test, TEST_USER, TEST_USER_PASSWD, NULL, TEST_PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
+        mysql_real_connect(test_conn, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, NULL, DBLE_PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
 	}
 
     if (test_conn == NULL) {
@@ -48,7 +48,7 @@ void case_mysql_real_connect(MYSQL* conn){
 	//case: multi query, and multi resultsets
 	/* execute multiple statements */
 	int status = mysql_query(test_conn,
-	                     "use schema1;\
+	                     "use schema1; \
 	                      DROP TABLE IF EXISTS test_table;\
 	                      CREATE TABLE test_table(id INT);\
 	                      INSERT INTO test_table VALUES(10);\
@@ -106,7 +106,7 @@ void case_mysql_real_connect(MYSQL* conn){
 	fprintf(stdout, "    *****pass! mysql_character_set_name, character set: %s*****\n", charset);
 
 	//mysql_data_seek
-	myquery(mysql_query(test_conn, "select * from test_table/*master*/"), test_conn);
+	myquery(test_conn, "select * from test_table/*master*/");
 	MYSQL_RES  *result = mysql_store_result(test_conn);
 	if (result)
 	{
@@ -127,7 +127,7 @@ void case_mysql_real_connect(MYSQL* conn){
 
 	//mysql_info
 	printf("    *****pass! mysql_info*****\n");
-	myquery(mysql_query(test_conn, "Insert into test_table values(111),(222),(333)"), test_conn);
+	myquery(test_conn, "Insert into test_table values(111),(222),(333)");
 	const char* info = mysql_info(test_conn);
 	printf("        mysql_info: %s\n", info);
 

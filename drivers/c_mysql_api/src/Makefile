@@ -3,10 +3,10 @@ MV := mv
 RM := rm -f
 CXX   := g++
 CXXFLAGS := -g 
-INCLUDES := -I/opt/mysql/include
-LIBDIRS  :=-L/opt/mysql/lib
+INCLUDES := -I/usr/local/mysql/include
+LIBDIRS  :=-L/usr/local/mysql/lib
 LINK     :=-lmysqlclient
-BIN      := ../../c
+BIN      := ./
 SOURCES  := *.cpp 
 PROGRAM  :=c_mysql_api.o
 
@@ -17,5 +17,4 @@ clean :
 	-${RM} ${BIN}/${PROGRAM}
 	-${RM} *.o
 install :
-    -${RM} ${BIN}/${PROGRAM}
-    -${MV} ${PROGRAM} ${BIN}
+	-${MV} ${PROGRAM} ${BIN}
