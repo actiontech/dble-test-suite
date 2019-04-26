@@ -7,31 +7,25 @@
 //============================================================================
 #include "c_mysql_api.h"
 
-void case_mysql_get_host_info(MYSQL* mysql) {
+void case_mysql_get_host_info(MYSQL* mysql){
 	printf("==>mysql_get_host_info && mysql_get_options && mysql_get_proto_info test suits\n");
 
 	const char *host_info = mysql_get_host_info(mysql);
 	printf("    pass! mysql_get_host_info,host info: %s\n", host_info);
 
 	my_bool reconnect;
-	if (mysql_get_option(mysql, MYSQL_OPT_RECONNECT, &reconnect)) {
-		fprintf(stderr, "mysql_get_options() failed\n");
-		exit(1);
+	if (mysql_get_option(mysql, MYSQL_OPT_RECONNECT, &reconnect)){
+        fprintf(stderr, "mysql_get_options() failed\n");
+        exit(1);
 	}
-	else {
+	else{
 		printf("    pass! mysql_get_options \n");
 	}
 
 	unsigned int proto_v = mysql_get_proto_info(mysql);
 	printf("    pass! mysql_get_proto_info, protocol version: %ud\n", proto_v);
 
-	const char *server_info = mysql_get_server_info(mysql);
-	printf("    pass! mysql_get_server_info,server info: %s\n", server_info);
-
-	unsigned long server_v = mysql_get_server_version(mysql);
-	printf("    pass! mysql_get_server_version,server_v: %ud \n", server_v);
-
 	const char * cipher = mysql_get_ssl_cipher(mysql);
-	printf("    pass! mysql_get_ssl_cipher,conn cipher: %s \n", cipher);
+	printf("    pass! mysql_get_ssl_cipher,conn cipher: %s\n", cipher);
 
 }
