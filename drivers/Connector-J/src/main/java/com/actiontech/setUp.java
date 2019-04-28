@@ -10,7 +10,7 @@ public class setUp {
         String[] datalist = {"10,10,'Vicky',10","11,11,'刘家',11"};
         //create file
         String curpath = System.getProperty("user.dir");
-        String path = curpath + "\\" + filename;
+        String path = curpath + File.separator + filename;
         File loadfile = new File(path);
         if (loadfile.exists()) {
             loadfile.delete();

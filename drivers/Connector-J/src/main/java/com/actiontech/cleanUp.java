@@ -8,7 +8,7 @@ public class cleanUp {
 
     public static void rmfile(String filename){
         String curpath = System.getProperty("user.dir");
-        String path = curpath + "\\" + filename;
+        String path = curpath +  File.separator + filename;
         File loadfile = new File(path);
         if(loadfile.exists()){
             loadfile.delete();
