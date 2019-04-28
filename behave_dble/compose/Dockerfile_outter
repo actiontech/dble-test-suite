@@ -25,7 +25,7 @@ RUN pip install --upgrade pip
 RUN curl --request GET -o /opt/dependencies_install.sh --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Fdependencies_install.sh/raw?ref=master
 RUN curl --request GET -o /opt/dependencies.txt --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Fdependencies.txt/raw?ref=master
 RUN chmod 777 /opt/dependencies_install.sh
-RUN bash dependencies_install.sh dependencies.txt
+RUN bash /opt/dependencies_install.sh dependencies.txt
 
 RUN chmod 777 /usr/local/bin/docker-compose
 
