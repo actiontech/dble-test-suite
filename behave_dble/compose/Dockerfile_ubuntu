@@ -1,0 +1,13 @@
+From ubuntu:18.04
+RUN apt-get update
+RUN apt-get -y install curl wget vim build-essential libboost1.65-dev gdb git cmake libmysqlclient-dev libyaml-cpp-dev openssh-server
+RUN wget -P /opt https://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.11.tar.gz
+RUN wget -P /opt https://github.com/jbeder/yaml-cpp/archive/yaml-cpp-0.6.2.tar.gz
+RUN tar zxvf /opt/yaml-cpp-0.6.2.tar.gz -C /opt/ &&\
+    mkdir /opt/yaml-cpp-yaml-cpp-0.6.2/build
+RUN cd /opt/yaml-cpp-yaml-cpp-0.6.2/build &&\
+    cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
+RUN mkdir ~/.ssh
+RUN sed -i -e "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN echo root:sshpass|chpasswd
+CMD ["/bin/bash"]
