@@ -14,7 +14,8 @@ public class testJDBC {
         String dbleURL;
         String dblemanagerURL;
         String mysqlURL;
-        String sqlfile;
+        String sqlfileClient;
+        String sqlfileManager = null;
         String dblemanageruserName;
         String dblemanageruserPwd;
         String dbleuserName;
@@ -22,11 +23,12 @@ public class testJDBC {
         String msqluserName;
         String mysqluserPwd;
         String logpath = System.getProperty("user.dir");
+        
         if (args[0].equals("test")){
             dbleURL = "jdbc:mysql://10.186.60.61:7131/schema1?characterEncoding=utf8";
             dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/schema1?characterEncoding=utf8";
             mysqlURL = "jdbc:mysql://10.186.60.61:7144/schema1?characterEncoding=utf8";
-            sqlfile = "D:\\branch\\dble\\drivers\\Connector-J\\assets\\sql\\driver_test_client.sql";
+            sqlfileClient = "D:\\branch\\dble\\drivers\\Connector-J\\assets\\sql\\driver_test_client.sql";
             dblemanageruserName = "root";
             dblemanageruserPwd = "111111";
             dbleuserName = "test";
@@ -39,7 +41,8 @@ public class testJDBC {
             dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8";
             dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8";
             mysqlURL = "jdbc:mysql://" + cfg.mysql_server + ":" + cfg.mysql_port + "/" + cfg.db + "?characterEncoding=utf8";
-            sqlfile = System.getProperty("user.dir") + File.separator + cfg.sqlpath + File.separator + args[2];
+            sqlfileClient = System.getProperty("user.dir") + File.separator + cfg.sqlpath + File.separator + args[2];
+            sqlfileManager = System.getProperty("user.dir") + File.separator + cfg.sqlpath + File.separator + args[3];
             dblemanageruserName = cfg.dbleM_user;
             dblemanageruserPwd = cfg.dbleM_password;
             dbleuserName = cfg.dble_user;
@@ -50,38 +53,17 @@ public class testJDBC {
         }
 
 
-        if (sqlfile.contains("manager")) {
-            Connection dblemanagerconn = null;
-            dblemanagerconn = conn.DBconn(dblemanagerURL, dblemanageruserName, dblemanageruserPwd);
-            if (dblemanagerconn != null) {
-                Statement dblemanagerstmt = null;
-                boolean stmterr = false;
-                try {
-                    dblemanagerstmt = dblemanagerconn.createStatement();
-                } catch (SQLException e) {
-                    System.out.println("dble create statement failed!");
-                    e.printStackTrace();
-                    stmterr = true;
-                } finally {
-                    if (stmterr == true) {
-                        cleanUp.closeStmt(dblemanagerstmt);
-                        cleanUp.closeConn(dblemanagerconn);
-                        System.exit(-1);
-                    }
-                }
-                com.actiontech.executeManager.execute(logpath, sqlfile, dblemanagerstmt);
-                //关闭statement链接
-                cleanUp.closeStmt(dblemanagerstmt);
-                cleanUp.closeConn(dblemanagerconn);
-            }
-        } else {
-            Connection dbleconn = null;
-            Connection mysqlconn = null;
-            dbleconn = conn.DBconn(dbleURL, dbleuserName, dbleuserPwd);
-            mysqlconn = conn.DBconn(mysqlURL, msqluserName, mysqluserPwd);
-            if (dbleconn != null && mysqlconn != null) {
+         Connection dblemanagerconn = null;
+         Connection dbleconn = null;
+         Connection mysqlconn = null;
+         dbleconn = conn.DBconn(dbleURL, dbleuserName, dbleuserPwd);
+         mysqlconn = conn.DBconn(mysqlURL, msqluserName, mysqluserPwd);
+         dblemanagerconn = conn.DBconn(dblemanagerURL, dblemanageruserName, dblemanageruserPwd);
+         if (dbleconn != null && mysqlconn != null &&dblemanagerconn != null) {
                 Statement dblestmt = null;
                 Statement mysqlstmt = null;
+                Statement dblemanagerstmt = null;
+                boolean stmterr = false;
                 boolean dblestmterr = false;
                 boolean mysqlstmterr = false;
                 try {
@@ -95,6 +77,7 @@ public class testJDBC {
                         cleanUp.closeStmt(dblestmt);
                         cleanUp.closeConn(mysqlconn);
                         cleanUp.closeConn(dbleconn);
+                        cleanUp.closeConn(dblemanagerconn);
                         System.exit(-1);
                     }
                 }
@@ -110,18 +93,40 @@ public class testJDBC {
                         cleanUp.closeStmt(dblestmt);
                         cleanUp.closeConn(mysqlconn);
                         cleanUp.closeConn(dbleconn);
+                        cleanUp.closeConn(dblemanagerconn);
                         System.exit(-1);
                     }
                 }
-                com.actiontech.execandCompare.execandCompare(logpath, sqlfile, dblestmt, mysqlstmt);
+                try {
+                    dblemanagerstmt = dblemanagerconn.createStatement();
+                } catch (SQLException e) {
+                    System.out.println("dble create statement failed!");
+                    e.printStackTrace();
+                    stmterr = true;
+                } finally {
+                    if (stmterr == true) {
+                    	cleanUp.closeStmt(mysqlstmt);
+                        cleanUp.closeStmt(dblestmt);
+                        cleanUp.closeStmt(dblemanagerstmt);
+                        cleanUp.closeConn(mysqlconn);
+                        cleanUp.closeConn(dbleconn);
+                        cleanUp.closeConn(dblemanagerconn);
+                        System.exit(-1);
+                    }
+                }
+                com.actiontech.execandCompare.execandCompare(logpath, sqlfileClient, dblestmt, mysqlstmt);
 
                 cleanUp.closeStmt(mysqlstmt);
                 cleanUp.closeStmt(dblestmt);
                 cleanUp.closeConn(mysqlconn);
                 cleanUp.closeConn(dbleconn);
+
+                com.actiontech.executeManager.execute(logpath, sqlfileManager,dblemanagerstmt);
+
+                cleanUp.closeStmt(dblemanagerstmt);
+                cleanUp.closeConn(dblemanagerconn);
             }
 
-        }
         com.actiontech.cleanUp.rmfile("test1.txt");
     }
 }
