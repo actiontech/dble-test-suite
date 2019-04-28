@@ -11,8 +11,8 @@ public class execandCompare {
 
     public static void execandCompare(String rtPath_value, String sqPath_value, Statement dblestmt, Statement mysqlstmt) {
         //create directory
-        long currentTime = System.currentTimeMillis();
-        String tst = String.valueOf(currentTime);
+        //long currentTime = System.currentTimeMillis();
+        String tst = "sql_logs";
         String cfilepath = rtPath_value + File.separator + tst;
         com.actiontech.createFileUtil.createDir(cfilepath);
 
@@ -62,6 +62,13 @@ public class execandCompare {
                 //line = br.readLine();
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("#") == false) {
+                    	
+                    	boolean allow_diff = false;
+                         
+                    	if (line.contains("allow_diff"))
+                         {
+                             allow_diff = true;
+                         }
                         String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
                         //dble
                         ArrayList<String> dblerslist = new ArrayList<String>();
@@ -106,7 +113,7 @@ public class execandCompare {
                         }
                         //compare the ResultSet
                         boolean same;
-                        same = compare.compareList(dblerslist, mysqlrslist);
+                        same = compare.compareList(dblerslist, mysqlrslist,allow_diff);
                         if (same) {
                             passbw.write(exec);
                             String passstr = dblerslist.toString() + "\r\n";

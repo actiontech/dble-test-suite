@@ -46,8 +46,7 @@ public class createFileUtil {
 //            Path path = Paths.get(filePath,destFileNames[i]);
 //            fpath = path.toString();
             File file = new File(fpath);
-            if (!file.exists()) {
-                System.out.println("create " + destFileNames[i] + " failed!");
+            if (file.exists()) {
                 file.delete();
             }
 
