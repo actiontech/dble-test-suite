@@ -7,18 +7,44 @@ RUN yum -y install sysbench
 RUN wget ftp://ftp:ftp@10.186.18.20/housekeep/jdk-8u121-linux-x64.tar.gz 
 RUN mkdir /opt/jdk 
 RUN tar -zxvf jdk-8u121-linux-x64.tar.gz -C /opt/jdk --strip-components=1 
-RUN echo "export JAVA_HOME=/usr/jdk">>/etc/bashrc 
-    
-RUN wget ftp://ftp:ftp@10.186.18.20/mysql-tarball/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
-RUN mkdir /usr/local/mysql 
-RUN tar -zxvf mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz -C /usr/local/mysql --strip-components=1 
-RUN echo "export PATH=/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc    
-    
-RUN wget ftp://ftp:ftp@10.186.18.20/housekeep/btrace-bin-1.3.11.tgz.tar.gz 
-RUN mkdir /opt/btrace 
-RUN tar -zxvf btrace-bin-1.3.11.tgz.tar.gz -C /opt/btrace
-RUN rm -r *.tar.gz
+RUN echo "export JAVA_HOME=/opt/jdk">>/etc/bashrc
 
+RUN wget ftp://ftp:ftp@10.186.18.20/mysql-tarball/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
+RUN mkdir /usr/local/mysql
+RUN tar -zxvf mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz -C /usr/local/mysql --strip-components=1
+
+
+RUN yum install -y openssl > /tmp/install_openssl.log
+RUN yum install -y openssh-server
+
+RUN groupadd mysql
+RUN useradd -r -g mysql -s /bin/false mysql
+RUN cd /usr/local/mysql && mkdir data && chown -R mysql:mysql .
+RUN sed -i '/mysqld_safe/,+2d' /etc/my.cnf
+RUN sed -i -e '$a [client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n' -e "/\[mysqld\]/a server-id=$(($1+2)) \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables=\"*\" \ngtid-mode=on \nenforce_gtid_consistency=on \nearly-plugin-load=keyring_file.so" /etc/my.cnf
+RUN rm -rf /var/lib/mysql
+RUN /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --user=mysql >/dev/null 2>&1
+
+RUN wget ftp://ftp:ftp@10.186.18.20/housekeep/btrace-bin-1.3.11.tgz.tar.gz
+RUN mkdir /opt/btrace
+RUN tar -zxvf btrace-bin-1.3.11.tgz.tar.gz -C /opt/btrace
+RUN sed -i 's/java -cp/java -Dcom.sun.btrace.unsafe=true -cp/' /opt/btrace/bin/btrace
+
+RUN wget ftp://ftp:ftp@10.186.18.20/housekeep/zookeeper-3.5.2-alpha.tar.gz
+RUN mkdir /opt/zookeeper
+RUN tar -zxvf zookeeper-3.5.2-alpha.tar.gz -C /opt/zookeeper --strip-components=1
+
+RUN echo "export PATH=/opt/zookeeper/bin:/opt/btrace/bin/:/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc
+
+RUN curl --request GET -o /opt/dble_init.sh --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Fdble_init.sh/raw?ref=master
+RUN chmod 777 /opt/dble_init.sh
+RUN curl --request GET -o /opt/mysql_init.sh --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Fmysql_init.sh/raw?ref=master
+RUN chmod 777 /opt/mysql_init.sh
+
+RUN ssh-keygen -A
+RUN mkdir ~/.ssh
+
+RUN rm -r *.tar.gz
 
 VOLUME /opt
 
