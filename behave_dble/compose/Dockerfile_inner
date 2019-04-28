@@ -43,6 +43,7 @@ RUN chmod 777 /opt/mysql_init.sh
 
 RUN ssh-keygen -A
 RUN mkdir ~/.ssh
+RUN echo 'sshpass'| passwd --stdin root
 
 RUN rm -r *.tar.gz
 
