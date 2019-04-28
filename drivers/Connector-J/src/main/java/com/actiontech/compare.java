@@ -6,9 +6,11 @@ import java.util.HashMap;
 
 public class compare {
 
-    public static boolean compareList(ArrayList<String> dblers, ArrayList<String> mysqlrs){
+    public static boolean compareList(ArrayList<String> dblers, ArrayList<String> mysqlrs,boolean allow_diff){
         //Collections.sort(dblers);
         //Collections.sort(mysqlrs);
+    	if (allow_diff)
+            return true;
         if (dblers.equals(mysqlrs)){
             return true;
         }
