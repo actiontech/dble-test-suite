@@ -161,9 +161,9 @@ int case_mysql_set_local_infile_handler()
     mysql_options(conn, MYSQL_OPT_LOCAL_INFILE, (char*) &opt_local_infile);
 
     if(IS_DEBUG){
-        mysql_real_connect(conn, Host_Single_MySQL, TEST_USER, TEST_USER_PASSWD, TEST_DB, MYSQL_PORT, NULL, CLIENT_DEPRECATE_EOF);
+        mysql_real_connect(conn, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, TEST_DB, MYSQL_PORT, NULL, CLIENT_DEPRECATE_EOF);
     }else{
-        mysql_real_connect(conn, Host_Test, TEST_USER, TEST_USER_PASSWD, TEST_DB, TEST_PORT,NULL, CLIENT_DEPRECATE_EOF);
+        mysql_real_connect(conn, HOST_DBLE, TEST_USER, TEST_USER_PASSWD, TEST_DB, DBLE_PORT,NULL, CLIENT_DEPRECATE_EOF);
 	}
     if (conn == NULL) {
         printf("Error connecting to database: %s\n", mysql_error(conn));
@@ -178,8 +178,8 @@ int case_mysql_set_local_infile_handler()
                                  local_infile_error,
                                  NULL);
 
-	myquery(mysql_query(conn, "DROP TABLE if exists local_infile_test"),conn);
-	myquery(mysql_query(conn, "CREATE TABLE local_infile_test(id  INT,msg VARCHAR(100));"),conn);
+	myquery(conn, "DROP TABLE if exists local_infile_test");
+	myquery(conn, "CREATE TABLE local_infile_test(id  INT,msg VARCHAR(100));");
     /* now trigger infile handling */
     stat = mysql_query(conn, "LOAD DATA LOCAL INFILE 'infile_source.txt' "
                             "     INTO TABLE local_infile_test "
