@@ -22,8 +22,8 @@ void case_mysql_list_dbs(MYSQL *conn){
 		exit(1);
 	}
 
-	myquery(mysql_query(conn, "drop table if exists mytest_test1"), conn);
-	myquery(mysql_query(conn, "create table mytest_test1(id int)"), conn);
+	myquery(conn, "drop table if exists sharding_4_t1");
+	myquery(conn, "create table sharding_4_t1(id int)");
 	MYSQL_RES *res2 = mysql_list_tables(conn, "tb%");
 	if (res){
 		printf("    pass! mysql_list_tables: \n");

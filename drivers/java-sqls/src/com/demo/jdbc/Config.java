@@ -70,7 +70,7 @@ public class Config {
 //			Host_Slave2 = slave2.split(":")[0];
 //
 			mysql_hosts[0]=Host_Single_MySQL;
-//			mysql_hosts[1]=Host_Master;
+//			mysql_hosts[1]=HOST_MASTER;
 //			mysql_hosts[2]=Host_Slave1;
 //			mysql_hosts[3]=Host_Slave2;
 
@@ -113,7 +113,7 @@ public class Config {
 //					String va = tmp[1].trim();
 //					va = va.replace("\"", "");
 //					dble_ADMIN_PASSWD = va;
-////					System.out.println(UPROXY_ADMIN_PASSWD);
+////					System.out.println(ADMIN_PASSWD);
 //				}
 //				if(tmp[0].indexOf("port")!=-1){
 //					dble_PORT = Integer.parseInt(tmp[1].trim());
@@ -130,7 +130,7 @@ public class Config {
 		Config.TEST_PORT = 8066;
 		Config.Host_Single_MySQL = "172.100.0.3";
 		Config.Host_Test = Config.Host_Single_MySQL;
-//		Config.Host_Master = Config.Host_Single_MySQL;
+//		Config.HOST_MASTER = Config.Host_Single_MySQL;
 //		Config.Host_Slave1 = Config.Host_Single_MySQL;
 //		Config.Host_Slave2 = Config.Host_Single_MySQL;
 		TEST_USER = "test";
