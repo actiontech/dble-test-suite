@@ -17,3 +17,6 @@ nohup docker exec mysql sh -c "/usr/sbin/sshd -D" &
 nohup docker exec mysql-master1 sh -c "/usr/sbin/sshd -D" &
 nohup docker exec mysql-master2 sh -c "/usr/sbin/sshd -D" &
 nohup docker exec driver-test sh -c "/etc/init.d/ssh start" &
+
+
+/bin/bash
