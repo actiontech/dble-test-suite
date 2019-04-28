@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class executeManager {
     public static void execute(String rtPath_value, String sqPath_value, Statement dblemanagerstmt) {
-        long currentTime = System.currentTimeMillis();
-        String tst = String.valueOf(currentTime);
+//        long currentTime = System.currentTimeMillis();
+        String tst = "sql_log";
         String cfilepath = rtPath_value + File.separator + tst;
         com.actiontech.createFileUtil.createDir(cfilepath);
 
