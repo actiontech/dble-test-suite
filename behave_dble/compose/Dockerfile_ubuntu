@@ -7,6 +7,7 @@ RUN tar zxvf /opt/release-0.5.1.tar.gz -C /opt/ &&\
     mkdir /opt/yaml-cpp-release-0.5.1/build
 RUN cd /opt/yaml-cpp-release-0.5.1/build &&\
     cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
+RUN echo "export LD_LIBRARY_PATH=/usr/local/lib">>/etc/bashrc
 RUN mkdir ~/.ssh
 RUN sed -i -e "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
 RUN echo root:sshpass|chpasswd
