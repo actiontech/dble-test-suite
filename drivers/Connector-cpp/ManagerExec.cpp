@@ -35,8 +35,7 @@ int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 	Statement *stmt;
 	ResultSet *res;
 	ResultSetMetaData *resultSetMetaData;
-	//ResultSetMetaData * 
-	//����sql�ļ�����ȡlog�ļ���
+	//ResultSetMetaData *
 	string sqlf = string(sqlFile);
 	string sqlFileName = sqlf.substr(sqlf.rfind("/") + 1);
 	sqlFileName = sqlFileName.substr(0, sqlFileName.find("."));
@@ -56,7 +55,8 @@ int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 	}
 
 	try {
-		pass.open(logPass, ios::out | ios::app);
+
+		pass.open(logPass, ios::out| ios::trunc);
 	}
 	catch (exception e) {
 		cout << "open file " + logPass + " failed!" << endl;
@@ -64,7 +64,7 @@ int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 		exit(1);
 	}
 	try {
-		fail.open(logFail, ios::out | ios::app);
+		fail.open(logFail, ios::out | ios::trunc);
 	}
 	catch (exception e) {
 		cout << "open file " + logFail + " failed!" << endl;
@@ -77,13 +77,13 @@ int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 		stmt = con->createStatement();
 	}
 	catch (SQLException &e) {
-		cout << e.what() << endl;
+//		cout << e.what() << endl;
 		exit(1);
 	}
 
 	while (getline(sqls, line)) // line�в�����ÿ�еĻ��з�
 	{
-		cout << line << endl;
+//		cout << line << endl;
 		if (line.find('#') != 0) {
 			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line + "===";
 			transform(line.begin(), line.end(), line.begin(), ::tolower);
@@ -147,7 +147,7 @@ int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 				string errMsg = e.what();
 				string errCode = to_string(e.getErrorCode());
 				string err = "dble: [(" + errCode + ": " + errMsg + ")]";
-				cout << "err:" + err << endl;
+//				cout << "err:" + err << endl;
 				fail << exec << endl;
 				fail << err << endl;
 			}
