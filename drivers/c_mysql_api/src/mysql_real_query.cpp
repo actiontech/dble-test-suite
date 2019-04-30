@@ -21,10 +21,11 @@ void case_mysql_real_query(MYSQL* conn){
             exit(1);
         }
 
-        char sql[50];
+        char sql[105];
+//        sprintf(sql, "create table tttt(id int);insert into tttt values(1)");
         sprintf(sql, "drop table if exists sharding_4_t1;create table sharding_4_t1(id int);insert into sharding_4_t1 values(1)");
 //        printf("%s\n", sql);
-        if(mysql_real_query(mysql, sql, 50)){
+        if(mysql_real_query(mysql, sql, 105)){
                 const char * err=mysql_error(mysql);
                 printf("create table err: %s\n", err);
                 exit(1);

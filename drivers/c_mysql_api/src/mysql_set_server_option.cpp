@@ -16,8 +16,8 @@ void case_mysql_set_server_option(MYSQL* conn)
         printf("set mysql_set_server_option get err:%s\n", mysql_error(conn));
 		exit(1);
     }else{
-        int status = mysql_query(conn, "DROP TABLE IF EXISTS test_table;\
-	                      CREATE TABLE test_table(id INT);");
+        int status = mysql_query(conn, "DROP TABLE IF EXISTS sharding_4_t1;\
+	                      CREATE TABLE sharding_4_t1(id INT);");
 	    if (status)
 		{
 		  printf("set mysql_set_server_option Could not execute multi statement(s)\n");
@@ -35,7 +35,7 @@ void case_mysql_set_server_option(MYSQL* conn)
 				}
 			} while (status == 0);
 
-			doQueryWithExpectInt(conn, "select count(*) from test_table/*master*/", 0);
+			doQueryWithExpectInt(conn, "select count(*) from sharding_4_t1", 0);
 			mysql_set_server_option(conn, MYSQL_OPTION_MULTI_STATEMENTS_OFF);
 			printf("    pass! after mysql_set_server_option MYSQL_OPTION_MULTI_STATEMENTS_ON, execute mult-query success!\n");
 
