@@ -13,7 +13,7 @@ void case_mysql_row_seek(MYSQL* conn){
 	char sql[100];
 	createAndFillTable(conn);
 
-    strcpy(sql, "select * from test_table/*master*/");
+    strcpy(sql, "select * from sharding_4_t1");
 
     myquery(conn, sql);
 
