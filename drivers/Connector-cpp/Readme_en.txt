@@ -12,19 +12,20 @@ mkdir build
 cd build
 cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
 
-3. Get mysql-connector-c++-1.1.11(source version) and build
+3. execute echo "export LD_LIBRARY_PATH=/usr/local/lib">>/root/.bashrc
+
+4. Get mysql-connector-c++-1.1.11(source version) and build
 cd /opt
 wget https://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.11.tar.gz
 tar zxf mysql-connector-c++-1.1.11.tar.gz
 cd /opt/mysql-connector-c++-1.1.11
 apt install -y cmake libmysqlclient-dev
 cmake .; make -j 3; make install
-LD_LIBRARY_PATH=/usr/local/lib
 note:maybe occur this issue: https://bugs.mysql.com/bug.php?id=90727  (remove line 703-704 from FindMySQL.cmake file)
 
-4.执行：behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+5.execute：behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
-5.Compile and run
+6.Compile and run
 cd /opt/cpp
 g++ *.cpp -l mysqlcppconn -l yaml-cpp
-./a.out "" "/opt/cpp/conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"
+./a.out "" "conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"

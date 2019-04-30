@@ -8,8 +8,8 @@ open project -> select the project dir
 mvn package
 make sure "BUILD SUCCES" observed, after build success, generate "Jconnector-5.1.35.jar" under dir target/
 
-3.执行：behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+3.execute：behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
 4.run in commandline
 1)access to the directory Connector-J/
-2)execute with the command: java -jar target/Jconnector.jar "" "/opt/auto_test/dble/behave_dble/conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"
+2)execute with the command: java -jar target/Jconnector.jar "" "conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"
