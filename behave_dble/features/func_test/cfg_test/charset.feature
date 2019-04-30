@@ -74,7 +74,8 @@ Feature: set charset in server.xml,check backend charsets are as set
     Then execute sql in "dble-1" in "user" mode
         | user | passwd  | conn   | toClose | sql                                 | expect  | db     |charset|
         | test | 111111  | conn_2 | False   | insert into aly_test value(1, '中') | success | schema1 |utf8  |
-        | test | 111111  | conn_2 | True    | select name from aly_test           | has{('中')} | schema1 |utf8  |
+        | test | 111111  | conn_2 | False   | select name from aly_test           | has{('中')} | schema1 |utf8  |
+        | test | 111111  | conn_2 | True    | drop table if exists aly_test       | success | schema1 |utf8  |
 
   Scenario: dble should map MySQL's utfmb4 character to utf8.
              In other words,non-ASCII sharding column should be routed to the same datanode whether client character-set is utfmb4 or utf8 #2
