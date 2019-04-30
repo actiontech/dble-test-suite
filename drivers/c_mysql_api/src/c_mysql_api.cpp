@@ -19,22 +19,24 @@ int main(int argc, char *argv[]) {
     MYSQL* conn = getConn();
 
 //    case_mysql_change_user(conn);//does not support, doc-it already
+//    case_mysql_reset_connection(conn); //does not support, doc-it already
+//    case_mysql_rollback(conn);//does not support
+//    case_mysql_set_server_option(conn);//does not support, doc-it already
+
     case_mysql_field_count(conn);
     case_mysql_get_host_info(conn);
     case_mysql_insert_id(conn);
     case_mysql_list_dbs(conn);
     case_mysql_options4(conn);
-    case_mysql_real_connect(conn);
+//    case_mysql_real_connect(conn);//skip for bug https://github.com/actiontech/dble/issues/1155
     case_mysql_real_escape_string(conn);
     case_mysql_real_query(conn);
-//    case_mysql_reset_connection(conn); //does not support, doc-it already
-//    case_mysql_rollback(conn);//does not support
+
     case_mysql_row_seek(conn);
     case_mysql_select_db(conn);
     case_mysql_set_character_set(conn);
     case_mysql_session_track_get_first(conn);
     case_mysql_set_local_infile_handler();
-//    case_mysql_set_server_option(conn);//does not support, doc-it already
     case_mysql_sqlstate(conn);
     case_mysql_stat(conn);
     case_mysql_thread_id();
