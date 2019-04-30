@@ -55,7 +55,7 @@ int client_exec(const char *sqlFile, const char *logPath, Connection *dbleConn, 
 	}
 
 	try {
-		pass.open(logPass, ios::out | ios::app);
+		pass.open(logPass, ios::out | ios::trunc);
 	}
 	catch (exception e) {
 		cout << "open file " + logPass + " failed!" << endl;
@@ -63,7 +63,7 @@ int client_exec(const char *sqlFile, const char *logPath, Connection *dbleConn, 
 		exit(1);
 	}
 	try {
-		fail.open(logFail, ios::out | ios::app);
+		fail.open(logFail, ios::out | ios::trunc);
 	}
 	catch (exception e) {
 		cout << "open file " + logFail + " failed!" << endl;
@@ -88,15 +88,15 @@ int client_exec(const char *sqlFile, const char *logPath, Connection *dbleConn, 
 		exit(1);
 	}
 
-	while (getline(sqls, line)) // line�в�����ÿ�еĻ��з�
+	while (getline(sqls, line))
 	{
 		if (line.find('#') != 0) {
-			cout << line << endl;
-			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line + "===";
-			bool allow_diff_sequence = false;
-			if (findSubstr(line,"allow_diff_sequence"))
+//			cout << line << endl;
+			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line ;
+			bool allow_diff = false;
+			if (findSubstr(line,"allow_diff"))
 			{
-				allow_diff_sequence = true;
+				allow_diff = true;
 			}
 			transform(line.begin(), line.end(), line.begin(), ::tolower);
 			boost::trim(line);
@@ -106,7 +106,7 @@ int client_exec(const char *sqlFile, const char *logPath, Connection *dbleConn, 
 			dbleResultSetList = exec_sql(dbleStmt, line);
 			mysqlResultSetList = exec_sql(mysqlStmt, line);
 			//compare rs
-			bool sameResultSet = compareList(dbleResultSetList, mysqlResultSetList, allow_diff_sequence);
+			bool sameResultSet = compareList(dbleResultSetList, mysqlResultSetList, allow_diff);
 			if (sameResultSet) {
 				string passString = convertListToString(dbleResultSetList);
 				pass << exec << endl;
