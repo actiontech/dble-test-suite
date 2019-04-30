@@ -42,7 +42,7 @@ static void print_error(MYSQL *l_mysql)
    }
 }
 MYSQL* createConn();
-static void :myquery( MYSQL* conn, const char* sql){
+static void myquery( MYSQL* conn, const char* sql){
 	if(IS_DEBUG) printf("sql:%s\n",sql);
 	int r= (mysql_query(conn, sql));
 	if (r) {
