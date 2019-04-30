@@ -42,9 +42,9 @@ extern unsigned int DBLE_ADMIN_PORT;
 //extern char ROOT_PATH[50];
 extern char SQLS_CONFIG[100];
 
-#define TEST_TABLE "test_table"
+#define TEST_TABLE "sharding_4_t1"
 #define DROP_SAMPLE_TABLE "DROP TABLE IF EXISTS " TEST_TABLE
-#define CREATE_SAMPLE_TABLE "CREATE TABLE " TEST_TABLE "(col1 INT,\
+#define CREATE_SAMPLE_TABLE "CREATE TABLE " TEST_TABLE "(id INT,\
                                                  col2 VARCHAR(40),\
                                                  col3 SMALLINT,\
                                                  col4 TIMESTAMP)"

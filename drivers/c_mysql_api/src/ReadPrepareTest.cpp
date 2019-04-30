@@ -22,7 +22,7 @@ void doRTest(){
 //******case1 end
 
 //******case2:during read prepare, sqls that should be sent to master should still be sent to master
-	myquery(conn, "insert into test_table(col1,col2,col3) values(1,'abc',2) /*uproxy_dest_expect:M*/");
+	myquery(conn, "insert into test_table(id,col2,col3) values(1,'abc',2)");
     printf("    pass! before read ps deallocate, queries should be sent to master should still be sent to master.\n");
 //******case2 end
 
