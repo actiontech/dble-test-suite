@@ -1,0 +1,226 @@
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:1,sql:use schema1;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:2,sql:drop table if exists test_shard;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:3,sql:drop table if exists test1;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:4,sql:drop table if exists schema2.test2;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:5,sql:drop table if exists schema3.test3;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:6,sql:drop view if exists view_test;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:7,sql:drop view if exists view_test1;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:8,sql:CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(40) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:9,sql:CREATE TABLE schema3.test3(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(40) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:10,sql:CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(40) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARSET=UTF8;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:11,sql:create table test_shard (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),t datetime,b bool)DEFAULT CHARSET=UTF8;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:12,sql:CREATE UNIQUE INDEX idx_id USING BTREE ON schema2.test2 (id,pad(3) ASC);===
+[(1089): Incorrect prefix key; the used key part isn't a string, the used length is longer than the key part, or the storage engine doesn't support unique prefix keys]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:13,sql:insert into schema2.test2 values(1,1,'test???id???1',1),(3,3,'test???id???3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6);===
+[5]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:14,sql:insert into schema3.test3 values(1,1,'order???id???1',1),(3,3,'order???id???3',3),(4,4,'$order$4',4),(5,5,'order...5',1);===
+[4]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:15,sql:insert into test1 values(1,1,'manager???id???1',1),(3,3,'manager???id???3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6);===
+[4]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:16,sql:insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012/12/31 11:30:45',0),(2,2, 'a string','2012/12/31 11:30:45',0),(5,5, 'a string','2018/12/03 11:30:45',0);===
+[3]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:18,sql:select * from test_shard where R_NAME=_utf8'???'COLLATE utf8_danish_ci;===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:19,sql:explain select * from schema2.test2 where id=1;===
+[true]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:26,sql:select schema1.test_shard.R_NAME from test_shard;===
+[{r_name=a string}, {r_name=a string}, {r_name=a string}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:27,sql:select * from test_shard where exists(select * from test_shard where id=1||id=3) order by id;===
+[{b=false, t=2012-12-31 11:30:45.0, r_regionkey=1.0, id=1, r_name=a string}, {b=false, t=2012-12-31 11:30:45.0, r_regionkey=2.0, id=2, r_name=a string}, {b=false, t=2018-12-03 11:30:45.0, r_regionkey=5.0, id=5, r_name=a string}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:28,sql:select * from test_shard where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13;===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:29,sql:select * from test_shard where id= (b'01' | B'11');===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:30,sql:select * from test_shard where b'1000001'  in (select R_NAME from test_shard where id =18);===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:31,sql:select * from test_shard where HEX(R_NAME) not between 0b11+0 and (select HEX(R_NAME) from test_shard where HEX(R_NAME) not in (select HEX(R_NAME) from test_shard where id <4));===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:32,sql:select * from test_shard where HEX(R_NAME) like (select '%A%') escape (select '%') and HEX(R_NAME) not like (select '%A%');===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:33,sql:select * from test_shard where false <> (select HEX(R_NAME) from test_shard where HEX(R_NAME)  not regexp '^A' limit 1 ) order by id;===
+[{b=false, t=2012-12-31 11:30:45.0, r_regionkey=1.0, id=1, r_name=a string}, {b=false, t=2012-12-31 11:30:45.0, r_regionkey=2.0, id=2, r_name=a string}, {b=false, t=2018-12-03 11:30:45.0, r_regionkey=5.0, id=5, r_name=a string}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:34,sql:select * from test_shard where !(true is not true) order by id;===
+[{b=false, t=2012-12-31 11:30:45.0, r_regionkey=1.0, id=1, r_name=a string}, {b=false, t=2012-12-31 11:30:45.0, r_regionkey=2.0, id=2, r_name=a string}, {b=false, t=2018-12-03 11:30:45.0, r_regionkey=5.0, id=5, r_name=a string}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:35,sql:select count(distinct id),sum(distinct R_NAME), R_REGIONKEY from test_shard where id=3 or id=7 group by R_REGIONKEY;===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:36,sql:select * from test_shard where id>(SELECT ABS(2)) order by id limit 1 offset 1;===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:39,sql:select * from test_shard order by id lock in share mode;===
+[{b=false, t=2012-12-31 11:30:45.0, r_regionkey=1.0, id=1, r_name=a string}, {b=false, t=2012-12-31 11:30:45.0, r_regionkey=2.0, id=2, r_name=a string}, {b=false, t=2018-12-03 11:30:45.0, r_regionkey=5.0, id=5, r_name=a string}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:40,sql:select * from test_shard where id=2 for update;===
+[{b=false, t=2012-12-31 11:30:45.0, r_regionkey=2.0, id=2, r_name=a string}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:41,sql:select a.id,b.id,b.pad,a.t_id from (select schema2.test2.id,schema2.test2.pad,schema2.test2.t_id from schema2.test2 join schema3.test3 where schema2.test2.pad=schema3.test3.pad ) a,(select test1.id,test1.pad from schema2.test2 join test1 where schema2.test2.pad=test1.pad) b where a.pad=b.pad order by a.id;===
+[{t_id=1, pad=1, id=1}, {t_id=1, pad=1, id=1}, {t_id=1, pad=1, id=1}, {t_id=1, pad=1, id=1}, {t_id=3, pad=4, id=4}, {t_id=4, pad=3, id=3}, {t_id=5, pad=1, id=1}, {t_id=5, pad=1, id=1}, {t_id=5, pad=1, id=1}, {t_id=5, pad=1, id=1}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:42,sql:select * from schema2.test2 a join (select * from schema3.test3 where pad>2) b on a.id<b.id and a.pad=b.pad order by a.id,b.id;===
+[{t_id=3, pad=4, name=$order$4, o_id=4, id=4}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:43,sql:select * from schema2.test2 a join (select * from schema3.test3 where pad>2) b  using(pad) order by a.id,b.id;===
+[{t_id=3, pad=4, name=$order$4, o_id=4, id=4}, {t_id=4, pad=3, name=order???id???3, o_id=3, id=3}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:44,sql:select * from (select * from schema2.test2 where pad>0) a straight_join (select * from schema3.test3 where pad>0) b order by a.id,b.id;===
+[{t_id=1, pad=1, name=order???id???1, o_id=1, id=1}, {t_id=1, pad=3, name=order???id???3, o_id=3, id=3}, {t_id=1, pad=4, name=$order$4, o_id=4, id=4}, {t_id=1, pad=1, name=order...5, o_id=5, id=5}, {t_id=3, pad=1, name=order???id???1, o_id=1, id=1}, {t_id=3, pad=3, name=order???id???3, o_id=3, id=3}, {t_id=3, pad=4, name=$order$4, o_id=4, id=4}, {t_id=3, pad=1, name=order...5, o_id=5, id=5}, {t_id=4, pad=1, name=order???id???1, o_id=1, id=1}, {t_id=4, pad=3, name=order???id???3, o_id=3, id=3}, {t_id=4, pad=4, name=$order$4, o_id=4, id=4}, {t_id=4, pad=1, name=order...5, o_id=5, id=5}, {t_id=5, pad=1, name=order???id???1, o_id=1, id=1}, {t_id=5, pad=3, name=order???id???3, o_id=3, id=3}, {t_id=5, pad=4, name=$order$4, o_id=4, id=4}, {t_id=5, pad=1, name=order...5, o_id=5, id=5}, {t_id=6, pad=1, name=order???id???1, o_id=1, id=1}, {t_id=6, pad=3, name=order???id???3, o_id=3, id=3}, {t_id=6, pad=4, name=$order$4, o_id=4, id=4}, {t_id=6, pad=1, name=order...5, o_id=5, id=5}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:46,sql:select * from (select * from schema2.test2 where pad>1) a right outer join (select * from schema3.test3 where pad>3) b on a.pad=b.pad order by a.id,b.id;===
+[{t_id=3, pad=4, name=$order$4, o_id=4, id=4}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:47,sql:select * from (select * from schema2.test2 where pad>1) a natural left outer join (select * from schema3.test3 where pad>3) b order by a.id,b.id;===
+[{t_id=3, pad=4, name=test???id???3, o_id=null, id=3}, {t_id=4, pad=3, name=$test$4, o_id=null, id=4}, {t_id=6, pad=6, name=test6, o_id=null, id=6}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:48,sql:select * from (select * from schema2.test2 where pad>1) a natural right outer join (select * from schema3.test3 where pad>3) b order by a.id,b.id;===
+[{t_id=null, pad=4, name=$order$4, o_id=4, id=4}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:49,sql:SELECT DISTINCT schema2.test2.id FROM schema2.test2,schema3.test3 where schema2.test2.pad=schema3.test3.pad;===
+[{id=1}, {id=3}, {id=4}, {id=5}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:51,sql:(select name from schema2.test2 where pad=1 order by id limit 10) union all (select name from schema3.test3 where pad=1 order by id limit 10) order by name;===
+[true]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:52,sql:(select name from schema2.test2 where pad=1 order by id limit 10) union distinct (select name from schema3.test3 where pad=1 order by id limit 10) order by name;===
+[true]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:53,sql:select a.id,b.id,c.pad from schema2.test2 a,schema3.test3 b,test1 c where a.id=b.id and a.id=c.pad;===
+[{pad=1, id=1}, {pad=3, id=3}, {pad=4, id=4}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:54,sql:create view view_test1 as select * from schema2.test2 where id=1;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:55,sql:create or replace view view_test1 as select * from schema2.test2 where id >3;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:56,sql:select * from view_test1  order by id;===
+[{t_id=4, pad=3, name=$test$4, id=4}, {t_id=5, pad=1, name=test...5, id=5}, {t_id=6, pad=6, name=test6, id=6}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:57,sql:create or replace view view_test as select * from schema2.test2;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:58,sql:alter view view_test as select * from schema3.test3;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:59,sql:select * from view_test order by id;===
+[{pad=1, o_id=1, name=order???id???1, id=1}, {pad=3, o_id=3, name=order???id???3, id=3}, {pad=4, o_id=4, name=$order$4, id=4}, {pad=1, o_id=5, name=order...5, id=5}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:60,sql:load data local infile "./test1.txt" into table schema2.test2 fields terminated by ',' lines terminated by '\n';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:61,sql:ALTER TABLE schema2.test2 ADD COLUMN name3 CHAR(5) FIRST,ADD COLUMN name4 CHAR(5) AFTER  t_id;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:62,sql:ALTER TABLE schema2.test2 DROP column name3,DROP column name4;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:63,sql:ALTER TABLE schema2.test2 ADD INDEX idx (id ASC,R_NAME(2) DESC);===
+[(1072): Key column 'r_name' doesn't exist in table]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:65,sql:ALTER TABLE schema2.test2 DROP PRIMARY KEY;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:66,sql:ALTER TABLE schema2.test2 ADD PRIMARY KEY USING HASH (id);===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:67,sql:ALTER TABLE schema2.test2 DROP PRIMARY KEY;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:68,sql:ALTER TABLE schema2.test2 ADD CONSTRAINT pK_id PRIMARY KEY (id);===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:69,sql:ALTER TABLE schema2.test2 DROP PRIMARY KEY;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:70,sql:ALTER TABLE schema2.test2 ADD UNIQUE KEY uk_id (id ASC,pad DESC);===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:71,sql:ALTER TABLE schema2.test2 DROP KEY uk_id;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:72,sql:ALTER TABLE schema2.test2 CHANGE name ID1 varchar(40)  NOT NULL DEFAULT 10 COMMENT 'my column1';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:73,sql:ALTER TABLE schema2.test2 CHANGE ID1 name char(40) NOT NULL DEFAULT '';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:74,sql:ALTER TABLE schema2.test2 MODIFY COLUMN ID1 BIGINT UNSIGNED UNIQUE DEFAULT 1 COMMENT 'my column2' AFTER pad;===
+[(1054): Unknown column 'id1' in 'test2']
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:76,sql:SHOW INDEX FROM schema2.test2;/*allow_diff*/===
+[(1146): Table 'schema2.test2' doesn't exist]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:77,sql:DESC schema2.test2;===
+[true]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:79,sql:lock tables schema2.test2 write;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:80,sql:unlock tables;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:81,sql:lock tables schema2.test2 read;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:82,sql:unlock tables;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:86,sql:show index from schema2.test2 in schema2;/*allow_diff*/===
+[(1146): Table 'schema2.test2' doesn't exist]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:87,sql:show keys in schema2.test2 from schema2;/*allow_diff*/===
+[(1146): Table 'schema2.test2' doesn't exist]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:88,sql:show databases;/*allow_diff*/===
+[{DATABASE=schema1}, {DATABASE=schema2}, {DATABASE=schema3}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:89,sql:replace into schema2.test2 values (1,1,'test???id???1',1);===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:90,sql:truncate table schema2.test2;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:91,sql:delete from schema2.test2;===
+[0]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:93,sql:drop table if exists test_shard;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:94,sql:CREATE TABLE test_shard ( id long,c1 CHAR(1) CHARACTER SET latin1, c2 CHAR(1) CHARACTER SET ascii,`c3` char(10) CHARACTER SET gbk, c4 char(10) character set utf8) DEFAULT CHARSET=utf8;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:95,sql:INSERT INTO test_shard VALUES (11111,'a','b','???','???');===
+[(1366): Incorrect string value: '\xEF\xBF\xBD\xEF\xBF\xBD...' for column 'c3' at row 1]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:96,sql:SELECT CONCAT(c1,c2),c3 FROM test_shard;===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:97,sql:set names 'utf8';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:98,sql:SELECT CONCAT(c1,c2),c3 FROM test_shard;===
+[]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:100,sql:prepare stmt from 'insert into schema2.test2 values(111,111,"test???id???1",111)';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:101,sql:execute stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:102,sql:select * from schema2.test2;===
+[{t_id=111, pad=111, name=test???id???1, id=111}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:103,sql:drop prepare stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:104,sql:prepare stmt from "insert into schema2.test2 values(111,111,'test???id???1',111)";===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:105,sql:execute stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:106,sql:select * from schema2.test2;===
+[{t_id=111, pad=111, name=test???id???1, id=111}, {t_id=111, pad=111, name=test???id???1, id=111}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:107,sql:drop prepare stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:108,sql:prepare stmt from 'insert into schema2.test2 values(111,111,\'test???id???1\',111)'===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:109,sql:execute stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:110,sql:select * from schema2.test2;===
+[{t_id=111, pad=111, name=test???id???1, id=111}, {t_id=111, pad=111, name=test???id???1, id=111}, {t_id=111, pad=111, name=test???id???1, id=111}]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:111,sql:drop prepare stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:112,sql:prepare stmt from 'select * from schema2.test2 where id=?';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:113,sql:set @b=1;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:114,sql:execute stmt using @b;===
+[true]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:115,sql:drop prepare stmt;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:117,sql:SET @@session.autocommit = ON;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:118,sql:update schema2.test2 set name = 'aa' where id between 2 and 3;===
+[0]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:119,sql:SET @@session.autocommit = 0;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:120,sql:start transaction;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:121,sql:insert into schema2.test2 value(20,20,"20",20);===
+[1]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:122,sql:commit;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:123,sql:begin;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:124,sql:update schema2.test2 set pad=10;===
+[4]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:125,sql:rollback;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:126,sql:drop table test_shard;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:127,sql:drop table schema2.test2;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:128,sql:drop table schema3.test3;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:129,sql:drop table test1;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:130,sql:drop table if exists schema1.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:131,sql:create table schema1.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl(id int);===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:132,sql:set @abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl='schema1';===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:133,sql:drop table schema1.abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijkl;===
+[false]
