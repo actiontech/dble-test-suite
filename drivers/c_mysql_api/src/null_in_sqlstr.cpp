@@ -48,7 +48,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case3********
-	sprintf(sql, "create table t5(id int);\0create table t6(id int)");
+	sprintf(sql, "drop table if exists t5;create table t5(id int);\0create table t6(id int)");
 	//	printf("%s\n", sql);
 	status = mysql_real_query(mysql, sql, 50);
 	if(status){

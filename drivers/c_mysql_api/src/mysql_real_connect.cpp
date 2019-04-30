@@ -25,7 +25,7 @@ void case_mysql_real_connect(MYSQL* conn){
         printf("Error connecting to database: %s\n", mysql_error(test_conn));
         exit(1);
     }else{
-
+        printf("connect success");
     }
     printf("    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****\n");
 
@@ -49,13 +49,12 @@ void case_mysql_real_connect(MYSQL* conn){
 	/* execute multiple statements */
 	int status = mysql_query(test_conn,
 	                     "use schema1; \
-	                      DROP TABLE IF EXISTS test_table;\
-	                      CREATE TABLE test_table(id INT);\
-	                      INSERT INTO test_table VALUES(10);\
-	                      INSERT INTO test_table VALUES(20);\
-	                      INSERT INTO test_table VALUES(30);\
-	                      UPDATE test_table SET id=20 WHERE id=10;\
-	                      SELECT * FROM test_table;");
+	                      DROP TABLE IF EXISTS sharding_4_t1;\
+	                      CREATE TABLE sharding_4_t1(id INT);\
+	                      INSERT INTO sharding_4_t1 VALUES(10);\
+	                      INSERT INTO sharding_4_t1 VALUES(20);\
+	                      INSERT INTO sharding_4_t1 VALUES(30);\
+	                      SELECT * FROM sharding_4_t1;");
 	if (status)
 	{
 	  printf("execute multi statement(s) Err, %s \n", mysql_error(test_conn));
@@ -106,7 +105,7 @@ void case_mysql_real_connect(MYSQL* conn){
 	fprintf(stdout, "    *****pass! mysql_character_set_name, character set: %s*****\n", charset);
 
 	//mysql_data_seek
-	myquery(test_conn, "select * from test_table/*master*/");
+	myquery(test_conn, "select * from sharding_4_t1");
 	MYSQL_RES  *result = mysql_store_result(test_conn);
 	if (result)
 	{
@@ -127,7 +126,7 @@ void case_mysql_real_connect(MYSQL* conn){
 
 	//mysql_info
 	printf("    *****pass! mysql_info*****\n");
-	myquery(test_conn, "Insert into test_table values(111),(222),(333)");
+	myquery(test_conn, "Insert into sharding_4_t1 values(111),(222),(333)");
 	const char* info = mysql_info(test_conn);
 	printf("        mysql_info: %s\n", info);
 
