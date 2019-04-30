@@ -39,15 +39,15 @@ void createTable(MYSQL* mysql){
 
 void createAndFillTable(MYSQL* mysql){
 	char sql[100];
-    strcpy(sql, "drop table if exists sharding_4_t1");
+    strcpy(sql, "drop table if exists schema1.sharding_4_t1");
 
     myquery(mysql, sql);
 
-    strcpy(sql, "create table sharding_4_t1(id int)");
+    strcpy(sql, "create table schema1.sharding_4_t1(id int)");
 
     myquery(mysql, sql);
 
-    strcpy(sql, "insert into sharding_4_t1 values(1),(2),(3)");
+    strcpy(sql, "insert into schema1.sharding_4_t1 values(1),(2),(3)");
 
     myquery(mysql, sql);
 }
