@@ -30,15 +30,18 @@ int main(int argc, char *argv[])
 	char *mysqlHostName;
 	const char *mysqlUserName;
 	const char *mysqlPassword;
-	string sqlFileName;
+	const char *clientSqlFile;
+	const char *managerSqlFile;
+	string sqlFileNameC;
+	string sqlFileNameM;
 	const char *sqlFile;
 	//get current path
 	char buffer[MAX_PATH];
 	const char *currentPath = getcwd(buffer, MAX_PATH);
 	//get current timestampt
-	unsigned long stime = time(0);
-	string strtime = to_string(stime);
-	string path = string(currentPath) + '/' + strtime;
+//	unsigned long stime = time(0);
+	string filename ="sql_logs";
+	string path = string(currentPath) + '/' + filename;
 	const char *logPath = path.c_str();
 	createDir(logPath);
 	Config cfg;
@@ -61,9 +64,9 @@ int main(int argc, char *argv[])
 		mysqlUserName = "test";
 		mysqlPassword = "111111";
 
-		sqlFileName = string(currentPath) + "/assets/sql/driver_test_manager.sql";
+		sqlFileNameM = string(currentPath) + "/assets/sql/driver_test_manager.sql";
 		//sqlFileName = string(currentPath) + "/assets/sql/driver_test_client.sql";
-		sqlFile = sqlFileName.c_str();
+		managerSqlFile = sqlFileNameM.c_str();
 		//cout << string(sqlFile) << endl;
 	}
 	else {
@@ -84,34 +87,31 @@ int main(int argc, char *argv[])
 		//mysqlHostName = mysqlHost.c_str();
 		mysqlUserName = cfg.mysqlUserName.c_str();
 		mysqlPassword = cfg.mysqlPassword.c_str();
-		sqlFileName = string(currentPath) + cfg.sqlPath.substr(1, cfg.sqlPath.length() - 1) + "/" + argv[4];
-		sqlFile = sqlFileName.c_str();
-		cout << string(sqlFile) << endl;
+		sqlFileNameC = string(currentPath)+ "/" + cfg.sqlPath + "/" + argv[3];
+		sqlFileNameM = string(currentPath)+ "/" + cfg.sqlPath + "/" + argv[4];
+		clientSqlFile = sqlFileNameC.c_str();
+		managerSqlFile = sqlFileNameM.c_str();
+//		cout << string(sqlFile) << endl;
 		//cout << string(managerHostName) << endl;
 		//cout << string(managerUserName) << endl;
 		//cout << string(managerPassword) << endl;
 	}
+	string loadPath = string(currentPath) + "/test1.txt";
+	const char *loadDataFile = loadPath.c_str();
+	writeLoadData("test1.txt");
+	cout << string(clientHostName) << endl;
+//	cout << string(clientUserName) << endl;
+//	cout << string(clientPassword) << endl;
+	dbleConn = createConn(clientHostName, clientUserName, clientPassword);
+	mysqlConn = createConn(mysqlHostName, mysqlUserName, mysqlPassword);
 
+	client_exec(clientSqlFile, logPath, dbleConn, mysqlConn);
+	delete dbleConn;
+	delete mysqlConn;
+	removeFile(loadDataFile);
 
-	if (string(argv[3]) == "m") {
-		dbleManagerConn = createConn(managerHostName, managerUserName, managerPassword);
-		manager_exec(sqlFile, logPath, dbleManagerConn);
-		delete dbleManagerConn;
-	}
-	if (string(argv[3]) == "b") {
-		string loadPath = string(currentPath) + "/test1.txt";
-		const char *loadDataFile = loadPath.c_str();
-		writeLoadData("test1.txt");
-		cout << string(clientHostName) << endl;
-		cout << string(clientUserName) << endl;
-		cout << string(clientPassword) << endl;
-		dbleConn = createConn(clientHostName, clientUserName, clientPassword);
-		mysqlConn = createConn(mysqlHostName, mysqlUserName, mysqlPassword);
-		client_exec(sqlFile, logPath, dbleConn, mysqlConn);
-		delete dbleConn;
-		delete mysqlConn;
-		removeFile(loadDataFile);
-	}
-
-	exit(0);
+	dbleManagerConn = createConn(managerHostName, managerUserName, managerPassword);
+	manager_exec(managerSqlFile, logPath, dbleManagerConn);
+	delete dbleManagerConn;
+    exit(0);
 }

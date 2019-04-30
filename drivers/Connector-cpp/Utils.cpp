@@ -35,7 +35,7 @@ string convertListToString(list<string> lt) {
 	{
 		str.append("(" + *iter + "), ");
 	}
-	cout << str << endl;
+//	cout << str << endl;
 	return str;
 }
 
