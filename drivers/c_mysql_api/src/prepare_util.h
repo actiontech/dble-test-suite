@@ -15,7 +15,7 @@
 //write prepare test related vars
 #define STRING_SIZE 50
 #define INSERT_SAMPLE "INSERT INTO \
-                       test_table(col1,col2,col3) \
+                       sharding_4_t1(id,col2,col3) \
                        VALUES(?,?,?)"
 
 extern short         small_data;

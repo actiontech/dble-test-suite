@@ -12,12 +12,12 @@ void case_mysql_real_escape_string(MYSQL* conn){
 	printf("==>mysql_real_escape_string test suites\n");
 
 	myquery(conn, "drop table if exists sharding_4_t1");
-	myquery(conn, "create table sharding_4_t1(str1 varchar(50), str2 varchar(50))");
+	myquery(conn, "create table sharding_4_t1(id int, str1 varchar(50), str2 varchar(50))");
 
 	char query[1000];
 	char *end;
 
-	end = strcpy(query,"INSERT INTO test_table VALUES('");
+	end = strcpy(query,"INSERT INTO sharding_4_t1 VALUES(1,'");
 	end += mysql_real_escape_string(conn,end,"What is this",12);
 	end = stpcpy(end,"','");
 	end += mysql_real_escape_string(conn,end,"binary data: \0\r\n",16);
@@ -32,7 +32,7 @@ void case_mysql_real_escape_string(MYSQL* conn){
 	    exit(1);
 	}
 
-	end = stpcpy(query,"INSERT INTO test_table VALUES('");
+	end = stpcpy(query,"INSERT INTO sharding_4_t1 VALUES(1,'");
 	end += mysql_real_escape_string_quote(conn,end,"What is this",12,'\'');
 	end = stpcpy(end,"','");
 	end += mysql_real_escape_string_quote(conn,end,"binary data: \0\r\n",16,'\'');
