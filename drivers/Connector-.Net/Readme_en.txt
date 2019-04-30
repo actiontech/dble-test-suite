@@ -6,8 +6,8 @@ su -c 'curl https://download.mono-project.com/repo/centos7-stable.repo | tee /et
 yum install -y mono-complete
 3.copy the packages we needed(MySql.Data.dll ,YamlDotNet.dll) from packages directory 
 copy the MySql.Data.dll ,YamlDotNet.dll to the directory where *.cs programmes located
-4.在 netdirver 目录 compile for console :
+4.cd  Connector-.Net/netdriver/ and compile for console :
 csc -out:test.exe -r:MySql.Data.dll -r:YamlDotNet.dll  *.cs
-5.执行：behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
-6.在 netdirver 目录 exec for console
+5.execute：behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+6.cd  Connector-.Net/netdriver/ and exec for console
 mono test.exe "run" "Properties/auto_dble_test.yaml" "driver_test_manager.sql" "driver_test_client.sql"
