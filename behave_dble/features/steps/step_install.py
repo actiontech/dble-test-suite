@@ -355,6 +355,7 @@ def step_impl(context):
     expectNodes = text.splitlines()
     
     check_cluster_successd(context, expectNodes)
+    assert_that(context.check_zk_nodes_success == True, "Expect the online dbles detected by zk meet expectations,but failed")
     
 def check_cluster_successd(context, expectNodes):
     if not hasattr(context, "retry_check_zk_nodes"):
@@ -381,7 +382,7 @@ def check_cluster_successd(context, expectNodes):
             time.sleep(10)
             check_cluster_successd(context, expectNodes)
         else:
-            LOGGER.info("zk cluster started failed after 5 times try,and expectNodes is different from realNodes,expectNodes:{0},realNodes:{1}".format(expectNodes, realNodes))
+            LOGGER.info("The online dbles detected by zk do not meet expectations after 5 times try,expectNodes:{0},realNodes:{1}".format(expectNodes, realNodes))
             delattr(context, "retry_check_zk_nodes")
     else:
         delattr(context, "retry_check_zk_nodes")
