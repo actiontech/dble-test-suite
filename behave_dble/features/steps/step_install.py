@@ -377,7 +377,7 @@ def check_cluster_successd(context, expectNodes):
     if (expectNodes == realNodes):
         context.check_zk_nodes_success = True
     if not context.check_zk_nodes_success:
-        if context.retry_check_zk_nodes < 5:
+        if context.retry_check_zk_nodes < 10:
             context.retry_check_zk_nodes = context.retry_check_zk_nodes + 1
             time.sleep(10)
             check_cluster_successd(context, expectNodes)
