@@ -25,7 +25,7 @@ Feature: install dble cluster, degrade to single dble, recover to cluster
     Given config zookeeper cluster in all dble nodes with "all zookeeper hosts"
     Given reset dble registered nodes in zk
     Then start dble in order
-    Given sleep "30" seconds
+#    Given sleep "30" seconds
     Then Monitored folling nodes online
     """
     dble-1
@@ -33,7 +33,7 @@ Feature: install dble cluster, degrade to single dble, recover to cluster
     dble-3
     """
     Then stop dble in "dble-2"
-    Given sleep "60" seconds
+#    Given sleep "60" seconds
     Then Monitored folling nodes online
     """
     dble-1
