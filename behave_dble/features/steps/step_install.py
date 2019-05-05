@@ -353,18 +353,37 @@ def reset_zk_nodes(context):
 def step_impl(context):
     text = context.text.strip().encode('utf-8')
     expectNodes = text.splitlines()
+    
+    check_cluster_successd(context, expectNodes)
+    
+def check_cluster_successd(context, expectNodes):
+    if not hasattr(context, "retry_check_zk_nodes"):
+        context.retry_check_zk_nodes = 0
+        context.check_zk_nodes_success = False
+
     realNodes = []
-
     cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online ".format(context.cfg_zookeeper['home'])
-    cmd_ssh=get_ssh(context.dbles,"dble-1")
+    cmd_ssh = get_ssh(context.dbles, "dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
-
-    sub_sto = re.findall(r'[[](.*)[]]',sto[-15:])
-    nodes = sub_sto[0].replace(","," ").split()
+    sub_sto = re.findall(r'[[](.*)[]]', sto[-15:])
+    nodes = sub_sto[0].replace(",", " ").split()
 
     for id in nodes:
         LOGGER.info("id:{0}".format(id))
         hostname = "dble-{0}".format(id)
         realNodes.append(hostname)
 
-    assert expectNodes==realNodes,"expectNodes is different from realNodes,expectNodes:{0},realNodes:{1}".format(expectNodes,realNodes)
+    if (expectNodes == realNodes):
+        context.check_zk_nodes_success = True
+    if not context.check_zk_nodes_success:
+        if context.retry_check_zk_nodes < 5:
+            context.retry_check_zk_nodes = context.retry_check_zk_nodes + 1
+            time.sleep(10)
+            check_cluster_successd(context, expectNodes)
+        else:
+            LOGGER.info("zk cluster started failed after 5 times try,and expectNodes is different from realNodes,expectNodes:{0},realNodes:{1}".format(expectNodes, realNodes))
+            delattr(context, "retry_check_zk_nodes")
+    else:
+        delattr(context, "retry_check_zk_nodes")
+
+    
