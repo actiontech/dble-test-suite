@@ -231,7 +231,7 @@ select id from  test1 union SELECT TIME_TO_SEC('22:23:00')
 select id from  test1 union SELECT TO_DAYS(950501)
 select id from  test1 union SELECT TO_SECONDS(950501)
 select id from  test1 union SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19')
-select id from  test1 union SELECT UNIX_TIMESTAMP()
+select id from  test1 union SELECT UNIX_TIMESTAMP() /*allow_diff*/
 select id from  test1 union SELECT UTC_DATE()
 select id from  test1 union SELECT UTC_DATE() + 0
 select id from  test1 union SELECT UTC_TIME() /*allow_diff*/
