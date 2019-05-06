@@ -504,5 +504,19 @@ dble:[[('aaa', 1195L), ('bbb', 1199L), ('ccc', 1199L), ('ddd', 1189L), ('eee', 1
 dble:[[('aaa', 1195L, 1004L, Decimal('1094.4444'), Decimal('49250')), ('bbb', 1199L, 1001L, Decimal('1107.0000'), Decimal('42066')), ('ccc', 1199L, 1003L, Decimal('1095.1714'), Decimal('38331')), ('ddd', 1189L, 1004L, Decimal('1082.1333'), Decimal('48696')), ('eee', 1187L, 1003L, Decimal('1083.8837'), Decimal('46607')), ('fff', 1191L, 1011L, Decimal('1095.6364'), Decimal('48208'))]]
 ===file:special_sharding/select/select_sharding.sql, id:257, sql:[select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg2, sum(saleNum) sum from test1 group by person order by person desc]===
 dble:[(('fff', 1191L, 1011L, Decimal('1095.6364'), Decimal('48208')), ('eee', 1187L, 1003L, Decimal('1083.8837'), Decimal('46607')), ('ddd', 1189L, 1004L, Decimal('1082.1333'), Decimal('48696')), ('ccc', 1199L, 1003L, Decimal('1095.1714'), Decimal('38331')), ('bbb', 1199L, 1001L, Decimal('1107.0000'), Decimal('42066')), ('aaa', 1195L, 1004L, Decimal('1094.4444'), Decimal('49250')))]
-===file:special_sharding/select/select_sharding.sql, id:261, sql:[drop table if exists test1]===
+===file:special_sharding/select/select_sharding.sql, id:258, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:259, sql:[drop table if exists schema2.sharding_4_t2]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:260, sql:[create table schema2.test2(id int)]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:261, sql:[create table schema2.sharding_4_t2(id int)]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:262, sql:[select timestampdiff(hour,a.id,now()) from schema2.test2 a,schema2.sharding_4_t2 b where a.id = b.id ;]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:266, sql:[drop table if exists test1]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:267, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:special_sharding/select/select_sharding.sql, id:268, sql:[drop table if exists schema2.sharding_4_t2]===
 dble:[[]]
