@@ -24,7 +24,7 @@ Feature: show @@binlog.status
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                             | expect   |  db  |
         | test | 111111 | conn_0 | False    | drop database if exists db11 | success  |      |
-        | test | 111111 | conn_0 | True     | drop database if exists db11 | success  |      |
+        | test | 111111 | conn_0 | True     | drop database if exists db22 | success  |      |
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@binlog.status" named "sql_rs"
     Then check resultset "sql_rs" has lines with following column values
