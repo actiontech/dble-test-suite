@@ -255,7 +255,14 @@ select person, max(saleNum) MAX from test1 group by person
 select person, max(saleNum) as MAX from test1 group by person
 select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg1, sum(saleNum) sum from test1 group by person
 select person,max(saleNum) max, min(saleNum) min, avg(saleNum) avg2, sum(saleNum) sum from test1 group by person order by person desc
+drop table if exists schema2.test2
+drop table if exists schema2.sharding_4_t2
+create table schema2.test2(id int)
+create table schema2.sharding_4_t2(id int)
+select timestampdiff(hour,a.id,now()) from schema2.test2 a,schema2.sharding_4_t2 b where a.id = b.id ;
 #
 #clear tables
 #
 drop table if exists test1
+drop table if exists schema2.test2
+drop table if exists schema2.sharding_4_t2
