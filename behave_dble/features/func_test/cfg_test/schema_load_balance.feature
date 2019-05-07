@@ -403,9 +403,9 @@ Feature: test read load balance
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |count|
-    | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | schema1 |test|     |
-    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | schema1 |test|     |
+    | user | passwd | conn   | toClose | sql                                              | expect   | db      |tb  |
+    | test | 111111 | conn_0 | True    | drop table if exists test                     | success  | schema1 |test|
+    | test | 111111 | conn_0 | True    | create table test(id int,name varchar(20))  | success  | schema1 |test|
     Then connect "dble-1" to insert "1000" of data for "test"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
