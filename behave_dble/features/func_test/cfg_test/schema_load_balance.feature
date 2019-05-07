@@ -368,14 +368,14 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,),}  |  |
     Then execute sql in "mysql-master2"
-    | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=off   | success |     |
     Then execute sql in "mysql-slave1"
-    | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=off   | success |     |
     Then execute sql in "mysql-slave2"
-    | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=off   | success |     |
 
   @CRITICAL
   Scenario: dataHost balance="2", 1m weight=0, the write node only accepts write traffic and does not receive read traffic   #9
@@ -433,12 +433,12 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{5000} |  |
     Then execute sql in "mysql-master2"
-    | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=off   | success |     |
     Then execute sql in "mysql-slave1"
-    | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=off   | success |     |
     Then execute sql in "mysql-slave2"
-    | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=off   | success |     |
 
