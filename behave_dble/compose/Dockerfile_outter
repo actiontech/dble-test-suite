@@ -34,7 +34,7 @@ RUN rpm --import "https://keyserver.ubuntu.com/pks/lookup?op=get&search=0x3FA7E0
 RUN curl https://download.mono-project.com/repo/centos7-stable.repo | tee /etc/yum.repos.d/mono-centos7-stable.repo
 RUN yum -y install mono-complete
 
-RUN curl --request GET -o /opt/docker-compose.yml --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Fdocker-compose-allinone.yml/raw?ref=master
+RUN curl --request GET -o /opt/docker-compose.yml --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Fdocker-compose-inner.yml/raw?ref=master
 RUN curl --request GET -o /opt/init.sh --header 'PRIVATE-TOKEN: Yz8U84daRU1cWUij2Mbb' http://10.186.18.21/api/v4/projects/293/repository/files/behave_dble%2Fcompose%2Finit.sh/raw?ref=master
 RUN chmod 777 /opt/init.sh
 
