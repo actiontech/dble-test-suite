@@ -8,8 +8,10 @@ namespace netdriver
 {
     class CompareRs
     {
-        public static bool CompareRS(List<String> dblers, List<String> mysqlrs,bool allow_diff_sequence)
+        public static bool CompareRS(List<String> dblers, List<String> mysqlrs,bool allow_diff)
         {
+            if (allow_diff)
+                return true;
             if (dblers == mysqlrs)
                 return true;
             if (null == dblers && null == mysqlrs)
@@ -18,12 +20,12 @@ namespace netdriver
                 return false;
             if (dblers.Count != mysqlrs.Count || !dblers.All(mysqlrs.Contains))
                 return false;
-            if (allow_diff_sequence)
-            {
-                dblers.Sort();
-                mysqlrs.Sort();
-
-            }
+//            if (allow_diff_sequence)
+//            {
+//                dblers.Sort();
+//                mysqlrs.Sort();
+//
+//            }
             int nCount = dblers.Count;
             for (int n = 0; n < nCount; n++)
             {
