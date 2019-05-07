@@ -6,17 +6,16 @@ using namespace std;
 
 
 
-bool compareList(list<string> dbleResultSetList, list<string> mysqlResultSetList, bool allow_diff_sequence) {
+bool compareList(list<string> dbleResultSetList, list<string> mysqlResultSetList, bool allow_diff) {
+    if (allow_diff) {
+//		dbleResultSetList.sort();
+//		mysqlResultSetList.sort();
+        return true;
+	}
 	if (dbleResultSetList.size() != mysqlResultSetList.size()) {
 		//cout << "not equal" << endl;
 		return false;
 	}
-
-	if (allow_diff_sequence) {
-		dbleResultSetList.sort();
-		mysqlResultSetList.sort();
-	}
-
 	list<string>::iterator iter1;
 	list<string>::iterator iter2;
 	for (iter1 = dbleResultSetList.begin(), iter2 = mysqlResultSetList.begin(); iter1 != dbleResultSetList.end(); iter1++, iter2++) {
