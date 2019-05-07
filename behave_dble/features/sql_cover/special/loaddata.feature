@@ -77,11 +77,34 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
      """
     Then execute sql in "dble-1" in "user" mode
         | user   | passwd    | conn   | toClose | sql                                                                                                                                               | expect       | db     |
-        | test   | 111111    | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                           | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | CREATE TABLE sharding_4_t1 (name varchar(15) DEFAULT NULL,id int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1          | success      | schema2 |
-        | test   | 111111    | conn_0 | False   | load data infile './data.txt' into table sharding_4_t1 fields terminated by ',';                                                       |success       | schema1 |
+        | test   | 111111    | conn_0 | True    | drop table if exists sharding_4_t1                                                                                                           | success      | schema1 |
+        | test   | 111111    | conn_0 | True    | CREATE TABLE sharding_4_t1 (name varchar(15) DEFAULT NULL,id int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1          | success      | schema1 |
+        | test   | 111111    | conn_0 | True    | load data infile './data.txt' into table sharding_4_t1 fields terminated by ',';                                                       |success       | schema1 |
         | test   | 111111    | conn_0 | True    | load data infile './data2.txt' into table sharding_4_t1 fields terminated by ',';                                                      | success      | schema1 |
         | test   | 111111    | conn_0 | True    | select * from sharding_4_t1                                                                                                                    | length{(4)} | schema1 |
         | test   | 111111    | conn_0 | True    | select name from sharding_4_t1 where id=1                                                                                                    | has{('#1')} | schema1 |
         | test   | 111111    | conn_0 | True    | select name from sharding_4_t1 where id=3                                                                                                    | has{('#3')} | schema1 |
         | test   | 111111    | conn_0 | True    | select name from sharding_4_t1 where id=4                                                                                                    | has{('#4')} | schema1 |
+
+  Scenario: load data for table using global sequence from issue:1048    #3
+     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
+    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="sequnceHandlerType">2</property>
+    """
+    Given Restart dble in "dble-1" success
+    Given create local and server file "ld.txt" and fill with text
+     """
+      dble
+     """
+    Then execute sql in "dble-1" in "user" mode
+        | user   | passwd    | conn   | toClose | sql                                                                                                                                                                                                                           | expect       | db     |
+        | test   | 111111    | conn_0 | False   | drop table if exists test_auto                                                                                                                                                                                            | success      | schema1 |
+        | test   | 111111    | conn_0 | False   | create table test_auto(`id` bigint(20) NOT NULL AUTO_INCREMENT, `name` varchar(20) DEFAULT NULL,PRIMARY KEY (`id`))ENGINE=InnoDB AUTO_INCREMENT=1103846109324774874 DEFAULT CHARSET=latin1          | success      | schema1 |
+        | test   | 111111    | conn_0 | False   | load data local infile './ld.txt' into table test_auto fields terminated by ',' lines terminated by '\n' (name);                                                                                               |success       | schema1 |
+        | test   | 111111    | conn_0 | False   | select * from test_auto                                                                                                                                                                                                     |length{(1)}  | schema1 |
+    Given remove local and server file "ld.txt"
+    
