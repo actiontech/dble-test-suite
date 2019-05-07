@@ -152,35 +152,37 @@ dble:[((2L, 2L, 'test_2', 2L, None, None, None, None), (3L, 3L, 'test\xe4\xb8\xa
 dble:[((None, None, None, None, 4L, 4L, '$order$4', 4L),)]
 ===file:sqls_mixed/select/join_global_sharding.sql, id:86, sql:[select sharding_4_t1.id,sharding_4_t1.t_id,sharding_4_t1.name,sharding_4_t1.pad,schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from sharding_4_t1 left join schema2.global_4_t1 on sharding_4_t1.pad=schema2.global_4_t1.pad and sharding_4_t1.id>3 order by sharding_4_t1.id,schema2.global_4_t1.id]===
 dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L, None, None, None, None), (2L, 2L, 'test_2', 2L, None, None, None, None), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L, None, None, None, None), (4L, 4L, '$test$4', 3L, 3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (5L, 5L, 'test...5', 1L, 1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L, 5L, 5L, 'order...5', 1L), (6L, 6L, 'test6', 6L, None, None, None, None))]
-===file:sqls_mixed/select/join_global_sharding.sql, id:90, sql:[(select pad from sharding_4_t1) union distinct (select pad from schema2.global_4_t1)]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:88, sql:[SELECT t.* FROM sharding_4_t1 t LEFT JOIN schema2.sharding_4_t2 i ON t.id = i.id left JOIN schema2.global_4_t1 b ON b.id = t.id  WHERE t.id = i.id and  b.id IN ('0200300000','0200300138','0200300130','0200300141','0200300285','0200300042','0200300283','0200300261','0200300263','0200300266','02003003...'0200300352','0200300402' ) AND t.id IN ('02003');]===
+dble:[[]]
+===file:sqls_mixed/select/join_global_sharding.sql, id:92, sql:[(select pad from sharding_4_t1) union distinct (select pad from schema2.global_4_t1)]===
 dble:[[(1L,), (2L,), (3L,), (4L,), (6L,)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:91, sql:[(select * from sharding_4_t1 where id=2) union distinct (select schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from schema2.global_4_t1 where id=2)]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:93, sql:[(select * from sharding_4_t1 where id=2) union distinct (select schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from schema2.global_4_t1 where id=2)]===
 dble:[[(2L, 2L, 'test_2', 2L)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:92, sql:[select distinct a.pad from sharding_4_t1 a,schema2.global_4_t1 b where a.pad=b.pad]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:94, sql:[select distinct a.pad from sharding_4_t1 a,schema2.global_4_t1 b where a.pad=b.pad]===
 dble:[[(1L,), (2L,), (3L,), (4L,)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:93, sql:[select distinct b.pad,a.pad from sharding_4_t1 a,(select schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from schema2.global_4_t1 where pad=1) b where a.t_id=b.o_id]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:95, sql:[select distinct b.pad,a.pad from sharding_4_t1 a,(select schema2.global_4_t1.id,schema2.global_4_t1.o_id,schema2.global_4_t1.name,schema2.global_4_t1.pad from schema2.global_4_t1 where pad=1) b where a.t_id=b.o_id]===
 dble:[[(1L, 1L)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:94, sql:[select count(distinct pad,name),avg(distinct t_id) from sharding_4_t1]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:96, sql:[select count(distinct pad,name),avg(distinct t_id) from sharding_4_t1]===
 dble:[[(6L, Decimal('3.5000'))]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:95, sql:[select count(distinct id),sum(distinct name) from sharding_4_t1 where id=3 or id=7]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:97, sql:[select count(distinct id),sum(distinct name) from sharding_4_t1 where id=3 or id=7]===
 dble:[[(1L, 0.0)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:99, sql:[select * from sharding_4_t1 union all select * from schema2.sharding_4_t2 union all select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:101, sql:[select * from sharding_4_t1 union all select * from schema2.sharding_4_t2 union all select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c]===
 dble:[[(1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (2L, 2L, 'test_2', 2L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$manager$4', 4L), (4L, 4L, '$order$4', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'manager...5', 6L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:100, sql:[select * from sharding_4_t1 union distinct select * from schema2.sharding_4_t2 union distinct select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:102, sql:[select * from sharding_4_t1 union distinct select * from schema2.sharding_4_t2 union distinct select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c]===
 dble:[[(1L, 1L, 'manager\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'manager\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$manager$4', 4L), (4L, 4L, '$order$4', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'manager...5', 6L), (5L, 5L, 'order...5', 1L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:101, sql:[(select name from sharding_4_t1 where pad=1 order by id limit 10) union all (select name from schema2.global_4_t1 where pad=1 order by id limit 10) order by name]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:103, sql:[(select name from sharding_4_t1 where pad=1 order by id limit 10) union all (select name from schema2.global_4_t1 where pad=1 order by id limit 10) order by name]===
 dble:[(('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('test\xe4\xb8\xadid\xe4\xb8\xba1',))]
-===file:sqls_mixed/select/join_global_sharding.sql, id:102, sql:[(select name from sharding_4_t1 where pad=1 order by id limit 10) union distinct (select name from schema2.global_4_t1 where pad=1 order by id limit 10) order by name]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:104, sql:[(select name from sharding_4_t1 where pad=1 order by id limit 10) union distinct (select name from schema2.global_4_t1 where pad=1 order by id limit 10) order by name]===
 dble:[(('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('test\xe4\xb8\xadid\xe4\xb8\xba1',))]
-===file:sqls_mixed/select/join_global_sharding.sql, id:103, sql:[(select * from sharding_4_t1 where pad=1) union (select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c where pad=1) order by name limit 10]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:105, sql:[(select * from sharding_4_t1 where pad=1) union (select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c where pad=1) order by name limit 10]===
 dble:[((5L, 5L, 'order...5', 1L), (1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (5L, 5L, 'test...5', 1L), (1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L))]
-===file:sqls_mixed/select/join_global_sharding.sql, id:104, sql:[(select name as sort_a from sharding_4_t1 where pad=1) union (select name from schema2.global_4_t1 where pad=1) order by sort_a limit 10]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:106, sql:[(select name as sort_a from sharding_4_t1 where pad=1) union (select name from schema2.global_4_t1 where pad=1) order by sort_a limit 10]===
 dble:[(('order...5',), ('order\xe4\xb8\xadid\xe4\xb8\xba1',), ('test...5',), ('test\xe4\xb8\xadid\xe4\xb8\xba1',))]
-===file:sqls_mixed/select/join_global_sharding.sql, id:105, sql:[(select name as sort_a,pad from sharding_4_t1 where pad=1) union (select name,pad from schema2.global_4_t1 where pad=1) order by sort_a,pad limit 10]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:107, sql:[(select name as sort_a,pad from sharding_4_t1 where pad=1) union (select name,pad from schema2.global_4_t1 where pad=1) order by sort_a,pad limit 10]===
 dble:[(('order...5', 1L), ('order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), ('test...5', 1L), ('test\xe4\xb8\xadid\xe4\xb8\xba1', 1L))]
-===file:sqls_mixed/select/join_global_sharding.sql, id:109, sql:[drop table if exists sharding_4_t1]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:111, sql:[drop table if exists sharding_4_t1]===
 dble:[[]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:110, sql:[drop table if exists schema2.global_4_t1]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:112, sql:[drop table if exists schema2.global_4_t1]===
 dble:[[]]
-===file:sqls_mixed/select/join_global_sharding.sql, id:111, sql:[drop table if exists schema2.sharding_4_t2]===
+===file:sqls_mixed/select/join_global_sharding.sql, id:113, sql:[drop table if exists schema2.sharding_4_t2]===
 dble:[[]]
