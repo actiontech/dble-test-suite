@@ -317,5 +317,55 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
     | test  | 111111    | conn_0 | True    | set global log_output='file'   | success |     |
 
+  @CRITICAL
+  Scenario: dataHost balance="2", 1m weight=1, 1s weight=1, 1s weight=0,do balance bewteen read host and write host according to their weight#8
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
+            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
+        </schema>
+        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
+        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
+        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
+        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
+        <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+            <heartbeat>select user()</heartbeat>
+            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
+              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
+              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="0"/>
+            </writeHost>
+        </dataHost>
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "mysql-master2"
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in "mysql-slave1"
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then execute sql in "mysql-slave2"
+    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
+    | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
+    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
+    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
+    Then connect "dble-1" to execute "10000" of select for "test"
+    Then execute sql in "mysql-master2"
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{5000}|  |
+    Then execute sql in "mysql-slave1"
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{5000} |  |
+    Then execute sql in "mysql-slave2"
+    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  has{(0L,),}  |  |
 
 
