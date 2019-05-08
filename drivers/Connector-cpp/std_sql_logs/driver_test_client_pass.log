@@ -32,6 +32,14 @@ dble: [((4), )]
 dble: [((3), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:18,sql:select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci;
 dble: [()]
+===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:21,sql:/*!40102 SET character_set_client = gbk*/;
+dble: [((false), )]
+===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:22,sql:/*!40101 SET character_set_client = utf8*/;
+dble: [((false), )]
+===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:23,sql:/*40101%%%%%????&&&**djdjj*/;
+dble: [((false), )]
+===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:24,sql:/*dfghdfgh*/;
+dble: [((false), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:26,sql:select schema1.test_shard.R_NAME from test_shard;
 dble: [((a string), (a string), (a string), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:27,sql:select * from test_shard where exists(select * from test_shard where id=1||id=3) order by id;
@@ -144,8 +152,6 @@ dble: [((false), )]
 dble: [((false), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:83,sql:show full columns from schema2.test2 from schema2 where field like 'o%';
 dble: [()]
-===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:84,sql:show full tables in schema1 where table_type like 'base%';
-dble: [((test1,BASE TABLE), (test_shard,BASE TABLE), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:85,sql:show open tables from schema1 like 'aly_o%';
 dble: [()]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:86,sql:show index from schema2.test2 in schema2;/*allow_diff*/
