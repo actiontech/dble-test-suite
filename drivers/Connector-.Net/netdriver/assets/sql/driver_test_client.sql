@@ -18,10 +18,10 @@ insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012
 select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci;
 explain select * from schema2.test2 where id=1;
 explain2 datanode=dn2 sql=select * from test_shard where id=1;
-#/*!40101 SET character_set_client = utf8*/;
-#/*!40102 SET character_set_client = gbk*/;
-#/*40101%%%%%????&&&**djdjj*/;
-#/*dfghdfgh*/;
+/*!40102 SET character_set_client = gbk*/;
+/*!40101 SET character_set_client = utf8*/;
+/*40101%%%%%????&&&**djdjj*/;
+/*dfghdfgh*/;
 select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));
 select schema1.test_shard.R_NAME from test_shard;
 select * from test_shard where exists(select * from test_shard where id=1||id=3) order by id;
@@ -81,7 +81,7 @@ unlock tables;
 lock tables schema2.test2 read;
 unlock tables;
 show full columns from schema2.test2 from schema2 where field like 'o%';
-show full tables in schema1 where table_type like 'base%';
+show full tables in schema1 where table_type like 'base%';/*allow_diff*/
 show open tables from schema1 like 'aly_o%';
 show index from schema2.test2 in schema2;/*allow_diff*/
 show keys in schema2.test2 from schema2;/*allow_diff*/
