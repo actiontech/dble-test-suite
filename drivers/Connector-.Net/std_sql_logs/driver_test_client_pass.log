@@ -32,6 +32,10 @@ dble: [(4)]
 dble: [(3)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:18,sql:select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci;===
 dble: [()]
+===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:21,sql:/*!40102 SET character_set_client = gbk*/;===
+dble: [(null)]
+===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:22,sql:/*!40101 SET character_set_client = utf8*/;===
+dble: [(null)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:25,sql:select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));===
 dble: [(0: Fatal error encountered during command execution.)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:26,sql:select schema1.test_shard.R_NAME from test_shard;===
@@ -146,8 +150,8 @@ dble: [(null)]
 dble: [(null)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:83,sql:show full columns from schema2.test2 from schema2 where field like 'o%';===
 dble: [()]
-===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:84,sql:show full tables in schema1 where table_type like 'base%';===
-dble: [(("test1","BASE TABLE"),("test_shard","BASE TABLE"),)]
+===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:84,sql:show full tables in schema1 where table_type like 'base%';/*allow_diff*/===
+dble: [(("test1","BASE TABLE"),("test_shard","BASE TABLE"),("test","BASE TABLE"),)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:85,sql:show open tables from schema1 like 'aly_o%';===
 dble: [()]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:86,sql:show index from schema2.test2 in schema2;/*allow_diff*/===

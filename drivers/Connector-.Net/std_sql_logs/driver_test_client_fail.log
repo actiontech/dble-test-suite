@@ -4,6 +4,12 @@ mysql: [(1)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:20,sql:explain2 datanode=dn2 sql=select * from test_shard where id=1;===
 dble: [(1)]
 mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'explain2 datanode=dn2 sql=select * from test_shard where id=1' at line 1)]
+===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:23,sql:/*40101%%%%%????&&&**djdjj*/;===
+dble: [(1064: error pos 33, line 1, column 5, token EOF)]
+mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1)]
+===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:24,sql:/*dfghdfgh*/;===
+dble: [(1064: error pos 17, line 1, column 5, token EOF)]
+mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1)]
 ===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;===
 dble: [(4004: with rollup is not supported yet!)]
 mysql: [((1,2),(3,1),(4,1),(6,1),(,5),)]
