@@ -81,7 +81,7 @@ unlock tables;
 lock tables schema2.test2 read;
 unlock tables;
 show full columns from schema2.test2 from schema2 where field like 'o%';
-show full tables in schema1 where table_type like 'base%';/*allow_diff*/
+show full tables in schema1 where table_type like 'base%';
 show open tables from schema1 like 'aly_o%';
 show index from schema2.test2 in schema2;/*allow_diff*/
 show keys in schema2.test2 from schema2;/*allow_diff*/
