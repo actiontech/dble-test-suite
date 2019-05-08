@@ -34,6 +34,14 @@
 []
 ===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:19,sql:explain select * from schema2.test2 where id=1;===
 [true]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:21,sql:/*!40102 SET character_set_client = gbk*/;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:22,sql:/*!40101 SET character_set_client = utf8*/;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:23,sql:/*40101%%%%%????&&&**djdjj*/;===
+[false]
+===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:24,sql:/*dfghdfgh*/;===
+[false]
 ===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:26,sql:select schema1.test_shard.R_NAME from test_shard;===
 [{r_name=a string}, {r_name=a string}, {r_name=a string}]
 ===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:27,sql:select * from test_shard where exists(select * from test_shard where id=1||id=3) order by id;===
