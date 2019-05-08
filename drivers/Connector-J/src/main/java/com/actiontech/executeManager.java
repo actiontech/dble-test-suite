@@ -9,8 +9,8 @@ import java.util.ArrayList;
 public class executeManager {
     public static void execute(String rtPath_value, String sqPath_value, Statement dblemanagerstmt) {
 //        long currentTime = System.currentTimeMillis();
-        String tst = "sql_log";
-        String cfilepath = rtPath_value + File.separator + tst;
+        String dirName = "sql_logs";
+        String cfilepath = rtPath_value + File.separator + dirName;
         com.actiontech.createFileUtil.createDir(cfilepath);
 
         File sqlf = new File(sqPath_value);
