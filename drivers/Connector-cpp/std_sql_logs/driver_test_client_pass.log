@@ -152,6 +152,8 @@ dble: [((false), )]
 dble: [((false), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:83,sql:show full columns from schema2.test2 from schema2 where field like 'o%';
 dble: [()]
+===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:84,sql:show full tables in schema1 where table_type like 'base%';
+dble: [((test1,BASE TABLE), (test_shard,BASE TABLE), )]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:85,sql:show open tables from schema1 like 'aly_o%';
 dble: [()]
 ===File:/opt/Connector-cpp/assets/sql/driver_test_client.sql,id:86,sql:show index from schema2.test2 in schema2;/*allow_diff*/
