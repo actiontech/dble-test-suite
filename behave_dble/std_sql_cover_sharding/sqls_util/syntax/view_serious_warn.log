@@ -4,3 +4,13 @@ dble err:(1003, "Unknown column 'test1.R_NAME' in 'field list'")
 ===file:sqls_util/syntax/view.sql, id:36, sql:[select * from view_test]===
 mysql err:(1356, "View 'schema1.view_test' references invalid table(s) or column(s) or function(s) or definer/invoker of view lack rights to use them")
 dble err:(1003, "Unknown column 'test1.R_NAME' in 'field list'")
+===file:sqls_util/syntax/view.sql, id:105, sql:[select * from view_test1/*table doesn't exist*/]===
+mysql err:(1146, "Table 'schema1.view_test1' doesn't exist")
+dble err:(1146, "Table 'db3.view_test1' doesn't exist")
+===file:sqls_util/syntax/view.sql, id:113, sql:[select * from view_test/*table doesn't exist*/]===
+mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
+dble err:(1146, "Table 'db3.view_test' doesn't exist")
+===file:sqls_util/syntax/view.sql, id:117, sql:[select * from view_test/*table doesn't exist*/]===
+mysql err:(1146, "Table 'schema1.view_test' doesn't exist")
+dble err:(1146, "Table 'db3.view_test' doesn't exist")
+
