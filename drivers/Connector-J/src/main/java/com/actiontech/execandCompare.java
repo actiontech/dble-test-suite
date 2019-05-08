@@ -12,8 +12,8 @@ public class execandCompare {
     public static void execandCompare(String rtPath_value, String sqPath_value, Statement dblestmt, Statement mysqlstmt) {
         //create directory
         //long currentTime = System.currentTimeMillis();
-        String tst = "sql_logs";
-        String cfilepath = rtPath_value + File.separator + tst;
+        String dirName = "sql_logs";
+        String cfilepath = rtPath_value + File.separator + dirName;
         com.actiontech.createFileUtil.createDir(cfilepath);
 
         File sqlf = new File(sqPath_value);
