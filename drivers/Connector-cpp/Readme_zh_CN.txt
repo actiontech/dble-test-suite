@@ -26,7 +26,9 @@ cmake .; make -j 3; make install
 behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
 7.编译C++源码：
-在源码所在目录Connector-cpp ，执行：g++ *.cpp -l mysqlcppconn -l yaml-cpp
+在源码所在目录Connector-cpp/source ，执行：g++ *.cpp -l mysqlcppconn -l yaml-cpp
 
 8.运行;
-在源码所在目录Connector-cpp，执行：./a.out "" "conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"
+在源码所在目录Connector-cpp，执行：bash run.sh [-c]
+注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
+    2).覆盖的sql文件位置：dble/drivers/Connector-cpp/assets/sql
