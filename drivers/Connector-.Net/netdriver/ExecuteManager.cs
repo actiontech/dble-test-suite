@@ -51,7 +51,7 @@ namespace netdriver
             while ((line = sr.ReadLine()) != null){
                 if (!line.StartsWith("#"))
                 {
-                    String exec = "===File:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
+                    String exec = "===file:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
                     line = line.ToLower();
                     //for kill command
                     //int PID = 0;
