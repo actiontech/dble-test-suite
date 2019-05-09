@@ -61,7 +61,7 @@ namespace netdriver
                         allow_diff = true;
                     }
 
-                    String exec = "===File:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
+                    String exec = "===file:" + sqlfile + ",id:" + idNum + ",sql:" + line + "===";
                     line = line.ToLower().Trim();
                     //dble
                     List<String> dblerslist = new List<string>();
