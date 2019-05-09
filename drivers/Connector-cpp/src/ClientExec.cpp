@@ -92,7 +92,7 @@ int client_exec(const char *sqlFile, const char *logPath, Connection *dbleConn, 
 	{
 		if (line.find('#') != 0) {
 //			cout << line << endl;
-			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line ;
+			string exec = "===file:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line ;
 			bool allow_diff = false;
 			if (findSubstr(line,"allow_diff"))
 			{
