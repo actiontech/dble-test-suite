@@ -11,5 +11,6 @@ linux Centos7 环境下运行 Java driver 代码说明：
 3.回到自动化项目目录，以拆分表的配置文件重启一遍dble，执行：
 behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
-4.在Connector-J 目录，运行：
-java -jar target/Jconnector.jar "" "conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"
+4.在Connector-J 目录，运行：bash run.sh {jar包名} [-c]
+  注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
+      2).覆盖的sql文件位置：dble/drivers/Connector-J/assets/sql/
