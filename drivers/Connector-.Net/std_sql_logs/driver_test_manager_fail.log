@@ -1,2 +1,2 @@
-===File:/opt/auto_test/dble/drivers/Connector-.Net/netdriver/assets/sql/driver_test_manager.sql,id:11,sql:set @a=20===
+===file:assets/sql/driver_test_manager.sql,id:11,sql:set @a=20===
 dble: [(-2147467259: Fatal error encountered during command execution.)]

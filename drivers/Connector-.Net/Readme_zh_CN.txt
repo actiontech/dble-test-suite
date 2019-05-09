@@ -17,5 +17,6 @@ behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 5.在源码所在目录 Connector-.Net/netdriver/，执行编译：
 csc -out:test.exe -r:MySql.Data.dll -r:YamlDotNet.dll  *.cs
 
-6.在源码所在目录Connector-.Net/netdriver/，运行：
-mono test.exe "run" "Properties/auto_dble_test.yaml" "driver_test_manager.sql" "driver_test_client.sql"
+6.在源码所在目录Connector-.Net/，运行 bash run.sh [-c]
+注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
+    2).覆盖的sql文件位置：dble/drivers/Connector-.Net/netdriver/assets/sql
