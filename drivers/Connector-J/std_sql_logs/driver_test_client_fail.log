@@ -1,22 +1,22 @@
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:20,sql:explain2 datanode=dn2 sql=select * from test_shard where id=1;===
+===file:assets/sql/driver_test_client.sql,id:20,sql:explain2 datanode=dn2 sql=select * from test_shard where id=1;===
 dble: [true]
 mysql: [(1064): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'explain2 datanode=dn2 sql=select * from test_shard where id=1' at line 1]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:25,sql:select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));===
+===file:assets/sql/driver_test_client.sql,id:25,sql:select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));===
 dble: [(4004): not support assignment]
 mysql: []
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:37,sql:select pad,count(id) t from schema2.test2 group by pad having t>1;===
+===file:assets/sql/driver_test_client.sql,id:37,sql:select pad,count(id) t from schema2.test2 group by pad having t>1;===
 dble: [{COUNT(id)=2, pad=1}]
 mysql: [{pad=1, t=2}]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;===
+===file:assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;===
 dble: [(4004): with rollup is not supported yet!]
 mysql: [{pad=1, t=2}, {pad=3, t=1}, {pad=4, t=1}, {pad=6, t=1}, {pad=null, t=5}]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:45,sql:select * from (select * from schema2.test2 where pad>1) a left outer join (select * from schema3.test3 where pad>3 group by pad) b on a.pad=b.pad order by a.id,b.id;===
+===file:assets/sql/driver_test_client.sql,id:45,sql:select * from (select * from schema2.test2 where pad>1) a left outer join (select * from schema3.test3 where pad>3 group by pad) b on a.pad=b.pad order by a.id,b.id;===
 dble: [(1003): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'db1.test3.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by]
 mysql: [(1055): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'schema3.test3.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:50,sql:select * from schema2.test2 a left join schema3.test3 b on a.pad=b.pad where a.t_id>b.o_id group by b.pad;===
+===file:assets/sql/driver_test_client.sql,id:50,sql:select * from schema2.test2 a left join schema3.test3 b on a.pad=b.pad where a.t_id>b.o_id group by b.pad;===
 dble: [{t_id=5, pad=1, name=order???id???1, o_id=1, id=1}, {t_id=4, pad=3, name=order???id???3, o_id=3, id=3}]
 mysql: [(1055): Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column 'schema2.a.id' which is not functionally dependent on columns in GROUP BY clause; this is incompatible with sql_mode=only_full_group_by]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:75,sql:SHOW CREATE TABLE schema2.test2;===
+===file:assets/sql/driver_test_client.sql,id:75,sql:SHOW CREATE TABLE schema2.test2;===
 dble: [{Table=test2, Create Table=CREATE TABLE `test2` (
   `id` int(10) unsigned NOT NULL,
   `t_id` int(10) unsigned NOT NULL DEFAULT '0',
@@ -25,12 +25,12 @@ dble: [{Table=test2, Create Table=CREATE TABLE `test2` (
   KEY `k_1` (`t_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8}]
 mysql: [true]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:83,sql:show full columns from schema2.test2 from schema2 where field like 'o%';===
+===file:assets/sql/driver_test_client.sql,id:83,sql:show full columns from schema2.test2 from schema2 where field like 'o%';===
 dble: []
 mysql: [true]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:84,sql:show full tables in schema1 where table_type like 'base%';===
+===file:assets/sql/driver_test_client.sql,id:84,sql:show full tables in schema1 where table_type like 'base%';===
 dble: [{Tables in schema1=test1, Table_type  =BASE TABLE}, {Tables in schema1=test_shard, Table_type  =BASE TABLE}]
 mysql: [true]
-===File:/opt/auto_test/dble/drivers/Connector-J/assets/sql/driver_test_client.sql,id:85,sql:show open tables from schema1 like 'aly_o%';===
+===file:assets/sql/driver_test_client.sql,id:85,sql:show open tables from schema1 like 'aly_o%';===
 dble: []
 mysql: [true]
