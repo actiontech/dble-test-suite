@@ -85,7 +85,7 @@ int manager_exec(const char *sqlFile, const char *logPath, Connection *con)
 	{
 //		cout << line << endl;
 		if (line.find('#') != 0) {
-			string exec = "===File:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line ;
+			string exec = "===file:" + string(sqlFile) + ",id:" + to_string(idNum) + ",sql:" + line ;
 			transform(line.begin(), line.end(), line.begin(), ::tolower);
 			boost::trim(line);
 			try {
