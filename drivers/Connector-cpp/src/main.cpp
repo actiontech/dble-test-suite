@@ -87,8 +87,8 @@ int main(int argc, char *argv[])
 		//mysqlHostName = mysqlHost.c_str();
 		mysqlUserName = cfg.mysqlUserName.c_str();
 		mysqlPassword = cfg.mysqlPassword.c_str();
-		sqlFileNameC = string(currentPath)+ "/" + cfg.sqlPath + "/" + argv[3];
-		sqlFileNameM = string(currentPath)+ "/" + cfg.sqlPath + "/" + argv[4];
+		sqlFileNameC =  cfg.sqlPath + "/" + argv[3];
+		sqlFileNameM =  cfg.sqlPath + "/" + argv[4];
 		clientSqlFile = sqlFileNameC.c_str();
 		managerSqlFile = sqlFileNameM.c_str();
 //		cout << string(sqlFile) << endl;

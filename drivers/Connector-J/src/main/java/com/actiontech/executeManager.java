@@ -58,7 +58,7 @@ public class executeManager {
                 System.out.println(idNum);
                 while ((line = br.readLine()) != null) {
                     if (line.startsWith("#") == false) {
-                        String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
+                        String exec = "===file:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
                         ArrayList<String> dblerslist = new ArrayList<String>();
                         line = line.toLowerCase();
                         try {
