@@ -120,3 +120,108 @@ Feature: Functional testing of global sequences
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                            | expect      | db      |
         | test | 111111 | conn_0 | True    | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
+
+  Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
+  #    case points:
+  #  1.Verify the illegal value of the WORKID
+  #  2.Verify the illegal value of the DATAACENTERID
+  #  3.Verify the illegal value of the START_TIME
+  #  4.START_TIME>the time of dble start
+  #  5.START_TIME+69 years<the time of dble start
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
+    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="sequnceHandlerType">2</property>
+    """
+    #case 1: Verify the illegal value of the WORKID
+     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/WORKID=01/WORKID=32/
+    """
+    Then restart dble in "dble-1" failed for
+    """
+     worker Id can't be greater than 31 or less than 0
+    """
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/WORKID=32/WORKID=-1/
+    """
+    Then restart dble in "dble-1" failed for
+    """
+     worker Id can't be greater than 31 or less than 0
+    """
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/WORKID=-1/WORKID=01/
+    """
+    Given Restart dble in "dble-1" success
+    #case 2: Verify the illegal value of the DATAACENTERID
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/DATAACENTERID=01/DATAACENTERID=32/
+    """
+    Then restart dble in "dble-1" failed for
+    """
+     datacenter Id can't be greater than 31 or less than 0
+    """
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/DATAACENTERID=32/DATAACENTERID=-1/
+    """
+    Then restart dble in "dble-1" failed for
+    """
+     datacenter Id can't be greater than 31 or less than 0
+    """
+     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/DATAACENTERID=-1/DATAACENTERID=01/
+    """
+    Given Restart dble in "dble-1" success
+    #case 3: Verify the illegal value of the START_TIME
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s/#START_TIME/START_TIME/
+      s#2010-10-01#2010/10/01#
+    """
+    Given Restart dble in "dble-1" success
+    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    """
+    START_TIME in sequence_time_conf.properties parse exception, starting from 2010-10-04 09:42:54
+    """
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s#2010/10/01#2010-10-01#
+    """
+    Given Restart dble in "dble-1" success
+    #case 4: START_TIME>the time of dble start
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s#2010-10-01#2190-10-01#
+    """
+    Given Restart dble in "dble-1" success
+    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    """
+    START_TIME in sequence_time_conf.properties mustn'\''t be over than dble start time, starting from 2010-10-04 09:42:54
+    """
+    #case 5: START_TIME+69 years<the time of dble start
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s#2190-10-01#1910-10-01#
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose  | sql                                                      | expect         | db     |
+      | test | 111111 | conn_0 | True     |drop table if exists test_auto                        | success        | schema1 |
+      | test | 111111 | conn_0 | True     |create table test_auto(id bigint,time char(120))    | success        | schema1 |
+      | test | 111111 | conn_0 | True     |insert into test_auto values(1)                       | Global sequence has reach to max limit and can generate duplicate sequences        | schema1 |
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     """
+      s#1910-10-01#2010-10-01#
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose  | sql                                                      | expect         | db     |
+      | test | 111111 | conn_0 | True     |insert into test_auto values(1)                       | success        | schema1 |
