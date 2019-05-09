@@ -69,7 +69,7 @@ public class execandCompare {
                          {
                              allow_diff = true;
                          }
-                        String exec = "===File:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
+                        String exec = "===file:" + sqPath_value + ",id:" + idNum + ",sql:" + line + "===" + "\r\n";
                         //dble
                         ArrayList<String> dblerslist = new ArrayList<String>();
                         line = line.toLowerCase();
