@@ -31,4 +31,4 @@ behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 8.运行;
 在目录Connector-cpp，执行：bash run.sh [-c]
 注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
-    2).覆盖的sql文件位置：dble/drivers/Connector-cpp/assets/sql
+    2).覆盖的sql文件位置：dble/drivers/Connector-cpp/src/assets/sql
