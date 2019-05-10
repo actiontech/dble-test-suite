@@ -41,8 +41,8 @@ public class testJDBC {
             dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8";
             dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8";
             mysqlURL = "jdbc:mysql://" + cfg.mysql_server + ":" + cfg.mysql_port + "/" + cfg.db + "?characterEncoding=utf8";
-            sqlfileClient = System.getProperty("user.dir") + File.separator + cfg.sqlpath + File.separator + args[2];
-            sqlfileManager = System.getProperty("user.dir") + File.separator + cfg.sqlpath + File.separator + args[3];
+            sqlfileClient = cfg.sqlpath + File.separator + args[2];
+            sqlfileManager = cfg.sqlpath + File.separator + args[3];
             dblemanageruserName = cfg.dbleM_user;
             dblemanageruserPwd = cfg.dbleM_password;
             dbleuserName = cfg.dble_user;
