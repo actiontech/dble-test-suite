@@ -68,3 +68,27 @@ Feature: #mysql node disconnected,check the change of dble
       | user  | passwd    | conn   | toClose | sql                     | expect                                                                                                     | db |
       | root  | 111111    | conn_0 | True    | dryrun                  | hasNoStr{dataNode[dn3] has no available writeHost,The table in this dataNode has not checked} |     |
       | root  | 111111    | conn_0 | True    | reload @@config_all   | success                                                                                                    |     |
+
+  Scenario: # some of the backend nodes was disconnected in the course of a transaction    #3
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    """
+    Then execute admin cmd "Reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                           | expect   | db      |
+      | test | 111111 | conn_0 | True    | drop table if exists test_table                            | success  | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_table(id int,pad int)                   | success  | schema1 |
+      | test | 111111 | conn_0 | True    | insert into test_table values(1,1),(2,2),(3,3),(4,4)    | success  | schema1 |
+      | test | 111111 | conn_0 | False    | begin                                                         | success  | schema1 |
+      | test | 111111 | conn_0 | False    | update test_table set pad=1                                | success  | schema1 |
+    Given stop mysql in host "mysql-master1"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose  | sql                 | expect      | db      |
+      | test | 111111 | conn_0 | False    | commit              | Connection  | schema1 |
+    Given start mysql in host "mysql-master1"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                          | expect   | db      |
+      | test | 111111 | conn_0 | True    | select * from test_table  | success  | schema1 |
+
+
