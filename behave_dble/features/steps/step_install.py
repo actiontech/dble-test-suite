@@ -366,8 +366,11 @@ def check_cluster_successd(context, expectNodes):
     cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online ".format(context.cfg_zookeeper['home'])
     cmd_ssh = get_ssh(context.dbles, "dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
+    LOGGER.debug("add debug to check the result of executing {0} is :sto:{1}".format(cmd,sto))
     sub_sto = re.findall(r'[[](.*)[]]', sto[-15:])
+    LOGGER.debug("add debug to check the result of sub_sto is :{0}".format(sub_sto))
     nodes = sub_sto[0].replace(",", " ").split()
+    LOGGER.debug("add debug to check the result of nodes is:{0}".format(nodes))
 
     for id in nodes:
         LOGGER.info("id:{0}".format(id))
@@ -382,7 +385,7 @@ def check_cluster_successd(context, expectNodes):
             time.sleep(10)
             check_cluster_successd(context, expectNodes)
         else:
-            LOGGER.info("The online dbles detected by zk do not meet expectations after 5 times try,expectNodes:{0},realNodes:{1}".format(expectNodes, realNodes))
+            LOGGER.info("The online dbles detected by zk do not meet expectations after 10 times try,expectNodes:{0},realNodes:{1}".format(expectNodes, realNodes))
             delattr(context, "retry_check_zk_nodes")
     else:
         delattr(context, "retry_check_zk_nodes")
