@@ -31,17 +31,20 @@ public class ConnProperties {
 		if(type.equals("mysql")){//mysql
 			this.serverName = Config.Host_Single_MySQL;
 			this.portNumber = Config.MYSQL_PORT;
+			this.userName = Config.MYSQL_USER;
+			this.password = Config.MYSQL_PASSWD;
 		}else{//uproxy
 			this.serverName = Config.Host_Test;
 			this.portNumber = Config.TEST_PORT;
 			//this.master = Config.HOST_MASTER;
 			//this.slave1 = Config.Host_Slave1;
 			this.defaultPort = Config.MYSQL_PORT;
+			this.userName = Config.TEST_USER;
+			this.password = Config.TEST_USER_PASSWD;
 		}
 
 		this.dbName = Config.TEST_DB;
-		this.userName = Config.TEST_USER;
-		this.password = Config.TEST_USER_PASSWD;
+		
 
 		System.out.println("======== Set the following connection properties: =======");
 		System.out.println("dbName: " + dbName);
