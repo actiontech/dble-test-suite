@@ -21,7 +21,9 @@ public class Config {
 	public static String TEST_ADMIN_PASSWD;
 
 	public static String TEST_USER;
+	public static String MYSQL_USER;
 	public static String TEST_USER_PASSWD;
+	public static String MYSQL_PASSWD;
 	public static String TEST_DB = "schema1";
 	public static int TEST_PORT;
 	public static int TEST_ADMIN_PORT;
@@ -60,7 +62,7 @@ public class Config {
 
 			String sys = ini.get("env", "sys");
 		    if (sys.equals("centos7"))
-		    	Host_Test = ini.get("centos7", "ip");
+		    	Host_Test = ini.get("dble", "ip");
 		    else
 		    	Host_Test = ini.get("centos6", "ip");
 		    System.out.println("system:"+sys+" test host:"+Host_Test);
@@ -78,7 +80,9 @@ public class Config {
 //			mysql_hosts[3]=Host_Slave2;
 
 			TEST_USER = ini.get("dble","user");
+			MYSQL_USER = ini.get("mysql", "user");
 			TEST_USER_PASSWD = ini.get("dble","passwd");
+			MYSQL_PASSWD = ini.get("mysql", "passwd");
 			TEST_PORT = Integer.parseInt(ini.get("dble","port"));
 			TEST_SETVER_NAME = ini.get("install", "server_name");
 
