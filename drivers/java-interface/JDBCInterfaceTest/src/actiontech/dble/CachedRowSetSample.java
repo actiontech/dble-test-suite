@@ -48,8 +48,8 @@ public class CachedRowSetSample extends InterfaceTest {
 			mysql_crs.setPassword(mysqlProp.password);
 			
 			uproxy_crs = new CachedRowSetImpl();
-			uproxy_crs.setUsername(mysqlProp.userName);
-			uproxy_crs.setPassword(mysqlProp.password);
+			uproxy_crs.setUsername(uproxyProp.userName);
+			uproxy_crs.setPassword(uproxyProp.password);
 
 			mysql_crs.setUrl(mysqlProp.urlString + "/" + mysqlProp.dbName+"?useSSL=false&&relaxAutoCommit=true");
 			uproxy_crs.setUrl(uproxyProp.urlString + "/" + uproxyProp.dbName+"?useSSL=false&&relaxAutoCommit=true");
