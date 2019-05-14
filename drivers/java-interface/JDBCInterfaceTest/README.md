@@ -101,6 +101,9 @@ class: java.sql SQLWarning
 String					getSQLState()
 
 
+# executing command:
+java  -jar ${jar_name}
+
 
 
 
