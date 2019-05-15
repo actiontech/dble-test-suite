@@ -9,6 +9,11 @@ count=${#mysql_install[@]}
 
 #restart all mysqlds
 for((i=0; i<count; i=i+1)); do
+	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/support-files/mysql.server stop" \
+    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf --skip-grant-tables --user=mysql >/dev/null 2>&1 &"
+    sleep 30s
+    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot --skip-password -e \"flush privileges;alter user root@'localhost' identified by '111111'\""
+
 	echo "restart mysql and delete none-sys dbs in ${mysql_install[$i]}"
 	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/support-files/mysql.server restart" \
 	&& docker cp ${base_dir}/deleteDb.sql "${mysql_install[$i]}:/" \
@@ -16,28 +21,27 @@ for((i=0; i<count; i=i+1)); do
 	&& docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 < /deleteDb.sql"
 done
 
-echo "reset master ${mysql_install[2]}"
+echo "reset master mysql-master2"
 docker exec ${mysql_install[2]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master;\" "
+docker exec ${mysql_install[2]} sh -c "sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' -e '/\[mysqld\]/a log-bin=mysql-bin \nbinlog_format=row \nrelay-log=mysql-relay-bin' /etc/my.cnf"
+docker exec ${mysql_install[2]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"create user if not exists 'repl'@'%' identified by '111111'\""
+docker exec ${mysql_install[2]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"grant replication slave on *.* to 'repl'@'%' identified by '111111'\""
+docker exec ${mysql_install[2]} sh -c "/usr/local/mysql/support-files/mysql.server restart"
 
 sleep 60s
 
 #i=4 stands for mysql slave in dble-2, i=5 stands for mysql slave in dble-3
 for((i=4; i<6; i=i+1)); do
 	echo "reset slave ${mysql_install[$i]}"
-	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"stop slave; reset slave; change master to master_auto_position=1\" "
+	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"stop slave; reset slave;\" "
 	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master; set global gtid_purged='';\" "
-done
-
-for((i=4; i<6; i=i+1)); do
-	echo "start slave ${mysql_install[$i]}"
+    docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"change master to master_host='172.100.9.6', master_user='repl', master_password='111111', master_auto_position=1\""
 	docker exec ${mysql_install[$i]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"start slave;\" "
 done
 
 echo "create database in compare mysql"
-#docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database schema1\" "
 docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database schema1;create database schema2;create database schema3;\" "
 docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database testdb\" "
-#docker exec ${mysql_install[0]} sh -c "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database tpccdb\" "
 
 for((i=0; i<4; i=i+1)); do
     echo "add some user and database in ${mysql_install[$i]}"
