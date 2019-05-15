@@ -1,7 +1,7 @@
 From centos:centos7
 MAINTAINER Hongjie Zhao <zhaohongjie@actionsky.com>
 
-RUN yum install -y yum-utils wget gcc g++ git vi net-tools libaio hwloc MySQL-python openssh-server openssh-clients libmysqlclient-dev
+RUN yum install -y yum-utils wget gcc g++ git vi net-tools libaio hwloc MySQL-python openssh-server openssh-clients sshpass libmysqlclient-dev
 
 #install pip and requirements
 RUN yum install -y epel-release
@@ -21,6 +21,5 @@ RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
 RUN ssh-keygen -t rsa -N ""  -f "/root/.ssh/id_rsa"
 
 COPY * /docker-build/
-COPY docker-loop.sh /opt-sys/
 
 ENTRYPOINT ["/usr/sbin/sshd", "-D"]

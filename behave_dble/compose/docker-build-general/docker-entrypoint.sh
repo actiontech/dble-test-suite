@@ -5,9 +5,7 @@ if [ "$1" = "dble" ]; then
 fi
 
 if [ "$1" = "mysql" -o "$1" = "dble" ]; then
-    if [ $# -ge 2 ]; then
-        sed -i "/server-id/c server-id=$2" /etc/my.cnf
-    fi
+    sed -i "/server-id=/c server-id=$2" /etc/my.cnf
 fi
 
 exec /usr/sbin/sshd -D

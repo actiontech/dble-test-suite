@@ -142,4 +142,4 @@ services:
             default:
               ipv4_address: 172.100.9.8
         dns: 114.114.114.114
-        working_dir: /opt
+        working_dir: /init_assets
