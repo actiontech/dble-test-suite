@@ -59,7 +59,7 @@ def install_dble_in_all_nodes(context):
 @Given('download dble')
 def download_dble(context):
     LOGGER.info("delete local dble packet")
-    rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_agent'],
+    rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_docker'],
                                context.cfg_dble['packet_name'])
     rpm_ftp_url = "{0}{1}".format(context.cfg_dble['ftp_path'],
                               context.cfg_dble['packet_name'])
@@ -67,12 +67,12 @@ def download_dble(context):
     exit_status = os.system(cmd)
     LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
 
-    cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_agent'],
+    cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_docker'],
                                                                     rpm_ftp_url)
     LOGGER.info(cmd)
     os.popen(cmd)
 
-    cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_agent'],
+    cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_docker'],
                                                           context.cfg_dble['packet_name'])
     LOGGER.info(cmd)
     str = os.popen(cmd).read()
