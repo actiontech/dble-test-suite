@@ -40,12 +40,13 @@ RUN mkdir -p /var/lib/mysql \
 COPY zookeeper-3.5.2-alpha.tar.gz /tmp/zookeeper-3.5.2-alpha.tar.gz
 RUN mkdir /opt/zookeeper
 RUN tar -zxvf /tmp/zookeeper-3.5.2-alpha.tar.gz -C /opt/zookeeper --strip-components=1
-RUN echo "export PATH=/opt/zookeeper/bin:$PATH">>/etc/bashrc \
-    && echo " ">> /opt/zookeeper/conf/zoo.cfg \
+RUN echo " ">> /opt/zookeeper/conf/zoo.cfg \
     && sed -i "$ a tickTime=2000\ninitLimit=10\nsyncLimit=5 \nclientPort=2181" /opt/zookeeper/conf/zoo.cfg \
     && sed -i "$ a dataDir=/opt/zookeeper/data\ndataLoginDir=/opt/zookeeper/logs" /opt/zookeeper/conf/zoo.cfg \
     && sed -i "$ a server.1=dble-1:2888:3888\nserver.2=dble-2:2888:3888\nserver.3=dble-3:2888:3888" /opt/zookeeper/conf/zoo.cfg \
     && mkdir /opt/zookeeper/data/
+
+RUN echo "export PATH=/opt/zookeeper/bin:/opt/btrace/bin/:/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc
 
 COPY dble_init.sh /usr/local/bin/dble_init.sh
 COPY mysql_init.sh /usr/local/bin/mysql_init.sh
