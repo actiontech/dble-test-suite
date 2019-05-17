@@ -32,9 +32,6 @@ RUN mkdir /opt/btrace
 RUN tar -zxvf /tmp/btrace-bin-1.3.11.tgz.tar.gz -C /opt/btrace
 RUN sed -i 's/java -cp/java -Dcom.sun.btrace.unsafe=true -cp/' /opt/btrace/bin/btrace
 RUN echo "export PATH=/opt/btrace/bin/:$PATH">>/etc/bashrc
-RUN mkdir -p /var/lib/mysql \
-    && touch /var/lib/mysql/auto.cnf \
-    && echo "server-uuid=$(uuidgen)" > /var/lib/mysql/auto.cnf
 
 #install zookeeper
 COPY zookeeper-3.5.2-alpha.tar.gz /tmp/zookeeper-3.5.2-alpha.tar.gz
@@ -48,9 +45,8 @@ RUN echo " ">> /opt/zookeeper/conf/zoo.cfg \
 
 RUN echo "export PATH=/opt/zookeeper/bin:/opt/btrace/bin/:/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc
 
-COPY dble_init.sh /usr/local/bin/dble_init.sh
 COPY mysql_init.sh /usr/local/bin/mysql_init.sh
-RUN chmod +x /usr/local/bin/dble_init.sh /usr/local/bin/mysql_init.sh
+RUN chmod +x /usr/local/bin/mysql_init.sh
 
 RUN ssh-keygen -A
 RUN mkdir ~/.ssh
