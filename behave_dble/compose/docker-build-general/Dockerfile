@@ -23,7 +23,6 @@ RUN useradd -r -g mysql -s /bin/false mysql
 RUN cd /usr/local/mysql && mkdir data && chown -R mysql:mysql .
 RUN echo -e '[client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n[mysqld] \nserver-id=10 \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables="*" \ngtid-mode=on \nenforce_gtid_consistency=on \nearly-plugin-load=keyring_file.so' > /etc/my.cnf
 RUN rm -rf /var/lib/mysql
-RUN /usr/local/mysql/bin/mysqld --initialize-insecure --basedir=/usr/local/mysql --user=mysql >/dev/null 2>&1
 RUN echo "export PATH=/usr/local/mysql/bin:$PATH">>/etc/bashrc
 
 #install btrace
