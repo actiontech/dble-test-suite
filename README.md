@@ -23,10 +23,13 @@ If you want to find how to test a database midware, you can get reference here.
 
 ## Documentation
 
-[简体中文](./docs/index.md)
+- [简体中文](./docs/index.md)
 
-## Quick start 
-Read the [快速入门](./docs/QUICKSTART.md) or [Quick Start With Docker](./docs/dble_quick_start_docker.md) or  [Quick Start With Docker-Compose](./docs/dble_start_docker_compose.md).  
+- [快速入门](./docs/QUICKSTART.md) 
+
+- [Quick Start With Docker](./docs/dble_quick_start_docker.md) 
+
+- [Quick Start With Docker-Compose](./docs/dble_start_docker_compose.md).  
 
 ## Official website
 For more information, please visit the [official website](https://opensource.actionsky.com).
