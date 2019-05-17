@@ -3,6 +3,13 @@ MAINTAINER Hongjie Zhao <zhaohongjie@actionsky.com>
 
 RUN yum install -y yum-utils wget gcc g++ git vi net-tools libaio hwloc MySQL-python openssh-server openssh-clients sshpass libmysqlclient-dev
 
+#install jdk
+COPY jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
+RUN mkdir /opt/jdk
+RUN tar -zxvf /tmp/jdk-8u121-linux-x64.tar.gz -C /opt/jdk --strip-components=1
+RUN echo "export JAVA_HOME=/opt/jdk">>/etc/bashrc
+RUN echo "export PATH=/opt/jdk/bin:$PATH">>/etc/bashrc
+
 #install pip and requirements
 RUN yum install -y epel-release
 RUN yum install -y  python-pip
