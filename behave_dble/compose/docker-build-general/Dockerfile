@@ -21,7 +21,7 @@ RUN yum install -y openssl > /tmp/install_openssl.log
 RUN groupadd mysql
 RUN useradd -r -g mysql -s /bin/false mysql
 RUN cd /usr/local/mysql && mkdir data && chown -R mysql:mysql .
-RUN echo -e '[client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n[mysqld] \nserver-id=10 \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables="*" \ngtid-mode=on \nenforce_gtid_consistency=on \nearly-plugin-load=keyring_file.so' > /etc/my.cnf
+RUN echo -e '[client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n[mysqld] \nserver-id=10 \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables="*" \ngtid-mode=on \nenforce_gtid_consistency=on \nearly-plugin-load=keyring_file.so \nsql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES' > /etc/my.cnf
 RUN rm -rf /var/lib/mysql
 RUN echo "export PATH=/usr/local/mysql/bin:$PATH">>/etc/bashrc
 
