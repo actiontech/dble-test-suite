@@ -1,3 +1,7 @@
+/*
+ * Copyright (C) 2016-2019 ActionTech.
+ * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
+ */
 # -*- coding: utf-8 -*-
 # @Time    : 2018/4/2 PM6:56
 # @Author  : zhaohongjie@actionsky.com
