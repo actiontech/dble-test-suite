@@ -3,8 +3,11 @@
 dble是一个社区驱动的开源项目，本指南记录了为dble做出各种贡献的最佳方式，包括提出bug，改进文档和报告等等。
 
 ## 一. 最佳提bug方式
+
 1.对于有足够代码经验的贡献者而言，提bug的同时可以附上解决该bug的代码。
+
 2.对于普通贡献者而言，提交的bug描述中应该包含足够的信息，提供重现步骤。不能重现的bug或者只有寥寥几句描述的bug可能会被关闭。
+
 3.贡献者们也可以提出新的功能需求，但是得附上详细的信息，比如设计文档或者更新的代码。
 
 ## 二.修改文档：
@@ -13,7 +16,7 @@ dble是一个社区驱动的开源项目，本指南记录了为dble做出各种
 ## 三.提交 pull request 流程
 1. 在github上 fork 该项目，项目地址：#todo
 2. 在本地完成 clone，操作如下：
-   ===
+```   
    mkdir -p $working_dir
    cd $working_dir
    git clone git@github.com:$user/dble.git (需要更换地址：todo)
@@ -34,29 +37,44 @@ dble是一个社区驱动的开源项目，本指南记录了为dble做出各种
    # upstream  https://github.com/actiontech/dble (fetch)(需要更换地址：todo)
    # upstream  no_push (push)
    git remote -v
-   ===
+```   
 3. 创建分支：
+
    1)更新本地master代码为最新，操作如下：
+   ```
      cd $working_dir/dble
      git fetch upstream
      git checkout master
      git rebase upstream/master
+   ```
    2）从master上创建新的分支
+   ```
      git checkout -b your_branch
+   ```
 4. 做自己的更新
-5. commit，执行：git commit
-6. push，执行：git push -f origin your_branch
+5. commit，执行：
+```
+git commit
+```
+6. push，执行：
+```
+git push -f origin your_branch
+```
 7. 创建pull request
    1) 打开 fork 的项目 https://github.com/$user/dble (replace $user obviously).(需要更换地址：todo)
    2) 点击 按钮 "Compare & pull request"
 
 ## 四.commit 信息规范
+
 为了使项目能更容易维护，提交变更时填写的信息请遵循以下方式：
+
+```
   <what changed>
   <BLANK LINE>
   <why this change was made>
   <BLANK LINE>
   <footer>(optional)
+ ```
   说明：1.第一行是主题，控制在70个字之内
         2.第二行是空白行
         3.其他行控制在80个字符之内。
