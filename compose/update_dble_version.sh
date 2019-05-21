@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 #2.17.09.0
 #9.9.9.9
 #2.18.02.1
