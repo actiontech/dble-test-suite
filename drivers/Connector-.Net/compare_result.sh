@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 std_result_dir=${1-"std_result"}
 real_result_dir=${2-"sql_cover_log"}
 cmp_std_res_dir=cmp_${std_result_dir}
