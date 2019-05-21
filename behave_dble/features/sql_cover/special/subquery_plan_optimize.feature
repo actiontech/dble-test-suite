@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by zhaohongjie at 2018/9/5
 Feature: subquery execute plan should be optimized for ER/Global table join #dble github issue #685 #1057
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
