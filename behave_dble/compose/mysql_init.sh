@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 sed -i '2c server-id='$1' ' /etc/my.cnf
 sed -i '2c server-uuid='$(uuidgen)' ' /var/lib/mysql/auto.cnf
 /usr/local/mysql/bin/mysqld_safe --defaults-file=/etc/my.cnf --skip-grant-tables --user=mysql >/dev/null 2>&1 &

@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 echo " ">> /opt/zookeeper/conf/zoo.cfg
 sed -i "$ a tickTime=2000\ninitLimit=10\nsyncLimit=5 \nclientPort=2181" /opt/zookeeper/conf/zoo.cfg
 sed -i "$ a dataDir=/opt/zookeeper/data\ndataLoginDir=/opt/zookeeper/logs" /opt/zookeeper/conf/zoo.cfg
