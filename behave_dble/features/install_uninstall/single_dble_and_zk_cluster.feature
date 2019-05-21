@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: install dble cluster, degrade to single dble, recover to cluster
 
   @BLOCKER
