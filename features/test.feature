@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature:
  @smoke
     Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2

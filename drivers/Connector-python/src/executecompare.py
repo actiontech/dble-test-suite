@@ -1,4 +1,6 @@
 # -*- coding: UTF-8 -*-
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # from behave import *
 import mysql.connector
 import os
