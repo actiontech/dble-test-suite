@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: Verify that the Reload @@config_all is effective for server.xml
 
   Scenario: #1 add/delete client user
