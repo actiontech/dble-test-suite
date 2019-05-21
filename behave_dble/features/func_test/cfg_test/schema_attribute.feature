@@ -242,6 +242,38 @@ Feature: test some import nodes attr in schema.xml
     """
     Given delete file "/opt/dble/rocksdb" on "dble-1"
 
+  Scenario:  test execute `set @x=1` when the max active Connections size max than "maxCon"   from issue:1177 author: maofei #9
+     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="4" minCon="0" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="4" minCon="0" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+    </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                         | expect  | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists test_table                         | success | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_table(id int,name varchar(33))      | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                                       | success | schema1 |
+      | test | 111111 | conn_0 | False   | select * from test_table                                 | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                                       | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                                 | success | schema1 |
+      | test | 111111 | conn_2 | False   | set @x = 1                                                 | error totally whack | schema1 |
+      | test | 111111 | conn_0 | True    | commit                                                      | success | schema1 |
+      | test | 111111 | conn_1 | True    | commit                                                      | success | schema1 |
+      | test | 111111 | conn_2 | True    | set @x = 1                                                 | success | schema1 |
+
 
 
 
