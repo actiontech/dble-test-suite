@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by zhaohongjie at 2018/11/28
 Feature: test for datahost property switchType
   switchType=-1: no ha

@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: reload @@config_all base test, not including all cases in testlink
   reload @@config_all, which do diff and reserve in use backend conn
   reload @@config_all -f, which do diff and kill in use backend conn
