@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: #
   Scenario: #1 show @@sql.resultset
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"

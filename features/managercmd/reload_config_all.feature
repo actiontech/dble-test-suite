@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: #base function test, not including all cases in testlink
   Scenario:
     #1 reload @@config_all, do diff, reserve in use backend conn
