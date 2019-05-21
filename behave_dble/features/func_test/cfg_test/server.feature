@@ -76,6 +76,7 @@ Feature: test config in server.xml
     <firewall>
         <whitehost>
             <host host="172.100.9.253" user="root,test"/>
+            <host host="172.100.9.8" user="root,test"/>
         </whitehost>
     </firewall>
     """
@@ -94,11 +95,11 @@ Feature: test config in server.xml
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Then execute sql in "dble-1" in "admin" mode
         | user        | passwd | conn   | toClose | sql      | expect  | db     |
-        | mng_user   | 111111 | conn_0 | True    | show @@version |Access denied for user 'mng_user' with host '172.100.9.253 |  |
+        | mng_user   | 111111 | conn_0 | True    | show @@version |Access denied for user 'mng_user'  |  |
     Then execute sql in "dble-1" in "user" mode
         | user        | passwd | conn   | toClose | sql      | expect  | db     |
         | test        | 111111 | conn_0 | True    | select 1 |success  | schema1 |
-        | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' with host '172.100.9.253 | schema1 |
+        | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' | schema1 |
 
   @CRITICAL
   Scenario: config sql blacklist #7
