@@ -17,5 +17,3 @@ about: Create a report to help us improve
 * **Additional information you deem important (e.g. issue happens only occasionally)：**  
     1.
 * **Additional details (log, config, job config etc):**
-
-/label ~BUG
