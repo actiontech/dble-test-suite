@@ -284,7 +284,7 @@ def step_impl(context, sql_cover_log):
 def step_impl(context):
     import subprocess
     try:
-        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-general/resetReplication.sh'])
+        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
         context.logger.info(out_bytes.decode('utf-8'))
@@ -295,7 +295,7 @@ def step_impl(context):
 def step_impl(context, dblelist):
     import subprocess
     try:
-        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-general/resetView.sh', dblelist])
+        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetView.sh', dblelist])
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
         context.logger.info(out_bytes.decode('utf-8'))
