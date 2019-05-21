@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 echo "install jdk 1.8"
 install_jdk_rpm="jdk-8u121-linux-x64.rpm"
 mkdir -p /usr/java

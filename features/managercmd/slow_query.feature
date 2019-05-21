@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature:#test reference manager cmd  and main function for slow query log
    @regression
    Scenario:# 1.test manager cmd for slow query log
