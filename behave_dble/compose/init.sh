@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 docker-compose up -d
 
 docker cp ~/.ssh/id_rsa.pub dble-1:/root/.ssh/authorized_keys
