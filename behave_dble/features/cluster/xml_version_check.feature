@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by WuJinling at 2019/3/6
 Feature: test "check xml version warning message in dble.log and dryrun"
   # details please refer to github issue #986
