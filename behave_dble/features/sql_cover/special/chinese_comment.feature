@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by zhaohongjie at 2018/9/20
 Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter feature name here
   # todo: the issue only occur under ushard ha env
