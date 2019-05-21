@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by zhaohongjie at 2018/10/15
 Feature: check lower_case_table_names works right for dble
 #  lower_case_table_names=0, case sensitive
