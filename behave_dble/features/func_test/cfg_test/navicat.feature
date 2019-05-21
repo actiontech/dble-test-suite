@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by yexiaoli at 2018/11/1
 Feature: queries to mysql default database send by  Navicat Premium 12, dble will mock a resultset to support it
 
