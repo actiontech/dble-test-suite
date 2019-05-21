@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 #this script is tested for zookeeper-3.4.9.tar.gz
 source_dir=$( dirname ${BASH_SOURCE[0]} )
 

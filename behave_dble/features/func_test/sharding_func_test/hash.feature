@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature:hash sharding function test suits
   @smoke
   Scenario: hash function #1

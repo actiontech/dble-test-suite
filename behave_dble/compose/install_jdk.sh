@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # this script is tested for jdk-8u121-linux-x64.tar.gz
 source_dir=$( dirname ${BASH_SOURCE[0]} )
 echo "install jdk from bash dir : ${source_dir}"
