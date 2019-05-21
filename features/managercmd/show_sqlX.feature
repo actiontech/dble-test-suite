@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: #show @@sql, show @@sql.resultset
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
