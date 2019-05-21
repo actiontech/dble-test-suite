@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by yexiaoli at 2018/12/13
 Feature: install_dble_cluster.feature:to config dble in zk cluster
 

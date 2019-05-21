@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: Functional testing of global sequences
   common test for global sequences column:
   insert or insert...set explicitly to global sequence column get error
