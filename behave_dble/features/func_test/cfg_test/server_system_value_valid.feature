@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 # Created by zhaohongjie at 2019/1/3
 Feature: if childnodes value of system in server.xml are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
