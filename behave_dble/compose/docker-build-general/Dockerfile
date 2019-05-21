@@ -16,16 +16,16 @@ RUN echo "export JAVA_HOME=/opt/jdk">>/etc/bashrc
 RUN echo "export PATH=$JAVA_HOME/bin:$PATH">>/etc/bashrc
 
 #install mysql
-COPY mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz /tmp/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz
+COPY mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz /tmp/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz
 RUN mkdir /usr/local/mysql
-RUN tar -zxvf /tmp/mysql-5.7.21-linux-glibc2.12-x86_64.tar.gz -C /usr/local/mysql --strip-components=1
+RUN tar -zxvf /tmp/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz -C /usr/local/mysql --strip-components=1
 
 RUN yum install -y openssl > /tmp/install_openssl.log
 
 RUN groupadd mysql
 RUN useradd -r -g mysql -s /bin/false mysql
 RUN cd /usr/local/mysql && mkdir data && chown -R mysql:mysql .
-RUN echo -e '[client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n[mysqld] \nserver-id=10 \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables="*" \ngtid-mode=on \nenforce_gtid_consistency=on \nsecure_file_priv='' \nsql_mode=NO_ENGINE_SUBSTITUTION' > /etc/my.cnf
+RUN echo -e '[client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n[mysqld] \nserver-id=10 \nsession_track_schema=1 \nsession_track_state_change=1 \nsession_track_system_variables="*" \ngtid-mode=on \nenforce_gtid_consistency=on \nsecure_file_priv='' \nsql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES' > /etc/my.cnf
 RUN rm -rf /var/lib/mysql
 RUN echo "export PATH=/usr/local/mysql/bin:$PATH">>/etc/bashrc
 
