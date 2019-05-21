@@ -10,13 +10,13 @@ dble-test-suite is maintained by [ActionTech](https://opensource.actionsky.com).
 
 ## What is dble-test-suite?
 
-dble-test-suit is a database midware test suites. 
+dble-test-suite is a database midware test suites. 
 
 - __sql cover__
 There is a full set of targeted sqls collected manually according to MySQL docs, you can test the database midware's sql support with it. 
 
 - __dble test__
-This test suites is originated from dble test. You can test dble with it when you make changes to dble. 
+This test suites is originated from dble test. You can test [dble](https://github.com/actiontech/dble) with it when you make changes to [dble](https://github.com/actiontech/dble). 
 
 - __database midware test reference__
 If you want to find how to test a database midware, you can get reference here.
@@ -49,7 +49,7 @@ for details on submitting patches and the contribution workflow.
 
 ## Contact us
 
-Dble has enterprise support plans, you may contact our sales team: 
+[Dble](https://github.com/actiontech/dble) has enterprise support plans, you may contact our sales team: 
 * Global Sales: 400-820-6580
 * North China: 86-13718877200, Mr. Wang
 * South China: 86-18503063188, Mr. Cao
