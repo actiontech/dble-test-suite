@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 dble_install=("dble-1" "dble-2" "dble-3")
 rm -r /opt/zookeeper
 cd /init_assets && tar -zxf zookeeper-3.4.9.tar.gz

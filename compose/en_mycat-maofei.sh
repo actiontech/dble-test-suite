@@ -1,5 +1,6 @@
 #!/bin/bash
-
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 mysql_install=("mycat.centos6-1" "mycat.mysql" "mycat.mysql1" "mycat.mysql2")
 count=${#mysql_install[@]}
 path=/opt/mycat_build/

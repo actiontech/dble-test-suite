@@ -1,3 +1,5 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
 Feature: #install dble
   Scenario: #change between single mode and cluster
     Given a clean environment in all dble nodes
