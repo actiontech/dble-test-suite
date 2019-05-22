@@ -14,13 +14,13 @@
 3.打包镜像
 
 ```
-a.下载生成镜像所需的安装包
+a.下载生成镜像所需的安装包，进入到dble-test-suite目录
    
-  1) cd dble-test-suite/behave_dble/compose/docker-build-behave/ 
+  1) cd behave_dble/compose/docker-build-behave/ 
   
      下载jdk安装包：jdk-8u121-linux-x64.tar.gz 
      
-  2) cd dble-test-suite/behave_dble/compose/docker-build-general/
+  2) cd behave_dble/compose/docker-build-general/
    
      下载jdk安装包：jdk-8u121-linux-x64.tar.gz 
      下载mysql安装包：mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz  
