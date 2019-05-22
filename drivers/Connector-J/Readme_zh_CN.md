@@ -1,16 +1,41 @@
-linux Centos7 环境下运行 Java driver 代码说明：
+# 1.2.2 基于java的MySQL数据库驱动-jdbc的sql覆盖测试
 
-1.配置java环境，安装jdk，具体步骤参考 文档 compose/install_jdk.sh
+## sql覆盖的测试策略
 
-2.生成java jar包放置Connector-J/target/目录，可借助工具，以eclipse举例：
-  1) 选中java项目-右键-Export
-  2）在弹出框 选择Java-Runnable JAR file- next
-  3) 在Launch configuration 项选择testJDBC-Connector-J(如果没有该选项，请先执行一遍 testJDBC.java)
-  4) 在Export destination 选择保存路径，点击Finish
+- 抽出基础典型的sql到[driver专用sql case文件](./1.3 sql文件说明.md#), 按照连接中间件和直连的结果差异做分类并整理出标准结果，后续回归将运行的当次的回归结果与标准结果比对
+- 整理中间件的管理命令到测试文件，检查driver是否支持
+- 对[sql覆盖相关case文件](./1.3 sql文件说明.md), 可自主选择是否需要中间件和直连的执行结果差异，但不再整理标准结果
 
-3.回到自动化项目目录，以拆分表的配置文件重启一遍dble，执行：
-behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+## 测试执行说明
 
-4.在Connector-J 目录，运行：bash run.sh {jar包名} [-c]
-  注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
-      2).覆盖的sql文件位置：dble/drivers/Connector-J/assets/sql/
+- 测试环境:linux Centos7
+
+- 测试准备：
+
+   1.部署好自动化测试环境
+
+   2.安装数据库中间件
+
+   3.修改配置文件为所需要的配置，重新启动中间件。注：本文提供的标准sql结果比对日志是以 dble/behave_dble/dble_conf/sql_cover_sharding_bk/目录下的配置文件跑的结果。
+
+- 测试步骤：
+
+   1.进入behave 容器
+
+      docker exec -it behave bash
+
+  2.将项目Connector-J打包成可运行的java jar包放置 drivers/Connector-J/target/目录，可借助工具，以eclipse举例：
+
+      1) exlipse打开Connector-J项目 -选中该项目-右键-Export
+      2）在弹出框 选择Java-Runnable JAR file- next
+      3) 在Launch configuration 项选择testJDBC-Connector-J(如果没有该选项，请先执行一遍 testJDBC.java)
+      4) 在Export destination 选择保存路径，点击Finish
+
+  3.在 drivers/Connector-J 目录运行步骤2生成的jar包，执行：
+
+      bash run.sh {jar包名} [-c]
+
+      注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
+         2).覆盖的sql文件位置：drivers/Connector-J/assets/sql/
+
+     说明：步骤3完成之后会在目录 drivers/Connector-J/ 下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
