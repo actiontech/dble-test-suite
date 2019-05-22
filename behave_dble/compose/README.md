@@ -6,14 +6,25 @@
 
 ### 二、测试环境搭建步骤：
 
-1.docker环境搭建（详情参考[compose/half-auto-env/docker_install.txt])
+1.安装docker 和 docker-compose
 
 2.打包镜像
 
 ```
 a.创建目录 /opt/behave/ ，并导入整个自动化测试项目（该目录会映射到behave 容器中的 /init_assets 目录，详情参考 docker-compose.yml)
 
-b.请参考Dockerfile，自行下载生成镜像所需的安装包，并放置在Dockerfile同级目录中,该项目有两份dockerfile，分别在目录 behave_dble/compose/docker-build-behave，behave_dble/compose/docker-build-general
+b.下载生成镜像所需的安装包
+   
+  1) cd behave_dble/compose/docker-build-behave/ 
+  
+     下载jdk安装包：jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
+     
+  2) cd behave_dble/compose/docker-build-general/
+   
+     下载jdk安装包：jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
+     下载mysql安装包：mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz /tmp/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz  
+     下载btrace安装包：btrace-bin-1.3.11.tgz.tar.gz /tmp/btrace-bin-1.3.11.tgz.tar.gz
+     下载zookeeper安装包：zookeeper-3.5.2-alpha.tar.gz /tmp/zookeeper-3.5.2-alpha.tar.gz
 
 c.打包镜像，分别执行：
   sudo docker build -t dble_test_general:latest ${path}/docker-build-general
