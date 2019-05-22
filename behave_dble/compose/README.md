@@ -6,8 +6,9 @@
 
 1.安装docker 和 docker-compose, 启动 docker 服务
 
-2.clone自动化测试项目，创建目录/opt/behave/,cd /opt/behave,执行：
+2.clone自动化测试项目，创建目录/opt/behave/,执行
 
+    cd /opt/behave/
     git clone https://github.com/actiontech/dble-test-suite.git 
     
 3.打包镜像
