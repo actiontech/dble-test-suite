@@ -16,9 +16,8 @@ dble是一个社区驱动的开源项目，本指南记录了为dble做出各种
 ## 三.提交 pull request 流程
 1. github上fork该项目
 
-   1)登陆项目地址：[https://github.com/actiontech/dble-test-suite](https://github.com/actiontech/dble-test-suite)
-   
-   2)点击"Fork"按钮
+   1）登陆项目地址：[https://github.com/actiontech/dble-test-suite](https://github.com/actiontech/dble-test-suite)  
+   2）点击"Fork"按钮
 
 2. 在本地完成 clone，操作如下：
 ```   
@@ -43,7 +42,7 @@ dble是一个社区驱动的开源项目，本指南记录了为dble做出各种
    # upstream  no_push (push)
    git remote -v
 ```   
-3. 创建分支：
+3. 创建分支
 
    1)更新本地master代码为最新，操作如下：
    ```
@@ -52,27 +51,25 @@ dble是一个社区驱动的开源项目，本指南记录了为dble做出各种
      git checkout master
      git rebase upstream/master
    ```
-   2）从master上创建新的分支并切换到此分支
+   2）从master上创建新的分支并切换到此分支：
    ```
      git checkout -b your_branch
    ```
 4. 做自己的更新
-5. commit，执行：
+5. commit
 ```
 git add <自己的更新>
-git commit -m "xxx"
+git commit -m "对更新的描述"
 ```
-6. push，执行：
+6. push
 ```
 git push origin your_branch
 ```
 7. 登陆github，创建pull request
 
-   1)打开 fork 的项目 https://github.com/$user/dble-test-suite.git 
-   
-   2)点击按钮 "Compare & pull request"
-   
-   3)再点击按钮 "Create pull request"
+   1）打开 fork 的项目 
+   2）点击按钮 "Compare & pull request"  
+   3）确认提交的内容无误后，再点击按钮 "Create pull request"
 
 ## 四.commit 信息规范
 
