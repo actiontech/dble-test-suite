@@ -6,7 +6,7 @@
 
 1.安装docker 和 docker-compose, 启动 docker 服务
 
-2.创建目录 /opt/behave/,clone自动化测试项目，执行：
+2.clone自动化测试项目，创建目录/opt/behave/,cd /opt/behave,执行：
 
     git clone https://github.com/actiontech/dble-test-suite.git 
     
@@ -15,11 +15,11 @@
 ```
 a.下载生成镜像所需的安装包
    
-  1) cd behave_dble/compose/docker-build-behave/ 
+  1) cd dble-test-suite/behave_dble/compose/docker-build-behave/ 
   
      下载jdk安装包：jdk-8u121-linux-x64.tar.gz 
      
-  2) cd behave_dble/compose/docker-build-general/
+  2) cd dble-test-suite/behave_dble/compose/docker-build-general/
    
      下载jdk安装包：jdk-8u121-linux-x64.tar.gz 
      下载mysql安装包：mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz  
@@ -33,10 +33,10 @@ b.打包镜像，进入到dble-test-suite目录， 分别执行：
 ```
 4.搭建测试环境
 ```
-cd behave_dble/compose/ 目录，执行脚本 start_env.sh 
+cd dble-test-suite/behave_dble/compose/ 目录，执行脚本 start_env.sh 
 ```
 5.执行测试
 ```
-cd behave_dble/compose/ 目录,执行脚本 start_dble_test.sh,完成 功能feature和sql覆盖的测试。
+cd dble-test-suite/behave_dble/compose/ 目录,执行脚本 start_dble_test.sh,完成 功能feature和sql覆盖的测试。
 ```
 ### 三、driver测试步骤请参考各driver下的readme.md
