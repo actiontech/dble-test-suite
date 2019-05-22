@@ -1,7 +1,6 @@
 cfg_sys:
   docker_compose_path: compose/docker-compose.yml
   share_path_docker: /share
-  share_path_docker: /share
   ssh_user: root
   ssh_password: sshpass
   default_db: schema1
