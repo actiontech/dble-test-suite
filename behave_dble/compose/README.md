@@ -4,14 +4,16 @@
 
 ### 二、测试环境搭建步骤：
 
-1.安装docker 和 docker-compose,启动docker服务
+1.安装docker 和 docker-compose, 启动 docker 服务
 
-2.打包镜像
+2.创建目录 /opt/behave/,clone自动化测试项目，执行：
+
+    git clone https://github.com/actiontech/dble-test-suite.git 
+    
+3.打包镜像
 
 ```
-a.创建目录 /opt/behave/ ，并导入整个自动化测试项目
-
-b.下载生成镜像所需的安装包
+a.下载生成镜像所需的安装包
    
   1) cd behave_dble/compose/docker-build-behave/ 
   
@@ -24,16 +26,16 @@ b.下载生成镜像所需的安装包
      下载btrace安装包：btrace-bin-1.3.11.tgz.tar.gz 
      下载zookeeper安装包：zookeeper-3.5.2-alpha.tar.gz 
 
-c.打包镜像，进入到dble-test-suite目录， 分别执行：
+b.打包镜像，进入到dble-test-suite目录， 分别执行：
   sudo docker build -t dble_test_general:latest  behave_dble/compose/docker-build-general/
   sudo docker build -t dble_test_client:latest   behave_dble/compose/docker-build-behave/
   sudo docker build -t dble_test_driver:latest   behave_dble/compose/docker-build-driver/
 ```
-3.搭建测试环境
+4.搭建测试环境
 ```
 cd behave_dble/compose/ 目录，执行脚本 start_env.sh 
 ```
-4.执行测试
+5.执行测试
 ```
 cd behave_dble/compose/ 目录,执行脚本 start_dble_test.sh,完成 功能feature和sql覆盖的测试。
 ```
