@@ -27,7 +27,7 @@ b.下载生成镜像所需的安装包
      下载zookeeper安装包：zookeeper-3.5.2-alpha.tar.gz 
 
 c.打包镜像，进入到dble-test-suite目录， 分别执行：
-  sudo docker build -t dble_test_general:latest  behave-dble/compose/docker-build-general/
+  sudo docker build -t dble_test_general:latest  behave_dble/compose/docker-build-general/
   sudo docker build -t dble_test_client:latest   behave_dble/compose/docker-build-behave/
   sudo docker build -t dble_test_driver:latest   behave_dble/compose/docker-build-driver/
 ```
