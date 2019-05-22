@@ -1,0 +1,62 @@
+# 1.2.4 基于c++的MySQL数据库驱动的sql覆盖测试
+
+## sql覆盖的测试策略
+
+- 抽出基础典型的sql到[driver专用sql case文件](./1.3 sql文件说明.md#), 按照连接中间件和直连的结果差异做分类并整理出标准结果，后续回归将运行的当次的回归结果与标准结果比对
+- 整理中间件的管理命令到测试文件，检查driver是否支持
+- 对[sql覆盖相关case文件](./1.3 sql文件说明.md), 可自主选择是否需要中间件和直连的执行结果差异，但不再整理标准结果
+
+## 测试执行说明
+
+- 测试环境:Linux ubuntu:18.04
+- 测试准备：
+
+    1.部署好自动化测试环境
+
+    2.安装数据库中间件
+
+    3.修改配置文件为所需要的配置，重新启动中间件。注：本文提供的标准sql结果比对日志是以 behave_dble/dble_conf/sql_cover_sharding_bk/目录下的配置文件跑的结果。
+
+- 在容器driver-test 中测试步骤：
+
+    1.进入driver-test 容器,导入整个Connector-cpp 项目,执行以下命令进入容器：
+
+      docker exec -it driver-test bash
+
+    2.编译C++源码,在源码所在目录 drivers/Connector-cpp/src ，执行：
+
+      g++ *.cpp -l mysqlcppconn -l yaml-cpp
+
+    3.运行,在目录 drivers/Connector-cpp，执行：
+
+      bash run.sh [-c]
+
+      注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
+          2).覆盖的sql文件位置：dble/drivers/Connector-cpp/src/assets/sql
+
+      说明： 步骤3完成之后会在目录 drivers/Connector-cpp/下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
+
+- 自行搭建环境步骤参考：
+
+    1.安装依赖包,执行：
+
+      apt update && apt install -y wget vim build-essential libboost1.65-dev gdb git cmake libmysqlclient-dev
+
+    2.安装并编译 yaml-cpp，执行：
+
+      1) wget https://github.com/jbeder/yaml-cpp/archive/release-0.5.1.tar.gz && tar zxvf /opt/release-0.5.1.tar.gz
+      2) cd yaml-cpp-release-0.5.1 && mkdir build
+      3) cd build
+      4) cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
+
+    3.配置环境变量，执行：
+
+      echo "export LD_LIBRARY_PATH=/usr/local/lib">>/root/.bashrc
+
+    4.安装并编译mysql-connector-c++-1.1.11，执行：
+
+      1)wget https://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.11.tar.gz && tar zxvf mysql-connector-c++-1.1.11.tar.gz
+      2)cd mysql-connector-c++-1.1.11
+      3)cmake .; make -j 3; make install
+      注：编译如未通过，请参考 https://bugs.mysql.com/bug.php?id=90727
+
