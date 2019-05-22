@@ -36,7 +36,7 @@
 
       说明： 步骤3完成之后会在目录 drivers/Connector-cpp/下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
 
-- 自行搭建环境步骤参考：
+- 自行搭建该driver测试环境参考：
 
     1.安装依赖包,执行：
 
