@@ -43,7 +43,8 @@ cd behave_dble/compose/ 目录,执行脚本 start_dble_test.sh,完成 功能feat
 ### 四、手动搭建环境依赖包安装参考
 
 使用pip安装behave 1.2.5，先确保pip可用，安装behave后还要安装测试中需要用到的依赖包：paramiko,PyYAML,hamcrest,lxml,MySQLdb
-    ```
+
+    
     yum -y install epel-release
     (if pip: command not found, yum install -y python-pip)
     pip install --upgrade pip
@@ -75,5 +76,5 @@ cd behave_dble/compose/ 目录,执行脚本 start_dble_test.sh,完成 功能feat
     cur.fetchall()
     cur.close()
     conn.close()
-    ```
+
 
