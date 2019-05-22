@@ -17,7 +17,7 @@
 
     3.修改配置文件为所需要的配置，重新启动中间件。注：本文提供的标准sql结果比对日志是以 behave_dble/dble_conf/sql_cover_sharding_bk/目录下的配置文件跑的结果。
 
-- 在容器driver-test 中测试步骤：
+- 测试步骤：
 
     1.进入driver-test 容器,导入整个Connector-cpp 项目,执行以下命令进入容器：
 
@@ -36,24 +36,24 @@
 
       说明： 步骤3完成之后会在目录 drivers/Connector-cpp/下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
 
-- 自行搭建该driver测试环境参考：
+## 自行搭建该driver测试环境参考：
 
-    1.安装依赖包,执行：
+   1.安装依赖包,执行：
 
       apt update && apt install -y wget vim build-essential libboost1.65-dev gdb git cmake libmysqlclient-dev
 
-    2.安装并编译 yaml-cpp，执行：
+   2.安装并编译 yaml-cpp，执行：
 
       1) wget https://github.com/jbeder/yaml-cpp/archive/release-0.5.1.tar.gz && tar zxvf /opt/release-0.5.1.tar.gz
       2) cd yaml-cpp-release-0.5.1 && mkdir build
       3) cd build
       4) cmake -DBUILD_SHARED_LIBS=ON ..;make -j 3;make install
 
-    3.配置环境变量，执行：
+   3.配置环境变量，执行：
 
       echo "export LD_LIBRARY_PATH=/usr/local/lib">>/root/.bashrc
 
-    4.安装并编译mysql-connector-c++-1.1.11，执行：
+   4.安装并编译mysql-connector-c++-1.1.11，执行：
 
       1)wget https://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.11.tar.gz && tar zxvf mysql-connector-c++-1.1.11.tar.gz
       2)cd mysql-connector-c++-1.1.11
