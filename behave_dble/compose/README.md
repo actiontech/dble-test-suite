@@ -17,14 +17,14 @@ b.下载生成镜像所需的安装包
    
   1) cd behave_dble/compose/docker-build-behave/ 
   
-     下载jdk安装包：jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
+     下载jdk安装包：jdk-8u121-linux-x64.tar.gz 
      
   2) cd behave_dble/compose/docker-build-general/
    
-     下载jdk安装包：jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
-     下载mysql安装包：mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz /tmp/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz  
-     下载btrace安装包：btrace-bin-1.3.11.tgz.tar.gz /tmp/btrace-bin-1.3.11.tgz.tar.gz
-     下载zookeeper安装包：zookeeper-3.5.2-alpha.tar.gz /tmp/zookeeper-3.5.2-alpha.tar.gz
+     下载jdk安装包：jdk-8u121-linux-x64.tar.gz 
+     下载mysql安装包：mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz  
+     下载btrace安装包：btrace-bin-1.3.11.tgz.tar.gz 
+     下载zookeeper安装包：zookeeper-3.5.2-alpha.tar.gz 
 
 c.打包镜像，分别执行：
   sudo docker build -t dble_test_general:latest ${path}/docker-build-general
