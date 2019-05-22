@@ -6,12 +6,12 @@
 
 ### 二、测试环境搭建步骤：
 
-1.安装docker 和 docker-compose
+1.安装docker 和 docker-compose,启动docker服务
 
 2.打包镜像
 
 ```
-a.创建目录 /opt/behave/ ，并导入整个自动化测试项目（该目录会映射到behave 容器中的 /init_assets 目录，详情参考 docker-compose.yml)
+a.创建目录 /opt/behave/ ，并导入整个自动化测试项目
 
 b.下载生成镜像所需的安装包
    
@@ -26,9 +26,9 @@ b.下载生成镜像所需的安装包
      下载btrace安装包：btrace-bin-1.3.11.tgz.tar.gz 
      下载zookeeper安装包：zookeeper-3.5.2-alpha.tar.gz 
 
-c.打包镜像，分别执行：
-  sudo docker build -t dble_test_general:latest ${path}/docker-build-general
-  sudo docker build -t dble_test_client:latest ${path}/docker-build-behave
+c.打包镜像，进入到dble-test-suite目录， 分别执行：
+  sudo docker build -t dble_test_general:latest  behave-dble/compose/docker-build-general/
+  sudo docker build -t dble_test_client:latest   behave_dble/compose/docker-build-behave/
 ```
 3.搭建测试环境
 ```
