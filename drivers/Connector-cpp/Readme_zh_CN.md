@@ -23,18 +23,18 @@
 
       docker exec -it driver-test bash
 
-    2.编译C++源码,在源码所在目录 drivers/Connector-cpp/src ，执行：
+    2.编译C++源码,在源码所在目录 Connector-cpp/src ，执行：
 
       g++ *.cpp -l mysqlcppconn -l yaml-cpp
 
-    3.运行,在目录 drivers/Connector-cpp，执行：
+    3.运行,在目录 Connector-cpp，执行：
 
       bash run.sh [-c]
 
       注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
-          2).覆盖的sql文件位置：dble/drivers/Connector-cpp/src/assets/sql
+          2).覆盖的sql文件位置：Connector-cpp/src/assets/sql/
 
-      说明： 步骤3完成之后会在目录 drivers/Connector-cpp/下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
+      说明： 步骤3完成之后会在目录 Connector-cpp/下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
 
 ## 自行搭建该driver测试环境参考：
 
@@ -59,4 +59,3 @@
       2)cd mysql-connector-c++-1.1.11
       3)cmake .; make -j 3; make install
       注：编译如未通过，请参考 https://bugs.mysql.com/bug.php?id=90727
-
