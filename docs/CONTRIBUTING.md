@@ -67,7 +67,7 @@ git push origin your_branch
 ```
 7. 登陆github，创建pull request
 
-   1）打开 fork 的项目 
+   1）打开 fork 的项目     
    2）点击按钮 "Compare & pull request"  
    3）确认提交的内容无误后，再点击按钮 "Create pull request"
 
