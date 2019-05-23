@@ -5,7 +5,7 @@ need_compare=${1-"false"}
 
 rm -rf sql_logs
 cd netdriver/
-mono test.exe "run" "Properties/auto_dble_test.yaml" "driver_test_manager.sql" "driver_test_client.sql"
+mono test.exe "run" "conf/auto_dble_test.yaml" "driver_test_manager.sql" "driver_test_client.sql"
 
 mv sql_logs ../sql_logs
 cd ../
