@@ -42,7 +42,7 @@ sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-
 ===============create docker container============================
 #docker-registry is the hostname used in docker-compose.yaml
 echo "10.186.18.20 docker-registry" >> /etc/hosts
-echo '{ "insecure-registries":["docker-registry:5000"] }'>>/etc/docker/daemon.json
+mkdir -p /etc/docker && echo '{ "insecure-registries":["docker-registry:5000"] }'>>/etc/docker/daemon.json
 systemctl restart docker
 cd compose && docker-compose -f docker-compose.yml up -d
 
