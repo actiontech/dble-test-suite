@@ -2,7 +2,7 @@ version: '2'
 networks:
     default:
         external:
-            name: ci_dble-test-net
+            name: dble_test
 services:
     ci-dble-autotest-master:
         image: docker-registry:5000/actiontech/dble_test_outter
@@ -13,7 +13,8 @@ services:
         tty: true
         volumes:
           - "/data/docker/volume/dble-autotest-agent/v1:/var/lib/docker"
-          - "/data/zhaohongjie/dble_master:/opt/auto_build"
+          - "/opt/auto_build:/opt/auto_build"
+          - "/var/run/docker.sock:/var/run/docker.sock"
         ports:
           - "7131:7131"
           - "7132:7132"
@@ -48,7 +49,8 @@ services:
         tty: true
         volumes:
           - "/data/docker/volume/dble-autotest-agent/v2:/var/lib/docker"
-          - "/data/zhaohongjie/dble_branch:/opt/auto_build"
+          - "/data/docker/dble_branch:/opt/auto_build"
+          - "/var/run/docker.sock:/var/run/docker.sock"
         ports:
           - "8131:7131"
           - "8132:7132"
