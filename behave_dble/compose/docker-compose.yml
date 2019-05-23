@@ -5,7 +5,7 @@ networks:
        name: dble_test
 services:
     dble-1:
-        image: dble_test_general:latest
+        image: dble/dble_test_general:latest
         container_name: dble-1
         hostname: dble-1
         privileged: true
@@ -25,7 +25,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     dble-2:
-        image: dble_test_general:latest
+        image: dble/dble_test_general:latest
         container_name: dble-2
         hostname: dble-2
         privileged: true
@@ -45,7 +45,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     dble-3:
-        image: dble_test_general:latest
+        image: dble/dble_test_general:latest
         container_name: dble-3
         hostname: dble-3
         privileged: true
@@ -65,7 +65,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql:
-        image: dble_test_general:latest
+        image: dble/dble_test_general:latest
         container_name: mysql
         hostname: mysql
         privileged: true
@@ -84,7 +84,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql-master1:
-        image: dble_test_general:latest
+        image: dble/dble_test_general:latest
         container_name: mysql-master1
         hostname: mysql-master1
         privileged: true
@@ -103,7 +103,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql-master2:
-        image: dble_test_general:latest
+        image: dble/dble_test_general:latest
         container_name: mysql-master2
         hostname: mysql-master2
         privileged: true
@@ -122,7 +122,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     c-plus-driver:
-        image: dble_test_driver:latest
+        image: dble/dble_test_driver:latest
         container_name: driver-test
         hostname: driver-test
         privileged: true
@@ -137,7 +137,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     behave:
-        image: dble_test_client:latest
+        image: dble/dble_test_client:latest
         container_name: behave
         hostname: behave
         privileged: true
