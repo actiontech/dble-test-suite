@@ -1,6 +1,6 @@
 ### 一、基础环境
 
-基础环境依赖自行安装: python 2.7, git, wget, gcc-c++等
+linux Centos7 ，基础环境依赖自行安装: python 2.7, git, wget, gcc-c++等
 
 ### 二、测试环境搭建步骤：
 
