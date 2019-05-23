@@ -16,7 +16,7 @@
 
    2.安装数据库中间件
 
-   3.修改配置文件为所需要的配置，重新启动中间件。注：本文提供的标准sql结果比对日志是以 dble/behave_dble/dble_conf/sql_cover_sharding_bk/目录下的配置文件跑的结果。
+   3.修改配置文件为所需要的配置，重新启动中间件。注：本文提供的标准sql结果比对日志是以 behave_dble/dble_conf/sql_cover_sharding_bk/目录下的配置文件跑的结果。
 
 - 测试步骤：
 
@@ -24,18 +24,20 @@
 
       docker exec -it behave bash
 
-  2.将项目Connector-J打包成可运行的java jar包放置 drivers/Connector-J/target/目录，可借助工具，以eclipse举例：
+   2.cd /init_assets/,找到 自动化测试项目
+
+  3.将项目Connector-J打包成可运行的java jar包放置 dble-test-suite/drivers/Connector-J/target/目录，可借助工具，以eclipse举例：
 
       1) exlipse打开Connector-J项目 -选中该项目-右键-Export
       2）在弹出框 选择Java-Runnable JAR file- next
       3) 在Launch configuration 项选择testJDBC-Connector-J(如果没有该选项，请先执行一遍 testJDBC.java)
       4) 在Export destination 选择保存路径，点击Finish
 
-  3.在 drivers/Connector-J 目录运行步骤2生成的jar包，执行：
+  4.返回上一级目录 Connector-J/ 运行步骤2生成的jar包，执行：
 
       bash run.sh {jar包名} [-c]
 
       注：1).加 -c 表示 生成的结果需要和标准sql文件做比对，
-         2).覆盖的sql文件位置：drivers/Connector-J/assets/sql/
+         2).覆盖的sql文件位置：dble-test-suite/drivers/Connector-J/assets/sql/
 
-     说明：步骤3完成之后会在目录 drivers/Connector-J/ 下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
+     说明：步骤4完成之后会在目录 dble-test-suite/drivers/Connector-J/ 下生成 sql_logs目录，放置sql 执行结果，执行失败的放在 XXX_fail.log中，执行成功的放在 XXX_pass.log中
