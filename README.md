@@ -2,7 +2,6 @@
 [![GitHub forks](https://img.shields.io/github/forks/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/network/members)
 [![GitHub stars](https://img.shields.io/github/stars/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/stargazers)
 [![GitHub license](https://img.shields.io/github/license/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/blob/master/LICENSE)
-[![GitHub release](https://img.shields.io/github/release/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/releases)
 
 dble-test-suite is maintained by [ActionTech](https://opensource.actionsky.com).
 
