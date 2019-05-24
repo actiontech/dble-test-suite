@@ -1,10 +1,8 @@
-[![GitHub issues](https://img.shields.io/github/issues/actiontech/dble.svg)](https://github.com/actiontech/dble/issues)
-[![GitHub forks](https://img.shields.io/github/forks/actiontech/dble.svg)](https://github.com/actiontech/dble/network/members)
-[![GitHub stars](https://img.shields.io/github/stars/actiontech/dble.svg)](https://github.com/actiontech/dble/stargazers)
-[![GitHub license](https://img.shields.io/github/license/actiontech/dble.svg)](https://github.com/actiontech/dble/blob/master/LICENSE)
-[![dble](https://img.shields.io/badge/dble-working%20in%20banks-blue.svg)](https://github.com/actiontech/dble)
-[![GitHub release](https://img.shields.io/github/release/actiontech/dble.svg)](https://github.com/actiontech/dble/releases)
-<img src="https://travis-ci.org/actiontech/dble.svg?branch=master">
+[![GitHub issues](https://img.shields.io/github/issues/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/issues)
+[![GitHub forks](https://img.shields.io/github/forks/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/network/members)
+[![GitHub stars](https://img.shields.io/github/stars/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/stargazers)
+[![GitHub license](https://img.shields.io/github/license/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/blob/master/LICENSE)
+[![GitHub release](https://img.shields.io/github/release/actiontech/dble-test-suite.svg)](https://github.com/actiontech/dble-test-suite/releases)
 
 dble-test-suite is maintained by [ActionTech](https://opensource.actionsky.com).
 
