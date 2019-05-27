@@ -1,6 +1,6 @@
 /*
  * Copyright (C) 2016-2019 ActionTech.
- * License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
+ * License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
  */
 #include <stdlib.h>
 #include <iostream>
@@ -39,7 +39,7 @@ int manager_exec(const char *sqlfile, const char *logpath, Connection *con)
 	ResultSet *res;
 	ResultSetMetaData *res_meta;
 	//ResultSetMetaData * 
-	//¸ù¾ÝsqlÎÄ¼þÃû»ñÈ¡logÎÄ¼þÃû
+	//ï¿½ï¿½ï¿½ï¿½sqlï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½È¡logï¿½Ä¼ï¿½ï¿½ï¿½
 	string sqlf = string(sqlfile);
 	string sqlfilename = sqlf.substr(sqlf.rfind("/") + 1);
 	sqlfilename = sqlfilename.substr(0, sqlfilename.find("."));
@@ -85,7 +85,7 @@ int manager_exec(const char *sqlfile, const char *logpath, Connection *con)
 		exit(1);
 	}
 
-	while (getline(sqls, line)) // lineÖÐ²»°üÀ¨Ã¿ÐÐµÄ»»ÐÐ·û
+	while (getline(sqls, line)) // lineï¿½Ð²ï¿½ï¿½ï¿½ï¿½ï¿½Ã¿ï¿½ÐµÄ»ï¿½ï¿½Ð·ï¿½
 	{
 		cout << line << endl;
 		if (line.find('#') != 0) {
