@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="d40e003d-d66e-4875-84c6-1494d4a4d6c0" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/compare_result.sh" beforeDir="false" afterPath="$PROJECT_DIR$/compare_result.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/env_dble.sh" beforeDir="false" afterPath="$PROJECT_DIR$/compose/env_dble.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/install_jdk.sh" beforeDir="false" afterPath="$PROJECT_DIR$/compose/install_jdk.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/install_mysql.sh" beforeDir="false" afterPath="$PROJECT_DIR$/compose/install_mysql.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/install_zookeeper.sh" beforeDir="false" afterPath="$PROJECT_DIR$/compose/install_zookeeper.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/compose/update_dble_version.sh" beforeDir="false" afterPath="$PROJECT_DIR$/compose/update_dble_version.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/environment.py" beforeDir="false" afterPath="$PROJECT_DIR$/environment.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/function/date.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/function/date.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/function/enum.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/function/enum.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/function/hash.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/function/hash.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/function/patternrange.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/function/patternrange.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/function/rangenumber.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/function/rangenumber.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/function/stringhash.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/function/stringhash.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/insert_multi_values.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/insert_multi_values.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/install_uninstall/install_base.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/install_uninstall/install_base.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/install_uninstall/install_dble.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/install_uninstall/install_dble.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/install_uninstall/install_dble_and_zk.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/install_uninstall/install_dble_and_zk.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/install_uninstall/update_dble.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/install_uninstall/update_dble.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/managercmd/reload_config_all.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/managercmd/reload_config_all.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/managercmd/show_sqlX.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/managercmd/show_sqlX.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/reload_conf/rule.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/reload_conf/rule.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/reload_conf/schema-parameter.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/reload_conf/schema-parameter.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/reload_conf/schema.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/reload_conf/schema.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/reload_conf/server.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/reload_conf/server.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/safety/safety.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/safety/safety.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/sequence/sequence.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/sequence/sequence.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/setup.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/setup.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/sql_cover/manager.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/sql_cover/manager.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/sql_cover/sql.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/sql_cover/sql.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/features/sql_cover/test.feature" beforeDir="false" afterPath="$PROJECT_DIR$/features/sql_cover/test.feature" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/DBUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/DBUtil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Logging.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Logging.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/Node.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/Node.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/SSHUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/SSHUtil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/SqlThread.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/SqlThread.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/XMLUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/XMLUtil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/__init__.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/generate_util.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/generate_util.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/lib/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/lib/utils.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/SqlUtil.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/SqlUtil.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/restart.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/restart.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/resultset_compare.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/resultset_compare.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_check_admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_check_admin.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_check_sql.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_check_sql.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_configuration.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_configuration.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_function.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_function.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_insert_values.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_insert_values.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_install.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_install.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_reload.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_reload.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_safety.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_safety.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/steps/step_sequence.py" beforeDir="false" afterPath="$PROJECT_DIR$/steps/step_sequence.py" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="556001813">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.open.time.4" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.extensions.open">
+        <counts>
+          <entry key="py" value="3" />
+        </counts>
+      </usages-collector>
+      <usages-collector id="statistics.file.types.open">
+        <counts>
+          <entry key="Python" value="3" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
+  <component name="FileEditorManager">
+    <leaf />
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.</replace>
+    </replaceStrings>
+    <dirStrings>
+      <dir>D:\branch\dble-test-suite</dir>
+    </dirStrings>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="JsBuildToolGruntFileManager" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsBuildToolPackageJson" detection-done="true" sorting="DEFINITION_ORDER" />
+  <component name="JsGulpfileManager">
+    <detection-done>true</detection-done>
+    <sorting>DEFINITION_ORDER</sorting>
+  </component>
+  <component name="ProjectFrameBounds">
+    <option name="width" value="1366" />
+    <option name="height" value="728" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="Scope" />
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="dble-test-suite" type="b2602c69:ProjectViewProjectNode" />
+              <item name="dble-test-suite" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d40e003d-d66e-4875-84c6-1494d4a4d6c0" name="Default Changelist" comment="" />
+      <created>1558927961590</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1558927961590</updated>
+    </task>
+    <servers />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1366" height="728" extended-state="0" />
+    <layout>
+      <window_info id="Favorites" side_tool="true" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24961714" />
+      <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
+      <window_info anchor="bottom" id="Docker" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Database Changes" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Python Console" />
+      <window_info anchor="bottom" id="Terminal" />
+      <window_info anchor="bottom" id="Event Log" side_tool="true" />
+      <window_info anchor="bottom" id="Message" order="0" />
+      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info anchor="bottom" id="Run" order="2" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="6" />
+      <window_info anchor="right" id="SciView" />
+      <window_info anchor="right" id="Database" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/behave_dble/features/environment.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="37" selection-start-column="37" selection-end-column="37" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/environment.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+  </component>
+</project>
