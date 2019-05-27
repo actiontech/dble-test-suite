@@ -1,5 +1,5 @@
 # Copyright (C) 2016-2019 ActionTech.
-# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: Functional testing of global sequences
   Scenario: Configuration test for local file mode
     #1 test config
