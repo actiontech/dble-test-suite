@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright (C) 2016-2019 ActionTech.
-# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 #clean mysqld before testing, including: drop none-sys databases, reset replication relation, prepare uproxy wanted database and table for delay checking
 mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3")
 
