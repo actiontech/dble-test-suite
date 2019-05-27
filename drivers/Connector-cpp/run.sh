@@ -1,6 +1,6 @@
 #!/bin/bash
 # Copyright (C) 2016-2019 ActionTech.
-# License: http://www.gnu.org/licenses/gpl.html GPL version 2 or higher.
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 need_compare=${1-"false"}
 
 rm -rf sql_logs
