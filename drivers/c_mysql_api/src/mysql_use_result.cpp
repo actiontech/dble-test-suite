@@ -17,7 +17,7 @@ void case_mysql_use_result(MYSQL* mysql){
     unsigned int  i;
     MYSQL_FIELD *field;
 
-	myquery(mysql, "SELECT * FROM sharding_4_t1");
+	myquery(mysql, "SELECT * FROM sharding_4_t1 order by id");
 	MYSQL_RES  *result = mysql_use_result(mysql);
 	printf("    pass! mysql_use_result \n");
 	unsigned int num_fields = mysql_field_count(mysql);

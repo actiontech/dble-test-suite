@@ -6,7 +6,7 @@ CXXFLAGS := -g
 INCLUDES := -I/usr/local/mysql/include
 LIBDIRS  :=-L/usr/local/mysql/lib
 LINK     :=-lmysqlclient
-BIN      := ./
+BIN      := .
 SOURCES  := *.cpp 
 PROGRAM  :=c_mysql_api.o
 
@@ -17,4 +17,4 @@ clean :
 	-${RM} ${BIN}/${PROGRAM}
 	-${RM} *.o
 install :
-	-${MV} ${PROGRAM} ${BIN}
+	-chmod +x ${BIN}/${PROGRAM}
