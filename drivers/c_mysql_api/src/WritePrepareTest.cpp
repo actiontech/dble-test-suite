@@ -11,6 +11,9 @@
 void wPrepareTest() {
 	printf("==>write prepare statement related test suites\n");
 
+    const char* para1="hello";
+    const char* para2="stmt";
+    const char* para12="hello stmt";
     /* Bind the data for all 3 parameters */
     memset(wbind, 0, sizeof(wbind));
     MYSQL *conn = getConn();
@@ -41,15 +44,15 @@ void wPrepareTest() {
     strcpy(sql, "truncate ");
     strcat(sql, TEST_TABLE);
     myquery(conn, sql);
-    MYSQL_STMT *rstmt = create_stmt_and_prepare(conn, "hello ", "stmt");
-    execStmtAndCmp(rstmt,conn, "hello stmt");
+    MYSQL_STMT *rstmt = create_stmt_and_prepare(conn, const_cast<char*>(para1), const_cast<char*>(para2));
+    execStmtAndCmp(rstmt,conn, const_cast<char*>(para12));
     printf("    start transaction read only\n");
     myquery(conn, "start transaction read only");
     execWStmtAndCmp(stmt, 3, 2);
     myquery(conn, "commit");
     printf("    commit trx\n");
     execWStmtAndCmp(stmt, 1, 2);
-    execStmtAndCmp(rstmt,conn, "hello stmt");
+    execStmtAndCmp(rstmt,conn, const_cast<char*>(para12));
 
     close_stmt(rstmt);
 //*****case3 end
