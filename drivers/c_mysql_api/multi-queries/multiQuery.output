@@ -45,7 +45,7 @@ field 0: schema1             , length:7
 =====sql index 2 result: =====
 result field 0:  USER()
 Number of rows 1
-field 0: test@172.100.9.253  , length:18
+field 0: test@172.100.9.1    , length:16
         More results exist
 =====sql index 3 result: =====
 result field 0:  @@session.auto_increment_increment
@@ -96,7 +96,9 @@ field 0: id                  , length:2field 1: int(11)             , length:7fi
         More results exist
 =====sql index 4 result: =====
 result field 0:  DATABASE
-Number of rows 1
+Number of rows 3
 field 0: schema1             , length:7
+field 0: schema2             , length:7
+field 0: schema3             , length:7
         More results exist
 Could not get next result
