@@ -44,7 +44,7 @@ def step_impl(context, rs_A_name, rs_B_name):
                 idx = int(row_idx['column_index'])
                 isFound = row_A[idx] == row_B[idx]
                 if not isFound: break
-            assert not isFound, "expect {0} row {1} not found in {2}".format(rs_B_name, row_child, rs_A_name)
+            assert not isFound, "expect {0} row {1} not found in {2}".format(rs_B_name, row_B, rs_A_name)
 
 #loop all rows confirm not exist, once exist, throw assertion error
 @Then('check resultset "{rs_name}" has not lines with following column values')
