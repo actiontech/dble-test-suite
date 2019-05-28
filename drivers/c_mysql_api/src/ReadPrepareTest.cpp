@@ -11,14 +11,22 @@
 void doRTest(){
     MYSQL *conn = getConn();
 
+    const char* para1="hello";
+    const char* para2="stmt";
+    const char* para3="stmt2";
+    const char* para4="stmt3";
+    const char* para12="hello stmt";
+    const char* para13="hello stmt2";
+    const char* para14="hello stmt3";
+
     createTable(conn);
 
-    MYSQL_STMT *stmt = create_stmt_and_prepare(conn, "hello ", "stmt");
+    MYSQL_STMT *stmt = create_stmt_and_prepare(conn, const_cast<char*>(para1), const_cast<char*>(para2));
     unsigned long type = CURSOR_TYPE_READ_ONLY;
     mysql_stmt_attr_set(stmt, STMT_ATTR_CURSOR_TYPE, (void*)&type);
 
 //******case1:read prepare execute correctly
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 //******case1 end
 
 //******case2:during read prepare, sqls that should be sent to master should still be sent to master
@@ -28,30 +36,30 @@ void doRTest(){
 
 //*****case3:two read prepare should not affact each other
     printf("    *****two read ps should not affact each other*****\n");
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 
-	MYSQL_STMT *stmt2 = create_stmt_and_prepare(conn, "hello ", "stmt2");
+	MYSQL_STMT *stmt2 = create_stmt_and_prepare(conn, const_cast<char*>(para1), const_cast<char*>(para3));
 
-	execStmtAndCmp(stmt2, conn, "hello stmt2");
+	execStmtAndCmp(stmt2, conn, const_cast<char*>(para13));
 
 	/* Close the statement */
 	close_stmt(stmt2);
 	printf("    close one ps.\n");
 
 	//this is the point
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 //******case3 end
 //*****case4:read prepare should correctly change from one slave to master if needed
     printf("    *****read ps should correctly change from one slave to master if needed*****\n");
     printf("    start transaction.\n");
 	myquery(conn, "start transaction;");
 
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 
     printf("    commit.\n");
 	myquery(conn, "commit;");
 
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 //*****case4 end
 
 //*****case5 diffenent ps on diffenent conns will not affected by each other.
@@ -62,7 +70,7 @@ void doRTest(){
 	//case5-step2
 	MYSQL *conn2 = getConn();
 
-    MYSQL_STMT *stmt3 = create_stmt_and_prepare(conn2, "hello ", "stmt3");
+    MYSQL_STMT *stmt3 = create_stmt_and_prepare(conn2, const_cast<char*>(para1), const_cast<char*>(para4));
 
 	//case5-step3
 	MYSQL *conn3 = getConn();
@@ -73,10 +81,10 @@ void doRTest(){
 	myquery(conn, "commit;");
 
 	//case5-step5
-	execStmtAndCmp(stmt3,conn2, "hello stmt3");
-	execStmtAndCmp(stmt,conn, "hello stmt");
-	execStmtAndCmp(stmt3,conn2, "hello stmt3");
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt3,conn2, const_cast<char*>(para14));
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
+	execStmtAndCmp(stmt3,conn2, const_cast<char*>(para14));
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 
 	//case5-step6
 	MYSQL *conn4 = getConn();
@@ -88,7 +96,7 @@ void doRTest(){
 
 	//case5-step8
 	close_stmt(stmt3);
-	execStmtAndCmp(stmt,conn, "hello stmt");
+	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 
 	//clear
 	mysql_close(conn2);
