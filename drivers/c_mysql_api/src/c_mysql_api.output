@@ -1,0 +1,85 @@
+    pass! mysql_real_escape_string, Failed to insert row, Error: syntax error, error in :'is this','binary data: \0\r\n'', expect IDENTIFIER, actual IDENTIFIER pos 4, line 1, column 5, token IDENTIFIER null
+    pass! after mysql_set_local_infile_handler, query 'load data local infile ...' ,stat: 2000     read() error on reading line 3
+IS_DEBUG: 0, argc:1, argv[1]:HOSTNAME=dble-1
+    create new conn! 
+    host:172.100.9.1, use:test, passwd:111111, port:8066 
+==>mysql_field_count test suits
+    pass! drop table does not return data, mysql_field_count gets 0. 
+==>mysql_get_host_info && mysql_get_options && mysql_get_proto_info test suits
+    pass! mysql_get_host_info,host info: 172.100.9.1 via TCP/IP
+    pass! mysql_get_options 
+    pass! mysql_get_proto_info, protocol version: 10d
+    pass! mysql_get_ssl_cipher,conn cipher: (null)
+==>mysql_insert_id test suites
+    pass! mysql_insert_id:1
+==>mysql_list_dbs && mysql_list_tables test suites 
+    pass! mysql_list_dbs 
+    pass! mysql_list_tables: 
+==>mysql_options4 && mysql_ping test suites
+    pass! mysql_options4 passed.
+    pass! mysql_ping passed!
+==>mysql_real_escape_string test suites
+    pass! mysql_real_escape_string_quote
+==> mysql_real_query test suites
+    pass! mysql_real_query mult-query success
+==>case: mysql_row_seek test suits
+    pass! mysql_row_seek pass
+==>mysql_select_db test suites
+    pass! create a table after mysql_select_db, then select from new_db.new_table success! 
+==>mysql_set_character_set && mysql_get_character_set_info test suites
+    pass! mysql_set_character_set set charset utf8 .
+    pass! mysql_get_character_set_info character set name: utf8_general_ci
+==>mysql_session_track_get_first && mysql_session_track_get_next test suites
+    query 'use dbname', Number of rows affected: 0
+    call mysql_session_track_get_first:
+    mysql_session_track_get_first failed, type:0 
+    mysql_session_track_get_first failed, type:1 
+    mysql_session_track_get_first failed, type:2 
+    mysql_session_track_get_first failed, type:3 
+    mysql_session_track_get_first failed, type:4 
+    mysql_session_track_get_first failed, type:5 
+==>mysql_set_local_infile_handler test suites
+    local_infile_init 'infile_source.txt' ('(null)')
+    local_infile_read line 1 (buf_len: 8192)
+    local_infile_read line 2 (buf_len: 8192)
+    local_infile_read line 3 (buf_len: 8192)
+    forcing error
+    local_infile_error
+    local_infile_end
+==>mysql_sqlstate test suites
+    pass! query 'use schema1/*a*/', mysql_sqlstate: HY000
+    pass! send query to admin port, mysql_sqlstate: HY000
+==> mysql_stat test suites
+    pass! mysql_stat: Unknown command
+==>mysql_thread_id && mysql_warning_count test suites
+    create new conn! 
+    host:172.100.9.1, use:test, passwd:111111, port:8066 
+    pass! after kill thread_id by mysql_thread_id query get 'lost connection to ...'
+    pass! mysql_warning_count: 0
+==>mysql_use_result && mysql_field_count && mysql_fetch_row && mysql_fetch_field_direct && mysql_free_result test suites
+    pass! mysql_use_result 
+    pass! mysql_field_count:1 
+    pass! mysql_fetch_row:
+    id: 1,
+    id: 2,
+    id: 3,
+    pass! mysql_free_result:
+==>mysql_real_query send queries end with null test suites
+    pass! multi-queries without ';' in the last query success
+    print multi resultsets:
+    0 rows affected
+    More results exist
+    Could not execute statement
+    pass! multi-queries without ';' in the last query, and queries before the last end with a \0 fail, err: sql syntax error, no terminated. IDENTIFIER
+    pass! multi-queries without ';' in the last query, and last query start with \0 success.
+    print multi resultsets:
+    0 rows affected
+    More results exist
+    0 rows affected
+    More results exist
+    Could not execute statement
+    pass! 'select 1\0,2', err: sql syntax error, no terminated. IF
+    pass! 'select 1,\02', err: sql syntax error, no terminated. EXISTS
+    pass! 'select '1,\02'', err: sql syntax error, no terminated. EXISTS
+    pass! '\0select '1'', err: syntax error, error in :'elect '1,'
+!!!Test Over!!!
