@@ -159,6 +159,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | test | 111111 | conn_1 | False    | begin                                 | success    | schema1 |
       | test | 111111 | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Then execute admin cmd "reload @@config_all -r -f -s"
+    Given sleep "1" seconds
     Then get resultset of admin cmd "show @@backend" named "backend_rs_I"
     Then check resultsets "backend_rs_I" does not including resultset "backend_rs_H" in following columns
       |column            | column_index |
