@@ -12,6 +12,8 @@ void case_mysql_set_server_option(MYSQL* conn)
 {
 	printf("==>mysql_set_server_option test suites\n");
 
+    const char* sql="select count(*) from sharding_4_t1";
+
     if(mysql_set_server_option(conn,MYSQL_OPTION_MULTI_STATEMENTS_ON)){
         printf("set mysql_set_server_option get err:%s\n", mysql_error(conn));
 		exit(1);
@@ -35,7 +37,7 @@ void case_mysql_set_server_option(MYSQL* conn)
 				}
 			} while (status == 0);
 
-			doQueryWithExpectInt(conn, "select count(*) from sharding_4_t1", 0);
+			doQueryWithExpectInt(conn, const_cast<char*>(sql), 0);
 			mysql_set_server_option(conn, MYSQL_OPTION_MULTI_STATEMENTS_OFF);
 			printf("    pass! after mysql_set_server_option MYSQL_OPTION_MULTI_STATEMENTS_ON, execute mult-query success!\n");
 
