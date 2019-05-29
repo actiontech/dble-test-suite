@@ -123,7 +123,6 @@ Feature: Functional testing of global sequences
         | user | passwd | conn   | toClose | sql                                                            | expect      | db      |
         | test | 111111 | conn_0 | True    | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
-  @skip
   Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
   #    case points:
   #  1.Verify the illegal value of the WORKID
