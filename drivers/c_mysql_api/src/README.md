@@ -18,7 +18,6 @@ bash c_mysql_api.sh
    /etc/ld.so.conf.d/mariadb-x86_64.conf，添加mysql lib的路径并执行 ldconfig
  
 ## 不使用Makefile,手动编译（相关mysql文件夹路径自行替换）：
-g++ -g -o c_mysql_api.o -L/usr/local/mysql/lib -I/usr/local/mysql/include -lmysqlclient *.cpp
-
+g++ -g *.cpp -o c_mysql_api.o -L/usr/local/mysql/lib -I/usr/local/mysql/include -lmysqlclient
 ## 调试：
 ./c_mysql_api.o 
