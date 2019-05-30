@@ -10,7 +10,7 @@ SOURCES  := *.cpp
 PROGRAM  :=multiQuery.o
 
 ${PROGRAM} : ${SOURCES}
-	$(CXX) ${CXXFLAGS} -o ${PROGRAM}  ${LIBDIRS} ${INCLUDES}  ${LINK}  ${SOURCES}
+	$(CXX) ${CXXFLAGS} ${SOURCES} -o ${PROGRAM}  ${LIBDIRS} ${INCLUDES}  ${LINK}
 clean :
 	-${RM} ${BIN}/${PROGRAM}
 install :
