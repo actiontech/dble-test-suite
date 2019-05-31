@@ -16,4 +16,7 @@ RUN cd /opt/yaml-cpp-release-0.5.1/build &&\
 RUN mkdir ~/.ssh
 RUN sed -i -e "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
 RUN echo root:sshpass|chpasswd
+
+COPY * /docker-build/
+
 CMD ["/bin/bash"]
