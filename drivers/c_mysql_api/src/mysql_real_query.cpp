@@ -21,7 +21,7 @@ void case_mysql_real_query(MYSQL* conn){
             exit(1);
         }
 
-        char sql[105];
+        char sql[106];
 //        sprintf(sql, "create table tttt(id int);insert into tttt values(1)");
         sprintf(sql, "drop table if exists sharding_4_t1;create table sharding_4_t1(id int);insert into sharding_4_t1 values(1)");
 //        printf("%s\n", sql);
