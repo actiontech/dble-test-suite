@@ -21,7 +21,7 @@ void case_null_in_sql(){
 	}
 
 	//*****case1:multi-queries without ';' in the last query;
-	char sql[50];
+	char sql[105];
 	sprintf(sql, "drop table if exists sharding_4_t1;create table sharding_4_t1(id int);create table sharding_4_t1(id int)");
 	//	printf("%s\n", sql);
 	int status = mysql_real_query(mysql, sql, 50);
