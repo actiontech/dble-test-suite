@@ -11,7 +11,7 @@
 void wPrepareTest() {
 	printf("==>write prepare statement related test suites\n");
 
-    const char* para1="hello";
+    const char* para1="hello ";
     const char* para2="stmt";
     const char* para12="hello stmt";
     /* Bind the data for all 3 parameters */
@@ -38,6 +38,7 @@ void wPrepareTest() {
 
 //*****case2 end
 
+/* dble do not support the stmt "start transaction read only"
 //*****case3:during read tx, cant execute write prepare, after tx over, both r/w-prepare work fine
     printf("    *****during read tx, cant execute write prepare, after tx over, both r/w-prepare work fine*****\n");
     char sql[50];
@@ -71,7 +72,7 @@ void wPrepareTest() {
 //*****case5:after master prepare close, select should be sent to slave
     myquery(conn, slave_sql);
     printf("    pass! after write ps close, select should be sent to slave.\n");
-
+*/
     res = mysql_store_result(conn);
     mysql_free_result(res);
 //*****case5 end
