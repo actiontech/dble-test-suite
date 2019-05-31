@@ -11,7 +11,7 @@
 void doRTest(){
     MYSQL *conn = getConn();
 
-    const char* para1="hello";
+    const char* para1="hello ";
     const char* para2="stmt";
     const char* para3="stmt2";
     const char* para4="stmt3";
