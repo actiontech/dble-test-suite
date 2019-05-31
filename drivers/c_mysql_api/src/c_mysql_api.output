@@ -1,3 +1,4 @@
+    pass! no default db, 'show tables' get Error:No database selected, Error no: 1046
     pass! mysql_real_escape_string, Failed to insert row, Error: syntax error, error in :'is this','binary data: \0\r\n'', expect IDENTIFIER, actual IDENTIFIER pos 4, line 1, column 5, token IDENTIFIER null
     pass! after mysql_set_local_infile_handler, query 'load data local infile ...' ,stat: 2000     read() error on reading line 3
 IS_DEBUG: 0, argc:1, argv[1]:HOSTNAME=dble-1
@@ -18,12 +19,31 @@ IS_DEBUG: 0, argc:1, argv[1]:HOSTNAME=dble-1
 ==>mysql_options4 && mysql_ping test suites
     pass! mysql_options4 passed.
     pass! mysql_ping passed!
+==>mysql_real_connect && mysql_character_set_name && mysql_data_seek && mysql_info && mysql_dump_debug_info test suites 
+connect success    *****pass! mysql_real_connect create conn with no default db allow multi-statements success*****
+    pass! single sql success
+    pass! multi sqls success
+        print multi resultsets:
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+        0 rows affected
+        More results exist
+        1 rows affected
+        More results exist
+        1 rows affected
+        More results exist
+        1 rows affected
+        More results exist
+    *****pass! mysql_character_set_name, character set: latin1*****
+    *****pass! mysql_data_seek*****
+    *****pass! mysql_info*****
+        mysql_info: (null)
 ==>mysql_real_escape_string test suites
     pass! mysql_real_escape_string_quote
 ==> mysql_real_query test suites
     pass! mysql_real_query mult-query success
-==>case: mysql_row_seek test suits
-    pass! mysql_row_seek pass
 ==>mysql_select_db test suites
     pass! create a table after mysql_select_db, then select from new_db.new_table success! 
 ==>mysql_set_character_set && mysql_get_character_set_info test suites
@@ -60,13 +80,15 @@ IS_DEBUG: 0, argc:1, argv[1]:HOSTNAME=dble-1
     pass! mysql_use_result 
     pass! mysql_field_count:1 
     pass! mysql_fetch_row:
-    id: 1,
-    id: 2,
-    id: 3,
+    id: 1, 
+    id: 2, 
+    id: 3, 
     pass! mysql_free_result:
 ==>mysql_real_query send queries end with null test suites
     pass! multi-queries without ';' in the last query success
     print multi resultsets:
+    0 rows affected
+    More results exist
     0 rows affected
     More results exist
     Could not execute statement
