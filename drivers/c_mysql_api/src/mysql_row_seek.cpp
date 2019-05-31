@@ -10,7 +10,7 @@
 void case_mysql_row_seek(MYSQL* conn){
 	printf("==>case: mysql_row_seek test suits\n");
 
-	char sql[200];
+	char sql[100];
 	createAndFillTable(conn);
 
     strcpy(sql, "select * from sharding_4_t1");
