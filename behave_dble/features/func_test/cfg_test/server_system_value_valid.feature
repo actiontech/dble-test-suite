@@ -87,7 +87,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | serverBacklog               | 2048                            |
       | serverNodeId                | 1                               |
       | showBinlogStatusTimeout     | 300ms                           |
-      | maxCon                      | 1024                            |
+      | maxCon                      | 0                            |
       | useCompression              | 0                               |
       | usingAIO                    | 0                               |
       | useZKSwitch                 | true                            |
