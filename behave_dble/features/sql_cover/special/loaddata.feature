@@ -94,4 +94,38 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
         | test   | 111111    | conn_0 | False   | load data local infile './ld.txt' into table test_auto fields terminated by ',' lines terminated by '\n' (name);                                                                                               |success       | schema1 |
         | test   | 111111    | conn_0 | False   | select * from test_auto                                                                                                                                                                                                     |length{(1)}  | schema1 |
     Given remove local and server file "ld.txt"
-    
+
+
+  Scenario: : Load data when the column content only has one '"' at the begining - issue:1182   #4
+     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    """
+        <table name="test_shard" dataNode="dn1"/>
+    """
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="maxCharsPerColumn">10</property>
+    """
+    Given Restart dble in "dble-1" success
+    Given create local and server file "aa.txt" and fill with text
+     """
+      1,"ab
+      2,cde
+      3,fgh
+     """
+    Given create local and server file "bb.txt" and fill with text
+     """
+      1,"ab
+      2,"cde
+      3,fgh"
+     """
+    Then execute sql in "dble-1" in "user" mode
+        | user   | passwd    | conn   | toClose | sql                                                                                                                                                         | expect       | db     |
+        | test   | 111111    | conn_0 | False   | drop table if exists test_shard                                                                                                                         | success      | schema1 |
+        | test   | 111111    | conn_0 | False   | create table test_shard(id int,name char(20))                                                                                                         | success      | schema1 |
+        | test   | 111111    | conn_0 | False   | load data local infile './aa.txt' into table test_shard character SET 'utf8' fields terminated by ',' lines terminated by '\n';           |success       | schema1 |
+        | test   | 111111    | conn_0 | False   | load data local infile './bb.txt' into table test_shard character SET 'utf8' fields terminated by ',' lines terminated by '\n';           |success       | schema1 |
+        | test   | 111111    | conn_0 | False   | select * from test_shard                                                                                                                                  |length{(6)}  | schema1 |
+        | test   | 111111    | conn_0 | False   | drop table if exists test_shard                                                                                                                         |success       | schema1 |
+    Given remove local and server file "aa.txt"
+    Given remove local and server file "bb.txt"
+
