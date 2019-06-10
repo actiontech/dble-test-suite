@@ -57,6 +57,7 @@ Feature: show @@connection.sql test
       | EXECUTE_TIME-5 | SQL-6                |
       |    90+200      | select sleep(0.1)    |
 
+  @skip
   @TRIVIAL
   Scenario: multiple session with multiple query display #3
     Then execute sql in "dble-1" in "user" mode
