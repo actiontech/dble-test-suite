@@ -34,7 +34,15 @@ def restart_mysql(context, host):
     update_file_content(context, "/etc/my.cnf", host)
 
     start_mysql(context, host)
+    
+@Given('restart mysql in "{host}"')
+def restart_mysql(context, host):
+    stop_mysql(context, host)
 
+    time.sleep(10)
+
+    start_mysql(context, host)
+    
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
     mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
@@ -69,6 +77,7 @@ def start_mysql(context, host):
     obj = re.search(success_p, out)
     isSuccess = obj is not None
     assert isSuccess, "start mysql in host:{0} err: {1}".format(host, err)
+    
 
 @Given('connect after restart success')
 def step_impl(context):
