@@ -57,6 +57,13 @@ def step_impl(context, adminsql, rs_name):
     assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
     setattr(context, rs_name, result)
 
+@Then('get resultset of user cmd "{sql}" named "{rs_name}"')
+def step_impl(context, sql, rs_name):
+    dble_conn = get_dble_conn(context)
+    result, error = dble_conn.query(sql)
+    assert error is None, "execute adminsql {0}, get error:{1}".format(sql, error)
+    setattr(context, rs_name, result)
+    
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):
     xmlSeg = get_xml_from_str(context.text)
