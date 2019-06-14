@@ -70,23 +70,42 @@ def step_impl(context, rs_name):
         context.logger.info("expect row:{0}, not found".format(expect_row))
 
 #once found expect, break loop
+@Then('check resultset "{rs_name}" has corresponding lines with following column values')
 @Then('check resultset "{rs_name}" has lines with following column values')
 def step_impl(context, rs_name):
-    # headings in form "columnName-columnIndex"
+
     col_idx_list = []
+    check_line =False
+
     for str in context.table.headings:
-        assert str.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
-        idx = int(str.split("-")[-1])
-        col_idx_list.append(idx)
+        if str.rfind('expect_result_line')!=-1:
+            check_line =True
+            continue
+        else:
+            # headings in form "columnName-columnIndex"
+            assert str.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
+            idx = int(str.split("-")[-1])
+            col_idx_list.append(idx)
 
     rs = getattr(context, rs_name)
     for expect_row in context.table:
         isFound = False
+        real_line = 0
+        expect_line = 0
         for rs_row in rs:
+            real_line = real_line +1
             for i in range(len(expect_row)):
-                col_idx = col_idx_list[i]
+                if (check_line):
+                    col_idx = col_idx_list[i - 1]
+                else:
+                    col_idx = col_idx_list[i]
+                    
+                if (expect_row[i].rfind('expect_result_line:') != -1):
+                    expect_line = int(expect_row[i].split(":")[-1])
+                    continue
+            
                 real_col = rs_row[col_idx]
-                if ( expect_row[i].rfind('+') != -1 ):
+                if( expect_row[i].rfind('+') != -1 ):
                     expect =expect_row[i].split("+")
                     expect_min = int(expect[0])
                     expect_max = int(expect[-1])+expect_min
@@ -98,8 +117,11 @@ def step_impl(context, rs_name):
                     if (expect_row[i].rfind('$') != -1):
                         dble_version =  context.cfg_dble['ftp_path'].split('/')[-2]
                         expect_col = expect_col.replace("${version}",dble_version)
-                    isFound = unicode(real_col) == unicode(expect_col)
-                    # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
+                    if (check_line):
+                        isFound = (unicode(real_col) == unicode(expect_col)) and (real_line == expect_line)
+                    else:
+                        isFound = (unicode(real_col) == unicode(expect_col))
+                        # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
         assert isFound, "expect line not found in resultset {0}".format(rs_name)
