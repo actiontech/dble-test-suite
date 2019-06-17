@@ -110,66 +110,66 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         | test | 111111 | conn_0 | True    | CREATE TABLE schema2.global_4_t1(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8 | success   | schema1 |
         | test | 111111 | conn_0 | True    | CREATE TABLE schema2.sharding_4_t2(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARSET=UTF8 | success   | schema1 |
     Then get resultset of user cmd "explain select * from sharding_4_t1,sharding_2_t1;" named "explain_result_A"
-    Then check resultset "explain_result_A" has corresponding lines with following column values
+    Then check resultset "explain_result_A" has lines with following column values
         | expect_result_line                      | DATA_NODE-0     | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE        |
         | expect_result_line:9                    | merge_2          | MERGE        |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id=b.id" named "explain_result_B"
-    Then check resultset "explain_result_B" has corresponding lines with following column values
+    Then check resultset "explain_result_B" has lines with following column values
         | expect_result_line                      | DATA_NODE-0                 | TYPE-1                  |
         | expect_result_line:5                    | merge_and_order_1          | MERGE_AND_ORDER        |
         | expect_result_line:9                    | merge_and_order_2          | MERGE_AND_ORDER        |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id=b.id and a.id>b.id" named "explain_result_C"
-    Then check resultset "explain_result_C" has corresponding lines with following column values
+    Then check resultset "explain_result_C" has lines with following column values
         | expect_result_line                      | DATA_NODE-0                 | TYPE-1                  |
         | expect_result_line:5                    | merge_and_order_1          | MERGE_AND_ORDER        |
         | expect_result_line:9                    | merge_and_order_2          | MERGE_AND_ORDER        |
         | expect_result_line:12                   | where_filter_1             | WHERE_FILTER            |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id>b.id" named "explain_result_D"
-    Then check resultset "explain_result_D" has corresponding lines with following column values
+    Then check resultset "explain_result_D" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE         |
         | expect_result_line:9                    | merge_2          | MERGE         |
         | expect_result_line:12                   | where_filter_1  | WHERE_FILTER |
     Then get resultset of user cmd "explain select * from sharding_4_t1 union select * from sharding_2_t1" named "explain_result_E"
-    Then check resultset "explain_result_E" has corresponding lines with following column values
+    Then check resultset "explain_result_E" has lines with following column values
         | expect_result_line                      | DATA_NODE-0     | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE        |
         | expect_result_line:9                    | merge_2          | MERGE        |
     Then get resultset of user cmd "explain select a.id,b.id,c.pad from sharding_4_t1 a,sharding_2_t1 b,sharding_3_t1 c where a.id=c.pad and b.id=c.m_id" named "explain_result_F"
-    Then check resultset "explain_result_F" has corresponding lines with following column values
+    Then check resultset "explain_result_F" has lines with following column values
         | expect_result_line                      | DATA_NODE-0         | TYPE-1            |
         | expect_result_line:5                    | merge_1             | MERGE             |
         | expect_result_line:9                    | merge_2             | MERGE             |
         | expect_result_line:17                   | merge_and_order_1  | MERGE_AND_ORDER |
     Then get resultset of user cmd "explain select * from tb_parent a,tb_child1 b on a.id=b.id" named "explain_result_G"
-    Then check resultset "explain_result_G" has corresponding lines with following column values
+    Then check resultset "explain_result_G" has lines with following column values
         | expect_result_line                      | DATA_NODE-0                 | TYPE-1                  |
         | expect_result_line:3                    | merge_and_order_1          | MERGE_AND_ORDER        |
         | expect_result_line:7                    | merge_and_order_2          | MERGE_AND_ORDER        |
     Then get resultset of user cmd "explain select * from tb_parent a,tb_child1 b on a.id=b.child1_id" named "explain_result_H"
-    Then check resultset "explain_result_H" has corresponding lines with following column values
+    Then check resultset "explain_result_H" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:3                    | merge_1          | MERGE        |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.id=b.id" named "explain_result_I"
-    Then check resultset "explain_result_I" has corresponding lines with following column values
+    Then check resultset "explain_result_I" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE        |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.pad=b.pad" named "explain_result_J"
-    Then check resultset "explain_result_J" has corresponding lines with following column values
+    Then check resultset "explain_result_J" has lines with following column values
         | expect_result_line                      | DATA_NODE-0                 | TYPE-1                  |
         | expect_result_line:5                    | merge_and_order_1          | MERGE_AND_ORDER        |
         | expect_result_line:11                   | merge_and_order_2          | MERGE_AND_ORDER        |
     Then get resultset of user cmd "explain select * from schema2.global_4_t2 a join schema2.global_4_t1 b on a.id=b.id" named "explain_result_K"
-    Then check resultset "explain_result_K" has corresponding lines with following column values
+    Then check resultset "explain_result_K" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:2                    | merge_1          | MERGE        |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a join schema2.global_4_t1 b on a.id=b.id" named "explain_result_M"
-    Then check resultset "explain_result_M" has corresponding lines with following column values
+    Then check resultset "explain_result_M" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE        |
     Then get resultset of user cmd "explain select * from (select * from sharding_4_t1) a join schema2.global_4_t1 b on a.id=b.id" named "explain_result_L"
-    Then check resultset "explain_result_L" has corresponding lines with following column values
+    Then check resultset "explain_result_L" has lines with following column values
         | expect_result_line                     | DATA_NODE-0                 | TYPE-1             |
         | expect_result_line:5                   | merge_and_order_1          | MERGE_AND_ORDER   |
         | expect_result_line:10                  | merge_1                     | MERGE               |
