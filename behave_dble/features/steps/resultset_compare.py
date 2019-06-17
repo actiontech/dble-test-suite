@@ -70,7 +70,6 @@ def step_impl(context, rs_name):
         context.logger.info("expect row:{0}, not found".format(expect_row))
 
 #once found expect, break loop
-@Then('check resultset "{rs_name}" has corresponding lines with following column values')
 @Then('check resultset "{rs_name}" has lines with following column values')
 def step_impl(context, rs_name):
 
@@ -95,17 +94,17 @@ def step_impl(context, rs_name):
         for rs_row in rs:
             real_line = real_line +1
             for i in range(len(expect_row)):
-                if (check_line):
+                if (check_line): #need to check the number of rows,the comparison need to start from the second column
                     col_idx = col_idx_list[i - 1]
                 else:
                     col_idx = col_idx_list[i]
                     
-                if (expect_row[i].rfind('expect_result_line:') != -1):
+                if (expect_row[i].rfind('expect_result_line:') != -1): #Get the expected number of rows when comparing the number of rows
                     expect_line = int(expect_row[i].split(":")[-1])
                     continue
             
                 real_col = rs_row[col_idx]
-                if( expect_row[i].rfind('+') != -1 ):
+                if( expect_row[i].rfind('+') != -1 ): #actual result tolerance,in the format:"expect_result+tolerance_scope"
                     expect =expect_row[i].split("+")
                     expect_min = int(expect[0])
                     expect_max = int(expect[-1])+expect_min
