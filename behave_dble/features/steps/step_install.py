@@ -226,10 +226,33 @@ def start_zk_services(context):
         start_zk_service(context, node)
 
 def start_zk_service(context, node):
+    if not hasattr(context, "retry_start_zk"):
+        context.retry_start_zk = 0
+        context.start_zk_service = False
     ssh_client = node.ssh_conn
     cmd_start = "{0}/bin/zkServer.sh start".format(context.cfg_zookeeper['home'])
+    cmd_check_port ="netstat -anp|grep 2181"
+    cmd_check_pid = "ps -ef | grep 'zookeeper' | grep -v grep | awk '{print $2}'"
+    
     rc, sto, ste = ssh_client.exec_command(cmd_start)
-    assert_that(sto, contains_string("STARTED"))
+    rc1, sto1, ste1 = ssh_client.exec_command(cmd_check_port)
+    rc2, sto2, ste2 = ssh_client.exec_command(cmd_check_pid)
+   
+    if (sto.rfind('STARTED') == -1):
+        LOGGER.debug("The use of port number 2181:{0}".format(sto1))
+        LOGGER.debug("the pid of zookeeper:{0}".format(sto2))
+        if context.retry_start_zk<5:
+            context.retry_start_zk =context.retry_start_zk+1
+            time.sleep(5)
+            start_zk_service(context, node)
+        else:
+            LOGGER.info("dble started failed after 5 times try")
+            delattr(context, "retry_start_dble")
+    else:
+        context.start_zk_service = True
+        delattr(context, "retry_start_zk")
+
+    assert_that(context.start_zk_service == True, "Expect start zk successful in {0},but failed".format(node))
 
 # zk cluster must start all,there are waiting between them, then check status
 def check_zk_status(context, node):
