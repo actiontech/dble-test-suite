@@ -329,6 +329,7 @@ Feature: test "check full @@metadata...'"
       | root | 111111 | conn_0 | True    | show @@version                                                     | success                            |     |
       | root | 111111 | conn_0 | True    | reload @@metadata                                                  | success                            |     |
     Given start mysql in host "mysql-master1"
+    Given sleep "10" seconds
     #6.2 Unable to connect to datahost has readhost
     Given stop mysql in host "mysql-master2"
     Given Restart dble in "dble-1" success
@@ -345,6 +346,7 @@ Feature: test "check full @@metadata...'"
       | root | 111111 | conn_0 | True    | show @@version                                                        | success                            |     |
       | root | 111111 | conn_0 | True    | reload @@metadata                                                     | success                            |     |
     Given start mysql in host "mysql-master2"
+    Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect  | db     |
       | test | 111111 | conn_0 | True    | drop table if exists test_shard    | success | schema1 |
