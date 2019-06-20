@@ -274,6 +274,81 @@ Feature: test some import nodes attr in schema.xml
       | test | 111111 | conn_1 | True    | commit                                                      | success | schema1 |
       | test | 111111 | conn_2 | True    | set @x = 1                                                 | success | schema1 |
 
+  Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
+              increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #10
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="dataNodeIdleCheckPeriod">1000</property>
+        <property name="dataNodeHeartbeatPeriod">300000000</property>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="1000" minCon="1" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="1000" minCon="1" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+    </writeHost>
+    </dataHost>
+    """
+    Given Restart dble in "dble-1" success
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given sleep "5" seconds
+    Then execute sql in "dble-1" in "admin" mode
+        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
+        | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="1000" minCon="3" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="1000" minCon="2" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+    </writeHost>
+    </dataHost>
+    """
+    Then execute admin cmd "reload @@config_all -f"
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given sleep "5" seconds
+    Then execute sql in "dble-1" in "admin" mode
+        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
+        | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
+
+  Scenario:  when minCon > the number of db, the minimum number of surviving connections = (the number of minCon);
+              increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    """
+        <property name="dataNodeIdleCheckPeriod">1000</property>
+        <property name="dataNodeHeartbeatPeriod">300000000</property>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <heartbeat>select user()</heartbeat>
+    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+    </writeHost>
+    </dataHost>
+    """
+    Given Restart dble in "dble-1" success
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given sleep "10" seconds
+    Then execute sql in "dble-1" in "admin" mode
+        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
+        | root | 111111 | conn_0 | True     | show @@backend                                                | length{(16)}   |        |
 
 
 
