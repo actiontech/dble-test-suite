@@ -95,4 +95,23 @@ Feature: #mysql node disconnected,check the change of dble
       | user | passwd | conn   | toClose | sql                          | expect   | db      |
       | test | 111111 | conn_0 | True    | select * from test_table  | success  | schema1 |
 
+  Scenario: # Sending a statement on a transaction to an uncreated physical database   from issue:1144 author:maofei  #4
+    Then execute sql in "mysql-master1"
+      | user | passwd | conn   | toClose  | sql                                   | expect                                           | db     |
+      | test | 111111 | conn_0 | True    | drop database if exists db3        | success                                          |         |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose  | sql                                   | expect                                           | db      |
+      | test | 111111 | conn_0 | False    | set xa=on                            | success                                          | schema1 |
+      | test | 111111 | conn_0 | False    | begin                                 | success                                          | schema1 |
+      | test | 111111 | conn_0 | False    | update test11 set pad=1             | Unknown database 'db3'                        | schema1 |
+      | test | 111111 | conn_0 | False    | commit                                | Transaction error, need to rollback.Reason  | schema1 |
+      | test | 111111 | conn_0 | False    | rollback                              | success                                          | schema1 |
+    Then execute sql in "mysql-master1"
+      | user | passwd | conn   | toClose | sql                                    | expect                                           | db      |
+      | test | 111111 | conn_1 | True    | create database if not exists db3   | success                                         |         |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                             | expect                                  | db      |
+      | test | 111111 | conn_0 | True    | create table if not exists test11(id int)  | success                                | schema1 |
+
+
 
