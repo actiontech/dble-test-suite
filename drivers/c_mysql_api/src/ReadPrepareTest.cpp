@@ -62,6 +62,7 @@ void doRTest(){
 	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 //*****case4 end
 
+/* dble do not support the stmt "start transaction read only"
 //*****case5 diffenent ps on diffenent conns will not affected by each other.
     printf("    *****diffenent ps on diffenent conns will not affected by each other*****\n");
 	//case5-step1
@@ -102,6 +103,7 @@ void doRTest(){
 	mysql_close(conn2);
 	mysql_close(conn4);
 //*****case5 end
+*/
 
 	close_stmt(stmt);
 	mysql_close(conn);
