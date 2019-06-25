@@ -1,3 +1,6 @@
+===file:select/subquery_no_er.sql, id:55, sql:[select (select name from a_test limit 1)]===
+dble:[[('$test$4',)]]
+mysql:[[('test\xe4\xb8\xadid\xe4\xb8\xba1',)]]
 ===file:select/subquery_no_er.sql, id:63, sql:[select * from a_test where (id,pad)=(select id,pad from a_two limit 1)]===
 dble:[None]
 mysql:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
