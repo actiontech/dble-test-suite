@@ -252,3 +252,10 @@ create table schema2.global_4_t1(id int,name varchar(30))
 select a.id,b.id,c.id from schema2.global_4_t1 a,sharding_1_t1 b,sharding_4_t1 c order by a.id,c.id
 #issue:1027
 select a.id,b.name from schema2.global_4_t1 a,sharding_4_t1 b where a.id < (select id from sharding_1_t1 where id = 1)
+#issue:1203
+drop table if exists sharding_4_t1
+create table sharding_4_t1(id int,name varchar(30))
+lock tables `sharding_4_t1` write
+insert into `sharding_4_t1` values(1,'1'),(2,'2'),(3,'3'),(4,'4')
+insert into `sharding_4_t1` values(5,'5'),(6,'6'),(7,'7'),(8,'8')
+unlock tables
