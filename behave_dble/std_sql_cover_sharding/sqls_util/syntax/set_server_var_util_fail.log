@@ -23,10 +23,3 @@ mysql:[[(10L,), (11L,), (12L,)]]
 dble:[None]
 mysql:[()]
 dble err:(1064, "bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1 (data)\nVALUES ('aaa')")
-===file:sqls_util/syntax/set_server_var_util.sql, id:25, sql:[insert into test1 (data) values ('bbb')]===
-dble:[None]
-mysql:[()]
-dble err:(1064, "bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1 (data)\nVALUES ('bbb')")
-===file:sqls_util/syntax/set_server_var_util.sql, id:26, sql:[select id,data from test1 where id is null]===
-dble:[[]]
-mysql:[[(2L, 'bbb')]]
