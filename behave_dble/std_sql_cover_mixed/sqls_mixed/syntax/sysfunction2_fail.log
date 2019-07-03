@@ -5,20 +5,17 @@ mysql:[[(1L, 'X')]]
 dble:[[(2L, 'y')]]
 mysql:[[(2L, 'Y')]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:77, sql:[SELECT CONNECTION_ID()]===
-dble:[[(326L,)]]
-mysql:[[(2200L,)]]
-===file:sqls_mixed/syntax/sysfunction2.sql, id:78, sql:[SELECT CURRENT_USER()]===
-dble:[[('test@172.100.9.253',)]]
-mysql:[[('test@%',)]]
+dble:[[(320L,)]]
+mysql:[[(2202L,)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:81, sql:[select schema()]===
 dble:[[('db3',)]]
 mysql:[[('schema1',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:82, sql:[SELECT SESSION_USER()]===
-dble:[[('test@dble-1.compose_net',)]]
-mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
+dble:[[('test@dble-1.dble_test',)]]
+mysql:[[('test@behave.dble_test',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:83, sql:[SELECT USER()]===
-dble:[[('test@172.100.9.253',)]]
-mysql:[[('test@cpe-172-100-9-253.twcny.res.rr.com',)]]
+dble:[[('test@172.100.9.8',)]]
+mysql:[[('test@behave.dble_test',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:85, sql:[SELECT VERSION()]===
-dble:[[('5.6.29-dble-9.9.9.9-89ec430f46ccadc8d6f126ade4d62ada7cf440ce-20190307084418',)]]
+dble:[[('5.6.29-dble-9.9.9.9-c31817bc0dd6ca58dae6bb50b5b153422d5ea816-20190723144535',)]]
 mysql:[[('5.7.13',)]]
