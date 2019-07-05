@@ -55,6 +55,7 @@ Given reset views in "dble-1" if exists
         | sqls_util/transaction/trx_syntax.sql                  |
         | sqls_util/dev_dealed/cross_db.sql                     |
         | special_sharding/select/select_sharding.sql           |
+        | special_sharding/select/er_sharding.sql           |
 
     Scenario: #5 compare new generated results is same with the standard ones
         When compare results in "sql_cover_sharding" with the standard results in "std_sql_cover_sharding"

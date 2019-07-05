@@ -5,6 +5,9 @@
 		<table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
 		<table name="select" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
 		<table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <table name="er_parent" dataNode="dn1,dn2,dn3,dn4" rule="hash-four">
+		    <childTable name="er_child" joinKey="id" parentKey="id" />
+		</table>
 	</schema>
 	<schema name="schema2" sqlMaxLimit="100">
 		<table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
