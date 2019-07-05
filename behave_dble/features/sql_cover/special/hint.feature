@@ -492,3 +492,21 @@ Feature: verify hint sql
         | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t1                        | success      | schema1 |
         | test | 111111 | conn_0 | True     | create table sharding_4_t1(id int,name varchar(30))    | success       | schema1 |
         | test | 111111 | conn_0 | True     | show table status like 'sharding_4_t1'                   | length{(1)}  | schema1 |
+
+  Scenario: support multi-statement in procedure   author:wujinling #9
+    #from issue:1228
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+      """
+        <table name="test_shard" dataNode="dn1,dn3" rule="hash-two" />
+     """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                                                                             | expect  | db     |
+        | test | 111111 | conn_0 | False    | drop table if exists test_shard                                                             | success | schema1 |
+        | test | 111111 | conn_0 | False    | create table test_shard (id int ,name varchar(20))                                     | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into test_shard values(1,'test_shard1'),(2,'test_shard2'),(3,'test_shard3')                   | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into test_shard values(4,'test_shard4'),(5,'test_shard5'),(6,'test_shard6')                   | success | schema1 |
+        | test | 111111 | conn_0 | False    | /*!dble:sql=select * from test_shard where id =1*/drop procedure if exists delete_matches                    | success | schema1 |
+        | test | 111111 | conn_0 | False    | /*!dble:sql=select * from test_shard where id =1*/CREATE PROCEDURE delete_matches(IN p_playerno INTEGER) BEGIN select * from test_shard; delete from test_shard; END               | success | schema1 |
+        | test | 111111 | conn_0 | False    | /*!dble:sql=select * from test_shard where id =1*/call delete_matches(1) | success | schema1 |
+        | test | 111111 | conn_0 | True     | /*!dble:sql=select * from test_shard where id =1*/drop procedure if exists delete_matches  | success | schema1 |
