@@ -213,19 +213,31 @@ public class ConnectionTest extends InterfaceTest {
 				while (true) {
 					try {
 						Thread.sleep(1000);
-					} catch (Exception ex) {
-
+					} catch (InterruptedException ie) {
+						System.out.println("InterruptedException:"+ie.getMessage());
 					}
 					if (i == 5)
 						break;
 					i++;
+					System.out.println("run times: "+ i);
 				}
 			}
 		});
 
-		mysqlConn.abort(ae);
-		uproxyConn.abort(ae);
+		try{
+			mysqlConn.abort(ae);
+		}catch(SQLException e){
+			System.out.println("SQLException:"+e.getMessage());
+		}
 
+		try{
+			uproxyConn.abort(ae);
+		}catch(SQLException e){
+			System.out.println("SQLException:"+e.getMessage());
+		}
+
+		System.out.println(mysqlConn.isClosed());
+		System.out.println(uproxyConn.isClosed());
 		if (mysqlConn.isClosed() == uproxyConn.isClosed())
 			System.out.println("pass! abort()");
 		else {
