@@ -1,11 +1,6 @@
-===file:sqls_util/syntax/show.sql, id:35, sql:[create database  if not exists schema1]===
-dble:[None]
-mysql:[()]
-dble err:(1064, 'THE DDL is not supported :CREATE DATABASE IF NOT EXISTS schema1')
 ===file:sqls_util/syntax/show.sql, id:36, sql:[show create database schema1]===
-dble:[None]
-mysql:[(('schema1', 'CREATE DATABASE `schema1` /*!40100 DEFAULT CHARACTER SET latin1 */'),)]
-dble err:(1049, "Unknown database 'schema1'")
+dble:[[('schema1', 'CREATE DATABASE `schema1`')]]
+mysql:[[('schema1', 'CREATE DATABASE `schema1` /*!40100 DEFAULT CHARACTER SET latin1 */')]]
 ===file:sqls_util/syntax/show.sql, id:37, sql:[show create schema schema1]===
 dble:[None]
 mysql:[(('schema1', 'CREATE DATABASE `schema1` /*!40100 DEFAULT CHARACTER SET latin1 */'),)]
@@ -17,7 +12,7 @@ dble err:(1049, "Unknown database 'schema1'")
 ===file:sqls_util/syntax/show.sql, id:39, sql:[show create database if not exists schema1]===
 dble:[None]
 mysql:[(('schema1', 'CREATE DATABASE /*!32312 IF NOT EXISTS*/ `schema1` /*!40100 DEFAULT CHARACTER SET latin1 */'),)]
-dble err:(1049, "Unknown database 'schema1'")
+dble err:(1064, 'error pos 23, line 1, column 21, token IF')
 ===file:sqls_util/syntax/show.sql, id:40, sql:[show databases]===
 dble:[[('schema1',), ('schema2',), ('schema3',)]]
 mysql:[[('db1',), ('db2',), ('db3',), ('db4',), ('information_schema',), ('mysql',), ('performance_schema',), ('schema1',), ('schema2',), ('schema3',), ('sys',), ('testdb',)]]
