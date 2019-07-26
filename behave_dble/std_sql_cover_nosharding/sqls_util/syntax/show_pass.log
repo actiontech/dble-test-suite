@@ -16,7 +16,7 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:10, sql:[show table status/*allow_diff*/]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', ''), ('test2', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 3, 8, 17, 27, 41), datetime.datetime(2019, 3, 8, 17, 27, 41), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 7, 26, 13, 51, 20), datetime.datetime(2019, 7, 26, 13, 51, 20), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/show.sql, id:11, sql:[show table status like 'aly_o%'/*allow_diff*/]===
 dble:[[]]
 mysql:[[]]
@@ -51,6 +51,8 @@ dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTR
 ===file:sqls_util/syntax/show.sql, id:33, sql:[show keys in test1 from schema1]===
 dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:34, sql:[drop index index_001 on test1]===
+dble:[[]]
+===file:sqls_util/syntax/show.sql, id:35, sql:[create database  if not exists schema1]===
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:47, sql:[show open tables from schema1 like 'aly_o%']===
 dble:[[]]
