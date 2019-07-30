@@ -151,6 +151,10 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
     Then check resultset "explain_result_H" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:3                    | merge_1          | MERGE        |
+    Then get resultset of user cmd "explain insert into tb_child1 values(1,1,1,1)  " named "explain_result_er_child"
+    Then check resultset "explain_result_er_child" has lines with following column values
+        | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
+        | expect_result_line:1                    | dn2          |  BASE SQL        |
     Then get resultset of user cmd "explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.id=b.id" named "explain_result_I"
     Then check resultset "explain_result_I" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
