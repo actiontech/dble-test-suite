@@ -95,6 +95,8 @@ select id t,pad from test1 order by t
 select id,pad from test1 order by pad
 select id,pad from test1 a order by a.id
 select id,pad from test1 a order by a.pad
+#issue 1256
+select test1.id,test1.id+1 as `rpda_0` from test1 order by `rpda_0` ASC
 #
 #limit
 #
