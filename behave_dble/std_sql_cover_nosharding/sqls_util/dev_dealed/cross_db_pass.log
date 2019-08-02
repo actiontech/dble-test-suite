@@ -32,3 +32,5 @@ dble:[[(1L, 2L, 3L)]]
 dble:[[]]
 ===file:sqls_util/dev_dealed/cross_db.sql, id:22, sql:[select * from test1 join schema2.test2 join schema3.test3;]===
 dble:[[(1L, 2L, 3L)]]
+===file:sqls_util/dev_dealed/cross_db.sql, id:24, sql:[select a.id,b.* from schema2.test2 a inner join test1 b on a.id+1 =b.id+2;]===
+dble:[[(2L, 1L)]]
