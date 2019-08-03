@@ -30,9 +30,9 @@ Feature: set charset in server.xml,check backend charsets are as set
     Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
     Then check resultset "backend_rs_A" has lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
-      | 172.100.9.6 |     utf8                | utf8_general_ci         | utf8                     |
-      | 172.100.9.2 |     utf8                | utf8_general_ci         | utf8                     |
-      | 172.100.9.3 |     utf8                | utf8_general_ci         | utf8                     |
+      | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.2 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.3 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd  | conn   | toClose | sql                                         | expect  | db     |charset|
       | test | 111111  | conn_0 | False   | drop table if exists aly_test               | success | schema1 | utf8  |
