@@ -96,7 +96,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | useCostTimeStat             | 0                               |
       | maxCostStatSize             | 100                             |
       | costSamplePercent           | 1                               |
-      | charset                     | utf8                            |
+      | charset                     | utf8mb4                            |
       | maxPacketSize               | 16M                             |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
@@ -155,7 +155,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
       | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
       | Xml     | WARNING | property [ bufferUsagePercent ] '80%' data type should be int, skip            |
-      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8 replaced       |
+      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8mb4 replaced       |
       | Xml     | WARNING | property [ checkTableConsistency ] 'false' data type should be int, skip       |
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
@@ -173,7 +173,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
       | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
       | Xml     | WARNING | property [ bufferUsagePercent ] '80%' data type should be int, skip            |
-      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8 replaced       |
+      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8mb4 replaced       |
       | Xml     | WARNING | property [ checkTableConsistency ] 'false' data type should be int, skip       |
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
