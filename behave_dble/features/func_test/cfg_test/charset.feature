@@ -9,7 +9,7 @@ Feature: set charset in server.xml,check backend charsets are as set
 
   @BLOCKER
   Scenario: set dble config charset same or different to session charset, session charset priorier to config charset #1
-    #   1.1 set backend charset utf8, front charset utf8;
+    #   1.1 set backend charset utf8mb4, front charset utf8mb4;
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <system>
@@ -39,11 +39,11 @@ Feature: set charset in server.xml,check backend charsets are as set
       | test | 111111  | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | schema1 | utf8  |
       | test | 111111  | conn_0 | False   | insert into aly_test value(1, '中')         | success | schema1 | utf8  |
       | test | 111111  | conn_0 | False   | select name from aly_test                   | has{('中')}| schema1 | utf8  |
-      | test | 111111  | conn_0 | False   | set names utf8                              | success | schema1 | utf8  |
+      | test | 111111  | conn_0 | False   | set names utf8mb4                              | success | schema1 | utf8  |
     Then get resultset of admin cmd "show @@connection" named "conn_rs_A"
     Then check resultset "conn_rs_A" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
-      |    utf8                | utf8_general_ci        | utf8                    |
+      |    utf8mb4                | utf8mb4_general_ci        | utf8mb4                    |
     #   1.2 set backend charset latin1, front charset default latin1;
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
@@ -55,9 +55,9 @@ Feature: set charset in server.xml,check backend charsets are as set
     Then get resultset of admin cmd "show @@backend" named "backend_rs_B"
     Then check resultset "backend_rs_B" has not lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
-      | 172.100.9.6 |     utf8                | utf8_general_ci         | utf8                     |
-      | 172.100.9.2 |     utf8                | utf8_general_ci         | utf8                     |
-      | 172.100.9.3 |     utf8                | utf8_general_ci         | utf8                     |
+      | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.2 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
+      | 172.100.9.3 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
     Then check resultset "backend_rs_B" has lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
       | 172.100.9.6 |     latin1              | latin1_swedish_ci       | latin1                   |
@@ -66,7 +66,7 @@ Feature: set charset in server.xml,check backend charsets are as set
     Then execute sql in "dble-1" in "user" mode
         | user | passwd  | conn   | toClose | sql                                         | expect  | db     |
         | test | 111111  | conn_1 | False   | drop table if exists aly_test               | success | schema1 |
-        | test | 111111  | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | schema1 |
+        | test | 111111  | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8mb4| success | schema1 |
         | test | 111111  | conn_1 | False   | insert into aly_test value(1, '中')         | ordinal not in range | schema1 |
     Then get resultset of admin cmd "show @@connection" named "conn_rs_B"
     Then check resultset "conn_rs_B" has lines with following column values
