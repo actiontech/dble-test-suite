@@ -934,5 +934,13 @@ dble:[[]]
 dble:[[('data1', 'int(11)', 'YES', '', None, ''), ('data2', 'int(11)', 'YES', '', None, ''), ('data3', 'int(11)', 'YES', 'UNI', None, ''), ('id', 'int(11)', 'YES', '', None, '')]]
 ===file:sqls_util/syntax/create_table_definition.sql, id:641, sql:[SELECT id,data1,data2,data3 FROM test1]===
 dble:[[(1L, 1L, 1L, None)]]
-===file:sqls_util/syntax/create_table_definition.sql, id:645, sql:[DROP TABLE IF EXISTS test1]===
+===file:sqls_util/syntax/create_table_definition.sql, id:643, sql:[DROP TABLE IF EXISTS test1]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:644, sql:[CREATE TABLE test1(id int, data1 varchar(10),data2 varchar(10),data3 varchar(20) as (concat(data1,' ',data2)))]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:645, sql:[INSERT INTO test1 (id,data1,data2)  VALUES (1,'aaa1','aaa2')]===
+dble:[[]]
+===file:sqls_util/syntax/create_table_definition.sql, id:646, sql:[SELECT id,data1,data2 FROM test1]===
+dble:[[(1L, 'aaa1', 'aaa2')]]
+===file:sqls_util/syntax/create_table_definition.sql, id:650, sql:[DROP TABLE IF EXISTS test1]===
 dble:[[]]

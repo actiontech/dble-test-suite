@@ -16,7 +16,7 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:10, sql:[show table status/*allow_diff*/]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 7, 26, 11, 23, 59), datetime.datetime(2019, 7, 26, 11, 23, 59), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 8, 5, 16, 30, 11), datetime.datetime(2019, 8, 5, 16, 30, 11), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/show.sql, id:11, sql:[show table status like 'aly_o%'/*allow_diff*/]===
 dble:[[]]
 mysql:[[]]
@@ -41,11 +41,11 @@ dble:[[('test1', 'BASE TABLE')]]
 ===file:sqls_util/syntax/show.sql, id:21, sql:[create INDEX index_001 ON test1 (ID)]===
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:22, sql:[show index from test1]===
-dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:23, sql:[show index in test1]===
-dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:24, sql:[show index from test1 from schema1]===
-dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:25, sql:[show index in test1 in schema1]===
 dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:26, sql:[show index in test1 from schema1]===
@@ -55,13 +55,13 @@ dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTR
 ===file:sqls_util/syntax/show.sql, id:28, sql:[show keys from test1]===
 dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:29, sql:[show keys in test1]===
-dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:30, sql:[show keys from test1 from schema1]===
 dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:31, sql:[show keys from test1 in schema1]===
-dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:32, sql:[show keys in test1 in schema1]===
-dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
+dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 1L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:33, sql:[show keys in test1 from schema1]===
 dble:[[('test1', 0L, 'PRIMARY', 1L, 'R_REGIONKEY', 'A', 4L, None, None, '', 'BTREE', '', ''), ('test1', 1L, 'index_001', 1L, 'ID', 'A', 4L, None, None, 'YES', 'BTREE', '', '')]]
 ===file:sqls_util/syntax/show.sql, id:34, sql:[drop index index_001 on test1]===
