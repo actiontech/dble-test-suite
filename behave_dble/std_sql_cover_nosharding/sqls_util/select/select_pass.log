@@ -146,335 +146,345 @@ dble:[((16L, -1L), (0L, 0L), (1L, 1L), (5L, 1L), (2L, 2L), (6L, 2L), (10L, 3L), 
 dble:[((0L, 0L), (1L, 1L), (2L, 2L), (3L, 3L), (4L, 4L), (5L, 1L), (6L, 2L), (7L, 3L), (8L, 4L), (9L, 3L), (10L, 3L), (11L, 4L), (12L, 5L), (13L, 6L), (14L, 14L), (15L, 15L), (16L, -1L), (17L, 17L), (18L, 18L), (19L, 19L))]
 ===file:sqls_util/select/select.sql, id:97, sql:[select id,pad from test1 a order by a.pad]===
 dble:[((16L, -1L), (0L, 0L), (1L, 1L), (5L, 1L), (2L, 2L), (6L, 2L), (10L, 3L), (9L, 3L), (7L, 3L), (3L, 3L), (8L, 4L), (4L, 4L), (11L, 4L), (12L, 5L), (13L, 6L), (14L, 14L), (15L, 15L), (17L, 17L), (18L, 18L), (19L, 19L))]
-===file:sqls_util/select/select.sql, id:101, sql:[select id,k,c,pad from test1 order by id limit 1,3]===
+===file:sqls_util/select/select.sql, id:99, sql:[select test1.id,test1.id+1 as `rpda_0` from test1 order by `rpda_0` ASC]===
+dble:[((0L, 1L), (1L, 2L), (2L, 3L), (3L, 4L), (4L, 5L), (5L, 6L), (6L, 7L), (7L, 8L), (8L, 9L), (9L, 10L), (10L, 11L), (11L, 12L), (12L, 13L), (13L, 14L), (14L, 15L), (15L, 16L), (16L, 17L), (17L, 18L), (18L, 19L), (19L, 20L))]
+===file:sqls_util/select/select.sql, id:103, sql:[select id,k,c,pad from test1 order by id limit 1,3]===
 dble:[((1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L))]
-===file:sqls_util/select/select.sql, id:102, sql:[prepare select_table from 'select * from test1 order by id limit ?']===
+===file:sqls_util/select/select.sql, id:104, sql:[prepare select_table from 'select * from test1 order by id limit ?']===
 dble:[()]
-===file:sqls_util/select/select.sql, id:103, sql:[select id,k,c,pad from test1 order by id limit 3]===
+===file:sqls_util/select/select.sql, id:105, sql:[select id,k,c,pad from test1 order by id limit 3]===
 dble:[((0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L))]
-===file:sqls_util/select/select.sql, id:104, sql:[select id,k,c,pad from test1 order by id limit 3 offset 1]===
+===file:sqls_util/select/select.sql, id:106, sql:[select id,k,c,pad from test1 order by id limit 3 offset 1]===
 dble:[((1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L))]
-===file:sqls_util/select/select.sql, id:108, sql:[select all id,k,c,pad from test1]===
+===file:sqls_util/select/select.sql, id:110, sql:[select all id,k,c,pad from test1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:109, sql:[select distinct pad from test1]===
+===file:sqls_util/select/select.sql, id:111, sql:[select distinct pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:110, sql:[select Distinctrow pad,id,k,c from test1]===
+===file:sqls_util/select/select.sql, id:112, sql:[select Distinctrow pad,id,k,c from test1]===
 dble:[[(-1L, 16L, 16L, '16'), (0L, 0L, 0L, '0'), (1L, 1L, 1L, 'id1'), (1L, 5L, 5L, 'id5'), (2L, 2L, 2L, 'id2'), (2L, 6L, 6L, 'id6'), (3L, 3L, 3L, 'id3'), (3L, 7L, 7L, 'id7'), (3L, 9L, 9L, 'test'), (3L, 10L, 10L, '\xe4\xb8\xad'), (4L, 4L, 4L, 'id4'), (4L, 8L, 8L, '$id8$'), (4L, 11L, 11L, 'i_'), (5L, 12L, 12L, '_g'), (6L, 13L, 13L, 'y_u'), (14L, 14L, 14L, '20%'), (15L, 15L, 15L, 'a_1'), (17L, 17L, 17L, 'new*\n*line'), (18L, 18L, 18L, 'a'), (19L, 19L, 19L, None)]]
-===file:sqls_util/select/select.sql, id:111, sql:[select distinct pad,id from test1 order by id]===
+===file:sqls_util/select/select.sql, id:113, sql:[select distinct pad,id from test1 order by id]===
 dble:[((0L, 0L), (1L, 1L), (2L, 2L), (3L, 3L), (4L, 4L), (1L, 5L), (2L, 6L), (3L, 7L), (4L, 8L), (3L, 9L), (3L, 10L), (4L, 11L), (5L, 12L), (6L, 13L), (14L, 14L), (15L, 15L), (-1L, 16L), (17L, 17L), (18L, 18L), (19L, 19L))]
-===file:sqls_util/select/select.sql, id:112, sql:[select distinct pad,id from test1 where pad>2 order by id]===
+===file:sqls_util/select/select.sql, id:114, sql:[select distinct pad,id from test1 where pad>2 order by id]===
 dble:[((3L, 3L), (4L, 4L), (3L, 7L), (4L, 8L), (3L, 9L), (3L, 10L), (4L, 11L), (5L, 12L), (6L, 13L), (14L, 14L), (15L, 15L), (17L, 17L), (18L, 18L), (19L, 19L))]
-===file:sqls_util/select/select.sql, id:113, sql:[select distinct pad,id from test1 group by id,pad]===
+===file:sqls_util/select/select.sql, id:115, sql:[select distinct pad,id from test1 group by id,pad]===
 dble:[[(-1L, 16L), (0L, 0L), (1L, 1L), (1L, 5L), (2L, 2L), (2L, 6L), (3L, 3L), (3L, 7L), (3L, 9L), (3L, 10L), (4L, 4L), (4L, 8L), (4L, 11L), (5L, 12L), (6L, 13L), (14L, 14L), (15L, 15L), (17L, 17L), (18L, 18L), (19L, 19L)]]
-===file:sqls_util/select/select.sql, id:114, sql:[select count(distinct id),pad from test1 group by pad]===
+===file:sqls_util/select/select.sql, id:116, sql:[select count(distinct id),pad from test1 group by pad]===
 dble:[[(1L, -1L), (1L, 0L), (1L, 5L), (1L, 6L), (1L, 14L), (1L, 15L), (1L, 17L), (1L, 18L), (1L, 19L), (2L, 1L), (2L, 2L), (3L, 4L), (4L, 3L)]]
-===file:sqls_util/select/select.sql, id:115, sql:[select distinct SQL_BIG_RESULT pad from test1]===
+===file:sqls_util/select/select.sql, id:117, sql:[select distinct SQL_BIG_RESULT pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:116, sql:[select distinct SQL_BIG_RESULT pad from test1 order by pad]===
+===file:sqls_util/select/select.sql, id:118, sql:[select distinct SQL_BIG_RESULT pad from test1 order by pad]===
 dble:[((-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:117, sql:[select distinctrow SQL_BIG_RESULT pad from test1]===
+===file:sqls_util/select/select.sql, id:119, sql:[select distinctrow SQL_BIG_RESULT pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:118, sql:[select distinctrow SQL_BIG_RESULT pad from test1 order by pad]===
+===file:sqls_util/select/select.sql, id:120, sql:[select distinctrow SQL_BIG_RESULT pad from test1 order by pad]===
 dble:[((-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:119, sql:[select SQL_BIG_RESULT count(*),pad from test1 group by pad]===
+===file:sqls_util/select/select.sql, id:121, sql:[select SQL_BIG_RESULT count(*),pad from test1 group by pad]===
 dble:[[(1L, -1L), (1L, 0L), (1L, 5L), (1L, 6L), (1L, 14L), (1L, 15L), (1L, 17L), (1L, 18L), (1L, 19L), (2L, 1L), (2L, 2L), (3L, 4L), (4L, 3L)]]
-===file:sqls_util/select/select.sql, id:120, sql:[select distinct SQL_SMALL_RESULT pad from test1]===
+===file:sqls_util/select/select.sql, id:122, sql:[select distinct SQL_SMALL_RESULT pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:121, sql:[select distinct SQL_SMALL_RESULT pad from test1 order by pad]===
+===file:sqls_util/select/select.sql, id:123, sql:[select distinct SQL_SMALL_RESULT pad from test1 order by pad]===
 dble:[((-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:122, sql:[select distinctrow SQL_SMALL_RESULT pad from test1]===
+===file:sqls_util/select/select.sql, id:124, sql:[select distinctrow SQL_SMALL_RESULT pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:123, sql:[select distinctrow SQL_SMALL_RESULT pad from test1 order by id]===
+===file:sqls_util/select/select.sql, id:125, sql:[select distinctrow SQL_SMALL_RESULT pad from test1 order by id]===
 dble:[((0L,), (1L,), (2L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (-1L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:124, sql:[select SQL_SMALL_RESULT count(*),pad from test1 group by pad]===
+===file:sqls_util/select/select.sql, id:126, sql:[select SQL_SMALL_RESULT count(*),pad from test1 group by pad]===
 dble:[[(1L, -1L), (1L, 0L), (1L, 5L), (1L, 6L), (1L, 14L), (1L, 15L), (1L, 17L), (1L, 18L), (1L, 19L), (2L, 1L), (2L, 2L), (3L, 4L), (4L, 3L)]]
-===file:sqls_util/select/select.sql, id:125, sql:[select SQL_BUFFER_RESULT pad from test1]===
+===file:sqls_util/select/select.sql, id:127, sql:[select SQL_BUFFER_RESULT pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (1L,), (2L,), (2L,), (3L,), (3L,), (3L,), (3L,), (4L,), (4L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:126, sql:[select SQL_BUFFER_RESULT pad from test1 order by id]===
+===file:sqls_util/select/select.sql, id:128, sql:[select SQL_BUFFER_RESULT pad from test1 order by id]===
 dble:[((0L,), (1L,), (2L,), (3L,), (4L,), (1L,), (2L,), (3L,), (4L,), (3L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (-1L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:127, sql:[select straight_join pad from test1]===
+===file:sqls_util/select/select.sql, id:129, sql:[select straight_join pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (1L,), (2L,), (2L,), (3L,), (3L,), (3L,), (3L,), (4L,), (4L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:128, sql:[select straight_join pad from test1 order by id]===
+===file:sqls_util/select/select.sql, id:130, sql:[select straight_join pad from test1 order by id]===
 dble:[((0L,), (1L,), (2L,), (3L,), (4L,), (1L,), (2L,), (3L,), (4L,), (3L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (-1L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:129, sql:[select sql_cache pad from test1]===
+===file:sqls_util/select/select.sql, id:131, sql:[select sql_cache pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (1L,), (2L,), (2L,), (3L,), (3L,), (3L,), (3L,), (4L,), (4L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:130, sql:[select sql_cache pad from test1 order by id]===
+===file:sqls_util/select/select.sql, id:132, sql:[select sql_cache pad from test1 order by id]===
 dble:[((0L,), (1L,), (2L,), (3L,), (4L,), (1L,), (2L,), (3L,), (4L,), (3L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (-1L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:131, sql:[select sql_no_cache pad from test1]===
+===file:sqls_util/select/select.sql, id:133, sql:[select sql_no_cache pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (1L,), (2L,), (2L,), (3L,), (3L,), (3L,), (3L,), (4L,), (4L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:132, sql:[select sql_no_cache pad from test1 order by id]===
+===file:sqls_util/select/select.sql, id:134, sql:[select sql_no_cache pad from test1 order by id]===
 dble:[((0L,), (1L,), (2L,), (3L,), (4L,), (1L,), (2L,), (3L,), (4L,), (3L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (-1L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:133, sql:[select SQL_CALC_FOUND_ROWS pad from test1 order by id]===
+===file:sqls_util/select/select.sql, id:135, sql:[select SQL_CALC_FOUND_ROWS pad from test1 order by id]===
 dble:[((0L,), (1L,), (2L,), (3L,), (4L,), (1L,), (2L,), (3L,), (4L,), (3L,), (3L,), (4L,), (5L,), (6L,), (14L,), (15L,), (-1L,), (17L,), (18L,), (19L,))]
-===file:sqls_util/select/select.sql, id:134, sql:[select SQL_CALC_FOUND_ROWS pad from test1]===
+===file:sqls_util/select/select.sql, id:136, sql:[select SQL_CALC_FOUND_ROWS pad from test1]===
 dble:[[(-1L,), (0L,), (1L,), (1L,), (2L,), (2L,), (3L,), (3L,), (3L,), (3L,), (4L,), (4L,), (4L,), (5L,), (6L,), (14L,), (15L,), (17L,), (18L,), (19L,)]]
-===file:sqls_util/select/select.sql, id:138, sql:[select id,k,c,pad from test1 where id=1+1]===
+===file:sqls_util/select/select.sql, id:140, sql:[select id,k,c,pad from test1 where id=1+1]===
 dble:[[(2L, 2L, 'id2', 2L)]]
-===file:sqls_util/select/select.sql, id:139, sql:[select id,k,c,pad from test1 where id=2*3]===
+===file:sqls_util/select/select.sql, id:141, sql:[select id,k,c,pad from test1 where id=2*3]===
 dble:[[(6L, 6L, 'id6', 2L)]]
-===file:sqls_util/select/select.sql, id:140, sql:[select id,k,c,pad from test1 where id=9/3]===
+===file:sqls_util/select/select.sql, id:142, sql:[select id,k,c,pad from test1 where id=9/3]===
 dble:[[(3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:141, sql:[select id,k,c,pad from test1 where id=12 div 4]===
+===file:sqls_util/select/select.sql, id:143, sql:[select id,k,c,pad from test1 where id=12 div 4]===
 dble:[[(3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:142, sql:[select id,k,c,pad from test1 where id=10-4]===
+===file:sqls_util/select/select.sql, id:144, sql:[select id,k,c,pad from test1 where id=10-4]===
 dble:[[(6L, 6L, 'id6', 2L)]]
-===file:sqls_util/select/select.sql, id:143, sql:[select id,k,c,pad from test1 where id=1+2*3-9/3+12 div 4]===
+===file:sqls_util/select/select.sql, id:145, sql:[select id,k,c,pad from test1 where id=1+2*3-9/3+12 div 4]===
 dble:[[(7L, 7L, 'id7', 3L)]]
-===file:sqls_util/select/select.sql, id:144, sql:[select id,k,c,pad from test1 where id=-3]===
+===file:sqls_util/select/select.sql, id:146, sql:[select id,k,c,pad from test1 where id=-3]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:145, sql:[select id,k,c,pad from test1 where id=6|3]===
+===file:sqls_util/select/select.sql, id:147, sql:[select id,k,c,pad from test1 where id=6|3]===
 dble:[[(7L, 7L, 'id7', 3L)]]
-===file:sqls_util/select/select.sql, id:146, sql:[select id,k,c,pad from test1 where id=2&3]===
+===file:sqls_util/select/select.sql, id:148, sql:[select id,k,c,pad from test1 where id=2&3]===
 dble:[[(2L, 2L, 'id2', 2L)]]
-===file:sqls_util/select/select.sql, id:147, sql:[select id,k,c,pad from test1 where id=7^3]===
+===file:sqls_util/select/select.sql, id:149, sql:[select id,k,c,pad from test1 where id=7^3]===
 dble:[[(4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:148, sql:[select id,k,c,pad from test1 where id=1<<2]===
+===file:sqls_util/select/select.sql, id:150, sql:[select id,k,c,pad from test1 where id=1<<2]===
 dble:[[(4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:149, sql:[select id,k,c,pad from test1 where id=4>>2]===
+===file:sqls_util/select/select.sql, id:151, sql:[select id,k,c,pad from test1 where id=4>>2]===
 dble:[[(1L, 1L, 'id1', 1L)]]
-===file:sqls_util/select/select.sql, id:150, sql:[select id,k,c,pad from test1 where id=5 & ~1]===
+===file:sqls_util/select/select.sql, id:152, sql:[select id,k,c,pad from test1 where id=5 & ~1]===
 dble:[[(4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:151, sql:[select id,k,c,pad from test1 where id=BIT_COUNT(29)]===
+===file:sqls_util/select/select.sql, id:153, sql:[select id,k,c,pad from test1 where id=BIT_COUNT(29)]===
 dble:[[(4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:152, sql:[select id,k,c,pad from test1 where id>=1]===
+===file:sqls_util/select/select.sql, id:154, sql:[select id,k,c,pad from test1 where id>=1]===
 dble:[[(1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:153, sql:[select id,k,c,pad from test1 where id<=3]===
+===file:sqls_util/select/select.sql, id:155, sql:[select id,k,c,pad from test1 where id<=3]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:154, sql:[select id,k,c,pad from test1 where id<5]===
+===file:sqls_util/select/select.sql, id:156, sql:[select id,k,c,pad from test1 where id<5]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:155, sql:[select id,k,c,pad from test1 where id>6]===
+===file:sqls_util/select/select.sql, id:157, sql:[select id,k,c,pad from test1 where id>6]===
 dble:[[(7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:156, sql:[select id,k,c,pad from test1 where id!=7]===
+===file:sqls_util/select/select.sql, id:158, sql:[select id,k,c,pad from test1 where id!=7]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:157, sql:[select id,k,c,pad from test1 where id between 2 and 4]===
+===file:sqls_util/select/select.sql, id:159, sql:[select id,k,c,pad from test1 where id between 2 and 4]===
 dble:[[(2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:158, sql:[select id,k,c,pad from test1 where id not between 3 and 5]===
+===file:sqls_util/select/select.sql, id:160, sql:[select id,k,c,pad from test1 where id not between 3 and 5]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:159, sql:[select id,k,c,pad from test1 where id is true]===
+===file:sqls_util/select/select.sql, id:161, sql:[select id,k,c,pad from test1 where id is true]===
 dble:[[(1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:160, sql:[select id,k,c,pad from test1 where id is false]===
+===file:sqls_util/select/select.sql, id:162, sql:[select id,k,c,pad from test1 where id is false]===
 dble:[[(0L, 0L, '0', 0L)]]
-===file:sqls_util/select/select.sql, id:161, sql:[select id,k,c,pad from test1 where id is unknown]===
+===file:sqls_util/select/select.sql, id:163, sql:[select id,k,c,pad from test1 where id is unknown]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:162, sql:[select id,k,c,pad from test1 where id is not true]===
+===file:sqls_util/select/select.sql, id:164, sql:[select id,k,c,pad from test1 where id is not true]===
 dble:[[(0L, 0L, '0', 0L)]]
-===file:sqls_util/select/select.sql, id:163, sql:[select id,k,c,pad from test1 where id is not false]===
+===file:sqls_util/select/select.sql, id:165, sql:[select id,k,c,pad from test1 where id is not false]===
 dble:[[(1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:164, sql:[select id,k,c,pad from test1 where id is not unknown]===
+===file:sqls_util/select/select.sql, id:166, sql:[select id,k,c,pad from test1 where id is not unknown]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:165, sql:[select id,k,c,pad from test1 where c is not null]===
+===file:sqls_util/select/select.sql, id:167, sql:[select id,k,c,pad from test1 where c is not null]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L)]]
-===file:sqls_util/select/select.sql, id:166, sql:[select id,k,c,pad from test1 where c is null]===
+===file:sqls_util/select/select.sql, id:168, sql:[select id,k,c,pad from test1 where c is null]===
 dble:[[(19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:167, sql:[select id,k,c,pad from test1 where c like '中']===
+===file:sqls_util/select/select.sql, id:169, sql:[select id,k,c,pad from test1 where c like '中']===
 dble:[[(10L, 10L, '\xe4\xb8\xad', 3L)]]
-===file:sqls_util/select/select.sql, id:168, sql:[select id,k,c,pad from test1 where c like '%3']===
+===file:sqls_util/select/select.sql, id:170, sql:[select id,k,c,pad from test1 where c like '%3']===
 dble:[[(3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:169, sql:[select id,k,c,pad from test1 where c like 'i%']===
+===file:sqls_util/select/select.sql, id:171, sql:[select id,k,c,pad from test1 where c like 'i%']===
 dble:[[(1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (11L, 11L, 'i_', 4L)]]
-===file:sqls_util/select/select.sql, id:170, sql:[select id,k,c,pad from test1 where c like '$%$']===
+===file:sqls_util/select/select.sql, id:172, sql:[select id,k,c,pad from test1 where c like '$%$']===
 dble:[[(8L, 8L, '$id8$', 4L)]]
-===file:sqls_util/select/select.sql, id:171, sql:[select id,k,c,pad from test1 where c like 'id_']===
+===file:sqls_util/select/select.sql, id:173, sql:[select id,k,c,pad from test1 where c like 'id_']===
 dble:[[(1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L)]]
-===file:sqls_util/select/select.sql, id:172, sql:[select id,k,c,pad from test1 where c like '_d3']===
+===file:sqls_util/select/select.sql, id:174, sql:[select id,k,c,pad from test1 where c like '_d3']===
 dble:[[(3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:173, sql:[select id,k,c,pad from test1 where c like 'i_4']===
+===file:sqls_util/select/select.sql, id:175, sql:[select id,k,c,pad from test1 where c like 'i_4']===
 dble:[[(4L, 4L, 'id4', 4L)]]
-===file:sqls_util/select/select.sql, id:174, sql:[select id,k,c,pad from test1 where c like '20\%']===
+===file:sqls_util/select/select.sql, id:176, sql:[select id,k,c,pad from test1 where c like '20\%']===
 dble:[[(14L, 14L, '20%', 14L)]]
-===file:sqls_util/select/select.sql, id:175, sql:[select id,k,c,pad from test1 where c like 'a\_1']===
+===file:sqls_util/select/select.sql, id:177, sql:[select id,k,c,pad from test1 where c like 'a\_1']===
 dble:[[(15L, 15L, 'a_1', 15L)]]
-===file:sqls_util/select/select.sql, id:176, sql:[select id,k,c,pad from test1 where c not like '中']===
+===file:sqls_util/select/select.sql, id:178, sql:[select id,k,c,pad from test1 where c not like '中']===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L)]]
-===file:sqls_util/select/select.sql, id:177, sql:[select id,k,c,pad from test1 where id<>2]===
+===file:sqls_util/select/select.sql, id:179, sql:[select id,k,c,pad from test1 where id<>2]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:178, sql:[select id,k,c,pad from test1 where id <=>1]===
+===file:sqls_util/select/select.sql, id:180, sql:[select id,k,c,pad from test1 where id <=>1]===
 dble:[[(1L, 1L, 'id1', 1L)]]
-===file:sqls_util/select/select.sql, id:179, sql:[select id,k,c,pad from test1 where 1 <=> 1]===
+===file:sqls_util/select/select.sql, id:181, sql:[select id,k,c,pad from test1 where 1 <=> 1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:180, sql:[select id,k,c,pad from test1 where NULL <=> NULL]===
+===file:sqls_util/select/select.sql, id:182, sql:[select id,k,c,pad from test1 where NULL <=> NULL]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:181, sql:[select id,k,c,pad from test1 where 1 <=> NULL]===
+===file:sqls_util/select/select.sql, id:183, sql:[select id,k,c,pad from test1 where 1 <=> NULL]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:183, sql:[select id,k,c,pad from test1 where id=COALESCE(2,3)]===
+===file:sqls_util/select/select.sql, id:185, sql:[select id,k,c,pad from test1 where id=COALESCE(2,3)]===
 dble:[[(2L, 2L, 'id2', 2L)]]
-===file:sqls_util/select/select.sql, id:184, sql:[select id,k,c,pad from test1 where id=COALESCE(null,3)]===
+===file:sqls_util/select/select.sql, id:186, sql:[select id,k,c,pad from test1 where id=COALESCE(null,3)]===
 dble:[[(3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:185, sql:[select id,k,c,pad from test1 where id=GREATEST(2,3,6.4,7,12)]===
+===file:sqls_util/select/select.sql, id:187, sql:[select id,k,c,pad from test1 where id=GREATEST(2,3,6.4,7,12)]===
 dble:[[(12L, 12L, '_g', 5L)]]
-===file:sqls_util/select/select.sql, id:186, sql:[select id,k,c,pad from test1 where id in(2,3,6.4,7,12)]===
+===file:sqls_util/select/select.sql, id:188, sql:[select id,k,c,pad from test1 where id in(2,3,6.4,7,12)]===
 dble:[[(2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (7L, 7L, 'id7', 3L), (12L, 12L, '_g', 5L)]]
-===file:sqls_util/select/select.sql, id:187, sql:[select id,k,c,pad from test1 where pad in(2,3,6.4,7,12)]===
+===file:sqls_util/select/select.sql, id:189, sql:[select id,k,c,pad from test1 where pad in(2,3,6.4,7,12)]===
 dble:[[(2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L)]]
-===file:sqls_util/select/select.sql, id:188, sql:[select id,k,c,pad from test1 where id not in(2,3)]===
+===file:sqls_util/select/select.sql, id:190, sql:[select id,k,c,pad from test1 where id not in(2,3)]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:189, sql:[select id,k,c,pad from test1 where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)]===
+===file:sqls_util/select/select.sql, id:191, sql:[select id,k,c,pad from test1 where id=INTERVAL(23, 1, 15, 17, 30, 44, 200)]===
 dble:[[(3L, 3L, 'id3', 3L)]]
-===file:sqls_util/select/select.sql, id:190, sql:[select id,k,c,pad from test1 where id=LEAST(23, 1, 15, 17, 30, 44, 200)]===
+===file:sqls_util/select/select.sql, id:192, sql:[select id,k,c,pad from test1 where id=LEAST(23, 1, 15, 17, 30, 44, 200)]===
 dble:[[(1L, 1L, 'id1', 1L)]]
-===file:sqls_util/select/select.sql, id:191, sql:[select id,k,c,pad from test1 where id not in(2,3,6.4,7,12)]===
+===file:sqls_util/select/select.sql, id:193, sql:[select id,k,c,pad from test1 where id not in(2,3,6.4,7,12)]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:192, sql:[select id,k,c,pad from test1 where pad=strcmp('test','test')]===
+===file:sqls_util/select/select.sql, id:194, sql:[select id,k,c,pad from test1 where pad=strcmp('test','test')]===
 dble:[[(0L, 0L, '0', 0L)]]
-===file:sqls_util/select/select.sql, id:193, sql:[select id,k,c,pad from test1 where pad=strcmp('test1','test')]===
+===file:sqls_util/select/select.sql, id:195, sql:[select id,k,c,pad from test1 where pad=strcmp('test1','test')]===
 dble:[[(1L, 1L, 'id1', 1L), (5L, 5L, 'id5', 1L)]]
-===file:sqls_util/select/select.sql, id:194, sql:[select id,k,c,pad from test1 where pad=strcmp('test','test1')]===
+===file:sqls_util/select/select.sql, id:196, sql:[select id,k,c,pad from test1 where pad=strcmp('test','test1')]===
 dble:[[(16L, 16L, '16', -1L)]]
-===file:sqls_util/select/select.sql, id:195, sql:[select id,k,c,pad from test1 where c regexp '.id,k,c,pad']===
+===file:sqls_util/select/select.sql, id:197, sql:[select id,k,c,pad from test1 where c regexp '.id,k,c,pad']===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:196, sql:[select id,k,c,pad from test1 where c regexp 'new\\id,k,c,pad.\\id,k,c,padline']===
+===file:sqls_util/select/select.sql, id:198, sql:[select id,k,c,pad from test1 where c regexp 'new\\id,k,c,pad.\\id,k,c,padline']===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:197, sql:[select id,k,c,pad from test1 where c regexp 'A']===
+===file:sqls_util/select/select.sql, id:199, sql:[select id,k,c,pad from test1 where c regexp 'A']===
 dble:[[(15L, 15L, 'a_1', 15L), (18L, 18L, 'a', 18L)]]
-===file:sqls_util/select/select.sql, id:198, sql:[select id,k,c,pad from test1 where c regexp BINARY 'A']===
+===file:sqls_util/select/select.sql, id:200, sql:[select id,k,c,pad from test1 where c regexp BINARY 'A']===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:199, sql:[select id,k,c,pad from test1 where c regexp '^[a-d]']===
+===file:sqls_util/select/select.sql, id:201, sql:[select id,k,c,pad from test1 where c regexp '^[a-d]']===
 dble:[[(15L, 15L, 'a_1', 15L), (18L, 18L, 'a', 18L)]]
-===file:sqls_util/select/select.sql, id:200, sql:[select id,k,c,pad from test1 where c not regexp '.id,k,c,pad']===
+===file:sqls_util/select/select.sql, id:202, sql:[select id,k,c,pad from test1 where c not regexp '.id,k,c,pad']===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L)]]
-===file:sqls_util/select/select.sql, id:201, sql:[select id,k,c,pad from test1 where c rlike '^[a-d]']===
+===file:sqls_util/select/select.sql, id:203, sql:[select id,k,c,pad from test1 where c rlike '^[a-d]']===
 dble:[[(15L, 15L, 'a_1', 15L), (18L, 18L, 'a', 18L)]]
-===file:sqls_util/select/select.sql, id:202, sql:[select id,k,c,pad from test1 where 1 AND 1]===
+===file:sqls_util/select/select.sql, id:204, sql:[select id,k,c,pad from test1 where 1 AND 1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:203, sql:[select id,k,c,pad from test1 where 1 AND 0]===
+===file:sqls_util/select/select.sql, id:205, sql:[select id,k,c,pad from test1 where 1 AND 0]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:204, sql:[select id,k,c,pad from test1 where 1 AND NULL]===
+===file:sqls_util/select/select.sql, id:206, sql:[select id,k,c,pad from test1 where 1 AND NULL]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:205, sql:[select id,k,c,pad from test1 where 0 AND NULL]===
+===file:sqls_util/select/select.sql, id:207, sql:[select id,k,c,pad from test1 where 0 AND NULL]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:206, sql:[select id,k,c,pad from test1 where NULL AND 0]===
+===file:sqls_util/select/select.sql, id:208, sql:[select id,k,c,pad from test1 where NULL AND 0]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:207, sql:[select id,k,c,pad from test1 where 1 && 1]===
+===file:sqls_util/select/select.sql, id:209, sql:[select id,k,c,pad from test1 where 1 && 1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:208, sql:[select id,k,c,pad from test1 where NOT 10]===
+===file:sqls_util/select/select.sql, id:210, sql:[select id,k,c,pad from test1 where NOT 10]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:209, sql:[select id,k,c,pad from test1 where NOT 0]===
+===file:sqls_util/select/select.sql, id:211, sql:[select id,k,c,pad from test1 where NOT 0]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:210, sql:[select id,k,c,pad from test1 where  NOT NULL]===
+===file:sqls_util/select/select.sql, id:212, sql:[select id,k,c,pad from test1 where  NOT NULL]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:211, sql:[select id,k,c,pad from test1 where  ! (1+1)]===
+===file:sqls_util/select/select.sql, id:213, sql:[select id,k,c,pad from test1 where  ! (1+1)]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:212, sql:[select id,k,c,pad from test1 where  ! 1+1]===
+===file:sqls_util/select/select.sql, id:214, sql:[select id,k,c,pad from test1 where  ! 1+1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:213, sql:[select id,k,c,pad from test1 where 1 OR 1]===
+===file:sqls_util/select/select.sql, id:215, sql:[select id,k,c,pad from test1 where 1 OR 1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:214, sql:[select id,k,c,pad from test1 where 1 OR 0]===
+===file:sqls_util/select/select.sql, id:216, sql:[select id,k,c,pad from test1 where 1 OR 0]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:215, sql:[select id,k,c,pad from test1 where 0 OR 0]===
+===file:sqls_util/select/select.sql, id:217, sql:[select id,k,c,pad from test1 where 0 OR 0]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:216, sql:[select id,k,c,pad from test1 where 0 || NULL]===
+===file:sqls_util/select/select.sql, id:218, sql:[select id,k,c,pad from test1 where 0 || NULL]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:217, sql:[select id,k,c,pad from test1 where 1 || NULL]===
+===file:sqls_util/select/select.sql, id:219, sql:[select id,k,c,pad from test1 where 1 || NULL]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:218, sql:[select id,k,c,pad from test1 where 1 XOR 1]===
+===file:sqls_util/select/select.sql, id:220, sql:[select id,k,c,pad from test1 where 1 XOR 1]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:219, sql:[select id,k,c,pad from test1 where 1 XOR 0]===
+===file:sqls_util/select/select.sql, id:221, sql:[select id,k,c,pad from test1 where 1 XOR 0]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:220, sql:[select id,k,c,pad from test1 where 1 XOR NULL]===
+===file:sqls_util/select/select.sql, id:222, sql:[select id,k,c,pad from test1 where 1 XOR NULL]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:221, sql:[select id,k,c,pad from test1 where 1 XOR 1 XOR 1]===
+===file:sqls_util/select/select.sql, id:223, sql:[select id,k,c,pad from test1 where 1 XOR 1 XOR 1]===
 dble:[[(0L, 0L, '0', 0L), (1L, 1L, 'id1', 1L), (2L, 2L, 'id2', 2L), (3L, 3L, 'id3', 3L), (4L, 4L, 'id4', 4L), (5L, 5L, 'id5', 1L), (6L, 6L, 'id6', 2L), (7L, 7L, 'id7', 3L), (8L, 8L, '$id8$', 4L), (9L, 9L, 'test', 3L), (10L, 10L, '\xe4\xb8\xad', 3L), (11L, 11L, 'i_', 4L), (12L, 12L, '_g', 5L), (13L, 13L, 'y_u', 6L), (14L, 14L, '20%', 14L), (15L, 15L, 'a_1', 15L), (16L, 16L, '16', -1L), (17L, 17L, 'new*\n*line', 17L), (18L, 18L, 'a', 18L), (19L, 19L, None, 19L)]]
-===file:sqls_util/select/select.sql, id:225, sql:[drop table if exists test1]===
+===file:sqls_util/select/select.sql, id:224, sql:[select count(*) from test1 where 2<id]===
+dble:[[(17L,)]]
+===file:sqls_util/select/select.sql, id:225, sql:[select count(*) from test1 where 1=1]===
+dble:[[(20L,)]]
+===file:sqls_util/select/select.sql, id:226, sql:[select count(*) from test1 where id =1 or id=2]===
+dble:[[(2L,)]]
+===file:sqls_util/select/select.sql, id:230, sql:[drop table if exists test1]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:226, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:sqls_util/select/select.sql, id:231, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:227, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:sqls_util/select/select.sql, id:232, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:228, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:sqls_util/select/select.sql, id:233, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:229, sql:[insert into test1 values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
+===file:sqls_util/select/select.sql, id:234, sql:[insert into test1 values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:230, sql:[select count(*) from test1 group by R_COMMENT,1+1]===
+===file:sqls_util/select/select.sql, id:235, sql:[select count(*) from test1 group by R_COMMENT,1+1]===
 dble:[[(2L,), (3L,), (4L,)]]
-===file:sqls_util/select/select.sql, id:231, sql:[select count(*) from test1 group by R_COMMENT asc]===
+===file:sqls_util/select/select.sql, id:236, sql:[select count(*) from test1 group by R_COMMENT asc]===
 dble:[[(2L,), (3L,), (4L,)]]
-===file:sqls_util/select/select.sql, id:232, sql:[select count(*) from test1 group by R_COMMENT desc]===
+===file:sqls_util/select/select.sql, id:237, sql:[select count(*) from test1 group by R_COMMENT desc]===
 dble:[[(2L,), (3L,), (4L,)]]
-===file:sqls_util/select/select.sql, id:233, sql:[select count(*) from test1 group by 1+1]===
+===file:sqls_util/select/select.sql, id:238, sql:[select count(*) from test1 group by 1+1]===
 dble:[[(9L,)]]
-===file:sqls_util/select/select.sql, id:234, sql:[select count(*) from test1 group by R_COMMENT,R_NAME order by null]===
+===file:sqls_util/select/select.sql, id:239, sql:[select count(*) from test1 group by R_COMMENT,R_NAME order by null]===
 dble:[((1L,), (1L,), (3L,), (4L,))]
-===file:sqls_util/select/select.sql, id:235, sql:[select count(*) al from test1 group by R_COMMENT,R_NAME order by al asc]===
+===file:sqls_util/select/select.sql, id:240, sql:[select count(*) al from test1 group by R_COMMENT,R_NAME order by al asc]===
 dble:[((1L,), (1L,), (3L,), (4L,))]
-===file:sqls_util/select/select.sql, id:236, sql:[select count(*) from test1 group by 1+1,1*5 order by 2*2 asc]===
+===file:sqls_util/select/select.sql, id:241, sql:[select count(*) from test1 group by 1+1,1*5 order by 2*2 asc]===
 dble:[((9L,),)]
-===file:sqls_util/select/select.sql, id:237, sql:[select count(*) from test1 group by R_COMMENT,R_NAME having count(*) order by 1+1]===
+===file:sqls_util/select/select.sql, id:242, sql:[select count(*) from test1 group by R_COMMENT,R_NAME having count(*) order by 1+1]===
 dble:[((1L,), (1L,), (3L,), (4L,))]
-===file:sqls_util/select/select.sql, id:238, sql:[select count(*) from test1 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2]===
+===file:sqls_util/select/select.sql, id:243, sql:[select count(*) from test1 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2]===
 dble:[((1L,), (1L,))]
-===file:sqls_util/select/select.sql, id:239, sql:[select count(*) from test1 where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 asc  limit 2 offset 2]===
+===file:sqls_util/select/select.sql, id:244, sql:[select count(*) from test1 where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 asc  limit 2 offset 2]===
 dble:[((3L,), (2L,))]
-===file:sqls_util/select/select.sql, id:240, sql:[select count(*) from test1 where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2]===
+===file:sqls_util/select/select.sql, id:245, sql:[select count(*) from test1 where id<8 group by R_COMMENT,R_NAME having count(*) order by 1+1 limit 2 ,2]===
 dble:[((3L,), (2L,))]
-===file:sqls_util/select/select.sql, id:241, sql:[select R_comment,count(*) a from test1 group by R_comment having a>1+1]===
+===file:sqls_util/select/select.sql, id:246, sql:[select R_comment,count(*) a from test1 group by R_comment having a>1+1]===
 dble:[[('b', 4L), ('string', 3L)]]
-===file:sqls_util/select/select.sql, id:242, sql:[select R_comment,count(*) a from test1 group by R_comment having count(*)>1+1]===
+===file:sqls_util/select/select.sql, id:247, sql:[select R_comment,count(*) a from test1 group by R_comment having count(*)>1+1]===
 dble:[[('b', 4L), ('string', 3L)]]
-===file:sqls_util/select/select.sql, id:243, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT+1 asc]===
+===file:sqls_util/select/select.sql, id:248, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT+1 asc]===
 dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (3L, 3.0, '', 'string'), (4L, 4.0, 'a', 'b'), (5L, 3.0, '', 'string'), (6L, 4.0, 'a', 'b'), (7L, 3.0, '', 'string'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'))]
-===file:sqls_util/select/select.sql, id:244, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT,1+1]===
+===file:sqls_util/select/select.sql, id:249, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT,1+1]===
 dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (4L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (5L, 3.0, '', 'string'), (7L, 3.0, '', 'string'))]
-===file:sqls_util/select/select.sql, id:245, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id,R_COMMENT]===
+===file:sqls_util/select/select.sql, id:250, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id,R_COMMENT]===
 dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (3L, 3.0, '', 'string'), (4L, 4.0, 'a', 'b'), (5L, 3.0, '', 'string'), (6L, 4.0, 'a', 'b'), (7L, 3.0, '', 'string'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'))]
-===file:sqls_util/select/select.sql, id:249, sql:[drop table if exists test1]===
+===file:sqls_util/select/select.sql, id:251, sql:[select count(*) from test1 group by R_COMMENT asc limit 2]===
+dble:[[(2L,), (4L,)]]
+===file:sqls_util/select/select.sql, id:255, sql:[drop table if exists test1]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:250, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
+===file:sqls_util/select/select.sql, id:256, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT varchar(50))]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:251, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:sqls_util/select/select.sql, id:257, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:252, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
+===file:sqls_util/select/select.sql, id:258, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (2,1, 'a')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:253, sql:[insert into test1 values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
+===file:sqls_util/select/select.sql, id:259, sql:[insert into test1 values(3,3,'','string'),(4,4,'a','b'),(5,3,'','string'),(6,4,'a','b'),(7,3,'','string'),(8,4,'a','b'),(9,4,'a','b')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:254, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_comment]===
+===file:sqls_util/select/select.sql, id:260, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_comment]===
 dble:[((1L, 1.0, 'a sting', None), (2L, 1.0, 'a', None), (4L, 4.0, 'a', 'b'), (6L, 4.0, 'a', 'b'), (8L, 4.0, 'a', 'b'), (9L, 4.0, 'a', 'b'), (3L, 3.0, '', 'string'), (5L, 3.0, '', 'string'), (7L, 3.0, '', 'string'))]
-===file:sqls_util/select/select.sql, id:255, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 where id =2 order by R_comment]===
+===file:sqls_util/select/select.sql, id:261, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 where id =2 order by R_comment]===
 dble:[((2L, 1.0, 'a', None),)]
-===file:sqls_util/select/select.sql, id:256, sql:[select count(*),R_COMMENT from test1 group by R_comment]===
+===file:sqls_util/select/select.sql, id:262, sql:[select count(*),R_COMMENT from test1 group by R_comment]===
 dble:[[(2L, None), (3L, 'string'), (4L, 'b')]]
-===file:sqls_util/select/select.sql, id:257, sql:[select count(*),R_COMMENT from test1 where id=2 group by R_comment]===
+===file:sqls_util/select/select.sql, id:263, sql:[select count(*),R_COMMENT from test1 where id=2 group by R_comment]===
 dble:[[(1L, None)]]
-===file:sqls_util/select/select.sql, id:258, sql:[select count(R_COMMENT) from test1]===
+===file:sqls_util/select/select.sql, id:264, sql:[select count(R_COMMENT) from test1]===
 dble:[[(7L,)]]
-===file:sqls_util/select/select.sql, id:259, sql:[select count(R_COMMENT) from test1 where id=2]===
+===file:sqls_util/select/select.sql, id:265, sql:[select count(R_COMMENT) from test1 where id=2]===
 dble:[[(0L,)]]
-===file:sqls_util/select/select.sql, id:260, sql:[select sum(R_COMMENT) from test1]===
+===file:sqls_util/select/select.sql, id:266, sql:[select sum(R_COMMENT) from test1]===
 dble:[[(0.0,)]]
-===file:sqls_util/select/select.sql, id:261, sql:[select sum(R_COMMENT) from test1 where id=2]===
+===file:sqls_util/select/select.sql, id:267, sql:[select sum(R_COMMENT) from test1 where id=2]===
 dble:[[(None,)]]
-===file:sqls_util/select/select.sql, id:262, sql:[select distinct R_COMMENT from test1]===
+===file:sqls_util/select/select.sql, id:268, sql:[select distinct R_COMMENT from test1]===
 dble:[[(None,), ('b',), ('string',)]]
-===file:sqls_util/select/select.sql, id:263, sql:[select distinct R_COMMENT from test1 where id=2]===
+===file:sqls_util/select/select.sql, id:269, sql:[select distinct R_COMMENT from test1 where id=2]===
 dble:[[(None,)]]
-===file:sqls_util/select/select.sql, id:264, sql:[select avg(R_REGIONKEY) from test1]===
+===file:sqls_util/select/select.sql, id:270, sql:[select avg(R_REGIONKEY) from test1]===
 dble:[[(3.0,)]]
-===file:sqls_util/select/select.sql, id:265, sql:[drop table if exists test1]===
+===file:sqls_util/select/select.sql, id:271, sql:[drop table if exists test1]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:266, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT date)]===
+===file:sqls_util/select/select.sql, id:272, sql:[create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT date)]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:267, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
+===file:sqls_util/select/select.sql, id:273, sql:[insert into test1 (id,R_REGIONKEY,R_NAME) values (1,1, 'a sting')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:268, sql:[insert into test1 values (2,1, 'a','1983-01-02')]===
+===file:sqls_util/select/select.sql, id:274, sql:[insert into test1 values (2,1, 'a','1983-01-02')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:269, sql:[insert into test1 values(3,3,'','1983-01-01'),(4,4,'a1','1967-09-12'),(5,3,'b1','1776-04-30'),(6,4,'b','1963-12-09')]===
+===file:sqls_util/select/select.sql, id:275, sql:[insert into test1 values(3,3,'','1983-01-01'),(4,4,'a1','1967-09-12'),(5,3,'b1','1776-04-30'),(6,4,'b','1963-12-09')]===
 dble:[[]]
-===file:sqls_util/select/select.sql, id:270, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT]===
+===file:sqls_util/select/select.sql, id:276, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT]===
 dble:[((1L, 1.0, 'a sting', None), (5L, 3.0, 'b1', datetime.date(1776, 4, 30)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (4L, 4.0, 'a1', datetime.date(1967, 9, 12)), (3L, 3.0, '', datetime.date(1983, 1, 1)), (2L, 1.0, 'a', datetime.date(1983, 1, 2)))]
-===file:sqls_util/select/select.sql, id:271, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME]===
+===file:sqls_util/select/select.sql, id:277, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_NAME]===
 dble:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (2L, 1.0, 'a', datetime.date(1983, 1, 2)), (1L, 1.0, 'a sting', None), (4L, 4.0, 'a1', datetime.date(1967, 9, 12)), (6L, 4.0, 'b', datetime.date(1963, 12, 9)), (5L, 3.0, 'b1', datetime.date(1776, 4, 30)))]
-===file:sqls_util/select/select.sql, id:272, sql:[select R_NAME,max(R_REGIONKEY) from test1 group by R_name]===
+===file:sqls_util/select/select.sql, id:278, sql:[select R_NAME,max(R_REGIONKEY) from test1 group by R_name]===
 dble:[[('', 3.0), ('a', 1.0), ('a sting', 1.0), ('a1', 4.0), ('b', 4.0), ('b1', 3.0)]]
-===file:sqls_util/select/select.sql, id:273, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 2,3]===
+===file:sqls_util/select/select.sql, id:279, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 2,3]===
 dble:[((3L, 3.0, '', datetime.date(1983, 1, 1)), (4L, 4.0, 'a1', datetime.date(1967, 9, 12)), (5L, 3.0, 'b1', datetime.date(1776, 4, 30)))]
-===file:sqls_util/select/select.sql, id:274, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,1]===
+===file:sqls_util/select/select.sql, id:280, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,1]===
 dble:[((2L, 1.0, 'a', datetime.date(1983, 1, 2)),)]
-===file:sqls_util/select/select.sql, id:275, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,2]===
+===file:sqls_util/select/select.sql, id:281, sql:[select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id limit 1,2]===
 dble:[((2L, 1.0, 'a', datetime.date(1983, 1, 2)), (3L, 3.0, '', datetime.date(1983, 1, 1)))]
-===file:sqls_util/select/select.sql, id:276, sql:[select id,R_REGIONKEY from test1 order by id,R_REGIONKEY limit 2,3]===
+===file:sqls_util/select/select.sql, id:282, sql:[select id,R_REGIONKEY from test1 order by id,R_REGIONKEY limit 2,3]===
 dble:[((3L, 3.0), (4L, 4.0), (5L, 3.0))]
-===file:sqls_util/select/select.sql, id:277, sql:[select id,R_REGIONKEY from test1 group by id,R_REGIONKEY limit 2,3]===
+===file:sqls_util/select/select.sql, id:283, sql:[select id,R_REGIONKEY from test1 group by id,R_REGIONKEY limit 2,3]===
 dble:[[(3L, 3.0), (4L, 4.0), (5L, 3.0)]]
-===file:sqls_util/select/select.sql, id:278, sql:[select id,R_REGIONKEY from test1 group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3]===
+===file:sqls_util/select/select.sql, id:284, sql:[select id,R_REGIONKEY from test1 group by id,R_REGIONKEY order by id,R_REGIONKEY limit 2,3]===
 dble:[((3L, 3.0), (4L, 4.0), (5L, 3.0))]
-===file:sqls_util/select/select.sql, id:282, sql:[drop table if exists test1]===
+===file:sqls_util/select/select.sql, id:288, sql:[drop table if exists test1]===
 dble:[[]]
