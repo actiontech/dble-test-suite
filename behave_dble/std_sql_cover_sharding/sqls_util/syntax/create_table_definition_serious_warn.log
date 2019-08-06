@@ -12,4 +12,4 @@ mysql err:(1146, "Table 'schema1.test1' doesn't exist")
 dble err:(-1, 'error totally whack')
 ===file:sqls_util/syntax/create_table_definition.sql, id:588, sql:[SHOW CREATE TABLE  test1]===
 mysql err:(1146, "Table 'schema1.test1' doesn't exist")
-dble err:(1146, "Table 'db2.test1' doesn't exist")
+dble err:(1146, "Table 'db1.test1' doesn't exist")
