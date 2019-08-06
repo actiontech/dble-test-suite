@@ -16,7 +16,7 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/show.sql, id:10, sql:[show table status/*allow_diff*/]===
 dble:[[('test1', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', ''), ('test2', 'InnoDB', '10', 'Compact', '0', '0', '16384', '0', '0', '0', '', None, None, None, 'utf8_general_ci', '', '', '')]]
-mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 7, 26, 13, 51, 20), datetime.datetime(2019, 7, 26, 13, 51, 20), None, 'latin1_swedish_ci', None, '', '')]]
+mysql:[[('test1', 'InnoDB', 10L, 'Dynamic', 4L, 4096L, 16384L, 0L, 0L, 0L, None, datetime.datetime(2019, 8, 5, 15, 56, 35), datetime.datetime(2019, 8, 5, 15, 56, 35), None, 'latin1_swedish_ci', None, '', '')]]
 ===file:sqls_util/syntax/show.sql, id:11, sql:[show table status like 'aly_o%'/*allow_diff*/]===
 dble:[[]]
 mysql:[[]]
