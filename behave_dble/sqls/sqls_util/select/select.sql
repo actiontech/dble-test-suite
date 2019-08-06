@@ -221,6 +221,9 @@ select id,k,c,pad from test1 where 1 XOR 1
 select id,k,c,pad from test1 where 1 XOR 0
 select id,k,c,pad from test1 where 1 XOR NULL
 select id,k,c,pad from test1 where 1 XOR 1 XOR 1
+select count(*) from test1 where 2<id
+select count(*) from test1 where 1=1
+select count(*) from test1 where id =1 or id=2
 #
 #clauses(order by/group by/having)
 #
@@ -245,6 +248,7 @@ select R_comment,count(*) a from test1 group by R_comment having count(*)>1+1
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT+1 asc
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by R_COMMENT,1+1
 select id,R_REGIONKEY,R_NAME,R_COMMENT from test1 order by id,R_COMMENT
+select count(*) from test1 group by R_COMMENT asc limit 2
 #
 #special_scene(null,Accuracy)
 #

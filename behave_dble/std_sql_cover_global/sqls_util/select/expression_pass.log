@@ -123,7 +123,7 @@ dble:[[(1L, 1.0, 'a string', 'test001'), (2L, 2.0, 'a\nstring', 'test002'), (3L,
 ===file:sqls_util/select/expression.sql, id:69, sql:[select R_name name from test1]===
 dble:[[('',), ('17',), ('A',), ('MySQL',), ('a\x08string',), ('a\tstring',), ('a\nstring',), ('a\nstring',), ('a\rstring',), ('a string',), ('a""string""',), ("a'string'",), ('a\\%string',), ('a\\_string',), ('a\\string',), ('another string',), ('azstring',), ('binary',), ('binary',), ('\xe4\xb8\xad',)]]
 ===file:sqls_util/select/expression.sql, id:70, sql:[select DATE_SUB(CURDATE(),INTERVAL 30 DAY)]===
-dble:[[(datetime.date(2019, 2, 17),)]]
+dble:[[(datetime.date(2019, 7, 6),)]]
 ===file:sqls_util/select/expression.sql, id:71, sql:[select * from test1 where DATE_SUB(CURDATE(),INTERVAL 30 DAY)=2017-08-13]===
 dble:[[]]
 ===file:sqls_util/select/expression.sql, id:75, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where id= (b'01' | B'11')]===
