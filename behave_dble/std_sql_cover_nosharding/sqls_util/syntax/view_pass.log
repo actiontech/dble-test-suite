@@ -176,9 +176,32 @@ dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (1L, 1L, 'test\xe4\xb8\
 dble:[[(1L, 1L, 'order\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'order\xe4\xb8\xadid\xe4\xb8\xba3', 3L)]]
 ===file:sqls_util/syntax/view.sql, id:124, sql:[drop view view_test]===
 dble:[[]]
-===file:sqls_util/syntax/view.sql, id:128, sql:[drop table if exists test1]===
+===file:sqls_util/syntax/view.sql, id:126, sql:[drop table if exists test1]===
 dble:[[]]
-===file:sqls_util/syntax/view.sql, id:129, sql:[drop table if exists schema2.test2]===
+===file:sqls_util/syntax/view.sql, id:127, sql:[create or replace view test1 as select id from schema2.test2]===
 dble:[[]]
-===file:sqls_util/syntax/view.sql, id:130, sql:[drop table if exists schema3.test3]===
+===file:sqls_util/syntax/view.sql, id:128, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:130, sql:[drop view test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:132, sql:[CREATE TABLE test1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARACTER SET = utf8]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:133, sql:[create view view_test as select name,pad from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:134, sql:[show create view view_test/*allow_diff*/]===
+dble:[[('view_test', 'create view view_test as  select name,pad from test1', 'latin1', 'latin1_swedish_ci')]]
+mysql:[[('view_test', 'CREATE ALGORITHM=UNDEFINED DEFINER=`test`@`%` SQL SECURITY DEFINER VIEW `view_test` AS select `test1`.`name` AS `name`,`test1`.`pad` AS `pad` from `test1`', 'latin1', 'latin1_swedish_ci')]]
+===file:sqls_util/syntax/view.sql, id:136, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:138, sql:[create view view_test as select id,name from test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:139, sql:[SHOW FULL TABLES WHERE Table_type = 'VIEW']===
+dble:[[('view_test', 'VIEW')]]
+===file:sqls_util/syntax/view.sql, id:140, sql:[drop view view_test]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:144, sql:[drop table if exists test1]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:145, sql:[drop table if exists schema2.test2]===
+dble:[[]]
+===file:sqls_util/syntax/view.sql, id:146, sql:[drop table if exists schema3.test3]===
 dble:[[]]
