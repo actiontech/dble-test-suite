@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by WuJinling at 2019/3/6
+@skip
 Feature: test "check xml version warning message in dble.log and dryrun"
   # details please refer to github issue #986
   Scenario: check xml version warning  message in dryrun and dble.log #1
