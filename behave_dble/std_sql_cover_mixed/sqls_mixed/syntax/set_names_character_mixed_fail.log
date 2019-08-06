@@ -1,21 +1,21 @@
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:10, sql:[select @@character_set_client]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:11, sql:[select @@character_set_results]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:16, sql:[select @@character_set_client]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:17, sql:[select @@character_set_results]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:19, sql:[select @@character_set_client]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:20, sql:[select @@character_set_results]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
 ===file:sqls_mixed/syntax/set_names_character_mixed.sql, id:21, sql:[select @@character_set_connection]===
-dble:[[('utf8',)]]
+dble:[[('utf8mb4',)]]
 mysql:[[('latin1',)]]
