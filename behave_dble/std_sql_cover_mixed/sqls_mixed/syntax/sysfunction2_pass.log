@@ -41,8 +41,8 @@ dble:[[(21L,)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:61, sql:[select decode(ENCODE('cleartext', CONCAT('my_random_salt','my_secret_password')), 'abc')]===
 dble:[[('\xff\xe5a,\xf0\xc90eF',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:62, sql:[SELECT ENCRYPT('hello')/*allow_diff*/]===
-dble:[[('mj3WFqzAkh2qE',)]]
-mysql:[[('mj3WFqzAkh2qE',)]]
+dble:[[('DkO6pDenGUmSQ',)]]
+mysql:[[('DkO6pDenGUmSQ',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:63, sql:[SELECT ENCRYPT('hello','abc')]===
 dble:[[('abl0JrMf6tlhw',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:64, sql:[SELECT MD5('testing')]===
@@ -74,7 +74,7 @@ dble:[[(0L,)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:236, sql:[SELECT JSON_ARRAY_APPEND('["a", ["b", "c"], "d"]', '$[1]', 1)]===
 dble:[[('["a", ["b", "c", 1], "d"]',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:237, sql:[SELECT JSON_ARRAY(1, "abc", NULL, TRUE, CURTIME())/*allow_10%_diff*/]===
-dble:[[('[1, "abc", null, true, "16:31:48.000000"]',)]]
+dble:[[('[1, "abc", null, true, "16:51:28.000000"]',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:238, sql:[SELECT JSON_ARRAY_INSERT('["a", ["b", "c"], "d"]', '$[100]', 'x')]===
 dble:[[('["a", ["b", "c"], "d", "x"]',)]]
 ===file:sqls_mixed/syntax/sysfunction2.sql, id:239, sql:[SELECT JSON_INSERT('{ "a": 1, "b": [2, 3]}', '$.a', 10, '$.c', '[true, false]')]===

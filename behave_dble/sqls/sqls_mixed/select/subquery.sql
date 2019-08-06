@@ -73,6 +73,7 @@ select * from sharding_4_t1 where row(id,pad)=(select id,pad from schema2.shardi
 select id,name,pad from sharding_4_t1 where (id,pad)in(select id,pad from schema2.sharding_4_t2)
 select id,name,pad from sharding_4_t1 where (1,1)in(select id,pad from schema2.sharding_4_t2)
 SELECT pad FROM sharding_4_t1 AS x WHERE x.id = (SELECT pad FROM schema2.sharding_4_t2 AS y WHERE x.id = (SELECT pad FROM schema3.sharding_4_t3 WHERE y.id = schema3.sharding_4_t3.id))
+select id from (select * from sharding_4_t1)a
 #
 #contains Aggregate function
 #
