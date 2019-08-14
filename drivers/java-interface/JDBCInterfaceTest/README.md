@@ -1,11 +1,12 @@
 # connector-j
+```
 test sqls supported by connetor/j
 ant jar
 ant create-mysql-database
 ant setup
-
+```
 #interfaces covered
-
+```
 class: java.sql.Connection
 void					abort(Executor executor)
 void					close()
@@ -31,7 +32,9 @@ void                  	rollback(Savepoint savepoint)
 Savepoint             	setSavepoint()                       
 void                   	setAutoCommit(boolean autoCommit)                       
 void                   	setCatalog(String catalog)
+```
 #### unsupported
+```
 Array					createArrayOf(String typeName, Object[] elements)//MySQL and Java DB currently do not support the ARRAY SQL data type.
 NClob					createNClob()//MySQL has no such type
 Struct					createStruct(String typeName, Object[] attributes)//MySQL has no such type
@@ -99,11 +102,12 @@ void				  	setString(String parameterName, String x)
 
 class: java.sql SQLWarning
 String					getSQLState()
-
+```
 
 # executing command:
+```
 java  -jar ${jar_name}
-
+```
 
 
 
