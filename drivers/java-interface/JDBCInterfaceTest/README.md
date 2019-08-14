@@ -1,11 +1,11 @@
-# connector-j
+# jdbc-interface
 ```
 test sqls supported by connetor/j
 ant jar
 ant create-mysql-database
 ant setup
 ```
-#interfaces covered
+# interfaces covered
 ```
 class: java.sql.Connection
 void					abort(Executor executor)
