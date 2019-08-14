@@ -20,6 +20,8 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:24, sql:[select @@sql_auto_is_null]===
 dble:[[(1L,)]]
+===file:sqls_util/syntax/set_server_var_util.sql, id:26, sql:[select id,data from test1 where id is null]===
+dble:[[]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:27, sql:[set @@session.sql_auto_is_null=off]===
 dble:[[]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:28, sql:[select @@sql_auto_is_null]===
