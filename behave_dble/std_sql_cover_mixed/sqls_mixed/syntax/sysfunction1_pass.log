@@ -503,43 +503,43 @@ dble:[[(None,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:293, sql:[SELECT CONVERT_TZ('2004-01-01 12:00:00','+00:00','+10:00')]===
 dble:[[(datetime.datetime(2004, 1, 1, 22, 0),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:294, sql:[SELECT CURDATE()]===
-dble:[[(datetime.date(2019, 3, 8),)]]
+dble:[[(datetime.date(2019, 8, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:295, sql:[SELECT CURDATE() + 0]===
-dble:[[(20190308L,)]]
+dble:[[(20190805L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:296, sql:[SELECT CURRENT_DATE]===
-dble:[[(datetime.date(2019, 3, 8),)]]
+dble:[[(datetime.date(2019, 8, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:297, sql:[SELECT CURRENT_DATE()]===
-dble:[[(datetime.date(2019, 3, 8),)]]
+dble:[[(datetime.date(2019, 8, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:298, sql:[SELECT CURRENT_TIME /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 42583),)]]
-mysql:[[(datetime.timedelta(0, 42583),)]]
+dble:[[(datetime.timedelta(0, 60665),)]]
+mysql:[[(datetime.timedelta(0, 60665),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:299, sql:[SELECT CURRENT_TIME() /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 42583),)]]
-mysql:[[(datetime.timedelta(0, 42583),)]]
+dble:[[(datetime.timedelta(0, 60665),)]]
+mysql:[[(datetime.timedelta(0, 60665),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:300, sql:[SELECT CURTIME() /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 42584),)]]
-mysql:[[(datetime.timedelta(0, 42584),)]]
+dble:[[(datetime.timedelta(0, 60665),)]]
+mysql:[[(datetime.timedelta(0, 60665),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:301, sql:[SELECT CURRENT_TIMESTAMP /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:302, sql:[SELECT CURRENT_TIMESTAMP() /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:303, sql:[SELECT NOW() /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:304, sql:[SELECT LOCALTIME /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 5),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:305, sql:[SELECT LOCALTIME() /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 6),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 6),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:306, sql:[SELECT LOCALTIMESTAMP /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 6),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 6),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:307, sql:[SELECT LOCALTIMESTAMP() /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 44),)]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 6),)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 6),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:308, sql:[SELECT DATE('2003-12-31 01:02:03')]===
 dble:[[(datetime.date(2003, 12, 31),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:309, sql:[SELECT DATEDIFF('2007-12-31 23:59:59','2007-12-30')]===
@@ -617,7 +617,7 @@ dble:[[(datetime.datetime(2015, 11, 14, 0, 8, 1),)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:345, sql:[SELECT FROM_UNIXTIME(1447430881) + 0]===
 dble:[[(20151114000801L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:346, sql:[SELECT FROM_UNIXTIME(UNIX_TIMESTAMP(),'%Y %D %M %h:%i:%s %x')/*allow_10%_diff*/]===
-dble:[[('2019 8th March 11:49:48 2019',)]]
+dble:[[('2019 5th August 04:51:08 2019',)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:347, sql:[SELECT DATE_FORMAT('2003-10-03',GET_FORMAT(DATE,'EUR'))]===
 dble:[[('03.10.2003',)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:348, sql:[SELECT STR_TO_DATE('10.31.2003',GET_FORMAT(DATE,'USA'))]===
@@ -641,11 +641,11 @@ dble:[[(2L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:357, sql:[SELECT MONTHNAME('2008-02-03')]===
 dble:[[('February',)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:358, sql:[SELECT NOW(), SLEEP(2), NOW() /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 51), 0L, datetime.datetime(2019, 3, 8, 11, 49, 51))]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 49), 0L, datetime.datetime(2019, 3, 8, 11, 49, 49))]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 11), 0L, datetime.datetime(2019, 8, 5, 16, 51, 11))]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 9), 0L, datetime.datetime(2019, 8, 5, 16, 51, 9))]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:359, sql:[SELECT SYSDATE(), SLEEP(2), SYSDATE() /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 11, 49, 56), 0L, datetime.datetime(2019, 3, 8, 11, 49, 58))]]
-mysql:[[(datetime.datetime(2019, 3, 8, 11, 49, 54), 0L, datetime.datetime(2019, 3, 8, 11, 49, 56))]]
+dble:[[(datetime.datetime(2019, 8, 5, 16, 51, 15), 0L, datetime.datetime(2019, 8, 5, 16, 51, 17))]]
+mysql:[[(datetime.datetime(2019, 8, 5, 16, 51, 13), 0L, datetime.datetime(2019, 8, 5, 16, 51, 15))]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:360, sql:[SELECT PERIOD_ADD(200801,2)]===
 dble:[[(200803L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:361, sql:[SELECT PERIOD_DIFF(200802,200703)]===
@@ -691,15 +691,15 @@ dble:[[(62966505600L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:381, sql:[SELECT UNIX_TIMESTAMP('2015-11-13 10:20:19')]===
 dble:[[(1447381219L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:382, sql:[SELECT UNIX_TIMESTAMP()/*allow_10%_diff*/]===
-dble:[[(1552017000L,)]]
+dble:[[(1564995078L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:383, sql:[SELECT UTC_DATE(), UTC_DATE() + 0]===
-dble:[[(datetime.date(2019, 3, 8), 20190308L)]]
+dble:[[(datetime.date(2019, 8, 5), 20190805L)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:384, sql:[SELECT UTC_TIME(), UTC_TIME() + 0 /*allow_diff*/]===
-dble:[[(datetime.timedelta(0, 13800), 35000L)]]
-mysql:[[(datetime.timedelta(0, 13800), 35000L)]]
+dble:[[(datetime.timedelta(0, 31879), 85119L)]]
+mysql:[[(datetime.timedelta(0, 31879), 85119L)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:385, sql:[SELECT UTC_TIMESTAMP(), UTC_TIMESTAMP() + 0 /*allow_diff*/]===
-dble:[[(datetime.datetime(2019, 3, 8, 3, 50), 20190308035000L)]]
-mysql:[[(datetime.datetime(2019, 3, 8, 3, 50), 20190308035000L)]]
+dble:[[(datetime.datetime(2019, 8, 5, 8, 51, 19), 20190805085119L)]]
+mysql:[[(datetime.datetime(2019, 8, 5, 8, 51, 19), 20190805085119L)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:386, sql:[SELECT WEEK('2008-02-20')]===
 dble:[[(7L,)]]
 ===file:sqls_mixed/syntax/sysfunction1.sql, id:387, sql:[SELECT WEEK('2008-12-31',1)]===

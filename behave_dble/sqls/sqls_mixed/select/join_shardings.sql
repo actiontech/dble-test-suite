@@ -117,6 +117,9 @@ select  * from sharding_4_t1 a left join schema2.sharding_4_t2 b on a.pad=b.pad 
 select * from sharding_4_t1 a left join schema2.sharding_4_t2 b on a.pad=b.pad where a.t_id>b.o_id
 select * from sharding_4_t1 a left join schema2.sharding_4_t2 b on a.pad=b.pad where a.t_id<b.o_id
 select * from sharding_4_t1 a left join schema2.sharding_4_t2 b on a.pad=b.pad where a.t_id=b.o_id
+select * from sharding_4_t1 a,schema2.sharding_4_t2 b where (a.id<3 && b.id>2)
+select * from sharding_4_t1 a,schema2.sharding_4_t2 b where (a.id>1 && b.id<4 && a.pad=b.pad)
+select * from sharding_4_t1 a,schema2.sharding_4_t2 b where a.id=b.id
 #
 #group by/order by
 #
