@@ -44,3 +44,9 @@ dble:[[]]
 dble:[[]]
 ===file:sqls_util/syntax/loaddata.sql, id:29, sql:[select id,c1,c2,c3 from test1;]===
 dble:[[(1L, '1', 'c2', 'c3')]]
+===file:sqls_util/syntax/loaddata.sql, id:31, sql:[load data infile "./test.txt" into table test1 character set 'utf8' fields terminated by ',' lines terminated by '\n']===
+dble:[[]]
+===file:sqls_util/syntax/loaddata.sql, id:32, sql:[select count(*) from test1 order by id]===
+dble:[((15001L,),)]
+===file:sqls_util/syntax/loaddata.sql, id:33, sql:[update test1 set c2=id]===
+dble:[[]]
