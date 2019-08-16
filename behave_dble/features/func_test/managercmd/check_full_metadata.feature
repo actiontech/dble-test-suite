@@ -533,5 +533,5 @@ Feature: test "check full @@metadata...'"
       | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema2'       | hasNoStr{student}   | schema1 |
       | root  | 111111 | conn_0 | True    | reload @@metadata where table in('schema1.test1') | success  | schema1 |
       | root  | 111111 | conn_0 | True    | check full @@metadata where schema='schema1'       | hasNoStr{name}   | schema1 |
-      | root  | 111111 | conn_0 | True    | reload @@metadata where schema=schema2              | reload @@metadata [where schema='?' [and table='?']   | schema1 |
+      | root  | 111111 | conn_0 | True    | reload @@metadata where schema=schema2              | success   | schema1 |
 
