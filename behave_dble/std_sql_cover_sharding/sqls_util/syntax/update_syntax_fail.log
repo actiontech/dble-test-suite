@@ -12,6 +12,10 @@ dble err:(1064, "Sharding column can't be updated test1->ID")
 ===file:sqls_util/syntax/update_syntax.sql, id:23, sql:[SELECT id,R_REGIONKEY FROM test1]===
 dble:[[(1L, 31L), (2L, 31L), (3L, 31L), (4L, 31L)]]
 mysql:[[(0L, 31L), (1L, 31L), (2L, 31L), (3L, 31L)]]
+===file:sqls_util/syntax/update_syntax.sql, id:59, sql:[UPDATE test1 SET R_REGIONKEY=R_REGIONKEY+10 WHERE R_REGIONKEY>=2 order by R_NAME LIMIT 1]===
+dble:[None]
+mysql:[()]
+dble err:(1064, 'delete/update sharding table with a limit route to multiNode not support')
 ===file:sqls_util/syntax/update_syntax.sql, id:60, sql:[SELECT * FROM test1]===
-dble:[[(1L, 1L, 'test2', 'test001'), (2L, 12L, 'test2', 'test002'), (3L, 13L, 'test2', 'test003'), (4L, 20L, 'test1', 'test004')]]
+dble:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 10L, 'test1', 'test004')]]
 mysql:[[(1L, 1L, 'test2', 'test001'), (2L, 2L, 'test2', 'test002'), (3L, 3L, 'test2', 'test003'), (4L, 20L, 'test1', 'test004')]]
