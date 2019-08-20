@@ -26,9 +26,9 @@ def step_impl(context,hostname, logfile):
         level = row[1] # 1 is level
         detail = row[2] # 2 is detail
         if level == "WARNING":
-            if (detail.rfind('$') != -1):
-                dble_version = context.cfg_dble['ftp_path'].split('/')[-2]
-                detail = detail.replace("${version}", dble_version)
+            # if (detail.rfind('$') != -1):
+            #     dble_version = context.cfg_dble['ftp_path'].split('/')[-2]
+            #     detail = detail.replace("${version}", dble_version)
             detail = detail.replace("[", "\[")
             detail = detail.replace("]", "\]")
             str_to_find = "WARN \[.*?\].*{0}".format(detail)
