@@ -8,8 +8,8 @@ import java.sql.Types;
 
 public class StoredProcedureMySQLSample extends InterfaceTest {
 
-	public StoredProcedureMySQLSample(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public StoredProcedureMySQLSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	public void start()throws SQLException{
@@ -60,32 +60,32 @@ public class StoredProcedureMySQLSample extends InterfaceTest {
 						"END main; " +
 						"end";
 
-		Statement stmt_uproxy = null, stmt_mysql=null;
-		Statement stmtDrop_uproxy = null, stmtDrop_mysql=null;
+		Statement stmt_dble = null, stmt_mysql=null;
+		Statement stmtDrop_dble = null, stmtDrop_mysql=null;
 
 		try {
 			System.out.println("Calling DROP PROCEDURE");
-			stmtDrop_uproxy = uproxyConn.createStatement();
-			stmtDrop_uproxy.execute(queryDrop);
+			stmtDrop_dble = dbleConn.createStatement();
+			stmtDrop_dble.execute(queryDrop);
 			stmtDrop_mysql = mysqlConn.createStatement();
 			stmtDrop_mysql.execute(queryDrop);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (stmtDrop_uproxy != null) { stmtDrop_uproxy.close(); }
+			if (stmtDrop_dble != null) { stmtDrop_dble.close(); }
 			if (stmtDrop_mysql != null) { stmtDrop_mysql.close(); }
 		}
 
 		try {
-			stmt_uproxy = uproxyConn.createStatement();
-			stmt_uproxy.executeUpdate(createProcedure);
+			stmt_dble = dbleConn.createStatement();
+			stmt_dble.executeUpdate(createProcedure);
 			
 			stmt_mysql = mysqlConn.createStatement();
 			stmt_mysql.executeUpdate(createProcedure);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (stmt_uproxy != null) { stmt_uproxy.close(); }
+			if (stmt_dble != null) { stmt_dble.close(); }
 			if (stmt_mysql != null) { stmt_mysql.close(); }
 		}
 	}
@@ -105,34 +105,34 @@ public class StoredProcedureMySQLSample extends InterfaceTest {
 						"and coffeeName = COFFEES.COF_NAME; " +
 						"select supplierName; " +
 						"end";
-		Statement stmt_uproxy = null, stmt_mysql=null;
-		Statement stmtDrop_uproxy = null, stmtDrop_mysql=null;
+		Statement stmt_dble = null, stmt_mysql=null;
+		Statement stmtDrop_dble = null, stmtDrop_mysql=null;
 
 		try {
 			System.out.println("Calling DROP PROCEDURE");
-			stmtDrop_uproxy = uproxyConn.createStatement();
-			stmtDrop_uproxy.execute(queryDrop);
+			stmtDrop_dble = dbleConn.createStatement();
+			stmtDrop_dble.execute(queryDrop);
 			
 			stmtDrop_mysql = mysqlConn.createStatement();
 			stmtDrop_mysql.execute(queryDrop);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (stmtDrop_uproxy != null) { stmtDrop_uproxy.close(); }
+			if (stmtDrop_dble != null) { stmtDrop_dble.close(); }
 			if (stmtDrop_mysql != null) { stmtDrop_mysql.close(); }
 		}
 
 
 		try {
-			stmt_uproxy = uproxyConn.createStatement();
-			stmt_uproxy.executeUpdate(createProcedure);
+			stmt_dble = dbleConn.createStatement();
+			stmt_dble.executeUpdate(createProcedure);
 			
 			stmt_mysql = mysqlConn.createStatement();
 			stmt_mysql.executeUpdate(createProcedure);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (stmt_uproxy != null) { stmt_uproxy.close(); }
+			if (stmt_dble != null) { stmt_dble.close(); }
 			if (stmt_mysql != null) { stmt_mysql.close(); }
 		}
 	}
@@ -150,95 +150,95 @@ public class StoredProcedureMySQLSample extends InterfaceTest {
 						"where SUPPLIERS.SUP_ID = COFFEES.SUP_ID " +
 						"order by SUP_NAME; " +
 						"end";
-		Statement stmt_uproxy = null, stmt_mysql=null;
-		Statement stmtDrop_uproxy = null, stmtDrop_mysql=null;
+		Statement stmt_dble = null, stmt_mysql=null;
+		Statement stmtDrop_dble = null, stmtDrop_mysql=null;
 
 		try {
 			System.out.println("Calling DROP PROCEDURE");
-			stmtDrop_uproxy = uproxyConn.createStatement();
-			stmtDrop_uproxy.execute(queryDrop);
+			stmtDrop_dble = dbleConn.createStatement();
+			stmtDrop_dble.execute(queryDrop);
 			
 			stmtDrop_mysql = mysqlConn.createStatement();
 			stmtDrop_mysql.execute(queryDrop);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (stmtDrop_uproxy != null) { stmtDrop_uproxy.close(); }
+			if (stmtDrop_dble != null) { stmtDrop_dble.close(); }
 			if (stmtDrop_mysql != null) { stmtDrop_mysql.close(); }
 		}
 
 
 		try {
-			stmt_uproxy = uproxyConn.createStatement();
-			stmt_uproxy.executeUpdate(createProcedure);
+			stmt_dble = dbleConn.createStatement();
+			stmt_dble.executeUpdate(createProcedure);
 			
 			stmt_mysql = mysqlConn.createStatement();
 			stmt_mysql.executeUpdate(createProcedure);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (stmt_uproxy != null) { stmt_uproxy.close(); }
+			if (stmt_dble != null) { stmt_dble.close(); }
 			if (stmt_mysql != null) { stmt_mysql.close(); }
 		}
 	}
 
 	public void runStoredProcedures(String coffeeNameArg, float maximumPercentageArg, float newPriceArg) throws SQLException {
-		CallableStatement cs_uproxy = null, cs_mysql = null;
+		CallableStatement cs_dble = null, cs_mysql = null;
 
 		try {
 			System.out.println("\nCalling the procedure GET_SUPPLIER_OF_COFFEE");
 			
-			cs_uproxy = this.uproxyConn.prepareCall("{call GET_SUPPLIER_OF_COFFEE(?, ?)}");
-			cs_uproxy.setString(1, coffeeNameArg);
-			cs_uproxy.registerOutParameter(2, Types.VARCHAR);
-			cs_uproxy.executeQuery();
+			cs_dble = this.dbleConn.prepareCall("{call GET_SUPPLIER_OF_COFFEE(?, ?)}");
+			cs_dble.setString(1, coffeeNameArg);
+			cs_dble.registerOutParameter(2, Types.VARCHAR);
+			cs_dble.executeQuery();
 			
 			cs_mysql = this.mysqlConn.prepareCall("{call GET_SUPPLIER_OF_COFFEE(?, ?)}");
 			cs_mysql.setString(1, coffeeNameArg);
 			cs_mysql.registerOutParameter(2, Types.VARCHAR);
 			cs_mysql.executeQuery();
 
-			String supplierName_uproxy = cs_uproxy.getString(2);
+			String supplierName_dble = cs_dble.getString(2);
 			String supplierName_mysql = cs_mysql.getString(2);
 
-			if(!supplierName_uproxy.equals(supplierName_mysql)){
-				on_assert_fail("uproxy get different result with mysql after execute procedure");
+			if(!supplierName_dble.equals(supplierName_mysql)){
+				on_assert_fail("dble get different result with mysql after execute procedure");
 			}
-			if(supplierName_uproxy != null) {
-				print_debug("\nSupplier of the coffee " + coffeeNameArg + ": " + supplierName_uproxy);          
+			if(supplierName_dble != null) {
+				print_debug("\nSupplier of the coffee " + coffeeNameArg + ": " + supplierName_dble);
 			}else{
 				print_debug("\nUnable to find the coffee " + coffeeNameArg);        
 			}
-			cs_uproxy.close();
+			cs_dble.close();
 			cs_mysql.close();
 
 			System.out.println("\nCalling the procedure SHOW_SUPPLIERS");
-			cs_uproxy = this.uproxyConn.prepareCall("{call SHOW_SUPPLIERS}");
-			ResultSet rs_uproxy = cs_uproxy.executeQuery();
+			cs_dble = this.dbleConn.prepareCall("{call SHOW_SUPPLIERS}");
+			ResultSet rs_dble = cs_dble.executeQuery();
 			
 			cs_mysql = this.mysqlConn.prepareCall("{call SHOW_SUPPLIERS}");
 			ResultSet rs_mysql = cs_mysql.executeQuery();
 
-			compare_result(rs_mysql, rs_uproxy);
-			while (rs_uproxy.next()) {
-				String supplier = rs_uproxy.getString("SUP_NAME");
-				String coffee = rs_uproxy.getString("COF_NAME");
+			compare_result(rs_mysql, rs_dble);
+			while (rs_dble.next()) {
+				String supplier = rs_dble.getString("SUP_NAME");
+				String coffee = rs_dble.getString("COF_NAME");
 				print_debug(supplier + ": " + coffee);
 			}
 
 			print_debug("\nContents of COFFEES table before calling RAISE_PRICE:");
-			CoffeesTable.viewTable(mysqlConn, uproxyConn);
-			cs_uproxy.close();
+			CoffeesTable.viewTable(mysqlConn, dbleConn);
+			cs_dble.close();
 			cs_mysql.close();
 
 			System.out.println("\nCalling the procedure RAISE_PRICE");
-			cs_uproxy = this.uproxyConn.prepareCall("{call RAISE_PRICE(?,?,?)}");
-			cs_uproxy.setString(1, coffeeNameArg);
-			cs_uproxy.setFloat(2, maximumPercentageArg);
-			cs_uproxy.registerOutParameter(3, Types.NUMERIC);
-			cs_uproxy.setFloat(3, newPriceArg);
+			cs_dble = this.dbleConn.prepareCall("{call RAISE_PRICE(?,?,?)}");
+			cs_dble.setString(1, coffeeNameArg);
+			cs_dble.setFloat(2, maximumPercentageArg);
+			cs_dble.registerOutParameter(3, Types.NUMERIC);
+			cs_dble.setFloat(3, newPriceArg);
 			
-			cs_uproxy.execute();
+			cs_dble.execute();
 			
 			cs_mysql = this.mysqlConn.prepareCall("{call RAISE_PRICE(?,?,?)}");
 			cs_mysql.setString(1, coffeeNameArg);
@@ -248,19 +248,19 @@ public class StoredProcedureMySQLSample extends InterfaceTest {
 
 			cs_mysql.execute();
 
-			float price_uproxy = cs_uproxy.getFloat(3);
+			float price_dble = cs_dble.getFloat(3);
 			float price_mysql = cs_mysql.getFloat(3);
-			if(price_uproxy != price_mysql){
-				on_assert_fail("uproxy get different newPrice with mysql after calling RAISE_PRICE");
+			if(price_dble != price_mysql){
+				on_assert_fail("dble get different newPrice with mysql after calling RAISE_PRICE");
 			}
-			print_debug("\nValue of newPrice after calling RAISE_PRICE: " + price_uproxy);
+			print_debug("\nValue of newPrice after calling RAISE_PRICE: " + price_dble);
 
 			print_debug("\nContents of COFFEES table after calling RAISE_PRICE:");
-			CoffeesTable.viewTable(mysqlConn, uproxyConn);
+			CoffeesTable.viewTable(mysqlConn, dbleConn);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (cs_uproxy != null) { cs_uproxy.close(); }
+			if (cs_dble != null) { cs_dble.close(); }
 			if (cs_mysql != null) { cs_mysql.close(); }
 		}
 	}
