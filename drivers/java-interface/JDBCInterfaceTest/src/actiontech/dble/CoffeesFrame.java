@@ -57,8 +57,8 @@ import javax.swing.JTextField;
 import com.sun.rowset.CachedRowSetImpl;
 
 public class CoffeesFrame extends JFrame implements RowSetListener {
-	ConnProperties uproxyProp;
-	Connection uproxyConn;
+	ConnProperties dbleProp;
+	Connection dbleConn;
 	JTable table; // The table for displaying data
 
 	JLabel label_COF_NAME;
@@ -79,13 +79,13 @@ public class CoffeesFrame extends JFrame implements RowSetListener {
 
 	CoffeesTableModel myCoffeesTableModel;
 
-	public CoffeesFrame(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
+	public CoffeesFrame(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
 		super("The Coffee Break: COFFEES Table"); // Set window title
 
-		this.uproxyProp = uproxyProp;
+		this.dbleProp = dbleProp;
 		
 		TestUtilities interfaceUtilities = new TestUtilities();
-		uproxyConn = interfaceUtilities.getConnection(uproxyProp);
+		dbleConn = interfaceUtilities.getConnection(dbleProp);
 
 		// Close connections exit the application when the user
 		// closes the window
@@ -94,7 +94,7 @@ public class CoffeesFrame extends JFrame implements RowSetListener {
 			public void windowClosing(WindowEvent e) {
 
 				try {
-					uproxyConn.close();
+					dbleConn.close();
 				} catch (SQLException sqle) {
 					TestUtilities.printSQLException(sqle);
 				}
@@ -356,18 +356,18 @@ public class CoffeesFrame extends JFrame implements RowSetListener {
 		CachedRowSet crs = null;
 		try {
 			TestUtilities interfaceUtilities = new TestUtilities();
-			uproxyConn = interfaceUtilities.getConnection(uproxyProp);
+			dbleConn = interfaceUtilities.getConnection(dbleProp);
 			
 			crs = new CachedRowSetImpl();
 			crs.setType(ResultSet.TYPE_SCROLL_INSENSITIVE);
 			crs.setConcurrency(ResultSet.CONCUR_UPDATABLE);
-			crs.setUsername(uproxyProp.userName);
-			crs.setPassword(uproxyProp.password);
+			crs.setUsername(dbleProp.userName);
+			crs.setPassword(dbleProp.password);
 
 			// In MySQL, to disable auto-commit, set the property relaxAutoCommit to
 			// true in the connection URL.
 
-			crs.setUrl(uproxyProp.urlString + "/" + uproxyProp.dbName+"?relaxAutoCommit=true&&useSSL=false");
+			crs.setUrl(dbleProp.urlString + "/" + dbleProp.dbName+"?relaxAutoCommit=true&&useSSL=false");
 
 			// Regardless of the query, fetch the contents of COFFEES
 
