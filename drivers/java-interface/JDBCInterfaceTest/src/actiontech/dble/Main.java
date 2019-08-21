@@ -73,7 +73,7 @@ public class Main {
 			dmt.start_test();
 
 			System.out.println("Congratulations, all interfaces passed!");
-//			CoffeesFrame qf = new CoffeesFrame(mysqlProp, uproxyProp);
+//			CoffeesFrame qf = new CoffeesFrame(mysqlProp, dbleProp);
 //		    qf.pack();
 //		    qf.setVisible(true);
 
