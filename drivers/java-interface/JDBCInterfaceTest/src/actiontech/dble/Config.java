@@ -116,9 +116,9 @@ public class Config {
 		TEST_DB = "schema1";
 	}
 
-	public static String getUproxyAdminCmd(String uproxy_cmd) {
+	public static String getdbleAdminCmd(String dble_cmd) {
 		String cmd = "mysql -u" + Config.TEST_ADMIN + " -p"
-				+ Config.TEST_ADMIN_PASSWD + " -h127.0.0.1 -P" + Config.TEST_PORT + " -e \""+uproxy_cmd + "\"";
+				+ Config.TEST_ADMIN_PASSWD + " -h127.0.0.1 -P" + Config.TEST_PORT + " -e \""+dble_cmd + "\"";
 
 		return cmd;
 	}
@@ -132,7 +132,7 @@ public class Config {
 		}
 	}
 
-	public static String getUproxyLogName() {
+	public static String getdbleLogName() {
 		SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_H:m:s", Locale.CHINA);
 		String log_name = format.format(new Date());
 		return log_name;

@@ -17,8 +17,8 @@ import com.sun.rowset.CachedRowSetImpl;
 
 public class CachedRowSetSample extends InterfaceTest {
 
-	public CachedRowSetSample(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public CachedRowSetSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	protected void start()throws SQLException{
@@ -39,35 +39,35 @@ public class CachedRowSetSample extends InterfaceTest {
 		CachedRowSet mysql_crs = null;
 		this.mysqlConn.setAutoCommit(false);
 		
-		CachedRowSet uproxy_crs = null;
-		this.uproxyConn.setAutoCommit(false);
+		CachedRowSet dble_crs = null;
+		this.dbleConn.setAutoCommit(false);
 
 		try {
 			mysql_crs = new CachedRowSetImpl();
 			mysql_crs.setUsername(mysqlProp.userName);
 			mysql_crs.setPassword(mysqlProp.password);
 			
-			uproxy_crs = new CachedRowSetImpl();
-			uproxy_crs.setUsername(uproxyProp.userName);
-			uproxy_crs.setPassword(uproxyProp.password);
+			dble_crs = new CachedRowSetImpl();
+			dble_crs.setUsername(dbleProp.userName);
+			dble_crs.setPassword(dbleProp.password);
 
 			mysql_crs.setUrl(mysqlProp.urlString + "/" + mysqlProp.dbName+"?useSSL=false&&relaxAutoCommit=true");
-			uproxy_crs.setUrl(uproxyProp.urlString + "/" + uproxyProp.dbName+"?useSSL=false&&relaxAutoCommit=true");
+			dble_crs.setUrl(dbleProp.urlString + "/" + dbleProp.dbName+"?useSSL=false&&relaxAutoCommit=true");
 
 			mysql_crs.setCommand("select * from MERCH_INVENTORY");
-			uproxy_crs.setCommand("select * from MERCH_INVENTORY");
+			dble_crs.setCommand("select * from MERCH_INVENTORY");
 
 			// Setting the page size to 4, such that we
 			// get the data in chunks of 4 rows @ a time.
 			mysql_crs.setPageSize(4);
-			uproxy_crs.setPageSize(4);
+			dble_crs.setPageSize(4);
 
 			// Now get the first set of data
 			mysql_crs.execute();
-			uproxy_crs.execute();
+			dble_crs.execute();
 
 			mysql_crs.addRowSetListener(new ExampleRowSetListener());
-			uproxy_crs.addRowSetListener(new ExampleRowSetListener());
+			dble_crs.addRowSetListener(new ExampleRowSetListener());
 
 			// Keep on getting data in chunks until done.
 
@@ -75,35 +75,35 @@ public class CachedRowSetSample extends InterfaceTest {
 			do {
 				print_debug("Page number: " + i);
 				while (mysql_crs.next()) {
-					uproxy_crs.next();
+					dble_crs.next();
 					
-					int itemId_uproxy=uproxy_crs.getInt("ITEM_ID");
+					int itemId_dble=dble_crs.getInt("ITEM_ID");
 					int itemId_mysql=mysql_crs.getInt("ITEM_ID");
 					
-					String itemName_uproxy=uproxy_crs.getString("ITEM_NAME");
+					String itemName_dble=dble_crs.getString("ITEM_NAME");
 					String itemName_mysql=mysql_crs.getString("ITEM_NAME");
 					
 					print_debug("mysql Found item " + itemId_mysql + ": " +itemName_mysql);
-					print_debug("uproxy Found item " + itemId_uproxy + ": " +itemName_uproxy);
+					print_debug("dble Found item " + itemId_dble + ": " +itemName_dble);
 					
-					if(!(itemId_uproxy==itemId_mysql && itemName_uproxy.equals(itemName_mysql))){
-						on_assert_fail("Uproxy get different with mysql");
+					if(!(itemId_dble==itemId_mysql && itemName_dble.equals(itemName_mysql))){
+						on_assert_fail("dble get different with mysql");
 					}
 					
 					if (itemId_mysql == 1235) {
 						int currentQuantity = mysql_crs.getInt("QUAN") + 1;
 						print_debug("Updating quantity to " + currentQuantity);
 						mysql_crs.updateInt("QUAN", currentQuantity + 1);
-						uproxy_crs.updateInt("QUAN", currentQuantity + 1);
+						dble_crs.updateInt("QUAN", currentQuantity + 1);
 						mysql_crs.updateRow();
-						uproxy_crs.updateRow();
+						dble_crs.updateRow();
 						// Syncing the row back to the DB
 						mysql_crs.acceptChanges(mysqlConn);
-						uproxy_crs.acceptChanges(uproxyConn);
+						dble_crs.acceptChanges(dbleConn);
 					}
 				} // End of inner while
 				i++;
-			} while (mysql_crs.nextPage()&&uproxy_crs.nextPage());
+			} while (mysql_crs.nextPage()&&dble_crs.nextPage());
 			// End of outer while
 
 
@@ -117,7 +117,7 @@ public class CachedRowSetSample extends InterfaceTest {
 				print_debug("Item ID " + newItemId + " already exists");
 			} else {
 				addNewRow(mysql_crs, newItemId);
-				addNewRow(uproxy_crs, newItemId);
+				addNewRow(dble_crs, newItemId);
 				
 				this.viewTable();
 			}
@@ -206,22 +206,22 @@ public class CachedRowSetSample extends InterfaceTest {
 	}
 
 	private void viewTable() throws SQLException {
-		Statement mysql_stmt = null,uproxy_stmt = null;
+		Statement mysql_stmt = null,dble_stmt = null;
 		String query = "select * from MERCH_INVENTORY";
 		
 		try {
 			
 			mysql_stmt = mysqlConn.createStatement();
-			uproxy_stmt = uproxyConn.createStatement();
+			dble_stmt = dbleConn.createStatement();
 			ResultSet set1 = mysql_stmt.executeQuery(query);
-			ResultSet set2 = uproxy_stmt.executeQuery(query);
+			ResultSet set2 = dble_stmt.executeQuery(query);
 
 			compare_result(set1, set2);
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
 			if (mysql_stmt != null) { mysql_stmt.close(); }
-			if (uproxy_stmt != null) { uproxy_stmt.close(); }
+			if (dble_stmt != null) { dble_stmt.close(); }
 		}
 	}
 }
