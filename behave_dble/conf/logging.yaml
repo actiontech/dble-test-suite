@@ -17,19 +17,19 @@ handlers:
     class: logging.FileHandler
     level: INFO
     formatter: simple
-    filename: logs/dble_info.log
+    filename: logs/behave_info.log
     mode: a
   debug_file_handler:
     class: logging.FileHandler
     level: DEBUG
     formatter: simple
-    filename: logs/dble_debug.log
+    filename: logs/behave_debug.log
     mode: a
   error:
     class: logging.handlers.RotatingFileHandler
     level: ERROR
     formatter: simple
-    filename: logs/error.log
+    filename: logs/behave_error.log
     maxBytes: 10485760
     backupCount: 20
     encoding: utf8
