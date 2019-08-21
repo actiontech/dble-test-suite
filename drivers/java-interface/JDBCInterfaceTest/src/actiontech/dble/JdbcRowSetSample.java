@@ -9,8 +9,8 @@ import com.sun.rowset.JdbcRowSetImpl;
 
 public class JdbcRowSetSample extends InterfaceTest{
 
-	public JdbcRowSetSample(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public JdbcRowSetSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	private void updateRow(JdbcRowSet jdbcRs)throws SQLException{
@@ -41,31 +41,31 @@ public class JdbcRowSetSample extends InterfaceTest{
 	}
 	 
 	public void testJdbcRowSet() throws SQLException {
-		JdbcRowSet jdbcRs_uproxy = null, jdbcRs_mysql=null;
+		JdbcRowSet jdbcRs_dble = null, jdbcRs_mysql=null;
 		Statement stmt = null;
 
 		try {
-			jdbcRs_uproxy = new JdbcRowSetImpl(uproxyConn);
+			jdbcRs_dble = new JdbcRowSetImpl(dbleConn);
 			jdbcRs_mysql = new JdbcRowSetImpl(mysqlConn);
-			updateRow(jdbcRs_uproxy);
+			updateRow(jdbcRs_dble);
 			updateRow(jdbcRs_mysql);
 			
 			print_debug("\nAfter updating the third row:");
-			CoffeesTable.viewTable(mysqlConn, uproxyConn);
-			System.out.println("uproxy is the same with mysql after updateRow!");
+			CoffeesTable.viewTable(mysqlConn, dbleConn);
+			System.out.println("dble is the same with mysql after updateRow!");
 
 			insertRows(jdbcRs_mysql);
-			insertRows(jdbcRs_uproxy);
+			insertRows(jdbcRs_dble);
 			print_debug("\nAfter inserting two rows:");
-			CoffeesTable.viewTable(mysqlConn, uproxyConn);
-			System.out.println("uproxy is the same with mysql after inserting two rows!");
+			CoffeesTable.viewTable(mysqlConn, dbleConn);
+			System.out.println("dble is the same with mysql after inserting two rows!");
 
-			jdbcRs_uproxy.last();
-			jdbcRs_uproxy.deleteRow();
+			jdbcRs_dble.last();
+			jdbcRs_dble.deleteRow();
 
 			print_debug("\nAfter deleting last row:");
-			CoffeesTable.viewTable(mysqlConn, uproxyConn);
-			System.out.println("uproxy is the same with mysql after deleting last row!");
+			CoffeesTable.viewTable(mysqlConn, dbleConn);
+			System.out.println("dble is the same with mysql after deleting last row!");
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 			on_assert_fail("fail! unexpected exception!");
