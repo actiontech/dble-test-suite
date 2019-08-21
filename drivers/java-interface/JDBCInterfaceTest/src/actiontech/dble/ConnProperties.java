@@ -33,7 +33,7 @@ public class ConnProperties {
 			this.portNumber = Config.MYSQL_PORT;
 			this.userName = Config.MYSQL_USER;
 			this.password = Config.MYSQL_PASSWD;
-		}else{//uproxy
+		}else{//dble
 			this.serverName = Config.Host_Test;
 			this.portNumber = Config.TEST_PORT;
 			//this.master = Config.HOST_MASTER;
