@@ -47,6 +47,10 @@ Feature: schema config stable test
 
   @BLOCKER
   Scenario: add mysqld with disabled="true", no readhost, reload success #2
+    Given delete the following xml segment
+      |file        | parent          | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <schema dataNode="dn2" name="schema1" sqlMaxLimit="100">
