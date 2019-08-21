@@ -402,11 +402,11 @@ def delete_child_node(file, kv_child, kv_parent):
 
 # delete the same name node with the given child
 def del_node_by_name(node, child):
-    name_to_del = child.get('name')
+    name_to_del = child.get('name').lower()
     nodeChildren = node.findall(child.tag)
 
     for nchild in nodeChildren:
-        if nchild.get('name') == name_to_del:
+        if nchild.get('name').lower() == name_to_del:
             node.remove(nchild)
 
 
