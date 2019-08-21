@@ -10,8 +10,8 @@ import java.util.Vector;
 
 public class DriverManagerTest extends InterfaceTest{
 
-	public DriverManagerTest(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public DriverManagerTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	protected void create_compare_conns(){
@@ -19,14 +19,14 @@ public class DriverManagerTest extends InterfaceTest{
 	}
 
 	public void start()throws SQLException{
-		useServerPrepStmts(uproxyProp);
-		reusePsBetweenFConns(uproxyProp);
+		useServerPrepStmts(dbleProp);
+		reusePsBetweenFConns(dbleProp);
 	}
 
 	private void useServerPrepStmts(ConnProperties prop)throws SQLException{
 		String urlString = "jdbc:mysql://" + prop.serverName + ":" + prop.portNumber + "";
 		String fullUrlString = urlString + "?useSSL=false&&useServerPrepStmts=true";
-		uproxyConn = DriverManager.getConnection(fullUrlString, prop.userName, prop.password);
+		dbleConn = DriverManager.getConnection(fullUrlString, prop.userName, prop.password);
 		System.out.println(fullUrlString);
 
 		//clear old log if exists
@@ -36,7 +36,7 @@ public class DriverManagerTest extends InterfaceTest{
 //		sshExecutor.execute(cmd);
 
 		//1m1s
-		//cmd = Config.getUproxyAdminCmd("uproxy remove_mysqlds '"+
+		//cmd = Config.getdbleAdminCmd("dble remove_mysqlds '"+
 		//		Config.TEST_USER+"' slaves '"+Config.Host_Slave2+":"+Config.MYSQL_PORT+"'");
 //
 //		SSHCommandExecutor sshExecutor2 = new SSHCommandExecutor(prop.serverName, Config.SSH_USER,
@@ -57,18 +57,18 @@ public class DriverManagerTest extends InterfaceTest{
 //		close_stmt(stmt);
 //		masterConn.close();
 		//
-		PreparedStatement ps_uproxy = uproxyConn.prepareStatement("select ?");
-		ps_uproxy.setInt(1, 13);
-		ResultSet rs = ps_uproxy.executeQuery();
+		PreparedStatement ps_dble = dbleConn.prepareStatement("select ?");
+		ps_dble.setInt(1, 13);
+		ResultSet rs = ps_dble.executeQuery();
 		System.out.println("After set var for prepare statement 13, execute ps, get:");
 		print_resultset(rs);
 		searchInGenLog(prop, "Prepare.*select ?");
 
 		rs.close();
-		ps_uproxy.close();
-		uproxyConn.close();
+		ps_dble.close();
+		dbleConn.close();
 
-		//cmd = Config.getUproxyAdminCmd("uproxy add_mysqlds '"+
+		//cmd = Config.getdbleAdminCmd("dble add_mysqlds '"+
 		//		Config.TEST_USER+"' slaves '"+Config.Host_Slave2+":"+Config.MYSQL_PORT+"'");
 		//sshExecutor2.execute(cmd);
 	}

@@ -14,8 +14,8 @@ import java.util.Set;
 
 public class CoffeesTable extends InterfaceTest {
 
-	public CoffeesTable(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public CoffeesTable(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	public void start()throws SQLException{
@@ -24,15 +24,15 @@ public class CoffeesTable extends InterfaceTest {
 		System.out.println("test tables prepare passed!");
 
 		modifyPrices(1.25f, mysqlConn);
-		modifyPrices(1.25f, uproxyConn);
-		CoffeesTable.viewTable(mysqlConn, uproxyConn);
+		modifyPrices(1.25f, dbleConn);
+		CoffeesTable.viewTable(mysqlConn, dbleConn);
 		System.out.println("modifyPrices passed");
 
 		print_debug("\nInserting a new row:");
 		insertRow("Kona", 150, 10.99f, 0, 0, mysqlConn);
-		insertRow("Kona", 150, 10.99f, 0, 0, uproxyConn);
-		CoffeesTable.viewTable(mysqlConn, uproxyConn);
-		System.out.println("uproxy is the same with mysql after insertRow");
+		insertRow("Kona", 150, 10.99f, 0, 0, dbleConn);
+		CoffeesTable.viewTable(mysqlConn, dbleConn);
+		System.out.println("dble is the same with mysql after insertRow");
 
 		print_debug("\nUpdating sales of coffee per week:");
 		HashMap<String, Integer> salesCoffeeWeek =
@@ -43,25 +43,25 @@ public class CoffeesTable extends InterfaceTest {
 		salesCoffeeWeek.put("Colombian_Decaf", 155);
 		salesCoffeeWeek.put("French_Roast_Decaf", 90);
 		updateCoffeeSales(salesCoffeeWeek, mysqlConn);
-		updateCoffeeSales(salesCoffeeWeek, uproxyConn);
-		CoffeesTable.viewTable(mysqlConn, uproxyConn);
-		System.out.println("uproxy is the same with mysql after Updating sales of coffee per week");
+		updateCoffeeSales(salesCoffeeWeek, dbleConn);
+		CoffeesTable.viewTable(mysqlConn, dbleConn);
+		System.out.println("dble is the same with mysql after Updating sales of coffee per week");
 
 		print_debug("\nModifying prices by percentage");
 		modifyPricesByPercentage("Colombian", 0.10f, 9.00f, mysqlConn);
-		modifyPricesByPercentage("Colombian", 0.10f, 9.00f, uproxyConn);
-		CoffeesTable.viewTable(mysqlConn, uproxyConn);
-		System.out.println("uproxy is the same with mysql after Modifying prices by percentage");
+		modifyPricesByPercentage("Colombian", 0.10f, 9.00f, dbleConn);
+		CoffeesTable.viewTable(mysqlConn, dbleConn);
+		System.out.println("dble is the same with mysql after Modifying prices by percentage");
 
 
 		print_debug("\nCOFFEES table after modifying prices by percentage:");
 
-		CoffeesTable.viewTable(mysqlConn, uproxyConn);
+		CoffeesTable.viewTable(mysqlConn, dbleConn);
 
 		System.out.println("\nPerforming batch updates; adding new coffees");
 		batchUpdate(mysqlConn);
-		batchUpdate(uproxyConn);
-		CoffeesTable.viewTable(mysqlConn, uproxyConn);
+		batchUpdate(dbleConn);
+		CoffeesTable.viewTable(mysqlConn, dbleConn);
 	}
 
 	public void updateCoffeeSales(HashMap<String, Integer> salesForWeek, Connection con) throws SQLException {
@@ -236,18 +236,18 @@ public class CoffeesTable extends InterfaceTest {
 		}
 	}
 
-	public static void viewTable(Connection conn_mysql, Connection conn_uproxy) throws SQLException {
-		Statement stmt_mysql = null, stmt_uproxy = null;
+	public static void viewTable(Connection conn_mysql, Connection conn_dble) throws SQLException {
+		Statement stmt_mysql = null, stmt_dble = null;
 		String query = "select COF_NAME, SUP_ID, PRICE, SALES, TOTAL from COFFEES";
 		try {
 			stmt_mysql = conn_mysql.createStatement();
-			stmt_uproxy = conn_uproxy.createStatement();
+			stmt_dble = conn_dble.createStatement();
 
 			ResultSet rs_mysql = stmt_mysql.executeQuery(query);
-			ResultSet rs_uproxy = stmt_uproxy.executeQuery(query);
+			ResultSet rs_dble = stmt_dble.executeQuery(query);
 
 
-			while (rs_mysql.next() && rs_uproxy.next()) {
+			while (rs_mysql.next() && rs_dble.next()) {
 				String coffeeName = rs_mysql.getString("COF_NAME");
 				int supplierID = rs_mysql.getInt("SUP_ID");
 				float price = rs_mysql.getFloat("PRICE");
@@ -261,7 +261,7 @@ public class CoffeesTable extends InterfaceTest {
 			TestUtilities.printSQLException(e);
 		} finally {
 			if (stmt_mysql != null) { stmt_mysql.close(); }
-			if (stmt_uproxy != null) { stmt_uproxy.close(); }
+			if (stmt_dble != null) { stmt_dble.close(); }
 		}
 	}
 
