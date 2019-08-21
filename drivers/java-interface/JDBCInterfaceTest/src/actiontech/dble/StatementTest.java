@@ -9,8 +9,8 @@ import java.sql.Statement;
 import com.sun.corba.se.spi.orbutil.fsm.Guard.Result;
 
 public class StatementTest extends InterfaceTest {
-	public StatementTest(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public StatementTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	protected void start() throws SQLException {
@@ -30,22 +30,22 @@ public class StatementTest extends InterfaceTest {
 		String createSql="drop table if exists tb; create table tb(id int, first varchar(30), last varchar(30), age int);";
 		String sql1="drop table if exists tb;";
 		TestUtilities.executeUpdate(mysqlConn, sql1);
-		TestUtilities.executeUpdate(uproxyConn, sql1);
+		TestUtilities.executeUpdate(dbleConn, sql1);
 
 		String sql2="create table tb(id int, first varchar(30), last varchar(30), age int);";
 		TestUtilities.executeUpdate(mysqlConn, sql2);
-		TestUtilities.executeUpdate(uproxyConn, sql2);
+		TestUtilities.executeUpdate(dbleConn, sql2);
 
 		String SQL = "INSERT INTO tb (id, first, last, age) " +
 				"VALUES(?, ?, ?, ?)";
 
 		// Create PrepareStatement object
 		PreparedStatement mysql_pstmt = mysqlConn.prepareStatement(SQL);
-		PreparedStatement uproxy_pstmt = uproxyConn.prepareStatement(SQL);
+		PreparedStatement dble_pstmt = dbleConn.prepareStatement(SQL);
 
 		//Set auto-commit to false
 		mysqlConn.setAutoCommit(false);
-		uproxyConn.setAutoCommit(false);
+		dbleConn.setAutoCommit(false);
 
 		// Set the variables
 		mysql_pstmt.setInt( 1, 400 );
@@ -65,49 +65,49 @@ public class StatementTest extends InterfaceTest {
 		mysql_pstmt.addBatch();
 
 		// Set the variables
-		uproxy_pstmt.setInt( 1, 400 );
-		uproxy_pstmt.setString( 2, "Pappu" );
-		uproxy_pstmt.setString( 3, "Singh" );
-		uproxy_pstmt.setInt( 4, 33 );
+		dble_pstmt.setInt( 1, 400 );
+		dble_pstmt.setString( 2, "Pappu" );
+		dble_pstmt.setString( 3, "Singh" );
+		dble_pstmt.setInt( 4, 33 );
 		// Add it to the batch
-		uproxy_pstmt.addBatch();
-		uproxy_pstmt.clearBatch();
+		dble_pstmt.addBatch();
+		dble_pstmt.clearBatch();
 
 		// Set the variables
-		uproxy_pstmt.setInt( 1, 401 );
-		uproxy_pstmt.setString( 2, "Pawan" );
-		uproxy_pstmt.setString( 3, "Singh" );
-		uproxy_pstmt.setInt( 4, 31 );
+		dble_pstmt.setInt( 1, 401 );
+		dble_pstmt.setString( 2, "Pawan" );
+		dble_pstmt.setString( 3, "Singh" );
+		dble_pstmt.setInt( 4, 31 );
 		// Add it to the batch
-		uproxy_pstmt.addBatch();
+		dble_pstmt.addBatch();
 
 		//Create an int[] to hold returned values
 		int[] mysql_count = mysql_pstmt.executeBatch();
-		int[] uproxy_count = uproxy_pstmt.executeBatch();
+		int[] dble_count = dble_pstmt.executeBatch();
 
 		//Explicitly commit statements to apply changes
 		mysqlConn.commit();
-		uproxyConn.commit();
+		dbleConn.commit();
 
-		int mysql_len = mysql_count.length, uproxy_len=uproxy_count.length;
-		boolean isEqual = mysql_len == uproxy_len;
+		int mysql_len = mysql_count.length, dble_len=dble_count.length;
+		boolean isEqual = mysql_len == dble_len;
 		while(isEqual && mysql_len-- > 0){
-			isEqual = mysql_count[mysql_len] == uproxy_count[mysql_len];
+			isEqual = mysql_count[mysql_len] == dble_count[mysql_len];
 		}
 		if(isEqual){
 			System.out.println("pass! addBatch(String sql)!");
 			System.out.println("pass! clearBatch()!");
 		}else{
 			System.out.println("mysql count:"+mysql_count);
-			System.out.println("uproxy count:"+uproxy_count);
+			System.out.println("dble count:"+dble_count);
 			on_assert_fail("fail! addBatch(String sql)!");
 		}
 
 		close_stmt(mysql_pstmt);
-		close_stmt(uproxy_pstmt);
+		close_stmt(dble_pstmt);
 
 		mysqlConn.setAutoCommit(true);
-		uproxyConn.setAutoCommit(true);
+		dbleConn.setAutoCommit(true);
 	}
 
 	/*
@@ -116,21 +116,21 @@ public class StatementTest extends InterfaceTest {
 	private void itf_cancel()throws SQLException {
 		String sql1="drop table if exists tb;";
 		TestUtilities.executeUpdate(mysqlConn, sql1);
-		TestUtilities.executeUpdate(uproxyConn, sql1);
+		TestUtilities.executeUpdate(dbleConn, sql1);
 		String sql2="create table tb(id int)";
 		TestUtilities.executeUpdate(mysqlConn, sql2);
-		TestUtilities.executeUpdate(uproxyConn, sql2);
+		TestUtilities.executeUpdate(dbleConn, sql2);
 
 
 		String insert_sql = "insert into tb values(10)";
 		PreparedStatement mysql_psts = mysqlConn.prepareStatement(insert_sql);
-		PreparedStatement uproxy_psts = uproxyConn.prepareStatement(insert_sql);
+		PreparedStatement dble_psts = dbleConn.prepareStatement(insert_sql);
 
 		mysql_psts.executeUpdate();
-		uproxy_psts.executeUpdate();
+		dble_psts.executeUpdate();
 
 		mysql_psts.cancel();
-		uproxy_psts.cancel();
+		dble_psts.cancel();
 
 		try{
 			Thread.sleep(5);
@@ -139,20 +139,20 @@ public class StatementTest extends InterfaceTest {
 		}
 		String sql = "select * from tb";
 		ResultSet mysql_rs = mysql_psts.executeQuery(sql);
-		ResultSet uproxy_rs = uproxy_psts.executeQuery(sql);
+		ResultSet dble_rs = dble_psts.executeQuery(sql);
 
 		print_debug("compare_result: " + sql);
-		boolean isEqual = compare_result(mysql_rs, uproxy_rs);
+		boolean isEqual = compare_result(mysql_rs, dble_rs);
 		if(isEqual){
 			System.out.println("pass! cancel()!");
 		}else{
 			on_assert_fail("fail! cancel()");
 		}
 		close_rs(mysql_rs);
-		close_rs(uproxy_rs);
+		close_rs(dble_rs);
 
 		close_stmt(mysql_psts);
-		close_stmt(uproxy_psts);
+		close_stmt(dble_psts);
 	}
 
 	/*
@@ -165,38 +165,38 @@ public class StatementTest extends InterfaceTest {
 		String sql = "select 1/0";
 		String sql1="set @@sql_mode='error_for_division_by_zero';";
 
-		Statement mysql_stmt=null, uproxy_stmt=null;
+		Statement mysql_stmt=null, dble_stmt=null;
 		try {
 			mysql_stmt = mysqlConn.createStatement();
-			uproxy_stmt = uproxyConn.createStatement();
+			dble_stmt = dbleConn.createStatement();
 
 			TestUtilities.executeUpdate(mysqlConn, sql1);
-			TestUtilities.executeUpdate(uproxyConn, sql1);
+			TestUtilities.executeUpdate(dbleConn, sql1);
 
 //			mysql_stmt.closeOnCompletion();
-//			uproxy_stmt.closeOnCompletion();
+//			dble_stmt.closeOnCompletion();
 
 			ResultSet mysql_rs = mysql_stmt.executeQuery(sql);
-			ResultSet uproxy_rs = uproxy_stmt.executeQuery(sql);
+			ResultSet dble_rs = dble_stmt.executeQuery(sql);
 
 			SQLWarning mysql_warn = mysql_stmt.getWarnings();
-			SQLWarning uproxy_warn = uproxy_stmt.getWarnings();
+			SQLWarning dble_warn = dble_stmt.getWarnings();
 
-			if(mysql_warn.getSQLState()== uproxy_warn.getSQLState() && mysql_warn.getErrorCode()==uproxy_warn.getErrorCode()){
+			if(mysql_warn.getSQLState()== dble_warn.getSQLState() && mysql_warn.getErrorCode()==dble_warn.getErrorCode()){
 				System.out.println("pass! getWarnings()!");
 			}else{
 //				System.out.println("select 1/0 mysql get warn:");
 //				TestUtilities.printWarnings(mysql_warn);
-//				System.out.println("select 1/0 uproxy get warn:");
-//				TestUtilities.printWarnings(uproxy_warn);
+//				System.out.println("select 1/0 dble get warn:");
+//				TestUtilities.printWarnings(dble_warn);
 				System.out.println("fail! getWarnings()!");
 				//on_assert_fail("fail! getWarnings()!");
 			}
 
 			mysql_stmt.clearWarnings();
-			uproxy_stmt.clearWarnings();
+			dble_stmt.clearWarnings();
 
-			if(uproxy_stmt.getWarnings()==null){
+			if(dble_stmt.getWarnings()==null){
 				System.out.println("pass! clearWarnings()!");
 				System.out.println("pass! getWarnings()!");
 			}else{
@@ -204,8 +204,8 @@ public class StatementTest extends InterfaceTest {
 			}
 
 			mysql_rs.close();
-			uproxy_rs.close();
-			if(mysql_stmt.isClosed() == uproxy_stmt.isClosed()){
+			dble_rs.close();
+			if(mysql_stmt.isClosed() == dble_stmt.isClosed()){
 				System.out.println("pass! closeOnCompletion()!");
 				System.out.println("pass! isClosed()!");
 			}else{
@@ -215,7 +215,7 @@ public class StatementTest extends InterfaceTest {
 			TestUtilities.printSQLException(e);
 		}finally{
 			mysql_stmt.close();
-			uproxy_stmt.close();
+			dble_stmt.close();
 		}
 	}
 
@@ -225,25 +225,25 @@ public class StatementTest extends InterfaceTest {
 	 * 			execute(String sql, int[] columnIndexes)
 	 * */
 	private void itf_execute()throws SQLException {
-		Statement mysql_stmt=null, uproxy_stmt=null;
+		Statement mysql_stmt=null, dble_stmt=null;
 		mysql_stmt = mysqlConn.createStatement();
-		uproxy_stmt = uproxyConn.createStatement();
+		dble_stmt = dbleConn.createStatement();
 
 		String sql = "drop table if exists mytest_global1";
 		String sql1="create table mytest_global1(id int primary key auto_increment, rank int)";
 		mysql_stmt.execute(sql);
-		uproxy_stmt.execute(sql);
+		dble_stmt.execute(sql);
 		mysql_stmt.execute(sql1);
-		uproxy_stmt.execute(sql1);
+		dble_stmt.execute(sql1);
 
 		sql = "insert into mytest_global1(rank) values(2)";
 		mysql_stmt.execute(sql,Statement.RETURN_GENERATED_KEYS);
-		uproxy_stmt.execute(sql,Statement.RETURN_GENERATED_KEYS);
+		dble_stmt.execute(sql,Statement.RETURN_GENERATED_KEYS);
 
 		ResultSet mysql_keys = mysql_stmt.getGeneratedKeys();
-		ResultSet uproxy_keys = uproxy_stmt.getGeneratedKeys();
+		ResultSet dble_keys = dble_stmt.getGeneratedKeys();
 		print_debug("compare_result: after '"+sql +"' getGeneratedKeys()");
-		boolean isEqual = compare_result(mysql_keys, uproxy_keys);
+		boolean isEqual = compare_result(mysql_keys, dble_keys);
 		if(isEqual){
 			System.out.println("pass! execute(String sql)!");
 			System.out.println("pass! execute(String sql, int autoGeneratedKeys)!");
@@ -252,22 +252,22 @@ public class StatementTest extends InterfaceTest {
 		}
 
 		close_rs(mysql_keys);
-		close_rs(uproxy_keys);
+		close_rs(dble_keys);
 
 		close_stmt(mysql_stmt);
-		close_stmt(uproxy_stmt);
+		close_stmt(dble_stmt);
 
 		mysql_stmt = mysqlConn.createStatement();
-		uproxy_stmt = uproxyConn.createStatement();
+		dble_stmt = dbleConn.createStatement();
 //
 		sql = "insert into mytest_global1(rank) values(3)";
 		int[] pkeys = {1, 2};
 		mysql_stmt.execute(sql,pkeys);
-		uproxy_stmt.execute(sql,pkeys);
+		dble_stmt.execute(sql,pkeys);
 		mysql_keys = mysql_stmt.getGeneratedKeys();
-		uproxy_keys = uproxy_stmt.getGeneratedKeys();
+		dble_keys = dble_stmt.getGeneratedKeys();
 		print_debug("compare_result: after '"+sql+"' getGeneratedKeys()");
-		isEqual = compare_result(mysql_keys, uproxy_keys);
+		isEqual = compare_result(mysql_keys, dble_keys);
 
 		if(isEqual){
 			System.out.println("pass! execute(String sql, int[] columnIndexes)!");
