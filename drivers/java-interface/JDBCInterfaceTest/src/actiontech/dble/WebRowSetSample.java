@@ -48,8 +48,8 @@ import javax.sql.rowset.WebRowSet;
 
 public class WebRowSetSample extends InterfaceTest {
 
-	public WebRowSetSample(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public WebRowSetSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	public void start()throws SQLException{
@@ -72,9 +72,9 @@ public class WebRowSetSample extends InterfaceTest {
 		int [] keyCols = {1};
 		WebRowSet priceList = new WebRowSetImpl();
 
-		priceList.setUsername(uproxyProp.userName);
-		priceList.setPassword(uproxyProp.password);
-		priceList.setUrl(uproxyProp.urlString + "/" + uproxyProp.dbName+"?useSSL=false");
+		priceList.setUsername(dbleProp.userName);
+		priceList.setPassword(dbleProp.password);
+		priceList.setUrl(dbleProp.urlString + "/" + dbleProp.dbName+"?useSSL=false");
 		priceList.setCommand("select COF_NAME, PRICE from COFFEES");
 		priceList.setKeyColumns(keyCols);
 
@@ -120,9 +120,9 @@ public class WebRowSetSample extends InterfaceTest {
 
 		// Create the receiving WebRowSet object
 		WebRowSet receiver = new WebRowSetImpl();
-		receiver.setUrl(uproxyProp.urlString + "/" + uproxyProp.dbName+"?useSSL=false");
-		receiver.setUsername(uproxyProp.userName);
-		receiver.setPassword(uproxyProp.password);
+		receiver.setUrl(dbleProp.urlString + "/" + dbleProp.dbName+"?useSSL=false");
+		receiver.setUsername(dbleProp.userName);
+		receiver.setPassword(dbleProp.password);
 
 		//Now read the XML file.
 		fReader = new FileReader( priceListFileName );

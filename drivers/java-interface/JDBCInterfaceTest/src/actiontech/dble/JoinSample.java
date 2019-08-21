@@ -14,8 +14,8 @@ import javax.sql.rowset.JoinRowSet;
 
 public class JoinSample extends InterfaceTest {
 
-	public JoinSample(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
-		super(mysqlProp, uproxyProp);
+	public JoinSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+		super(mysqlProp, dbleProp);
 	}
 
 	public static void getCoffeesBoughtBySupplier(String supplierName,
@@ -41,29 +41,29 @@ public class JoinSample extends InterfaceTest {
 	}
 
 	public void testJoinRowSet(String supplierName) throws SQLException {
-		CachedRowSet coffees_uproxy = null,coffees_mysql = null;
-		CachedRowSet suppliers_uproxy = null, suppliers_mysql = null;
-		JoinRowSet jrs_uproxy = null, jrs_mysql = null;
+		CachedRowSet coffees_dble = null,coffees_mysql = null;
+		CachedRowSet suppliers_dble = null, suppliers_mysql = null;
+		JoinRowSet jrs_dble = null, jrs_mysql = null;
 
 		try {
-			//prepare jrs for uproxy
-			coffees_uproxy = new CachedRowSetImpl();
-			coffees_uproxy.setCommand("SELECT * FROM COFFEES");
-			coffees_uproxy.setUsername(uproxyProp.userName);
-			coffees_uproxy.setPassword(uproxyProp.password);
-			coffees_uproxy.setUrl(uproxyProp.urlString+ "/" + uproxyProp.dbName+"?useSSL=false");
-			coffees_uproxy.execute();
+			//prepare jrs for dble
+			coffees_dble = new CachedRowSetImpl();
+			coffees_dble.setCommand("SELECT * FROM COFFEES");
+			coffees_dble.setUsername(dbleProp.userName);
+			coffees_dble.setPassword(dbleProp.password);
+			coffees_dble.setUrl(dbleProp.urlString+ "/" + dbleProp.dbName+"?useSSL=false");
+			coffees_dble.execute();
 			
-			suppliers_uproxy = new CachedRowSetImpl();
-			suppliers_uproxy.setCommand("SELECT * FROM SUPPLIERS");
-			suppliers_uproxy.setUsername(uproxyProp.userName);
-			suppliers_uproxy.setPassword(uproxyProp.password);
-			suppliers_uproxy.setUrl(uproxyProp.urlString+ "/" + uproxyProp.dbName+"?useSSL=false");
-			suppliers_uproxy.execute();      
+			suppliers_dble = new CachedRowSetImpl();
+			suppliers_dble.setCommand("SELECT * FROM SUPPLIERS");
+			suppliers_dble.setUsername(dbleProp.userName);
+			suppliers_dble.setPassword(dbleProp.password);
+			suppliers_dble.setUrl(dbleProp.urlString+ "/" + dbleProp.dbName+"?useSSL=false");
+			suppliers_dble.execute();
 			
-			jrs_uproxy = new JoinRowSetImpl();
-			jrs_uproxy.addRowSet(coffees_uproxy, "SUP_ID");
-			jrs_uproxy.addRowSet(suppliers_uproxy, "SUP_ID");
+			jrs_dble = new JoinRowSetImpl();
+			jrs_dble.addRowSet(coffees_dble, "SUP_ID");
+			jrs_dble.addRowSet(suppliers_dble, "SUP_ID");
 			
 			//prepare jrs for mysql
 			coffees_mysql = new CachedRowSetImpl();
@@ -85,21 +85,21 @@ public class JoinSample extends InterfaceTest {
 			jrs_mysql.addRowSet(suppliers_mysql, "SUP_ID");
 
 
-			compare_result(jrs_mysql, jrs_uproxy);
-			System.out.println("Join result set of uproxy is the same with mysql");
+			compare_result(jrs_mysql, jrs_dble);
+			System.out.println("Join result set of dble is the same with mysql");
 			print_debug("Coffees bought from " + supplierName + ": ");
-			while (jrs_uproxy.next()) {
-				if (jrs_uproxy.getString("SUP_NAME").equals(supplierName)) { 
-					String coffeeName = jrs_uproxy.getString(1);
+			while (jrs_dble.next()) {
+				if (jrs_dble.getString("SUP_NAME").equals(supplierName)) {
+					String coffeeName = jrs_dble.getString(1);
 					print_debug("     " + coffeeName);
 				}
 			}
 		} catch (SQLException e) {
 			TestUtilities.printSQLException(e);
 		} finally {
-			if (jrs_uproxy != null) { jrs_uproxy.close(); }
-			if (suppliers_uproxy != null) { suppliers_uproxy.close(); }
-			if (coffees_uproxy != null) { coffees_uproxy.close(); }
+			if (jrs_dble != null) { jrs_dble.close(); }
+			if (suppliers_dble != null) { suppliers_dble.close(); }
+			if (coffees_dble != null) { coffees_dble.close(); }
 			
 			if (jrs_mysql != null) { jrs_mysql.close(); }
 			if (suppliers_mysql != null) { suppliers_mysql.close(); }
