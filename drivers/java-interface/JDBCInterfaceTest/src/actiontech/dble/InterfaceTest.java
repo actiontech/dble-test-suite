@@ -9,14 +9,14 @@ import java.sql.Statement;
 
 public class InterfaceTest {
 	protected Connection mysqlConn;
-	protected Connection uproxyConn;
+	protected Connection dbleConn;
 
 	protected ConnProperties mysqlProp;
-	protected ConnProperties uproxyProp;
+	protected ConnProperties dbleProp;
 
-	public InterfaceTest(ConnProperties mysqlProp, ConnProperties uproxyProp) throws SQLException {
+	public InterfaceTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
 		this.mysqlProp = mysqlProp;
-		this.uproxyProp = uproxyProp;
+		this.dbleProp = dbleProp;
 		create_compare_conns();
 	}
 
@@ -27,19 +27,19 @@ public class InterfaceTest {
 			interfaceUtilities = new TestUtilities();
 			mysqlConn = interfaceUtilities.getConnectionAllowMultiQuery(mysqlProp);
 			//dble not supported allowMultiQuery
-			uproxyConn = interfaceUtilities.getConnectionAllowMultiQuery(uproxyProp);
+			dbleConn = interfaceUtilities.getConnectionAllowMultiQuery(dbleProp);
 
 
 			String dropDb = "DROP DATABASE IF EXISTS ";
 			String createDb = "CREATE DATABASE ";
 			TestUtilities.executeUpdate(mysqlConn, dropDb + mysqlProp.dbName);
 			//dble not supported CREATE/DROP DATABASE
-			//TestUtilities.executeUpdate(uproxyConn, dropDb + uproxyProp.dbName);
+			//TestUtilities.executeUpdate(dbleConn, dropDb + dbleProp.dbName);
 			TestUtilities.executeUpdate(mysqlConn, createDb + mysqlProp.dbName);
-			//TestUtilities.executeUpdate(uproxyConn, createDb + uproxyProp.dbName);
-			System.out.println(uproxyProp.dbName);
+			//TestUtilities.executeUpdate(dbleConn, createDb + dbleProp.dbName);
+			System.out.println(dbleProp.dbName);
 			mysqlConn.setCatalog(mysqlProp.dbName);
-			uproxyConn.setCatalog(uproxyProp.dbName);
+			dbleConn.setCatalog(dbleProp.dbName);
 		} catch (SQLException e) {
 			System.err.println("ERR! SQLException!");
 			TestUtilities.printSQLException(e);
@@ -106,12 +106,12 @@ public class InterfaceTest {
 
 	public void doCreateTable(String sql) throws SQLException {
 		TestUtilities.executeUpdate(mysqlConn, sql);
-		TestUtilities.executeUpdate(uproxyConn, sql);
+		TestUtilities.executeUpdate(dbleConn, sql);
 	}
 	public void dropTable(String table_name) throws SQLException {
 		String sql = "DROP TABLE IF EXISTS "+table_name;
 		TestUtilities.executeUpdate(mysqlConn, sql);
-		TestUtilities.executeUpdate(uproxyConn, sql);
+		TestUtilities.executeUpdate(dbleConn, sql);
 	}
 
 	public void populateTable() throws SQLException {
@@ -160,7 +160,7 @@ public class InterfaceTest {
 
 		for(String sql:sqls){
 			TestUtilities.executeUpdate(mysqlConn,sql);
-			TestUtilities.executeUpdate(uproxyConn,sql);
+			TestUtilities.executeUpdate(dbleConn,sql);
 		}
 	}
 
@@ -230,13 +230,13 @@ public class InterfaceTest {
 
 		do{
 			if(hadResults1 != hadResults2){
-				on_assert_fail("expect mysql hadResults: "+ hadResults1 + " equals to uproxy hadResults: "+hadResults2);
+				on_assert_fail("expect mysql hadResults: "+ hadResults1 + " equals to dble hadResults: "+hadResults2);
 			}
 			ResultSet set1 = stmt1.getResultSet();
 			ResultSet set2 = stmt2.getResultSet();
 			boolean isEqual = compare_result(set1, set2);
 			if(!isEqual){
-				on_assert_fail("mysql and uproxy get different result set");
+				on_assert_fail("mysql and dble get different result set");
 			}
 
 			hadResults1 = stmt1.getMoreResults();
@@ -247,14 +247,14 @@ public class InterfaceTest {
 		return true;
 	}
 
-	protected boolean compare_result(Object set_mysql, Object set_uproxy) {
+	protected boolean compare_result(Object set_mysql, Object set_dble) {
 		if (set_mysql instanceof ResultSet) {
-			return equal((ResultSet) set_mysql, (ResultSet) set_uproxy);
+			return equal((ResultSet) set_mysql, (ResultSet) set_dble);
 		}
-		print_debug("mysql result:" + set_mysql + ", uproxy result:" + set_uproxy);
-		boolean b = set_mysql == set_uproxy;
+		print_debug("mysql result:" + set_mysql + ", dble result:" + set_dble);
+		boolean b = set_mysql == set_dble;
 		if (!b) {
-			on_assert_fail("fail! update rows count is not equal:[" + set_mysql + "," + set_uproxy + "]");
+			on_assert_fail("fail! update rows count is not equal:[" + set_mysql + "," + set_dble + "]");
 		}
 		return b;
 	}
@@ -272,7 +272,7 @@ public class InterfaceTest {
 			boolean line2 = set2.next();
 			boolean line1 = set1.next();
 			boolean tobreak = false;
-			print_debug("resultset values of mysql and uproxy:");
+			print_debug("resultset values of mysql and dble:");
 			while (line1 && line2) {
 				for (int i = 1; i < columnCount1; i++) {
 					String value1 = null, value2 = null;
@@ -284,7 +284,7 @@ public class InterfaceTest {
 					}
 					try {
 						value2 = set2.getString(i);
-						print_debug("uproxy " +value2);
+						print_debug("dble " +value2);
 					} catch (SQLException e) {
 						value2 = e.getMessage();
 					}
@@ -313,7 +313,7 @@ public class InterfaceTest {
 
 			if (line1 != line2) {
 				System.out.println("mysql has next line: "+line1);
-				System.out.println("uproxy has next line: "+line2);
+				System.out.println("dble has next line: "+line2);
 				on_assert_fail("fail! rows content is not equal");
 				resetCursor(set1,set2);
 				return false;
@@ -356,7 +356,7 @@ public class InterfaceTest {
 
 	protected void destroy(int status){
 		TestUtilities.closeConnection(mysqlConn);
-		TestUtilities.closeConnection(uproxyConn);
+		TestUtilities.closeConnection(dbleConn);
 		if(status==-1) {
 			System.exit(status);
 
