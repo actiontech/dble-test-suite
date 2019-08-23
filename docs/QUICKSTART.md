@@ -16,7 +16,7 @@
 
 ## 六. 使用behave测试dble(以下涉及的behave命令需要在behave_dble目录下执行)
 ### behave 自定义命令行参数说明（在 behave.ini 中配置）：
- - -D rpm_local={true|false}, default false
+ - -D install_from_local={true|false}, default false
  - -D test_config={auto_dble_test.yaml}
  - -D reinstall={true|false}，default false, true if need reinstall before features start
  - -D reset={true|false}, default true, reset dble config files and restart dble before features start
