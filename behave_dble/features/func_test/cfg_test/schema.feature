@@ -172,3 +172,86 @@ Feature: schema basic config test
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                             | expect   | db      |
         | test | 111111 | conn_0 | True    | create table if not exists test(id int,name varchar(20))    | Unknown database  | schema1 |
+
+  Scenario: Multiple datanodes use the same database of the same datahost #11
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="172.100.9.5" database="db1" name="dn5" />
+    """
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql            | expect  | db     |
+        | root  | 111111    | conn_0 | True    | dryrun | dataNode dn5 use the same dataHost&database with other dataNode | schema1 |
+        | root  | 111111    | conn_0 | True    | reload @@config_all | dataNode dn5 use the same dataHost&database with other dataNode | schema1 |
+    Then restart dble in "dble-1" failed for
+    """
+    dataNode dn5 use the same dataHost&database with other dataNode
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
+    """
+	Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql                   | expect  | db       |
+        | root  | 111111    | conn_0 | True    | dryrun                | success | schema1 |
+        | root  | 111111    | conn_0 | True    | reload @@config_all | success | schema1 |
+    Given delete the following xml segment
+      |file         | parent           | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <schema dataNode="dn-5" name="schema1" sqlMaxLimit="100">
+    <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+    <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    </schema>
+    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
+    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
+    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
+    <dataNode dataHost="172.100.9.5" database="db1" name="dn-5" />
+    """
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql                   | expect                                                                   | db     |
+        | root  | 111111    | conn_0 | True    | dryrun                | dataNode dn-5 use the same dataHost&database with other dataNode | schema1 |
+        | root  | 111111    | conn_0 | True    | reload @@config_all | dataNode dn-5 use the same dataHost&database with other dataNode | schema1 |
+    Then restart dble in "dble-1" failed for
+    """
+    dataNode dn-5 use the same dataHost&database with other dataNode
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="172.100.9.5" database="db3" name="dn-5" />
+    """
+    Given Restart dble in "dble-1" success
+     Given delete the following xml segment
+      |file         | parent           | child                 |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}     |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <schema dataNode="dn_5" name="schema1" sqlMaxLimit="100">
+    <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+    <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+    </schema>
+    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
+    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
+    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
+    <dataNode dataHost="172.100.9.5" database="db1" name="dn_5" />
+    """
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql                   | expect                                                                    | db      |
+        | root  | 111111    | conn_0 | True    | dryrun                | dataNode dn_5 use the same dataHost&database with other dataNode | schema1 |
+        | root  | 111111    | conn_0 | True    | reload @@config_all | dataNode dn_5 use the same dataHost&database with other dataNode | schema1 |
+    Then restart dble in "dble-1" failed for
+    """
+    dataNode dn_5 use the same dataHost&database with other dataNode
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="172.100.9.5" database="db3" name="dn_5" />
+    """
+    Given Restart dble in "dble-1" success
+
+
