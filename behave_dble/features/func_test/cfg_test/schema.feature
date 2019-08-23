@@ -179,8 +179,8 @@ Feature: schema basic config test
     <dataNode dataHost="172.100.9.5" database="db1" name="dn5" />
     """
     Then execute sql in "dble-1" in "admin" mode
-        | user  | passwd    | conn   | toClose | sql            | expect  | db     |
-        | root  | 111111    | conn_0 | True    | dryrun | dataNode dn5 use the same dataHost&database with other dataNode | schema1 |
+        | user  | passwd    | conn   | toClose | sql                   | expect                                                                  | db     |
+        | root  | 111111    | conn_0 | True    | dryrun                | dataNode dn5 use the same dataHost&database with other dataNode | schema1 |
         | root  | 111111    | conn_0 | True    | reload @@config_all | dataNode dn5 use the same dataHost&database with other dataNode | schema1 |
     Then restart dble in "dble-1" failed for
     """
@@ -196,8 +196,8 @@ Feature: schema basic config test
         | root  | 111111    | conn_0 | True    | dryrun                | success | schema1 |
         | root  | 111111    | conn_0 | True    | reload @@config_all | success | schema1 |
     Given delete the following xml segment
-      |file         | parent           | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |file         | parent           | child                 |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}     |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -224,7 +224,7 @@ Feature: schema basic config test
     <dataNode dataHost="172.100.9.5" database="db3" name="dn-5" />
     """
     Given Restart dble in "dble-1" success
-     Given delete the following xml segment
+    Given delete the following xml segment
       |file         | parent           | child                 |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}     |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
@@ -253,5 +253,36 @@ Feature: schema basic config test
     <dataNode dataHost="172.100.9.5" database="db3" name="dn_5" />
     """
     Given Restart dble in "dble-1" success
+    Given delete the following xml segment
+      |file         | parent           | child                 |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}     |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <schema dataNode="dn_5" name="schema1" sqlMaxLimit="100">
+    <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+    <table name="sharding_4_t1" dataNode="dn$1-4" rule="hash-four" />
+    </schema>
+    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+    <dataNode dataHost="172.100.9.6" database="db$1-1" name="dn2" />
+    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
+    <dataNode dataHost="172.100.9.6" database="db$1-1" name="dn4" />
+    <dataNode dataHost="172.100.9.5" database="db3" name="dn_5" />
+    """
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql                   | expect                                                                   | db      |
+        | root  | 111111    | conn_0 | True    | dryrun                | dataNode dn4 use the same dataHost&database with other dataNode | schema1 |
+        | root  | 111111    | conn_0 | True    | reload @@config_all | dataNode dn4 use the same dataHost&database with other dataNode | schema1 |
+    Then restart dble in "dble-1" failed for
+    """
+    dataNode dn4 use the same dataHost&database with other dataNode
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
+    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
+    """
+    Given Restart dble in "dble-1" success
+
 
 
