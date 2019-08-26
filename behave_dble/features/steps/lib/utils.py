@@ -38,7 +38,7 @@ def setup_logging(logging_cfg_file):
     init_log_dir('logs')
     if os.path.exists(logging_cfg_file):
         with open(logging_cfg_file, 'rt') as f:
-            dict_config = yaml.load(f.read())
+            dict_config = yaml.load(f.read(),Loader=yaml.BaseLoader)
         logging.config.dictConfig(dict_config)
     else:
         print 'No such logging config file : <{0}>'.format(logging_cfg_file)
@@ -47,7 +47,7 @@ def setup_logging(logging_cfg_file):
 @log_it
 def load_yaml_config(config_path):
     with open(config_path, 'r') as f:
-        parsed = yaml.load(f)
+        parsed = yaml.load(f,Loader=yaml.BaseLoader)
     return parsed
 
 @log_it
