@@ -3,6 +3,7 @@
 import os
 import re
 import time
+import subprocess
 
 import MySQLdb
 from behave import *
@@ -30,20 +31,33 @@ def unistall_dble_by_hostname(context, hostname):
     node = get_node(context.dbles, hostname)
     uninstall_dble_in_node(context, node)
 
+def get_dble_install_packet_name(context):
+    dble_packet = context.cfg_dble['packet_name']
+
+    if dble_packet.find("{0}") != -1:
+        cmd = "curl -s 'https://github.com/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
+        version = subprocess.check_output(cmd,shell=True)
+        version = version.strip("\n")
+        dble_packet = dble_packet.format(version)
+
+    LOGGER.debug("dble packet to install: {0}".format(dble_packet))
+    return dble_packet
+
 def install_dble_in_node(context, node):
+    dble_packet = get_dble_install_packet_name(context)
+
     if context.need_download:
-        download_dble(context)
+        download_dble(context, dble_packet)
 
     ssh_client =node.ssh_conn
-    dble_packget = "{0}".format(context.cfg_dble['packet_name'])
 
-    cmd = "cd {0} && rm -rf {1} dble".format(context.cfg_dble['install_dir'], dble_packget)
+    cmd = "cd {0} && rm -rf dble".format(context.cfg_dble['install_dir'])
     ssh_client.exec_command(cmd)
 
-    cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packget,
+    cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packet,
                                            context.cfg_dble['install_dir'])
     ssh_client.exec_command(cmd)
-    cmd = "cd {0} && tar xf {1}".format(context.cfg_dble['install_dir'], dble_packget)
+    cmd = "cd {0} && tar xf {1}".format(context.cfg_dble['install_dir'], dble_packet)
     ssh_client.exec_command(cmd)
 
 @Given('install dble in "{hostname}"')
@@ -56,25 +70,24 @@ def install_dble_in_all_nodes(context):
     for node in context.dbles:
         install_dble_in_node(context, node)
 
-@Given('download dble')
-def download_dble(context):
-    LOGGER.info("delete local dble packet")
+def download_dble(context, dble_packet_name):
+    LOGGER.debug("delete local dble packet")
     rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_docker'],
-                               context.cfg_dble['packet_name'])
+                                      dble_packet_name)
     rpm_ftp_url = "{0}{1}".format(context.cfg_dble['ftp_path'],
-                              context.cfg_dble['packet_name'])
+                                  dble_packet_name)
     cmd = 'rm -rf {0}'.format(rpm_local_path)
     exit_status = os.system(cmd)
     LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
 
     cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_docker'],
                                                                     rpm_ftp_url)
-    LOGGER.info(cmd)
+    LOGGER.debug(cmd)
     os.popen(cmd)
 
     cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_docker'],
-                                                          context.cfg_dble['packet_name'])
-    LOGGER.info(cmd)
+                                                          dble_packet_name)
+    LOGGER.debug(cmd)
     str = os.popen(cmd).read()
     assert_that(str.strip(), equal_to('1'), "Download dble tar fail")
 
@@ -370,7 +383,7 @@ def replace_config_in_node(context, node):
 
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
-    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh rmr /dble".format(context.cfg_dble["install_dir"])
+    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(context.cfg_dble["install_dir"])
     ssh_client = get_ssh(context.dbles, "dble-1")
     ssh_client.exec_command(resetCmd)
 
