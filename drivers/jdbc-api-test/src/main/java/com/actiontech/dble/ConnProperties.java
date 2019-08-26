@@ -26,8 +26,8 @@ public class ConnProperties {
 	public ConnProperties(String type)throws FileNotFoundException,
 	IOException,
 	InvalidPropertiesFormatException  {
+		Config.getInstance().init("sys.config");
 		if(Main.isDebug){
-			Config.getInstance().init("sys.config");
 			Config.initDebug();
 		}
 		if(type.equals("mysql")){//mysql
