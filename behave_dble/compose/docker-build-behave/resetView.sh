@@ -14,7 +14,7 @@ for((i=0; i<count; i=i+1)); do
 
     #remove dble registered nodes in zk
     echo "remove dble registered nodes ${dble_install[$i]}"
-    ssh root@${dble_install[$i]} sh -c "cd /opt/zookeeper/bin && sh zkCli.sh rmr /dble"
+    ssh root@${dble_install[$i]} sh -c "cd /opt/zookeeper/bin && sh zkCli.sh deleteall /dble"
     echo "remove dble in ${dble_install[$i]} success"
 
     echo "reset views in ${dble_install[$i]} success"
