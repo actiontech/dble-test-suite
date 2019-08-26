@@ -8,15 +8,14 @@ count=${#dble_install[@]}
 for((i=0; i<count; i=i+1)); do
     echo "reset views in ${dble_install[$i]} starting"
     #remove viewConf
-    echo "remove viewConf in ${dble_install[$i]}"
+    echo "try to remove viewConf in host ${dble_install[$i]}"
     ssh root@${dble_install[$i]} sh -c "rm -rf /opt/dble/viewConf"
-    echo "remove viewConf in ${dble_install[$i]} success"
+    echo "try to remove viewConf finished"
 
     #remove dble registered nodes in zk
-    echo "remove dble registered nodes ${dble_install[$i]}"
-    ssh root@${dble_install[$i]} sh -c "cd /opt/zookeeper/bin && sh zkCli.sh deleteall /dble"
-    echo "remove dble in ${dble_install[$i]} success"
+    echo "try to remove zookeeper registered key '/dble' in host ${dble_install[$i]}"
+    ssh root@${dble_install[$i]} sh -c "cd /opt/zookeeper/bin && sh zkCli.sh deleteall /dble >> ../../logs/deleteDbleInZk.log 2>&1"
+    echo "try to remove zookeeper registered key finished"
 
-    echo "reset views in ${dble_install[$i]} success"
     echo "-----------------------------------------------------------"
 done
