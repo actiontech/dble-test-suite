@@ -378,7 +378,6 @@ def replace_config_in_node(context, node):
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
-        LOGGER.info("sftp from: {0} to {1}".format(local_file, remote_file))
         node.sftp_conn.sftp_put(local_file, remote_file)
 
 @Given('reset dble registered nodes in zk')
