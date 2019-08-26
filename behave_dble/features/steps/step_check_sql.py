@@ -298,9 +298,9 @@ def step_impl(context, dblelist):
         out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetView.sh', dblelist])
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
-        context.logger.info(out_bytes.decode('utf-8'))
+        context.logger.debug(out_bytes.decode('utf-8'))
     finally:
-        context.logger.info(out_bytes.decode('utf-8'))
+        context.logger.debug(out_bytes.decode('utf-8'))
 
 @Then('execute sql in file "{filename}"')
 @Then('execute sql in "{filename}" to check read-write-split work fine and log dest slave')
