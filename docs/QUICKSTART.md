@@ -11,7 +11,8 @@
 - -D dble_conf = {sql_cover_mixed|sql_cover_global|template|sql_cover_nosharding|sql_cover_sharding}, default template
 - -D is_cluster = {true|false}，default false, run with 3 dbles in zookeeper mode
 - -D user_debug =  {true|false}，default false, reserve last case environment
- 
+所有的自定义命令行参数均可在behave.ini中进行配置
+
 ### behave_dble下的用例按照 allure-behave将用例优先级由高到低分为以下5类:
 - BLOCKER
 - CRITICAL
