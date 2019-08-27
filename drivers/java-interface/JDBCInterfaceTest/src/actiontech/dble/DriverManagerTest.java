@@ -1,3 +1,6 @@
+/* Copyright (C) 2016-2019 ActionTech.
+ * License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+ */
 package actiontech.dble;
 
 import java.sql.Connection;
@@ -5,8 +8,6 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Vector;
 
 public class DriverManagerTest extends InterfaceTest{
 
@@ -74,7 +75,7 @@ public class DriverManagerTest extends InterfaceTest{
 	}
 
 	private void searchInGenLog(ConnProperties prop, String re){
-		String cmd = "cat "+Config.GENERAL_LOG+" | grep '"+re+"'";
+//		String cmd = "cat "+Config.GENERAL_LOG+" | grep '"+re+"'";
 //		SSHCommandExecutor sshExecutor = new SSHCommandExecutor(prop.slave1,Config.SSH_USER,
 //				Config.SSH_PASSWORD);
 		//sshExecutor.execute(cmd);
@@ -91,7 +92,7 @@ public class DriverManagerTest extends InterfaceTest{
 		String fullUrlString = urlString + "?useSSL=false&&useServerPrepStmts=true&&cachePrepStmts=true";
 
 		Connection conn1 = DriverManager.getConnection(fullUrlString, prop.userName, prop.password);
-		Connection conn2 = DriverManager.getConnection(fullUrlString, prop.userName, prop.password);
+//		Connection conn2 = DriverManager.getConnection(fullUrlString, prop.userName, prop.password);
 
 		PreparedStatement pstmt1 = conn1.prepareStatement("select ?");
 		pstmt1.setInt(1, 13);
