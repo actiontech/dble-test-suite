@@ -134,5 +134,6 @@ public class WebRowSetSample extends InterfaceTest {
 		} else {
 			System.out.println("Error....serializing/deserializng the WebRowSet");
 		}
+		receiver.close();
 	}
 }
