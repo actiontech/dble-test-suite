@@ -1,3 +1,6 @@
+/* Copyright (C) 2016-2019 ActionTech.
+ * License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+ */
 package actiontech.dble;
 
 import java.sql.Blob;
@@ -234,7 +237,7 @@ public class ConnectionTest extends InterfaceTest {
 			if (isMySQLClosed == isDbleClosed)
 				System.out.println("pass! abort()");
 			else {
-				on_assert_fail("fail! After abort(), dble isClosed() is:"+isDbleClosed+"but mysql isClosed is:"+isMySQLClosed);
+				on_assert_fail("fail! After abort(), dble isClosed() is:"+isDbleClosed+", but mysql isClosed is:"+isMySQLClosed);
 			}
 		}catch(SQLException e){
 			System.out.println("SQLException:"+e.getMessage());
