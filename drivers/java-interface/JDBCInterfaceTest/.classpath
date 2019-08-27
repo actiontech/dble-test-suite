@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="properties"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="lib/ini4j-0.5.4-jdk14.jar"/>
-	<classpathentry kind="lib" path="lib/jsch-0.1.54.jar"/>
-	<classpathentry kind="lib" path="lib/mysql-connector-java-5.1.39-bin.jar"/>
+	<classpathentry kind="lib" path="/Users/apple/PycharmProjects/dble_github/dble-testing/drivers/java/ini4j-0.5.4-jdk14.jar"/>
+	<classpathentry kind="lib" path="/Users/apple/PycharmProjects/dble_github/dble-testing/drivers/java/jsch-0.1.54.jar"/>
+	<classpathentry kind="lib" path="/Users/apple/PycharmProjects/dble_github/dble-testing/drivers/java/mysql-connector-java-5.1.39-bin.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
