@@ -14,35 +14,13 @@
     </formats>
     <fileSets>
         <fileSet>
-            <directory>target/generated-resources/appassembler/jsw/dble/lib</directory>
-            <outputDirectory>dble/lib</outputDirectory>
-            <includes>
-                <include>*.jar</include>
-                <include>libwrapper-linux*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/assembly/conf</directory>
-            <outputDirectory>dble/conf</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>src/main/assembly/bin</directory>
-            <outputDirectory>dble/bin</outputDirectory>
+            <directory>target/generated-resources/appassembler/jsw/jdbc-api-test/bin</directory>
+            <outputDirectory>jdbc_api_test/bin</outputDirectory>
             <fileMode>0755</fileMode>
             <includes>
-                <include>*.sh</include>
+                <include>jdbc-api-test</include>
+                <include>wrapper-linux*</include>
             </includes>
-        </fileSet>
-        <fileSet>
-            <directory>${basedir}/logs</directory>
-            <outputDirectory>dble/logs</outputDirectory>
-            <excludes>
-                <exclude>**/*</exclude>
-            </excludes>
-        </fileSet>
-		 <fileSet>
-            <directory>${basedir}/algorithm</directory>
-            <outputDirectory>dble/algorithm</outputDirectory>
         </fileSet>
     </fileSets>
 
