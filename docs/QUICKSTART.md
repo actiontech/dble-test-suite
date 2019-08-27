@@ -19,15 +19,16 @@
 - MINOR
 - TRIVIAL
 
-### 基于behave的测试命令集，可通过自定义参数：test_config 选择使用的配置文件，配置文件可自定义，参考behave_dble/conf/auto_test_dble_release.yaml, 使用示例：
+### 基于behave的测试命令集，可通过自定义参数：test_config 选择使用的配置文件
+ 配置文件可自定义，参考behave_dble/conf/auto_test_dble_release.yaml,这份配置需要将最近发布的dble安装包下载到dble所在主机指定目录/share下。外网用户建议使用该配置而非auto_dble_test.yaml。 使用示例：
 >behave -Dreset=false -Dtest_config=auto_test_dble_release.yaml features/install_uninstall/install_dble.feature
 
 ### 测试命令集
 1. 通过ftp包安装单节点并启动
->behave -Dreset=false features/install_uninstall/install_dble.feature
+>behave -Dreset=false -Dtest_config=auto_test_dble_release.yaml features/install_uninstall/install_dble.feature
 
 2. 通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点(-Dreset=false 参数仅为初始安装dble的必要参数)
->behave -Dreset=false -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature 
+>behave -Dreset=false -Dis_cluster=true -Dtest_config=auto_test_dble_release.yaml features/install_uninstall/install_dble_cluster.feature 
 
 3. 通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换(-Dreset=false 参数仅为初始安装dble的必要参数)
 >behave -Dreset=false -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
