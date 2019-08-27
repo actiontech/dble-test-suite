@@ -2,22 +2,10 @@
 ## 一. 测试环境搭建
 参考：./behave_dble/compose/README.md
 
-## 二. 对c_mysql_api中接口的支持度测试
-参考：drivers/c_mysql_api下对应文件夹中的README.md
-
-## 三. 对connector/j中接口及sql的支持度测试
-参考：drivers/Connector-J下对应文件夹中的README.md
-
-## 四. 对connector/c++中sql的支持度测试
-参考：drivers/Connector-cpp下对应文件夹中的README.md
-
-## 五.对connector/.net中sql的支持度测试
-参考：drivers/Connector-.net下对应文件夹中的README.md
-
-## 六. 使用behave测试dble(以下涉及的behave命令需要在behave_dble目录下执行)
+## 二. 使用behave测试dble(以下涉及的behave命令需要在behave_dble目录下执行)
 ### behave 自定义命令行参数说明（在 behave.ini 中配置）：
  - -D install_from_local={true|false}, default false
- - -D test_config={auto_dble_test.yaml}
+ - -D test_config={auto_dble_test.yaml}，测试使用的配置文件
  - -D reinstall={true|false}，default false, true if need reinstall before features start
  - -D reset={true|false}, default true, reset dble config files and restart dble before features start
 - -D dble_conf = {sql_cover_mixed|sql_cover_global|template|sql_cover_nosharding|sql_cover_sharding}, default template
@@ -30,6 +18,9 @@
 - NORMAL
 - MINOR
 - TRIVIAL
+
+### 基于behave的测试命令集，可通过自定义参数：test_config 选择使用的配置文件，配置文件可自定义，参考behave_dble/conf/auto_test_dble_release.yaml, 使用示例：
+>behave -Dreset=false -Dtest_config=auto_test_dble_release.yaml features/install_uninstall/install_dble.feature
 
 ### 测试命令集
 1. 通过ftp包安装单节点并启动
@@ -114,3 +105,15 @@ server.3=dble-3:2888:3888
 
 1. block确认
 2. hang后超时多久连接重建
+
+## 三. 对c_mysql_api中接口的支持度测试
+参考：drivers/c_mysql_api下对应文件夹中的README.md
+
+## 四. 对connector/j中接口及sql的支持度测试
+参考：drivers/Connector-J下对应文件夹中的README.md
+
+## 五. 对connector/c++中sql的支持度测试
+参考：drivers/Connector-cpp下对应文件夹中的README.md
+
+## 六.对connector/.net中sql的支持度测试
+参考：drivers/Connector-.net下对应文件夹中的README.md
