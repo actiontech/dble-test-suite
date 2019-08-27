@@ -38,7 +38,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     Then check resultsets "backend_rs_A" and "backend_rs_B" are same in following columns
       |column               | column_index |
       |processor            | 0            |
-      |ID                   | 1            |
+      |BACKEND_ID           | 1            |
       |MYSQLID              | 2            |
       |HOST                 | 3            |
       |PORT                 | 4            |
@@ -48,6 +48,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |USER_VARIABLES       | 19           |
 
   @BLOCKER
+  @skip
   Scenario: reload @@config_all, eg:remove old writeHost and add new, drop backend connection pool for old writeHost, create new connection pool, backend conn in use will not be dropped even the writehost was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -95,7 +96,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     Then check resultsets "backend_rs_D" including resultset "backend_rs_E" in following columns
       |column               | column_index |
       |processor            | 0            |
-      |ID                   | 1            |
+      |BACKEND_ID           | 1            |
       |MYSQLID              | 2            |
       |HOST                 | 3            |
       |PORT                 | 4            |
@@ -108,7 +109,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     Then get resultset of admin cmd "show @@backend" named "backend_rs_F"
     Then check resultsets "backend_rs_F" does not including resultset "backend_rs_E" in following columns
       |column            | column_index |
-      |ID                | 1     |
+      |BACKEND_ID        | 1     |
       |MYSQLID           | 2     |
       |HOST              | 3     |
       |PORT              | 4     |
@@ -142,7 +143,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     Then check resultsets "backend_rs_G" including resultset "backend_rs_H" in following columns
       |column               | column_index |
       |processor            | 0            |
-      |ID                   | 1            |
+      |BACKEND_ID           | 1            |
       |MYSQLID              | 2            |
       |HOST                 | 3            |
       |PORT                 | 4            |
@@ -163,7 +164,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     Then get resultset of admin cmd "show @@backend" named "backend_rs_I"
     Then check resultsets "backend_rs_I" does not including resultset "backend_rs_H" in following columns
       |column            | column_index |
-      |ID                | 1     |
+      |BACKEND_ID        | 1     |
       |MYSQLID           | 2     |
       |HOST              | 3     |
       |PORT              | 4     |
