@@ -26,4 +26,4 @@ Feature: show_datasource
     Then get resultset of admin cmd "show @@datasource" named "sql_rs2"
     Then check resultset "sql_rs2" has lines with following column values
         | NAME-0 | HOST-1         |  PORT-2  | ACTIVE-4 |IDLE-5  |
-        | hostM1 | 172.100.9.5   | 3306     |    0      |       10|
+        | hostM1 | 172.100.9.5   | 3306     |    1      |       9|
