@@ -10,12 +10,12 @@ Feature: #test show @@processlist
     <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     <table name="test1" dataNode="dn1"/>
     </schema>
-    <dataHost balance="0" maxCon="4" minCon="4" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="5" minCon="5" name="172.100.9.5" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="4" minCon="4" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="5" minCon="5" name="172.100.9.6" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
     </writeHost>
@@ -44,7 +44,7 @@ Feature: #test show @@processlist
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                        | expect    | db         |
       | test | 111111 | conn_1 | False    | begin                      | success   |  schema1  |
-      | test | 111111 | conn_1 | False    | select * from test1      | success   |  schema1  |
+      | test | 111111 | conn_1 | False    | select * from test1        | success   |  schema1  |
     Then get resultset of admin cmd "show @@processlist" named "pro_rs_C"
     Then check resultset "pro_rs_C" has lines with following column values
       | Front_Id-0 | Datanode-1   | User-3    | db-5   | Command-6    | Info-9  |
