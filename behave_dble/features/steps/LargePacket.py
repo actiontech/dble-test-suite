@@ -2,7 +2,7 @@
 # @Time    : 2019/8/9 AM10:31
 # @Author  : zhaohongjie@actionsky.com
 #todo multiple queries
-import pymysql
+import MySQLdb
 import argparse
 
 from SQLContext import SQLContext
@@ -37,7 +37,7 @@ def create_conn(args):
     db = args.database
     port = args.port
 
-    conn = pymysql.connect(host=host, user=user, passwd=passwd, db=db, port=port, autocommit=True,
+    conn = MySQLdb.connect(host=host, user=user, passwd=passwd, db=db, port=port, autocommit=True,
                            charset='utf8mb4')
     return conn
 
