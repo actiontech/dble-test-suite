@@ -58,6 +58,7 @@ Given reset views in "dble-1" if exists
         | special_nosharding/select/join_no_sharding.sql        |
         | special_nosharding/select/reference_no_sharding.sql   |
         | special_nosharding/select/subquery_no_sharding.sql    |
+        | special_nosharding/select/join_union_subquery_mixed.sql    |
 
     Scenario: #5 compare new generated results is same with the standard ones
         When compare results in "sql_cover_nosharding" with the standard results in "std_sql_cover_nosharding"
