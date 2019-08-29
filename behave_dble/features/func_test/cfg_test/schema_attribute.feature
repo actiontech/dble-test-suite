@@ -1,16 +1,18 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+# Modified by wujinling at 2019/8/29
 Feature: test some import nodes attr in schema.xml
 
   @BLOCKER
-  Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=true" #1
+  Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=true" (for all table type) #1
     Given delete the following xml segment
       |file         | parent           | child                 |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
      """
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="3">
-            <table dataNode="dn1,dn3" name="test_table" type="global"/>
+            <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
+		     <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
         </schema>
       """
     Then execute admin cmd "reload @@config_all"
@@ -19,14 +21,25 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | False    | drop table if exists test_table                 | success | schema1 |
         | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | schema1 |
-        | test | 111111 | conn_0 | True     | select * from test_table                        | length{(3)} | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test_table                        | length{(3)} | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test_table limit 1                       | length{(1)} | schema1 |
+        | test | 111111 | conn_0 | False     | drop table if exists test                        | success | schema1 |
+        | test | 111111 | conn_0 | False    | create table test(id int)                 | success | schema1 |
+        | test | 111111 | conn_0 | False     | insert into test values(1),(2),(3),(4),(5)                        | success | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test                        | length{(3)} | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test limit 4                        | length{(4)} | schema1 |
+        | test | 111111 | conn_0 | False     | drop table if exists sharding_4_t1                        | success | schema1 |
+        | test | 111111 | conn_0 | False    | create table sharding_4_t1(id int)                 | success | schema1 |
+        | test | 111111 | conn_0 | False     | insert into sharding_4_t1 values(1),(2),(3),(4),(5)                        | success | schema1 |
+        | test | 111111 | conn_0 | True     | select * from sharding_4_t1 limit 6                       | length{(5)} | schema1 |
+#        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | create table default_table(id int)              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)/*dest_node:dn5*/    | success | schema1 |
 #        | test | 111111 | conn_0 | False    | select * from default_table                     | length{(3)} | schema1 |
 
   @TRIVIAL
-  Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=false" #2
+  Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=false"(for all table type) #2
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -34,7 +47,8 @@ Feature: test some import nodes attr in schema.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
       <schema dataNode="dn1" name="schema1" sqlMaxLimit="3">
-          <table dataNode="dn1,dn3" name="test_table" type="global" needAddLimit="false"/>
+          <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" needAddLimit="false" />
+		   <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" needAddLimit="false"/>
       </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -43,7 +57,16 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | False    | drop table if exists test_table                 | success | schema1 |
         | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | schema1 |
-        | test | 111111 | conn_0 | True     | select * from test_table    | length{(5)} | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test_table                        | length{(3)} | schema1 |
+        | test | 111111 | conn_0 | False     | drop table if exists test                        | success | schema1 |
+        | test | 111111 | conn_0 | False    | create table test(id int)                 | success | schema1 |
+        | test | 111111 | conn_0 | False     | insert into test values(1),(2),(3),(4),(5)                        | success | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test                        | length{(5)} | schema1 |
+        | test | 111111 | conn_0 | False     | drop table if exists sharding_4_t1                        | success | schema1 |
+        | test | 111111 | conn_0 | False    | create table sharding_4_t1(id int)                 | success | schema1 |
+        | test | 111111 | conn_0 | False     | insert into sharding_4_t1 values(1),(2),(3),(4),(5)                        | success | schema1 |
+        | test | 111111 | conn_0 | True     | select * from sharding_4_t1                        | length{(5)} | schema1 |
+
 
   @TRIVIAL
   Scenario: config "table" node attr "name" with multiple values #3
