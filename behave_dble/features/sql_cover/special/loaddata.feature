@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by Rita at 2019/3/20
+# Modified by wujinling at 2019/8/29
 Feature: to verify issue https://github.com/actiontech/dble/issues/1000
 
   Scenario: config parameter "maxCharsPerColumn " in server.xml to limit characters per column #1
@@ -129,3 +130,17 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
     Given remove local and server file "aa.txt"
     Given remove local and server file "bb.txt"
 
+
+  Scenario: Load data when the column content contains Tab, from issue:1250 #5
+    Given create local and server file "tab.txt" and fill with text
+     """
+      201	"Mazojys	ddd	ggg"	"Fxoj"	"Finance"	7800
+     """
+    Then execute sql in "dble-1" in "user" mode
+        | user   | passwd    | conn   | toClose | sql                                                                                                                                                         | expect       | db     |
+        | test   | 111111    | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                                         | success      | schema1 |
+        | test   | 111111    | conn_0 | False   | CREATE TABLE sharding_4_t1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)                                                                                                        | success      | schema1 |
+        | test   | 111111    | conn_0 | False   | load data infile "./tab.txt" into table sharding_4_t1  FIELDS   OPTIONALLY ENCLOSED BY '"'   LINES TERMINATED BY '\n';           |success       | schema1 |
+        | test   | 111111    | conn_0 | False   | select * from sharding_4_t1                                                                                                                                  |has{('Mazojys	ddd	ggg')}  | schema1 |
+        | test   | 111111    | conn_0 | True   | drop table if exists sharding_4_t1                                                                                                                         |success       | schema1 |
+    Given remove local and server file "tab.txt"
