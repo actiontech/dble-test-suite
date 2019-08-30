@@ -43,7 +43,7 @@ Feature: test show user related manager command
       |    test1        | schema         | test             | N      | N   | N        | N       |
       |    test1        | schema         | sharding_4_t1   | Y      | Y   | Y        | Y       |
       |    test1        | schema2        | sharding_4_t1   | Y      | N   | N        | Y       |
-      |    test1        | schema2        | *   | Y      | N   | N        | Y       |
+      |    test1        | schema2        | *   | N      | Y   | N        | Y       |
        Then get resultset of admin cmd "show @@help" named "help_rs_A"
        Then check resultset "help_rs_A" has lines with following column values
       | STATEMENT-0 | DESCRIPTION-1  |
