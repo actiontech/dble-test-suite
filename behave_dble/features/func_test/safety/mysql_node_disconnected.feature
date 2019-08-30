@@ -3,7 +3,6 @@
 # Created by maofei at 2019/4/16
 Feature: #mysql node disconnected,check the change of dble
   # Enter feature description here
-
   Scenario: # only one mysql node and it was disconnected    #1
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -99,6 +98,7 @@ Feature: #mysql node disconnected,check the change of dble
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose  | sql                                   | expect                                           | db     |
       | test | 111111 | conn_0 | True    | drop database if exists db3        | success                                          |         |
+    Then execute admin cmd "Reload @@config_all -r"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                                   | expect                                           | db      |
       | test | 111111 | conn_0 | False    | set xa=on                            | success                                          | schema1 |
