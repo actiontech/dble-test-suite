@@ -22,16 +22,16 @@ Feature: test some import nodes attr in schema.xml
         | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | schema1 |
         | test | 111111 | conn_0 | False     | select * from test_table                        | length{(3)} | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test_table limit 1                       | length{(1)} | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test_table order by id limit 1                       | length{(1)} | schema1 |
         | test | 111111 | conn_0 | False     | drop table if exists test                        | success | schema1 |
         | test | 111111 | conn_0 | False    | create table test(id int)                 | success | schema1 |
         | test | 111111 | conn_0 | False     | insert into test values(1),(2),(3),(4),(5)                        | success | schema1 |
         | test | 111111 | conn_0 | False     | select * from test                        | length{(3)} | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test limit 4                        | length{(4)} | schema1 |
+        | test | 111111 | conn_0 | False     | select * from test order by id limit 4                        | length{(4)} | schema1 |
         | test | 111111 | conn_0 | False     | drop table if exists sharding_4_t1                        | success | schema1 |
         | test | 111111 | conn_0 | False    | create table sharding_4_t1(id int)                 | success | schema1 |
         | test | 111111 | conn_0 | False     | insert into sharding_4_t1 values(1),(2),(3),(4),(5)                        | success | schema1 |
-        | test | 111111 | conn_0 | True     | select * from sharding_4_t1 limit 6                       | length{(5)} | schema1 |
+        | test | 111111 | conn_0 | True     | select * from sharding_4_t1 order by id limit 6                       | length{(5)} | schema1 |
 #        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | create table default_table(id int)              | success | schema1 |
