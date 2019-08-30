@@ -9,7 +9,7 @@ Feature: show_datasource
      Given stop mysql in host "mysql-master1"
      Then get resultset of admin cmd "show @@datasource" named "sql_rs"
      Then check resultset "sql_rs" has lines with following column values
-        | NAME-0 | HOST-1         |  PORT-2 | ACTIVE-4  | IDLE-5  |
+        | NAME-1 | HOST-2         |  PORT-3 | ACTIVE-5  | IDLE-6  |
         | hostM1 | 172.100.9.5   | 3306     |    0      |      0    |
     Given start mysql in host "mysql-master1"
 
@@ -25,5 +25,5 @@ Feature: show_datasource
     Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@datasource" named "sql_rs2"
     Then check resultset "sql_rs2" has lines with following column values
-        | NAME-0 | HOST-1         |  PORT-2  | ACTIVE-4 |IDLE-5  |
+        | NAME-1 | HOST-2         |  PORT-3  | ACTIVE-5 |IDLE-6  |
         | hostM1 | 172.100.9.5   | 3306     |    1      |       9|
