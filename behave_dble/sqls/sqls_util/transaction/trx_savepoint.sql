@@ -7,632 +7,218 @@ SET @@session.autocommit = ON
 delete from test1
 begin
 select * from test1 order by id
+savepoint sp1
 insert into test1 values(1,1,1,1)
 select * from test1 order by id
-commit
+savepoint sp2
+insert into test1 values(2,2,2,2)
 select * from test1 order by id
-update test1 set pad=10
+savepoint sp1
+insert into test1 values(3,3,3,3)
+select * from test1 order by id
+savepoint sp4
+insert into test1 values(4,4,4,4)
+select * from test1 order by id
+savepoint sp5
+rollback to savepoint sp4
+select * from test1 order by id
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
 rollback
 select * from test1 order by id
-#*******************begin********单节点*********************
 #!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin***********双节点*********commit***********
-#!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin***********双节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin***********3节点*********commit***********
-#!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin***********3节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin***********4节点*********commit***********
-#!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin***********4节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********单节点*********commit***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********单节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********2节点*********commit***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********单节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********3节点*********commit***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********3节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********4节点*********commit***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************begin work***********4节点*********rollback***********
-#!share_conn_1
-delete from test1
-begin work
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********单节点*********commit***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********单节点*********rollback***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********2节点*********commit***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********2节点*********rollback***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********3节点*********commit***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********3节点*********rollback***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********4节点*********commit***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************start transaction***********4节点*********rollback***********
-#!share_conn_1
-delete from test1
-start transaction
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-#*****************set autocommit=0***********单节点*********commit***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********单节点*********rollback***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********2节点*********commit***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********2节点*********rollback***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********3节点*********commit***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********3节点*********rollback***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********4节点*********commit***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set autocommit=0***********单节点*********rollback***********
-#!share_conn_1
-delete from test1
-set autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set autocommit=1
-#*****************set @@session.autocommit=0***********单节点*********commit***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********单节点*********rollback***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********2节点*********commit***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********2节点*********rollback***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********3节点*********commit***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********3节点*********rollback***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********4节点*********commit***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-commit
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#*****************set @@session.autocommit=0***********4节点*********rollback***********
-#!share_conn_1
-delete from test1
-set @@session.autocommit=0
-select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-select * from test1 order by id
-rollback
-select * from test1 order by id
-update test1 set pad=10
-rollback
-select * from test1 order by id
-set @@session.autocommit=1
-#***********************read write*************单节点************commit*****************
-#!share_conn_1
-delete from test1
-start transaction read write
-select * from test1 order by id
-insert into test1 values(1,1,1,1)
-#!share_conn_2
 SET @@session.autocommit = ON
-start transaction read write
-select * from test1 order by id
-insert into test1 values(5,5,5,5)
-#!share_conn_1
-commit
-update test1 set pad=10 where id =1
-select * from test1 order by id
-#!share_conn_2
-commit
-select * from test1 order by id
-#***********************read write*************单节点************ROLLBACK *****************
-#!share_conn_1
 delete from test1
-start transaction read write
+start transaction
 select * from test1 order by id
+savepoint sp1
 insert into test1 values(1,1,1,1)
-#!share_conn_2
-start transaction read write
 select * from test1 order by id
-insert into test1 values(5,5,5,5)
+savepoint sp2
+insert into test1 values(2,2,2,2)
+select * from test1 order by id
+savepoint sp1
+insert into test1 values(3,3,3,3)
+select * from test1 order by id
+savepoint sp4
+insert into test1 values(4,4,4,4)
+select * from test1 order by id
+savepoint sp5
+rollback to savepoint sp4
+select * from test1 order by id
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
+commit
+select * from test1 order by id
+#*********************SET @@session.autocommit = OFF***************************
 #!share_conn_1
+SET @@session.autocommit = OFF
+delete from test1
+begin
+select * from test1 order by id
+savepoint sp1
+insert into test1 values(1,1,1,1)
+select * from test1 order by id
+savepoint sp2
+insert into test1 values(2,2,2,2)
+select * from test1 order by id
+savepoint sp1
+insert into test1 values(3,3,3,3)
+select * from test1 order by id
+savepoint sp4
+insert into test1 values(4,4,4,4)
+select * from test1 order by id
+savepoint sp5
+rollback to savepoint sp4
+select * from test1 order by id
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
 rollback
+select * from test1 order by id
+#!share_conn_1
+SET @@session.autocommit = OFF
+delete from test1
+start transaction
+select * from test1 order by id
+savepoint sp1
 insert into test1 values(1,1,1,1)
 select * from test1 order by id
-#!share_conn_2
+savepoint sp2
+insert into test1 values(2,2,2,2)
+select * from test1 order by id
+savepoint sp1
+insert into test1 values(3,3,3,3)
+select * from test1 order by id
+savepoint sp4
+insert into test1 values(4,4,4,4)
+select * from test1 order by id
+savepoint sp5
+rollback to savepoint sp4
+select * from test1 order by id
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
 commit
 select * from test1 order by id
-#***********************read write*************2节点************commit*****************
+#*****************set autocommit=0**********************
 #!share_conn_1
+SET @@autocommit = 0
 delete from test1
-start transaction read write
+begin
 select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-#!share_conn_2
-start transaction read write
+savepoint sp1
+insert into test1 values(1,1,1,1)
 select * from test1 order by id
-insert into test1 values(5,5,5,5),(6,6,6,6)
-#!share_conn_1
-commit
-update test1 set pad=10 where id =1
+savepoint sp2
+insert into test1 values(2,2,2,2)
 select * from test1 order by id
-#!share_conn_2
-commit
+savepoint sp1
+insert into test1 values(3,3,3,3)
 select * from test1 order by id
-#***********************read write*************2节点************ROLLBACK *****************
-#!share_conn_1
-delete from test1
-start transaction read write
+savepoint sp4
+insert into test1 values(4,4,4,4)
 select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2)
-#!share_conn_2
-start transaction read write
+savepoint sp5
+rollback to savepoint sp4
 select * from test1 order by id
-insert into test1 values(5,5,5,5),(6,6,6,6)
-#!share_conn_1
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
 rollback
+select * from test1 order by id
+#!share_conn_1
+SET @@autocommit = 0
+delete from test1
+start transaction
+select * from test1 order by id
+savepoint sp1
 insert into test1 values(1,1,1,1)
 select * from test1 order by id
-#!share_conn_2
+savepoint sp2
+insert into test1 values(2,2,2,2)
+select * from test1 order by id
+savepoint sp1
+insert into test1 values(3,3,3,3)
+select * from test1 order by id
+savepoint sp4
+insert into test1 values(4,4,4,4)
+select * from test1 order by id
+savepoint sp5
+rollback to savepoint sp4
+select * from test1 order by id
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
 commit
 select * from test1 order by id
-#***********************read write*************3节点************COMMIT *****************
+#*****************set @@autocommit=1**********************
 #!share_conn_1
+SET @@autocommit = 1
 delete from test1
-start transaction read write
+begin
 select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-#!share_conn_2
-start transaction read write
+savepoint sp1
+insert into test1 values(1,1,1,1)
 select * from test1 order by id
-insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)
-#!share_conn_1
-commit
-update test1 set pad=10 where id =1
+savepoint sp2
+insert into test1 values(2,2,2,2)
 select * from test1 order by id
-#!share_conn_2
-commit
+savepoint sp1
+insert into test1 values(3,3,3,3)
 select * from test1 order by id
-#***********************read write*************3节点************ROLLBACK *****************
-#!share_conn_1
-delete from test1
-start transaction read write
+savepoint sp4
+insert into test1 values(4,4,4,4)
 select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3)
-#!share_conn_2
-start transaction read write
+savepoint sp5
+rollback to savepoint sp4
 select * from test1 order by id
-insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7)
-#!share_conn_1
+release savepoint sp5
+select * from test1 order by id
+release savepoint sp4
+rollback to savepoint sp1
+select * from test1 order by id
 rollback
+select * from test1 order by id
+#!share_conn_1
+SET @@autocommit = 1
+delete from test1
+start transaction
+select * from test1 order by id
+savepoint sp1
 insert into test1 values(1,1,1,1)
 select * from test1 order by id
-#!share_conn_2
-commit
+savepoint sp2
+insert into test1 values(2,2,2,2)
 select * from test1 order by id
-#***********************read write*************4节点************COMMIT *****************
-#!share_conn_1
-delete from test1
-start transaction read write
+savepoint sp1
+insert into test1 values(3,3,3,3)
 select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-#!share_conn_2
-start transaction read write
+savepoint sp4
+insert into test1 values(4,4,4,4)
 select * from test1 order by id
-insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)
-#!share_conn_1
-commit
-update test1 set pad=10 where id =1
+savepoint sp5
+rollback to savepoint sp4
 select * from test1 order by id
-#!share_conn_2
-commit
+release savepoint sp5
 select * from test1 order by id
-#***********************read write*************4节点************ROLLBACK *****************
-#!share_conn_1
-delete from test1
-start transaction read write
+release savepoint sp4
+rollback to savepoint sp1
 select * from test1 order by id
-insert into test1 values(1,1,1,1),(2,2,2,2),(3,3,3,3),(4,4,4,4)
-#!share_conn_2
-start transaction read write
-select * from test1 order by id
-insert into test1 values(5,5,5,5),(6,6,6,6),(7,7,7,7),(8,8,8,8)
-#!share_conn_1
-rollback
-insert into test1 values(1,1,1,1)
-select * from test1 order by id
-#!share_conn_2
 commit
 select * from test1 order by id
 #
