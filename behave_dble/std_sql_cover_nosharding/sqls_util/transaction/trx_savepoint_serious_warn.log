@@ -1,0 +1,24 @@
+===file:sqls_util/transaction/trx_savepoint.sql, id:25, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:52, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:80, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:107, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:135, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:162, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:190, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
+===file:sqls_util/transaction/trx_savepoint.sql, id:217, sql:[release savepoint sp5]===
+mysql err:(1305, 'SAVEPOINT sp5 does not exist')
+dble err:(1305, 'SAVEPOINT sp5 in dble does not exist')
