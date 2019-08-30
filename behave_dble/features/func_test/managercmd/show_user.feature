@@ -14,6 +14,7 @@ Feature: test show user related manager command
      """
       Then execute admin cmd "reload @@config_all"
       Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+
       """
       <user name="test1">
            <property name="password">123456</property>
@@ -31,7 +32,7 @@ Feature: test show user related manager command
            </privileges>
       </user>
       """
-       Given Restart dble in "dble-1" success
+       Then execute admin cmd "reload @@config_all"
        Then get resultset of admin cmd "show @@user" named "user_rs_A"
        Then check resultset "user_rs_A" has lines with following column values
       | Username-0 | Manager-1  | Readonly-2   | Max_con-3    |
