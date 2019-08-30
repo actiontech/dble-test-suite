@@ -53,6 +53,7 @@ Given reset views in "dble-1" if exists
         | sqls_util/transaction/trx_ddl_dml.sql                 |
         | sqls_util/transaction/trx_isolation.sql               |
         | sqls_util/transaction/trx_syntax.sql                  |
+        | sqls_util/transaction/trx_savepoint.sql                  |
         | sqls_util/dev_dealed/cross_db.sql                     |
         | special_nosharding/select/join_no_sharding.sql        |
         | special_nosharding/select/reference_no_sharding.sql   |
