@@ -89,7 +89,7 @@ Feature: #mysql node disconnected,check the change of dble
       | user | passwd | conn   | toClose  | sql                 | expect      | db      |
       | test | 111111 | conn_0 | False    | commit              | Connection  | schema1 |
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+    Given sleep "30" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                          | expect   | db      |
       | test | 111111 | conn_0 | True    | select * from test_table  | success  | schema1 |
