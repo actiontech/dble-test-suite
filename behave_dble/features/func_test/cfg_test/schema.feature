@@ -284,5 +284,40 @@ Feature: schema basic config test
     """
     Given Restart dble in "dble-1" success
 
+  Scenario: Special characters:'-' in the name of schema #12
+    Given delete the following xml segment
+      |file         | parent           | child               |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}   |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+     """
+     <schema dataNode="dn1" name="schema-1" sqlMaxLimit="100">
+     <table dataNode="dn1,dn2,dn3,dn4" name="test-1" type="global" />
+     <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+     </schema>
+     """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <user name="test">
+        <property name="password">111111</property>
+        <property name="schemas">schema-1</property>
+     </user>
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose | sql                                        | expect   | db       |
+        | test | 111111 | conn_0 | True    | drop table if exists `test-1`          | success  | schema-1 |
+        | test | 111111 | conn_0 | True    | create table `test-1`(id int)          | success  | schema-1 |
+        | test | 111111 | conn_0 | True    | show columns from `schema-1`.`test-1` | success  | schema-1 |
+        | test | 111111 | conn_0 | True    | show index from `schema-1`.`test-1`   | success  | schema-1 |
+        | test | 111111 | conn_0 | True    | show full tables from `schema-1`       | success  | schema-1 |
+        | test | 111111 | conn_0 | True    | show table status from `schema-1`      | success  | schema-1 |
+    Then execute sql in "dble-1" in "admin" mode
+        | user  | passwd    | conn   | toClose | sql                                                                      | expect   | db |
+        | root  | 111111    | conn_0 | True    | kill @@ddl_lock where schema='schema-1' and table='test-1'        | success |    |
+        | root  | 111111    | conn_0 | True    | check full @@metadata where schema='schema-1' and table='test-1' | success |    |
+        | root  | 111111    | conn_0 | True    | reload @@metadata where schema='schema-1' and table='test-1'      | success |    |
+        | root  | 111111    | conn_0 | True    | reload @@metadata where table in ('schema-1.test-1')               | success |    |
+        | root  | 111111    | conn_0 | True    | show @@Algorithm where schema='schema-1' and table='test-1'       | success |    |
+        | root  | 111111    | conn_0 | True    | show @@datanodes where schema='schema-1' and table='test-1'       | success |    |
 
 
