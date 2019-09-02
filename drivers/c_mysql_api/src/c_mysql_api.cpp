@@ -18,10 +18,10 @@ int main(int argc, char *argv[]) {
 //    config("../../sys.config", sys);
     MYSQL* conn = getConn();
 
-//    case_mysql_change_user(conn);//does not support, doc-it already
-//    case_mysql_reset_connection(conn); //does not support, doc-it already
+    case_mysql_change_user(conn);
+    case_mysql_reset_connection(conn);
 //    case_mysql_rollback(conn);//does not support
-//    case_mysql_set_server_option(conn);//does not support, doc-it already
+    case_mysql_set_server_option(conn);
 
     case_mysql_field_count(conn);
     case_mysql_get_host_info(conn);
