@@ -34,9 +34,9 @@ void case_mysql_change_user(MYSQL* conn){
         strcat(sql, TEST_TABLE);
 
         if(mysql_query(conn, sql)){
-           printf("    pass! After change user, the new db has no tables\n");
+           printf("    pass! After change user, the new db has no table '%s'\n",TEST_TABLE);
         }else{
-           printf(" After change user, the new db has no tables, '%s' expect run into err\n", sql);
+           printf(" After change user, the new db has no table '%s', '%s' expect run into err\n", TEST_TABLE,sql);
            exit(1);
         }
 
@@ -57,16 +57,19 @@ void case_mysql_change_user(MYSQL* conn){
         }
     }
 
-    strcpy(sql, "drop table if exists sharding_4_t1");
+    strcpy(sql, "drop table if exists sharding_4_t2");
     myquery(conn, sql);
 
-    strcpy(sql, "create table sharding_4_t1(id int)");
+    strcpy(sql, "create table sharding_4_t2(id int)");
+    myquery(conn, sql);
+
+    strcpy(sql, "set autocommit=0");
     myquery(conn, sql);
 
     strcpy(sql, "start transaction");
     myquery(conn, sql);
 
-    strcpy(sql, "insert into sharding_4_t1 values(1)");
+    strcpy(sql, "insert into sharding_4_t2 values(1)");
     myquery(conn, sql);
 
     if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, NULL)){
@@ -86,7 +89,7 @@ void case_mysql_change_user(MYSQL* conn){
         }
 
         //case:check mysql_change_user, always performs a ROLLBACK of any active transactions
-        strcpy(sql, "select count(*) from schema1.sharding_4_t1");
+        strcpy(sql, "select count(*) from schema2.sharding_4_t2");
 
         doQueryWithExpectInt(conn, sql, 0);
         printf("    pass! select x from a_table_rows_filled_in_uncommited_trx get 0 rows. \n");
@@ -95,8 +98,14 @@ void case_mysql_change_user(MYSQL* conn){
 
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
+
+        //case:check mysql_change_user, will reset autocommit
+        strcpy(sql, "select @@autocommit");
+        doQueryWithExpectInt(conn, sql, 1);
+        printf("    pass! after change user,the autocommit is reset as well\n");
     }
 
+    /* dble do not support temp table
     strcpy(sql, "create temporary table schema1.tmp_tb(id int)");
 
     myquery(conn, sql);
@@ -108,7 +117,7 @@ void case_mysql_change_user(MYSQL* conn){
         printf("    *****pass! change user success after create tmp table!*****\n");
 
         //case:mysql_change_user drops all temporary tables
-        strcpy(sql, "select 1 /*uproxy_dest_expect:S*/");
+        strcpy(sql, "select 1  ");
 
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
@@ -121,12 +130,37 @@ void case_mysql_change_user(MYSQL* conn){
             printf("Expect temp table dropped, but query success!\n");
             exit(1);
         }
+       */
+
     }
+
+    /*
+    //case:reset last_insert_id as 0, dble not support yet,coz dble always return 0, 2019.09.02
+    strcpy(sql, "insert into schema2.sharding_4_t2 values(10)");
+    myquery(conn, sql);
+    strcpy(sql, "insert into schema2.sharding_4_t2 values(11)");
+    myquery(conn, sql);
+    strcpy(sql, "insert into schema2.sharding_4_t2 values(12)");
+    myquery(conn, sql);
+    strcpy(sql, "insert into schema2.sharding_4_t2 values(13)");
+    myquery(conn, sql);
+    if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema2")){
+        fprintf(stderr, "Failed to change user.  Error: %s\n", mysql_error(conn));
+        exit(1);
+    }else{
+        strcpy(sql, "select last_insert_id()");
+        doQueryWithExpectInt(conn, sql, 0);
+        printf("    pass! after change user, the last_insert_id is reset as 0! \n");
+    }
+    */
+
+    strcpy(sql, "drop table if exists schema1.lock_tb");
+    myquery(conn, sql);
 
     strcpy(sql, "create table schema1.lock_tb(id int)");
     myquery(conn, sql);
 
-    strcpy(sql, "lock table schema1.lock_tb write");
+    strcpy(sql, "lock table schema1.lock_tb write");  //issue #1374
     myquery(conn, sql);
 
     if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema1")){
@@ -141,7 +175,7 @@ void case_mysql_change_user(MYSQL* conn){
         printf("    pass! after change user, the lock on the table before change user is released! \n");
 
         //case:restore read-write-split
-        strcpy(sql, "select 1 /*uproxy_dest_expect:S*/");
+        strcpy(sql, "select 1 /*#dble:datanode=dn1*/");
 
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
@@ -162,4 +196,5 @@ void case_mysql_change_user(MYSQL* conn){
         doQueryWithExpectInt(conn, sql, 8388608);
         printf("    pass! after change user,a session variable changed before change user is reset to default value\n");
     }
+
 }
