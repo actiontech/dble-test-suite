@@ -151,7 +151,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
     Given start mysql in host "mysql-master2"
-    Given sleep "10" seconds
+    Given sleep "30" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                            | expect     | db     |
       | test | 111111 | conn_1 | False    | drop table if exists test_shard       | success    | schema1 |
