@@ -132,8 +132,6 @@ void case_mysql_change_user(MYSQL* conn){
         }
        */
 
-    }
-
     /*
     //case:reset last_insert_id as 0, dble not support yet,coz dble always return 0, 2019.09.02
     strcpy(sql, "insert into schema2.sharding_4_t2 values(10)");
@@ -160,7 +158,7 @@ void case_mysql_change_user(MYSQL* conn){
     strcpy(sql, "create table schema1.lock_tb(id int)");
     myquery(conn, sql);
 
-    strcpy(sql, "lock table schema1.lock_tb write");  //issue #1374
+    strcpy(sql, "lock table schema1.lock_tb write");  
     myquery(conn, sql);
 
     if (mysql_change_user(conn, TEST_USER, TEST_USER_PASSWD, "schema1")){
