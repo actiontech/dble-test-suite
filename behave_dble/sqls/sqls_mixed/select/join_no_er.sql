@@ -103,6 +103,8 @@ select * from sharding_4_t1 union distinct select * from sharding_3_t1 union dis
 (select name as sort_a from sharding_4_t1 where pad=1) union (select name from sharding_2_t1 where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from sharding_4_t1 where pad=1) union (select name,pad from sharding_2_t1 where pad=1) order by sort_a,pad limit 10
 #
+select c.id, (case c.name  when c.name is not null then  c.name else c.pad end) from sharding_3_t1 c, sharding_2_t1 a where a.id=c.id;
+select concat(a.name, cast(b.pad as char(4))) from sharding_3_t1 a, sharding_2_t1 b where a.id = b.id order by a.id;
 #clear tables
 #
 drop table if exists sharding_4_t1
