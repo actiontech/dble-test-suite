@@ -317,4 +317,30 @@ Feature: test config in server.xml
       | user  | passwd | conn    | toClose | sql                                           | expect          |db       |
       | test  | 111111 | conn_0  | True    | drop table if exists test_table           | success         | schema1 |
 
+  Scenario: test 'sqlExecuteTimeout' from issue:1286 #12
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     """
+     <system>
+          <property name="fakeMySQLVersion">5.7.13</property>
+          <property name="useGlobleTableCheck">1</property>
+	      <property name="dataNodeIdleCheckPeriod">10</property>
+	      <property name="processorCheckPeriod">10</property>
+	      <property name="sqlExecuteTimeout">60</property>
+     </system>
+
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn    | toClose  | sql                                                  | expect          |db       |
+      | test  | 111111 | conn_0  | False    | drop table if exists test_table                  | success         |schema1       |
+      | test  | 111111 | conn_0  | False    | create table test_table(id int,name char(20))  | success         |schema1       |
+      | test  | 111111 | conn_0  | False    | insert into test_table values(1,11),(2,22)      | success         |schema1       |
+      | test  | 111111 | conn_0  | False    | select sleep(3)               | success         | schema1 |
+      | test  | 111111 | conn_0  | False    | select sleep(30)               | success         | schema1 |
+      | test  | 111111 | conn_0  | False    | select sleep(50)              | success          | schema1 |
+      | test  | 111111 | conn_0  | False    | select sleep(60),id from test_table             | reason is [sql timeout]         | schema1 |
+      | test  | 111111 | conn_0  | False    | select sleep(61)                                   | reason is [sql timeout]         | schema1 |
+      | test  | 111111 | conn_0  | True     | select sleep(70),id from test_table              | reason is [sql timeout]         | schema1 |
+
+
 
