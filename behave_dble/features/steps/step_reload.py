@@ -63,6 +63,17 @@ def step_impl(context, sql, rs_name):
     result, error = dble_conn.query(sql)
     assert error is None, "execute adminsql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
+
+@Then('removal result set "{rs_name}" contains "{key_word}" part')
+def step_impl(context, rs_name, key_word):
+    rs_A = getattr(context, rs_name)
+    rs_end = []
+    for row_A in rs_A:
+        if str(row_A).rfind(key_word) != -1:
+            continue
+        else:
+            rs_end.append(row_A)
+    setattr(context, rs_name, rs_end)
     
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):
