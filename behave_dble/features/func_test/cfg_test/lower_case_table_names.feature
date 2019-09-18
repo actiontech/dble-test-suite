@@ -1,9 +1,13 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/10/15
-Feature: check lower_case_table_names works right for dble
+# Modified by wujinling at 2019/09/17
+Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=0, case sensitive
 #  lower_case_table_names=1, case insensitive
+#  lower_case_table_names=1,CHARACTER SET utf8 COLLATE utf8_bin is case sensitive, from issue 1229
+#  lower_case_table_names=1,CHARACTER SET utf8 COLLATE latin1_swedish_ci is case insensitive, from issue 1229
+
 
   @BLOCKER
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
@@ -31,6 +35,8 @@ Feature: check lower_case_table_names works right for dble
     """
         <schema name="DBTEST">
             <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+            <table name="uos_page_ret_inst" dataNode="dn4" />
+            <table name="uos_tache_def" dataNode="dn3" />
         </schema>
     """
     Given delete the following xml segment
@@ -79,6 +85,20 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test) |success | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test) |success | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'            |success | schema1 |
+        | test | 111111 | conn_2 | False   | drop table if exists uos_page_ret_inst                                                                                                                  | success     | DbTest |
+        | test | 111111 | conn_2 | False   | drop table if exists uos_tache_def                                      | success      | DbTest |
+        | test | 111111 | conn_2 | False   | create table uos_page_ret_inst(`RET_INST_ID` bigint (20),`TACHE_CODE` varchar (180),`TEST` varchar (300))                             | success             | DbTest |
+        | test | 111111 | conn_2 | False   | create table uos_tache_def(`ID` bigint (20),`TACHE_CODE` varchar (180),`CREATE_DATE` datetime ,`SHADOW_NAME` varchar (180))                  | success     | DbTest |
+        | test | 111111 | conn_2 | False   | insert into uos_page_ret_inst values('10','AAAA',NULL) ,('36','BBBB',NULL)                                                                          | success     | DbTest |
+        | test | 111111 | conn_2 | False   | insert into uos_tache_def values('1557471076988','BBBB','2019-05-10 14:51:17',NULL), ('1557471086419','aaaa','2019-05-10 14:51:26',NULL)  | success      | DbTest |
+        | test | 111111 | conn_2 | False    | select INST.TACHE_CODE,def.TACHE_CODE from uos_page_ret_inst INST JOIN uos_tache_def def ON def.TACHE_CODE=INST.TACHE_CODE                  | length{(2)}       | DbTest |
+        | test | 111111 | conn_2 | False   | drop table if exists uos_page_ret_inst                                                                                                                  | success     | DbTest |
+        | test | 111111 | conn_2 | False   | drop table if exists uos_tache_def                                      | success      | DbTest |
+        | test | 111111 | conn_2 | False   | create table uos_page_ret_inst(`RET_INST_ID` bigint (20),`TACHE_CODE` varchar (180),`TEST` varchar (300)) CHARACTER SET utf8 COLLATE utf8_bin                             | success             | DbTest |
+        | test | 111111 | conn_2 | False   | create table uos_tache_def(`ID` bigint (20),`TACHE_CODE` varchar (180),`CREATE_DATE` datetime ,`SHADOW_NAME` varchar (180)) CHARACTER SET utf8 COLLATE utf8_bin                 | success     | DbTest |
+        | test | 111111 | conn_2 | False   | insert into uos_page_ret_inst values('10','AAAA',NULL) ,('36','BBBB',NULL)                                                                          | success     | DbTest |
+        | test | 111111 | conn_2 | False   | insert into uos_tache_def values('1557471076988','BBBB','2019-05-10 14:51:17',NULL), ('1557471086419','aaaa','2019-05-10 14:51:26',NULL)  | success      | DbTest |
+        | test | 111111 | conn_2 | True    | select INST.TACHE_CODE,def.TACHE_CODE from uos_page_ret_inst INST JOIN uos_tache_def def ON def.TACHE_CODE=INST.TACHE_CODE                  | length{(1)}       | DbTest |
     Given restart mysql in "mysql-master1" with options
       """
       /lower_case_table_names/d
@@ -165,3 +185,4 @@ Feature: check lower_case_table_names works right for dble
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                   |success               | schema1 |
+
