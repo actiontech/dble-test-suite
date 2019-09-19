@@ -11,7 +11,7 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
-from behave_dble.features.steps.lib.DBUtil import DBUtil
+from lib.DBUtil import DBUtil
 from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
 
