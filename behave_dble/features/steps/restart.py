@@ -7,23 +7,13 @@
 import re
 import time
 
+import MySQLdb
 from behave import *
 from hamcrest import *
 
+from behave_dble.features.steps.lib.DBUtil import DBUtil
 from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
-
-
-@Given('restart mysql "{key}" with options "{options}" and reconnect success')
-def step_impl(context,key, options):
-    context.execute_steps(u'Given restart mysql in "{0}" with options "{1}"'.format(key, options))
-    context.execute_steps(u'''
-        Given execute admin command
-            |cmd                                         | expect |group | index|
-            |uproxy update_conns 'uproxy' masters 'host' | success|group1| 0    |
-            |uproxy update_conns 'uproxy' slaves  'host' | success|group1| 0 1  |
-        ''')
-    context.execute_steps(u'Given connect after restart success')
 
 @Given('restart mysql in "{host}" with options')
 def restart_mysql(context, host):
@@ -42,6 +32,13 @@ def restart_mysql(context, host):
     time.sleep(10)
 
     start_mysql(context, host)
+
+    node = get_node(context.mysqls, host)
+    ip = node.ip
+    port = node.mysql_port
+    user = context.cfg_mysql['user']
+    passwd = context.cfg_mysql['password']
+    connect_test(context, ip, user, passwd, port)
     
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
@@ -80,16 +77,6 @@ def start_mysql(context, host):
     
 
 @Given('connect after restart success')
-def step_impl(context):
-    cgroup = getattr(context, context.cgroup)
-    u_ip = context.uproxy.ip
-    u_user = cgroup.user
-    u_passwd = cgroup.passwd
-    u_port = context.uproxy.port
-
-    connect_test(context, u_ip, u_user, u_passwd, u_port)
-    connect_test(context, context.mysql.ip, context.mysql.user, context.mysql.passwd, context.mysql.port)
-
 def connect_test(context, ip, user, passwd, port):
     conn = None
     isSuccess = False
@@ -107,6 +94,6 @@ def connect_test(context, ip, user, passwd, port):
                 isSuccess = True
                 conn.close()
 
-        time.sleep(60)
+        time.sleep(5)
 
-    assert_that(isSuccess, "can not connect to {0} after 5 minutes wait".format(ip))
+    assert_that(isSuccess, "can not connect to {0} after 25s wait".format(ip))
