@@ -368,9 +368,8 @@ Feature: test some import nodes attr in schema.xml
     Given Restart dble in "dble-1" success
     Given restart mysql in "mysql-master1"
     Given restart mysql in "mysql-master2"
-    Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
+        | user | passwd | conn   | toClose  | sql                                                           | expect         | db     |
         | root | 111111 | conn_0 | True     | show @@backend                                                | length{(16)}   |        |
 
 
