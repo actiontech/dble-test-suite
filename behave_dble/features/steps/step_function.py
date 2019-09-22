@@ -237,6 +237,12 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
+@Given('execute oscmd in "{hostname}"')
+def step_impl(context,hostname):
+    cmd = context.text
+    rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    stderr =  stderr.lower()
+    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
