@@ -37,7 +37,7 @@ cfg_dble:
 #  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.12.0/
 #  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.01.0/
 #  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.03.0/
-  ftp_path: https://github.com/actiontech/dble/releases/download/$version%2Ftag/
+  ftp_path: https://github.com/actiontech/dble/releases/download/{0}%2Ftag/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   user: test
