@@ -43,6 +43,18 @@ def get_dble_install_packet_name(context):
     LOGGER.debug("dble packet to install: {0}".format(dble_packet))
     return dble_packet
 
+def get_download_ftp_path(context):
+    ftp_path = context.cfg_dble['ftp_path']
+
+    if ftp_path.find("{0}") != -1:
+        cmd = "curl -s 'https://github.com/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
+        version = subprocess.check_output(cmd,shell=True)
+        version = version.strip("\n")
+        ftp_path = ftp_path.format(version)
+
+    LOGGER.debug("download dble ftp path : {0}".format(ftp_path))
+    return ftp_path
+
 def install_dble_in_node(context, node):
     dble_packet = get_dble_install_packet_name(context)
 
@@ -74,14 +86,20 @@ def download_dble(context, dble_packet_name):
     LOGGER.debug("delete local dble packet")
     rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_docker'],
                                       dble_packet_name)
-    rpm_ftp_url = "{0}{1}".format(context.cfg_dble['ftp_path'],
+    ftp_path = get_download_ftp_path(context)
+    rpm_ftp_url = "{0}{1}".format(ftp_path,
                                   dble_packet_name)
     cmd = 'rm -rf {0}'.format(rpm_local_path)
     exit_status = os.system(cmd)
     LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
 
-    cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_docker'],
+    if context.cfg_dble['packet_name'].find("{0}") == -1:
+        cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_docker'],
+                                                                        rpm_ftp_url)
+    else:
+        cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'],
                                                                     rpm_ftp_url)
+
     LOGGER.debug(cmd)
     os.popen(cmd)
 
