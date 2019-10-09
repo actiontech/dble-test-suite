@@ -6,7 +6,7 @@
 
 ## 执行：
 bash c_mysql_api.sh  
-注：multiQuery.sh 中执行了 清理、编译、运行和结果比对
+注：c_mysql_api.sh 中执行了 清理、编译、运行和结果比对
 
 ## 可能遇到的问题及解决	：
  - 1, g++找不到
