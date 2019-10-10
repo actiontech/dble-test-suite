@@ -9,6 +9,7 @@
 
 void case_mysql_real_query(MYSQL* conn){
 	    printf("==> mysql_real_query test suites\n");
+	    int status;
         MYSQL *mysql = mysql_init(NULL);
         if(IS_DEBUG){
             mysql_real_connect(mysql, HOST_MASTER, TEST_USER, TEST_USER_PASSWD, TEST_DB, MYSQL_PORT,NULL, CLIENT_DEPRECATE_EOF|CLIENT_MULTI_STATEMENTS);
@@ -25,11 +26,38 @@ void case_mysql_real_query(MYSQL* conn){
 //        sprintf(sql, "create table tttt(id int);insert into tttt values(1)");
         sprintf(sql, "drop table if exists sharding_4_t1;create table sharding_4_t1(id int);insert into sharding_4_t1 values(1)");
 //        printf("%s\n", sql);
-        if(mysql_real_query(mysql, sql, 105)){
-                const char * err=mysql_error(mysql);
-                printf("create table err: %s\n", err);
-                exit(1);
-        }else{
-                printf("    pass! mysql_real_query mult-query success\n");
+        status = mysql_real_query(mysql, sql, 105);
+        if(status){
+            const char * err=mysql_error(mysql);
+            printf("create table err: %s\n", err);
+            mysql_close(mysql);
+            exit(1);
         }
+
+        do {
+            MYSQL_RES  *result;
+            result = mysql_store_result(mysql);
+            if (result)
+              {
+                /* yes; process rows and free the result set */
+                //process_result_set(mysql, result);
+                mysql_free_result(result);
+              }
+            else          /* no result set or error */
+              {
+                if (mysql_field_count(mysql) == 0)
+                {
+                  printf("%lld rows affected\n",
+                        mysql_affected_rows(mysql));
+                }
+                else  /* some error occurred */
+                {
+                  printf("Could not retrieve result set\n");
+                  break;
+                }
+              }
+            if ((status = mysql_next_result(mysql)) > 0)
+            printf("Could not execute statement\n");
+        } while (status == 0);
+        printf("    pass! mysql_real_query mult-query success\n");
 }
