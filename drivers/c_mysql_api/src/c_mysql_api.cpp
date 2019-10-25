@@ -20,7 +20,7 @@ int main(int argc, char *argv[]) {
 
     case_mysql_change_user(conn);
     case_mysql_reset_connection(conn);
-//    case_mysql_rollback(conn);//does not support
+  //case_mysql_rollback(conn);//does not support
     case_mysql_set_server_option(conn);
 
     case_mysql_field_count(conn);
@@ -28,11 +28,11 @@ int main(int argc, char *argv[]) {
     case_mysql_insert_id(conn);
     case_mysql_list_dbs(conn);
     case_mysql_options4(conn);
-    case_mysql_real_connect(conn);//https://github.com/actiontech/dble/issues/1155
+    case_mysql_real_connect(conn);
     case_mysql_real_escape_string(conn);
     case_mysql_real_query(conn);
 
-    //case_mysql_row_seek(conn); skip coz bug
+    case_mysql_row_seek(conn);
     case_mysql_select_db(conn);
     case_mysql_set_character_set(conn);
     case_mysql_session_track_get_first(conn);
