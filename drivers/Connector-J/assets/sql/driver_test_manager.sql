@@ -32,8 +32,7 @@ show @@datasource
 show @@datasource.cluster
 show @@datasource.synstatus
 show @@datasource.syndetail where name=172.100.9.1
-show @@directmemory=1
-show @@directmemory=2
+show @@directmemory
 show @@heartbeat
 show @@heartbeat.detail where name=hostM1
 show @@processor
