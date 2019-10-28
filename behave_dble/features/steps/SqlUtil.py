@@ -67,6 +67,7 @@ def exec_sql(context, ip, port):
         expect = row["expect"]
         db = row["db"]
         if db is None: db = ''
+        time.sleep(10)
         do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
         if charset is not None:

@@ -324,7 +324,6 @@ def add_child_in_text(file, parentNode, childNodeInText):
        childIdx:要添加的子节点的位置索引
        childNodeInText: 子节点'''
     childNodeRoot = get_xml_from_str(childNodeInText)
-
     add_child_in_xml(file, parentNode, childNodeRoot)
 
 

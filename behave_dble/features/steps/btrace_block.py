@@ -54,6 +54,7 @@ def step_impl(context, btraceScript, host):
 
         global btrace_threads
         thd = Thread(target=run_btrace_script, args=(sshClient, remoteFile),name=btraceScript)
+        context.logger.info("thd has been in yangxiaoliang {0} and {1}".format(thd.getName(),thd.name))
         btrace_threads.append(thd)
 
         thd.setDaemon(True)
@@ -128,5 +129,5 @@ def step_impl(context,btraceScript,host):
 def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
-        context.logger.debug("join btrace thread:".format(thd.name))
+        context.logger.debug("join btrace thread {0}:".format(thd.name))
         thd.join()
