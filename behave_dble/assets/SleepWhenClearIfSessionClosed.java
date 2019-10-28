@@ -18,7 +18,7 @@ public final class SleepWhenClearIfSessionClosed {
     public static void sleepWhenClearIfSessionClosed(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.print("get into clearIfSessionClosed,start sleep ");
         BTraceUtils.print(" __________________________ ");
-        Thread.sleep(30000L);
+        Thread.sleep(20000L);
         BTraceUtils.print("sleep end ");
         BTraceUtils.print(" __________________________ ");
     }

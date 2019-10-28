@@ -14,4 +14,5 @@
 		<property name="password">111111</property>
 		<property name="manager">true</property>
 	</user>
+
 </dble:server>
