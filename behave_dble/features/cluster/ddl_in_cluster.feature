@@ -3,7 +3,7 @@
 # Created by wujinling at 2019/10/16
 
 Feature:check ddl related functionality work fine
-
+  @btrace
   Scenario: can see ddl in all dbles in cluster if ddl happen in one dble #1
     Given stop dble cluster and zk service
     Given delete the following xml segment
@@ -83,7 +83,8 @@ Feature:check ddl related functionality work fine
       | root | 111111 | conn_0 | True    | show @@ddl | Empty set |    |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy btrace threads list
-
+  
+  @btrace
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work fine #2
     Given stop dble cluster and zk service
     Given delete the following xml segment
