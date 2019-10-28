@@ -3,9 +3,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/10/25
 
-Feature:
 
-  @skip_restart
+Feature:
+  @btrace
   Scenario:
     Given delete the following xml segment
       | file       | parent         | child              |
@@ -47,7 +47,7 @@ Feature:
     """
     truncate table test_shard
     """
-    Given sleep "20" seconds
+    Given sleep "10" seconds
     Then check btrace "SleepWhenAddMetaLock.java" output in "dble-1"
     """
     sleep end
@@ -59,15 +59,15 @@ Feature:
 
 
 
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                               | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                                                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_shard(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4))CHARSET=utf8 | success | schema1 |
+#    Then execute sql in "dble-1" in "user" mode
+#      | user | passwd | conn   | toClose | sql                                                                                               | expect  | db      |
+#      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                                                   | success | schema1 |
+#      | test | 111111 | conn_0 | True    | create table test_shard(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4))CHARSET=utf8 | success | schema1 |
     Given prepare a thread run btrace script "SleepWhenClearIfSessionClosed.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | user | passwd | conn   | toClose | sql                                | db      |
       | test | 111111 | conn_0 | True    | alter table test_shard drop c_flag | schema1 |
-    Given sleep "50" seconds
+    Given sleep "30" seconds
     Then check btrace "SleepWhenClearIfSessionClosed.java" output in "dble-1"
     """
     __________________________ get into clearIfSessionClosed,start sleep
@@ -93,23 +93,23 @@ Feature:
 
 
 
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                               | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                                                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_shard(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4))CHARSET=utf8 | success | schema1 |
+#    Then execute sql in "dble-1" in "user" mode
+#      | user | passwd | conn   | toClose | sql                                                                                               | expect  | db      |
+#      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                                                   | success | schema1 |
+#      | test | 111111 | conn_0 | True    | create table test_shard(id int(11) NOT NULL,c_flag char(255),c_decimal decimal(16,4))CHARSET=utf8 | success | schema1 |
     Given prepare a thread run btrace script "SleepWhen2ClearIfSessionClosed.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | user | passwd | conn   | toClose | sql                                | db      |
-      | test | 111111 | conn_0 | True    | alter table test_shard drop c_flag | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_shard drop c_decimal | schema1 |
     Then check btrace "SleepWhen2ClearIfSessionClosed.java" output in "dble-1"
     """
     get into clearIfSessionClosed,start sleep
     """
     Given kill mysql query in "dble-1" forcely
     """
-    alter table test_shard drop c_flag
+    alter table test_shard drop c_decimal
     """
-    Given sleep "20" seconds
+    Given sleep "10" seconds
     Then check btrace "SleepWhen2ClearIfSessionClosed.java" output in "dble-1"
     """
     sleep end
