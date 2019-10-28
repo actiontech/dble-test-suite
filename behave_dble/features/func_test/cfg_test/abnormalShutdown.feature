@@ -3,10 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/10/25
 
-Feature: #Enter feature name here
-  # Enter feature description here
+Feature:
+
   @skip_restart
-  Scenario: # Enter scenario name here
+  Scenario:
     Given delete the following xml segment
       | file       | parent         | child              |
       | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
