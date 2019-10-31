@@ -1,0 +1,52 @@
+===file:special_sharding/syntax/set_user_var_util.sql, id:7, sql:[drop table if exists sharding_2_t1;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:8, sql:[drop table if exists schema2.sharding_3_t1;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:9, sql:[create table sharding_2_t1(id int(4), B float(8,2)) ;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:10, sql:[insert into sharding_2_t1 values(1,234.25),(2,67.29),(3,1.25),(12,1),(1,234.25) ;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:11, sql:[create table schema2.sharding_3_t1(id int(4), B int(4)) ;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:12, sql:[insert into schema2.sharding_3_t1 values (10, 1),(11, 2),(10,2) ;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:13, sql:[set @min_price=1.25,@max_price=234.25;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:14, sql:[set @id_a=2,@id_b=10,@B=5;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:16, sql:[SELECT * FROM sharding_2_t1 WHERE B=@min_price OR B=@max_price;]===
+dble:[[(1L, 234.25), (1L, 234.25), (3L, 1.25)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:17, sql:[SELECT * FROM sharding_2_t1 GROUP BY id HAVING id=@id_a;]===
+dble:[[(2L, 67.29)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:24, sql:[select (select id from sharding_2_t1 where id=@id_a) as c from (select B from schema2.sharding_3_t1 where id=@id_b) as a;]===
+dble:[[(2L,), (2L,)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:26, sql:[update schema2.sharding_3_t1 set B=B+@id_a where id=@id_b order by @id_a;]===
+dble:[()]
+===file:special_sharding/syntax/set_user_var_util.sql, id:27, sql:[select * from schema2.sharding_3_t1;]===
+dble:[[(10L, 3L), (10L, 4L), (11L, 2L)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:29, sql:[delete from schema2.sharding_3_t1 where id<=@id_b order by @id_a;]===
+dble:[()]
+===file:special_sharding/syntax/set_user_var_util.sql, id:30, sql:[select * from schema2.sharding_3_t1;]===
+dble:[[(11L, 2L)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:32, sql:[insert into schema2.sharding_3_t1 values(10, @id_a-1);]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:33, sql:[insert into schema2.sharding_3_t1 set id=10, B=@id_a;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:34, sql:[select * from schema2.sharding_3_t1;]===
+dble:[[(10L, 1L), (10L, 2L), (11L, 2L)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:36, sql:[REPLACE INTO sharding_2_t1 VALUES (1, @B);]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:37, sql:[REPLACE INTO sharding_2_t1 set id=1, B=@B;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:38, sql:[select * from schema2.sharding_3_t1;]===
+dble:[[(10L, 1L), (10L, 2L), (11L, 2L)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:44, sql:[set @mystmt='insert into sharding_2_t1 values(?,?)';]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:45, sql:[prepare stmt from @mystmt;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:46, sql:[execute stmt using @id_a, @B;]===
+dble:[[]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:47, sql:[select * from sharding_2_t1;]===
+dble:[[(1L, 5.0), (1L, 5.0), (1L, 234.25), (1L, 234.25), (2L, 5.0), (2L, 67.29), (3L, 1.25), (12L, 1.0)]]
+===file:special_sharding/syntax/set_user_var_util.sql, id:48, sql:[drop prepare stmt;]===
+dble:[[]]
