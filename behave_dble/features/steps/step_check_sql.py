@@ -341,11 +341,12 @@ def step_impl(context, filename):
                     if is_next_line_exist:
                         next_line = lines[next_line_nu].strip()
                         step_len += 1
-
-            is_next_line_milestone = (not is_next_line_exist) or next_line.startswith("#")
+            # '#--' only means comment in sql file
+            is_next_line_milestone = (not is_next_line_exist) or (next_line.startswith("#") and not next_line.startswith('#--'))
 
             context.logger.info("********* {2} line {1}: {0} **********".format(line, line_nu, filename))
             if line.startswith('#'):
+                if line.startswith('#--'): continue
                 is_share_conn = False
 
                 if line.find('#!share_conn') != -1:
