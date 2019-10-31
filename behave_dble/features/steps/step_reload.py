@@ -150,6 +150,40 @@ def check_sys_property(context, cmd, name, text):
                 flag = "succeed"
     assert_that(flag, has_string('succeed'), "expect flag contains 'succeed', but flag is: {0}".format(flag))
 
+@Then('record reloadTime of "{tbName}" from "{rs_name}" named "{rtName}"')
+def record_time(context, tbName, rs_name, rtName):
+    rs = getattr(context, rs_name)
+    count = 0
+    for rs_row in rs:
+        if rs_row[1]==tbName:
+            count = count+1
+            reload_time = rs_row[2].replace("/","-")
+            setattr(context,rtName,reload_time)
+            break
+    assert count != 0, "{0} is not found !".format(tbName)
+
+@Then('get resutlset when reload time "{compare}" record time "{rtName}" named "{rs_name}"')
+def step(context, compare, rtName, rs_name):
+    rtn=getattr(context,rtName)
+    comp = ''
+    if compare == 'equal':
+        comp = '='
+    elif compare == 'lt':
+        comp = "<="
+    elif compare == 'gt':
+        comp = '>='
+    else: assert comp != '',"Comparison operator must form [{0}, {1}, {2}]".format("equal","lt","gt")
+    context.logger.info("wodemaya:{0}".format(comp))
+    adminsql = "check full @@metadata where reload_time{0}'{1}'".format(comp,rtn)
+    context.logger.info("adminsql_yangxiaoliang:{0}".format(adminsql))
+    manager_conn = get_admin_conn(context)
+    result, error = manager_conn.query(adminsql)
+    context.logger.info("result_yangxiaoliang:{0}".format(result))
+    assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
+    setattr(context, rs_name, result)
+
+
+
 def get_abs_path(context, file):
     path = "{0}/{1}".format(context.dble_conf, file)
     return path
