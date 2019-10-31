@@ -1,0 +1,8 @@
+===file:special_sharding/syntax/set_user_var_util.sql, id:19, sql:[SELECT * FROM sharding_2_t1 a left join schema2.sharding_3_t1 c  on a.id=c.id and a.id=@id_a;]===
+dble:[None]
+mysql:[((1L, 234.25, None, None), (2L, 67.29, None, None), (3L, 1.25, None, None), (12L, 1.0, None, None), (1L, 234.25, None, None))]
+dble err:(1003, 'field not found:@id_a')
+===file:special_sharding/syntax/set_user_var_util.sql, id:21, sql:[(SELECT id FROM sharding_2_t1 WHERE id=@id_a AND B=67.29) UNION (SELECT id FROM schema2.sharding_3_t1 WHERE id=@id_b AND B=2) order by @id_a ;]===
+dble:[None]
+mysql:[((2L,), (10L,))]
+dble err:(1003, 'Union field merge error, field not found:@id_a')
