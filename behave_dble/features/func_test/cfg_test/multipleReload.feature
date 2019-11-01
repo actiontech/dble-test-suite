@@ -3,8 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/10/31
 
-Feature: #Enter feature name here
-  # Enter feature description here
+Feature: multiple reload
 
   Scenario: execute reload @@config_all at the same time
     Given delete the following xml segment
