@@ -6,22 +6,22 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
 
   @NORMAL
   Scenario: check ER tables subquery execute plan optimized
-    Given restart mysql in "mysql-master1" with options
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given restart mysql in "mysql-master2" with options
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given restart mysql in "mysql-slave1" with options
+    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given restart mysql in "mysql-slave2" with options
+    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
@@ -43,22 +43,22 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       |explain select * from table_a a, table_b b on a.id =b.id | 4 |
       |explain select * from table_a a, table_b B on a.id =b.id | 4 |
       |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 7 |
-    Given restart mysql in "mysql-master1" with options
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /lower_case_table_names/d
       /server-id/a lower_case_table_names = 0
      """
-    Given restart mysql in "mysql-master2" with options
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
      """
       /lower_case_table_names/d
       /server-id/a lower_case_table_names = 0
      """
-     Given restart mysql in "mysql-slave1" with options
+     Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
      """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 0
      """
-     Given restart mysql in "mysql-slave2" with options
+     Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
      """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 0
