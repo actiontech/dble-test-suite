@@ -15,10 +15,11 @@ from lib.DBUtil import DBUtil
 from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
 
-@Given('restart mysql in "{host}" with options')
+@Given('restart mysql in "{host}" with sed cmds to update mysql config')
 def restart_mysql(context, host):
     stop_mysql(context, host)
 
+    # to wait stop finished
     time.sleep(10)
 
     update_file_content(context, "/etc/my.cnf", host)
@@ -29,6 +30,7 @@ def restart_mysql(context, host):
 def restart_mysql(context, host):
     stop_mysql(context, host)
 
+    # to wait stop finished
     time.sleep(10)
 
     start_mysql(context, host)
