@@ -343,7 +343,6 @@ def step_impl(context,cmd):
 def step_impl(context,curtime):
     ct = str(getattr(context,curtime)[0][0])
     ct = ct.replace('-','/')
-    context.logger.info("yangxiaoliang:{0}".format(ct))
     cmd = 'date -s "{0}"'.format(ct)
     rc, sto, err = context.ssh_client.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
