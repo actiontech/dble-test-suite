@@ -271,3 +271,98 @@ def step_impl(context,flag,dirname,hostname):
             assert_that(len(stdout) == 0, "expect \"{0}\" not exist in dir {1},but exist".format(str, dirname))
         else:
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in dir {1},but not".format(str, dirname))
+
+@Then('get id binary named "{binary_name}" from "{rs_name}" and add 0 if binary length less than 64 bits')
+def step_impl(context, binary_name, rs_name):
+    binary = getattr(context, rs_name)[0][0]
+    binary_str = str(binary)
+    binary_len = len(binary_str)
+    while (binary_len < 64):
+        binary_str = '0' + binary_str;
+        binary_len = binary_len + 1;
+    assert_that(len(binary_str) == 64), "expect binary length is 64 , not {0}".format(len(binary_str))
+    setattr(context, binary_name, binary_str);
+
+
+@Then('get binary range start "{start_index}" end "{end_index}" from "{binary_name}" named "{binary_sub_name}"')
+def step_impl(context, start_index, end_index, binary_name, binary_sub_name):
+    binary = getattr(context, binary_name)
+    start_index = int(start_index)
+    end_index = int(end_index)
+    binary_sub = binary[start_index:end_index + 1]
+    setattr(context, binary_sub_name, binary_sub)
+
+
+@When('connect "{binary_a}" and "{binary_b}" to get new binary "{binary_c}"')
+def step_impl(context, binary_a, binary_b, binary_c):
+    binary_a = getattr(context, binary_a)
+    binary_b = getattr(context, binary_b)
+    binary_str = binary_a + binary_b
+    setattr(context, binary_c, binary_str)
+
+
+@Then('conver binary "{binary_sub5}"  to decimal "{decimal_sub5}"')
+@Then('conver binary "{binary_sub5}"  to decimal "{decimal_sub5}" and check value is "{value}"')
+def step_impl(context, binary_sub5, decimal_sub5, value=''):
+    binary = getattr(context, binary_sub5)
+    sql = "select conv({0},2,10)".format(binary)
+    result = get_result(context, sql)
+    setattr(context, decimal_sub5, result[0][0])
+    if len(value.strip()) != 0:
+        assert_that(result[0][0] == value), "expect value is {0}, but is {1}".format(value, result[0][0])
+
+
+@Then('conver decimal "{decimal_sub}" to datatime "{dt_name}"')
+def step_impl(context, decimal_sub, dt_name):
+    unixtime = int(getattr(context, decimal_sub)) / 1000
+    sql = "select from_unixtime('{0}')".format(unixtime)
+    result = get_result(context, sql)
+    setattr(context, dt_name, result[0][0])
+
+
+@Then('get datatime "{dt_name2}" by "{dt_name1}" minus "1970-01-01"')
+def step_impl(context, dt_name2, dt_name1):
+    dt_name1_str = getattr(context, dt_name1)
+    sql = "select datediff('{0}','1970-01-01')".format(dt_name1_str)
+    result = get_result(context, sql)
+    setattr(context, dt_name2, result[0][0])
+
+
+@Then('datatime "{dt_name1}" plus start_time "{start_time}" to get "{dt_name2}"')
+def step_impl(context, dt_name1, start_time, dt_name2):
+    dt_name1_str = getattr(context, dt_name1)
+    sql = "select date_add('{0}', interval {1} day)".format(start_time, dt_name1_str)
+    result = get_result(context, sql)
+    setattr(context, dt_name2, result[0][0])
+
+
+@Then('check time "{t1}" equal to "{t2}"')
+def step_impl(context, t1, t2):
+    t1_result = getattr(context, t1)
+    t2_result = getattr(context, t2)
+    t1_result = t1_result[0][0]
+    t2_result = t2_result.split(' ')[0]
+    # assert_that t1_result==t2_result , "expect {0} == {1}, but not !".format(t1,t2)
+    assert_that(t2_result == t1_result), "expect {0} == {1}, but not !".format(t1, t2)
+
+
+@When('connect ssh execute cmd "{cmd}"')
+def step_impl(context, cmd):
+    rc, sto, err = context.ssh_client.exec_command(cmd)
+    assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
+
+
+@Then('restore to current time by "{curtime}"')
+def step_impl(context, curtime):
+    ct = str(getattr(context, curtime)[0][0])
+    ct = ct.replace('-', '/')
+    cmd = 'date -s "{0}"'.format(ct)
+    rc, sto, err = context.ssh_client.exec_command(cmd)
+    assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
+
+
+def get_result(context, sql):
+    dble_conn = get_dble_conn(context)
+    result, error = dble_conn.query(sql)
+    assert error is None, "execute adminsql {0}, get error:{1}".format(sql, error)
+    return result
