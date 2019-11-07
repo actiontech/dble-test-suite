@@ -5,6 +5,7 @@
 
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will report an error #1
 
+  @skip_restart
   Scenario: get the binary of the self-increasing id, split id to get the result and compare it with the configuration file
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
@@ -41,39 +42,22 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then datatime "t2" plus start_time "2010-10-01 09:42:54" to get "t3"
     Then check time "ts_time" equal to "t3"
 
-
+  @skip_restart
   Scenario: modify the system time, if system time is less than "start time", insertSql will report error #2
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
-    """
-        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id" autoIncrement="true"/>
-    """
-    Given Restart dble in "dble-1" success
     Then get resultset of user cmd "select sysdate()" named "curTime"
     When connect ssh execute cmd "date -s 2009/01/01"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                    | expect                                          | db      |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
-    Then restore to current time by "curTime"
+    Then revert to current time by "curTime"
 
 
   Scenario: get the binary of the self-increasing id, split id to get the result and compare it with the modified configuration file #3
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    When Add some data in "sequence_time_conf.properties"
     """
-        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id" autoIncrement="true"/>
-    """
-    Given Restart dble in "dble-1" success
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
-  """
-      s/WORKID=01/WORKID=02/
-    """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
-  """
-      s/DATAACENTERID=01/DATAACENTERID=31/
-    """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
-  """
-      s/#START_TIME/START_TIME/
-      s#2010-10-01 09:42:54#2005-10-01 09:42:54#
+    WORKID=02
+    DATAACENTERID=31
+    START_TIME=2005-10-01 09:42:54
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
