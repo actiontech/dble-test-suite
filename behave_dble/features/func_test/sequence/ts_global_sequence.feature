@@ -5,8 +5,10 @@
 
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will report an error #1
 
+ Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
+
   @skip_restart
-  Scenario: get the binary of the self-increasing id, split id to get the result and compare it with the configuration file
+  Scenario: when "insert time" greater than "start time" and less than "start time + 69years", check the correctness of the self-increment sequence #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id" autoIncrement="true"/>
@@ -43,7 +45,7 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then check time "ts_time" equal to "t3"
 
   @skip_restart
-  Scenario: modify the system time, if system time is less than "start time", insertSql will report error #2
+  Scenario: when "system time" less than "start time + 69years", execute insert sql will error #2
     Then get resultset of user cmd "select sysdate()" named "curTime"
     When connect ssh execute cmd "date -s 2009/01/01"
     Then execute sql in "dble-1" in "user" mode
@@ -51,8 +53,8 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
     Then revert to current time by "curTime"
 
-
-  Scenario: get the binary of the self-increasing id, split id to get the result and compare it with the modified configuration file #3
+  @skip_restart
+  Scenario: change configuration file, check the correctness of the self-increment sequence #3
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=02
