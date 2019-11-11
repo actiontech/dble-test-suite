@@ -6,7 +6,7 @@
 Feature: when global sequence with zookeeper mode, if system time exceeds 17 years after startup time ,it will report an error
 
   @skip_restart
-  Scenario: get the binary of the self-increasing id, split id to get the result and compare it with the configuration #1
+  Scenario: when "insert time" greater than "start time" and less than "start time + 17years", check the correctness of the self-increment sequence #1
     Given reset dble registered nodes in zk
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
@@ -16,7 +16,6 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
         <property name="sequnceHandlerType">3</property>
     """
-    Then start dble in order
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-1"
     """
     INSTANCEID=zk
@@ -58,7 +57,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
     Then execute sql in "dble-2" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
+      | user | passwd | conn   | toClose | sql                                                      | expect  | db      |
       | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
@@ -77,7 +76,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
   @skip_restart
-  Scenario: modify the system time, if system time is less than "start time", insertSql will report error #2
+  Scenario: when "system time" less than "start time + 17years", execute insert sql will error #2
     Then get resultset of user cmd "select sysdate()" named "curTime"
     When connect ssh execute cmd "date -s 2009/01/01"
     Then execute sql in "dble-1" in "user" mode
@@ -86,17 +85,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then revert to current time by "curTime"
 
   @skip_restart
-  Scenario: modify properties, make sure values of key "CLUSTERID" are different.
-     get the binary of the self-increasing id, split id to get the result and compare it with the configuration #3
-
-    Given update file content "/opt/dble/conf/sequence_distributed_conf.properties" in "dble-1"
-     """
-      s/CLUSTERID=01/CLUSTERID=04/
+  Scenario: when values of key "INSTANCEID" are same and values of key "CLUSTERID" are different, check the correctness of the self-increment sequence #3
+    Then add some data in "sequence_distributed_conf.properties" in dble "dble-1"
     """
-    Given update file content "/opt/dble/conf/sequence_distributed_conf.properties" in "dble-1"
-     """
-      s/#START_TIME/START_TIME/
-      s#2010-11-04 09:42:54#2015-11-04 09:42:54#
+    INSTANCEID=zk
+    CLUSTERID=04
+    START_TIME=2015-11-04 09:42:54
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -119,8 +113,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
   @skip_restart
-  Scenario: modify properties, make sure values of key "INSTANCEID" and "CLUSTERID" is not different.
-      get the binary of the self-increasing id, split id to get the result and compare it with the configuration #4
+  Scenario: when values of key "INSTANCEID" and "CLUSTERID" are same, check the correctness of the self-increment sequence #4
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-1"
     """
     INSTANCEID=zk
@@ -181,8 +174,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
   @skip_restart
-  Scenario: modify properties, make sure values of key "INSTANCEID" is not different.
-      get the binary of the self-increasing id, split id to get the result and compare it with the configuration #5
+  Scenario: when values of key "CLUSTERID" are same and values of key "INSTANCEID" are different, check the correctness of the self-increment sequence #5
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-1"
     """
     INSTANCEID=01
