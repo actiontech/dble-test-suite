@@ -7,6 +7,7 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
+import time
 
 from lib.DBUtil import DBUtil
 from lib.Node import get_sftp,get_ssh
@@ -271,3 +272,25 @@ def step_impl(context,flag,dirname,hostname):
             assert_that(len(stdout) == 0, "expect \"{0}\" not exist in dir {1},but exist".format(str, dirname))
         else:
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in dir {1},but not".format(str, dirname))
+
+@Then('check log "{file}" output in "{host}"')
+def step_impl(context,file,host):
+    sshClient = get_ssh(context.dbles, host)
+    retry = 0
+    isFound = False
+    while retry < 5:
+        time.sleep(2)  # a interval wait for query run into
+        cmd = "cat {0} | grep '{1}' -c".format(file, context.text)
+        rc, sto, ste = sshClient.exec_command(cmd)
+        context.logger.info("yangxiaoliang:{0}".format(sto))
+        assert len(ste) == 0, "check err:{0}".format(ste)
+        isFound = int(sto) == 1
+        if isFound:
+            context.logger.debug("expect text is found in {0}s".format((retry + 1) * 2))
+            break
+
+        retry = retry + 1
+
+    assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
+
+
