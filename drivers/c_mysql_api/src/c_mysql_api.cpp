@@ -45,8 +45,8 @@ int main(int argc, char *argv[]) {
 
 	mysql_close(conn);
 
-//	wPrepareTest();
-//	rPrepareTest();
+	wPrepareTest();
+	rPrepareTest();
 
 	cout << "!!!Test Over!!!" << endl;
 	return 0;
