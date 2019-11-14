@@ -13,15 +13,21 @@ void doRTest(){
 
     const char* para1="hello ";
     const char* para2="stmt";
-    const char* para3="stmt2";
-    const char* para4="stmt3";
-    const char* para12="hello stmt";
-    const char* para13="hello stmt2";
-    const char* para14="hello stmt3";
+//    const char* para3="stmt2";
+//    const char* para4="stmt3";
+//    const char* para12="hello stmt";
+    const char* para12="2";
+//    const char* para13="hello stmt2";
+    const char* para13="3";
+//    const char* para14="hello stmt3";
+
+
 
     createTable(conn);
 
-    MYSQL_STMT *stmt = create_stmt_and_prepare(conn, const_cast<char*>(para1), const_cast<char*>(para2));
+    myquery(conn, "insert into sharding_4_t1(id,col2,col3) values(1,'hello',2)");
+
+    MYSQL_STMT *stmt = create_stmt_and_prepare(conn, const_cast<char*>(para1));
     unsigned long type = CURSOR_TYPE_READ_ONLY;
     mysql_stmt_attr_set(stmt, STMT_ATTR_CURSOR_TYPE, (void*)&type);
 
@@ -30,7 +36,7 @@ void doRTest(){
 //******case1 end
 
 //******case2:during read prepare, sqls that should be sent to master should still be sent to master
-	myquery(conn, "insert into sharding_4_t1(id,col2,col3) values(1,'abc',2)");
+	myquery(conn, "insert into sharding_4_t1(id,col2,col3) values(2,'stmt',3)");
     printf("    pass! before read ps deallocate, queries should be sent to master should still be sent to master.\n");
 //******case2 end
 
@@ -38,7 +44,7 @@ void doRTest(){
     printf("    *****two read ps should not affact each other*****\n");
 	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
 
-	MYSQL_STMT *stmt2 = create_stmt_and_prepare(conn, const_cast<char*>(para1), const_cast<char*>(para3));
+	MYSQL_STMT *stmt2 = create_stmt_and_prepare(conn, const_cast<char*>(para2));
 
 	execStmtAndCmp(stmt2, conn, const_cast<char*>(para13));
 
