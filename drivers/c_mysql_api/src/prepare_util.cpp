@@ -15,14 +15,15 @@ my_bool       is_null;
 MYSQL_BIND    wbind[3];
 int param_count = 0;
 
-MYSQL_STMT * create_stmt_and_prepare(MYSQL* conn, char* param1, char* param2){
+MYSQL_STMT * create_stmt_and_prepare(MYSQL* conn, char* param1){
     MYSQL_STMT *stmt = mysql_stmt_init(conn);
     if (stmt == NULL) {
         printf(" init stmt err!\n");
         exit(1);
     }
 
-    char sql[] = "select concat(?, ?)";
+//    char sql[] = "select concat(?, ?)";
+    char sql[] = "select col3 from sharding_4_t1 where col2=?";
 
     if (mysql_stmt_prepare(stmt, sql, strlen(sql)) != 0) {
         printf(" prepare stmt err! %s\n", mysql_error(conn));
@@ -34,9 +35,9 @@ MYSQL_STMT * create_stmt_and_prepare(MYSQL* conn, char* param1, char* param2){
     bind[0].buffer_type = MYSQL_TYPE_STRING;
     bind[0].buffer = param1;;
     bind[0].buffer_length = strlen(param1);
-    bind[1].buffer_type = MYSQL_TYPE_STRING;
-    bind[1].buffer = param2;
-    bind[1].buffer_length = strlen(param2);
+//    bind[1].buffer_type = MYSQL_TYPE_STRING;
+//    bind[1].buffer = param2;
+//    bind[1].buffer_length = strlen(param2);
 
     mysql_stmt_bind_param(stmt, bind);
     printf("    create new ps success!\n");
@@ -49,7 +50,7 @@ void execStmtAndCmp(MYSQL_STMT *stmt, MYSQL *conn, char* expect){
 
     MYSQL_BIND result[1];
     memset(result, 0, sizeof(result));
-    result[0].buffer_type = MYSQL_TYPE_STRING;
+    result[0].buffer_type = MYSQL_TYPE_LONG;
     result[0].buffer = out_buf;
     result[0].buffer_length = OUTSIZE;
 
