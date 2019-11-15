@@ -328,9 +328,10 @@ def step_impl(context, dt_name2, dt_name1):
     setattr(context, dt_name2, result[0][0])
 
 
-@Then('datatime "{dt_name1}" plus start_time "{start_time}" to get "{dt_name2}"')
-def step_impl(context, dt_name1, start_time, dt_name2):
+@Then('datatime "{dt_name1}" plus start_time "{sys_time}" to get "{dt_name2}"')
+def step_impl(context, dt_name1, sys_time, dt_name2):
     dt_name1_str = getattr(context, dt_name1)
+    start_time = getattr(context, sys_time)[0][0]
     sql = "select date_add('{0}', interval {1} day)".format(start_time, dt_name1_str)
     result = get_result(context, sql)
     setattr(context, dt_name2, result[0][0])
@@ -368,6 +369,15 @@ def step_impl(context,mapFile,hostname):
     rc, sto, err = ssh.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
+@Then('add start_time "{curTime}" in "{mapFile}" in dble "{hostname}"')
+def step_impl(context,curTime,mapFile,hostname):
+    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    text = "START_TIME={0}".format(getattr(context,curTime)[0][0])
+    context.logger.info("START_TIME = {0}".format(getattr(context,curTime)[0][0]))
+    cmd = "echo '{0}' >> {1}".format(text, targetFile)
+    ssh = get_ssh(context.dbles, hostname)
+    rc, sto, err = ssh.exec_command(cmd)
+    assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
 def get_result(context, sql):
     dble_conn = get_dble_conn(context)
