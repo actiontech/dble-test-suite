@@ -3,9 +3,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/11/6
 
-Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will report an error #1
 
- Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
+Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
 
   @skip_restart
   Scenario: when "insert time" greater than "start time" and less than "start time + 69years", check the correctness of the self-increment sequence #1
@@ -13,12 +12,13 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id" autoIncrement="true"/>
     """
+    Then get resultset of user cmd "select sysdate()" named "sysTime"
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=01
     DATAACENTERID=01
-    START_TIME=2010-10-01 09:42:54
     """
+    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -41,7 +41,7 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then convert binary "binary_sub5"  to decimal "decimal_sub5"
     Then convert decimal "decimal_sub5" to datatime "t1"
     Then get datatime "t2" by "t1" minus "1970-01-01"
-    Then datatime "t2" plus start_time "2010-10-01 09:42:54" to get "t3"
+    Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
 
   @skip_restart
@@ -55,12 +55,13 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
 
   @skip_restart
   Scenario: change configuration file, check the correctness of the self-increment sequence #3
+    Then get resultset of user cmd "select sysdate()" named "sysTime"
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=02
     DATAACENTERID=31
-    START_TIME=2005-10-01 09:42:54
     """
+    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -82,5 +83,5 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then convert binary "binary_sub5"  to decimal "decimal_sub5"
     Then convert decimal "decimal_sub5" to datatime "t1"
     Then get datatime "t2" by "t1" minus "1970-01-01"
-    Then datatime "t2" plus start_time "2005-10-01 09:42:54" to get "t3"
+    Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
