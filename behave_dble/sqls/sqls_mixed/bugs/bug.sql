@@ -259,3 +259,37 @@ lock tables `sharding_4_t1` write
 insert into `sharding_4_t1` values(1,'1'),(2,'2'),(3,'3'),(4,'4')
 insert into `sharding_4_t1` values(5,'5'),(6,'6'),(7,'7'),(8,'8')
 unlock tables
+#issue:1385
+drop table if exists sharding_4_t1
+create table sharding_4_t1(id int,goods_id varchar(40),city varchar(40))
+insert into sharding_4_t1 values(1,"goods","city")
+drop table if exists schema2.sharding_4_t2
+drop table if exists schema2.global_4_t1
+create table schema2.sharding_4_t2(id int,goods_id varchar(40))
+insert into schema2.sharding_4_t2 values(2,"goods")
+create table schema2.global_4_t1(id int,city varchar(50),wid int)
+insert into schema2.global_4_t1 values(3,"city",4)
+drop table if exists schema3.sharding_4_t3
+create table schema3.sharding_4_t3(id int,name varchar(100))
+insert into schema3.sharding_4_t3 values(4,"12345AAA")
+select dg.id aaaa, dgw.id bbbb, ew.id cccc from schema1.sharding_4_t1 dgw inner join schema2.sharding_4_t2 dg on dgw.goods_id = dg.goods_id left join schema2.global_4_t1 dwp on dgw.city = dwp.city left join schema3.sharding_4_t3 ew on ew.id = dwp.wid where dgw.id = 1 and ew.name regexp 'AAA'
+select dg.id aaaa, dgw.id bbbb, ew.id cccc from schema1.sharding_4_t1 dgw inner join schema2.sharding_4_t2 dg on dgw.goods_id = dg.goods_id left join schema2.global_4_t1 dwp on dgw.city = dwp.city left join schema3.sharding_4_t3 ew on ew.id = dwp.wid where dgw.id = 1 and ew.name regexp 'AAA$'
+select dg.id aaaa, dgw.id bbbb, ew.id cccc from schema1.sharding_4_t1 dgw inner join schema2.sharding_4_t2 dg on dgw.goods_id = dg.goods_id left join schema2.global_4_t1 dwp on dgw.city = dwp.city left join schema3.sharding_4_t3 ew on ew.id = dwp.wid where dgw.id = 1 and ew.name not regexp '^AAA'
+drop table if exists sharding_4_t1
+drop table if exists schema2.sharding_4_t2
+drop table if exists schema2.global_4_t1
+drop table if exists schema3.sharding_4_t3
+#issue:1429
+drop table if exists global_4_t1
+drop table if exists sharding_4_t1
+drop table if exists sharding_4_t2
+CREATE TABLE `global_4_t1` (`id` char(6) COLLATE utf8mb4_bin NOT NULL,`a_id` char(10) COLLATE utf8mb4_bin DEFAULT NULL,`q_id` char(30) COLLATE utf8mb4_bin DEFAULT NULL,`s_id` char(10) COLLATE utf8mb4_bin DEFAULT NULL,PRIMARY KEY (`id`),KEY `idx_q_s_id` (`q_id`,`s_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+CREATE TABLE `sharding_4_t1` (`id` char(36) COLLATE utf8mb4_bin NOT NULL,`code` varchar(30) COLLATE utf8mb4_bin NOT NULL,PRIMARY KEY (`id`),UNIQUE KEY `idx__code_qk` (`code`) USING BTREE,KEY `idx__a_code` (`code`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+CREATE TABLE `sharding_4_t2` (`id` char(36) COLLATE utf8mb4_bin NOT NULL ,`code` varchar(30) COLLATE utf8mb4_bin NOT NULL,`ck` varchar(50) COLLATE utf8mb4_bin NOT NULL,`pre` varchar(10) COLLATE utf8mb4_bin NOT NULL DEFAULT '' ,PRIMARY KEY (`id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+insert into global_4_t1(id,a_id,q_id,s_id) values(1,'00001a','0001code','00001s'),(2,'0002code','f330f7','e4c9a8'),(3,'0003code','f32825','4c9a89')
+insert into sharding_4_t1 values(1,'0001code'),(2,'0002code'),(3,'0003code')
+insert into sharding_4_t2 values(1,'0001code','0001ck','0001pre'),(2,'0002code','0002ck','0002pre'),(3,'0003code','0003ck','0003pre')
+SELECT t2.pre,t2.ck, COUNT(*) AS count FROM sharding_4_t1 t1 INNER JOIN sharding_4_t2 t2 ON t1.code = t2.code INNER JOIN (SELECT id, a_id FROM global_4_t1 WHERE q_id = 'f330f7' AND s_id = 'e4c9a8') t3 ON t1.id = t3.a_id INNER JOIN (SELECT id, a_id FROM global_4_t1 WHERE q_id = 'f32825' AND s_id = '4c9a89') t4 ON t1.id = t4.a_id GROUP BY t2.pre, t2.ck
+drop table if exists global_4_t1
+drop table if exists sharding_4_t1
+drop table if exists sharding_4_t2
