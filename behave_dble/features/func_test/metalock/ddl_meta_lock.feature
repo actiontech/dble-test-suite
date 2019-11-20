@@ -5,7 +5,7 @@
 Feature: ddl metalock in dble test suites
   # Enter feature description here
 
-  Scenario: ddl metalock in dble released when client interruption occured during select 1 phrase
+  Scenario: ddl metalock in dble released when client interruption occured during select 1 phrase #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                   | expect   | db      |
       | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1    | success  | schema1 |
