@@ -3,7 +3,7 @@
 # Created by maofei at 2019/6/5
 Feature: xa transaction test
 
-  Scenario: #Complex query in xa transaction   from issue:#1116
+  Scenario: #Complex query in xa transaction   from issue:#1116  #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                                           | expect   | db      |
       | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1                                                                        | success  | schema1 |

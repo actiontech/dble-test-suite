@@ -3,7 +3,7 @@
 # Created by maofei at 2019/5/7
 Feature: #view test except sql cover
 
-  Scenario: # start dble when the configuration does not include the tables involved in the view  from issue:1100  #1
+  Scenario: # start dble when the configuration does not include the tables involved in the view  from issue:1100 #1
      Then  execute sql in "dble-1" in "user" mode
        | user | passwd | conn   | toClose  | sql                                                | expect  | db       |
        | test | 111111 | conn_0 | True     | drop table if exists test                       | success | schema1 |
