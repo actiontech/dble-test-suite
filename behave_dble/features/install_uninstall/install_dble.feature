@@ -3,7 +3,7 @@
 Feature: install single dble
 
   @BLOCKER
-  Scenario: install single dble in a clean environment
+  Scenario: install single dble in a clean environment #1
     Given a clean environment in all dble nodes
     Given install dble in "dble-1"
     Given replace config files in "dble-1" with command line config

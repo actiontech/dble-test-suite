@@ -78,7 +78,7 @@ Feature: multi-tenancy, user-Permission
         | testC| testC  | conn_2 | True     | drop table if exists mytestC.sbtestC1 | success           |        |
 
   @NORMAL
-  Scenario: # Query statements with 2 subqueries can cause thread insecurities  from issue:917  author:maofei
+  Scenario: # Query statements with 2 subqueries can cause thread insecurities  from issue:917  author:maofei #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
