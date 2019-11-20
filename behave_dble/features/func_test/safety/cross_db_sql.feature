@@ -25,7 +25,7 @@ Feature: test default db change right; cross db table with same name not affecte
     Then execute admin cmd "reload @@config_all"
 
   @BLOCKER @skip_restart
-  Scenario: default db not set;cross db table not affected by others; and cross db sql works right
+  Scenario: default db not set;cross db table not affected by others; and cross db sql works right #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                             | expect  | db   |
       | test | 111111 | conn_0 | False   | drop table if exists test1                      | No database selected |      |

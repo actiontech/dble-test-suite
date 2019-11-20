@@ -4,7 +4,7 @@
 Feature: queries to mysql default database send by  Navicat Premium 12, dble will mock a resultset to support it
 
   @NORMAL
-  Scenario: test navicat used sqls support when connect to dble
+  Scenario: test navicat used sqls support when connect to dble #1
     Then execute sql in "dble-1" in "user" mode
     | user         | passwd         | conn    | toClose | sql                                                                                                                                                                                              | expect        | db     |
     | test         | 111111         | conn_0 | False    | SELECT TABLE_SCHEMA, TABLE_NAME, TABLE_TYPE FROM information_schema.TABLES WHERE TABLE_SCHEMA = 'schema1' ORDER BY TABLE_SCHEMA, TABLE_TYPE                                 | length{(0)}  | schema1 |
