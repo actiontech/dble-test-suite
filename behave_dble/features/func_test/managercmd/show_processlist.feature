@@ -3,7 +3,7 @@
 # Created by maofei at 2019/3/11
 Feature: #test show @@processlist
 
-  Scenario: use `show @@processlist` to view the correspondence between front and backend session
+  Scenario: use `show @@processlist` to view the correspondence between front and backend session #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
