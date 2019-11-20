@@ -3,7 +3,7 @@
 Feature: show @@sql, show @@sql.resultset
 
   @NORMAL
-  Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting
+  Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">

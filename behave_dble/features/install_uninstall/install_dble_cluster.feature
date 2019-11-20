@@ -4,7 +4,7 @@
 Feature: install_dble_cluster.feature:to config dble in zk cluster
 
   @skip_restart
-  Scenario: install zk cluster
+  Scenario: install zk cluster #1
     Given stop dble cluster and zk service
     Given a clean environment in all dble nodes
     Given install dble in all dble nodes
