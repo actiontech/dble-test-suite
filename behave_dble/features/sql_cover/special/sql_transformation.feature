@@ -1,7 +1,9 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/7/25
 Feature: #test the correctness of sql transformation
 
-  Scenario: #test the explain result of `limit`
+  Scenario: #test the explain result of `limit` #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                                                              | expect    | db     |
       | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t1                          | success   | schema1 |
