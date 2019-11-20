@@ -354,7 +354,7 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard | success | schema1 |
 
   @regression
-  Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #5
+  Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
@@ -399,7 +399,7 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | schema1 |
 
   @regression
-  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #6
+  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
       <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
@@ -471,7 +471,7 @@ Feature: test "check full @@metadata...'"
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
       | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`mytest_auto_test1`}   | schema1 |
 
-  Scenario: add filter for reload @@metadata #7
+  Scenario: add filter for reload @@metadata #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test">
