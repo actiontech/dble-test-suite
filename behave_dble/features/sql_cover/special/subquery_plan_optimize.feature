@@ -5,7 +5,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
 
   @NORMAL
-  Scenario: check ER tables subquery execute plan optimized
+  Scenario: check ER tables subquery execute plan optimized #1
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
@@ -65,7 +65,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
      """
 
   @regression
-  Scenario: check Global tables subquery execute plan optimized
+  Scenario: check Global tables subquery execute plan optimized #2
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="table_a" dataNode="dn1,dn2" type="global" />
@@ -83,7 +83,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         |explain select * from table_a a, table_b b on a.id =b.id | 2 |
         |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 2 |
 
-  Scenario: the optimization of merge
+  Scenario: the optimization of merge #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="tb_parent" dataNode="dn1,dn2" rule="hash-two">
