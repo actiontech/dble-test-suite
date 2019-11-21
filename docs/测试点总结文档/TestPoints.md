@@ -106,7 +106,7 @@
 - scenario 2: “create database @@...”命令为部分使用的节点创建后端数据库
 - scenario 3: “create database @@...”命令支持dn$x-y格式
 #### behave_dble/features/func_test/managercmd/dryrun.feature
-- scenario 1: <table>配置type="default"及type=非法值，dryrun报错
+- scenario 1: table元素中配置type="default"及type=非法值，dryrun报错
 #### behave_dble/features/func_test/managercmd/pause_resume.feature
 - scenario 1: pause/resume测试：不带参数的pause；pause带timeout时间不在([0-9]+)内；pause带正确的timeout时间；pause带正确的timeout,queue；pause带正确的timeout,queue，wait_limit；pause不存在的dataNode
 - scenario 2: 验证pause中wait_limit条件的正确性
@@ -157,7 +157,7 @@
 #### behave_dble/features/func_test/sequence/sequence.feature
 - scenario 1: 全局序列MySQL-offset-step类型：不能对全局序列字段显示插入值；序列值必须唯一；单线程插入值到全局序列列，则生成的序列值应该保持连续；多线程插入值到全局序列列，序列值需唯一，插入时间应该小于1s
 - scenario 2: 全局序列snowflake类型：不能对全局序列字段显示插入值；序列值必须唯一；多线程插入值到全局序列列，序列值需唯一；全局序列须为bigint类型
-- scenario 3: 验证配置文件sequence_time_conf.properties中配置非法值：WORKID的取值范围需在01~31之间；DATAACENTERID的取值范围需在01~15之间；START_TIME>dble的启动时间；START_TIME+69年<dble的启动时间
+- scenario 3: 验证配置文件sequence_time_conf.properties中配置非法值：WORKID的取值范围需在01到31之间；DATAACENTERID的取值范围需在01到15之间；START_TIME>dble的启动时间；START_TIME+69年<dble的启动时间
 
 ### 分片算法测试
 #### behave_dble/features/func_test/sharding_func_test/date.feature
