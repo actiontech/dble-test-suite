@@ -161,93 +161,93 @@
 
 ### 分片算法测试
 #### behave_dble/features/func_test/sharding_func_test/date.feature
-- scenario 1: date分片算法测试：
-1.未配置sBeginDate,reload @@config_all失败
-2.sBeginDate < sEndDate-nodes*sPartition+1，reload @@config_all提示信息"please make sure table datanode size = function partition size"
-3.配置sBeginDate和默认节点，reload @@config_all成功后，允许插入null字段插入null值，路由到默认节点；非NULL字段中插入NULL值，则返回报错"Sharding column can't be null when the table in MySQL column is not null"
-4.配置sEndDate且未配置默认节点，reload @@config_all后，插入的值小于sBeginDate配置的值，则返回报错"can't find any valid data node"
-5.未配置sEndDate且配置defaultNode，reload @@config_all后，当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*dataNode),则返回报错信息"can't find any valid data node"
-6.未配置sEndDate且未配置defaultNode:reload可以成功，当插入值小于sBeginDate时，返回报错信息"can't find any valid data node";当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*dataNode),则返回报错信息"can't find any valid data node"
-7.分片表的使用限制测试：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
-    创建的分片表示不包含分片列，则插入报错；
-8.分片列的数据类型支持度测试：
-    分片列的数据类型为date类型；
-    分片列的数据类型为time类型；
-    分片列的数据类型为timestamp类型；
-    分片列的数据类型为datetime类型；
+- scenario 1: date分片算法测试：  
+1.未配置sBeginDate,reload @@config_all失败  
+2.sBeginDate < sEndDate-nodes*sPartition+1，reload @@config_all提示信息"please make sure table datanode size = function partition size"  
+3.配置sBeginDate和默认节点，reload @@config_all成功后，允许插入null字段插入null值，路由到默认节点；非NULL字段中插入NULL值，则返回报错"Sharding column can't be null when the table in MySQL column is not null"  
+4.配置sEndDate且未配置默认节点，reload @@config_all后，插入的值小于sBeginDate配置的值，则返回报错"can't find any valid data node"  
+5.未配置sEndDate且配置defaultNode，reload @@config_all后，当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*dataNode),则返回报错信息"can't find any valid data node"  
+6.未配置sEndDate且未配置defaultNode:reload可以成功，当插入值小于sBeginDate时，返回报错信息"can't find any valid data node";当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*dataNode),则返回报错信息"can't find any valid data node"  
+7.分片表的使用限制测试：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
+    创建的分片表示不包含分片列，则插入报错；  
+8.分片列的数据类型支持度测试：  
+    分片列的数据类型为date类型；  
+    分片列的数据类型为time类型；  
+    分片列的数据类型为timestamp类型；  
+    分片列的数据类型为datetime类型；  
     分片列的数据类型为year4类型；
 #### behave_dble/features/func_test/sharding_func_test/enum.feature
-- scenario 1: enum分片算法测试：
-1.type=0（即配置成integer类型），且未配置默认节点:若插入的int类型的值不在配置文件中，则返回报错信息"can't find any valid data node";若插入值为字符类型，则返回报错"Please check if the format satisfied"
-2.type！=0（即配置成string类型），且配置默认节点:插入数值或字符串成功
-3.分片表的使用限制：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
-    创建的分片表示不包含分片列，则插入报错；
-4.分片列的数据类型支持度测试：
+- scenario 1: enum分片算法测试：  
+1.type=0（即配置成integer类型），且未配置默认节点:若插入的int类型的值不在配置文件中，则返回报错信息"can't find any valid data node";若插入值为字符类型，则返回报错"Please check if the format satisfied"  
+2.type！=0（即配置成string类型），且配置默认节点:插入数值或字符串成功  
+3.分片表的使用限制：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
+    创建的分片表示不包含分片列，则插入报错；  
+4.分片列的数据类型支持度测试：  
     int,varchar,int(5) ZEROFILL,int ZEROFILL,int(5) UNSIGNED ZEROFILL,int UNSIGNED ZEROFILL,INTEGER,INTEGER(5),INTEGER(5) ZEROFILL,INTEGER ZEROFILL,INTEGER(5) UNSIGNED ZEROFILL,INTEGER UNSIGNED ZEROFILL,tinyint,tinyint(2),tinyint(3) ZEROFILL,tinyint ZEROFILL,tinyint(3) UNSIGNED ZEROFILL,tinyint UNSIGNED ZEROFILL,smallint,smallint(3),smallint(6) ZEROFILL,smallint ZEROFILL,smallint(6) UNSIGNED ZEROFILL,smallint UNSIGNED ZEROFILL,mediumint,mediumint(5),mediumint(6) ZEROFILL,mediumint ZEROFILL,mediumint(6) UNSIGNED ZEROFILL,mediumint UNSIGNED ZEROFILL,char,char(5),char(255),varchar(0),varchar(30),binary,binary(5),varbinary(5),tinyblob,blob,mediumblob,longblob,tinytext,tinytext binary,text,text binary,mediumtext,longtext,longtext binary
 #### behave_dble/features/func_test/sharding_func_test/hash.feature
-- scenario 1: hash分片算法测试：
-1.Sum(count[i]*length[i]) >=2880时，reload @@config_all报错
-2.测试每个分片包含的值为均匀分布的情况
-3.测试每个分片包含的值为非均匀分布的情况
-4.分片表的使用限制：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
-    创建的分片表示不包含分片列，则插入报错；
-5.分片列的数据类型支持度测试：
+- scenario 1: hash分片算法测试：  
+1.Sum(count[i]*length[i]) >=2880时，reload @@config_all报错  
+2.测试每个分片包含的值为均匀分布的情况  
+3.测试每个分片包含的值为非均匀分布的情况  
+4.分片表的使用限制：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
+    创建的分片表示不包含分片列，则插入报错；  
+5.分片列的数据类型支持度测试：  
     bit(5),bit(8),bit(16),bit(24),bit(29),bit(32),bit(40),bit(48),bit(56),bit(59),bit(64),tinyint,tinyint(2),tinyint UNSIGNED,tinyint(2) UNSIGNED,tinyint(3) ZEROFILL,tinyint ZEROFILL,tinyint(3) UNSIGNED ZEROFILL,tinyint UNSIGNED ZEROFILL,smallint,smallint(3),smallint(6) ZEROFILL,smallint ZEROFILL,smallint UNSIGNED,smallint(3) UNSIGNED,smallint(6) UNSIGNED ZEROFILL,smallint UNSIGNED ZEROFILL,mediumint,mediumint(5),mediumint(6) ZEROFILL,mediumint ZEROFILL,mediumint UNSIGNED,mediumint(5) UNSIGNED,mediumint(6) UNSIGNED ZEROFILL,mediumint UNSIGNED ZEROFILL,int,int UNSIGNED,int(11) UNSIGNED,int(5) ZEROFILL,int ZEROFILL,int(5) UNSIGNED ZEROFILL,int UNSIGNED ZEROFILL,INTEGER,INTEGER(5),INTEGER UNSIGNED,INTEGER(5) UNSIGNED,INTEGER(5) ZEROFILL,INTEGER ZEROFILL,INTEGER(5) UNSIGNED ZEROFILL,INTEGER UNSIGNED ZEROFILL,bigint,bigint(3),bigint(6) ZEROFILL,bigint ZEROFILL,decimal(10,2),numeric(10,2),float(7,4),double(7,4),enum('1','2','3','4','5'),enum('a','b','c','d','f'),varchar(10)
 #### behave_dble/features/func_test/sharding_func_test/jumpstringhash.feature
-- scenario 1: jumpstringhash分片算法测试：
-1.mysql中字段值为允许null，则插入null值时恒定落在0号节点上
-2.分片表的使用限制：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
+- scenario 1: jumpstringhash分片算法测试：  
+1.mysql中字段值为允许null，则插入null值时恒定落在0号节点上  
+2.分片表的使用限制：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
     创建的分片表示不包含分片列，则插入报错；
 #### behave_dble/features/func_test/sharding_func_test/numberrange.feature
-- scenario 1: numberrange分片算法测试：
-1.配置了默认节点：则null落在默认节点（若字段值不能为NULL值则返回报错），不在配置中的值落在默认节点，其他则按配置落在对应的节点上
-2.未配置默认节点：插入值为NULL或不在配置中，则返回报错"can't find any valid data node"
-3.分片表的使用限制：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
-    创建的分片表示不包含分片列，则插入报错；
-4.分片列的数据类型支持度测试：
+- scenario 1: numberrange分片算法测试：  
+1.配置了默认节点：则null落在默认节点（若字段值不能为NULL值则返回报错），不在配置中的值落在默认节点，其他则按配置落在对应的节点上  
+2.未配置默认节点：插入值为NULL或不在配置中，则返回报错"can't find any valid data node"  
+3.分片表的使用限制：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
+    创建的分片表示不包含分片列，则插入报错；  
+4.分片列的数据类型支持度测试：  
     bit(5),bit(8),bit(16),bit(24),bit(29),bit(32),bit(40),bit(48),bit(56),bit(59),bit(64),tinyint,tinyint(2),tinyint UNSIGNED,tinyint(2) UNSIGNED,tinyint(3) ZEROFILL,tinyint ZEROFILL,tinyint(3) UNSIGNED ZEROFILL,tinyint UNSIGNED ZEROFILL,smallint,smallint(3),smallint(6) ZEROFILL,smallint ZEROFILL,smallint UNSIGNED,smallint(3) UNSIGNED,smallint(6) UNSIGNED ZEROFILL,smallint UNSIGNED ZEROFILL,mediumint,mediumint(5),mediumint(6) ZEROFILL,mediumint ZEROFILL,mediumint UNSIGNED,mediumint(5) UNSIGNED,mediumint(6) UNSIGNED ZEROFILL,mediumint UNSIGNED ZEROFILL,int,int UNSIGNED,int(11) UNSIGNED,int(5) ZEROFILL,int ZEROFILL,int(5) UNSIGNED ZEROFILL,int UNSIGNED ZEROFILL,INTEGER,INTEGER(5),INTEGER UNSIGNED,INTEGER(5) UNSIGNED,INTEGER(5) ZEROFILL,INTEGER ZEROFILL,INTEGER(5) UNSIGNED ZEROFILL,INTEGER UNSIGNED ZEROFILL,bigint,bigint(3),bigint(6) ZEROFILL,bigint ZEROFILL,decimal(10,2),numeric(10,2),float(7,4),double(7,4),enum('1','2','3','4','5'),enum('a','b','c','d','f')
 #### behave_dble/features/func_test/sharding_func_test/patternrange.feature
-- scenario 1: patternrange分片算法测试：
-1.配置了默认节点：则null落在默认节点（若字段值不能为NULL值则返回报错），不在配置中的值落在默认节点，其他则按配置落在对应的节点上
-2.未配置默认节点：插入值为NULL或不在配置中，则返回报错"can't find any valid data node"
-3.分片表的使用限制：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
-    创建的分片表示不包含分片列，则插入报错；
-4.分片列的数据类型支持度测试：
+- scenario 1: patternrange分片算法测试：  
+1.配置了默认节点：则null落在默认节点（若字段值不能为NULL值则返回报错），不在配置中的值落在默认节点，其他则按配置落在对应的节点上  
+2.未配置默认节点：插入值为NULL或不在配置中，则返回报错"can't find any valid data node"  
+3.分片表的使用限制：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
+    创建的分片表示不包含分片列，则插入报错；  
+4.分片列的数据类型支持度测试：  
     bit(5),bit(8),bit(16),bit(24),bit(29),bit(32),bit(40),bit(48),bit(56),bit(59),bit(64),tinyint,tinyint(2),tinyint UNSIGNED,tinyint(2) UNSIGNED,tinyint(3) ZEROFILL,tinyint ZEROFILL,tinyint(3) UNSIGNED ZEROFILL,tinyint UNSIGNED ZEROFILL,smallint,smallint(3),smallint(6) ZEROFILL,smallint ZEROFILL,smallint UNSIGNED,smallint(3) UNSIGNED,smallint(6) UNSIGNED ZEROFILL,smallint UNSIGNED ZEROFILL,mediumint,mediumint(5),mediumint(6) ZEROFILL,mediumint ZEROFILL,mediumint UNSIGNED,mediumint(5) UNSIGNED,mediumint(6) UNSIGNED ZEROFILL,mediumint UNSIGNED ZEROFILL,int,int UNSIGNED,int(11) UNSIGNED,int(5) ZEROFILL,int ZEROFILL,int(5) UNSIGNED ZEROFILL,int UNSIGNED ZEROFILL,INTEGER,INTEGER(5),INTEGER UNSIGNED,INTEGER(5) UNSIGNED,INTEGER(5) ZEROFILL,INTEGER ZEROFILL,INTEGER(5) UNSIGNED ZEROFILL,INTEGER UNSIGNED ZEROFILL,bigint,bigint(3),bigint(6) ZEROFILL,bigint ZEROFILL,decimal(10,2),numeric(10,2),float(7,4),double(7,4),enum('1','2','3','4','5'),enum('a','b','c','d','f')
 #### behave_dble/features/func_test/sharding_func_test/stringhash.feature
-- scenario 1: stringhash分片算法测试：
-1.Sum(count[i]*length[i])>=2880时，reload @@config_all返回报错"Sum(count[i]*length[i]) must be less than 2880"
-2.测试每个分片包含的值为均匀分布的情况
-3.测试每个分片包含的值为非均匀分布的情况
-4.分片表的使用限制：
-    分片表的分片列不能drop；
-    分片表的分片列值不允许被更新；
-    分片表插入值时，分片列必须显示插入值；
-    分片表插入值时，插入的分片列值不支持表达式的形式；
+- scenario 1: stringhash分片算法测试：  
+1.Sum(count[i]*length[i])>=2880时，reload @@config_all返回报错"Sum(count[i]*length[i]) must be less than 2880"  
+2.测试每个分片包含的值为均匀分布的情况  
+3.测试每个分片包含的值为非均匀分布的情况  
+4.分片表的使用限制：  
+    分片表的分片列不能drop；  
+    分片表的分片列值不允许被更新；  
+    分片表插入值时，分片列必须显示插入值；  
+    分片表插入值时，插入的分片列值不支持表达式的形式；  
     创建的分片表示不包含分片列，则插入报错；
 
 ## 安装卸载测试（包括单机及zk集群）
