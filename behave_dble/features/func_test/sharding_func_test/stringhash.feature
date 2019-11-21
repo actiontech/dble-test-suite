@@ -3,7 +3,7 @@
 Feature: stringhash sharding function test suits
 
   @BLOCKER
-  Scenario: stringhash function
+  Scenario: stringhash function #1
     #test: <= 2880
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
