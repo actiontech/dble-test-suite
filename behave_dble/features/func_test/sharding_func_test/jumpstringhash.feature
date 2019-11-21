@@ -1,6 +1,6 @@
 Feature: jumpstringhash sharding function test suits
 
-  Scenario: jumpstringhash function
+  Scenario: jumpstringhash function #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
         <tableRule name="jump_string_hash_rule">
