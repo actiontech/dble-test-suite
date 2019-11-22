@@ -17,8 +17,9 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
     WORKID=01
     DATAACENTERID=01
+    #START_TIME=2010-10-01 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "sequence_time_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -60,14 +61,14 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
     WORKID=02
     DATAACENTERID=31
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "sequence_time_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
+      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
     Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs"
 
