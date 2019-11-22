@@ -11,40 +11,26 @@
 void doRTest(){
     MYSQL *conn = getConn();
 
-    const char* para1="hello ";
-    const char* para2="stmt";
-//    const char* para3="stmt2";
-//    const char* para4="stmt3";
-//    const char* para12="hello stmt";
+    const char* para1="1";
+    const char* para2="hello";
+    const char* para4="world";
     const char* para12="2";
-//    const char* para13="hello stmt2";
     const char* para13="3";
-//    const char* para14="hello stmt3";
-
-
 
     createTable(conn);
 
     myquery(conn, "insert into sharding_4_t1(id,col2,col3) values(1,'hello',2)");
-
-    MYSQL_STMT *stmt = create_stmt_and_prepare(conn, const_cast<char*>(para1));
-    unsigned long type = CURSOR_TYPE_READ_ONLY;
-    mysql_stmt_attr_set(stmt, STMT_ATTR_CURSOR_TYPE, (void*)&type);
+    myquery(conn, "insert into sharding_4_t1(id,col2,col3) values(2,'world',3)");
 
 //******case1:read prepare execute correctly
+    MYSQL_STMT *stmt = create_stmt_and_prepare(conn, const_cast<char*>(para2));
 	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
+	printf("    pass! read prepare execute correctly\n");
 //******case1 end
 
-//******case2:during read prepare, sqls that should be sent to master should still be sent to master
-	myquery(conn, "insert into sharding_4_t1(id,col2,col3) values(2,'stmt',3)");
-    printf("    pass! before read ps deallocate, queries should be sent to master should still be sent to master.\n");
-//******case2 end
-
-//*****case3:two read prepare should not affact each other
+//*****case2:two read prepare should not affact each other
     printf("    *****two read ps should not affact each other*****\n");
-	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
-
-	MYSQL_STMT *stmt2 = create_stmt_and_prepare(conn, const_cast<char*>(para2));
+	MYSQL_STMT *stmt2 = create_stmt_and_prepare(conn, const_cast<char*>(para4));
 
 	execStmtAndCmp(stmt2, conn, const_cast<char*>(para13));
 
@@ -54,9 +40,9 @@ void doRTest(){
 
 	//this is the point
 	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
-//******case3 end
-//*****case4:read prepare should correctly change from one slave to master if needed
-    printf("    *****read ps should correctly change from one slave to master if needed*****\n");
+//******case2 end
+//*****case3:read prepare should correctly in transaction
+    printf("    *****read ps should correctly in transaction*****\n");
     printf("    start transaction.\n");
 	myquery(conn, "start transaction;");
 
@@ -65,8 +51,10 @@ void doRTest(){
     printf("    commit.\n");
 	myquery(conn, "commit;");
 
-	execStmtAndCmp(stmt,conn, const_cast<char*>(para12));
-//*****case4 end
+	close_stmt(stmt);
+	mysql_close(conn);
+
+//*****case3 end
 
 /* dble do not support the stmt "start transaction read only"
 //*****case5 diffenent ps on diffenent conns will not affected by each other.
@@ -110,9 +98,6 @@ void doRTest(){
 	mysql_close(conn4);
 //*****case5 end
 */
-
-	close_stmt(stmt);
-	mysql_close(conn);
 }
 
 //test when read preapre statements will get multi-results
