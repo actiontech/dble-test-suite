@@ -22,21 +22,14 @@ void wPrepareTest() {
 
     MYSQL_STMT *stmt = create_wstmt_and_prepare(conn);
 
-//*****case1:during master prepare, select should be sent to slave
-    printf("debug 1\n");
-    myquery(conn, slave_sql);
-    printf("debug 2\n");
-
+//*****case1:basic write prepare executed successfully
     MYSQL_RES  *res;
     res = mysql_store_result(conn);
     mysql_free_result(res);
-    printf("    pass! during write prepare, select should be sent to slave.\n");
-//*****case1 end
-//*****case2:basic write prepare executed successfully
 	execWStmtAndCmp(stmt, 1, 1);
     printf("    pass! execute write prepare success.\n");
 
-//*****case2 end
+//*****case1 end
 
 /* dble do not support the stmt "start transaction read only"
 //*****case3:during read tx, cant execute write prepare, after tx over, both r/w-prepare work fine
