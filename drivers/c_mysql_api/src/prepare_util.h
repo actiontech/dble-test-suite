@@ -26,7 +26,7 @@ extern my_bool       is_null;
 extern MYSQL_BIND    wbind[3];
 extern int           param_count;
 
-#define slave_sql "select 1 /*uproxy_dest_expect:S*/"
+//#define slave_sql "select 1 /*uproxy_dest_expect:S*/"
 //end write prepare test related vars
 
 MYSQL_STMT * create_stmt_and_prepare(MYSQL* conn, char* param1);
