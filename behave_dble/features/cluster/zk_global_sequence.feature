@@ -21,20 +21,23 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     INSTANCEID=zk
     CLUSTERID=01
+    START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-2"
     """
     INSTANCEID=zk
     CLUSTERID=02
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-3"
     """
     INSTANCEID=zk
     CLUSTERID=03
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
@@ -58,7 +61,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
     Then execute sql in "dble-2" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                      | expect  | db      |
+      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
       | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
@@ -92,14 +95,14 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     INSTANCEID=zk
     CLUSTERID=04
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
+      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
     Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id"
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
@@ -121,28 +124,30 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     INSTANCEID=zk
     CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-2"
     """
     INSTANCEID=zk
     CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-3"
     """
     INSTANCEID=zk
     CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
+      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
     Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id"
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
@@ -158,10 +163,9 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
     Then execute sql in "dble-2" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
+      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Then get result of user cmd "select time from mytest_auto_test" named "ts_time" in dble "dble-2"
     Then get result of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id" in dble "dble-2"
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
@@ -183,28 +187,30 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     INSTANCEID=01
     CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-2"
     """
     INSTANCEID=02
     CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
     Then add some data in "sequence_distributed_conf.properties" in dble "dble-3"
     """
     INSTANCEID=03
     CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
     """
-    Then add start_time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
+    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
+      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Then get result of user cmd "select time from mytest_auto_test" named "ts_time" in dble "dble-2"
     Then get result of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id" in dble "dble-2"
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
