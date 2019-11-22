@@ -369,14 +369,15 @@ def step_impl(context,mapFile,hostname):
     rc, sto, err = ssh.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
-@Then('add start_time "{curTime}" in "{mapFile}" in dble "{hostname}"')
+@Then('change start_time to current time "{curTime}" in "{mapFile}" in dble "{hostname}"')
 def step_impl(context,curTime,mapFile,hostname):
     targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
     text = "START_TIME={0}".format(getattr(context,curTime)[0][0])
     context.logger.info("START_TIME = {0}".format(getattr(context,curTime)[0][0]))
-    cmd = "echo '{0}' >> {1}".format(text, targetFile)
+    sed_cmd_str = "sed -i '/START_TIME/c {0}' {1}".format(text,targetFile)
     ssh = get_ssh(context.dbles, hostname)
-    rc, sto, err = ssh.exec_command(cmd)
+    rc, sto, err = ssh.exec_command(sed_cmd_str)
+    context.logger.info("execute cmd: {0}".format(sed_cmd_str))
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
 def get_result(context, sql):
