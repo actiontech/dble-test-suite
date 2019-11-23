@@ -23,12 +23,12 @@
 
 ## 1.2 sql覆盖测试分类
 
-### [1.2.1 基于python的MySQL数据库驱动-MySQLdb的sql覆盖测试](./1.2.1%20基于python的MySQL数据库驱动-MySQLdb的sql覆盖测试.md)
+### [1.2.1 基于python的MySQL数据库驱动-MySQLdb的sql覆盖测试](./1.2.1%20python_based__MySQL_driver_testing.md)
 
-### [1.2.2 基于java的MySQL数据库驱动-jdbc的sql覆盖测试](./1.2.2%20基于java的MySQL数据库驱动-jdbc的sql覆盖测试.md)
+### [1.2.2 基于java的MySQL数据库驱动-jdbc的sql覆盖测试](./1.2.2%20Java_based_MySQL_driver_testing.md)
 
-### [1.2.3 基于c#的MySQL数据库驱动的sql覆盖测试](./1.2.3%20基于c-net的MySQL数据库驱动的sql覆盖测试.md)
+### [1.2.3 基于c#的MySQL数据库驱动的sql覆盖测试](./1.2.3%20DotNet_based_MySQL_driver_testing.md)
 
-### [1.2.4 基于c++的MySQL数据库驱动的sql覆盖测试](./1.2.4%20基于c++的MySQL数据库驱动的sql覆盖测试.md)
+### [1.2.4 基于c++的MySQL数据库驱动的sql覆盖测试](./1.2.4%20CPP_based_MySQL_driver_testing.md)
 
-## [1.3 sql文件说明](./1.3%20sql文件说明.md)
+## [1.3 sql文件说明](./1.3%20sql_file_specifications.md)
