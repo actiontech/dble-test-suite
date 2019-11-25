@@ -46,7 +46,7 @@ select * from (select * from schema2.test2 where pad>1) a left outer join (selec
 select * from (select * from schema2.test2 where pad>1) a right outer join (select * from schema3.test3 where pad>3) b on a.pad=b.pad order by a.id,b.id;
 select * from (select * from schema2.test2 where pad>1) a natural left outer join (select * from schema3.test3 where pad>3) b order by a.id,b.id;
 select * from (select * from schema2.test2 where pad>1) a natural right outer join (select * from schema3.test3 where pad>3) b order by a.id,b.id;
-SELECT DISTINCT schema2.test2.id FROM schema2.test2,schema3.test3 where schema2.test2.pad=schema3.test3.pad;
+SELECT DISTINCT schema2.test2.id FROM schema2.test2,schema3.test3 where schema2.test2.pad=schema3.test3.pad order by id;
 select * from schema2.test2 a left join schema3.test3 b on a.pad=b.pad where a.t_id>b.o_id group by b.pad;
 (select name from schema2.test2 where pad=1 order by id limit 10) union all (select name from schema3.test3 where pad=1 order by id limit 10) order by name;
 (select name from schema2.test2 where pad=1 order by id limit 10) union distinct (select name from schema3.test3 where pad=1 order by id limit 10) order by name;
