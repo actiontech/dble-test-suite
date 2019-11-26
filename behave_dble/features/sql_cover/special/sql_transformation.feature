@@ -1,7 +1,9 @@
+# Copyright (C) 2016-2019 ActionTech.
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/7/25
 Feature: #test the correctness of sql transformation
 
-  Scenario: #test the explain result of `limit`
+  Scenario: #test the explain result of `limit` #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                                                              | expect    | db     |
       | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t1                          | success   | schema1 |
@@ -14,7 +16,7 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True     | create table global_4_t1 (id int,c_flag char(255))       | success   | schema2 |
       | test | 111111 | conn_0 | True     | explain select * from schema1.sharding_4_t1                | hasStr{'SELECT * FROM sharding_4_t1 LIMIT 100'}    | schema1 |
       | test | 111111 | conn_0 | True     | explain select * from schema3.sharding_4_t3               | hasStr{'select * from sharding_4_t3'}    | schema1 |
-      | test | 111111 | conn_0 | True     | explain insert into global_4_t1 values(1,1)               | hasStr{insert into `global_4_t1`(id,c_flag,_dble_op_time)}    | schema2 |
+      | test | 111111 | conn_0 | True     | explain insert into global_4_t1 values(1,1)               | hasStr{insert into `global_4_t1`(`id`,`c_flag`,`_dble_op_time`)}    | schema2 |
       | test | 111111 | conn_0 | True     | explain update global_4_t1 set c_flag=2                    | hasStr{UPDATE global_4_t1 SET c_flag = 2, _dble_op_time}    | schema2 |
       | test | 111111 | conn_0 | True     | explain select distinct(id) from sharding_4_t1             | hasStr{SELECT id FROM sharding_4_t1 GROUP BY id LIMIT 100'}    | schema1 |
       | test | 111111 | conn_0 | True     | explain select 1                                               | hasStr{('dn5', 'BASE SQL', 'select 1'),}    | schema1 |
