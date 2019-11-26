@@ -108,14 +108,20 @@ public class Config {
 	}
 
 	public static void initDebug(){
-		Config.TEST_PORT = 8066;
-		Config.Host_Single_MySQL = "172.100.0.3";
+		Config.Host_Single_MySQL = "10.186.60.31";
 		Config.Host_Test = Config.Host_Single_MySQL;
 //		Config.HOST_MASTER = Config.Host_Single_MySQL;
 //		Config.Host_Slave1 = Config.Host_Single_MySQL;
 //		Config.Host_Slave2 = Config.Host_Single_MySQL;
-		TEST_USER = "test";
-		TEST_USER_PASSWD = "test";
+		Config.MYSQL_PORT = 7144;
+		Config.MYSQL_USER = "test";
+		Config.MYSQL_PASSWD = "111111";
+		
+//		for dble
+		Config.Host_Test = "10.186.60.31";
+		Config.TEST_PORT = 7131;
+		Config.TEST_USER = "test";
+		Config.TEST_USER_PASSWD = "111111";
 		TEST_DB = "schema1";
 	}
 
