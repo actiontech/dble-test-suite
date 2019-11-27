@@ -15,6 +15,9 @@ import java.sql.Types;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author janey uncovered:
@@ -209,27 +212,16 @@ public class ConnectionTest extends InterfaceTest {
 	 * function: abort()
 	 * */
 	private void itf_abort() throws SQLException {
-		AbortExecutor ae = new AbortExecutor();
-		ae.execute(new Runnable() {
-			public void run() {
-				int i = 0;
-				while (true) {
-					try {
-						Thread.sleep(1000);
-					} catch (InterruptedException ie) {
-						System.out.println("InterruptedException:"+ie.getMessage());
-					}
-					if (i == 5)
-						break;
-					i++;
-					System.out.println("run times: "+ i);
-				}
-			}
-		});
+		 ExecutorService ae = Executors.newFixedThreadPool(2);
 
-		try{
-			mysqlConn.abort(ae);
-			dbleConn.abort(ae);
+        try{
+            mysqlConn.abort(ae);
+            dbleConn.abort(ae);
+            ae.shutdown();
+
+            while (!ae.awaitTermination(1, TimeUnit.SECONDS)) {
+                System.out.println("waiting abort finish..." );
+            }
 
 			boolean isMySQLClosed = mysqlConn.isClosed();
 			boolean isDbleClosed = dbleConn.isClosed();
@@ -241,12 +233,8 @@ public class ConnectionTest extends InterfaceTest {
 			}
 		}catch(SQLException e){
 			System.out.println("SQLException:"+e.getMessage());
-		}
-
-		try {
-			Thread.sleep(6000);
-		} catch (InterruptedException e) {
-			System.out.println("InterruptedException:"+e.getMessage());
+		}catch(InterruptedException ie) {
+			System.out.println("InterruptedException:"+ie.getMessage());
 		}
 
 		create_compare_conns();
