@@ -224,3 +224,10 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then get datatime "t2" by "t1" minus "1970-01-01"
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
+    Then add some data in "sequence_distributed_conf.properties" in dble "dble-1"
+    """
+    INSTANCEID=01
+    CLUSTERID=01
+    #START_TIME=2010-11-04 09:42:54
+    """
+    Given Restart dble in "dble-1" success
