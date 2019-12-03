@@ -5,17 +5,14 @@
 drop table if exists sharding_4_t1
 drop table if exists schema2.global_4_t1
 drop table if exists schema2.sharding_4_t2
-drop table if exists schema3.sharding_4_t3
 
 CREATE TABLE sharding_4_t1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
 CREATE TABLE schema2.global_4_t1(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8
 CREATE TABLE schema2.sharding_4_t2(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARSET=UTF8
-CREATE TABLE schema3.sharding_4_t3(`id` int(10) unsigned NOT NULL,`a_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARSET=UTF8
 
 insert into sharding_4_t1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
 insert into schema2.global_4_t1 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
 insert into schema2.sharding_4_t2 values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4',4),(5,5,'manager...5',6)
-insert into schema3.sharding_4_t3 values(1,1,'manager中id为1',1),(2,2,'test_2',2),(3,3,'manager中id为3',3),(4,4,'$manager$4AAA',4),(5,5,'manager...5',6)
 #
 #join table
 #
@@ -108,14 +105,9 @@ select * from sharding_4_t1 union distinct select * from schema2.sharding_4_t2 u
 (select * from sharding_4_t1 where pad=1) union (select c.id,c.o_id,c.name,c.pad from schema2.global_4_t1 c where pad=1) order by name limit 10
 (select name as sort_a from sharding_4_t1 where pad=1) union (select name from schema2.global_4_t1 where pad=1) order by sort_a limit 10
 (select name as sort_a,pad from sharding_4_t1 where pad=1) union (select name,pad from schema2.global_4_t1 where pad=1) order by sort_a,pad limit 10
-#github issue 1385
-
-#github issue 1429
 #
 #clear tables
 #
 drop table if exists sharding_4_t1
 drop table if exists schema2.global_4_t1
 drop table if exists schema2.sharding_4_t2
-
-
