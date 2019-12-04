@@ -20,6 +20,13 @@ def get_dble_conn(context, default_db="schema1", node=None):
                          context)
     return conn
 
+def get_dble_connect(context,host_name,default_db="schema1"):
+    node = get_node(context.dbles, host_name)
+    conn = DBUtil(node.ip, context.cfg_dble['client_user'],
+                  context.cfg_dble['client_password'], default_db, context.cfg_dble['client_port'],
+                  context)
+    return conn
+
 def get_admin_conn(context, user="", passwd=""):
     if len(user.strip()) == 0:
         user = context.cfg_dble['manager_user']
@@ -61,7 +68,14 @@ def step_impl(context, adminsql, rs_name):
 def step_impl(context, sql, rs_name):
     dble_conn = get_dble_conn(context)
     result, error = dble_conn.query(sql)
-    assert error is None, "execute adminsql {0}, get error:{1}".format(sql, error)
+    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
+    setattr(context, rs_name, result)
+
+@Then('get result of user cmd "{sql}" named "{rs_name}" in dble "{host_name}"')
+def step_impl(context, sql, rs_name, host_name):
+    dble_conn = get_dble_connect(context, host_name)
+    result, error = dble_conn.query(sql)
+    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
 
 @Then('removal result set "{rs_name}" contains "{key_word}" part')

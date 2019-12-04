@@ -292,5 +292,3 @@ def step_impl(context,file,host):
         retry = retry + 1
 
     assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
-
-
