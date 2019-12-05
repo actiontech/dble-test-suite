@@ -104,9 +104,17 @@ Feature: test some import nodes attr in schema.xml
             </writeHost>
         </dataHost>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="useGlobleTableCheck">0</property>
+        <property name="processors">1</property>
+        <property name="processorExecutor">1</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
+    | user | passwd | conn   | toClose  | sql                                | expect  | db     |
     | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | schema1 |
     | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | schema1 |
     Then create "14" conn while maxCon="15" finally close all conn
@@ -114,8 +122,8 @@ Feature: test some import nodes attr in schema.xml
     """
     error totally whack
     """
-  @NORMAL
-  Scenario: if "dataHost" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1 #5
+  @NORMAL @current
+  Scenario: if "dataHost" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
     Given delete the following xml segment
       |file        | parent          | child                |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -124,28 +132,39 @@ Feature: test some import nodes attr in schema.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn3" name="test_shard" type="global" />
+            <table dataNode="dn2" name="single_shard" />
+            <table dataNode="dn1,dn3" name="global_2_t1" type="global" />
         </schema>
         <dataNode dataHost="dh1" database="db1" name="dn1" />
-        <dataNode dataHost="dh1" database="db2" name="dn3" />
-        <dataHost balance="0" maxCon="2" minCon="1" name="dh1" slaveThreshold="100" switchType="-1">
+        <dataNode dataHost="dh1" database="db2" name="dn2" />
+        <dataNode dataHost="dh1" database="db3" name="dn3" />
+        <dataHost balance="0" maxCon="3" minCon="1" name="dh1" slaveThreshold="100" switchType="-1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
         </dataHost>
     """
-    Then execute admin cmd "reload @@config_all"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="useGlobleTableCheck">0</property>
+        <property name="processors">1</property>
+        <property name="processorExecutor">1</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                             | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_shard                                 | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists global_2_t1                                 | success | schema1 |
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard                              | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_shard(id int,name varchar(33))                | success | schema1 |
+      | test | 111111 | conn_0 | True    | create table global_2_t1(id int,name varchar(33))                | success | schema1 |
       | test | 111111 | conn_0 | True    | create table test_no_shard(id int,name varchar(33))             | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test_shard set id = 1                               | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into global_2_t1 set id = 1                               | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into test_no_shard set id = 1                            | success | schema1 |
-      | test | 111111 | conn_0 | True    | select a.id from test_shard a,test_no_shard b where a.id = b.id | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test_table                                 | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_table(id int)                                 | success | schema1 |
+      | test | 111111 | conn_0 | True    | select a.id from global_2_t1 a,test_no_shard b where a.id = b.id | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists global_2_t1                                 | success | schema1 |
+      | test | 111111 | conn_0 | True    | create table global_2_t1(id int)                                 | success | schema1 |
+#   maxCon config is 3, but real created is 4(=sum(datanodes)+1)
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
@@ -153,11 +172,11 @@ Feature: test some import nodes attr in schema.xml
     """
 
   @CRITICAL
-  Scenario: select (colomn is not cacheKey set in schema.xml) from table -- cacheKey cache invalid
-             select (contains column which is set as cacheKey in schema.xml) from table -- cacheKey cache  effective #6
+  Scenario: select (colomn is not primarykey set in schema.xml) from table -- primarykey cache invalid
+             select (contains column which is set as primarykey in schema.xml) from table -- primarykey cache  effective #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="name" rule="hash-two" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="name" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -177,10 +196,10 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
   @CRITICAL
-  Scenario: primayKey cache effective when attribute "cacheKey" be set #7
+  Scenario: primayKey cache effective when attribute "primaryKey" be set #7
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="k" rule="hash-four" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="k" rule="hash-four" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -213,7 +232,7 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache                                                    | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,1L,1L,4L,2018')}| |
 
   @NORMAL
-  Scenario: primayKey cache invalid when attribute "cacheKey" not be set #8
+  Scenario: primayKey cache invalid when attribute "primaryKey" not be set #8
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4"  rule="hash-two" />
@@ -265,19 +284,19 @@ Feature: test some import nodes attr in schema.xml
     """
     Given delete file "/opt/dble/rocksdb" on "dble-1"
 
-  Scenario: execute `set @x=1` gets error when the max active Connections size max than "maxCon",heartbeat take account into maxCon   from issue:1177 author: maofei #10
+  Scenario:  test execute `set @x=1` when the max active Connections size max than "maxCon"   from issue:1177 author: maofei #10
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="4" minCon="0" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="5" minCon="0" name="172.100.9.5" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="4" minCon="0" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="5" minCon="0" name="172.100.9.6" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
     </writeHost>
@@ -285,18 +304,17 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                               | expect  | db     |
-      | test | 111111 | conn_0 | False   | drop table if exists test_table                   | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table test_table(id int,name varchar(33))  | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                             | success | schema1 |
-      | test | 111111 | conn_0 | False   | select * from test_table                          | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                             | success | schema1 |
-      | test | 111111 | conn_1 | False   | select * from test_table                          | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | commit                                            | success | schema1 |
-      | test | 111111 | conn_1 | False   | rollback                                          | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                             | success | schema1 |
-      | test | 111111 | conn_1 | False   | select * from test_table                          | success | schema1 |
-      | test | 111111 | conn_1 | True    | commit                                            | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                                         | expect  | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists test_table                         | success | schema1 |
+      | test | 111111 | conn_0 | True    | create table test_table(id int,name varchar(33))      | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                                       | success | schema1 |
+      | test | 111111 | conn_0 | False   | select * from test_table                                 | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                                       | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                                 | success | schema1 |
+      | test | 111111 | conn_2 | False   | set @x = 1                                                 | error totally whack | schema1 |
+      | test | 111111 | conn_0 | True    | commit                                                      | success | schema1 |
+      | test | 111111 | conn_1 | True    | commit                                                      | success | schema1 |
+      | test | 111111 | conn_2 | True    | set @x = 1                                                 | success | schema1 |
 
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
@@ -307,12 +325,12 @@ Feature: test some import nodes attr in schema.xml
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="1" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="1" name="172.100.9.5" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="1" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="1" name="172.100.9.6" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
     </writeHost>
@@ -327,12 +345,12 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="3" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="3" name="172.100.9.5" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="2" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="2" name="172.100.9.6" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
     </writeHost>
@@ -355,12 +373,12 @@ Feature: test some import nodes attr in schema.xml
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
     </writeHost>
