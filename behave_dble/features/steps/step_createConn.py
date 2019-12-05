@@ -3,6 +3,7 @@
 import logging
 import thread
 import time
+import re
 
 import MySQLdb
 from behave import *
@@ -36,8 +37,6 @@ def createConn(context,num,sql):
         conn.close()
         if e.args:
             context.logger.info("get error{0}:##########################".format(e.args))
-        
-
 
 @Then('create "{num}" conn while maxCon="{maxNum}" finally close all conn')
 def step_impl(context,num,maxNum):
@@ -50,8 +49,10 @@ def step_impl(context,num,maxNum):
 
     time.sleep(15)
     if context.text:
-        context.logger.info("create conn got err:{0}".format(errs[0]))
-        assert errs, "expect get err,but err is:{0}".format(errs[0])
+        assert len(errs)>0, "expect get err,but no err"
+
+        hasExpect = re.search(context.text, errs[0][1], re.I)
+        assert hasExpect, "expect err:{0}, but real err is: {1}".format(context.text, errs[0])
     else:
         if errs:
             assert False, "expect no err,but outcomes:{0} when create conn".format(errs[0])
