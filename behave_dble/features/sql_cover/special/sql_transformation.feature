@@ -37,8 +37,20 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True     | explain select * from table_b                    | hasStr{('dn1', 'BASE SQL', 'select * from table_b'),}   | schema1 |
     Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
      """
-      s/layedpool.TableID2DataNodeCache=encache,10000,18000/#layedpool.TableID2DataNodeCache=encache,10000,18000/
-      s/#layedpool.TableID2DataNodeCacheType=encache/layedpool.TableID2DataNodeCacheType=encache/
+      /layedpool.TableID2DataNodeCache=encache,10000,18000/d
+      /#layedpool.TableID2DataNodeCacheType=encache/d
+      /# default cache/a #layedpool.TableID2DataNodeCache=encache,10000,18000
+      /# no default cache,but set cache type/a layedpool.TableID2DataNodeCacheType=encache
+    """
+    Then check following " " exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    """
+    #layedpool.TableID2DataNodeCache=encache,10000,18000
+    layedpool.TableID2DataNodeCacheType=encache
+    """
+    Then check following "not" exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    """
+    layedpool.TableID2DataNodeCache=encache,10000,18000
+    #layedpool.TableID2DataNodeCacheType=encache
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -50,7 +62,18 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True    | explain select * from table_a order by id limit 3,9        | hasStr{ASC LIMIT 12}   | schema1 |
     Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
      """
-      s/#layedpool.TableID2DataNodeCache=encache,10000,18000/layedpool.TableID2DataNodeCache=encache,10000,18000/
-      s/layedpool.TableID2DataNodeCacheType=encache/#layedpool.TableID2DataNodeCacheType=encache/
+      /#layedpool.TableID2DataNodeCache=encache,10000,18000/d
+      /layedpool.TableID2DataNodeCacheType=encache/d
+      /# default cache/a layedpool.TableID2DataNodeCache=encache,10000,18000
+      /# no default cache,but set cache type/a #layedpool.TableID2DataNodeCacheType=encache
     """
-
+    Then check following " " exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    """
+    layedpool.TableID2DataNodeCache=encache,10000,18000
+    #layedpool.TableID2DataNodeCacheType=encache
+    """
+    Then check following "not" exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    """
+    #layedpool.TableID2DataNodeCache=encache,10000,18000
+    layedpool.TableID2DataNodeCacheType=encache
+    """
