@@ -173,10 +173,12 @@ def check_dble_started(context, node):
             check_dble_started(context,node)
         else:
             LOGGER.info("dble started failed after 5 times try")
+            cmd = "cat /opt/dble/logs/wrapper.log"
+            rc, sto, ste = node.ssh_conn.exec_command(cmd)
+            LOGGER.info("Please check the error message in wrapper.log:\n{0}".format(sto))
             delattr(context, "retry_start_dble")
     else:
         delattr(context, "retry_start_dble")
-
 @Given("stop all dbles")
 def stop_dbles(context):
     for node in context.dbles:
