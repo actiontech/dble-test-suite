@@ -56,8 +56,8 @@ def get_node_attr_by_kv(parentNode, childNode, file):
 # pos_kv_map stores mainly about the parent node info,tag is parent node tag, kv_map stores parent node attribute and values
 # pos_kv_map,example {'tag':'writeHost','kv_map':{'host':'hostM2'}}
 def get_parent_nodes_from_dic(tree, pos_kv_map):
-    parentTag = pos_kv_map.get("tag").lower()
-    if parentTag == "root":
+    parentTag = pos_kv_map.get("tag")
+    if parentTag.lower() == "root":
         parentNodes = [tree.getroot()]
     else:
         tagNodes = tree.findall(parentTag)
