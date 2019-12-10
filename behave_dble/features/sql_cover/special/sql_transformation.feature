@@ -49,7 +49,6 @@ Feature: #test the correctness of sql transformation
     """
     Then check following "not" exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
     """
-    layedpool.TableID2DataNodeCache=encache,10000,18000
     #layedpool.TableID2DataNodeCacheType=encache
     """
     Given Restart dble in "dble-1" success
@@ -75,5 +74,4 @@ Feature: #test the correctness of sql transformation
     Then check following "not" exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
     """
     #layedpool.TableID2DataNodeCache=encache,10000,18000
-    layedpool.TableID2DataNodeCacheType=encache
     """
