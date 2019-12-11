@@ -7,17 +7,17 @@
 	</schema>
 	<schema name="schema3" sqlMaxLimit="100" dataNode="dn6">
 	</schema>
-	<dataNode name="dn1" dataHost="172.100.9.5" database="db1" />
-	<dataNode name="dn5" dataHost="172.100.9.5" database="db3" />
-	<dataNode name="dn6" dataHost="172.100.9.6" database="db3" />
+	<dataNode name="dn1" dataHost="ha_group1" database="db1" />
+	<dataNode name="dn5" dataHost="ha_group1" database="db3" />
+	<dataNode name="dn6" dataHost="ha_group2" database="db3" />
 
-	<dataHost name="172.100.9.5" maxCon="1000" minCon="10" balance="0" switchType="1"  slaveThreshold="100">
+	<dataHost name="ha_group1" maxCon="1000" minCon="10" balance="0" switchType="1"  slaveThreshold="100">
 		<heartbeat>select user()</heartbeat>
 		<writeHost host="hostM1" url="172.100.9.5:3306" user="test"
 				   password="111111">
 		</writeHost>
 	</dataHost>
-	<dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
+	<dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
 		<heartbeat>select user()</heartbeat>
 		<writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
 		</writeHost>
