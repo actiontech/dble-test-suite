@@ -281,7 +281,7 @@ def step_impl(context, sql_cover_log):
         shutil.rmtree(sql_cover_log)
 
 @Given('reset replication and none system databases')
-def step_impl(context):
+def reset_repl(context):
     import subprocess
     try:
         out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
