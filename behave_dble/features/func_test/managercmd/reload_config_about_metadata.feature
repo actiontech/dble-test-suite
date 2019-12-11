@@ -183,11 +183,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100">
     <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="da1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="da2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="da1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="da2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
@@ -198,11 +198,11 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100">
     <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
     #表的datasource发生变更
@@ -217,12 +217,12 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100">
     <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
@@ -238,12 +238,12 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100">
     <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
@@ -324,12 +324,12 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
     <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="da3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="da3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
@@ -345,12 +345,12 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
     <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
@@ -368,12 +368,12 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
     <table name="test_shard" dataNode="dn2,dn4" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
@@ -430,12 +430,12 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <schema name="schema1" sqlMaxLimit="100">
     <table name="test_shard" dataNode="dn1,dn3" type="global"/>
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
@@ -476,7 +476,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | test | 111111 | conn_0 | True    | create database db2                                     | success  |     |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
