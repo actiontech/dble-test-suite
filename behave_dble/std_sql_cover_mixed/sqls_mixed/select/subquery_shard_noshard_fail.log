@@ -18,6 +18,3 @@ dble err:(1064, 'Row Subqueries is not supported')
 dble:[None]
 mysql:[((1L,), (2L,), (4L,), (3L,))]
 dble err:(1105, 'Correlated Sub Queries is not supported ')
-===file:sqls_mixed/select/subquery_shard_noshard.sql, id:70, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from sharding_4_t1 group by pad) as t1]===
-dble:[[(4.2,)]]
-mysql:[[(Decimal('4.2000'),)]]
