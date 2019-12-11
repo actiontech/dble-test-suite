@@ -73,7 +73,7 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="2" minCon="1" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="2" minCon="1" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
