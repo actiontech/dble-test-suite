@@ -13,11 +13,11 @@ Feature: #mysql node disconnected,check the change of dble
       | test | 111111 | conn_0 | True    | create database if not exists da2   | success |        |
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.5" database="da1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.5" database="da2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="da1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group1" database="da2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "Reload @@config_all"
     Given stop mysql in host "mysql-master1"

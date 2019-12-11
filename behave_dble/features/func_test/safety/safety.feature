@@ -19,9 +19,9 @@ Feature: multi-tenancy, user-Permission
     <schema name="mytestD">
         <table dataNode="dn1,dn2,dn3,dn4,dn5,dn6,dn7,dn8" name="sbtestD1" rule="eight-long"/>
     </schema>
-    <dataNode dataHost="172.100.9.6" database="db3" name="dn6"/>
-    <dataNode dataHost="172.100.9.5" database="db4" name="dn7"/>
-    <dataNode dataHost="172.100.9.6" database="db4" name="dn8"/>
+    <dataNode dataHost="ha_group2" database="db3" name="dn6"/>
+    <dataNode dataHost="ha_group1" database="db4" name="dn7"/>
+    <dataNode dataHost="ha_group2" database="db4" name="dn8"/>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
     """
