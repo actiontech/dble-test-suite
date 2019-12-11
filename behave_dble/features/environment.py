@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 
+from steps.step_check_sql import reset_repl
 from steps.lib.Node import get_ssh, get_sftp
 from steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
@@ -127,6 +128,9 @@ def after_scenario(context, scenario):
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     if not (context.config.stop and scenario.status == "failed") and not "skip_restart" in scenario.tags and not context.userDebug:
         reset_dble(context)
+
+    if "aft_reset_replication" in scenario.tags:
+        reset_repl(context)
 
     logger.debug('after_scenario end: <{0}>'.format(scenario.name))
     logger.debug('#' * 30)
