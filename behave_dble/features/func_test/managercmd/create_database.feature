@@ -7,11 +7,11 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
   Scenario: "create database @@..." for all used datanode #1
      Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
      """
-        <dataNode dataHost="172.100.9.5" database="da1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="da1" name="dn2" />
-        <dataNode dataHost="172.100.9.5" database="da2" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="da2" name="dn4" />
-        <dataNode dataHost="172.100.9.5" database="da3" name="dn5" />
+        <dataNode dataHost="ha_group1" database="da1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="da1" name="dn2" />
+        <dataNode dataHost="ha_group1" database="da2" name="dn3" />
+        <dataNode dataHost="ha_group2" database="da2" name="dn4" />
+        <dataNode dataHost="ha_group1" database="da3" name="dn5" />
     """
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                         | expect   | db     |
@@ -47,11 +47,11 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
   Scenario: "create database @@..." for part of used datanode #2
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
     """
-         <dataNode dataHost="172.100.9.5" database="da11" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="da11" name="dn2" />
-        <dataNode dataHost="172.100.9.5" database="da21" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="da21" name="dn4" />
-        <dataNode dataHost="172.100.9.5" database="da31" name="dn5" />
+         <dataNode dataHost="ha_group1" database="da11" name="dn1" />
+        <dataNode dataHost="ha_group2" database="da11" name="dn2" />
+        <dataNode dataHost="ha_group1" database="da21" name="dn3" />
+        <dataNode dataHost="ha_group2" database="da21" name="dn4" />
+        <dataNode dataHost="ha_group1" database="da31" name="dn5" />
     """
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                          | expect   | db      |
@@ -105,9 +105,9 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
             <table dataNode="dn10,dn11,dn20,dn21" name="test" rule="hash-four" />
         </schema>
 
-         <dataNode dataHost="172.100.9.5" database="da0$0-1" name="dn1$0-1" />
-        <dataNode dataHost="172.100.9.6" database="da0$0-1" name="dn2$0-1" />
-        <dataNode dataHost="172.100.9.5" database="da31" name="dn5" />
+         <dataNode dataHost="ha_group1" database="da0$0-1" name="dn1$0-1" />
+        <dataNode dataHost="ha_group2" database="da0$0-1" name="dn2$0-1" />
+        <dataNode dataHost="ha_group1" database="da31" name="dn5" />
      """
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                          | expect   | db      |
