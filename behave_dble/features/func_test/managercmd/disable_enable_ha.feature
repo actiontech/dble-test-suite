@@ -8,27 +8,44 @@ Feature: test high-availability related commands
   dataHost @@switch name='xxx' master='xxx'
   show @@datasource
 
-  @skip @after_reset_replication
+  @skip
+#  @aft_reset_replication
   Scenario: end to end ha switch test
-    Given a transaction in processing
-    Given execute admin cmd "dataHost @@disable name='master1'"
-    Then check transaction is killed forcely
-    And dataHost config in schema.xml added attribute disabled=true
-    And new query failed for "todo:dataSource is diabled xxxx"
+    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+     """
+     <property name="useOuterHa">true</property>
+    """
+    Given Restart dble in "dble-1" success
+#   a transaction in processing
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                        | expect   | db       |
+        | test | 111111 | conn_0 | False    | drop table if exists sharding_4_t1         | success  |  schema1  |
+        | test | 111111 | conn_0 | False    | create table sharding_4_t1(id int)         | success  |  schema1  |
+        | test | 111111 | conn_0 | False    | begin                                      | success  |  schema1  |
+        | test | 111111 | conn_0 | False    | insert into sharding_4_t1 values(1),(2)    | success  |  schema1  |
+    Then execute admin cmd "dataHost @@disable name='ha_group2'"
+#    check transaction is killed forcely
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                              | expect     | db       |
+        | test | 111111 | conn_0 | False    | select * from sharding_4_t1      | ha command disable datasource|  schema1 |
+    Then check exist xml node "{'tag':'writeHost' 'kv':{'name':'hostM2','disabled':'true'}}" in "schema.xml"
+    Then execute sql in "dble-1" in "user" mode
+        | user | passwd | conn   | toClose  | sql                                        | expect              | db       |
+        | test | 111111 | conn_0 | False    | insert into sharding_4_t1 values(1),(2)    | todo:fill fail msg  |  schema1  |
     Then get resultset of admin cmd "show @@backend" named "show_be_rs"
     Then check resultset "show_be_rs" has not lines with following column values
     """
-| HOST-3      | PORT-4 |
-| 172.100.9.5 | 3306   |
-  """
+    | HOST-3      | PORT-4 |
+    | 172.100.9.5 | 3306   |
+    """
     Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
     Then check resultset "show_ds_rs" has lines with following column values
     """
-| DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5| IDLE | SIZE | EXECUTE | READ_LOAD | WRITE_LOAD | DISABLED |
-| ha_group1       | master1   | 172.100.9.6   | 3306   | W    |      0  |    0 |   50 |       0 |         0 |          0 | true     |
-| dh01       | hostm1   | 172.100.9.5   | 3306   | W    |      1  |    0 |   50 |       1 |         0 |          0 | false    |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   | true        |
+    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      1   | false       |
     """
-    Given add xml segment to node with attribute "{'tag':'writeHost','kv_map':{'host':'master1'}}" in "<schema.xml>"
+    Given add xml segment to node with attribute "{'tag':'writeHost','kv_map':{'host':'hostM2'}}" in "<schema.xml>"
     """
     <readHost host="slave1" user="test" password="111111" url="172.100.9.2:3306" disabled="true"/>
     """
@@ -36,47 +53,58 @@ Feature: test high-availability related commands
     Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
     Then check resultset "show_ds_rs" has lines with following column values
     """
-| DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R  | ACTIVE | IDLE | SIZE | EXECUTE | READ_LOAD | WRITE_LOAD | DISABLED |
-| ha_group1       | master1   | 172.100.9.6   | 3306   | W    |      0 |    0 |   50 |       0 |         0 |          0 | true     |
-| ha_group1       | slave1   | 172.100.9.2   | 3306   | R    |      0 |    0 |   50 |       1 |         0 |          0 | false    |
-| dh01       | hostM1   | 172.100.9.5   | 3306   | W    |      1  |    0 |   50 |       1 |         0 |          0 | false    |
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   |  true       |
+    | ha_group2  | slave1   | 172.100.9.2   | 3306   | R    |      0   |  true       |
+    | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      1   |  false      |
     """
-    Given execute admin cmd "dataHost @@switch name='ha_group1' master='slave1'"
-    Then check host "slave1" in schema.xml is "writeHost"
-    And check host "master1" in schema.xml is "readHost"
+    Given execute admin cmd "dataHost @@switch name='ha_group2' master='slave1'"
+    Then check exist xml node "{'tag':'readHost','kv_map':{'host':'hostM2'}}" in "schema.xml"
+    Then check exist xml node "{'tag':'writeHost','kv_map':{'host':'slave1'}}" in "schema.xml"
     Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
     Then check resultset "show_ds_rs" has lines with following column values
     """
-| DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R  | ACTIVE | IDLE | SIZE | EXECUTE | READ_LOAD | WRITE_LOAD | DISABLED |
-| ha_group1       | master1   | 172.100.9.6   | 3306   | R    |      0 |    0 |   50 |       0 |         0 |          0 | true     |
-| ha_group1       | slave1   | 172.100.9.2   | 3306   | W    |      0 |    0 |   50 |       1 |         0 |          0 | true    |
-"""
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | true        |
+    | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
+    """
     Given execute admin cmd "dataHost @@enable name='ha_group1'"
     Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
     Then check resultset "show_ds_rs" has lines with following column values
     """
-| DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R  | ACTIVE | IDLE | SIZE | EXECUTE | READ_LOAD | WRITE_LOAD | DISABLED |
-| ha_group1       | master1   | 172.100.9.6   | 3306   | R    |      0 |    0 |   50 |       0 |         0 |          0 | false     |
-| ha_group1       | slave1   | 172.100.9.2   | 3306   | W    |      0 |    0 |   50 |       1 |         0 |          0 | false    |
-"""
-    Then check host "slave1" config in schema.xml added attribute "disabled=false"
-    Then check host "master1" config in schema.xml added attribute "disabled=false"
-    Given query a insert/read sql needs to use new master
-    Then check query is send to new master
-    Given execute admin cmd "dataHost @@disable name='ha_group1' node='slave1'"
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | false       |
+    | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | false       |
+    """
+    Then check exist xml node "{'tag':'readHost','kv_map':{'host':'hostM2','disabled':'false'}}" in "schema.xml"
+    Then check exist xml node "{'tag':'writeHost','kv_map':{'host':'slave1','disabled':'false'}}" in "schema.xml"
+#    dble-2 is slave1's server
+    Then execute sql in "dble-2"
+      | user  | passwd    | conn   | toClose | sql                             | expect  | db     |
+      | test  | 111111    | conn_0 | True    | set global general_log=on       | success | db1 |
+      | test  | 111111    | conn_0 | True    | set global log_output='table'   | success | db1 |
+      | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success | db1 |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose  | sql                                        | expect   | db        |
+      | test | 111111 | conn_0 | False    | insert into sharding_4_t1 values(1),(2)    | success  |  schema1  |
+      | test | 111111 | conn_0 | False    | select * from sharding_4_t1                | success  |  schema1  |
+    Then execute sql in "dble-2"
+      | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+      | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'insert into sharding_4_t1 values%' | length{(1)} | db1 |
+    Then execute admin cmd "dataHost @@disable name='ha_group2' node='slave1'"
     Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
     Then check resultset "show_ds_rs" has lines with following column values
     """
-| DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R  | ACTIVE | IDLE | SIZE | EXECUTE | READ_LOAD | WRITE_LOAD | DISABLED |
-| ha_group1       | master1   | 172.100.9.6   | 3306   | R    |      0 |    0 |   50 |       0 |         0 |          0 | true     |
-| ha_group1       | slave1   | 172.100.9.2   | 3306   | W    |      0 |    0 |   50 |       1 |         0 |          0 | false    |
-"""
-    Given execute admin cmd "dataHost @@switch name='ha_group1' master='master1'"
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | false       |
+    | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
+    """
+    Given execute admin cmd "dataHost @@switch name='ha_group1' master='hostM2'"
     Then Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
     Then check resultset "show_ds_rs" has lines with following column values
     """
-| DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R  | ACTIVE | IDLE | SIZE | EXECUTE | READ_LOAD | WRITE_LOAD | DISABLED |
-| ha_group1       | master1   | 172.100.9.6   | 3306   | R    |      0 |    0 |   50 |       0 |         0 |          0 | true     |
-| ha_group1       | slave1   | 172.100.9.2   | 3306   | W    |      0 |    0 |   50 |       1 |         0 |          0 | false    |
-"""
+    | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | true        |
+    | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
+    """
