@@ -157,9 +157,9 @@ Feature: verify hint sql
       </schema>
       <schema name="schema2" dataNode="dn2">
       </schema>
-       <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-       <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-      <dataHost balance="1" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
+       <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+       <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+      <dataHost balance="1" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
                <heartbeat>select user()</heartbeat>
                <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
                   <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
@@ -249,9 +249,9 @@ Feature: verify hint sql
       </schema>
       <schema name="schema2" dataNode="dn2">
       </schema>
-       <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-       <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-      <dataHost balance="2" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
+       <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+       <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+      <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
                <heartbeat>select user()</heartbeat>
                <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
                   <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
@@ -341,9 +341,9 @@ Feature: verify hint sql
       </schema>
       <schema name="schema2" dataNode="dn2">
       </schema>
-       <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-       <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-      <dataHost balance="3" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
+       <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+       <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+      <dataHost balance="3" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
                <heartbeat>select user()</heartbeat>
                <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
                   <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
