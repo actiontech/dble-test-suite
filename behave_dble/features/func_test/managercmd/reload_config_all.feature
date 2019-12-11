@@ -116,16 +116,16 @@ Feature: reload @@config_all base test, not including all cases in testlink
     #4 reload @@config_all -s,  skip test new connections
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
         <heartbeat>select user()</heartbeat>
         <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
         </writeHost>

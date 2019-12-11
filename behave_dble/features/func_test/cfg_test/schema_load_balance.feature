@@ -14,11 +14,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -62,11 +62,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="1" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="1" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -104,11 +104,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -146,11 +146,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
@@ -197,11 +197,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="3" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="3" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -248,11 +248,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -288,11 +288,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -331,11 +331,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
@@ -391,11 +391,11 @@ Feature: test read load balance
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
-        <dataNode dataHost="172.100.9.6" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.6" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="172.100.9.6" slaveThreshold="100" switchType="1">
+        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
+        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
+        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
+        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="0">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
