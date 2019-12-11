@@ -12,7 +12,7 @@ Feature: schema basic config test
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.6" database="db3" name="testdn"/>
+    <dataNode dataHost="ha_group2" database="db3" name="testdn"/>
     """
     Then execute admin cmd "reload @@config_all"
 
@@ -65,8 +65,8 @@ Feature: schema basic config test
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2" name="test" type="global" />
         </schema>
-        <dataNode dataHost="172.100.9.5" database="db$1-2" name="dn$1-2" />
-        <dataHost balance="0" maxCon="100" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="-1">
+        <dataNode dataHost="ha_group1" database="db$1-2" name="dn$1-2" />
+        <dataHost balance="0" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" switchType="-1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
@@ -118,11 +118,11 @@ Feature: schema basic config test
             <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
         </schema>
 
-        <dataNode dataHost="172.100.9.5" database="da1" name="dn1" />
-        <dataNode dataHost="172.100.9.6" database="da1" name="dn2" />
-        <dataNode dataHost="172.100.9.5" database="da2" name="dn3" />
-        <dataNode dataHost="172.100.9.6" database="da2" name="dn4" />
-        <dataNode dataHost="172.100.9.5" database="da3" name="dn5" />
+        <dataNode dataHost="ha_group1" database="da1" name="dn1" />
+        <dataNode dataHost="ha_group2" database="da1" name="dn2" />
+        <dataNode dataHost="ha_group1" database="da2" name="dn3" />
+        <dataNode dataHost="ha_group2" database="da2" name="dn4" />
+        <dataNode dataHost="ha_group1" database="da3" name="dn5" />
     """
     Then execute sql in "mysql-master1"
         | user | passwd | conn   | toClose  | sql                         | expect   | db     |
@@ -176,7 +176,7 @@ Feature: schema basic config test
   Scenario: Multiple datanodes use the same database of the same datahost #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn5" />
     """
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql                   | expect                                                                  | db     |
@@ -188,7 +188,7 @@ Feature: schema basic config test
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn5" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
 	Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
@@ -205,11 +205,11 @@ Feature: schema basic config test
     <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
     <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn-5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn-5" />
     """
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql                   | expect                                                                   | db     |
@@ -221,7 +221,7 @@ Feature: schema basic config test
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn-5" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn-5" />
     """
     Given Restart dble in "dble-1" success
     Given delete the following xml segment
@@ -234,11 +234,11 @@ Feature: schema basic config test
     <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
     <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn_5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn_5" />
     """
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql                   | expect                                                                    | db      |
@@ -250,7 +250,7 @@ Feature: schema basic config test
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn_5" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn_5" />
     """
     Given Restart dble in "dble-1" success
     Given delete the following xml segment
@@ -263,11 +263,11 @@ Feature: schema basic config test
     <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
     <table name="sharding_4_t1" dataNode="dn$1-4" rule="hash-four" />
     </schema>
-    <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
-    <dataNode dataHost="172.100.9.6" database="db$1-1" name="dn2" />
-    <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-    <dataNode dataHost="172.100.9.6" database="db$1-1" name="dn4" />
-    <dataNode dataHost="172.100.9.5" database="db3" name="dn_5" />
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db$1-1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db$1-1" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn_5" />
     """
     Then execute sql in "dble-1" in "admin" mode
         | user  | passwd    | conn   | toClose | sql                   | expect                                                                   | db      |
@@ -279,8 +279,8 @@ Feature: schema basic config test
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataNode dataHost="172.100.9.6" database="db1" name="dn2" />
-    <dataNode dataHost="172.100.9.6" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     """
     Given Restart dble in "dble-1" success
     
@@ -295,11 +295,11 @@ Feature: schema basic config test
      <table dataNode="dn1,dn2,dn3,dn4" name="test-1" type="global" />
      <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
      </schema>
-     <dataNode dataHost="172.100.9.5" database="db_1.1" name="dn1" />
-     <dataNode dataHost="172.100.9.6" database="db$1-1" name="dn2" />
-     <dataNode dataHost="172.100.9.5" database="db.2" name="dn3" />
-     <dataNode dataHost="172.100.9.6" database="db.2" name="dn4" />
-     <dataNode dataHost="172.100.9.5" database="db.3_3" name="dn5" />
+     <dataNode dataHost="ha_group1" database="db_1.1" name="dn1" />
+     <dataNode dataHost="ha_group2" database="db$1-1" name="dn2" />
+     <dataNode dataHost="ha_group1" database="db.2" name="dn3" />
+     <dataNode dataHost="ha_group2" database="db.2" name="dn4" />
+     <dataNode dataHost="ha_group1" database="db.3_3" name="dn5" />
      """
      Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
