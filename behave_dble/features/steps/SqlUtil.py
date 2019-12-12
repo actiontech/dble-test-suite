@@ -14,11 +14,12 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
-from lib.XMLUtil import get_node_attr_by_kv
+from lib.XMLUtil import get_child_node
 from lib.Node import get_node
 from step_reload import get_abs_path
 
-LOGGER = logging.getLogger('steps.reload')
+LOGGER = logging.getLogger('steps')
+console_logger = logging.getLogger('mydebug')
 
 def get_sql(type):
     if type == "read":
@@ -239,12 +240,23 @@ def turn_on_general_log(context, shardings, user, passwd):
     fullpath = get_abs_path(context, "schema.xml")
 
     parentNode = {'tag':'root'}
-    childNode = {'tag':'dataNode', 'attr':['dataHost','database']}
+    dataNode_info = {'tag':'dataNode'}
+    dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
-        childNode['kv_map'] = {'name': sharding}
-        dic = get_node_attr_by_kv(parentNode, childNode, fullpath)
-        ip = dic.get("dataHost")
-        db = dic.get('database')
+        dataNode_info['kv_map'] = {'name': sharding}
+        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+        assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
+        dataNode = dataNodes[0]
+        db = dataNode.get('database')
+        dataHost = dataNode.get("dataHost")
+
+        dataHost_info['kv_map'] = {'name':dataHost}
+        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
+        assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
+        dataHost = dataHosts[0]
+        ip_port = dataHost.find("writeHost").get("url")
+        ip=ip_port.split(":")[0]
+
         node = get_node(context.mysqls, ip)
         conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
 
@@ -283,13 +295,24 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
 
     fullpath = get_abs_path(context, "schema.xml")
 
-    parentNode = {'tag': 'root'}
-    childNode = {'tag': 'dataNode', 'attr': ['dataHost', 'database']}
+    parentNode = {'tag':'root'}
+    dataNode_info = {'tag':'dataNode'}
+    dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
-        childNode['kv_map'] = {'name': sharding}
-        dic = get_node_attr_by_kv(parentNode, childNode, fullpath)
-        ip = dic.get("dataHost")
-        db = dic.get('database')
+        dataNode_info['kv_map'] = {'name': sharding}
+        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+        assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
+        dataNode = dataNodes[0]
+        db = dataNode.get('database')
+        dataHost = dataNode.get("dataHost")
+
+        dataHost_info['kv_map'] = {'name':dataHost}
+        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
+        assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
+        dataHost = dataHosts[0]
+        ip_port = dataHost.find("writeHost").get("url")
+        ip=ip_port.split(":")[0]
+
         node = get_node(context.mysqls, ip)
         conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
 
