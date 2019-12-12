@@ -9,7 +9,7 @@ import logging
 import os
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh
+from lib.Node import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *
@@ -385,3 +385,72 @@ def get_result(context, sql):
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
+
+@When('sysbench_cmd parameters(dbName: "{dbName}" mysqlName: "{mysqlName}" num: "{num}" tableCount: "{tableCount}" threadCount: "{threadCount}" intervalCount: "{intervalCount}" cmd: "{cmd}")')
+def step_impl(context,dbName,mysqlName,num,tableCount,threadCount,intervalCount,cmd):
+    mysql_node = get_node(context.mysqls,mysqlName)
+    ip = mysql_node.ip
+    port = mysql_node.mysql_port
+
+    command = "sysbench /usr/share/sysbench/oltp_write_only.lua --mysql-host="+str(ip)+"  --mysql-port="+str(port)+\
+              " --mysql-user=test --mysql-password=111111 --mysql-db="+str(dbName)+" --tables="+str(tableCount)+\
+              " --table_size="+str(num)+" --report-interval="+str(intervalCount)+" --threads="+str(threadCount)+" --time=120"+" "+str(cmd)
+
+    status = os.system(command)
+    context.logger.info("sysbench cmd: {0}  status:{1}".format(command,status))
+    assert status==0,"sysbench err"
+
+@Then('dump database "{dbname}" from mysql "{mysqlName}"')
+def step_impl(context,dbname,mysqlName):
+    mysql_node = get_node(context.mysqls,mysqlName)
+    ip = mysql_node.ip
+    port = mysql_node.mysql_port
+    rmdir_cmd = "rm -rf /opt/dump/split"
+    mkdir_cmd = "mkdir -p /opt/dump/split"
+    ssh = get_ssh(context.dbles, "dble-1")
+    ssh.exec_command(rmdir_cmd)
+    ssh.exec_command(mkdir_cmd)
+    command ="mysqldump --set-gtid-purged=off -h{0} -P{1} -utest -B {2} > /opt/dump/dump.sql".format(ip,port,dbname,dir)
+    ssh.exec_command(command)
+
+@Then('move dump file to mysql node by "{rs_name}" and execute')
+def step_impl(context,rs_name):
+    master1_dump = []
+    master2_dump = []
+    rs = getattr(context,rs_name)
+    context.logger.info("rs:{0}".format(rs))
+    filenames = get_file(context,"dble-1","/opt/dump/split/")
+    context.logger.info("filenames:{0}".format(filenames))
+    for node_info in rs:
+        node = node_info[0]
+        node_ip = node_info[1].split("/")[0]
+        context.logger.info("node:{0} node_ip:{1}".format(node,node_ip))
+        for filename in filenames:
+            if node in filename:
+                ssh_mysql = get_ssh(context.mysqls,node_ip)
+                ssh_mysql.exec_command("yum install -y sshpass")
+                ssh_mysql.exec_command("mkdir -p /opt/dump/split/")
+                command = "sshpass -p {1} scp root@172.100.9.1:/opt/dump/split/{0} /opt/dump/split/ ".format(filename,context.cfg_sys['ssh_password'])
+                if node_ip == "172.100.9.5":
+                    master1_dump.append(filename)
+                else:
+                    master2_dump.append(filename)
+                ssh_mysql.exec_command(command)
+                ssh_mysql.exec_command("mysql < /opt/dump/split/{0}".format(filename))
+                context.logger.info("move dump command:{0}".format(command))
+    context.logger.info("master1_dump:{0}  master2_dump:{1}".format(master1_dump,master2_dump))
+
+@Then('assert value of "{rs_name}" is "{expect}"')
+def step_impl(context,rs_name,expect):
+        value = getattr(context,rs_name)
+        assert int(value[0][0]) == int(expect),"expect {0}, but is {1}".format(expect,value[0][0])
+
+def get_file(context,host,file_dir):
+    ssh = get_ssh(context.dbles,host)
+    ssh.exec_command("yum install -y sshpass")
+    os.system('echo "sshpass" | passwd --stdin root')
+    os.system("rm -rf /opt/dump")
+    command = "sshpass -p sshpass scp -r /opt/dump/ root@172.100.9.8:/opt/"
+    ssh.exec_command(command)
+    filenames = os.listdir(file_dir)
+    return filenames
