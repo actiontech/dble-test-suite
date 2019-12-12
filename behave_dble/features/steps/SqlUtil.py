@@ -14,7 +14,7 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
-from lib.XMLUtil import get_child_node
+from lib.XMLUtil import get_child_nodes
 from lib.Node import get_node
 from step_reload import get_abs_path
 
@@ -244,14 +244,14 @@ def turn_on_general_log(context, shardings, user, passwd):
     dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
         dataNode_info['kv_map'] = {'name': sharding}
-        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+        dataNodes = get_child_nodes(parentNode, dataNode_info, fullpath)
         assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
         dataNode = dataNodes[0]
         db = dataNode.get('database')
         dataHost = dataNode.get("dataHost")
 
         dataHost_info['kv_map'] = {'name':dataHost}
-        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
+        dataHosts=get_child_nodes(parentNode, dataHost_info, fullpath)
         assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
         dataHost = dataHosts[0]
         ip_port = dataHost.find("writeHost").get("url")
@@ -300,14 +300,14 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
     dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
         dataNode_info['kv_map'] = {'name': sharding}
-        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+        dataNodes = get_child_nodes(parentNode, dataNode_info, fullpath)
         assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
         dataNode = dataNodes[0]
         db = dataNode.get('database')
         dataHost = dataNode.get("dataHost")
 
         dataHost_info['kv_map'] = {'name':dataHost}
-        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
+        dataHosts=get_child_nodes(parentNode, dataHost_info, fullpath)
         assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
         dataHost = dataHosts[0]
         ip_port = dataHost.find("writeHost").get("url")
