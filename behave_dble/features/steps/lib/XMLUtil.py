@@ -29,29 +29,24 @@ def get_node_by_keyvalue(nodelist, kv_map):
             result_nodes.append(node)
     return result_nodes
 
-
-def get_node_attr_by_kv(parentNode, childNode, file):
+# get_child_node: to get a node featured childNode_info, and parent node is parentNode from the file
+# parentNode: target node's parent node
+# childNode_info: target node's feature, tag is a must feature, kv_map is optional feature, eg:{'tag':'dataHost','kv_map':{'name': 'ha_group1','balance':'0'}}
+# file: the file node in
+def get_child_node(parentNode,childNode_info, file):
     tree = ET.parse(file)
     parentNodes = get_parent_nodes_from_dic(tree, parentNode)
-    childTag = childNode.get("tag")
-    childAttr = childNode.get("attr")
+    childTag = childNode_info.get("tag")
 
     targets = None
     for node in parentNodes:
         children = node.findall(childTag)
-        targets = get_node_by_keyvalue(children, childNode.get("kv_map"))
+        targets = get_node_by_keyvalue(children, childNode_info.get("kv_map"))
         if len(targets) == 1: break
 
     assert targets, "get node attribute fail, no targets node found"
 
-    target = targets[0]
-    dic = {}
-    if isinstance(childAttr, list):  # get multi-attr
-        for attr in childAttr:
-            dic[attr] = target.get(attr)
-    else:  # get single attr
-        dic[childAttr] = target.get(childAttr)
-    return dic
+    return targets
 
 # pos_kv_map stores mainly about the parent node info,tag is parent node tag, kv_map stores parent node attribute and values
 # pos_kv_map,example {'tag':'writeHost','kv_map':{'host':'hostM2'}}
@@ -171,7 +166,6 @@ def del_node_by_name(node, child):
             nchild_name = nchild_name.lower()
         if nchild_name == name_to_del:
             node.remove(nchild)
-
 
 def get_Insert_Idx(node, child):
     existsChildren = node.findall(child.tag)
