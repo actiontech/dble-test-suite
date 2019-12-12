@@ -6,19 +6,22 @@
 # **********************
 from lxml import etree as ET
 from behave import *
-import lib.XMLUtil
-from step_reload import get_abs_path
 
+from lib.Node import get_ssh
+from lib.XMLUtil import get_node_by_keyvalue
 
-@Then('check exist xml node "{node}" in "{targetXml}"')
-def step_impl(context, node, targetXml):
-    fullpath = get_abs_path(context, targetXml)
+@Then('check exist xml node "{node}" in "{target_file}" in host "{host_name}"')
+def step_impl(context, node, target_file,host_name):
+    sshClient = get_ssh(context.dbles,host_name)
+    cmd = "cat {0}".format(target_file)
+    rc, sto, ste = sshClient.exec_command(cmd)
 
-    ET.register_namespace("dble", "http://dble.cloud/")
-    tree = ET.parse(fullpath)
+    nodeXml = eval(node)
 
-    root = tree.getroot()
-    targetNodes = root.findAll(node.get("tag"))
-    targetNodes_filtered= lib.XMLUtil.get_node_by_keyvalue(targetNodes, node.get("kv"))
-    assert len(targetNodes_filtered)>0, "can't find {0} in xml {1}".format(node, targetXml)
+    tree = ET.fromstring(sto)
+
+    tag = nodeXml.get("tag")
+    targetNodes = tree.findall(tag)
+    targetNodes_filtered= get_node_by_keyvalue(targetNodes, nodeXml.get("kv_map"))
+    assert len(targetNodes_filtered)>0, "can't find {0} in xml {1}".format(node, target_file)
 
