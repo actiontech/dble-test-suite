@@ -29,13 +29,16 @@ def get_node_by_keyvalue(nodelist, kv_map):
             result_nodes.append(node)
     return result_nodes
 
-# get_child_node: to get a node featured childNode_info, and parent node is parentNode from the file
-# parentNode: target node's parent node
-# childNode_info: target node's feature, tag is a must feature, kv_map is optional feature, eg:{'tag':'dataHost','kv_map':{'name': 'ha_group1','balance':'0'}}
-# file: the file node in
-def get_child_node(parentNode,childNode_info, file):
+def get_child_nodes(parentNode, childNode_info, file):
+    """
+    to get a node featured childNode_info, and parent node is parentNode from the file
+    :param parentNode: target node's parent node
+    :param childNode_info: target node's feature, tag is a must feature, kv_map is optional feature, eg:{'tag':'dataHost','kv_map':{'name': 'ha_group1','balance':'0'}}
+    :param file: the xml file
+    :return:
+    """
     tree = ET.parse(file)
-    parentNodes = get_parent_nodes_from_dic(tree, parentNode)
+    parentNodes = get_parent_nodes(tree, parentNode)
     childTag = childNode_info.get("tag")
 
     targets = None
@@ -48,62 +51,64 @@ def get_child_node(parentNode,childNode_info, file):
 
     return targets
 
-# pos_kv_map stores mainly about the parent node info,tag is parent node tag, kv_map stores parent node attribute and values
-# pos_kv_map,example {'tag':'writeHost','kv_map':{'host':'hostM2'}}
-def get_parent_nodes_from_dic(tree, pos_kv_map):
+def get_parent_nodes(tree, pos_kv_map):
+    """
+    :param tree:
+    :param pos_kv_map: stores mainly about the parent node info,tag is parent node tag, kv_map stores parent node attribute and values,example {'tag':'writeHost','kv_map':{'host':'hostM2'}}
+    :return: parent nodes
+    """
     parentTag = pos_kv_map.get("tag")
     if parentTag.lower() == "root":
         parentNodes = [tree.getroot()]
     else:
-        tagNodes = tree.findall(parentTag)
-        parentNodes = get_node_by_keyvalue(tagNodes, pos_kv_map.get("kv_map"))
-    assert len(parentNodes) > 0, "cant not find parent tag:{0} in file {1} to insert child node".format(
-        pos_kv_map.get("tag"), file)
+        parentNodesRaw = tree.findall(parentTag)
+        parentNodes = get_node_by_keyvalue(parentNodesRaw, pos_kv_map.get("kv_map"))
+    assert len(parentNodes) > 0, "cant not find parent tag:{0} to insert child node".format(
+        pos_kv_map.get("tag"))
     return parentNodes
-
 
 def get_xml_from_str(str):
     return ET.fromstring("<tmproot>" + str + "\n</tmproot>")
 
 
-def add_child_in_text(file, pos_kv_map, childNodeInText):
-    '''file:指定的xml文件的一个节点添加子节点
-       pos_kv_map: 要添加节点的定位信息，包括父节点，前节点，插入位置等，
-       格式举例： {'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple
-       tag:父节点,节点
-       kv_map:父节点的节点属性信息，如name:value
-       prev:要添加的节点点的前一个节点名称
-       childNodeInText: 子节点'''
-    childNode = get_xml_from_str(childNodeInText)
-    add_child_in_xml(file, pos_kv_map, childNode)
+def add_child_in_string(file, pos_kv_map, childNodeInString):
+    """
+    add child to file or to file content in memory
+    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add,childIdx is index for the node to add
+    :param childNodeInString: child node xml in string format
+    :param file_local: xml file name in local
+    :param file_content: xml content
+    :return: if file_local is not None, return none, elif file_content is not None, return xmlStr
+    """
+    childNode = get_xml_from_str(childNodeInString)
+    return add_child_in_xml(file, pos_kv_map, childNode)
 
 def add_child_in_xml(file, pos_kv_map, childNode):
     ET.register_namespace("dble", "http://dble.cloud/")
     tree = ET.parse(file)
 
-    parentNodes = get_parent_nodes_from_dic(tree, pos_kv_map)
-    assert len(parentNodes) == 1, "expect there exists only 1 parent node, but get more"
-    parentNode = parentNodes[0]
+    parentNodes = get_parent_nodes(tree, pos_kv_map)
 
     prevTag = pos_kv_map.get("prev", None)
+    childIdx = pos_kv_map.get("childIdx", None)
+    # add child nodes, delete the same name ones if exists
+    idx = childIdx
+    for parentNode in parentNodes:
+        if childIdx is None and prevTag is not None:
+            firstPrevNode = parentNode.find(prevTag)
+            firstPrevIdx = parentNode.index(firstPrevNode)
+            prevNodes = parentNode.findall(prevTag)
+            idx = firstPrevIdx + len(prevNodes)
 
-    #delete the same name ones if exists
-    for child in childNode:#delete the same name nodes
-        del_node_by_name(parentNode, child)
-
-    #set the insert idx, if prevTag is assigned, index is calculated by prevTag idx,else calculated by the same child tag index
-    if prevTag is None:
-        idx = get_Insert_Idx(parentNode, childNode[0])
-    else:
-        firstPrevNode = parentNode.find(prevTag)
-        firstPrevIdx = parentNode.index(firstPrevNode)
-        prevNodes = parentNode.findall(prevTag)
-        idx = firstPrevIdx + len(prevNodes)
-
-    # add child nodes
-    for child in childNode:
-        parentNode.insert(idx, child)
-        idx = idx + 1
+        k = 0
+        for child in childNode:
+            del_node_by_name(parentNode, child)
+            if prevTag is None and childIdx is None:
+                idx = get_Insert_Idx(parentNode, child)
+                if idx == 0:
+                    idx = k
+            parentNode.insert(idx, child)
+            k = k + idx + 1
 
     doctype = ""
     if file.find('rule.xml') > -1:
@@ -151,8 +156,13 @@ def delete_child_node(file, kv_child, kv_parent):
         f.writelines(xmlstr)
 
 
-# delete the same name node with the given child
 def del_node_by_name(node, child):
+    """
+    delete the same name node with the given child
+    :param node: parent node
+    :param child: featured child node which gives node tag and name by which to delete
+    :return:
+    """
     name_to_del = child.get('name')
     if name_to_del is not None:
         name_to_del = name_to_del.lower()
@@ -218,26 +228,31 @@ if __name__ == "__main__":
             <property name="sPartionDay">10</property>
         </function>
         """
-        add_child_in_text('../../../dble_conf/template_bk/rule.xml', {"tag": "root", "kv_map": {}}, seg)
+        add_child_in_string('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map": {}}, seg)
     elif command == "schema":
-        seg ="""
-        <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>"""
+        seg = """
+<dataHost balance="0" maxCon="100" minCon="10" name="test-dataHost" slaveThreshold="100" switchType="1">
+<heartbeat>select user()</heartbeat>
+<writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+</writeHost>
+</dataHost>
+        """
 
-        fullpath = "../../../dble_conf/template_bk/schema.xml"
+        fullpath = "/init_assets/dble-test-suite/behave_dble/dble_conf/template/schema.xml"
 
-        # add_child_in_text(fullpath, {'tag':'dataHost','kv_map':{'name':"ha_group2"}}, seg)
-
-        parentNode = {'tag': 'root'}
-        dataNode_info = {'tag': 'dataNode', 'kv_map': {'name': u'dn2'}}
-        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
-
+        add_child_in_string(fullpath, {'tag': 'root', 'prev': "dataHost"}, seg)
     elif command == "server":
         seg = """
-      <system>
-          <property name="maxResultSet">1024</property>
-      </system>
+      <firewall>
+          <whitehost>
+              <host host="10.186.23.68" user="test"/>
+              <host host="10.186.23.68" user="root"/>
+              <host host="172.100.9.253" user="root"/>
+              <host host="172.100.9.253" user="test"/>
+          </whitehost>
+      </firewall>
             """
-        add_child_in_text('../../../dble_conf/template_bk/server.xml', {"tag": "root"}, seg)
+        add_child_in_string('../../../dble_conf/conf_template/server.xml', {"tag": "root", "prev": 'system'}, seg)
     elif command == "delete":
         file = "dble_conf/conf_template/server.xml"
         kv_child = eval("{'tag':'user','kv_map':{'name':'mnger'}}")
