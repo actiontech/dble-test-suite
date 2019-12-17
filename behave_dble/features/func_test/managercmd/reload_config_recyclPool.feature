@@ -1,0 +1,64 @@
+# -*- coding=utf-8 -*-
+# Copyright (C) 2016-2019 ActionTech.
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+# Created by yangxiaoliang at 2019/12/17
+
+Feature: reload @@config_all and recycl pool
+
+  Scenario: modifiy datahost url and execute reload @@config_all #1
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                             | expect  | db      |
+      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1              | success | schema1 |
+      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int)              | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                           | success | schema1 |
+      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
+    Then execute admin cmd "reload @@config_all"
+    Then get resultset of admin cmd "show @@backend" named "rs_A"
+    Then check resultset "rs_A" has lines with following column values
+      | HOST-3      |
+      | 172.100.9.5 |
+      | 172.100.9.6 |
+    Then check resultset "rs_A" has not lines with following column values
+      | HOST-3      |
+      | 172.100.9.4 |
+
+    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    """
+    s/172.100.9.6/172.100.9.4/g
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then get resultset of admin cmd "show @@backend" named "rs_B"
+    Then check resultset "rs_B" has lines with following column values
+      | HOST-3      |
+      | 172.100.9.4 |
+      | 172.100.9.5 |
+      | 172.100.9.6 |
+
+    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    """
+    s/172.100.9.4/172.100.9.1/g
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then get resultset of admin cmd "show @@backend" named "rs_C"
+    Then check resultset "rs_C" has lines with following column values
+      | HOST-3      |
+      | 172.100.9.1 |
+      | 172.100.9.5 |
+      | 172.100.9.6 |
+    Then check resultset "rs_C" has not lines with following column values
+      | HOST-3      |
+      | 172.100.9.4 |
+
+    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    """
+    s/172.100.9.5/172.100.9.6/g
+    """
+    Then execute admin cmd "reload @@config_all -f"
+    Then get resultset of admin cmd "show @@backend" named "rs_D"
+    Then check resultset "rs_D" has lines with following column values
+      | HOST-3      |
+      | 172.100.9.6 |
+      | 172.100.9.1 |
+    Then check resultset "rs_D" has not lines with following column values
+      | HOST-3      |
+      | 172.100.9.5 |
