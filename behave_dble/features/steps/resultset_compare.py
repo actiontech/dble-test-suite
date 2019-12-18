@@ -67,7 +67,7 @@ def step_impl(context, rs_name):
                 real_col = rs_row[col_idx]
                 isFound = unicode(real_col) == unicode(expect_col)
                 if not isFound: break
-        assert not isFound, "expect line not in resultset {0}".format(rs_name)
+            assert not isFound, "expect line not in resultset {0}".format(rs_name)
         context.logger.info("expect row:{0}, not found".format(expect_row))
 
 #once found expect, break loop
