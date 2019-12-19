@@ -108,13 +108,10 @@ def step_impl(context,fileName,hostname,dir):
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
     else :
-        stop_mysql(context, hostname)
-        time.sleep(10)
         ssh = get_ssh(context.mysqls, hostname)
         targetFile = "{0}/{1}".format(dir,fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
-        start_mysql(context,hostname)
     assert_that(len(stderr)==0, 'update file content wtih:{0}, got err:{1}'.format(cmd,stderr))
 
 def merge_cmd_strings(context,text,targetFile):
