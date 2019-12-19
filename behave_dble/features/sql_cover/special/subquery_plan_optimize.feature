@@ -26,6 +26,10 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given restart mysql in "mysql-slave1"
+    Given restart mysql in "mysql-slave2"
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="table_a" dataNode="dn1,dn2" rule="hash-two" />
@@ -63,6 +67,10 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 0
      """
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given restart mysql in "mysql-slave1"
+    Given restart mysql in "mysql-slave2"
 
   @regression
   Scenario: check Global tables subquery execute plan optimized #2
