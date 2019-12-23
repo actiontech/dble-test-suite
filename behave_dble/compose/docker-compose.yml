@@ -121,6 +121,29 @@ services:
               ipv4_address: 172.100.9.6
         dns: 114.114.114.114
         working_dir: /opt
+
+    mysql8.0:
+      image: docker.io/mysql:8.0.13
+      container_name: mysql8.0
+      hostname: mysql8.0
+      privileged: true
+      stdin_open: true
+      command:
+        --default-authentication-plugin=caching_sha2_password
+      tty: true
+      environment:
+        MYSQL_ROOT_PASSWORD: 111111
+      volumes:
+        - /opt/mysql-master2:/init_assets
+        - /opt/share:/share
+      ports:
+        - "7147:3306"
+        - "7157:22"
+      networks:
+        default:
+          ipv4_address: 172.100.9.9
+      dns: 114.114.114.114
+      working_dir: /opt
     c-plus-driver:
         image: dble/dble_test_driver:latest
         container_name: driver-test
