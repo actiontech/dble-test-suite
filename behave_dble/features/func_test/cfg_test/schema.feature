@@ -7,7 +7,7 @@ Feature: schema basic config test
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" >
-            <childTable name="child_table" primaryKey="id" joinKey="id" parentKey="id" />
+            <childTable name="child_table" cacheKey="id" joinKey="id" parentKey="id" />
         </table>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
