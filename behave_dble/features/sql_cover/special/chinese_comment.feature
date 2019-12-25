@@ -20,7 +20,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="hash-four" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" rule="hash-four" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
