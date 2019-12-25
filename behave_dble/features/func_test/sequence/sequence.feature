@@ -14,7 +14,7 @@ Feature: Functional testing of global sequences
 #  4.multiple thread insert values to sequenceColumn, the vlaues should be unique, and insert time should be tolerable(<1s)
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" autoIncrement="true" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -43,8 +43,8 @@ Feature: Functional testing of global sequences
         | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | success | schema1 |
         | test | 111111 | conn_0 | False   | drop table if exists test_auto                       | success | schema1 |
         | test | 111111 | conn_0 | False   | create table test_auto(idd bigint, name varchar(20)) | success | schema1 |
-        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has primaryKey or incrementColumn | schema1 |
-        | test | 111111 | conn_0 | True    | insert into test_auto(name) values('abc')            | please make sure your table structure has primaryKey or incrementColumn | schema1 |
+        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has cacheKey or incrementColumn | schema1 |
+        | test | 111111 | conn_0 | True    | insert into test_auto(name) values('abc')            | please make sure your table structure has cacheKey or incrementColumn | schema1 |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                            | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists test_auto                                                 | success           | schema1 |
@@ -74,7 +74,7 @@ Feature: Functional testing of global sequences
 
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" autoIncrement="true" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -98,8 +98,8 @@ Feature: Functional testing of global sequences
         | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | success | schema1 |
         | test | 111111 | conn_0 | False   | drop table if exists test_auto                       | success | schema1 |
         | test | 111111 | conn_0 | False   | create table test_auto(idd bigint, name varchar(20)) | success | schema1 |
-        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has primaryKey or incrementColumn | schema1 |
-        | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | please make sure your table structure has primaryKey or incrementColumn | schema1 |
+        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has cacheKey or incrementColumn | schema1 |
+        | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | please make sure your table structure has cacheKey or incrementColumn | schema1 |
         | test | 111111 | conn_0 | True    | drop table if exists test_auto                       | success | schema1 |
     #case 4: int type for current type sequence type is err, expect bigint
     Then execute sql in "dble-1" in "user" mode
@@ -132,7 +132,7 @@ Feature: Functional testing of global sequences
   #  5.START_TIME+69 years<the time of dble start
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" autoIncrement="true" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
