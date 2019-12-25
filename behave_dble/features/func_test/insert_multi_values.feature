@@ -6,7 +6,7 @@ Feature:  insert into values (),(),()... to verify the max rows can be inserted
     Scenario:
         Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
         """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="id" rule="fixed_string_rule" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" rule="fixed_string_rule" />
         """
         Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
         """
