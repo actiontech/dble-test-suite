@@ -23,7 +23,7 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True     | explain select * from sharding_4_t1,sharding_3_t1         | hasNoStr{LIMIT}    | schema1 |
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="table_a" dataNode="dn1,dn2" rule="hash-two" primaryKey="id"/>
+        <table name="table_a" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
         <table name="table_b" dataNode="dn1,dn2" rule="hash-two" needAddLimit="false"/>
     """
     Then execute admin cmd "reload @@config_all"

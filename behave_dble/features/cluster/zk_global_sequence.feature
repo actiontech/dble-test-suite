@@ -10,7 +10,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Given reset dble registered nodes in zk
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id" autoIncrement="true"/>
+        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id" autoIncrement="true"/>
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
