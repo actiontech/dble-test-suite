@@ -153,11 +153,11 @@ Feature: test some import nodes attr in schema.xml
     """
 
   @CRITICAL
-  Scenario: select (colomn is not primarykey set in schema.xml) from table -- primarykey cache invalid
-             select (contains column which is set as primarykey in schema.xml) from table -- primarykey cache  effective #6
+  Scenario: select (colomn is not cacheKey set in schema.xml) from table -- cacheKey cache invalid
+             select (contains column which is set as cacheKey in schema.xml) from table -- cacheKey cache  effective #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="name" rule="hash-two" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="name" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -177,10 +177,10 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
   @CRITICAL
-  Scenario: primayKey cache effective when attribute "primaryKey" be set #7
+  Scenario: primayKey cache effective when attribute "cacheKey" be set #7
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="k" rule="hash-four" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="k" rule="hash-four" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -213,7 +213,7 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache                                                    | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,1L,1L,4L,2018')}| |
 
   @NORMAL
-  Scenario: primayKey cache invalid when attribute "primaryKey" not be set #8
+  Scenario: primayKey cache invalid when attribute "cacheKey" not be set #8
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4"  rule="hash-two" />

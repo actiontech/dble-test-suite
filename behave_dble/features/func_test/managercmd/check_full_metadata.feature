@@ -182,12 +182,12 @@ Feature: test "check full @@metadata...'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test4" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
+      <table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test4" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
       <table name="test5" dataNode="dn1,dn2,dn3,dn4" type="global"/>
-      <table name="test6" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
+      <table name="test6" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -293,8 +293,8 @@ Feature: test "check full @@metadata...'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test_two" dataNode="dn2,dn4" rule="hash-two" primaryKey="id"/>
+      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test_two" dataNode="dn2,dn4" rule="hash-two" cacheKey="id"/>
     </schema>
 
     <dataHost balance="3" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="-1" switchType="1">
@@ -358,7 +358,7 @@ Feature: test "check full @@metadata...'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
+      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -404,7 +404,7 @@ Feature: test "check full @@metadata...'"
       """
       <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
       <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
-      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="R_REGIONKEY" autoIncrement="true"/>
+      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="R_REGIONKEY" autoIncrement="true"/>
       </schema>
       <dataNode name="dn1" dataHost="host1" database="db1"/>
       <dataNode name="dn2" dataHost="host1" database="db2"/>
