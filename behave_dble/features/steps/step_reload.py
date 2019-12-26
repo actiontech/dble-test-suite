@@ -65,8 +65,13 @@ def step_impl(context, adminsql, rs_name):
     setattr(context, rs_name, result)
 
 @Then('get resultset of user cmd "{sql}" named "{rs_name}"')
-def step_impl(context, sql, rs_name):
-    dble_conn = get_dble_conn(context)
+@Then('get resultset of user cmd "{sql}" named "{rs_name}" with connection "{conn_type}"')
+def step_impl(context, sql, rs_name, conn_type):
+    if hasattr(context, conn_type):
+        dble_conn = getattr(context, conn_type)
+        LOGGER.debug("get dble_conn: {0}".format(conn_type))
+    else:
+        dble_conn = get_dble_conn(context)
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
