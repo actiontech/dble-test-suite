@@ -109,8 +109,8 @@ Feature: test some import nodes attr in schema.xml
     | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
     | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | schema1 |
     | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | schema1 |
+    Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
-    Then create "16" conn while maxCon="15" finally close all conn
     """
     error totally whack
     """
