@@ -132,12 +132,12 @@ def after_scenario(context, scenario):
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
 
-    logger.debug('after_scenario end: <{0}>'.format(scenario.name))
-    logger.debug('#' * 30)
+    logger.info('after_scenario end: <{0}>'.format(scenario.name))
+    logger.info('#' * 30)
 def before_step(context, step):
-    logger.debug('*' * 30)
-    logger.debug('step start: <{0}>'.format(step.name))
+    logger.info('*' * 30)
+    logger.info('step start: <{0}>'.format(step.name))
 
 def after_step(context, step):
-    logger.debug('step end: <{0}>, status:{1}'.format(step.name, step.status))
-    logger.debug('*' * 30)
+    logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
+    logger.info('*' * 30)
