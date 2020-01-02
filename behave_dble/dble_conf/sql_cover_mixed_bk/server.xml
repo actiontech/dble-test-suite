@@ -2,10 +2,7 @@
 <!DOCTYPE dble:server SYSTEM "server.dtd">
 <dble:server xmlns:dble="http://dble.cloud/">
 	<system>
-		<property name="useGlobleTableCheck">1</property>
-		<!--<property name="useExtensions">true</property>-->
 		<property name="serverPort">8066</property>
-
 	</system>
 	
 	<user name="test">

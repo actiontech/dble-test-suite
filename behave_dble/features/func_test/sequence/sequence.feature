@@ -14,7 +14,7 @@ Feature: Functional testing of global sequences
 #  4.multiple thread insert values to sequenceColumn, the vlaues should be unique, and insert time should be tolerable(<1s)
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -43,8 +43,8 @@ Feature: Functional testing of global sequences
         | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | success | schema1 |
         | test | 111111 | conn_0 | False   | drop table if exists test_auto                       | success | schema1 |
         | test | 111111 | conn_0 | False   | create table test_auto(idd bigint, name varchar(20)) | success | schema1 |
-        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has cacheKey or incrementColumn | schema1 |
-        | test | 111111 | conn_0 | True    | insert into test_auto(name) values('abc')            | please make sure your table structure has cacheKey or incrementColumn | schema1 |
+        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has incrementColumn | schema1 |
+        | test | 111111 | conn_0 | True    | insert into test_auto(name) values('abc')            | please make sure your table structure has incrementColumn | schema1 |
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose | sql                                                                            | expect            | db     |
         | test | 111111 | conn_0 | False   | drop table if exists test_auto                                                 | success           | schema1 |
@@ -74,7 +74,7 @@ Feature: Functional testing of global sequences
 
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -98,8 +98,8 @@ Feature: Functional testing of global sequences
         | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | success | schema1 |
         | test | 111111 | conn_0 | False   | drop table if exists test_auto                       | success | schema1 |
         | test | 111111 | conn_0 | False   | create table test_auto(idd bigint, name varchar(20)) | success | schema1 |
-        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has cacheKey or incrementColumn | schema1 |
-        | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | please make sure your table structure has cacheKey or incrementColumn | schema1 |
+        | test | 111111 | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has incrementColumn | schema1 |
+        | test | 111111 | conn_0 | False   | insert into test_auto(name) values('abc')            | please make sure your table structure has incrementColumn | schema1 |
         | test | 111111 | conn_0 | True    | drop table if exists test_auto                       | success | schema1 |
     #case 4: int type for current type sequence type is err, expect bigint
     Then execute sql in "dble-1" in "user" mode
@@ -132,7 +132,7 @@ Feature: Functional testing of global sequences
   #  5.START_TIME+69 years<the time of dble start
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -141,7 +141,7 @@ Feature: Functional testing of global sequences
     #case 1: Verify the illegal value of the WORKID
      Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/WORKID=01/WORKID=32/
+      s/WORKID=.*/WORKID=32/
     """
     Then restart dble in "dble-1" failed for
     """
@@ -149,7 +149,7 @@ Feature: Functional testing of global sequences
     """
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/WORKID=32/WORKID=-1/
+      s/WORKID=.*/WORKID=-1/
     """
     Then restart dble in "dble-1" failed for
     """
@@ -157,13 +157,13 @@ Feature: Functional testing of global sequences
     """
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/WORKID=-1/WORKID=01/
+      s/WORKID=.*/WORKID=01/
     """
     Given Restart dble in "dble-1" success
     #case 2: Verify the illegal value of the DATAACENTERID
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/DATAACENTERID=01/DATAACENTERID=32/
+      s/DATAACENTERID=.*/DATAACENTERID=32/
     """
     Then restart dble in "dble-1" failed for
     """
@@ -171,7 +171,7 @@ Feature: Functional testing of global sequences
     """
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/DATAACENTERID=32/DATAACENTERID=-1/
+      s/DATAACENTERID=.*/DATAACENTERID=-1/
     """
     Then restart dble in "dble-1" failed for
     """
@@ -179,14 +179,13 @@ Feature: Functional testing of global sequences
     """
      Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/DATAACENTERID=-1/DATAACENTERID=01/
+      s/DATAACENTERID=.*/DATAACENTERID=01/
     """
     Given Restart dble in "dble-1" success
     #case 3: Verify the illegal value of the START_TIME
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s/#START_TIME/START_TIME/
-      s#2010-11-04#2010/11/04#
+      s/[#]*START_TIME=.* /START_TIME=2010\/11\/04 /
     """
     Given Restart dble in "dble-1" success
     Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
@@ -195,13 +194,13 @@ Feature: Functional testing of global sequences
     """
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
      """
-      s#2010/11/04#2010-11-04#
+      s/[#]*START_TIME=.* /START_TIME=2010-11-04 /
     """
     Given Restart dble in "dble-1" success
     #case 4: START_TIME>the time of dble start
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
-     """
-      s#2010-11-04#2190-10-01#
+    """
+    s/[#]*START_TIME=.* /START_TIME=2190-10-01 /
     """
     Given Restart dble in "dble-1" success
     Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
@@ -210,8 +209,8 @@ Feature: Functional testing of global sequences
     """
     #case 5: START_TIME+69 years<the time of dble start
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
-     """
-      s#2190-10-01#1910-10-01#
+    """
+    s/[#]*START_TIME=.* /START_TIME=1910-10-01 /
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -220,8 +219,8 @@ Feature: Functional testing of global sequences
       | test | 111111 | conn_0 | True     |create table test_auto(id bigint,time char(120))    | success        | schema1 |
       | test | 111111 | conn_0 | True     |insert into test_auto values(1)                       | Global sequence has reach to max limit and can generate duplicate sequences        | schema1 |
     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
-     """
-      s#1910-10-01#2010-11-04#
+    """
+    s/[#]*START_TIME=.* /START_TIME=2010-11-04 /
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
