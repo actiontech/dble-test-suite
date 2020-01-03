@@ -3,7 +3,7 @@
 # Created by maofei at 2019/1/2
 Feature: # Detecting the reasonableness of the alarm information returned by the front end
 
-  @TRIVIAL
+  @TRIVIAL @current
   Scenario: union with different number of columns #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose| sql                                                                                | expect    | db     |
@@ -13,10 +13,9 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int, name varchar(5))                                | success   | schema1 |
       | test | 111111 | conn_0 | True    | create table schema2.global_4_t1(id int, name varchar(5))                          | success   | schema1 |
       | test | 111111 | conn_0 | True    | create table single_node_t1(id int, name varchar(5),age int)                       | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema2.global_4_t1        | The used SELECT statements have a different number of columns   | schema1 |
+      | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema2.global_4_t1        | success   | schema1 |
       | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema1.single_node_t1     | The used SELECT statements have a different number of columns   | schema1 |
       | test | 111111 | conn_0 | True    | alter table schema2.global_4_t1 drop column name                                   | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from sharding_4_t1 union select * from schema2.global_4_t1                | success   | schema1 |
       | test | 111111 | conn_0 | True    | select * from schema1.single_node_t1 union select * from schema2.global_4_t1       | The used SELECT statements have a different number of columns   | schema1 |
 
   @regression
