@@ -16,6 +16,9 @@ from lib.Node import get_sftp, get_ssh
 global btrace_threads
 btrace_threads=[]
 
+global sql_threads
+sql_threads = []
+
 def check_btrace_running(sshClient, btraceScript):
     cmd = "ps -ef |grep -v -w grep| grep -F -c {0}".format(btraceScript)
     rc, sto, ste = sshClient.exec_command(cmd)
@@ -80,15 +83,15 @@ def step_impl(context, host):
 
     run_mysql_query(sshClient, context)
 
-def check_btrace_output(sshClient, btraceScript, expectTxt, context):
+def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
     retry=0
     isFound = False
-    while retry<5:
-        time.sleep(2) # a interval wait for query run into
+    while retry < 200:
+        time.sleep(5)  # a interval wait for query run into
         cmd = "cat {0}.log | grep '{1}' -c".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
-        isFound = int(sto)==1
+        isFound = int(sto)==num
         if isFound:
             context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*2))
             break
@@ -97,12 +100,13 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context):
 
     assert isFound, "can not find expect text '{0}' in {1}.log".format(expectTxt, btraceScript)
 
+@Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
 @Then('check btrace "{btraceScript}" output in "{host}"')
-def step_impl(context, btraceScript, host):
+def step_impl(context, btraceScript, host, num = 1):
     sshClient = get_ssh(context.dbles, host)
 
     remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],btraceScript)
-    check_btrace_output(sshClient, remoteFile, context.text, context)
+    check_btrace_output(sshClient, remoteFile, context.text.strip(), context, int(num))
 
 def kill_query(sshClient,query, context):
     cmd = u"kill -9 `ps -ef | grep -F '{0}'| grep -v grep | awk '{{print $2}}'`".format(query)
@@ -129,4 +133,25 @@ def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
         context.logger.debug("join btrace thread:".format(thd.name))
+        thd.join()
+
+@Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
+def step_impl(context, sql, conn_type=''):
+    assert hasattr(context, conn_type), "conn_type {0} is not exists"
+    conn = getattr(context, conn_type)
+    global sql_threads
+    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
+    sql_threads.append(thd)
+    thd.setDaemon(True)
+    thd.start()
+
+def execute_sql_backgroud(context, conn, sql):
+    sql_cmd = sql.strip()
+    res, err = conn.query(sql_cmd)
+
+@Given('destroy sql threads list')
+def step_impl(context):
+    global sql_threads
+    for thd in sql_threads:
+        context.logger.debug("join sql thread: {0}".format(thd.name))
         thd.join()
