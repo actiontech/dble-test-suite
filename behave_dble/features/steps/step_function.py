@@ -385,3 +385,29 @@ def get_result(context, sql):
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
+
+@Then('get result of oscmd name "{result}" in "{hostname}"')
+def step_impl(context,result,hostname):
+    cmd = context.text.strip()
+    if hostname.startswith("dble"):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    context.logger.info("execute cmd:{0}".format(cmd))
+    stderr = stderr.lower()
+    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
+    setattr(context,result,stdout)
+
+@Then('check result "{result}" value is "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) == int(value),"expect result is {0},but is {1}".format(value,rs)
+
+@Then('check result "{result}" value less than "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) < int(value),"expect result {0} less than {1},but not".format(rs,value)
+
+
+
