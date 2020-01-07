@@ -7,6 +7,7 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
+import re
 
 from lib.DBUtil import DBUtil
 from lib.Node import get_sftp,get_ssh
@@ -240,7 +241,11 @@ def step_impl(context,filename,hostname):
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname):
     cmd = context.text
-    rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    if hostname.startswith("dble"):
+        rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    else:
+        ssh = get_ssh(context.mysqls,hostname)
+        rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
     assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
 
@@ -385,3 +390,35 @@ def get_result(context, sql):
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
+
+@Given('get resultset of oscmd in "{host}" with pattern "{pattern}" name "{resultName}"')
+def impl_step(context,host,pattern,resultName):
+    if host.startswith('dble'):
+        ssh = get_ssh(context.dbles, host)
+    else:
+        ssh = get_ssh(context.mysqls, host)
+    oscmd = context.text.strip()
+    rc, stdout, stderr = ssh.exec_command(oscmd)
+    assert_that(len(stderr) == 0, 'expect no err ,but: {0}'.format(stderr))
+    results = list(set(re.findall(pattern,stdout)))
+    assert_that(len(results)),"result of find by pattern is empty"
+    context.logger.info("result of find by pattern:{0}".format(results))
+    setattr(context,resultName,results)
+
+@Then('get result of oscmd name "{result}" in "{hostname}"')
+def step_impl(context,result,hostname):
+    cmd = context.text.strip()
+    if hostname.startswith("dble"):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    context.logger.info("execute cmd:{0}".format(cmd))
+    stderr = stderr.lower()
+    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
+    setattr(context,result,stdout)
+
+@Then('check result "{result}" value is "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) == int(value),"expect result is {0},but is {1}".format(value,rs)
