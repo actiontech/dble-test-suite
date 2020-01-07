@@ -93,7 +93,7 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
         assert len(ste)==0, "btrace err:{0}".format(ste)
         isFound = int(sto)==num
         if isFound:
-            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*2))
+            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*5))
             break
 
         retry=retry+1
