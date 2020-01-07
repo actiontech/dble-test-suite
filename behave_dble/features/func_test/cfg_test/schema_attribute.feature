@@ -265,7 +265,7 @@ Feature: test some import nodes attr in schema.xml
     """
     Given delete file "/opt/dble/rocksdb" on "dble-1"
 
-  Scenario:  test execute `set @x=1` when the max active Connections size max than "maxCon"   from issue:1177 author: maofei #10
+  Scenario: execute `set @x=1` gets error when the max active Connections size max than "maxCon",heartbeat take account into maxCon   from issue:1177 author: maofei #10
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
@@ -285,17 +285,16 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                         | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_table                         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_table(id int,name varchar(33))      | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                                       | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                                      | expect  | db     |
+      | test | 111111 | conn_0 | False   | drop table if exists test_table                          | success | schema1 |
+      | test | 111111 | conn_0 | False   | create table test_table(id int,name varchar(33))         | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                                    | success | schema1 |
       | test | 111111 | conn_0 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                                       | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                                    | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                                 | error totally whack | schema1 |
+      | test | 111111 | conn_0 | True    | commit                                                   | success | schema1 |
       | test | 111111 | conn_1 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_2 | False   | set @x = 1                                                 | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | commit                                                      | success | schema1 |
-      | test | 111111 | conn_1 | True    | commit                                                      | success | schema1 |
-      | test | 111111 | conn_2 | True    | set @x = 1                                                 | success | schema1 |
+      | test | 111111 | conn_1 | True    | commit                                                   | success | schema1 |
 
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
