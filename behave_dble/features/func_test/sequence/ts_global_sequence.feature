@@ -10,7 +10,7 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
   Scenario: when "insert time" greater than "start time" and less than "start time + 69years", check the correctness of the self-increment sequence #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" autoIncrement="true"/>
+        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" />
     """
     Then get resultset of user cmd "select sysdate()" named "sysTime"
     When Add some data in "sequence_time_conf.properties"
