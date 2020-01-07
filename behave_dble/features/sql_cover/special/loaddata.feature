@@ -77,7 +77,7 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
   Scenario: load data for table using global sequence from issue:1048    #3
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """

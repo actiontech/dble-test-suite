@@ -404,7 +404,7 @@ Feature: test "check full @@metadata...'"
       """
       <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
       <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
-      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="R_REGIONKEY" autoIncrement="true"/>
+      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="R_REGIONKEY" />
       </schema>
       <dataNode name="dn1" dataHost="host1" database="db1"/>
       <dataNode name="dn2" dataHost="host1" database="db2"/>
