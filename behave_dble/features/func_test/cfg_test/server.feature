@@ -255,7 +255,6 @@ Feature: test config in server.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <system>
-           <property name="useGlobleTableCheck">1</property>
            <property name="processors">1</property>
           <property name="processorExecutor">1</property>
           <property name="maxCon">1</property>
@@ -322,7 +321,6 @@ Feature: test config in server.xml
      """
      <system>
           <property name="fakeMySQLVersion">5.7.13</property>
-          <property name="useGlobleTableCheck">1</property>
 	      <property name="dataNodeIdleCheckPeriod">10</property>
 	      <property name="processorCheckPeriod">10</property>
 	      <property name="sqlExecuteTimeout">60</property>
