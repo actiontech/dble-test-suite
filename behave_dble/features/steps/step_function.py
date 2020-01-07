@@ -247,7 +247,7 @@ def step_impl(context,hostname):
         ssh = get_ssh(context.mysqls,hostname)
         rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
@@ -391,7 +391,7 @@ def get_result(context, sql):
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
 
-@Given('get resultset of oscmd in "{host}" with pattern "{pattern}" name "{resultName}"')
+@Given('get resultset of oscmd in "{host}" with pattern "{pattern}" named "{resultName}"')
 def impl_step(context,host,pattern,resultName):
     if host.startswith('dble'):
         ssh = get_ssh(context.dbles, host)
@@ -401,11 +401,11 @@ def impl_step(context,host,pattern,resultName):
     rc, stdout, stderr = ssh.exec_command(oscmd)
     assert_that(len(stderr) == 0, 'expect no err ,but: {0}'.format(stderr))
     results = list(set(re.findall(pattern,stdout)))
-    assert_that(len(results)),"result of find by pattern is empty"
-    context.logger.info("result of find by pattern:{0}".format(results))
+    assert_that(len(results)),"regular matching result is empty"
+    context.logger.info("regular matching result:{0}".format(results))
     setattr(context,resultName,results)
 
-@Then('get result of oscmd name "{result}" in "{hostname}"')
+@Then('get result of oscmd named "{result}" in "{hostname}"')
 def step_impl(context,result,hostname):
     cmd = context.text.strip()
     if hostname.startswith("dble"):
@@ -415,10 +415,10 @@ def step_impl(context,result,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     context.logger.info("execute cmd:{0}".format(cmd))
     stderr = stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
+    assert stderr.find("error") == -1, "execute cmd:{0} error:{1}".format(cmd, stderr)
     setattr(context,result,stdout)
 
 @Then('check result "{result}" value is "{value}"')
 def step_impl(context,result,value):
     rs = getattr(context,result)
-    assert int(rs) == int(value),"expect result is {0},but is {1}".format(value,rs)
+    assert str(rs) == str(value),"expect result is {0},but is {1}".format(value,rs)
