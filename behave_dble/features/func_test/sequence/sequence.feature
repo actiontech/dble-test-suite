@@ -14,7 +14,7 @@ Feature: Functional testing of global sequences
 #  4.multiple thread insert values to sequenceColumn, the vlaues should be unique, and insert time should be tolerable(<1s)
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -74,7 +74,7 @@ Feature: Functional testing of global sequences
 
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -132,7 +132,7 @@ Feature: Functional testing of global sequences
   #  5.START_TIME+69 years<the time of dble start
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" autoIncrement="true" rule="hash-four" />
+        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
