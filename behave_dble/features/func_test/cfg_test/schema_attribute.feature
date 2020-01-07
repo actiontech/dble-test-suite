@@ -285,16 +285,18 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                      | expect  | db     |
-      | test | 111111 | conn_0 | False   | drop table if exists test_table                          | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table test_table(id int,name varchar(33))         | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                                    | success | schema1 |
-      | test | 111111 | conn_0 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                                    | success | schema1 |
-      | test | 111111 | conn_1 | False   | select * from test_table                                 | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | commit                                                   | success | schema1 |
-      | test | 111111 | conn_1 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_1 | True    | commit                                                   | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                               | expect  | db     |
+      | test | 111111 | conn_0 | False   | drop table if exists test_table                   | success | schema1 |
+      | test | 111111 | conn_0 | False   | create table test_table(id int,name varchar(33))  | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                             | success | schema1 |
+      | test | 111111 | conn_0 | False   | select * from test_table                          | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                             | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                          | error totally whack | schema1 |
+      | test | 111111 | conn_0 | True    | commit                                            | success | schema1 |
+      | test | 111111 | conn_1 | False   | rollback                                          | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                             | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                          | success | schema1 |
+      | test | 111111 | conn_1 | True    | commit                                            | success | schema1 |
 
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11

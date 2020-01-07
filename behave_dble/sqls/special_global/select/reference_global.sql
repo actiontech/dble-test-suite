@@ -30,7 +30,8 @@ select a.id,a.t_id,a.name,a.pad from test1 a union distinct select b.id,b.m_id,b
 (select a.id,a.t_id,a.name,a.pad from test1 a where a.pad=1) union (select c.id,c.o_id,c.name,c.pad from schema2.test2 c where c.pad=1) order by id limit 10/*allow_diff_sequence*/
 (select name as sort_a from test1 where pad=1) union (select name from schema2.test2 where pad=1) order by sort_a limit 10/*allow_diff_sequence*/
 (select name as sort_a,pad from test1 where pad=1) union (select name,pad from schema2.test2 where pad=1) order by sort_a,pad limit 10/*allow_diff_sequence*/
-#
+#-- case union,from issue #275
+(select * from test1 where id=2) union (select * from schema2.test2 where id=2);
 #clear tables
 #
 drop table if exists test1
