@@ -7,9 +7,10 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
+import time
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh
+from lib.Node import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *
@@ -240,7 +241,11 @@ def step_impl(context,filename,hostname):
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname):
     cmd = context.text
-    rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    if hostname.startswith("dble"):
+        rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+        rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
     assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
 
@@ -385,3 +390,44 @@ def get_result(context, sql):
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
+
+
+@Given('get "{host1}" connection with "{role}" in "{host2}" to execute sql')
+@Given('get "{host1}" connection with "{role}" in "{host2}" to execute sql and "{dir}" is local dir')
+def step_impl(context,host1,role,host2,dir='/usr/local/mysql/data'):
+    user = ''
+    password = ''
+    port = ''
+    if host1.startswith('dble'):
+        node = get_node(context.dbles,host1)
+        if role == "admin":
+            user = context.cfg_dble['manager_user']
+            password = context.cfg_dble['manager_password']
+            port = context.cfg_dble['manager_port']
+        else:
+            user = context.cfg_dble['client_user']
+            password = context.cfg_dble['client_password']
+            port = context.cfg_dble['client_port']
+    else:
+        node = get_node(context.mysqls,host1)
+        user = context.cfg_mysql['user']
+        password = context.cfg_mysql['password']
+        port = context.cfg_mysql['client_port']
+    ip = node.ip
+
+    if host2.startswith('dble'):
+        ssh = get_ssh(context.dbles,host2)
+    else:
+        ssh = get_ssh(context.mysqls,host2)
+
+    sql_cmd_str = context.text.strip()
+    sql_cmd_list = sql_cmd_str.splitlines()
+    context.logger.info("sql list: {0}".format(sql_cmd_list))
+    for sql_cmd in sql_cmd_list:
+        cmd = 'cd {5} && mysql -h{0} -u{1} -p{2} -P{3} -c -e"{4}"'.format(ip, user, password, port,sql_cmd,dir)
+        stdin, stdout, stderr = ssh.exec_command(cmd)
+        context.logger.info("execute cmd:{0}".format(cmd))
+        stderr = stderr.lower()
+        assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+        time.sleep(3)
+
