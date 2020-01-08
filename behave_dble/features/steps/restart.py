@@ -107,7 +107,7 @@ def step_impl(context,fileName,hostname,dir):
         targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble[dir],fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
-    else :
+    else:
         ssh = get_ssh(context.mysqls, hostname)
         targetFile = "{0}/{1}".format(dir,fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
