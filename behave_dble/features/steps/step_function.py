@@ -392,9 +392,9 @@ def get_result(context, sql):
     return result
 
 
-@Given('get "{host1}" connection with "{role}" in "{host2}" to execute sql')
-@Given('get "{host1}" connection with "{role}" in "{host2}" to execute sql and "{dir}" is local dir')
-def step_impl(context,host1,role,host2,dir='/usr/local/mysql/data'):
+@Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
+@Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
+def step_impl(context,host1,role,host2,oscmd='cd /usr/local/mysql/data'):
     user = ''
     password = ''
     port = ''
@@ -424,7 +424,7 @@ def step_impl(context,host1,role,host2,dir='/usr/local/mysql/data'):
     sql_cmd_list = sql_cmd_str.splitlines()
     context.logger.info("sql list: {0}".format(sql_cmd_list))
     for sql_cmd in sql_cmd_list:
-        cmd = 'cd {5} && mysql -h{0} -u{1} -p{2} -P{3} -c -e"{4}"'.format(ip, user, password, port,sql_cmd,dir)
+        cmd = '{5} && mysql -h{0} -u{1} -p{2} -P{3} -c -e"{4}"'.format(ip, user, password, port,sql_cmd,oscmd)
         stdin, stdout, stderr = ssh.exec_command(cmd)
         context.logger.info("execute cmd:{0}".format(cmd))
         stderr = stderr.lower()
