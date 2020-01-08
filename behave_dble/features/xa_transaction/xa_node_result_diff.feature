@@ -3,34 +3,12 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/4
 
-Feature: xa nodes have different result after execute transaction
+Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and some nodes prepare/start failed.
+         For xa prepared successfully nodes, need to rollback after dble restart
+         For xa start failed nodes, dble need return a reasonable error message
 
   @skip_restart
-  Scenario: xa prepare is abnormal, but some nodes successfully prepare. After dble restart, the successful preparation needs rolled back. #1
-    Given delete the following xml segment
-      | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-    """
-    <schema name="schema1" sqlMaxLimit="100">
-       <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-    </schema>
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group2" database="db1"/>
-    <dataNode name="dn3" dataHost="ha_group1" database="db2"/>
-    <dataNode name="dn4" dataHost="ha_group2" database="db2"/>
-    """
-    Given delete the following xml segment
-      | file       | parent         | child            |
-      | schema.xml | {'tag':'root'} | {'tag':'system'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-    """
-    <system>
-    <property name="xaRetryCount">0</property>
-    </system>
-    """
-    Given Restart dble in "dble-1" success
+  Scenario: xa prepare is abnormal: some nodes prepare successfully and some nodes prepare failed. After dble restart, the successful nodes need rollback. #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
       | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -59,7 +37,7 @@ Feature: xa nodes have different result after execute transaction
       | test | 111111 | new    | True    | delete from sharding_4_t1                               | success     | schema1 |
 
   @skip_restart
-  Scenario: when xa start, some backend nodes execute successfully and some errors . dble give a reasonable error #2
+  Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                                            | expect  | db |
       | test | 111111 | conn_0 | False   | set global log_output=file                     | success |    |
@@ -82,7 +60,7 @@ Feature: xa nodes have different result after execute transaction
     """
     before xa start
     """
-    Given get resultset of oscmd in "dble-1" with pattern "Dble_Server.*db1" name "rs_A"
+    Given get resultset of oscmd in "dble-1" with pattern "Dble_Server.*db1" named "rs_A"
     """
     cat /opt/dble/DelayBeforeXaStart.java.log
     """
@@ -104,19 +82,19 @@ Feature: xa nodes have different result after execute transaction
       | test | 111111 | conn_1 | False   | rollback                    | success     | schema1 |
       | test | 111111 | conn_1 | False   | select * from sharding_4_t1 | length{(0)} | schema1 |
     Given sleep "10" seconds
-    Then get result of oscmd name "rs_B" in "mysql-master1"
+    Then get result of oscmd named "rs_B" in "mysql-master1"
     """
     grep -c -i 'rollback' /tmp/general.log
     """
-    Then get result of oscmd name "rs_C" in "mysql-master1"
+    Then get result of oscmd named "rs_C" in "mysql-master1"
     """
     grep -c -i 'quit' /tmp/general.log
     """
-    Then get result of oscmd name "rs_D" in "mysql-master2"
+    Then get result of oscmd named "rs_D" in "mysql-master2"
     """
     grep -c -i 'rollback' /tmp/general.log
     """
-    Then get result of oscmd name "rs_E" in "mysql-master2"
+    Then get result of oscmd named "rs_E" in "mysql-master2"
     """
     grep -c -i 'quit' /tmp/general.log
     """
