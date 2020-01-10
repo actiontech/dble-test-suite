@@ -238,13 +238,13 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
-@Given('execute oscmd in "{hostname}" and assert "{num}" should less than result')
+@Given('execute oscmd in "{hostname}" and "{num}" less than result')
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname,num=None):
     cmd = context.text.strip()
     rc, stdout, stderr = context.ssh_client.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
     if num is not None:
         assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num,int(stdout))
 
@@ -390,7 +390,7 @@ def get_result(context, sql):
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
 
-@Then('execute oscmd many times in "{host}" and assert result is constant')
+@Then('execute oscmd many times in "{host}" and result is same')
 def step_impl(context,host):
     cmd = context.text.strip()
     retry = 0
@@ -400,7 +400,7 @@ def step_impl(context,host):
         time.sleep(10)
         rc, stdout, stderr = context.ssh_client.exec_command(cmd)
         stderr =  stderr.lower()
-        assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(host,stderr)
+        assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(host,stderr)
         if int(stdout) != result:
             result = int(stdout)
             retry = retry + 1
@@ -409,7 +409,7 @@ def step_impl(context,host):
         else:
             count = count + 1
             if count >2 : break
-    assert count >2, "result is not a constant"
+    assert count >2, "result is not same"
 
 
 
