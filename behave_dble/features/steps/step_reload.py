@@ -51,8 +51,6 @@ def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
         passwd = str(context.cfg_dble['manager_password'])
     if hasattr(context,result):
         adminsql = "{0} {1}".format(adminsql,getattr(context,result)[0][0])
-        context.logger.info("yangxiaoliang:{0}".format(adminsql))
-
 
     if context.text: expect = context.text
     else: expect = "success"
