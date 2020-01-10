@@ -3,35 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/26
 
-Feature: mysql node hangs causing xa transaction fail to commit, background execution policy recovery transaction
+Feature: retry policy after xa transaction commit failed for mysql service stopped
 
   @skip_restart
-  Scenario: mysql node hangs causing xa transaction fail to commit,
-    restart mysql node before the front end attempts to commit 5 times , #1
-    Given delete the following xml segment
-      | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-    """
-    <schema name="schema1" sqlMaxLimit="100">
-       <table name="sharding_4_t1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-    </schema>
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group2" database="db1"/>
-    <dataNode name="dn3" dataHost="ha_group1" database="db2"/>
-    <dataNode name="dn4" dataHost="ha_group2" database="db2"/>
-    """
-    Given delete the following xml segment
-      | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'system'}   |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-    """
-    <system>
-    <property name="xaRetryCount">0</property>
-    </system>
-    """
-    Given Restart dble in "dble-1" success
+  Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times , #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
       | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -80,7 +55,7 @@ Feature: mysql node hangs causing xa transaction fail to commit, background exec
     Given destroy btrace threads list
     Given sleep "10" seconds
     Given start mysql in host "mysql-master1"
-    Then execute oscmd many times in "dble-1" and assert result is constant
+    Then execute oscmd many times in "dble-1" and result is same
     """
     cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
     """
@@ -111,7 +86,7 @@ Feature: mysql node hangs causing xa transaction fail to commit, background exec
     Given destroy sql threads list
     Then get resultset of admin cmd "show @@session.xa" named "rs_A"
     Then execute admin cmd "kill @@xa_session" with "rs_A" result
-    Then execute oscmd many times in "dble-1" and assert result is constant
+    Then execute oscmd many times in "dble-1" and result is same
     """
     cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
     """
@@ -157,12 +132,12 @@ Feature: mysql node hangs causing xa transaction fail to commit, background exec
     Given start mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                    | expect  | db      |
-      | test | 111111 | conn_1 | False   | select * from sharding_4_t1            | success | schema1 |
-      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success | schema1 |
-      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success | schema1 |
-      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success | schema1 |
-      | test | 111111 | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                    | expect      | db      |
+      | test | 111111 | conn_1 | False   | select * from sharding_4_t1            | length{(4)} | schema1 |
+      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
+      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
+      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
+      | test | 111111 | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success     | schema1 |
 
   @skip_restart
   Scenario: mysql node hangs causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #5
@@ -190,16 +165,16 @@ Feature: mysql node hangs causing xa transaction fail to commit, background exec
     Given stop btrace script "DelayBeforeXaPrepare.java" in "dble-1"
     Given destroy btrace threads list
     Given sleep "30" seconds
-    Given execute oscmd in "dble-1" and assert "6" should less than result
+    Given execute oscmd in "dble-1" and "6" less than result
     """
     cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                    | expect  | db      |
-      | test | 111111 | conn_1 | False   | select * from sharding_4_t1            | success | schema1 |
-      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success | schema1 |
-      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success | schema1 |
-      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success | schema1 |
-      | test | 111111 | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                    | expect      | db      |
+      | test | 111111 | conn_1 | False   | select * from sharding_4_t1            | length{(0)} | schema1 |
+      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
+      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
+      | test | 111111 | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
+      | test | 111111 | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success     | schema1 |
