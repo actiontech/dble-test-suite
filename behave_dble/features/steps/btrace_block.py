@@ -92,9 +92,9 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
         cmd = "cat {0}.log | grep '{1}' -c".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
-        isFound = int(sto)==1
+        isFound = int(sto)==num
         if isFound:
-            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*2))
+            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*5))
             break
 
         retry=retry+1
