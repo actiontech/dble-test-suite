@@ -238,7 +238,7 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
-@Given('execute oscmd in "{hostname}" and assert "{num}" should less than result')
+@Given('execute oscmd in "{hostname}" and "{num}" less than result')
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname,num=None):
     cmd = context.text.strip()
@@ -394,7 +394,7 @@ def get_result(context, sql):
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
 
-@Then('execute oscmd many times in "{host}" and assert result is constant')
+@Then('execute oscmd many times in "{host}" and result is same')
 def step_impl(context,host):
     cmd = context.text.strip()
     retry = 0
