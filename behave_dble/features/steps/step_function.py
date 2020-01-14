@@ -247,7 +247,7 @@ def step_impl(context,hostname):
         ssh = get_ssh(context.mysqls, hostname)
         rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(hostname,stderr)
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
