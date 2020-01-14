@@ -396,7 +396,7 @@ def step_impl(context,result,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     context.logger.info("execute cmd:{0}".format(cmd))
     stderr = stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(hostname, stderr)
     setattr(context,result,stdout)
 
 @Then('check result "{result}" value is "{value}"')
