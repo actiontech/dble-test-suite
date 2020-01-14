@@ -67,7 +67,7 @@ Feature: schema config stable test
 
   @NORMAL
   Scenario: add readhost for writehost in disabled state, execute select success with balance not 0 #3
-    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}, 'childIdx':1}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}}" in "schema.xml"
     """
         <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111"/>
     """
