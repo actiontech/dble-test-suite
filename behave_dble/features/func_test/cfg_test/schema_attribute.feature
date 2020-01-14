@@ -109,8 +109,8 @@ Feature: test some import nodes attr in schema.xml
     | user | passwd | conn   | toClose  | sql                                    | expect  | db     |
     | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | schema1 |
     | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | schema1 |
+    Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
-    Then create "16" conn while maxCon="15" finally close all conn
     """
     error totally whack
     """
@@ -153,11 +153,11 @@ Feature: test some import nodes attr in schema.xml
     """
 
   @CRITICAL
-  Scenario: select (colomn is not primarykey set in schema.xml) from table -- primarykey cache invalid
-             select (contains column which is set as primarykey in schema.xml) from table -- primarykey cache  effective #6
+  Scenario: select (colomn is not cacheKey set in schema.xml) from table -- cacheKey cache invalid
+             select (contains column which is set as cacheKey in schema.xml) from table -- cacheKey cache  effective #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="name" rule="hash-two" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="name" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -177,10 +177,10 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
 
   @CRITICAL
-  Scenario: primayKey cache effective when attribute "primaryKey" be set #7
+  Scenario: primayKey cache effective when attribute "cacheKey" be set #7
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" primaryKey="k" rule="hash-four" />
+        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="k" rule="hash-four" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -213,7 +213,7 @@ Feature: test some import nodes attr in schema.xml
         | root | 111111 | conn_0 | True     | show @@cache                                                    | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,1L,1L,4L,2018')}| |
 
   @NORMAL
-  Scenario: primayKey cache invalid when attribute "primaryKey" not be set #8
+  Scenario: primayKey cache invalid when attribute "cacheKey" not be set #8
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4"  rule="hash-two" />
@@ -265,7 +265,7 @@ Feature: test some import nodes attr in schema.xml
     """
     Given delete file "/opt/dble/rocksdb" on "dble-1"
 
-  Scenario:  test execute `set @x=1` when the max active Connections size max than "maxCon"   from issue:1177 author: maofei #10
+  Scenario: execute `set @x=1` gets error when the max active Connections size max than "maxCon",heartbeat take account into maxCon   from issue:1177 author: maofei #10
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
@@ -285,17 +285,18 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                         | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_table                         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_table(id int,name varchar(33))      | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                                       | success | schema1 |
-      | test | 111111 | conn_0 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                                       | success | schema1 |
-      | test | 111111 | conn_1 | False   | select * from test_table                                 | success | schema1 |
-      | test | 111111 | conn_2 | False   | set @x = 1                                                 | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | commit                                                      | success | schema1 |
-      | test | 111111 | conn_1 | True    | commit                                                      | success | schema1 |
-      | test | 111111 | conn_2 | True    | set @x = 1                                                 | success | schema1 |
+      | user | passwd | conn   | toClose | sql                                               | expect  | db     |
+      | test | 111111 | conn_0 | False   | drop table if exists test_table                   | success | schema1 |
+      | test | 111111 | conn_0 | False   | create table test_table(id int,name varchar(33))  | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                             | success | schema1 |
+      | test | 111111 | conn_0 | False   | select * from test_table                          | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                             | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                          | error totally whack | schema1 |
+      | test | 111111 | conn_0 | True    | commit                                            | success | schema1 |
+      | test | 111111 | conn_1 | False   | rollback                                          | success | schema1 |
+      | test | 111111 | conn_1 | False   | begin                                             | success | schema1 |
+      | test | 111111 | conn_1 | False   | select * from test_table                          | success | schema1 |
+      | test | 111111 | conn_1 | True    | commit                                            | success | schema1 |
 
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
