@@ -73,39 +73,37 @@ def add_child_in_text(file, pos_kv_map, childNodeInText):
        tag:父节点,节点
        kv_map:父节点的节点属性信息，如name:value
        prev:要添加的节点点的前一个节点名称
-       childIdx:要添加的子节点的位置索引
        childNodeInText: 子节点'''
     childNode = get_xml_from_str(childNodeInText)
-
     add_child_in_xml(file, pos_kv_map, childNode)
-
 
 def add_child_in_xml(file, pos_kv_map, childNode):
     ET.register_namespace("dble", "http://dble.cloud/")
     tree = ET.parse(file)
 
     parentNodes = get_parent_nodes_from_dic(tree, pos_kv_map)
+    assert len(parentNodes) == 1, "expect there exists only 1 parent node, but get more"
+    parentNode = parentNodes[0]
 
     prevTag = pos_kv_map.get("prev", None)
-    childIdx = pos_kv_map.get("childIdx", None)
-    # add child nodes, delete the same name ones if exists
-    idx = childIdx
-    for parentNode in parentNodes:
-        if childIdx is None and prevTag is not None:
-            firstPrevNode = parentNode.find(prevTag)
-            firstPrevIdx = parentNode.index(firstPrevNode)
-            prevNodes = parentNode.findall(prevTag)
-            idx = firstPrevIdx + len(prevNodes)
 
-        k = 0
-        for child in childNode:
-            del_node_by_name(parentNode, child)
-            if prevTag is None and childIdx is None:
-                idx = get_Insert_Idx(parentNode, child)
-                if idx == 0:
-                    idx = k
-            parentNode.insert(idx, child)
-            k = k + idx + 1
+    #delete the same name ones if exists
+    for child in childNode:#delete the same name nodes
+        del_node_by_name(parentNode, child)
+
+    #set the insert idx, if prevTag is assigned, index is calculated by prevTag idx,else calculated by the same child tag index
+    if prevTag is None:
+        idx = get_Insert_Idx(parentNode, childNode[0])
+    else:
+        firstPrevNode = parentNode.find(prevTag)
+        firstPrevIdx = parentNode.index(firstPrevNode)
+        prevNodes = parentNode.findall(prevTag)
+        idx = firstPrevIdx + len(prevNodes)
+
+    # add child nodes
+    for child in childNode:
+        parentNode.insert(idx, child)
+        idx = idx + 1
 
     doctype = ""
     if file.find('rule.xml') > -1:
@@ -220,31 +218,26 @@ if __name__ == "__main__":
             <property name="sPartionDay">10</property>
         </function>
         """
-        add_child_in_text('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map": {}}, seg)
+        add_child_in_text('../../../dble_conf/template_bk/rule.xml', {"tag": "root", "kv_map": {}}, seg)
     elif command == "schema":
-        seg = """
-<dataHost balance="0" maxCon="100" minCon="10" name="test-dataHost" slaveThreshold="100" switchType="1">
-<heartbeat>select user()</heartbeat>
-<writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-</writeHost>
-</dataHost>
-        """
+        seg ="""
+        <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>"""
 
-        fullpath = "/init_assets/dble-test-suite/behave_dble/dble_conf/template/schema.xml"
+        fullpath = "../../../dble_conf/template_bk/schema.xml"
 
-        add_child_in_text(fullpath, {'tag': 'root', 'prev': "dataHost"}, seg)
+        # add_child_in_text(fullpath, {'tag':'dataHost','kv_map':{'name':"ha_group2"}}, seg)
+
+        parentNode = {'tag': 'root'}
+        dataNode_info = {'tag': 'dataNode', 'kv_map': {'name': u'dn2'}}
+        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+
     elif command == "server":
         seg = """
-      <firewall>
-          <whitehost>
-              <host host="10.186.23.68" user="test"/>
-              <host host="10.186.23.68" user="root"/>
-              <host host="172.100.9.253" user="root"/>
-              <host host="172.100.9.253" user="test"/>
-          </whitehost>
-      </firewall>
+      <system>
+          <property name="maxResultSet">1024</property>
+      </system>
             """
-        add_child_in_text('../../../dble_conf/conf_template/server.xml', {"tag": "root", "prev": 'system'}, seg)
+        add_child_in_text('../../../dble_conf/template_bk/server.xml', {"tag": "root"}, seg)
     elif command == "delete":
         file = "dble_conf/conf_template/server.xml"
         kv_child = eval("{'tag':'user','kv_map':{'name':'mnger'}}")
