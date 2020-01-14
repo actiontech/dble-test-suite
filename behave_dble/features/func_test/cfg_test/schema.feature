@@ -91,7 +91,7 @@ Feature: schema basic config test
     """
   @TRIVIAL
   Scenario:.when <readHost> put outside <wirteHost>, reload fail #6
-    Given add xml segment to node with attribute "{'tag':'dataHost'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':"ha_group2"}}" in "schema.xml"
     """
     <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
     """
