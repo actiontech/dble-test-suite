@@ -28,11 +28,9 @@ Feature: connect dble in mysql-master1, and execute cmd "load data" with relativ
     load data local infile './test.txt' into table schema1.test fields terminated by ',' lines terminated by '\n'
     """
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                | expect                                                       | db      |
-      | test | 111111 | new  | True    | select * from test | hasStr{(1L, 1L), (2L, 2L), (3L, 3L), (20L, 20L), (30L, 30L)} | schema1 |
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                 | expect  | db      |
-      | test | 111111 | new  | True    | truncate table test | success | schema1 |
+      | user | passwd | conn | toClose | sql                 | expect                                                       | db      |
+      | test | 111111 | new  | True    | select * from test  | hasStr{(1L, 1L), (2L, 2L), (3L, 3L), (20L, 20L), (30L, 30L)} | schema1 |
+      | test | 111111 | new  | True    | truncate table test | success                                                      | schema1 |
 
     #load data with absolute path #2
     Given connect "dble-1" with user "test" in "mysql-master1" to execute sql
