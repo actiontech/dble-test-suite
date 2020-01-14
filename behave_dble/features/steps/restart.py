@@ -16,7 +16,7 @@ from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
 
 @Given('restart mysql in "{host}" with sed cmds to update mysql config')
-def update_config_and_restart_mysql(context, host):
+def restart_mysql(context, host):
     stop_mysql(context, host)
 
     # to wait stop finished
@@ -107,7 +107,7 @@ def step_impl(context,fileName,hostname,dir):
         targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble[dir],fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
-    else:
+    else :
         ssh = get_ssh(context.mysqls, hostname)
         targetFile = "{0}/{1}".format(dir,fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
@@ -118,9 +118,7 @@ def step_impl(context,fileName,hostname,dir):
 def step_impl(context,btrace,dir):
     targetFile = "{0}/{1}".format(dir, btrace)
     cmd = merge_cmd_strings(context, context.text, targetFile)
-    status = os.system(cmd)
-    assert status == 0, "change {0} failed".format(btrace)
-    context.logger.info("change {0} successed".format(btrace))
+    os.system(cmd)
 
 def merge_cmd_strings(context,text,targetFile):
     sed_cmd_str = text.strip()
