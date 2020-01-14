@@ -9,21 +9,17 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t1                          | success   | schema1 |
       | test | 111111 | conn_0 | True     | drop table if exists sharding_3_t1                          | success   | schema1 |
       | test | 111111 | conn_0 | True     | drop table if exists sharding_4_t3                          | success   | schema3 |
-      | test | 111111 | conn_0 | True     | drop table if exists global_4_t1                            | success   | schema2 |
       | test | 111111 | conn_0 | True     | create table sharding_4_t1 (id int,c_flag char(255))     | success   | schema1 |
       | test | 111111 | conn_0 | True     | create table sharding_3_t1 (id int,c_flag char(255))     | success   | schema1 |
       | test | 111111 | conn_0 | True     | create table sharding_4_t3 (id int,c_flag char(255))     | success   | schema3 |
-      | test | 111111 | conn_0 | True     | create table global_4_t1 (id int,c_flag char(255))       | success   | schema2 |
       | test | 111111 | conn_0 | True     | explain select * from schema1.sharding_4_t1                | hasStr{'SELECT * FROM sharding_4_t1 LIMIT 100'}    | schema1 |
       | test | 111111 | conn_0 | True     | explain select * from schema3.sharding_4_t3               | hasStr{'select * from sharding_4_t3'}    | schema1 |
-      | test | 111111 | conn_0 | True     | explain insert into global_4_t1 values(1,1)               | hasStr{insert into `global_4_t1`(`id`,`c_flag`,`_dble_op_time`)}    | schema2 |
-      | test | 111111 | conn_0 | True     | explain update global_4_t1 set c_flag=2                    | hasStr{UPDATE global_4_t1 SET c_flag = 2, _dble_op_time}    | schema2 |
       | test | 111111 | conn_0 | True     | explain select distinct(id) from sharding_4_t1             | hasStr{SELECT id FROM sharding_4_t1 GROUP BY id LIMIT 100'}    | schema1 |
       | test | 111111 | conn_0 | True     | explain select 1                                               | hasStr{('dn5', 'BASE SQL', 'select 1'),}    | schema1 |
       | test | 111111 | conn_0 | True     | explain select * from sharding_4_t1,sharding_3_t1         | hasNoStr{LIMIT}    | schema1 |
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="table_a" dataNode="dn1,dn2" rule="hash-two" primaryKey="id"/>
+        <table name="table_a" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
         <table name="table_b" dataNode="dn1,dn2" rule="hash-two" needAddLimit="false"/>
     """
     Then execute admin cmd "reload @@config_all"
