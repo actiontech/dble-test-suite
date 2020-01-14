@@ -7,8 +7,8 @@ import logging
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
-from lib.Node import get_node
-from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, add_child_in_xml,change_node_properties
+from lib.Node import get_node, get_sftp
+from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_root_node_properties
 
 LOGGER = logging.getLogger('steps.reload')
 
@@ -49,7 +49,7 @@ def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
         user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
         passwd = str(context.cfg_dble['manager_password'])
-    if hasattr(context, result):
+    if len(result.strip()) != 0:
         adminsql = "{0} {1}".format(adminsql, getattr(context, result)[0][0])
     if context.text: expect = context.text
     else: expect = "success"
@@ -67,8 +67,13 @@ def step_impl(context, adminsql, rs_name):
     setattr(context, rs_name, result)
 
 @Then('get resultset of user cmd "{sql}" named "{rs_name}"')
-def step_impl(context, sql, rs_name):
-    dble_conn = get_dble_conn(context)
+@Then('get resultset of user cmd "{sql}" named "{rs_name}" with connection "{conn_type}"')
+def step_impl(context, sql, rs_name, conn_type=''):
+    if hasattr(context, conn_type):
+        dble_conn = getattr(context, conn_type)
+        LOGGER.debug("get dble_conn: {0}".format(conn_type))
+    else:
+        dble_conn = get_dble_conn(context)
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
@@ -104,7 +109,7 @@ def step_impl(context, rs_name, key_word):
         else:
             rs_end.append(row_A)
     setattr(context, rs_name, rs_end)
-    
+
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):
     xmlSeg = get_xml_from_str(context.text)
@@ -130,15 +135,22 @@ def step_impl(context, kv_map_str, file):
 def add_xml_segment(context, kv_map_str, file):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
-    add_child_in_text(fullpath, kv_map, context.text)
+    add_child_in_string(fullpath, kv_map, context.text)
     upload_and_replace_conf(context, file)
 
 @Given('add attribute "{kv_map_str}" to rootnode in "{file}"')
 def add_attr_to_node(context, file, kv_map_str):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
-    change_node_properties(fullpath, kv_map)
+    change_root_node_properties(fullpath, kv_map)
     upload_and_replace_conf(context, file)
+
+@Given('add current version from var "{var_name}" to rootnode in "{file}"')
+def step_impl(context, var_name, file):
+    current_version=getattr(context, var_name)
+    kv_map_str= "{{'version':'{0}'}}".format(current_version)
+
+    add_attr_to_node(context, file, kv_map_str)
 
 @Given('delete the following xml segment')
 def delete_xml_segment(context):
@@ -184,10 +196,14 @@ def get_abs_path(context, file):
     path = "{0}/{1}".format(context.dble_conf, file)
     return path
 
-def upload_and_replace_conf(context, filename):
+def upload_and_replace_conf(context, filename, host='dble-1'):
     local_file = get_abs_path(context, filename)
     remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'],filename)
-    context.ssh_sftp.sftp_put(local_file, remote_file)
+    if host == 'dble-1':
+        context.ssh_sftp.sftp_put(local_file, remote_file)
+    else:
+        sftpClient = get_sftp(context.dbles, host)
+        sftpClient.sftp_put(local_file, remote_file)
 
 def get_encrypt(context, string):
     cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
@@ -195,7 +211,8 @@ def get_encrypt(context, string):
     rc, sto, ste = context.ssh_client.exec_command(cmd)
     return sto.split('\n')[1]
 
-@Then('execute cmd "{cmd}" xid from "{result}" in mysql "{host}"')
+
+@Then('execute cmd "{cmd}" with "{result}" in mysql "{host}"')
 def step_impl(context, cmd, result, host):
     node = get_node(context.mysqls, host)
     ip = node._ip
@@ -208,3 +225,17 @@ def step_impl(context, cmd, result, host):
         for r in getattr(context,result):
             adminsql = "{0} {1}".format(cmd, r[3])
             conn.query(adminsql)
+
+@Given('get config xml version from template config and named as "{var_version}"')
+def step_impl(context, var_version):
+    cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+    cmd_schema_version = "grep '<dble:schema' {0}/dble/conf/schema_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+    cmd_rule_version = "grep '<dble:rule' {0}/dble/conf/rule_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+
+    rc1, sto1, ste1 = context.ssh_client.exec_command(cmd_server_version)
+    rc2, sto2, ste2 = context.ssh_client.exec_command(cmd_schema_version)
+    rc3, sto3, ste3 = context.ssh_client.exec_command(cmd_rule_version)
+
+    assert sto1==sto2==sto3, "versions in server_template.xml schema_template.xml rule_template.xml are not the same"
+    setattr(context, var_version, sto1)
+
