@@ -15,13 +15,14 @@ Feature: reload @@config_all and recycl pool
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "rs_A"
     Then check resultset "rs_A" has lines with following column values
-      | HOST-3      |
-      | 172.100.9.5 |
-      | 172.100.9.6 |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.5 | false       |
+      | 172.100.9.5 | true        |
+      | 172.100.9.6 | false       |
+      | 172.100.9.6 | true        |
     Then check resultset "rs_A" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
-
     Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
     """
     s/172.100.9.6/172.100.9.4/g
@@ -29,25 +30,34 @@ Feature: reload @@config_all and recycl pool
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "rs_B"
     Then check resultset "rs_B" has lines with following column values
-      | HOST-3      |
-      | 172.100.9.4 |
-      | 172.100.9.5 |
-      | 172.100.9.6 |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.4 | false       |
+      | 172.100.9.4 | true        |
+      | 172.100.9.5 | false       |
+      | 172.100.9.5 | true        |
+      | 172.100.9.6 | true        |
+    Then check resultset "rs_B" has not lines with following column values
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.6 | false       |
+    Then check "rs_B" only has "2" connection of "172.100.9.6"
 
     Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
     """
-    s/172.100.9.4/172.100.9.1/g
+    s/172.100.9.4/172.100.9.2/g
     """
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "rs_C"
     Then check resultset "rs_C" has lines with following column values
-      | HOST-3      |
-      | 172.100.9.1 |
-      | 172.100.9.5 |
-      | 172.100.9.6 |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.2 | false       |
+      | 172.100.9.2 | true        |
+      | 172.100.9.5 | false       |
+      | 172.100.9.5 | true        |
+      | 172.100.9.6 | true        |
     Then check resultset "rs_C" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
+    Then check "rs_C" only has "2" connection of "172.100.9.6"
 
     Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
     """
@@ -56,9 +66,11 @@ Feature: reload @@config_all and recycl pool
     Then execute admin cmd "reload @@config_all -f"
     Then get resultset of admin cmd "show @@backend" named "rs_D"
     Then check resultset "rs_D" has lines with following column values
-      | HOST-3      |
-      | 172.100.9.6 |
-      | 172.100.9.1 |
+      | HOST-3      | BORROWED-10 |
+      | 172.100.9.6 | false       |
+      | 172.100.9.6 | true        |
+      | 172.100.9.2 | false       |
+      | 172.100.9.2 | true        |
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.5 |
