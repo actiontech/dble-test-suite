@@ -6,7 +6,7 @@
 Feature: use template to generate configuration file, check function is normal
 
   @skip_restart
-  Scenario:
+  Scenario: overwrite dble configuration by configuration templates
       #1.overwrite configuration by template, and modifying mysql node ip, dble can start normally
       #2.create databases by admin commands "create database"
       #3.create different types of tables successfully
@@ -26,7 +26,6 @@ Feature: use template to generate configuration file, check function is normal
     Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
     """
     s/name="testdb"/name="schema1"/
-    /tb_hash_sharding_er3/d
     s/ip[1-3]:3306/172.100.9.5:3306/
     s/ip[4-5]:3306/172.100.9.6:3306/
     s/your_user/test/
@@ -45,13 +44,9 @@ Feature: use template to generate configuration file, check function is normal
       | user | passwd | conn   | toClose | sql                                          | expect  | db |
       | root | 111111 | conn_0 | True    | create database @@dataNode='dn1,dn2,dn3,dn4' | success |    |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                 | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists tb_hash_string | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists tb_global2     | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table tb_hash_string(id int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table tb_global2(id int)     | success | schema1 |
-    Then get resultset of user cmd "show all tables" named "rs_A"
-    Then check resultset "rs_A" has lines with following column values
-      | Tables_in_TESTDB-0 | Table_type-1   |
-      | tb_global2         | GLOBAL TABLE   |
-      | tb_hash_string     | SHARDING TABLE |
+      | user | passwd | conn   | toClose | sql                                 | expect                                                                         | db      |
+      | test | 111111 | conn_0 | True    | drop table if exists tb_hash_string | success                                                                        | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists tb_global2     | success                                                                        | schema1 |
+      | test | 111111 | conn_0 | True    | create table tb_hash_string(id int) | success                                                                        | schema1 |
+      | test | 111111 | conn_0 | True    | create table tb_global2(id int)     | success                                                                        | schema1 |
+      | test | 111111 | conn_0 | True    | show all tables                     | hasStr{(('tb_global2', 'GLOBAL TABLE'), ('tb_hash_string', 'SHARDING TABLE'))} | schema1 |
