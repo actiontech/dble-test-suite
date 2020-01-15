@@ -242,7 +242,7 @@ def step_impl(context,hostname):
     cmd = context.text
     rc, stdout, stderr = context.ssh_client.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
