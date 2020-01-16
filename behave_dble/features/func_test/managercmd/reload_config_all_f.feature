@@ -5,7 +5,7 @@
 
 Feature: reload @@config_all -f
 
-  Scenario: execute manager cmd "@@reload config_all -f" after add or change dataNode/dataHost #1
+  Scenario: execute manager cmd "reload @@config_all -f" after add or change dataNode/dataHost #1
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
       """
       <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
