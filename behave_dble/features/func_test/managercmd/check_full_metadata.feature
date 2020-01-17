@@ -110,8 +110,6 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True     | create table test1(id int)  | success  | testdb   |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect                                                         | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1)  | In insert Syntax, you can't set value for Global check column! | testdb  |
-      | test | 111111 | conn_0 | True    | insert into test1 values(2,2)      | In insert Syntax, you can't set value for Global check column! | testdb  |
       | test | 111111 | conn_0 | True    | insert into test1 values(3)        | success                                                        | testdb  |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                           | expect                               | db |
@@ -120,8 +118,6 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect                                                          | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1)  |  In insert Syntax, you can't set value for Global check column! | testdb  |
-      | test | 111111 | conn_0 | True    | insert into test1 values(2,2)      | In insert Syntax, you can't set value for Global check column!  | testdb  |
       | test | 111111 | conn_0 | True    | insert into test1 values(3)        | success                                                         | testdb  |
       | test | 111111 | conn_0 | True    | alter table test1 add name char    | success                                                         | testdb  |
     Then execute sql in "dble-1" in "admin" mode
@@ -170,7 +166,7 @@ Feature: test "check full @@metadata...'"
       | user | passwd | conn   | toClose | sql                       | expect  | db     |
       | test | 111111 | conn_0 | True    | drop table if exists test | success | schema1 |
 
-  @CRITICAL
+  @CRITICAL @current
   Scenario: backend tables in datanode are inconsistent or lack in some datanode for a config sharding/global table, check metadata and query #5
     """
     5.1 the table structure of the sharding table in the datanode is different
