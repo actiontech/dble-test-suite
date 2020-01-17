@@ -5,28 +5,19 @@
 
 Feature: reload @@config_all -fr
 
-  @skip_restart
-  Scenario: open transaction, and execute "reload @@config_all -fr" or "reload @@config_all -f -r", transaction closed successfully
-    Given delete the following xml segment
-      | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
+  Scenario: open transaction, execute "reload @@config_all -fr" or "reload @@config_all -f -r" causing transaction closed
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" switchType="2" slaveThreshold="100">
-    <heartbeat>show slave status</heartbeat>
-    <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
-    </writeHost>
-    </dataHost>
-    <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
-    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
-    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
-    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
     <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+    <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
     """
     Given Restart dble in "dble-1" success
+    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
-    # 1 reload @@config_all -fr, donot do diff, rebuild backend conn, skip in use backend conn
+    # 1 execute "reload @@config_all -rf" will rebuild backend conn
     Then get resultset of admin cmd "show @@backend" named "rs_A"
     Then execute admin cmd "reload @@config_all -fr"
     Then get resultset of admin cmd "show @@backend" named "rs_B"
@@ -35,28 +26,14 @@ Feature: reload @@config_all -fr
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
 
-    #2 reload @@config_all -fr: add dataNode, rebuild backend conn , add new backend conn
-    Given delete the following xml segment
-      | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
+    #2 add dataNode, then execute "reload @@config_all -fr" will rebuild backend conn and add new backend conn
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
-      <heartbeat>select user()</heartbeat>
-      <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-      </writeHost>
-    </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
-      <heartbeat>select user()</heartbeat>
-      <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-      </writeHost>
-    </dataHost>
-    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
     <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group2" database="db1" name="dn2" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group2" database="db2" name="dn4" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fr"
     Then get resultset of admin cmd "show @@backend" named "rs_C"
@@ -72,21 +49,18 @@ Feature: reload @@config_all -fr
       | 172.100.9.5 |
       | 172.100.9.6 |
 
-    #3 Start the transaction, add readHost, Reload config_all -fr succeeds, the transaction connection is closed, and all connections are rebuilt
-    Given delete the following xml segment
-      | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
+    #3 Start the transaction and add readHost with err password causing execute "reload @@config_all -fr" fail
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
-      <heartbeat>select user()</heartbeat>
-      <writeHost host="hostM2" password="111111" url="172.100.9.4:3306" user="test">
-      </writeHost>
-    </dataHost>
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-      <readHost host="hostS1" url="172.100.9.2:3306" password="passwd" user="test"/>
+      <readHost host="hostS1" url="172.100.9.2:3306" password="errpwd" user="test"/>
+      </writeHost>
+    </dataHost>
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
+      <heartbeat>select user()</heartbeat>
+      <writeHost host="hostM2" password="111111" url="172.100.9.4:3306" user="test">
       </writeHost>
     </dataHost>
     """
@@ -97,14 +71,11 @@ Feature: reload @@config_all -fr
       | test | 111111 | conn_0 | False   | begin                                            | success | schema1 |
       | test | 111111 | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
 
-    Then execute admin cmd "reload @@config_all" get the following output
+    Then execute admin cmd "reload @@config_all -fr" get the following output
     """
     there are some datasource connection failed
     """
-    Given delete the following xml segment
-      | file       | parent         | child                                            |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost','kv_map':{'name':'ha_group1'}} |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
       <heartbeat>select user()</heartbeat>
@@ -130,7 +101,7 @@ Feature: reload @@config_all -fr
       | user | passwd | conn | toClose | sql                                    | expect      | db      |
       | test | 111111 | new  | true    | select * from sharding_4_t1 where id=2 | length{(0)} | schema1 |
 
-    #4 Start the transaction, add readHost, Reload config_all -f -r succeeds, the transaction connection is closed, and all connections are rebuilt
+    #4 Start the transaction and change dataNode, then execute "reload @@config_all -f -r"  causing transaction closed
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                              | expect  | db      |
       | test | 111111 | conn_1 | False   | drop table if exists sharding_4_t1               | success | schema1 |
@@ -143,6 +114,17 @@ Feature: reload @@config_all -fr
     """
     Then execute admin cmd "reload @@config_all -f -r"
     Then get resultset of admin cmd "show @@backend" named "rs_E"
+    Then check resultsets "rs_E" does not including resultset "rs_D" in following columns
+      | column     | column_index |
+      | BACKEND_ID | 1            |
+      | MYSQLID    | 2            |
+    Then check resultset "rs_E" has not lines with following column values
+      | HOST-3      |
+      | 172.100.9.4 |
+    Then check resultset "rs_E" has lines with following column values
+      | HOST-3      |
+      | 172.100.9.6 |
+      | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn | toClose | sql                                | expect      | db      |
       | test | 111111 | new  | True    | drop table if exists sharding_4_t1 | length{(0)} | schema1 |
