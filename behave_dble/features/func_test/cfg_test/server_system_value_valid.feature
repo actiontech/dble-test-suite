@@ -41,7 +41,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
         <property name="showBinlogStatusTimeout">60000</property>
         <property name="maxPacketSize">16777216</property>
         <property name="checkTableConsistencyPeriod">60000</property>
-        <property name="glableTableCheckPeriod">86400000</property>
         <property name="dataNodeIdleCheckPeriod">300000  </property>
         <property name="dataNodeHeartbeatPeriod">10000   </property>
         <property name="processorCheckPeriod">1000    </property>
@@ -100,7 +99,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
-      | glableTableCheckPeriod      | 86400000ms                      |
       | dataNodeIdleCheckPeriod     | 300 Seconds                     |
       | dataNodeHeartbeatPeriod     | 10 Seconds                      |
       | processorCheckPeriod        | 1 Seconds                       |
