@@ -86,6 +86,7 @@ def add_child_in_string(file, pos_kv_map, childNodeInString):
     childNode = get_xml_from_str(childNodeInString)
     return add_child_in_xml(file, pos_kv_map, childNode)
 
+
 def add_child_in_xml(file, pos_kv_map, childNode):
     """
     for each child to insert, insert position priority: same name node index > max(same tag index) > lastInsertTypeNodeMaxIdx
@@ -120,10 +121,10 @@ def add_child_in_xml(file, pos_kv_map, childNode):
             if firstDelIdx == -1 and sameTagChildMaxIdx == 0:  # there is no same tag
                 if firstLoop:
                     if prevTag is None:  # for the first child to insert,if no prev node, insert index is 0
-                        idx=0
+                        idx = 0
                     else:
                         idx = idxByPrevNode
-                else:# not first child, insert as last of parentNode
+                else:  # not first child, insert as last of parentNode
                     idx = k
             else:
                 if firstDelIdx == -1:  # there is no same name tag, insert as last of same tag
@@ -133,8 +134,9 @@ def add_child_in_xml(file, pos_kv_map, childNode):
             # print "debug6: idx ", idx, "child,", child.get('name')
             parentNode.insert(idx, child)
 
-            k = get_Insert_Idx(parentNode,child)#lastInsertTypeNodeMaxIdx, prepare for next child which has no same tag
-            firstLoop=False
+            k = get_Insert_Idx(parentNode,
+                               child)  # lastInsertTypeNodeMaxIdx, prepare for next child which has no same tag
+            firstLoop = False
 
     doctype = ""
     if file.find('rule.xml') > -1:
