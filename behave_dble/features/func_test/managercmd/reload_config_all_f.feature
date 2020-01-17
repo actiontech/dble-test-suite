@@ -64,13 +64,6 @@ Feature: reload @@config_all -f
       | PORT-4 | HOST-3      |
       | 3306   | 172.100.9.4 |
       | 3306   | 172.100.9.5 |
-
-    Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                             | expect  | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1              | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                           | success | schema1 |
-      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
       <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
@@ -79,6 +72,13 @@ Feature: reload @@config_all -f
       <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
       <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
       """
+    Then execute admin cmd "reload @@config_all -f"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                             | expect  | db      |
+      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1              | success | schema1 |
+      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int)              | success | schema1 |
+      | test | 111111 | conn_0 | False   | begin                                           | success | schema1 |
+      | test | 111111 | conn_0 | True    | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
     Then execute admin cmd "reload @@config_all -f"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                      | expect      | db      |
