@@ -25,7 +25,6 @@ Feature: reload @@config_all -r
       | column     | column_index |
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
-      | HOST       | 3            |
 
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
       """
