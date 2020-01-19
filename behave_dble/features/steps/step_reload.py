@@ -8,7 +8,7 @@ from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
 from lib.Node import get_node, get_sftp
-from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_node_properties
+from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_root_node_properties
 
 LOGGER = logging.getLogger('steps.reload')
 
@@ -126,8 +126,15 @@ def add_xml_segment(context, kv_map_str, file):
 def add_attr_to_node(context, file, kv_map_str):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
-    change_node_properties(fullpath, kv_map)
+    change_root_node_properties(fullpath, kv_map)
     upload_and_replace_conf(context, file)
+
+@Given('add current version from var "{var_name}" to rootnode in "{file}"')
+def step_impl(context, var_name, file):
+    current_version=getattr(context, var_name)
+    kv_map_str= "{{'version':'{0}'}}".format(current_version)
+
+    add_attr_to_node(context, file, kv_map_str)
 
 @Given('delete the following xml segment')
 def delete_xml_segment(context):
@@ -187,3 +194,16 @@ def get_encrypt(context, string):
 
     rc, sto, ste = context.ssh_client.exec_command(cmd)
     return sto.split('\n')[1]
+
+@Given('get config xml version from template config and named as "{var_version}"')
+def step_impl(context, var_version):
+    cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+    cmd_schema_version = "grep '<dble:schema' {0}/dble/conf/schema_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+    cmd_rule_version = "grep '<dble:rule' {0}/dble/conf/rule_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+
+    rc1, sto1, ste1 = context.ssh_client.exec_command(cmd_server_version)
+    rc2, sto2, ste2 = context.ssh_client.exec_command(cmd_schema_version)
+    rc3, sto3, ste3 = context.ssh_client.exec_command(cmd_rule_version)
+
+    assert sto1==sto2==sto3, "versions in server_template.xml schema_template.xml rule_template.xml are not the same"
+    setattr(context, var_version, sto1)
