@@ -234,7 +234,7 @@ def get_Insert_Idx(node, child):
     return idx
 
 
-def change_node_properties(file, kv_map, is_delete=False):
+def change_root_node_properties(file, kv_map, is_delete=False):
     '''修改/增加 /删除 节点的属性及属性值
       nodelist: 节点列表
       kv_map:属性及属性值map'''
