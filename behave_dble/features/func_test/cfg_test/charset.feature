@@ -51,6 +51,7 @@ Feature: set charset in server.xml,check backend charsets are as set
      <property name="charset">latin1</property>
      </system>
      """
+
     Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@backend" named "backend_rs_B"
     Then check resultset "backend_rs_B" has not lines with following column values
