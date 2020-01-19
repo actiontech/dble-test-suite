@@ -438,7 +438,7 @@ def step_impl(context,file,host):
     isFound = False
     while retry < 5:
         time.sleep(2)  # a interval wait for query run into
-        cmd = "cat {0} | grep '{1}' -c".format(file, context.text)
+        cmd = "cat {0} | grep '{1}' -c".format(file, context.text.strip())
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste) == 0, "check err:{0}".format(ste)
         isFound = int(sto) == 1
