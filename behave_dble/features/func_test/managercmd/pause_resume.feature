@@ -136,6 +136,6 @@ Feature: test "pause/resume" manager cmd
     """
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                          | expect  | db |
-      | test | 111111 | conn_0 | false   | select *  from sharding_4_t1 | success |    |
+      | test | 111111 | conn_0 | false   | select *  from sharding_4_t1 | length{(4)} |    |
       | test | 111111 | conn_0 | true    | commit                       | success |    |
     Given delete file "/tmp/dble_query.log" on "dble-1"
