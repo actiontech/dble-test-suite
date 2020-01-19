@@ -80,17 +80,17 @@ def step_impl(context, host):
 
     run_mysql_query(sshClient, context)
 
-def check_btrace_output(sshClient, btraceScript, expectTxt, context):
+def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
     retry=0
     isFound = False
-    while retry<5:
-        time.sleep(2) # a interval wait for query run into
+    while retry < 200:
+        time.sleep(5)  # a interval wait for query run into
         cmd = "cat {0}.log | grep '{1}' -c".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
-        isFound = int(sto)==1
+        isFound = int(sto)==num
         if isFound:
-            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*2))
+            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*5))
             break
 
         retry=retry+1
@@ -98,11 +98,11 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context):
     assert isFound, "can not find expect text '{0}' in {1}.log".format(expectTxt, btraceScript)
 
 @Then('check btrace "{btraceScript}" output in "{host}"')
-def step_impl(context, btraceScript, host):
+@Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
+def step_impl(context, btraceScript, host, num=1):
     sshClient = get_ssh(context.dbles, host)
-
-    remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],btraceScript)
-    check_btrace_output(sshClient, remoteFile, context.text, context)
+    remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'], btraceScript)
+    check_btrace_output(sshClient, remoteFile, context.text.strip(), context, int(num))
 
 def kill_query(sshClient,query, context):
     cmd = u"kill -9 `ps -ef | grep -F '{0}'| grep -v grep | awk '{{print $2}}'`".format(query)
