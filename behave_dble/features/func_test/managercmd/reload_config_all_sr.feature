@@ -15,7 +15,7 @@ Feature: reload @@config_all -sr
     <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
     """
     Given Restart dble in "dble-1" success
-
+    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
     # 1 execute "reload @@config_all -sr" will rebuild backend conn
     Then get resultset of admin cmd "show @@backend" named "rs_A"
     Then execute admin cmd "reload @@config_all -rs"
