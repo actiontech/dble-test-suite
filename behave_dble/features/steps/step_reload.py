@@ -7,8 +7,8 @@ import logging
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
-from lib.Node import get_node, get_sftp
-from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_node_properties
+from lib.Node import get_node
+from lib.XMLUtil import add_child_in_text, delete_child_node, get_xml_from_str, add_child_in_xml,change_node_properties
 
 LOGGER = logging.getLogger('steps.reload')
 
@@ -66,7 +66,7 @@ def step_impl(context, adminsql, rs_name):
 
 @Then('get resultset of user cmd "{sql}" named "{rs_name}"')
 @Then('get resultset of user cmd "{sql}" named "{rs_name}" with connection "{conn_type}"')
-def step_impl(context, sql, rs_name, conn_type=''):
+def step_impl(context, sql, rs_name, conn_type):
     if hasattr(context, conn_type):
         dble_conn = getattr(context, conn_type)
         LOGGER.debug("get dble_conn: {0}".format(conn_type))
@@ -93,7 +93,7 @@ def step_impl(context, rs_name, key_word):
         else:
             rs_end.append(row_A)
     setattr(context, rs_name, rs_end)
-
+    
 @Given('encrypt passwd and add xml segment to node with attribute "{kv_map_str}" in "{file}"')
 def step_impl(context, kv_map_str, file):
     xmlSeg = get_xml_from_str(context.text)
@@ -119,7 +119,7 @@ def step_impl(context, kv_map_str, file):
 def add_xml_segment(context, kv_map_str, file):
     fullpath = get_abs_path(context, file)
     kv_map = eval(kv_map_str)
-    add_child_in_string(fullpath, kv_map, context.text)
+    add_child_in_text(fullpath, kv_map, context.text)
     upload_and_replace_conf(context, file)
 
 @Given('add attribute "{kv_map_str}" to rootnode in "{file}"')
@@ -173,14 +173,10 @@ def get_abs_path(context, file):
     path = "{0}/{1}".format(context.dble_conf, file)
     return path
 
-def upload_and_replace_conf(context, filename, host='dble-1'):
+def upload_and_replace_conf(context, filename):
     local_file = get_abs_path(context, filename)
     remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'],filename)
-    if host == 'dble-1':
-        context.ssh_sftp.sftp_put(local_file, remote_file)
-    else:
-        sftpClient = get_sftp(context.dbles, host)
-        sftpClient.sftp_put(local_file, remote_file)
+    context.ssh_sftp.sftp_put(local_file, remote_file)
 
 def get_encrypt(context, string):
     cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
