@@ -5,7 +5,6 @@
 
 Feature: reload @@config_all -s
 
-  @skip_restart
   Scenario: execute manager cmd "reload @@config_all -s" after change user of writeHost ang password of readHost #1
     Given delete the following xml segment
       | file       | parent         | child              |
