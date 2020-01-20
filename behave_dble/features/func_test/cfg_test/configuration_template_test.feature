@@ -5,7 +5,6 @@
 
 Feature: use template to generate configuration file, check function is normal
 
-  @skip_restart
   Scenario: overwrite dble configuration by configuration templates
       #1.overwrite configuration by template, and modifying mysql node ip, dble can start normally
       #2.create databases by admin commands "create database"
