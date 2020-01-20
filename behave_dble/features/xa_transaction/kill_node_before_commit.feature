@@ -22,7 +22,7 @@ Feature: xa_transaction: kill node before transaction commit
       | test | 111111 | conn_0 | False   | select * from sharding_4_t1 | Transaction error, need to rollback | schema1 |
       | test | 111111 | conn_0 | False   | rollback                    | success                             | schema1 |
     Given start mysql in host "mysql-master1"
-    Given sleep "30" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_0 | True    | select * from sharding_4_t1 | length{(0)} | schema1 |
