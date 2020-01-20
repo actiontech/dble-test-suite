@@ -1,9 +1,10 @@
-﻿
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dble:server SYSTEM "server.dtd">
 <dble:server xmlns:dble="http://dble.cloud/">
 	<system>
+		<!--<property name="useExtensions">true</property>-->
 		<property name="serverPort">8066</property>
+
 	</system>
 	
 	<user name="test">
