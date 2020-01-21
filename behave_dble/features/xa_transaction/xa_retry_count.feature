@@ -20,7 +20,7 @@ Feature: change xaRetryCount value and check result
       | Xml    | WARNING | Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced |
 
   @skip_restart
-  Scenario: xaRetryCount value to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
+  Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
     <property name="xaRetryCount">3</property>
@@ -59,7 +59,7 @@ Feature: change xaRetryCount value and check result
       | test | 111111 | conn_1 | True    | delete from sharding_4_t1 where id=4 | success     | schema1 |
 
   @skip_restart
-  Scenario: when xa attempts does not reach the specified value, start mysql node and check data not lost #3
+  Scenario: recover mysql node in xaRetryCount and check data not lost #3
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
