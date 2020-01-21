@@ -85,7 +85,8 @@ Feature: reload @@config_all -r
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                    | expect      | db      |
       | test | 111111 | conn_0 | false   | commit                                 | success     | schema1 |
-      | test | 111111 | conn_0 | false   | select * from sharding_4_t1 where id=1 | length{(0)} | schema1 |
+      | test | 111111 | conn_0 | True    | select * from sharding_4_t1 where id=1 | length{(0)} | schema1 |
+    Given sleep "2" seconds
     Then get resultset of admin cmd "show @@backend" named "F"
     Then check resultset "F" has not lines with following column values
       | HOST-3      |
