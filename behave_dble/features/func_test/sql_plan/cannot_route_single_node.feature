@@ -43,14 +43,13 @@ Feature: following complex queries are not able to send one datanode
       | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` ORDER BY `a`.`c_flag` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                          |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                     |
-      | dn1_1             | BASE SQL        | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC |
-      | dn2_1             | BASE SQL        | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC |
+      | dn1_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC |
+      | dn2_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC |
       | merge_and_order_2 | MERGE_AND_ORDER | dn1_1; dn2_1                                                                                          |
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                     |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                      |
       | where_filter_1    | WHERE_FILTER    | join_1                                                                                                |
       | shuffle_field_2   | SHUFFLE_FIELD   | where_filter_1                                                                                        |
-
     Then get resultset of user cmd "explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)" named "rs_B" with connection "conn_0"
     Then check resultset "rs_B" has lines with following column values
       | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                                                                      |
@@ -58,8 +57,8 @@ Feature: following complex queries are not able to send one datanode
       | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 513) ORDER BY `a`.`c_flag` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                   |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                              |
-      | dn1_1             | BASE SQL        | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b` where (`b`.`id` = 1) OR (`b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
-      | dn2_1             | BASE SQL        | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b` where (`b`.`id` = 1) OR (`b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
+      | dn1_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` where (`b`.`id` = 1) OR (`b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
+      | dn2_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` where (`b`.`id` = 1) OR (`b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
       | merge_and_order_2 | MERGE_AND_ORDER | dn1_1; dn2_1                                                                                                                                   |
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                                                              |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                                               |
@@ -72,8 +71,8 @@ Feature: following complex queries are not able to send one datanode
       | dn1_0           | BASE SQL      | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 2) |
       | merge_1         | MERGE         | dn1_0                                                                                                             |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                           |
-      | dn1_1           | BASE SQL      | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b`                                       |
-      | dn2_0           | BASE SQL      | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b`                                       |
+      | dn1_1           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b`                                       |
+      | dn2_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b`                                       |
       | merge_2         | MERGE         | dn1_1; dn2_0                                                                                                      |
       | shuffle_field_3 | SHUFFLE_FIELD | merge_2                                                                                                           |
       | join_1          | JOIN          | shuffle_field_1; shuffle_field_3                                                                                  |
@@ -86,8 +85,8 @@ Feature: following complex queries are not able to send one datanode
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where `a`.`id` = 2 ORDER BY `a`.`c_flag` ASC |
       | merge_1           | MERGE           | dn1_0                                                                                                                   |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_1                                                                                                                 |
-      | dn1_1             | BASE SQL        | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC                   |
-      | dn2_0             | BASE SQL        | select `b`.`c_flag`,`b`.`c_decimal`,`b`.`id` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC                   |
+      | dn1_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC                   |
+      | dn2_0             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` ORDER BY `b`.`c_flag` ASC                   |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_1; dn2_0                                                                                                            |
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                       |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                        |
@@ -96,8 +95,8 @@ Feature: following complex queries are not able to send one datanode
     Then get resultset of user cmd "explain select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 or (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )))" named "rs_E" with connection "conn_0"
     Then check resultset "rs_E" has lines with following column values
       | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                       |
-      | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((a.c_decimal IN (1)) OR (`a`.`id` = 1) OR (`a`.`id` = 2)) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (a.c_decimal IN (1))) |
-      | dn2_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((a.c_decimal IN (1)) OR (`a`.`id` = 1) OR (`a`.`id` = 2)) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (a.c_decimal IN (1))) |
+      | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((`a`.`id` = 1) OR (`a`.`id` = 2) OR (a.c_decimal IN (1))) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (a.c_decimal IN (1))) |
+      | dn2_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((`a`.`id` = 1) OR (`a`.`id` = 2) OR (a.c_decimal IN (1))) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (a.c_decimal IN (1))) |
       | merge_1         | MERGE         | dn1_0; dn2_0                                                                                                                                                                                                                                                                                                                                                    |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                                                                                                                                                                                                                         |
 
