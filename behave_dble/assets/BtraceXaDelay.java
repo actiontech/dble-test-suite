@@ -5,9 +5,9 @@ import com.sun.btrace.annotations.BTrace;
 import com.sun.btrace.annotations.OnMethod;
 
 @BTrace(unsafe = true)
-public final class DelayBeforeXaStart {
+public final class BtraceXaDelay {
 
-    private DelayBeforeXaStart() {
+    private BtraceXaDelay() {
 
     }
 
@@ -17,7 +17,7 @@ public final class DelayBeforeXaStart {
     )
     public static void delayBeforeXaStart(String rrnName, String xaId) throws Exception {
         BTraceUtils.println("before xa start " + xaId + " in " + rrnName);
-        Thread.sleep(30000L);
+        Thread.sleep(100L);
     }
 
     @OnMethod(
@@ -27,7 +27,6 @@ public final class DelayBeforeXaStart {
     public static void delayBeforeXaEnd(String rrnName, String xaId) throws Exception {
         BTraceUtils.println("before xa end " + xaId + " in " + rrnName);
         Thread.sleep(100L);
-
     }
 
     @OnMethod(
