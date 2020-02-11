@@ -1,4 +1,5 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+﻿
+<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dble:server SYSTEM "server.dtd">
 <dble:server xmlns:dble="http://dble.cloud/">
 	<system>
@@ -6,7 +7,7 @@
 		<property name="serverPort">8066</property>
 
 	</system>
-	
+
 	<user name="test">
 		<property name="password">111111</property>
 		<property name="schemas">schema1,schema2,schema3</property>
