@@ -88,6 +88,7 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Given add current version from var "current_version" to rootnode in "server.xml"
     Given add current version from var "current_version" to rootnode in "rule.xml"
     Then execute admin cmd "reload @@config_all"
+    Given Restart dble in "dble-1" success
     Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
       """
       The dble-config-version is [0-9]*\.[0-9]*,but the server.xml version is [0-9]*\.[0-9]*.There must be some incompatible config between two versions, please check it
