@@ -57,6 +57,7 @@ class SFTPClient(Logging):
             self.logger.info('sftp put local_path:{1}, remote_path:{0}'.format(remote_path, local_path))
             self._sftp_ssh.put(local_path, remote_path)
         except Exception, e:
+            self.logger.debug("sftp put exception: {0}".format(e.message))
             raise
 
     def sftp_get(self, remote_path, local_path):
@@ -64,6 +65,7 @@ class SFTPClient(Logging):
             self.logger.info('sftp get remote_path:{0}, local_path:{1}'.format(remote_path, local_path))
             self._sftp_ssh.get(remote_path, local_path)
         except Exception, e:
+            self.logger.debug("sftp get exception: {0}".format(e.message))
             raise
 
     def sftp_close(self):

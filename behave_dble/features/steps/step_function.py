@@ -7,9 +7,10 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
+import time
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh
+from lib.Node import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *
@@ -240,9 +241,13 @@ def step_impl(context,filename,hostname):
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname):
     cmd = context.text
-    rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    if hostname.startswith("dble"):
+        rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+        rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
@@ -409,5 +414,58 @@ def step_impl(context,result,value):
     rs = getattr(context,result)
     assert int(rs) < int(value),"expect result {0} less than {1},but not".format(rs,value)
 
+@Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
+@Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
+def step_impl(context,host1,role,host2,oscmd='cd /usr/local/mysql/data'):
+    user = ''
+    password = ''
+    port = ''
+    if host1.startswith('dble'):
+        node = get_node(context.dbles,host1)
+        if role == "admin":
+            user = context.cfg_dble['manager_user']
+            password = context.cfg_dble['manager_password']
+            port = context.cfg_dble['manager_port']
+        else:
+            user = context.cfg_dble['client_user']
+            password = context.cfg_dble['client_password']
+            port = context.cfg_dble['client_port']
+    else:
+        node = get_node(context.mysqls,host1)
+        user = context.cfg_mysql['user']
+        password = context.cfg_mysql['password']
+        port = context.cfg_mysql['client_port']
+    ip = node.ip
 
+    if host2.startswith('dble'):
+        ssh = get_ssh(context.dbles,host2)
+    else:
+        ssh = get_ssh(context.mysqls,host2)
 
+    sql_cmd_str = context.text.strip()
+    sql_cmd_list = sql_cmd_str.splitlines()
+    context.logger.info("sql list: {0}".format(sql_cmd_list))
+    for sql_cmd in sql_cmd_list:
+        cmd = '{5} && mysql -h{0} -u{1} -p{2} -P{3} -c -e"{4}"'.format(ip, user, password, port,sql_cmd,oscmd)
+        stdin, stdout, stderr = ssh.exec_command(cmd)
+        context.logger.info("execute cmd:{0}".format(cmd))
+        stderr = stderr.lower()
+        assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+        time.sleep(3)
+
+@Then('check log "{file}" output in "{host}"')
+def step_impl(context,file,host):
+    sshClient = get_ssh(context.dbles, host)
+    retry = 0
+    isFound = False
+    while retry < 5:
+        time.sleep(2)  # a interval wait for query run into
+        cmd = "cat {0} | grep '{1}' -c".format(file, context.text.strip())
+        rc, sto, ste = sshClient.exec_command(cmd)
+        assert len(ste) == 0, "check err:{0}".format(ste)
+        isFound = int(sto) == 1
+        if isFound:
+            context.logger.debug("expect text is found in {0}s".format((retry + 1) * 2))
+            break
+        retry = retry + 1
+    assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
