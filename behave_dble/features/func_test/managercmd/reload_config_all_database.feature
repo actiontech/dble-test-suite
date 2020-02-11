@@ -20,7 +20,7 @@ Feature: execute manager cmd "create database @@datanode"
       | user | passwd | conn   | toClose | sql                                  | expect  | db |
       | root | 111111 | conn_0 | True    | create database @@datanode='dn2,dn4' | success |    |
     Then get resultset of admin cmd "show @@backend" named "rs_B"
-    Then check resultsets "rs_B" including resultset "rs_A" in following columns
+    Then check resultsets "rs_A" including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
