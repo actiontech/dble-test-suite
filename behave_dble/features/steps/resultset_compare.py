@@ -67,7 +67,7 @@ def step_impl(context, rs_name):
                 real_col = rs_row[col_idx]
                 isFound = unicode(real_col) == unicode(expect_col)
                 if not isFound: break
-        assert not isFound, "expect line not in resultset {0}".format(rs_name)
+            assert not isFound, "expect line not in resultset {0}".format(rs_name)
         context.logger.info("expect row:{0}, not found".format(expect_row))
 
 #once found expect, break loop
@@ -129,3 +129,9 @@ def step_impl(context, rs_name):
             if isFound: break
         assert isFound, "expect line not found in resultset {0}".format(rs_name)
         context.logger.info("expect row:{0}, is found".format(expect_row))
+
+@Then('check "{rs_name}" only has "{num}" connection of "{host}"')
+def step_impl(context,rs_name,num,host):
+    rs = getattr(context, rs_name)
+    stoList = re.findall(host,str(rs))
+    assert str(len(stoList)) == num, "expect only has {0} {1} connection, but has {2}".format(num,host,len(stoList))

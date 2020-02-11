@@ -9,7 +9,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
-        <property name="useGlobleTableCheck">false    </property>
         <property name="sequnceHandlerType">20</property>
         <property name="useSqlStat">false        </property>
         <property name="useCompression">true    </property>
@@ -42,7 +41,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
         <property name="showBinlogStatusTimeout">60000</property>
         <property name="maxPacketSize">16777216</property>
         <property name="checkTableConsistencyPeriod">60000</property>
-        <property name="glableTableCheckPeriod">86400000</property>
         <property name="dataNodeIdleCheckPeriod">300000  </property>
         <property name="dataNodeHeartbeatPeriod">10000   </property>
         <property name="processorCheckPeriod">1000    </property>
@@ -101,8 +99,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
-      | useGlobleTableCheck         | 1                               |
-      | glableTableCheckPeriod      | 86400000ms                      |
       | dataNodeIdleCheckPeriod     | 300 Seconds                     |
       | dataNodeHeartbeatPeriod     | 10 Seconds                      |
       | processorCheckPeriod        | 1 Seconds                       |
@@ -164,7 +160,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
-      | Xml     | WARNING | property [ useGlobleTableCheck ] 'false' data type should be int, skip         |
       | Xml     | WARNING | property [ usePerformanceMode ] 'false' data type should be int, skip          |
       | Xml     | WARNING | property [ useSqlStat ] 'false' data type should be int, skip                  |
       | Xml     | WARNING | property [ useThreadUsageStat ] 'false' data type should be int, skip          |
@@ -182,7 +177,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
-      | Xml     | WARNING | property [ useGlobleTableCheck ] 'false' data type should be int, skip         |
       | Xml     | WARNING | property [ usePerformanceMode ] 'false' data type should be int, skip          |
       | Xml     | WARNING | property [ useSqlStat ] 'false' data type should be int, skip                  |
       | Xml     | WARNING | property [ useThreadUsageStat ] 'false' data type should be int, skip          |
