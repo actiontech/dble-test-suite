@@ -6,7 +6,7 @@
 
 import re
 import time
-
+import os
 import MySQLdb
 from behave import *
 from hamcrest import *
@@ -107,12 +107,18 @@ def step_impl(context,fileName,hostname,dir):
         targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble[dir],fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
-    else :
+    else:
         ssh = get_ssh(context.mysqls, hostname)
         targetFile = "{0}/{1}".format(dir,fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0, 'update file content wtih:{0}, got err:{1}'.format(cmd,stderr))
+
+@Given('change btrace "{btrace}" locate "{dir}" with sed cmds')
+def step_impl(context,btrace,dir):
+    targetFile = "{0}/{1}".format(dir, btrace)
+    cmd = merge_cmd_strings(context, context.text, targetFile)
+    os.system(cmd)
 
 def merge_cmd_strings(context,text,targetFile):
     sed_cmd_str = text.strip()
