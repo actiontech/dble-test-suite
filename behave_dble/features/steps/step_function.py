@@ -8,10 +8,11 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 import logging
 import os
 import re
+
 import time
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh
+from lib.Node import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *

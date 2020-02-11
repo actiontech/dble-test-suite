@@ -102,9 +102,9 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
 
 @Then('check btrace "{btraceScript}" output in "{host}"')
 @Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
-def step_impl(context, btraceScript, host, num = 1):
+def step_impl(context, btraceScript, host, num=1):
     sshClient = get_ssh(context.dbles, host)
-    remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],btraceScript)
+    remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'], btraceScript)
     check_btrace_output(sshClient, remoteFile, context.text.strip(), context, int(num))
 
 def kill_query(sshClient,query, context):
