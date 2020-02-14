@@ -4,7 +4,7 @@
 Feature: subquery execute plan should be optimized for ER/Global table join #dble github issue #685 #1057
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
 
-  @NORMAL
+  @NORMAL @current
   Scenario: check ER tables subquery execute plan optimized #1
     Given change file "my.cnf" in "mysql-master1" locate "/etc" with sed cmds
     """
@@ -36,6 +36,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         <table name="table_b" dataNode="dn1,dn2" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
+    Given sleep "11" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                          | expect    | db     |
       | test | 111111 | conn_0 | False    | drop table if exists table_a | success   | schema1 |
