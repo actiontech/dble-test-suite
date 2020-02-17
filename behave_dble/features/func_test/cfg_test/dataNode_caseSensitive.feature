@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
-  @NORMAL
+  @NORMAL @restore_letter_sensitive
   Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
     Given delete the following xml segment
     |file        | parent          | child               |
