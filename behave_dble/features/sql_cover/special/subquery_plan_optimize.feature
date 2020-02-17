@@ -36,6 +36,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         <table name="table_b" dataNode="dn1,dn2" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
+#    default heartbeat period is 10 seconds,wait enough time for heartbeat recover
     Given sleep "11" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                          | expect    | db     |
