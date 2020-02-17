@@ -16,7 +16,7 @@ from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
 
 @Given('restart mysql in "{host}" with sed cmds to update mysql config')
-def restart_mysql(context, host):
+def update_config_and_restart_mysql(context, host):
     stop_mysql(context, host)
 
     # to wait stop finished
