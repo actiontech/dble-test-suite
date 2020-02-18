@@ -10,6 +10,10 @@ from steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
+from steps.restart import update_config_and_restart_mysql
+
+from .steps.step_function import restore_sys_time
+
 logger = logging.getLogger('environment')
 
 def init_dble_conf(context, para_dble_conf):
@@ -113,7 +117,16 @@ def after_feature(context, feature):
 def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
-    pass
+    logger.info(context.text)
+    if "restore_letter_sensitive" in scenario.tags:
+        context.text = """
+        /lower_case_table_names/d
+        /server-id/a lower_case_table_names = 0
+        """
+        update_config_and_restart_mysql(context, "mysql-master1")
+        update_config_and_restart_mysql(context, "mysql-master2")
+        update_config_and_restart_mysql(context, "mysql-slave1")
+        update_config_and_restart_mysql(context, "mysql-slave2")
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
@@ -125,12 +138,17 @@ def after_scenario(context, scenario):
             conn.close()
             delattr(context, conn_name)
 
-    # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
-    if not (context.config.stop and scenario.status == "failed") and not "skip_restart" in scenario.tags and not context.userDebug:
-        reset_dble(context)
+    if "restore_sys_time" in scenario.tags:
+        restore_sys_time(context)
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
+
+    # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
+    stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
+    if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:
+        reset_dble(context)
+
 
     logger.info('after_scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)

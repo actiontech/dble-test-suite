@@ -191,6 +191,8 @@ dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:134, sql:[show create view view_test/*allow_diff*/]===
 dble:[[('view_test', 'create view view_test as  select name,pad from test1', 'latin1', 'latin1_swedish_ci')]]
 mysql:[[('view_test', 'CREATE ALGORITHM=UNDEFINED DEFINER=`test`@`%` SQL SECURITY DEFINER VIEW `view_test` AS select `test1`.`name` AS `name`,`test1`.`pad` AS `pad` from `test1`', 'latin1', 'latin1_swedish_ci')]]
+===file:sqls_util/syntax/view.sql, id:135, sql:[SHOW COLUMNS FROM view_test]===
+dble:[[('name', 'char(120)', 'NO', '', '', ''), ('pad', 'int(11)', 'NO', '', None, '')]]
 ===file:sqls_util/syntax/view.sql, id:136, sql:[drop view view_test]===
 dble:[[]]
 ===file:sqls_util/syntax/view.sql, id:138, sql:[create view view_test as select id,name from test1]===
