@@ -49,7 +49,7 @@ def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
         user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
         passwd = str(context.cfg_dble['manager_password'])
-    if hasattr(context, result):
+    if len(result.strip()) != 0:
         adminsql = "{0} {1}".format(adminsql, getattr(context, result)[0][0])
     if context.text: expect = context.text
     else: expect = "success"
@@ -212,7 +212,7 @@ def get_encrypt(context, string):
     return sto.split('\n')[1]
 
 
-@Then('execute cmd "{cmd}" xid from "{result}" in mysql "{host}"')
+@Then('execute cmd "{cmd}" with "{result}" in mysql "{host}"')
 def step_impl(context, cmd, result, host):
     node = get_node(context.mysqls, host)
     ip = node._ip

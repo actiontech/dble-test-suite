@@ -5,7 +5,6 @@
 
 Feature: retry policy after xa transaction commit failed for network anomaly
 
-  @skip_restart
   Scenario: mysql node network shock causing xa transaction fail to commit, recovery network before the front end attempts to commit 5 times #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -14,10 +13,18 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    48s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "10" seconds
+    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
-    Given sleep "3" seconds
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before xa prepare
+    """
     Given execute oscmd in "mysql-master1"
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
@@ -37,8 +44,9 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
       | test | 111111 | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @skip_restart
   Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -47,10 +55,18 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    48s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "10" seconds
+    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
-    Given sleep "3" seconds
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before xa prepare
+    """
     Given execute oscmd in "mysql-master1"
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
@@ -76,8 +92,9 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
       | test | 111111 | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @skip_restart
   Scenario:  mysql node network shock causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' and 'xa commit'  #3
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -86,10 +103,18 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    48s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "10" seconds
+    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
-    Given sleep "3" seconds
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before xa prepare
+    """
     Given execute oscmd in "mysql-master1"
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
@@ -127,6 +152,8 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_1 | false   | select * from sharding_4_t1 | length{(2)} | schema1 |
       | test | 111111 | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
   Scenario: mysql node network shock causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #4
     Then execute sql in "dble-1" in "user" mode
@@ -136,15 +163,25 @@ Feature: retry policy after xa transaction commit failed for network anomaly
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given prepare a thread run btrace script "DelayBeforeXaPrepare.java" in "dble-1"
-    Given sleep "10" seconds
+    Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    39s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    """
+    Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
+    Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
-    Given sleep "3" seconds
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before xa end
+    """
     Given execute oscmd in "mysql-master1"
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
     """
     Given destroy sql threads list
+    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
+    Given destroy btrace threads list
     Given execute oscmd in "mysql-master1"
     """
     iptables -D INPUT -s 172.100.9.1 -j REJECT
@@ -152,4 +189,15 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
-      | test | 111111 | conn_1 | True    | select * from sharding_4_t1 | length{(0)} | schema1 |
+      | test | 111111 | conn_1 | true    | select * from sharding_4_t1 | length{(0)} | schema1 |
+    Then restart dble in "dble-1" failed for
+    """
+    Fail to recover xa when dble start, please check backend mysql
+    """
+    Given restart mysql in "mysql-master1"
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn | toClose | sql                                | expect      | db      |
+      | test | 111111 | new  | True    | drop table if exists sharding_4_t1 | length{(0)} | schema1 |
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
