@@ -101,4 +101,5 @@ field 0: schema1             , length:7
 field 0: schema2             , length:7
 field 0: schema3             , length:7
         More results exist
-Could not get next result
+=====sql index 5 result: =====
+        0 rows affected
