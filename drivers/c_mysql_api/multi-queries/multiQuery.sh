@@ -2,7 +2,7 @@
 dble_version=$1
 
 #restart dble
-ssh root@behave "cd /var/lib/go-agent/pipelines/autotest-dble-${dble_version}/behave_dble;behave --stop -D dble_conf=sql_cover_sharding features/setup.feature;chown -R go:go dble_conf/sql_cover_sharding;;chown -R go:go logs"
+ssh root@behave "cd /var/lib/go-agent/pipelines/autotest-dble-${dble_version}/behave_dble;behave --stop -D dble_conf=sql_cover_sharding features/setup.feature;chown -R go:go dble_conf/sql_cover_sharding;chown -R go:go logs"
 
 #compile multiquery code
 make clean
@@ -22,4 +22,4 @@ fi
 
 #save logs for ci artifacts
 scp -r root@dble-1:/opt/dble/logs ./dble_logs
-cp ./drivers/c_mysql_api/multi-queries/curr.output ./dble_logs/sql.output
+cp ./curr.output ./dble_logs/sql.output
