@@ -13,7 +13,7 @@
 
 int main(int argc, char *argv[]) {
 //	IS_DEBUG = argc==1 && strcmp(argv[1],"debug")==0;
-	printf("IS_DEBUG: %d, argc:%d, argv[1]:%s\n", IS_DEBUG, argc, argv[2]);
+	printf("IS_DEBUG: %d, argc:%d\n", IS_DEBUG, argc);
 
 //    config("../../sys.config", sys);
     MYSQL* conn = getConn();
