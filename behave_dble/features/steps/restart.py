@@ -16,7 +16,7 @@ from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
 
 @Given('restart mysql in "{host}" with sed cmds to update mysql config')
-def restart_mysql(context, host):
+def update_config_and_restart_mysql(context, host):
     stop_mysql(context, host)
 
     # to wait stop finished
@@ -25,7 +25,7 @@ def restart_mysql(context, host):
     update_file_content(context, "/etc/my.cnf", host)
 
     start_mysql(context, host)
-    
+
 @Given('restart mysql in "{host}"')
 def restart_mysql(context, host):
     stop_mysql(context, host)
@@ -41,7 +41,7 @@ def restart_mysql(context, host):
     user = context.cfg_mysql['user']
     passwd = context.cfg_mysql['password']
     connect_test(context, ip, user, passwd, port)
-    
+
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
     mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
@@ -76,7 +76,7 @@ def start_mysql(context, host):
     obj = re.search(success_p, out)
     isSuccess = obj is not None
     assert isSuccess, "start mysql in host:{0} err: {1}".format(host, err)
-    
+
 
 @Given('connect after restart success')
 def connect_test(context, ip, user, passwd, port):
