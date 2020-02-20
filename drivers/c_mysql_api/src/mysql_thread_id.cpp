@@ -17,19 +17,19 @@ void case_mysql_thread_id(){
 	sprintf(sql, "kill %lu", tid);
 	if(mysql_query(mysql, sql)){
 //		printf("kill:%lu,\n", tid);
-		const char * err=mysql_error(mysql);
-		printf("debug1: kill thread_id fail, err: %s\n", err);
 
-		unsigned int wc = mysql_warning_count(mysql);
-		printf("    pass! mysql_warning_count: %u\n", wc);
-	}else{
 		const char * err=mysql_error(mysql);
-		printf("debug2: kill thread_id fail, err: %s\n", err);
 		if(strcmp("Lost connection to MySQL server during query", err)==0 || strcmp("Query execution was interrupted",err)==0){
 			printf("    pass! after kill thread_id by mysql_thread_id query get 'lost connection to ...'\n");
 		}else{
 			printf("kill thread_id fail, err: %s\n", err);
 			exit(1);
 		}
+
+		unsigned int wc = mysql_warning_count(mysql);
+		printf("    pass! mysql_warning_count: %u\n", wc);
+	}else{
+	    printf("    fail:expect after kill thread_id, conn be closed");
+	    exit(1);
 	}
 }
