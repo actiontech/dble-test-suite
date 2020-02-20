@@ -1,16 +1,21 @@
 #!/bin/bash
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-need_compare=${1-"false"}
 
-rm -rf sql_logs
+dble_version=$1
 
-cd src
-./a.out "" "conf/auto_dble_test.yaml" "driver_test_client.sql" "driver_test_manager.sql"
+DIR="$( cd "$( dirname "$0" )" && pwd )"
+cd ../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
 
-mv sql_logs ../sql_logs
-cd ../
-if [ "$need_compare" = "-c" ]; then
-    echo "comparing results..."
-    bash compare_result.sh std_sql_logs sql_logs
-fi
+#restart dble
+ssh root@behave "cd /var/lib/go-agent/pipelines/autotest-dble-${dble_version}/behave_dble;behave --stop -D dble_conf=sql_cover_sharding features/setup.feature;chown -R go:go dble_conf/sql_cover_sharding;chown -R go:go logs"
+
+#compile code
+cd ${DIR} && g++ src/*.cpp -l mysqlcppconn -l yaml-cpp
+
+#do run cpp driver test
+bash do_run_connector_cpp.sh -c
+
+#save logs for ci artifacts
+scp -r root@dble-1:/opt/dble/logs ./dble_logs
+cp -r ./sql_logs ./dble_logs/sql_logs
