@@ -11,7 +11,7 @@ cd ../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
 ssh root@behave "cd /var/lib/go-agent/pipelines/autotest-dble-${dble_version}/behave_dble;behave --stop -D dble_conf=sql_cover_sharding features/setup.feature;chown -R go:go dble_conf/sql_cover_sharding;chown -R go:go logs"
 
 #compile code
-cd ${DIR} && g++ src/*.cpp -l mysqlcppconn -l yaml-cpp
+cd ${DIR}/src && g++ *.cpp -l mysqlcppconn -l yaml-cpp
 
 #do run cpp driver test
 bash do_run_connector_cpp.sh -c
