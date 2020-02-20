@@ -8,8 +8,7 @@ cd ${DIR}/../../../behave_dble/compose/docker-build-behave && bash resetReplicat
 ssh root@behave "cd /var/lib/go-agent/pipelines/autotest-dble-${dble_version}/behave_dble;behave --stop -D dble_conf=sql_cover_sharding features/setup.feature;chown -R go:go dble_conf/sql_cover_sharding;chown -R go:go logs"
 
 #compile code
-make clean
-make
+cd ${DIR} && make clean && make
 
 #run cases
 cd ${DIR} && ./c_mysql_api.o > curr.output 2>&1
