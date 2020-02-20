@@ -1,4 +1,4 @@
-IS_DEBUG: 0, argc:1, argv[1]:HOSTNAME=behave
+IS_DEBUG: 0, argc:1
     create new conn! 
     host:172.100.9.1, use:test, passwd:111111, port:8066 
 ==>mysql_change_user test suits
