@@ -21,5 +21,5 @@ else
 fi
 
 #save logs for ci artifacts
-scp -r root@dble-1:/opt/dble/logs ./dble_logs
-cp ./curr.output ./dble_logs/c_mysql_api.output
+scp -r root@dble-1:/opt/dble/logs ../../dble_logs
+cp ./curr.output ../../dble_logs/curr.output
