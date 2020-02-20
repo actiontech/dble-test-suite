@@ -18,7 +18,7 @@ Feature: set charset in server.xml,check backend charsets are as set
      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <dataHost maxCon="100" minCon="10" name="172.100.9.6" balance="1" switchType="-1">
+        <dataHost maxCon="100" minCon="10" name="ha_group2" balance="1" switchType="-1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
                 <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="111111"/>
@@ -51,6 +51,7 @@ Feature: set charset in server.xml,check backend charsets are as set
      <property name="charset">latin1</property>
      </system>
      """
+
     Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@backend" named "backend_rs_B"
     Then check resultset "backend_rs_B" has not lines with following column values

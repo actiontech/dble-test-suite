@@ -5,7 +5,7 @@ Feature: manager commands test
   # Enter feature description here
 
   @NORMAL
-  Scenario Outline:
+  Scenario Outline:  #1
     Then execute sql in "<filename>" to check manager work fine
 
         Examples:Types

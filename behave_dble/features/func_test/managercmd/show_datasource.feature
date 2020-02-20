@@ -16,7 +16,7 @@ Feature: show_datasource
   Scenario: github issue #1064 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-	   <dataHost balance="0" maxCon="10" minCon="10" name="172.100.9.5" slaveThreshold="100" switchType="1">
+	   <dataHost balance="0" maxCon="10" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
 		   <heartbeat>select user()</heartbeat>
 		   <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		   </writeHost>
@@ -25,5 +25,5 @@ Feature: show_datasource
     Given Restart dble in "dble-1" success
     Then get resultset of admin cmd "show @@datasource" named "sql_rs2"
     Then check resultset "sql_rs2" has lines with following column values
-        | NAME-1 | HOST-2         |  PORT-3  | ACTIVE-5 |IDLE-6  |
-        | hostM1 | 172.100.9.5   | 3306     |    1      |       9|
+        | NAME-1 | HOST-2        |  PORT-3  | ACTIVE-5 |
+        | hostM1 | 172.100.9.5   | 3306     |    1     |

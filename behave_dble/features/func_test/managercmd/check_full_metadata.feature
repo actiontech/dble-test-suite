@@ -110,8 +110,6 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True     | create table test1(id int)  | success  | testdb   |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect                                                         | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1)  | In insert Syntax, you can't set value for Global check column! | testdb  |
-      | test | 111111 | conn_0 | True    | insert into test1 values(2,2)      | In insert Syntax, you can't set value for Global check column! | testdb  |
       | test | 111111 | conn_0 | True    | insert into test1 values(3)        | success                                                        | testdb  |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                           | expect                               | db |
@@ -120,8 +118,6 @@ Feature: test "check full @@metadata...'"
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect                                                          | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1,1,1)  |  In insert Syntax, you can't set value for Global check column! | testdb  |
-      | test | 111111 | conn_0 | True    | insert into test1 values(2,2)      | In insert Syntax, you can't set value for Global check column!  | testdb  |
       | test | 111111 | conn_0 | True    | insert into test1 values(3)        | success                                                         | testdb  |
       | test | 111111 | conn_0 | True    | alter table test1 add name char    | success                                                         | testdb  |
     Then execute sql in "dble-1" in "admin" mode
@@ -170,7 +166,7 @@ Feature: test "check full @@metadata...'"
       | user | passwd | conn   | toClose | sql                       | expect  | db     |
       | test | 111111 | conn_0 | True    | drop table if exists test | success | schema1 |
 
-  @CRITICAL
+  @CRITICAL @current
   Scenario: backend tables in datanode are inconsistent or lack in some datanode for a config sharding/global table, check metadata and query #5
     """
     5.1 the table structure of the sharding table in the datanode is different
@@ -182,12 +178,12 @@ Feature: test "check full @@metadata...'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test4" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
+      <table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test4" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
       <table name="test5" dataNode="dn1,dn2,dn3,dn4" type="global"/>
-      <table name="test6" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
+      <table name="test6" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -293,11 +289,11 @@ Feature: test "check full @@metadata...'"
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
-      <table name="test_two" dataNode="dn2,dn4" rule="hash-two" primaryKey="id"/>
+      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+      <table name="test_two" dataNode="dn2,dn4" rule="hash-two" cacheKey="id"/>
     </schema>
 
-    <dataHost balance="3" maxCon="1000" minCon="10" name="172.100.9.6" slaveThreshold="-1" switchType="1">
+    <dataHost balance="3" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="-1" switchType="1">
         <heartbeat>select user()</heartbeat>
         <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
         <readHost host="hostS2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -354,11 +350,11 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard | success | schema1 |
 
   @regression
-  Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #5
+  Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="id"/>
+      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -399,12 +395,12 @@ Feature: test "check full @@metadata...'"
       | test | 111111 | conn_0 | True    | drop table if exists test_no_shard     | success  | schema1 |
 
   @regression
-  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #6
+  Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
       <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
       <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
-      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" primaryKey="R_REGIONKEY" autoIncrement="true"/>
+      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="R_REGIONKEY" />
       </schema>
       <dataNode name="dn1" dataHost="host1" database="db1"/>
       <dataNode name="dn2" dataHost="host1" database="db2"/>
@@ -471,7 +467,7 @@ Feature: test "check full @@metadata...'"
       | user  | passwd | conn   | toClose | sql                                                                  | expect              | db     |
       | root  | 111111 | conn_0 | True    | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`mytest_auto_test1`}   | schema1 |
 
-  Scenario: add filter for reload @@metadata #7
+  Scenario: add filter for reload @@metadata #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test">

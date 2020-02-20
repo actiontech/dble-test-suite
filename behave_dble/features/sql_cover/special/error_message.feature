@@ -3,8 +3,8 @@
 # Created by maofei at 2019/1/2
 Feature: # Detecting the reasonableness of the alarm information returned by the front end
 
-  @TRIVIAL
-  Scenario: # union with different number of columns
+  @TRIVIAL @current
+  Scenario: union with different number of columns #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose| sql                                                                                | expect    | db     |
       | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1                                                 | success   | schema1 |
@@ -13,14 +13,13 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int, name varchar(5))                                | success   | schema1 |
       | test | 111111 | conn_0 | True    | create table schema2.global_4_t1(id int, name varchar(5))                          | success   | schema1 |
       | test | 111111 | conn_0 | True    | create table single_node_t1(id int, name varchar(5),age int)                       | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema2.global_4_t1        | The used SELECT statements have a different number of columns   | schema1 |
+      | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema2.global_4_t1        | success   | schema1 |
       | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema1.single_node_t1     | The used SELECT statements have a different number of columns   | schema1 |
       | test | 111111 | conn_0 | True    | alter table schema2.global_4_t1 drop column name                                   | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from sharding_4_t1 union select * from schema2.global_4_t1                | success   | schema1 |
       | test | 111111 | conn_0 | True    | select * from schema1.single_node_t1 union select * from schema2.global_4_t1       | The used SELECT statements have a different number of columns   | schema1 |
 
   @regression
-  Scenario: # unexpected explain  from issue：837
+  Scenario: unexpected explain  from issue：837 #2
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose| sql                                                                     | expect                                                                                                     | db     |
       | test | 111111 | conn_0  | True   | explain explain select 1                                                | Inner command not route to MySQL:explain select 1                                                   |schema1  |
@@ -44,7 +43,7 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0  | True   | explain load data infile my.sqll                                        |Inner command not route to MySQL:load data infile my.sqll                                            |schema1  |
 
   @regression
-  Scenario: # correlated subquery in the SELECT clause will raise an error  from issue：1087
+  Scenario: correlated subquery in the SELECT clause will raise an error  from issue：1087 #3
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose| sql                                                                                                                                                                        | expect                                          |db     |
       | test | 111111 | conn_0  | True   | drop table if exists sharding_4_t1                                                                                                                                     | success                                         |schema1  |
@@ -52,7 +51,7 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0  | True   | SELECT COUNT(*) AS TEMP2,(SELECT COUNT(*) FROM sharding_4_t1 S WHERE MONTH(s.SENDING_DATE) = MONTH(t.SENDING_DATE)) AS TEMP1 FROM sharding_4_t1 t       |Correlated Sub Queries is not supported     |schema1  |
 
   @regression
-  Scenario: # test Unfriendly tips for select query  from issue：1053
+  Scenario: test Unfriendly tips for select query  from issue：1053 #4
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose| sql                                                                                                                           | expect                                    |db     |
       | test | 111111 | conn_0  | True   | drop table if exists sharding_4_t1                                                                                       | success                                    |schema1  |
@@ -63,7 +62,7 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
       | test | 111111 | conn_0  | True   | create table sharding_4_t1(id int,name char)                                                                            | success                                    |schema1  |
       | test | 111111 | conn_0  | True   | select * from sharding_1_t1 b,sharding_4_t1 c,(select * from sharding_2_t1) a on c.id=b.id and c.id=b.id       |You have an error in your SQL syntax     |schema1  |
 
-  Scenario: # test a physical database that has not been created when starting xa  from issue：1106
+  Scenario: test a physical database that has not been created when starting xa  from issue：1106 #5
     Then execute sql in "mysql-master1"
       | user  | passwd | conn   | toClose | sql                                  | expect  | db  |
       | test  | 111111 | conn_0 | True    | drop database if exists db3       | success |     |

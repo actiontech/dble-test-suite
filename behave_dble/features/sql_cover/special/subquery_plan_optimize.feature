@@ -5,33 +5,39 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
 
   @NORMAL
-  Scenario: check ER tables subquery execute plan optimized
-    Given restart mysql in "mysql-master1" with options
+  Scenario: check ER tables subquery execute plan optimized #1
+    Given change file "my.cnf" in "mysql-master1" locate "/etc" with sed cmds
+    """
+    /lower_case_table_names/d
+    /server-id/a lower_case_table_names = 1
+    """
+    Given change file "my.cnf" in "mysql-master2" locate "/etc" with sed cmds
+    """
+    /lower_case_table_names/d
+    /server-id/a lower_case_table_names = 1
+    """
+    Given change file "my.cnf" in "mysql-slave1" locate "/etc" with sed cmds
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given restart mysql in "mysql-master2" with options
+    Given change file "my.cnf" in "mysql-slave2" locate "/etc" with sed cmds
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given restart mysql in "mysql-slave1" with options
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 1
-     """
-    Given restart mysql in "mysql-slave2" with options
-    """
-     /lower_case_table_names/d
-     /server-id/a lower_case_table_names = 1
-     """
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given restart mysql in "mysql-slave1"
+    Given restart mysql in "mysql-slave2"
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="table_a" dataNode="dn1,dn2" rule="hash-two" />
         <table name="table_b" dataNode="dn1,dn2" rule="hash-two" />
     """
     Then execute admin cmd "reload @@config_all"
+#    default heartbeat period is 10 seconds,wait enough time for heartbeat recover
+    Given sleep "11" seconds
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose  | sql                          | expect    | db     |
       | test | 111111 | conn_0 | False    | drop table if exists table_a | success   | schema1 |
@@ -43,29 +49,33 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       |explain select * from table_a a, table_b b on a.id =b.id | 4 |
       |explain select * from table_a a, table_b B on a.id =b.id | 4 |
       |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 7 |
-    Given restart mysql in "mysql-master1" with options
+    Given change file "my.cnf" in "mysql-master1" locate "/etc" with sed cmds
       """
       /lower_case_table_names/d
       /server-id/a lower_case_table_names = 0
      """
-    Given restart mysql in "mysql-master2" with options
+    Given change file "my.cnf" in "mysql-master2" locate "/etc" with sed cmds
      """
       /lower_case_table_names/d
       /server-id/a lower_case_table_names = 0
      """
-     Given restart mysql in "mysql-slave1" with options
+    Given change file "my.cnf" in "mysql-slave1" locate "/etc" with sed cmds
      """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 0
      """
-     Given restart mysql in "mysql-slave2" with options
+    Given change file "my.cnf" in "mysql-slave2" locate "/etc" with sed cmds
      """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 0
      """
+    Given restart mysql in "mysql-master1"
+    Given restart mysql in "mysql-master2"
+    Given restart mysql in "mysql-slave1"
+    Given restart mysql in "mysql-slave2"
 
   @regression
-  Scenario: check Global tables subquery execute plan optimized
+  Scenario: check Global tables subquery execute plan optimized #2
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="table_a" dataNode="dn1,dn2" type="global" />
@@ -83,7 +93,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         |explain select * from table_a a, table_b b on a.id =b.id | 2 |
         |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 2 |
 
-  Scenario: the optimization of merge
+  Scenario: the optimization of merge #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="tb_parent" dataNode="dn1,dn2" rule="hash-two">

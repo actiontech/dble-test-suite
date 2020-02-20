@@ -15,20 +15,22 @@ from lib.DBUtil import DBUtil
 from . lib.Node import get_node, get_ssh
 from . step_function import update_file_content
 
-@Given('restart mysql in "{host}" with options')
-def restart_mysql(context, host):
+@Given('restart mysql in "{host}" with sed cmds to update mysql config')
+def update_config_and_restart_mysql(context, host):
     stop_mysql(context, host)
 
+    # to wait stop finished
     time.sleep(10)
 
     update_file_content(context, "/etc/my.cnf", host)
 
     start_mysql(context, host)
-    
+
 @Given('restart mysql in "{host}"')
 def restart_mysql(context, host):
     stop_mysql(context, host)
 
+    # to wait stop finished
     time.sleep(10)
 
     start_mysql(context, host)
@@ -39,7 +41,7 @@ def restart_mysql(context, host):
     user = context.cfg_mysql['user']
     passwd = context.cfg_mysql['password']
     connect_test(context, ip, user, passwd, port)
-    
+
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
     mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
@@ -74,7 +76,7 @@ def start_mysql(context, host):
     obj = re.search(success_p, out)
     isSuccess = obj is not None
     assert isSuccess, "start mysql in host:{0} err: {1}".format(host, err)
-    
+
 
 @Given('connect after restart success')
 def connect_test(context, ip, user, passwd, port):
@@ -97,3 +99,27 @@ def connect_test(context, ip, user, passwd, port):
         time.sleep(5)
 
     assert_that(isSuccess, "can not connect to {0} after 25s wait".format(ip))
+
+@Given('change file "{fileName}" in "{hostname}" locate "{dir}" with sed cmds')
+def step_impl(context,fileName,hostname,dir):
+    if hostname.startswith('dble'):
+        ssh = get_ssh(context.dbles, hostname)
+        targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble[dir],fileName)
+        cmd = merge_cmd_strings(context,context.text,targetFile)
+        rc, stdout, stderr = ssh.exec_command(cmd)
+    else :
+        ssh = get_ssh(context.mysqls, hostname)
+        targetFile = "{0}/{1}".format(dir,fileName)
+        cmd = merge_cmd_strings(context,context.text,targetFile)
+        rc, stdout, stderr = ssh.exec_command(cmd)
+    assert_that(len(stderr)==0, 'update file content wtih:{0}, got err:{1}'.format(cmd,stderr))
+
+def merge_cmd_strings(context,text,targetFile):
+    sed_cmd_str = text.strip()
+    sed_cmd_list = sed_cmd_str.splitlines()
+    cmd = "sed -i"
+    for sed_cmd in sed_cmd_list:
+        cmd += " -e '{0}'".format(sed_cmd.strip())
+    cmd += " {0}".format(targetFile)
+    context.logger.info("cmd : {0}".format(cmd))
+    return cmd

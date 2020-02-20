@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
-  @NORMAL
+  @NORMAL @restore_letter_sensitive
   Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
     Given delete the following xml segment
     |file        | parent          | child               |
@@ -14,21 +14,21 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
       <schema dataNode="DN1" name="schema1" sqlMaxLimit="100">
           <table dataNode="DN1,dn3" name="test1" type="global" />
        </schema>
-       <dataNode dataHost="172.100.9.5" database="db1" name="DN1" />
-       <dataNode dataHost="172.100.9.5" database="db2" name="dn3" />
-       <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.5" slaveThreshold="100" switchType="-1">
+       <dataNode dataHost="ha_group1" database="db1" name="DN1" />
+       <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+       <dataHost balance="0" maxCon="9" minCon="3" name="ha_group1" slaveThreshold="100" switchType="-1">
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
        </dataHost>
     """
-    Given restart mysql in "mysql-master1" with options
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 0
     """
     Given Restart dble in "dble-1" success
-    Given restart mysql in "mysql-master1" with options
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
@@ -46,10 +46,10 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-       <dataNode dataHost="172.100.9.5" database="db1" name="dn1" />
+       <dataNode dataHost="ha_group1" database="db1" name="dn1" />
     """
     Given Restart dble in "dble-1" success
-    Given restart mysql in "mysql-master1" with options
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 0

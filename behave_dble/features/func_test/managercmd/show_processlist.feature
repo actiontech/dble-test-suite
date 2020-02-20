@@ -3,19 +3,19 @@
 # Created by maofei at 2019/3/11
 Feature: #test show @@processlist
 
-  Scenario: use `show @@processlist` to view the correspondence between front and backend session
+  Scenario: use `show @@processlist` to view the correspondence between front and backend session #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
     <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     <table name="test1" dataNode="dn1"/>
     </schema>
-    <dataHost balance="0" maxCon="5" minCon="5" name="172.100.9.5" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="5" minCon="5" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="5" minCon="5" name="172.100.9.6" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="5" minCon="5" name="ha_group2" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
     </writeHost>
