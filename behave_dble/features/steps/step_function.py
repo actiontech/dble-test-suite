@@ -10,7 +10,7 @@ import os
 import time
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh
+from lib.Node import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *
@@ -359,6 +359,11 @@ def step_impl(context, cmd):
     rc, sto, err = context.ssh_client.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
+def restore_sys_time(context):
+    import os
+    res = os.system("ntpdate -u 0.centos.pool.ntp.org")
+    assert res==0, "restore sys time fail"
+    context.logger.info("restore sys time success")
 
 @Then('revert to current time by "{curtime}"')
 def step_impl(context, curtime):
@@ -470,6 +475,3 @@ def step_impl(context,file,host):
             break
         retry = retry + 1
     assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
-
-
-

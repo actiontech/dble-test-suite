@@ -10,7 +10,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Given reset dble registered nodes in zk
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
-        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id" autoIncrement="true"/>
+        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id"/>
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -79,7 +79,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
 
-  @skip_restart
+  @skip_restart @restore_sys_time
   Scenario: when "system time" less than "start time + 17years", execute insert sql will error #2
     Then get resultset of user cmd "select sysdate()" named "curTime"
     When connect ssh execute cmd "date -s 2009/01/01"
