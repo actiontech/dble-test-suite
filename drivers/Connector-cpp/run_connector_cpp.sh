@@ -17,5 +17,5 @@ cd ${DIR} && g++ src/*.cpp -l mysqlcppconn -l yaml-cpp
 bash do_run_connector_cpp.sh -c
 
 #save logs for ci artifacts
-scp -r root@dble-1:/opt/dble/logs ./dble_logs
-cp -r ./sql_logs ./dble_logs/sql_logs
+scp -r root@dble-1:/opt/dble/logs ../../dble_logs
+cp -r ./sql_logs ../../dble_logs/sql_logs
