@@ -22,4 +22,4 @@ fi
 
 #save logs for ci artifacts
 scp -r root@dble-1:/opt/dble/logs ./dble_logs
-cp ./drivers/c_mysql_api/multi-queries/curr.output ./dble_logs/sql.output
+cp ./curr.output ./dble_logs/sql.output
