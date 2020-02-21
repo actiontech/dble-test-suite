@@ -5,9 +5,9 @@ import com.sun.btrace.annotations.BTrace;
 import com.sun.btrace.annotations.OnMethod;
 
 @BTrace(unsafe = true)
-public final class BtraceXaDelay {
+public final class BeforeAddXaToQueue {
 
-    private BtraceXaDelay() {
+    private BeforeAddXaToQueue() {
 
     }
 
@@ -63,7 +63,7 @@ public final class BtraceXaDelay {
     )
     public static void beforeAddXaToQueue(int count, String xaId) throws Exception {
         BTraceUtils.println("before add xa " + xaId + " to queue in " + count + " time.");
-        Thread.sleep(100L);
+        Thread.sleep(30000L);
     }
 
     @OnMethod(
