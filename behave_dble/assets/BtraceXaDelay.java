@@ -45,7 +45,7 @@ public final class BtraceXaDelay {
     )
     public static void delayBeforeXaCommit(String rrnName, String xaId) throws Exception {
         BTraceUtils.println("before xa commit " + xaId + " in " + rrnName);
-        Thread.sleep(30000L);
+        Thread.sleep(100L);
     }
 
     @OnMethod(
