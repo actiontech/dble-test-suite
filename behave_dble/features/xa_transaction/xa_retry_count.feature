@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/3
 
+#2.19.11.0#dble-7869
 Feature: change xaRetryCount value and check result
 
   Scenario: Setting xaRetryCount to an illegal value, dble report warning #1
@@ -18,6 +19,7 @@ Feature: change xaRetryCount value and check result
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
       | Xml    | WARNING | Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced |
 
+  @btrace
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -34,7 +36,7 @@ Feature: change xaRetryCount value and check result
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    48s/Thread.sleep(100L)/Thread.sleep(20000L)/
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -66,6 +68,7 @@ Feature: change xaRetryCount value and check result
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
+  @btrace
   Scenario: recover mysql node in xaRetryCount and check data not lost #3
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -77,8 +80,8 @@ Feature: change xaRetryCount value and check result
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    48s/Thread.sleep(100L)/Thread.sleep(20000L)/
-    66s/Thread.sleep(100L)/Thread.sleep(20000L)/
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
