@@ -3,10 +3,12 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/4
 
+#2.19.11.0#dble-7871
 Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and some nodes prepare/start failed.
   For xa prepared successfully nodes, need to rollback after dble restart
   For xa start failed nodes, dble need return a reasonable error message
 
+  @btrace
   Scenario: xa prepare is abnormal: some nodes prepare successfully and some nodes prepare failed. After dble restart, the successful nodes need rollback. #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -41,7 +43,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-
+  @btrace
   Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
     Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                                            | expect  | db |
