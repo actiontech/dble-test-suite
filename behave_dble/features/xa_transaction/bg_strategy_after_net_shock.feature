@@ -3,8 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/2
 
+#2.19.11.0#dble-7868
 Feature: retry policy after xa transaction commit failed for network anomaly
 
+  @btrace
   Scenario: mysql node network shock causing xa transaction fail to commit, recovery network before the front end attempts to commit 5 times #1
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -16,7 +18,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    48s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -47,6 +49,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
+  @btrace
   Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -58,7 +61,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    48s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -95,6 +98,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
+  @btrace
   Scenario:  mysql node network shock causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' and 'xa commit'  #3
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -106,7 +110,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    48s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -155,6 +159,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
+  @btrace
   Scenario: mysql node network shock causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #4
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
@@ -166,7 +171,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    39s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/
+    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
