@@ -18,12 +18,12 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    38s/Thread.sleep(100L)/Thread.sleep(10000L)/
+    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
-    Then check btrace "BtraceXaDelay.java" output in "dble-1"
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "2" times
     """
     before xa prepare
     """
@@ -57,7 +57,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    20s/Thread.sleep(100L)/Thread.sleep(10000L)/
+    /delayBeforeXaStart/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -112,6 +112,12 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Then check result "rs_C" value is "1"
     Then check result "rs_D" value is "1"
     Then check result "rs_E" value is "1"
+    Then execute sql in "mysql-master1"
+      | user | passwd | conn   | toClose | sql                        | expect  | db |
+      | test | 111111 | conn_0 | True    | set global general_log=off | success |    |
+    Then execute sql in "mysql-master2"
+      | user | passwd | conn   | toClose | sql                        | expect  | db |
+      | test | 111111 | conn_4 | True    | set global general_log=off | success |    |
     Given execute oscmd in "mysql-master1"
     """
     rm -rf /tmp/general.log
@@ -120,11 +126,5 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     """
     rm -rf /tmp/general.log
     """
-    Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql                        | expect  | db |
-      | test | 111111 | conn_0 | True    | set global general_log=off | success |    |
-    Then execute sql in "mysql-master2"
-      | user | passwd | conn   | toClose | sql                        | expect  | db |
-      | test | 111111 | conn_4 | True    | set global general_log=off | success |    |
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
