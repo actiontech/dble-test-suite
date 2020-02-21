@@ -7,7 +7,6 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
-import time
 
 from lib.DBUtil import DBUtil
 from lib.Node import get_sftp,get_ssh
@@ -238,19 +237,12 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
-@Given('execute oscmd in "{hostname}" and "{num}" less than result')
 @Given('execute oscmd in "{hostname}"')
-def step_impl(context,hostname,num=None):
-    cmd = context.text.strip()
-    if hostname.startswith("dble"):
-        ssh = get_ssh(context.dbles, hostname)
-    else :
-        ssh = get_ssh(context.mysqls, hostname)
-    rc, stdout, stderr = ssh.exec_command(cmd)
+def step_impl(context,hostname):
+    cmd = context.text
+    rc, stdout, stderr = context.ssh_client.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
-    if num is not None:
-        assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
+    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
@@ -394,23 +386,28 @@ def get_result(context, sql):
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
 
-@Then('execute oscmd many times in "{host}" and result is same')
-def step_impl(context,host):
+@Then('get result of oscmd name "{result}" in "{hostname}"')
+def step_impl(context,result,hostname):
     cmd = context.text.strip()
-    retry = 0
-    result = 0
-    count = 0
-    while retry<20:
-        time.sleep(10)
-        rc, stdout, stderr = context.ssh_client.exec_command(cmd)
-        stderr =  stderr.lower()
-        assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(host,stderr)
-        if int(stdout) != result:
-            result = int(stdout)
-            retry = retry + 1
-            count = 0
-            continue
-        else:
-            count = count + 1
-            if count >2 : break
-    assert count >2, "result is not a constant"
+    if hostname.startswith("dble"):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    context.logger.info("execute cmd:{0}".format(cmd))
+    stderr = stderr.lower()
+    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
+    setattr(context,result,stdout)
+
+@Then('check result "{result}" value is "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) == int(value),"expect result is {0},but is {1}".format(value,rs)
+
+@Then('check result "{result}" value less than "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) < int(value),"expect result {0} less than {1},but not".format(rs,value)
+
+
+
