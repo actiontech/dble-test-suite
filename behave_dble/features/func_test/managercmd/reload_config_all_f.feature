@@ -15,6 +15,7 @@ Feature: reload @@config_all -f
       <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
       """
     Given Restart dble in "dble-1" success
+    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
     Then get resultset of admin cmd "show @@backend" named "A"
     Then execute admin cmd "reload @@config_all -f"
     Then get resultset of admin cmd "show @@backend" named "B"
