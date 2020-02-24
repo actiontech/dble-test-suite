@@ -19,7 +19,7 @@ def step_impl(context,hostname, logfile):
     cmd = "cat {0}".format(logpath)
     ssh_client = get_ssh(context.dbles, hostname)
     rc, sto, ste = ssh_client.exec_command(cmd)
-    assert len(ste)==0, "cut dble.log failed for: {0}".format(ste[0:200])
+    assert len(ste)==0, "cat dble.log failed for: {0}".format(ste[0:200])
 
     context.logger.debug("show warn content")
     for row in rs:
