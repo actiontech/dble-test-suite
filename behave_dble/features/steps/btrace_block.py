@@ -151,27 +151,6 @@ def step_impl(context, sql, conn_type=''):
 def execute_sql_backgroud(context, conn, sql):
     sql_cmd = sql.strip()
     res, err = conn.query(sql_cmd)
-
-@Given('destroy sql threads list')
-def step_impl(context):
-    global sql_threads
-    for thd in sql_threads:
-        context.logger.debug("join sql thread: {0}".format(thd.name))
-        thd.join()
-
-@Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
-def step_impl(context, sql, conn_type=''):
-    assert hasattr(context, conn_type), "conn_type {0} is not exists"
-    conn = getattr(context, conn_type)
-    global sql_threads
-    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
-    sql_threads.append(thd)
-    thd.setDaemon(True)
-    thd.start()
-
-def execute_sql_backgroud(context, conn, sql):
-    sql_cmd = sql.strip()
-    res, err = conn.query(sql_cmd)
     setattr(context,"sql_thread_result",res)
     setattr(context,"sql_thread_err",err)
 
