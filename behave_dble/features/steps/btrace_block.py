@@ -100,8 +100,8 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
 
     assert isFound, "can not find expect text '{0}' in {1}.log".format(expectTxt, btraceScript)
 
-@Then('check btrace "{btraceScript}" output in "{host}"')
 @Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
+@Then('check btrace "{btraceScript}" output in "{host}"')
 def step_impl(context, btraceScript, host, num=1):
     sshClient = get_ssh(context.dbles, host)
     remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'], btraceScript)
@@ -149,7 +149,6 @@ def execute_sql_backgroud(context, conn, sql):
     res, err = conn.query(sql_cmd)
     setattr(context,"sql_thread_result",res)
     setattr(context,"sql_thread_err",err)
-
 
 @Given('destroy sql threads list')
 def step_impl(context):
