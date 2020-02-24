@@ -9,6 +9,11 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect  | db      |
       | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+    Given change btrace "BtraceClusterDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    /removeMetaLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | user | passwd | conn   | toClose | sql                                | db      |
