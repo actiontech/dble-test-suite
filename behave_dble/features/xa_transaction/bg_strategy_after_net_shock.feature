@@ -202,7 +202,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given restart mysql in "mysql-master1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                | expect      | db      |
-      | test | 111111 | new  | True    | drop table if exists sharding_4_t1 | length{(0)} | schema1 |
+      | user | passwd | conn | toClose | sql                                | expect  | db      |
+      | test | 111111 | new  | True    | drop table if exists sharding_4_t1 | success | schema1 |
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
