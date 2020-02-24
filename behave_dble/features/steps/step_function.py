@@ -7,6 +7,8 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
+import re
+
 import time
 
 from lib.DBUtil import DBUtil
@@ -359,6 +361,11 @@ def step_impl(context, cmd):
     rc, sto, err = context.ssh_client.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
+def restore_sys_time(context):
+    import os
+    res = os.system("ntpdate -u 0.centos.pool.ntp.org")
+    assert res==0, "restore sys time fail"
+    context.logger.info("restore sys time success")
 
 @Then('revert to current time by "{curtime}"')
 def step_impl(context, curtime):
@@ -414,6 +421,38 @@ def step_impl(context,host):
             count = count + 1
             if count >2 : break
     assert count >2, "result is not a constant"
+
+@Given('get resultset of oscmd in "{host}" with pattern "{pattern}" named "{resultName}"')
+def impl_step(context,host,pattern,resultName):
+    if host.startswith('dble'):
+        ssh = get_ssh(context.dbles, host)
+    else:
+        ssh = get_ssh(context.mysqls, host)
+    oscmd = context.text.strip()
+    rc, stdout, stderr = ssh.exec_command(oscmd)
+    assert_that(len(stderr) == 0, 'expect no err ,but: {0}'.format(stderr))
+    results = list(set(re.findall(pattern,stdout)))
+    assert_that(len(results)),"regular matching result is empty"
+    context.logger.info("regular matching result:{0}".format(results))
+    setattr(context,resultName,results)
+
+@Then('get result of oscmd named "{result}" in "{hostname}"')
+def step_impl(context,result,hostname):
+    cmd = context.text.strip()
+    if hostname.startswith("dble"):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    context.logger.info("execute cmd:{0}".format(cmd))
+    stderr = stderr.lower()
+    assert stderr.find("error") == -1, "execute cmd:{0} error:{1}".format(cmd, stderr)
+    setattr(context,result,stdout)
+
+@Then('check result "{result}" value is "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert str(rs) == str(value),"expect result is {0},but is {1}".format(value,rs)
 
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')

@@ -134,7 +134,6 @@ def destroy_threads(context):
         context.logger.debug("join btrace thread:".format(thd.name))
         thd.join()
 
-
 @Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
 def step_impl(context, sql, conn_type=''):
     assert hasattr(context, conn_type), "conn_type {0} is not exists"
@@ -148,6 +147,8 @@ def step_impl(context, sql, conn_type=''):
 def execute_sql_backgroud(context, conn, sql):
     sql_cmd = sql.strip()
     res, err = conn.query(sql_cmd)
+    setattr(context,"sql_thread_result",res)
+    setattr(context,"sql_thread_err",err)
 
 @Given('destroy sql threads list')
 def step_impl(context):
@@ -155,6 +156,14 @@ def step_impl(context):
     for thd in sql_threads:
         context.logger.debug("join sql thread: {0}".format(thd.name))
         thd.join()
+
+@Then('check sql thread output in "{result}"')
+def step_impl(context,result):
+    if result.lower() == "res":
+        output = getattr(context,"sql_thread_result")
+    elif result.lower() == "err":
+        output = getattr(context,"sql_thread_err")
+    assert str(output).find(context.text.strip()),"not found '{0}' in sql '{1}'".format(context.text,result)
 
 def run_dble_query(sshClient, context):
     context.logger.debug("btrace is running, start query!!!")

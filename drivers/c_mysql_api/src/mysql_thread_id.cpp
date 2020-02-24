@@ -28,5 +28,8 @@ void case_mysql_thread_id(){
 
 		unsigned int wc = mysql_warning_count(mysql);
 		printf("    pass! mysql_warning_count: %u\n", wc);
+	}else{
+	    printf("    fail:expect after kill thread_id, conn be closed");
+	    exit(1);
 	}
 }
