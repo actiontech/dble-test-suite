@@ -49,9 +49,8 @@ def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
         user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
         passwd = str(context.cfg_dble['manager_password'])
-    if hasattr(context,result):
-        adminsql = "{0} {1}".format(adminsql,getattr(context,result)[0][0])
-
+    if hasattr(context, result):
+        adminsql = "{0} {1}".format(adminsql, getattr(context, result)[0][0])
     if context.text: expect = context.text
     else: expect = "success"
 
@@ -68,13 +67,8 @@ def step_impl(context, adminsql, rs_name):
     setattr(context, rs_name, result)
 
 @Then('get resultset of user cmd "{sql}" named "{rs_name}"')
-@Then('get resultset of user cmd "{sql}" named "{rs_name}" with connection "{conn_type}"')
-def step_impl(context, sql, rs_name, conn_type):
-    if hasattr(context, conn_type):
-        dble_conn = getattr(context, conn_type)
-        LOGGER.debug("get dble_conn: {0}".format(conn_type))
-    else:
-        dble_conn = get_dble_conn(context)
+def step_impl(context, sql, rs_name):
+    dble_conn = get_dble_conn(context)
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
@@ -85,6 +79,20 @@ def step_impl(context, sql, rs_name, host_name):
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
+
+@Then('get resultset of cmd "{sql}" named "{rs_name}" in mysql "{host_name}"')
+def step_impl(context, sql, rs_name, host_name):
+    node = get_node(context.mysqls, host_name)
+    ip = node._ip
+    port = node._mysql_port
+    user = "test"
+    passwd = "111111"
+    db = ""
+    conn = DBUtil(ip, user, passwd, db, port, context)
+    result,error = conn.query(sql)
+    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
+    setattr(context,rs_name,result)
+
 
 @Then('removal result set "{rs_name}" contains "{key_word}" part')
 def step_impl(context, rs_name, key_word):
@@ -186,3 +194,17 @@ def get_encrypt(context, string):
 
     rc, sto, ste = context.ssh_client.exec_command(cmd)
     return sto.split('\n')[1]
+
+@Then('execute cmd "{cmd}" xid from "{result}" in mysql "{host}"')
+def step_impl(context, cmd, result, host):
+    node = get_node(context.mysqls, host)
+    ip = node._ip
+    port = node._mysql_port
+    user = "test"
+    passwd = "111111"
+    db = ""
+    conn = DBUtil(ip, user, passwd, db, port, context)
+    if hasattr(context, result):
+        for r in getattr(context,result):
+            adminsql = "{0} {1}".format(cmd, r[3])
+            conn.query(adminsql)
