@@ -14,7 +14,11 @@ from hamcrest import *
 from lib.Node import get_sftp, get_ssh
 
 global btrace_threads
-btrace_threads=[]
+btrace_threads = []
+
+global sql_threads
+sql_threads = []
+
 
 def check_btrace_running(sshClient, btraceScript):
     cmd = "ps -ef |grep -v -w grep| grep -F -c {0}".format(btraceScript)
@@ -88,9 +92,9 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
         cmd = "cat {0}.log | grep '{1}' -c".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
-        isFound = int(sto)==num
+        isFound = int(sto)==1
         if isFound:
-            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*5))
+            context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*2))
             break
 
         retry=retry+1
@@ -128,26 +132,26 @@ def step_impl(context,btraceScript,host):
 def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
-        context.logger.debug("join btrace thread:".format(thd.name))
+        context.logger.debug("join btrace thread: {0}".format(thd.name))
         thd.join()
 
-def run_dble_query(sshClient, context):
-    context.logger.debug("btrace is running, start query!!!")
-    time.sleep(5)
-    for row in context.table:
-        user = row["user"]
-        passwd = row["passwd"]
-        sql = row["sql"]
-        db = row["db"]
-        if db is None: db = ''
+@Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
+def step_impl(context, sql, conn_type=''):
+    assert hasattr(context, conn_type), "conn_type {0} is not exists"
+    conn = getattr(context, conn_type)
+    global sql_threads
+    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
+    sql_threads.append(thd)
+    thd.setDaemon(True)
+    thd.start()
 
-        cmd = u"nohup {0}/bin/mysql -u{1} -p{2} -P{3} -c -D{4} -e\"{5}\" >/tmp/dble_query.log 2>&1 &".format(
-            context.cfg_mysql['install_path'], user, passwd, context.cfg_dble['manager_port'], db, sql)
-        rc, sto, ste = sshClient.exec_command(cmd)
-        assert len(ste) == 0, "impossible err occur"
+def execute_sql_backgroud(context, conn, sql):
+    sql_cmd = sql.strip()
+    res, err = conn.query(sql_cmd)
 
-@Then('execute admin cmd  in "{host}" at background')
-def step_impl(context, host):
-    sshClient = get_ssh(context.dbles, host)
-
-    run_dble_query(sshClient, context)
+@Given('destroy sql threads list')
+def step_impl(context):
+    global sql_threads
+    for thd in sql_threads:
+        context.logger.debug("join sql thread: {0}".format(thd.name))
+        thd.join()
