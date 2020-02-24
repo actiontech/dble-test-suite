@@ -118,7 +118,9 @@ def step_impl(context,fileName,hostname,dir):
 def step_impl(context,btrace,dir):
     targetFile = "{0}/{1}".format(dir, btrace)
     cmd = merge_cmd_strings(context, context.text, targetFile)
-    os.system(cmd)
+    status = os.system(cmd)
+    assert status == 0, "change {0} failed".format(btrace)
+    context.logger.info("change {0} successed".format(btrace))
 
 def merge_cmd_strings(context,text,targetFile):
     sed_cmd_str = text.strip()
