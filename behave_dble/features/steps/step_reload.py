@@ -43,11 +43,16 @@ def get_admin_conn(context, user="", passwd=""):
 @Then('execute admin cmd "{adminsql}"')
 @Then('execute admin cmd "{adminsql}" get the following output')
 @Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
-def exec_admin_cmd(context, adminsql, user="", passwd=""):
+@Then('execute admin cmd "{adminsql}" with "{result}" result')
+def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
     if len(user.strip()) == 0:
         user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
         passwd = str(context.cfg_dble['manager_password'])
+    if hasattr(context,result):
+        adminsql = "{0} {1}".format(adminsql,getattr(context,result)[0][0])
+        context.logger.info("yangxiaoliang:{0}".format(adminsql))
+
 
     if context.text: expect = context.text
     else: expect = "success"
