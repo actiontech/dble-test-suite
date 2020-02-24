@@ -452,7 +452,12 @@ def step_impl(context,result,hostname):
 @Then('check result "{result}" value is "{value}"')
 def step_impl(context,result,value):
     rs = getattr(context,result)
-    assert str(rs) == str(value),"expect result is {0},but is {1}".format(value,rs)
+    assert int(rs) == int(value),"expect result is {0},but is {1}".format(value,rs)
+
+@Then('check result "{result}" value less than "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) < int(value),"expect result {0} less than {1},but not".format(rs,value)
 
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
