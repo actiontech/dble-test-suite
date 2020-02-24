@@ -14,7 +14,7 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
-from lib.XMLUtil import get_child_nodes
+from lib.XMLUtil import get_child_node
 from lib.Node import get_node
 from step_reload import get_abs_path
 
@@ -244,14 +244,14 @@ def turn_on_general_log(context, shardings, user, passwd):
     dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
         dataNode_info['kv_map'] = {'name': sharding}
-        dataNodes = get_child_nodes(parentNode, dataNode_info, fullpath)
+        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
         assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
         dataNode = dataNodes[0]
         db = dataNode.get('database')
         dataHost = dataNode.get("dataHost")
 
         dataHost_info['kv_map'] = {'name':dataHost}
-        dataHosts=get_child_nodes(parentNode, dataHost_info, fullpath)
+        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
         assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
         dataHost = dataHosts[0]
         ip_port = dataHost.find("writeHost").get("url")
@@ -300,14 +300,14 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
     dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
         dataNode_info['kv_map'] = {'name': sharding}
-        dataNodes = get_child_nodes(parentNode, dataNode_info, fullpath)
+        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
         assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
         dataNode = dataNodes[0]
         db = dataNode.get('database')
         dataHost = dataNode.get("dataHost")
 
         dataHost_info['kv_map'] = {'name':dataHost}
-        dataHosts=get_child_nodes(parentNode, dataHost_info, fullpath)
+        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
         assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
         dataHost = dataHosts[0]
         ip_port = dataHost.find("writeHost").get("url")
@@ -379,3 +379,27 @@ def do_batch_sql(context, hostname, db, sql):
             context.logger.info("close conn failed!")
     assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
 
+@Then('execute sql "{sql}" in "{host}" with "{results}" result')
+def step_impl(context,sql,host,results):
+    node = get_node(context.mysqls, host)
+    ip = node._ip
+    port = node._mysql_port
+    resultList = []
+    for row in context.table:
+        user = row["user"]
+        passwd = row["passwd"]
+        bClose = row["toClose"].lower()=="true"
+        charset = row.get("charset",None)
+        if charset is not None:
+            setattr(context, "charset", charset)
+        conn_type = row["conn"]
+        expect = row["expect"]
+        db = row["db"]
+        if db is None: db = ''
+
+        resultList = getattr(context,results)
+        for result in resultList:
+            sql = sql + ' ' +'"{0}"'.format(result)
+            do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
+        if charset is not None:
+            delattr(context, "charset")
