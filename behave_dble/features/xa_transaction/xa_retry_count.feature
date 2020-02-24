@@ -50,7 +50,7 @@ Feature: change xaRetryCount value and check result
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given sleep "10" seconds
-    Then get result of oscmd name "rs_A" in "dble-1"
+    Then get result of oscmd named "rs_A" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
@@ -98,7 +98,7 @@ Feature: change xaRetryCount value and check result
     """
     Given start mysql in host "mysql-master1"
     Given sleep "15" seconds
-    Then get result of oscmd name "rs_B" in "dble-1"
+    Then get result of oscmd named "rs_B" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
