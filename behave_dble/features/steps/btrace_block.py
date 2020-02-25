@@ -14,7 +14,11 @@ from hamcrest import *
 from lib.Node import get_sftp, get_ssh
 
 global btrace_threads
-btrace_threads=[]
+btrace_threads = []
+
+global sql_threads
+sql_threads = []
+
 
 global sql_threads
 sql_threads = []
@@ -131,7 +135,7 @@ def step_impl(context,btraceScript,host):
 def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
-        context.logger.debug("join btrace thread:".format(thd.name))
+        context.logger.debug("join btrace thread: {0}".format(thd.name))
         thd.join()
 
 @Given('prepare a thread execute sql "{sql}" with "{conn_type}"')

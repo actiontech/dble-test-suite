@@ -250,7 +250,7 @@ def step_impl(context,hostname,num=None):
         ssh = get_ssh(context.mysqls, hostname)
     rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
-    assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname, stderr)
+    assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
     if num is not None:
         assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
 
@@ -411,7 +411,7 @@ def step_impl(context,host):
         time.sleep(10)
         rc, stdout, stderr = context.ssh_client.exec_command(cmd)
         stderr =  stderr.lower()
-        assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(host,stderr)
+        assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(host,stderr)
         if int(stdout) != result:
             result = int(stdout)
             retry = retry + 1
@@ -420,7 +420,7 @@ def step_impl(context,host):
         else:
             count = count + 1
             if count >2 : break
-    assert count >2, "result is not a constant"
+    assert count >2, "result is not same"
 
 @Given('get resultset of oscmd in "{host}" with pattern "{pattern}" named "{resultName}"')
 def impl_step(context,host,pattern,resultName):
