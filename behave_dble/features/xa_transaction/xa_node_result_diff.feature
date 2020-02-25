@@ -17,7 +17,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
