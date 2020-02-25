@@ -9,7 +9,7 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                | expect  | db      |
       | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
-    Given change btrace "BtraceClusterDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /removeMetaLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -27,3 +27,5 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
       | root | 111111 | conn_0 | True    | reload @@config_all | Reload config failure.The reason is There is other session is doing DDL | schema1 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
