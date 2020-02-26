@@ -239,3 +239,31 @@ def step_impl(context, var_version):
     assert sto1==sto2==sto3, "versions in server_template.xml schema_template.xml rule_template.xml are not the same"
     setattr(context, var_version, sto1)
 
+@Then('record reloadTime of "{tbName}" from "{rs_name}" named "{rtName}"')
+def record_time(context, tbName, rs_name, rtName):
+    rs = getattr(context, rs_name)
+    count = 0
+    for rs_row in rs:
+        if rs_row[1]==tbName:
+            count = count+1
+            reload_time = rs_row[2].replace("/","-")
+            setattr(context,rtName,reload_time)
+            break
+    assert count != 0, "{0} is not found !".format(tbName)
+
+@Then('get resultset when reload time "{compare}" record time "{rtName}" named "{rs_name}"')
+def step(context, compare, rtName, rs_name):
+    rtn=getattr(context,rtName)
+    comp = ''
+    if compare == 'equal':
+        comp = '='
+    elif compare == 'lt':
+        comp = "<="
+    elif compare == 'gt':
+        comp = '>='
+    else: assert comp != '',"Comparison operator must form [{0}, {1}, {2}]".format("equal","lt","gt")
+    adminsql = "check full @@metadata where reload_time{0}'{1}'".format(comp,rtn)
+    manager_conn = get_admin_conn(context)
+    result, error = manager_conn.query(adminsql)
+    assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
+    setattr(context, rs_name, result)
