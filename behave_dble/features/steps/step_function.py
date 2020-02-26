@@ -7,6 +7,8 @@ sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
 import logging
 import os
+import re
+
 import time
 
 from lib.DBUtil import DBUtil
@@ -238,16 +240,19 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
+@Given('execute oscmd in "{hostname}" and "{num}" less than result')
 @Given('execute oscmd in "{hostname}"')
-def step_impl(context,hostname):
-    cmd = context.text
+def step_impl(context,hostname,num=None):
+    cmd = context.text.strip()
     if hostname.startswith("dble"):
-        rc, stdout, stderr = context.ssh_client.exec_command(cmd)
-    else:
+        ssh = get_ssh(context.dbles, hostname)
+    else :
         ssh = get_ssh(context.mysqls, hostname)
-        rc, stdout, stderr = ssh.exec_command(cmd)
+    rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
     assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
+    if num is not None:
+        assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
 
 @Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
 def step_impl(context,flag,filename,hostname):
@@ -396,6 +401,63 @@ def get_result(context, sql):
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     return result
 
+@Then('execute oscmd many times in "{host}" and result is same')
+def step_impl(context,host):
+    cmd = context.text.strip()
+    retry = 0
+    result = 0
+    count = 0
+    while retry<20:
+        time.sleep(10)
+        rc, stdout, stderr = context.ssh_client.exec_command(cmd)
+        stderr =  stderr.lower()
+        assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(host,stderr)
+        if int(stdout) != result:
+            result = int(stdout)
+            retry = retry + 1
+            count = 0
+            continue
+        else:
+            count = count + 1
+            if count >2 : break
+    assert count >2, "result is not same"
+
+@Given('get resultset of oscmd in "{host}" with pattern "{pattern}" named "{resultName}"')
+def impl_step(context,host,pattern,resultName):
+    if host.startswith('dble'):
+        ssh = get_ssh(context.dbles, host)
+    else:
+        ssh = get_ssh(context.mysqls, host)
+    oscmd = context.text.strip()
+    rc, stdout, stderr = ssh.exec_command(oscmd)
+    assert_that(len(stderr) == 0, 'expect no err ,but: {0}'.format(stderr))
+    results = list(set(re.findall(pattern,stdout)))
+    assert_that(len(results)),"regular matching result is empty"
+    context.logger.info("regular matching result:{0}".format(results))
+    setattr(context,resultName,results)
+
+@Then('get result of oscmd named "{result}" in "{hostname}"')
+def step_impl(context,result,hostname):
+    cmd = context.text.strip()
+    if hostname.startswith("dble"):
+        ssh = get_ssh(context.dbles, hostname)
+    else:
+        ssh = get_ssh(context.mysqls, hostname)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    context.logger.info("execute cmd:{0}".format(cmd))
+    stderr = stderr.lower()
+    assert stderr.find("error") == -1, "execute cmd:{0} error:{1}".format(cmd, stderr)
+    setattr(context,result,stdout)
+
+@Then('check result "{result}" value is "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) == int(value),"expect result is {0},but is {1}".format(value,rs)
+
+@Then('check result "{result}" value less than "{value}"')
+def step_impl(context,result,value):
+    rs = getattr(context,result)
+    assert int(rs) < int(value),"expect result {0} less than {1},but not".format(rs,value)
 
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql')
 @Given('connect "{host1}" with user "{role}" in "{host2}" to execute sql after "{oscmd}"')
