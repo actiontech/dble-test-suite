@@ -250,7 +250,7 @@ def step_impl(context,host,result,mysqlID):
         if matchObj1:
             matchObj2 = re.search("mysqlId=([0-9]*)",i)
             break
-    assert matchObj2, "not found mysqlID"
+    assert matchObj2, "not found mysqlID in {0}".format(host)
     setattr(context, mysqlID, matchObj2.group(1))
     context.logger.info("mysqlID is {0}".format(matchObj2.group(1)))
 
