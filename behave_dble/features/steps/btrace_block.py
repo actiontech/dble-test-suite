@@ -88,7 +88,7 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
     isFound = False
     while retry < 200:
         time.sleep(5)  # a interval wait for query run into
-        cmd = "cat {0}.log | grep '{1}' -c".format(btraceScript, expectTxt)
+        cmd = "cat {0}.log | grep -o '{1}' | wc -l".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
         isFound = int(sto)==num
