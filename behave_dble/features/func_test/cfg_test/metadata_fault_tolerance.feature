@@ -344,7 +344,6 @@ Feature: fault tolerance detection
       | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
 
-  @skip_restart
   Scenario: table structure is not recognized and metadata is not generated #4
     Given delete the following xml segment
       | file       | parent         | child              |
@@ -423,3 +422,11 @@ Feature: fault tolerance detection
       | user | passwd | conn   | toClose | sql               | expect  | db      |
       | root | 111111 | conn_0 | True    | show @@version    | success | schema1 |
       | root | 111111 | conn_0 | True    | reload @@metadata | success | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                        | expect  | db      |
+      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
+      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
