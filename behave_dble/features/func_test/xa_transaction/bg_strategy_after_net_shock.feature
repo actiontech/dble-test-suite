@@ -4,6 +4,7 @@
 # Created by yangxiaoliang at 2020/1/2
 
 #2.19.11.0#dble-7868
+@skip
 Feature: retry policy after xa transaction commit failed for network anomaly
 
   @btrace
