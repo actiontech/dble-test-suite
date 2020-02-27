@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/24
 
+#2.19.11.0#dble-7863
 Feature: xa_transaction: kill node before transaction commit
 
   Scenario: begin transaction and insert data , kill one node before transaction commit #1
