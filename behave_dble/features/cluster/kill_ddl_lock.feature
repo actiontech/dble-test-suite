@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/2/26
 
-# 2.19.11.0#dble-7859
+# 2.19.11.0#dble-7860
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
 
   @btrace
