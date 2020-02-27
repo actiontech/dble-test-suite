@@ -48,10 +48,12 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | user | passwd | conn   | toClose | sql                                                 | expect                            | db |
       | root | 111111 | conn_2 | false   | show @@ddl                                          | hasStr{drop table if exists test} |    |
       | root | 111111 | conn_2 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                           |    |
+      | root | 111111 | conn_2 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |    |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                 | expect                            | db |
       | root | 111111 | conn_1 | false   | show @@ddl                                          | hasStr{drop table if exists test} |    |
       | root | 111111 | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                           |    |
+      | root | 111111 | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |    |
       | root | 111111 | conn_1 | true    | reload @@metadata                                   | success                           |    |
     Then execute sql in "dble-2" in "admin" mode
       | user | passwd | conn   | toClose | sql                       | expect      | db |
