@@ -46,9 +46,9 @@ Feature: change xaRetryCount value and check result
     before xa prepare
     """
     Given stop mysql in host "mysql-master1"
-    Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
+    Given destroy sql threads list
     Given sleep "10" seconds
     Then get result of oscmd named "rs_A" in "dble-1"
     """
