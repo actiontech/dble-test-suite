@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/11/6
 
-
+  #2.19.11.0#dble-7889
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
 
 
