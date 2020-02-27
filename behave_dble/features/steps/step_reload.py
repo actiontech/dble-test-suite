@@ -261,7 +261,7 @@ def step(context, compare, rtName, rs_name):
         comp = "<="
     elif compare == 'gt':
         comp = '>='
-    else: assert comp != '',"Comparison operator must form [{0}, {1}, {2}]".format("equal","lt","gt")
+    else: assert comp != '',"Comparison operator must from [{0}, {1}, {2}]".format("equal","lt","gt")
     adminsql = "check full @@metadata where reload_time{0}'{1}'".format(comp,rtn)
     manager_conn = get_admin_conn(context)
     result, error = manager_conn.query(adminsql)
