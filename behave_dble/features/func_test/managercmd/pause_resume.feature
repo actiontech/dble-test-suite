@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yexiaoli at 2018/12/7
 # Modified by yangxiaoliang at 2020/1/19
+  #2.19.11.0#dble-7858
 Feature: test "pause/resume" manager cmd
 
   @NORMAL

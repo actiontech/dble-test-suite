@@ -2,7 +2,7 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/9
-
+#2.19.11.0#dble-7876
 Feature: following complex queries are not able to send one datanode
       #1. explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1
       #2. explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)
