@@ -4,6 +4,7 @@
 # Created by yangxiaoliang at 2019/11/6
 
   #2.19.11.0#dble-7889
+@skip
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
 
 
