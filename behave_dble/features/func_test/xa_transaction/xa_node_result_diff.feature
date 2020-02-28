@@ -10,6 +10,8 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
 
   @btrace
   Scenario: xa prepare is abnormal: some nodes prepare successfully and some nodes prepare failed. After dble restart, the successful nodes need rollback. #1
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
       | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -46,6 +48,22 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
   @btrace
   Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
     Then execute sql in "mysql-master1"
+      | user | passwd | conn   | toClose | sql                        | expect  | db |
+      | test | 111111 | conn_0 | True    | set global general_log=off | success |    |
+    Then execute sql in "mysql-master2"
+      | user | passwd | conn   | toClose | sql                        | expect  | db |
+      | test | 111111 | conn_4 | True    | set global general_log=off | success |    |
+    Given execute oscmd in "mysql-master1"
+    """
+    rm -rf /tmp/general.log
+    """
+    Given execute oscmd in "mysql-master2"
+    """
+    rm -rf /tmp/general.log
+    """
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Then execute sql in "mysql-master1"
       | user | passwd | conn   | toClose | sql                                            | expect  | db |
       | test | 111111 | conn_0 | False   | set global log_output=file                     | success |    |
       | test | 111111 | conn_0 | False   | set global general_log_file='/tmp/general.log' | success |    |
@@ -56,7 +74,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | test | 111111 | conn_4 | False   | set global general_log_file='/tmp/general.log' | success |    |
       | test | 111111 | conn_4 | False   | set global general_log=on                      | success |    |
 
-    Given change btrace "BtraceXaDelay.java" locate "/init_assets/dble-test-suite/behave_dble/assets" with sed cmds
+    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaStart/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
