@@ -55,9 +55,10 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | root | 111111 | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                           |    |
       | root | 111111 | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |    |
       | root | 111111 | conn_1 | true    | reload @@metadata                                   | success                           |    |
-    Then execute sql in "dble-2" in "admin" mode
-      | user | passwd | conn   | toClose | sql                       | expect      | db |
-      | root | 111111 | conn_2 | true    | show @@backend.statistics | length{(1)} |    |
+    Then get resultset of admin cmd "show @backend.statistics" named "rs_A"
+    Then check resultset "rs_A" has lines with following column values
+      | TOTAL-3 |
+      | 4       |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
