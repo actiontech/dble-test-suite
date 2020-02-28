@@ -2,7 +2,7 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/9
-
+#2.19.11.0#dble-7875
 Feature: two logical databases: declare the database of all tables when querying or declare the database of partial tables when querying
 
   Scenario: create two logical databases by configuration, declare the database of all tables when querying or declare the database of partial tables when querying #1

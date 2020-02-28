@@ -2,7 +2,7 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/17
-
+#2.19.11.0#dble-7854
 Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all -f -s", transaction will be closed successfully
 
   Scenario: open transaction, and execute "reload @@config_all -fs" or "reload @@config_all -f -s", transaction closed successfully
