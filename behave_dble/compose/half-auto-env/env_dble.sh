@@ -1,5 +1,5 @@
 #!/bin/bash
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 #mainly: config mysqld, config 1m2s replication, create some mysqld users for testing
 mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3")
