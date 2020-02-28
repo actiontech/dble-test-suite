@@ -21,6 +21,8 @@ Feature: change xaRetryCount value and check result
 
   @btrace
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
     <property name="xaRetryCount">3</property>
@@ -70,6 +72,8 @@ Feature: change xaRetryCount value and check result
 
   @btrace
   Scenario: recover mysql node in xaRetryCount and check data not lost #3
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
       | test | 111111 | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
