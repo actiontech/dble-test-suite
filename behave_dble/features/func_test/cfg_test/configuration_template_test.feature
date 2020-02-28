@@ -1,8 +1,8 @@
 # -*- coding=utf-8 -*-
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/7
-
+# 2.19.11.0#dble-7843
 Feature: use template to generate configuration file, check function is normal
 
   Scenario: overwrite dble configuration by configuration templates
