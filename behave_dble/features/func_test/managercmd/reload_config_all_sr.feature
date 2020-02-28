@@ -2,7 +2,7 @@
 # Copyright (C) 2016-2019 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/18
-
+#2.19.11.0#dble-7856
 Feature: reload @@config_all -sr
 
   Scenario: open transaction and execute "reload @@config_all -sr" or "reload @@config_all -s -r" will rebuild connections except connections in transaction
