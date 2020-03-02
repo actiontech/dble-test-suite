@@ -13,6 +13,14 @@ Feature: test high-availability related commands
      """
      <property name="useOuterHa">true</property>
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    """
+    <dataHost balance="0" maxCon="100" minCon="1" name="ha_group2" slaveThreshold="100" switchType="1">
+        <heartbeat>select user()</heartbeat>
+        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
+        </writeHost>
+    </dataHost>
+    """
     Given Restart dble in "dble-1" success
 #   a transaction in processing
     Then execute sql in "dble-1" in "user" mode
