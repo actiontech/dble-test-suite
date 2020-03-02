@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
   #2.19.11.0#dble-7847
 Feature: reload @@config_all base test, not including all cases in testlink

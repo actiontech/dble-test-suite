@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2019/10/11
 Feature: verify table name or schema name enclosed by backquotes can work fine
