@@ -1,5 +1,5 @@
 #encoding: utf-8
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import sys   #引用sys模块进来，并不是进行sys的第一次加载
 reload(sys)  #重新加载sys
