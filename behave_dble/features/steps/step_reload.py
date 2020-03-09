@@ -1,5 +1,5 @@
 #coding= 'utf8'
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import MySQLdb
 import logging
@@ -43,12 +43,14 @@ def get_admin_conn(context, user="", passwd=""):
 @Then('execute admin cmd "{adminsql}"')
 @Then('execute admin cmd "{adminsql}" get the following output')
 @Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
-def exec_admin_cmd(context, adminsql, user="", passwd=""):
+@Then('execute admin cmd "{adminsql}" with "{result}" result')
+def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
     if len(user.strip()) == 0:
         user = context.cfg_dble['manager_user']
     if len(passwd.strip()) == 0:
         passwd = str(context.cfg_dble['manager_password'])
-
+    if len(result.strip()) != 0:
+        adminsql = "{0} {1}".format(adminsql, getattr(context, result)[0][0])
     if context.text: expect = context.text
     else: expect = "success"
 
@@ -82,6 +84,20 @@ def step_impl(context, sql, rs_name, host_name):
     result, error = dble_conn.query(sql)
     assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
     setattr(context, rs_name, result)
+
+@Then('get resultset of cmd "{sql}" named "{rs_name}" in mysql "{host_name}"')
+def step_impl(context, sql, rs_name, host_name):
+    node = get_node(context.mysqls, host_name)
+    ip = node._ip
+    port = node._mysql_port
+    user = "test"
+    passwd = "111111"
+    db = ""
+    conn = DBUtil(ip, user, passwd, db, port, context)
+    result,error = conn.query(sql)
+    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
+    setattr(context,rs_name,result)
+
 
 @Then('removal result set "{rs_name}" contains "{key_word}" part')
 def step_impl(context, rs_name, key_word):
@@ -195,6 +211,21 @@ def get_encrypt(context, string):
     rc, sto, ste = context.ssh_client.exec_command(cmd)
     return sto.split('\n')[1]
 
+
+@Then('execute cmd "{cmd}" with "{result}" in mysql "{host}"')
+def step_impl(context, cmd, result, host):
+    node = get_node(context.mysqls, host)
+    ip = node._ip
+    port = node._mysql_port
+    user = "test"
+    passwd = "111111"
+    db = ""
+    conn = DBUtil(ip, user, passwd, db, port, context)
+    if hasattr(context, result):
+        for r in getattr(context,result):
+            adminsql = "{0} {1}".format(cmd, r[3])
+            conn.query(adminsql)
+
 @Given('get config xml version from template config and named as "{var_version}"')
 def step_impl(context, var_version):
     cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
@@ -207,3 +238,32 @@ def step_impl(context, var_version):
 
     assert sto1==sto2==sto3, "versions in server_template.xml schema_template.xml rule_template.xml are not the same"
     setattr(context, var_version, sto1)
+
+@Then('record reloadTime of "{tbName}" from "{rs_name}" named "{rtName}"')
+def record_time(context, tbName, rs_name, rtName):
+    rs = getattr(context, rs_name)
+    count = 0
+    for rs_row in rs:
+        if rs_row[1]==tbName:
+            count = count+1
+            reload_time = rs_row[2].replace("/","-")
+            setattr(context,rtName,reload_time)
+            break
+    assert count != 0, "{0} is not found !".format(tbName)
+
+@Then('get resultset when reload time "{compare}" record time "{rtName}" named "{rs_name}"')
+def step(context, compare, rtName, rs_name):
+    rtn=getattr(context,rtName)
+    comp = ''
+    if compare == 'equal':
+        comp = '='
+    elif compare == 'lt':
+        comp = "<="
+    elif compare == 'gt':
+        comp = '>='
+    else: assert comp != '',"Comparison operator must from [{0}, {1}, {2}]".format("equal","lt","gt")
+    adminsql = "check full @@metadata where reload_time{0}'{1}'".format(comp,rtn)
+    manager_conn = get_admin_conn(context)
+    result, error = manager_conn.query(adminsql)
+    assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
+    setattr(context, rs_name, result)

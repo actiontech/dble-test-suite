@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2018/4/2 PM6:56
 # @Author  : zhaohongjie@actionsky.com
@@ -379,3 +379,27 @@ def do_batch_sql(context, hostname, db, sql):
             context.logger.info("close conn failed!")
     assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
     
+@Then('execute sql "{sql}" in "{host}" with "{results}" result')
+def step_impl(context,sql,host,results):
+    node = get_node(context.mysqls, host)
+    ip = node._ip
+    port = node._mysql_port
+    resultList = []
+    for row in context.table:
+        user = row["user"]
+        passwd = row["passwd"]
+        bClose = row["toClose"].lower()=="true"
+        charset = row.get("charset",None)
+        if charset is not None:
+            setattr(context, "charset", charset)
+        conn_type = row["conn"]
+        expect = row["expect"]
+        db = row["db"]
+        if db is None: db = ''
+
+        resultList = getattr(context,results)
+        for result in resultList:
+            sql = sql + ' ' +'"{0}"'.format(result)
+            do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
+        if charset is not None:
+            delattr(context, "charset")

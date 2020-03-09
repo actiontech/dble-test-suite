@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/6/25 AM10:56
 # @Author  : zhaohongjie@actionsky.com
-# Copyright (C) 2016-2019 ActionTech.
+# Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 
 from threading import Thread, Condition
@@ -14,7 +14,10 @@ from hamcrest import *
 from lib.Node import get_sftp, get_ssh
 
 global btrace_threads
-btrace_threads=[]
+btrace_threads = []
+
+global sql_threads
+sql_threads = []
 
 def check_btrace_running(sshClient, btraceScript):
     cmd = "ps -ef |grep -v -w grep| grep -F -c {0}".format(btraceScript)
@@ -85,7 +88,7 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
     isFound = False
     while retry < 200:
         time.sleep(5)  # a interval wait for query run into
-        cmd = "cat {0}.log | grep '{1}' -c".format(btraceScript, expectTxt)
+        cmd = "cat {0}.log | grep -o '{1}' | wc -l".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
         isFound = int(sto)==num
@@ -97,8 +100,8 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
 
     assert isFound, "can not find expect text '{0}' in {1}.log".format(expectTxt, btraceScript)
 
-@Then('check btrace "{btraceScript}" output in "{host}"')
 @Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
+@Then('check btrace "{btraceScript}" output in "{host}"')
 def step_impl(context, btraceScript, host, num=1):
     sshClient = get_ssh(context.dbles, host)
     remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'], btraceScript)
@@ -128,8 +131,39 @@ def step_impl(context,btraceScript,host):
 def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
-        context.logger.debug("join btrace thread:".format(thd.name))
+        context.logger.debug("join btrace thread: {0}".format(thd.name))
         thd.join()
+
+@Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
+def step_impl(context, sql, conn_type=''):
+    assert hasattr(context, conn_type), "conn_type {0} is not exists"
+    conn = getattr(context, conn_type)
+    global sql_threads
+    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
+    sql_threads.append(thd)
+    thd.setDaemon(True)
+    thd.start()
+
+def execute_sql_backgroud(context, conn, sql):
+    sql_cmd = sql.strip()
+    res, err = conn.query(sql_cmd)
+    setattr(context,"sql_thread_result",res)
+    setattr(context,"sql_thread_err",err)
+
+@Given('destroy sql threads list')
+def step_impl(context):
+    global sql_threads
+    for thd in sql_threads:
+        context.logger.debug("join sql thread: {0}".format(thd.name))
+        thd.join()
+
+@Then('check sql thread output in "{result}"')
+def step_impl(context,result):
+    if result.lower() == "res":
+        output = getattr(context,"sql_thread_result")
+    elif result.lower() == "err":
+        output = getattr(context,"sql_thread_err")
+    assert str(output).find(context.text.strip()),"not found '{0}' in sql '{1}'".format(context.text,result)
 
 def run_dble_query(sshClient, context):
     context.logger.debug("btrace is running, start query!!!")
