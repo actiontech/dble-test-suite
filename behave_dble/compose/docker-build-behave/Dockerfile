@@ -1,7 +1,7 @@
 From centos:centos7
 MAINTAINER Hongjie Zhao <zhaohongjie@actionsky.com>
 
-RUN yum install -y yum-utils wget gcc g++ git vi net-tools libaio hwloc MySQL-python openssh-server openssh-clients sshpass libmysqlclient-dev
+RUN yum install -y yum-utils wget gcc g++ git vi net-tools libaio hwloc python-devel mysql-devel openssh-server openssh-clients sshpass libmysqlclient-dev ntp
 
 #install jdk
 COPY jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
