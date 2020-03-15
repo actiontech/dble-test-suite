@@ -4,6 +4,7 @@
 # Created by yangxiaoliang at 2019/12/26
 
   #2.19.11.0#dble-7865
+@skip #for xa is in debugging of dev
 Feature: xa_transaction: kill node before transaction rollback
 
   Scenario: begin transaction and insert data , kill one node before transaction rollback #1

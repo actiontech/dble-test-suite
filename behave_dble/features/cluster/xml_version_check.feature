@@ -14,28 +14,28 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                                                                    |
       | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the rule.xml version is 9.9.9.9.There must be some incompatible config between two versions, please check it             |
       | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the server.xml version is 9.9.9.0.There must be some incompatible config between two versions, please check it |
-    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the server.xml version is 9.9.9.0.There must be some incompatible config between two versions, please check it
       The dble-config-version is [0-9].[0-9],but the rule.xml version is 9.9.9.9.There must be some incompatible config between two versions, please check it
       """
-    Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the schema.xml version
       """
-    Then check following " " exist in file "/opt/dble/conf/rule.xml" in "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/conf/rule.xml" in host "dble-2"
       """
       version="9.9.9.9"
      """
-    Then check following " " exist in file "/opt/dble/conf/server.xml" in "dble-2"
+    Then check following text exist "Y" in file "/opt/dble/conf/server.xml" in host "dble-2"
       """
       version="9.9.9.0"
      """
-    Then check following " " exist in file "/opt/dble/conf/rule.xml" in "dble-3"
+    Then check following text exist "Y" in file "/opt/dble/conf/rule.xml" in host "dble-3"
       """
       version="9.9.9.9"
      """
-    Then check following " " exist in file "/opt/dble/conf/server.xml" in "dble-3"
+    Then check following text exist "Y" in file "/opt/dble/conf/server.xml" in host "dble-3"
       """
       version="9.9.9.0"
      """
@@ -45,12 +45,12 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Given add attribute "{"version":"1.1"}" to rootnode in "rule.xml"
     Then execute admin cmd "reload @@config_all"
     Given sleep "2" seconds
-    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the server.xml version is 1.0.There must be some incompatible config between two versions, please check it
       The dble-config-version is [0-9].[0-9],but the rule.xml version is 1.1.There must be some incompatible config between two versions, please check it
       """
-    Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the schema.xml version
       """
@@ -62,12 +62,12 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Then stop dble in "dble-1"
     Given sleep "60" seconds
     Then Start dble in "dble-1"
-    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the server.xml version is 1.0.There must be some incompatible config between two versions, please check it
       The dble-config-version is [0-9].[0-9],but the rule.xml version is 1.1.There must be some incompatible config between two versions, please check it
       """
-    Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the schema.xml version
       """
@@ -89,7 +89,7 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Given add current version from var "current_version" to rootnode in "rule.xml"
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
-    Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9]*\.[0-9]*,but the server.xml version is [0-9]*\.[0-9]*.There must be some incompatible config between two versions, please check it
       The dble-config-version is [0-9]*\.[0-9],but the rule.xml version is [0-9]*\.[0-9]*.There must be some incompatible config between two versions, please check it

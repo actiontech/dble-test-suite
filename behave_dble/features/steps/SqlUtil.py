@@ -140,7 +140,7 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 if lengthObj:
                     expectRS = lengthObj.group(1)
                     context.logger.info("expect resultset:{0}, length equal to real res length:{1}".format(eval(expectRS), len(res)))
-                    assert_that(len(res),equal_to(eval(expectRS)))
+                    assert_that(len(res),equal_to(eval(expectRS)),"sql resultset records count is not as expected")
                 if matchObj:
                     match_Obj = matchObj.group(1)
                     context.logger.info("expect match_obj:{0}".format(match_Obj))
