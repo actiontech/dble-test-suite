@@ -4,6 +4,7 @@
 # Created by yangxiaoliang at 2019/12/26
 
 #2.19.11.0#dble-7867
+@skip #for xa is in debugging of dev
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
   @btrace

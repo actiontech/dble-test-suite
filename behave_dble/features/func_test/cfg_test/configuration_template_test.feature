@@ -42,20 +42,10 @@ Feature: use template to generate configuration file, check function is normal
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                          | expect  | db |
       | root | 111111 | conn_0 | True    | create database @@dataNode='dn1,dn2,dn3,dn4' | success |    |
-    Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql                                 | expect  | db   |
-      | test | 111111 | new    | False   | drop table if exists tb_hash_string | success | db_1 |
-      | test | 111111 | new    | False   | drop table if exists tb_hash_string | success | db_3 |
-      | test | 111111 | new    | False   | drop table if exists tb_global2     | success | db_1 |
-      | test | 111111 | new    | True    | drop table if exists tb_global2     | success | db_3 |
-    Then execute sql in "mysql-master2"
-      | user | passwd | conn   | toClose | sql                                 | expect  | db   |
-      | test | 111111 | new    | False   | drop table if exists tb_hash_string | success | db_2 |
-      | test | 111111 | new    | False   | drop table if exists tb_hash_string | success | db_4 |
-      | test | 111111 | new    | False   | drop table if exists tb_global2     | success | db_2 |
-      | test | 111111 | new    | True    | drop table if exists tb_global2     | success | db_4 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                 | expect                                                                         | db     |
+      | test | 111111 | conn_0 | True    | drop table if exists tb_hash_string | success                                                                        | testdb |
+      | test | 111111 | conn_0 | True    | drop table if exists tb_global2     | success                                                                        | testdb |
       | test | 111111 | conn_0 | True    | create table tb_hash_string(id int) | success                                                                        | testdb |
       | test | 111111 | conn_0 | True    | create table tb_global2(id int)     | success                                                                        | testdb |
       | test | 111111 | conn_0 | True    | show all tables                     | hasStr{(('tb_global2', 'GLOBAL TABLE'), ('tb_hash_string', 'SHARDING TABLE'))} | testdb |

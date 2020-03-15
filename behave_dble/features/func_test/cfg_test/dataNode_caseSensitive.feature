@@ -4,6 +4,9 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
 
   @NORMAL @restore_letter_sensitive
   Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
+   """
+   {'restore_letter_sensitive':['mysql-master1']}
+   """
     Given delete the following xml segment
     |file        | parent          | child               |
     |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
