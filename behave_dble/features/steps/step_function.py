@@ -254,18 +254,23 @@ def step_impl(context,hostname,num=None):
     if num is not None:
         assert int(stdout) >= int(num), "expect {0} less than result {1} ,but not ".format(num, int(stdout))
 
-@Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
-def step_impl(context,flag,filename,hostname):
+@Then('check following text exist "{flag}" in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
+def check_text_from_line(context,flag,filename,hostname,checkFromLine):
+    checkFromLineNum=getattr(context,checkFromLine,0)
+    check_text(context,flag,filename,hostname,checkFromLineNum)
+
+@Then('check following text exist "{flag}" in file "{filename}" in host "{hostname}"')
+def check_text(context,flag,filename,hostname,checkFromLine=0):
     strs = context.text.strip()
     strs_list = strs.splitlines()
 
     ssh = get_ssh(context.dbles,hostname)
     for str in strs_list:
-        cmd = "grep \'{0}\' {1}".format(str,filename)
+        cmd = "tail -n +{2} {1} | grep -n \'{0}\'".format(str,filename,checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
-        if flag =="not":
+        if flag =="N":
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
-        else:
+        else:#default take flag as Y
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
 
 @Then ('check following "{flag}" exist in dir "{dirname}" in "{hostname}"')

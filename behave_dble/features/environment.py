@@ -4,13 +4,13 @@ import logging
 import os
 import sys
 
-from steps.step_check_sql import reset_repl
-from steps.lib.Node import get_ssh, get_sftp
-from steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
-from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+from .steps.step_check_sql import reset_repl
+from .steps.lib.Node import get_ssh, get_sftp
+from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
+from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
-from steps.restart import update_config_and_restart_mysql
+from .steps.restart import update_config_and_restart_mysql
 
 from .steps.step_function import restore_sys_time
 
@@ -143,6 +143,16 @@ def after_scenario(context, scenario):
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
+
+    if "restore_letter_sensitive" in scenario.tags:
+        context.text = """
+        /lower_case_table_names/d
+        /server-id/a lower_case_table_names = 0
+        """
+        update_config_and_restart_mysql(context, "mysql-master1")
+        update_config_and_restart_mysql(context, "mysql-master2")
+        update_config_and_restart_mysql(context, "mysql-slave1")
+        update_config_and_restart_mysql(context, "mysql-slave2")
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
