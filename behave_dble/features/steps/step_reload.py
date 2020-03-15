@@ -40,6 +40,7 @@ def get_admin_conn(context, user="", passwd=""):
         assert False, "create manager conn meets error:{0}".format(e.args)
     return conn
 
+@Given('execute admin cmd "{adminsql}" success')
 @Then('execute admin cmd "{adminsql}"')
 @Then('execute admin cmd "{adminsql}" get the following output')
 @Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')

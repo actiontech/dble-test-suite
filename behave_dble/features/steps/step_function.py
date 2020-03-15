@@ -2,6 +2,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import sys   #引用sys模块进来，并不是进行sys的第一次加载
+
 reload(sys)  #重新加载sys
 sys.setdefaultencoding('utf8')  ##调用setdefaultencoding函数
 
@@ -15,7 +16,6 @@ from lib.generate_util import generate
 from behave import *
 from hamcrest import *
 from step_reload import get_admin_conn, get_dble_conn
-
 LOGGER = logging.getLogger('steps.function')
 
 @then('Test the data types supported by the sharding column in "{sql_name}"')
@@ -212,17 +212,20 @@ def step_impl(context, filename):
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
 
 
-@Given ('update file content "{filename}" in "{hostname}"')
-def update_file_content(context,filename, hostname):
-    sed_cmd_str = context.text.strip()
+def merge_cmd_strings(context,text,targetFile):
+    sed_cmd_str = text.strip()
     sed_cmd_list = sed_cmd_str.splitlines()
-    sed_cmd = "sed -i"
-    for cmd in sed_cmd_list:
-        sed_cmd += " -e '{0}'".format(cmd.strip())
+    cmd = "sed -i"
+    for sed_cmd in sed_cmd_list:
+        cmd += " -e '{0}'".format(sed_cmd.strip())
+    cmd += " {0}".format(targetFile)
+    context.logger.info("sed cmd : {0}".format(cmd))
+    return cmd
 
-    sed_cmd += " {0}".format(filename)
+@Given ('update file content "{filename}" in "{hostname}"')
+def update_file_content(context, sedStr,filename, hostname):
+    sed_cmd = merge_cmd_strings(context,sedStr,filename)
 
-    context.logger.info("sed cmd is :{0}".format(sed_cmd))
     if hostname.startswith('dble'):
         ssh = get_ssh(context.dbles,hostname)
     else:
@@ -244,18 +247,23 @@ def step_impl(context,hostname):
     stderr =  stderr.lower()
     assert stderr.find("error") == -1, "import data from file in {0} fail for {1}".format(hostname,stderr)
 
-@Then ('check following "{flag}" exist in file "{filename}" in "{hostname}"')
-def step_impl(context,flag,filename,hostname):
+@Then('check following text exist "{flag}" in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
+def check_text_from_line(context,flag,filename,hostname,checkFromLine):
+    checkFromLineNum=getattr(context,checkFromLine,0)
+    check_text(context,flag,filename,hostname,checkFromLineNum)
+
+@Then('check following text exist "{flag}" in file "{filename}" in host "{hostname}"')
+def check_text(context,flag,filename,hostname,checkFromLine=0):
     strs = context.text.strip()
     strs_list = strs.splitlines()
 
     ssh = get_ssh(context.dbles,hostname)
     for str in strs_list:
-        cmd = "grep \'{0}\' {1}".format(str,filename)
+        cmd = "tail -n +{2} {1} | grep -n \'{0}\'".format(str,filename,checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
-        if flag =="not":
+        if flag =="N":
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
-        else:
+        else:#default take flag as Y
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
 
 @Then ('check following "{flag}" exist in dir "{dirname}" in "{hostname}"')

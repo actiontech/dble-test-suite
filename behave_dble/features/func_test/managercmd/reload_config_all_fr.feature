@@ -5,6 +5,7 @@
 #2.19.11.0#dble-7855
 Feature: reload @@config_all -fr
 
+  @skip #for issue:http://10.186.18.11/jira/browse/DBLE0REQ-180
   Scenario: open transaction, execute "reload @@config_all -fr" or "reload @@config_all -f -r" causing transaction closed
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """

@@ -38,12 +38,12 @@ Feature: #test the correctness of sql transformation
       /# default cache/a #layedpool.TableID2DataNodeCache=encache,10000,18000
       /# no default cache,but set cache type/a layedpool.TableID2DataNodeCacheType=encache
     """
-    Then check following " " exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
     #layedpool.TableID2DataNodeCache=encache,10000,18000
     layedpool.TableID2DataNodeCacheType=encache
     """
-    Then check following "not" exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
     #layedpool.TableID2DataNodeCacheType=encache
     """
@@ -62,12 +62,12 @@ Feature: #test the correctness of sql transformation
       /# default cache/a layedpool.TableID2DataNodeCache=encache,10000,18000
       /# no default cache,but set cache type/a #layedpool.TableID2DataNodeCacheType=encache
     """
-    Then check following " " exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
     layedpool.TableID2DataNodeCache=encache,10000,18000
     #layedpool.TableID2DataNodeCacheType=encache
     """
-    Then check following "not" exist in file "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
     #layedpool.TableID2DataNodeCache=encache,10000,18000
     """
