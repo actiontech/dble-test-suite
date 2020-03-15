@@ -27,12 +27,14 @@ sql_threads = {}
 last_sql_queue_size = 0
 current_thread_tag = []
 
-def get_log_linenu(context):
+@Given('record current dble log line number in "{log_linenu}"')
+def get_log_linenu(context, log_linenu="log_linenu"):
     logpath = get_full_log_path(context)
     cmd = "wc -l %s | awk '{print $1}'" % logpath
     re, sdo, sdr = context.ssh_client.exec_command(cmd)
     context.logger.info("log lines: {0}".format(sdo))
-    context.log_linenu = sdo.strip()
+    # context.log_linenu = sdo.strip()
+    setattr(context,log_linenu, sdo.strip())
 
 
 def get_full_log_path(context):
