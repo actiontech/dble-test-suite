@@ -4,13 +4,13 @@ import logging
 import os
 import sys
 
-from steps.step_check_sql import reset_repl
-from steps.lib.Node import get_ssh, get_sftp
-from steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
-from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+from .steps.step_check_sql import reset_repl
+from .steps.lib.Node import get_ssh, get_sftp
+from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
+from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
-from steps.restart import update_config_and_restart_mysql
+from .steps.restart import update_config_with_sedStr_and_restart_mysql
 
 from .steps.step_function import restore_sys_time
 
@@ -118,15 +118,6 @@ def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
     logger.info(context.text)
-    if "restore_letter_sensitive" in scenario.tags:
-        context.text = """
-        /lower_case_table_names/d
-        /server-id/a lower_case_table_names = 0
-        """
-        update_config_and_restart_mysql(context, "mysql-master1")
-        update_config_and_restart_mysql(context, "mysql-master2")
-        update_config_and_restart_mysql(context, "mysql-slave1")
-        update_config_and_restart_mysql(context, "mysql-slave2")
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
@@ -143,6 +134,27 @@ def after_scenario(context, scenario):
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
+
+    if "restore_letter_sensitive" in scenario.tags:
+        sedStr= """
+        /lower_case_table_names/d
+        /server-id/a lower_case_table_names = 0
+        """
+        restore_letter_sensitive_dic=None
+        for line in scenario.description:
+            line_no_white=line.strip()
+            if line_no_white and line_no_white.startswith("{'restore_letter_sensitive'"):
+                restore_letter_sensitive_dic = eval(line)
+                break
+
+        if restore_letter_sensitive_dic:
+            paras = restore_letter_sensitive_dic["restore_letter_sensitive"]
+        else:
+            paras = ['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']
+
+        logger.debug("try to restore lower_case_table_names of mysqls: {0}".format(paras))
+        for i in paras:
+            update_config_with_sedStr_and_restart_mysql(context, i, sedStr)
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
