@@ -49,7 +49,7 @@ Feature: install dble cluster, degrade to single dble, recover to cluster
     Given config zookeeper cluster in all dble nodes with "all zookeeper hosts"
     Given reset dble registered nodes in zk
     Given Restart dble in "dble-1" success
-    Then check following " " exist in file "/opt/dble/conf/dnindex.properties" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/conf/dnindex.properties" in host "dble-1"
     """
     localhost1=0
     """

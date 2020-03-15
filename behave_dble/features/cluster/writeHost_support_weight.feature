@@ -30,11 +30,11 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
       """
       Then execute admin cmd "reload @@config_all"
       Given sleep "2" seconds
-      Then check following " " exist in file "/opt/dble/conf/schema.xml" in "dble-2"
+      Then check following text exist "Y" in file "/opt/dble/conf/schema.xml" in host "dble-2"
       """
       weight="3"
      """
-      Then check following " " exist in file "/opt/dble/conf/schema.xml" in "dble-3"
+      Then check following text exist "Y" in file "/opt/dble/conf/schema.xml" in host "dble-3"
       """
       weight="3"
       """

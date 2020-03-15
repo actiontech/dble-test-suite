@@ -307,7 +307,7 @@ Feature: test config in server.xml
       | user  | passwd | conn    | toClose | sql                                            | expect          |db       |
       | test  | 111111 | conn_0  | True    | alter table test_table drop name           | success         | db1     |
     Given sleep "2" seconds
-    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     structure are not consistent in different data node
     are modified by other,Please Check IT

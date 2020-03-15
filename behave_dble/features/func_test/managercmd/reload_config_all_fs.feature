@@ -5,6 +5,7 @@
 #2.19.11.0#dble-7854
 Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all -f -s", transaction will be closed successfully
 
+  @skip #for issue http://10.186.18.11/jira/browse/DBLE0REQ-181
   Scenario: open transaction, and execute "reload @@config_all -fs" or "reload @@config_all -f -s", transaction closed successfully
     #1 reload @@config_all -fs : schema.xml is unchanged, backend connection is unchanged too
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -44,7 +45,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | 172.100.9.6 |
 
     # 3 reload @@config_all -fs : open transaction, add bad readHost, execute 'reload @@config_all -fs', transaction closed successfully
-    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}, 'childIdx':1}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}}" in "schema.xml"
     """
         <readHost host="hostS1" url="172.100.9.2:3306" password="111111" user="testx"/>
     """
