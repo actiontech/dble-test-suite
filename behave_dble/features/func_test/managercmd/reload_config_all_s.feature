@@ -5,7 +5,7 @@
 #2.19.11.0#dble-7850
 Feature: reload @@config_all -s
 
-  Scenario: execute manager cmd "reload @@config_all -s" after change user of writeHost ang password of readHost #1
+  Scenario: execute manager cmd "reload @@config_all -s" after change user of writeHost and password of readHost #1
     Given delete the following xml segment
       | file       | parent         | child              |
       | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |

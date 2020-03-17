@@ -33,7 +33,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
        </writeHost>
     </dataHost>
     """
-    Given restart mysql in "dble-2" with sed cmds to update mysql config
+    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 0
