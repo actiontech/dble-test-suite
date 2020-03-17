@@ -29,9 +29,66 @@ def get_sql(type):
 
     return sql
 
+@Given('turn on general log in "{hostname}"')
+def step_impl(context,hostname, user=""):
+    node = get_node(context.mysqls, hostname)
+    conn = DBUtil(node.ip, context.cfg_mysql['user'], context.cfg_mysql['password'], '', node.mysql_port, context)
+
+    res, err = conn.query("set global log_output='file'")
+    assert err is None, "get general log file fail for {0}".format(err[1])
+
+    res, err = conn.query("set global general_log=off")
+    assert err is None, "set general log off fail for {0}".format(err[1])
+
+    res, err = conn.query("show variables like 'general_log_file'")
+    assert err is None, "get general log file fail for {0}".format(err[1])
+
+    general_log_file = res[0][1]
+    rc, sto, ste = node.ssh_conn.exec_command('rm -rf {0}'.format(general_log_file))
+    assert len(ste) == 0, "rm general_log_file fail for {0}".format(ste)
+
+    res, err = conn.query("set global general_log=on")
+    assert err is None, "set general log on fail for {0}".format(err[1])
+
+    conn.close()
+
+@Given('turn off general log in "{hostname}"')
+def turn_off_general_log(context,hostname, user=""):
+    context.execute_steps('''
+    Then execute sql in "{0}"
+      | user  | passwd    | conn   | toClose | sql                         | expect  | db|
+      | test  | 111111    | conn_0 | True    | set global general_log=off  | success |   |
+    '''.format(hostname))
+
+@Then('check general log in host "{hostname}" has not "{query}"')
+def step_impl(context,hostname, query):
+    node = get_node(context.mysqls, hostname)
+    conn = DBUtil(node.ip, context.cfg_mysql['user'], context.cfg_mysql['password'], '', node.mysql_port, context)
+
+    res, err = conn.query("show variables like 'general_log_file'")
+    assert err is None, "get general log file fail for {0}".format(err[1])
+
+    general_log_file = res[0][1]
+
+    find_query_in_genlog_cmd = 'grep -ni "{0}" {1} | wc -l'.format(query, general_log_file)
+    rc, sto, ste = node.ssh_conn.exec_command(find_query_in_genlog_cmd)
+    assert sto==0, "expect general log has no {0}, but it occurs {1} times".format(query,sto);
+
+@Then('check general log in host "{hostname}" has "{query}"')
+def step_impl(context,hostname, query):
+    context.execute_steps('''
+    Then execute sql in "{0}"
+      | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
+      | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'{1}' | length{(1)} | db1 |
+    '''.format(hostname,query))
+
+@Given('execute sql in "{hostname}"')
+def step_impl(context,hostname):
+    execute_sql_in_host(context,hostname)
+
 @Then('execute sql in "{hostname}"')
 @Then('execute sql in "{hostname}" in "{user}" mode')
-def step_impl(context,hostname, user=""):
+def execute_sql_in_host(context,hostname, user=""):
     if len(user.strip()) == 0:
         node = get_node(context.mysqls, hostname)
         ip = node._ip
