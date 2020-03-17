@@ -188,7 +188,7 @@ Feature: Functional testing of global sequences
       s/[#]*START_TIME=.* /START_TIME=2010\/11\/04 /
     """
     Given Restart dble in "dble-1" success
-    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     START_TIME in sequence_time_conf.properties parse exception, starting from 2010-11-04 09:42:54
     """
@@ -203,7 +203,7 @@ Feature: Functional testing of global sequences
     s/[#]*START_TIME=.* /START_TIME=2190-10-01 /
     """
     Given Restart dble in "dble-1" success
-    Then check following " " exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     START_TIME in sequence_time_conf.properties mustn'\''t be over than dble start time, starting from 2010-11-04 09:42:54
     """

@@ -74,7 +74,7 @@ Feature: test slow query log related manager command
         | test         | 111111    | conn_0 | False    | select count(id) from a_test    |  success  | schema1 |
         | test         | 111111    | conn_0 | True     | delete from a_test              |  success  | schema1 |
 
-      Then check following "not" exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
+      Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
       """
       drop table if exists a_test
       create table a_test(id int)
@@ -96,7 +96,7 @@ Feature: test slow query log related manager command
         | test         | 111111    | conn_0 | False    | select id from a_test           | success |  schema1|
         | test         | 111111    | conn_0 | False    | select count(id) from a_test    | success |  schema1|
         | test         | 111111    | conn_0 | True     | delete from a_test              | success |  schema1|
-      Then check following " " exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
+      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
       """
       drop table if exists a_test
       create table a_test(id int)
@@ -115,13 +115,13 @@ Feature: test slow query log related manager command
         | test         | 111111    | conn_0 | False    | create table a_test(id int(10) unsigned NOT NULL,name char(1))  |  success                         | schema1 |
         | test         | 111111    | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | schema1 |
         | test         | 111111    | conn_0 | False    | insert into a_test values(3,3)                                  |  success                         | schema1 |
-     Then check following " " exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
+     Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists a_test
      create table a_test(id int(10) unsigned NOT NULL,name char(1))
      insert into a_test values(3,3)
      """
-     Then check following "not" exist in file "/opt/dble/slowQuery/query.log" in "dble-1"
+     Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      insert into a_test values(1,1),(2,1111)
      """
