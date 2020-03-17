@@ -5,8 +5,11 @@
 # @Author  : irene-coming
 Feature: dble start fail if global var lower_case_table_names are not consistent in all dataHosts
 
-  @restore_letter_sensitive
-  Scenario: dble start fail if global var lower_case_table_names are not consistent in all dataHosts
+  @restore_letter_sensitive @current
+  Scenario: dble start fail if global var lower_case_table_names are not consistent in all dataHosts #1
+    """
+    {'restore_letter_sensitive':['mysql-master1','mysql-master2']}
+    """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
     /lower_case_table_names/d
@@ -23,7 +26,10 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
 
   @restore_letter_sensitive
-  Scenario: dble start fail if global var lower_case_table_names are not consistent between readHost and writeHost
+  Scenario: dble start fail if global var lower_case_table_names are not consistent between readHost and writeHost #2
+    """
+    {'restore_letter_sensitive':['mysql-slave1','mysql-master2']}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="-1">

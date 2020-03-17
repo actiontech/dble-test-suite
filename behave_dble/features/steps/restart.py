@@ -13,16 +13,20 @@ from hamcrest import *
 
 from lib.DBUtil import DBUtil
 from . lib.Node import get_node, get_ssh
-from . step_function import update_file_content
+from . step_function import update_file_content, merge_cmd_strings
+
 
 @Given('restart mysql in "{host}" with sed cmds to update mysql config')
 def update_config_and_restart_mysql(context, host):
+    update_config_with_sedStr_and_restart_mysql(context, host, context.text)
+
+def update_config_with_sedStr_and_restart_mysql(context, host, sedStr):
     stop_mysql(context, host)
 
     # to wait stop finished
     time.sleep(10)
 
-    update_file_content(context, "/etc/my.cnf", host)
+    update_file_content(context, sedStr, "/etc/my.cnf", host)
 
     start_mysql(context, host)
 
@@ -122,12 +126,3 @@ def step_impl(context,btrace,dir):
     assert status == 0, "change {0} failed".format(btrace)
     context.logger.info("change {0} successed".format(btrace))
 
-def merge_cmd_strings(context,text,targetFile):
-    sed_cmd_str = text.strip()
-    sed_cmd_list = sed_cmd_str.splitlines()
-    cmd = "sed -i"
-    for sed_cmd in sed_cmd_list:
-        cmd += " -e '{0}'".format(sed_cmd.strip())
-    cmd += " {0}".format(targetFile)
-    context.logger.info("cmd : {0}".format(cmd))
-    return cmd
