@@ -4,6 +4,7 @@
 # Created by yangxiaoliang at 2020/1/4
 
 #2.19.11.0#dble-7871
+@skip #for xa is in debugging of dev
 Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and some nodes prepare/start failed.
   For xa prepared successfully nodes, need to rollback after dble restart
   For xa start failed nodes, dble need return a reasonable error message

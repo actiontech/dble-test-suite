@@ -77,7 +77,7 @@ def get_xml_from_str(str):
 def add_child_in_string(file, pos_kv_map, childNodeInString):
     """
     add child to file or to file content in memory
-    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add,childIdx is index for the node to add
+    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
     :param childNodeInString: child node xml in string format
     :param file_local: xml file name in local
     :param file_content: xml content

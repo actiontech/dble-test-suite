@@ -456,7 +456,7 @@ Feature: verify hint sql
     """
     show index from test_global /*test*/
     """
-    Then check following "not" exist in file "/opt/dble/logs/dble.log" in "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     dn5{show index from test_global/*test*/}
     """
