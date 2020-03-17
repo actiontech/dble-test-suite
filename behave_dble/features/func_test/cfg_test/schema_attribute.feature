@@ -348,8 +348,14 @@ Feature: test some import nodes attr in schema.xml
         | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
         | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
 
-  Scenario:  when minCon > the number of db, the minimum number of surviving connections = (the number of minCon);
-              increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #12
+  Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic
+#  minConRecover logic, take this case as example:
+#  minCon=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,alread_created=num_dns+1=3+1=4
+#  main logic: minConRecover_num_each_loop=floor((minCon_of_config-already_created)/3), end loop until this formula get result 0
+#  minConRecover_num_loop1:(10-4)/3 = 2, already_created=alread_created + minConRecover_num_loop1=4+2=6
+#  minConRecover_num_loop2:(10-6)/3 = 1, already_created=already_created + minConRecover_num_loop2=6+1=7
+#  minConRecover_num_loop3:(10-7)/3 = 1, already_created=already_created + minConRecover_num_loop3=7+1=8
+#  minConRecover_num_loop4:(10-8)/3 = 0, formula get result 0,end loop, and the real restored conns num is 8, that is show @@backend resultset count
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
         <property name="dataNodeIdleCheckPeriod">1000</property>
@@ -357,23 +363,24 @@ Feature: test some import nodes attr in schema.xml
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
+    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
+        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
+    </schema>
+    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
+    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
-    <heartbeat>select user()</heartbeat>
-    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-    </writeHost>
-    </dataHost>
     """
     Given Restart dble in "dble-1" success
     Given restart mysql in "mysql-master1"
-    Given restart mysql in "mysql-master2"
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                           | expect         | db     |
-        | root | 111111 | conn_0 | True     | show @@backend                                                | length{(16)}   |        |
+        | user | passwd | conn   | toClose  | sql             | expect        | db     |
+        | root | 111111 | conn_0 | True     | show @@backend  | length{(8)}   |        |
 
 
 
