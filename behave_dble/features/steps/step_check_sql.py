@@ -34,6 +34,7 @@ def get_log_linenu(context, log_linenu="log_linenu"):
     re, sdo, sdr = context.ssh_client.exec_command(cmd)
     context.logger.info("log lines: {0}".format(sdo))
     # context.log_linenu = sdo.strip()
+    assert_that(sdr ,is_(""), "expect cmd success, but err occured:{0}".format(sdr))
     setattr(context,log_linenu, sdo.strip())
 
 

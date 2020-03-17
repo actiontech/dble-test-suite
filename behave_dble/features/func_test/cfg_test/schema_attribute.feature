@@ -348,11 +348,11 @@ Feature: test some import nodes attr in schema.xml
         | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
         | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
 
-  Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic
+  Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #12
 #  minConRecover logic, take this case as example:
-#  minCon=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,alread_created=num_dns+1=3+1=4
+#  minCon_of_config=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,already_created=num_dns+1=3+1=4
 #  main logic: minConRecover_num_each_loop=floor((minCon_of_config-already_created)/3), end loop until this formula get result 0
-#  minConRecover_num_loop1:(10-4)/3 = 2, already_created=alread_created + minConRecover_num_loop1=4+2=6
+#  minConRecover_num_loop1:(10-4)/3 = 2, already_created=already_created + minConRecover_num_loop1=4+2=6
 #  minConRecover_num_loop2:(10-6)/3 = 1, already_created=already_created + minConRecover_num_loop2=6+1=7
 #  minConRecover_num_loop3:(10-7)/3 = 1, already_created=already_created + minConRecover_num_loop3=7+1=8
 #  minConRecover_num_loop4:(10-8)/3 = 0, formula get result 0,end loop, and the real restored conns num is 8, that is show @@backend resultset count
@@ -377,6 +377,7 @@ Feature: test some import nodes attr in schema.xml
     """
     Given Restart dble in "dble-1" success
     Given restart mysql in "mysql-master1"
+#   wait 2s for minConRecover is a duration, but not at once
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql             | expect        | db     |

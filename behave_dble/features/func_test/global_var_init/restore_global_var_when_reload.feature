@@ -6,7 +6,7 @@
 Feature: if dble rebuild conn pool with reload, then global vars dble use deeply will be redetected, and the detected result affets whether reload success
 #global vars:lower_case_table_names,autocommit,transaction_isolation,read_only
 
-  Scenario: Backend Global vars are same with dble config,do dble reload -r which makes conn pool recreated will success, check the global var values is redetected.
+  Scenario: Backend Global vars are same with dble config,do dble reload -r which makes conn pool recreated will success, check the global var values is redetected.#1
 # if conn pool is not recreated, global var will not be redetected
 
   Given record current dble log line number in "log_linenu"
@@ -15,6 +15,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble use deeply
   """
   con query sql:select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation
   """
+  Then check
 
 #  Scenario: Backend Global vars are different with dble config,do dble reload -r which makes conn pool recreated will failed
 #  """
