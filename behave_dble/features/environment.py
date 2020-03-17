@@ -4,6 +4,7 @@ import logging
 import os
 import sys
 
+from .steps.SqlUtil import turn_off_general_log
 from .steps.step_check_sql import reset_repl
 from .steps.lib.Node import get_ssh, get_sftp
 from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
@@ -140,12 +141,7 @@ def after_scenario(context, scenario):
         /lower_case_table_names/d
         /server-id/a lower_case_table_names = 0
         """
-        restore_letter_sensitive_dic=None
-        for line in scenario.description:
-            line_no_white=line.strip()
-            if line_no_white and line_no_white.startswith("{'restore_letter_sensitive'"):
-                restore_letter_sensitive_dic = eval(line)
-                break
+        restore_letter_sensitive_dic = get_case_tag_params(scenario.description, "{'restore_letter_sensitive'")
 
         if restore_letter_sensitive_dic:
             paras = restore_letter_sensitive_dic["restore_letter_sensitive"]
@@ -156,6 +152,18 @@ def after_scenario(context, scenario):
         for i in paras:
             update_config_with_sedStr_and_restart_mysql(context, i, sedStr)
 
+    if "restore_general_log" in scenario.tags:
+        params_dic = get_case_tag_params(scenario.description, "{'restore_general_log'")
+
+        if params_dic:
+            paras = params_dic["restore_general_log"]
+        else:
+            paras = ['mysql-master1', 'mysql-master2', 'mysql-slave1', 'mysql-slave2']
+
+        logger.debug("try to restore general_log of mysqls: {0}".format(paras))
+        for i in paras:
+            turn_off_general_log(context, i)
+
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
     if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:
@@ -164,6 +172,18 @@ def after_scenario(context, scenario):
 
     logger.info('after_scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
+
+
+def get_case_tag_params(scenario):
+    restore_letter_sensitive_dic = None
+    for line in scenario.description:
+        line_no_white = line.strip()
+        if line_no_white and line_no_white.startswith("{'restore_letter_sensitive'"):
+            restore_letter_sensitive_dic = eval(line)
+            break
+    return restore_letter_sensitive_dic
+
+
 def before_step(context, step):
     logger.info('*' * 30)
     logger.info('step start: <{0}>'.format(step.name))
