@@ -221,7 +221,8 @@ def do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect
                 duration = (endtime - starttime).seconds
                 context.logger.info(" expect duration is :{0},real duration is{1} ".format(eval(expectRS), duration))
                 assert_that(duration, equal_to(eval(expectRS)))
-
+            elif expect.lower() == "error totally whack":
+                assert_that(err,not_none(), "exec sql:{1} Err is None, expect:{0}".format(expect, sql))
             else:
                 assert_that(err,not_none(), "exec sql:{1} Err is None, expect:{0}".format(expect, sql))
                 assert_that(err[1], contains_string(expect), "expect text: {0}, read err:{1}".format(expect,err))
