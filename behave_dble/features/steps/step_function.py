@@ -524,28 +524,27 @@ def step_impl(context,file,host):
     assert isFound, "can not find expect text '{0}' in {1}".format(context.text, file)
 
 
-@Then('check the number of following key in file "{filename}" in "{hostname}"')
+@Then('check the occur times of following key in file "{filename}" in "{hostname}"')
 def step_impl(context, filename, hostname):
     ssh = get_ssh(context.dbles, hostname)
     for row in context.table:
         str = row["key"]
-        num = row["number"]
+        num = row["occur_times"]
         cmd = "grep \'{0}\' {1}|wc -l".format(str, filename)
         rc, stdout, stderr = ssh.exec_command(cmd)
         assert_that(stdout == num,
-                    "expect the number of \"{0}\" is {1} in {2},but the actual value is {3}".format(str, num, filename,
+                    "expect the occur times of \"{0}\" is {1} in {2},but the actual value is {3}".format(str, num, filename,
                                                                                                     stdout))
 
-@Then('get the value of "{column_index}" when admin cmd "{adminsql}" named "{rs_name}"')
+@Then('get index:"{column_index}" column value of "{adminsql}" named as "{rs_name}"')
 def step_impl(context, column_index, adminsql, rs_name):
     manager_conn = get_admin_conn(context)
     result, error = manager_conn.query(adminsql)
     assert error is None, "execute adminsql {0} to get the value of column, get error:{1}".format(adminsql, error)
-    for row in result:
-        id = row[int(column_index)]
+    id = result[0][int(column_index)]
     setattr(context, rs_name, id)
 
-@Then('kill dble front session "{session_id}" in "{hostname}"')
+@Then('kill dble front connection "{session_id}" in "{hostname}" with manager command')
 def step_impl(context, session_id, hostname):
     rs = getattr(context, session_id)
     manager_conn = get_admin_conn(context)
