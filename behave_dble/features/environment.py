@@ -103,7 +103,7 @@ def after_all(context):
 
 def before_feature(context, feature):
     logger.info('*' * 30)
-    logger.info('Feature start: <{0}>'.format(feature.name))
+    logger.info('Feature start: <{0}><{1}>'.format(feature.filename,feature.name))
 
     if "setup" in feature.tags:
         # delete the begin and end """
@@ -112,7 +112,7 @@ def before_feature(context, feature):
             context.execute_steps(desc)
 
 def after_feature(context, feature):
-    logger.info('Feature end: <{0}>'.format(feature.name))
+    logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
     logger.info('*' * 30)
 
 def before_scenario(context, scenario):
