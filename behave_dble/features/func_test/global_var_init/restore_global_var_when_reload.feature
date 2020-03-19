@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
+@skip
 Feature: if dble rebuild conn pool with reload, then global vars dble use deeply will be redetected, and the detected result affets whether reload success
 #global vars:lower_case_table_names,autocommit,transaction_isolation,read_only
 
@@ -14,6 +15,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble use deeply
 # if conn pool is not recreated, global var will not be redetected
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
+    Given record current dble log line number in "log_linenu"
     When execute admin cmd "reload @@config_all -r" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
