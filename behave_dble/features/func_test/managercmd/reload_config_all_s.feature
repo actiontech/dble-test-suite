@@ -16,7 +16,7 @@ Feature: reload @@config_all -s
     <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
     <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
     <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test"></writeHost>
     <writeHost host="hostM2" url="172.100.9.6:3306" password="111111" user="testx"></writeHost>
@@ -30,7 +30,7 @@ Feature: reload @@config_all -s
 
     Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test"></writeHost>
     <writeHost host="hostM2" url="172.100.9.6:3306" password="111111" user="test"></writeHost>
@@ -40,7 +40,7 @@ Feature: reload @@config_all -s
 
     Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
     <readHost host="hostS1" url="172.100.9.6:3306" password="errpwd" user="test"/>
@@ -55,7 +55,7 @@ Feature: reload @@config_all -s
 
     Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
     <readHost host="hostS1" url="172.100.9.6:3306" password="111111" user="test"/>
