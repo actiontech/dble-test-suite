@@ -19,7 +19,7 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
        </schema>
        <dataNode dataHost="ha_group1" database="db1" name="DN1" />
        <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-       <dataHost balance="0" maxCon="9" minCon="3" name="ha_group1" slaveThreshold="100" switchType="-1">
+       <dataHost balance="0" maxCon="9" minCon="3" name="ha_group1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
