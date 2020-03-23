@@ -222,7 +222,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
@@ -243,7 +243,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
@@ -329,7 +329,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="da3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
@@ -350,7 +350,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
     </writeHost>
@@ -373,7 +373,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
@@ -435,7 +435,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <dataNode dataHost="ha_group1" database="db2" name="dn3" />
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>
@@ -476,7 +476,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | test | 111111 | conn_0 | True    | create database db2                                     | success  |     |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
     </writeHost>

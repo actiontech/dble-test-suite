@@ -35,7 +35,7 @@ Feature: schema basic config test
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
@@ -66,7 +66,7 @@ Feature: schema basic config test
             <table dataNode="dn1,dn2" name="test" type="global" />
         </schema>
         <dataNode dataHost="ha_group1" database="db$1-2" name="dn$1-2" />
-        <dataHost balance="0" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" switchType="-1">
+        <dataHost balance="0" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
@@ -155,7 +155,7 @@ Feature: schema basic config test
         </schema>
         <dataNode dataHost="dh1" database="da1" name="dn1" />
         <dataNode dataHost="dh1" database="da2" name="dn3" />
-        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" switchType="-1">
+        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
