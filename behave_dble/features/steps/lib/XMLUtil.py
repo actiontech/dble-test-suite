@@ -286,7 +286,7 @@ if __name__ == "__main__":
         </schema>
         <dataNode dataHost="ha_group1" database="db1" name="dn2" />
         <dataNode dataHost="ha_group1" database="db2" name="dn4" />
-        <dataHost balance="1" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" switchType="-1">
+        <dataHost balance="1" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true"></writeHost>
         </dataHost>
