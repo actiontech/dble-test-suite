@@ -77,7 +77,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | test | 111111 | conn_1 | false   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
     Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
     <heartbeat>select user()</heartbeat>
     <writeHost host="hostM2" password="111111" url="172.100.9.4:3306" user="test">
     </writeHost>

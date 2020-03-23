@@ -53,13 +53,13 @@ Feature: reload @@config_all -fr
     #3 Start the transaction and add readHost with err password causing execute "reload @@config_all -fr" fail
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
       <readHost host="hostS1" url="172.100.9.2:3306" password="errpwd" user="test"/>
       </writeHost>
     </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM2" password="111111" url="172.100.9.4:3306" user="test">
       </writeHost>
@@ -78,7 +78,7 @@ Feature: reload @@config_all -fr
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
       <readHost host="hostS1" url="172.100.9.2:3306" password="111111" user="test"/>
