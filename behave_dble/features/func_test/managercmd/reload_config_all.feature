@@ -17,7 +17,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     <dataNode name="dn2" dataHost="host1" database="db2"/>
     <dataNode name="dn3" dataHost="host1" database="db3"/>
     <dataNode name="dn4" dataHost="host1" database="db4"/>
-    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
     </writeHost>
@@ -53,7 +53,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
         <heartbeat>show slave status</heartbeat>
         <writeHost host="hostW1" url="172.100.9.6:3306" password="111111" user="test"/>
     </dataHost>
@@ -76,7 +76,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | test | 111111 | conn_0 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
     </writeHost>
