@@ -20,7 +20,7 @@ Feature:check if schema.xml in which writeHost contains "weight" push success in
            <dataNode dataHost="ha_group2" database="db2" name="dn2" />
              <dataNode dataHost="ha_group2" database="db3" name="dn3" />
              <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-              <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="1">
+              <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
                  <heartbeat>select user()</heartbeat>
                  <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="3">
                     <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="3"/>

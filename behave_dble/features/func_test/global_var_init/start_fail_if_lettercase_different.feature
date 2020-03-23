@@ -32,7 +32,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" switchType="-1">
+    <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
        <heartbeat>select user()</heartbeat>
        <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
           <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>

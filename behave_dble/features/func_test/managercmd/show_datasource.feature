@@ -16,7 +16,7 @@ Feature: show_datasource
   Scenario: github issue #1064 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-	   <dataHost balance="0" maxCon="10" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+	   <dataHost balance="0" maxCon="10" minCon="10" name="ha_group1" slaveThreshold="100" >
 		   <heartbeat>select user()</heartbeat>
 		   <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
 		   </writeHost>
