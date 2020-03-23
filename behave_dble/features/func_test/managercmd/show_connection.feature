@@ -18,7 +18,7 @@ Feature: show @@connection.sql test
         <dataNode dataHost="172.100.9.1" database="db2" name="dn2" />
         <dataNode dataHost="172.100.9.1" database="db3" name="dn3" />
         <dataNode dataHost="172.100.9.1" database="db4" name="dn4" />
-        <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.1" switchType="1">
+        <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.1" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
             </writeHost>
