@@ -22,7 +22,7 @@ Feature: schema config stable test
         </schema>
         <dataNode dataHost="ha_group1" database="db1" name="dn1" />
         <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-        <dataHost balance="0" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" switchType="-1">
+        <dataHost balance="0" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
             </writeHost>
@@ -58,7 +58,7 @@ Feature: schema config stable test
         </schema>
         <dataNode dataHost="ha_group1" database="db1" name="dn2" />
         <dataNode dataHost="ha_group1" database="db2" name="dn4" />
-        <dataHost balance="1" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" switchType="-1">
+        <dataHost balance="1" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true"></writeHost>
         </dataHost>
@@ -85,7 +85,7 @@ Feature: schema config stable test
         </schema>
         <dataNode dataHost="ha_group2" database="db1" name="dn2" />
         <dataNode dataHost="ha_group2" database="db2" name="dn4" />
-        <dataHost maxCon="100" minCon="10" name="ha_group2" balance="0" switchType="-1">
+        <dataHost maxCon="100" minCon="10" name="ha_group2" balance="0" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
                 <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="222"/>
