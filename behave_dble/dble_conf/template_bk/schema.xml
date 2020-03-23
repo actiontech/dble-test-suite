@@ -11,13 +11,13 @@
     <dataNode dataHost="ha_group2" database="db2" name="dn4" />
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
 
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
         </writeHost>
     </dataHost>
 
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" switchType="1">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
         </writeHost>
