@@ -51,7 +51,7 @@ Feature: reload @@config_all -f
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" switchType="2" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostW1" url="172.100.9.4:3306" password="111111" user="test"/>
     </dataHost>
