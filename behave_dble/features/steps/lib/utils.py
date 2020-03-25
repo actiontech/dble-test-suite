@@ -85,3 +85,9 @@ def get_nodes(context , flag):
 def step_impl(context, num):
     int_num = int(num)
     time.sleep(int_num)
+
+def restore_sys_time():
+    import os
+    res = os.system("ntpdate -u 0.centos.pool.ntp.org")
+    assert res == 0, "restore sys time fail"
+    logger.debug("restore sys time success")
