@@ -6,7 +6,7 @@
 Feature: dble start fail if global var lower_case_table_names are not consistent in all dataHosts
 
   @restore_letter_sensitive @current
-  Scenario: dble start fail if global var lower_case_table_names are not consistent in all dataHosts #1
+  Scenario: dble start fail if global var lower_case_table_names of writeHosts are not consistent in 2 dataHosts #1
     """
     {'restore_letter_sensitive':['mysql-master1','mysql-master2']}
     """
