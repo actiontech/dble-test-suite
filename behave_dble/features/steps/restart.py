@@ -18,33 +18,22 @@ from . step_function import update_file_content, merge_cmd_strings
 
 @Given('restart mysql in "{host}" with sed cmds to update mysql config')
 def update_config_and_restart_mysql(context, host):
-    update_config_with_sedStr_and_restart_mysql(context, host, context.text)
+    restart_mysql(context, host, context.text)
 
-def update_config_with_sedStr_and_restart_mysql(context, host, sedStr):
-    stop_mysql(context, host)
-
-    # to wait stop finished
-    time.sleep(10)
-
-    update_file_content(context, sedStr, "/etc/my.cnf", host)
-
-    start_mysql(context, host)
+def update_config_with_sedStr_and_restart_mysql(context, host, sedStr=None):
+    restart_mysql(context, host, sedStr)
 
 @Given('restart mysql in "{host}"')
-def restart_mysql(context, host):
+def restart_mysql(context, host, sedStr=None):
     stop_mysql(context, host)
 
     # to wait stop finished
     time.sleep(10)
 
-    start_mysql(context, host)
+    if sedStr:
+        update_file_content(context, sedStr, "/etc/my.cnf", host)
 
-    node = get_node(context.mysqls, host)
-    ip = node.ip
-    port = node.mysql_port
-    user = context.cfg_mysql['user']
-    passwd = context.cfg_mysql['password']
-    connect_test(context, ip, user, passwd, port)
+    start_mysql(context, host)
 
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
@@ -81,6 +70,12 @@ def start_mysql(context, host):
     isSuccess = obj is not None
     assert isSuccess, "start mysql in host:{0} err: {1}".format(host, err)
 
+    node = get_node(context.mysqls, host)
+    ip = node.ip
+    port = node.mysql_port
+    user = context.cfg_mysql['user']
+    passwd = context.cfg_mysql['password']
+    connect_test(context, ip, user, passwd, port)
 
 @Given('connect after restart success')
 def connect_test(context, ip, user, passwd, port):

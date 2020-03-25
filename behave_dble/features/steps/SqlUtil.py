@@ -53,12 +53,19 @@ def step_impl(context,hostname, user=""):
     conn.close()
 
 @Given('turn off general log in "{hostname}"')
-def turn_off_general_log(context,hostname, user=""):
-    context.execute_steps('''
-    Then execute sql in "{0}"
-      | user  | passwd    | conn   | toClose | sql                         | expect  | db|
-      | test  | 111111    | conn_0 | True    | set global general_log=off  | success |   |
-    '''.format(hostname))
+def turn_off_general_log(context,hostname):
+    node = get_node(context.mysqls, hostname)
+    ip = node.ip
+    port = node.mysql_port
+    user= context.cfg_mysql["user"]
+    passwd = context.cfg_mysql["password"]
+    db=""
+    sql="set global general_log=off"
+    bClose=True
+    conn_type="conn_0"
+    expect = "success"
+
+    do_exec_sql(context,ip, user, passwd, db, port,sql,bClose, conn_type, expect)
 
 @Then('check general log in host "{hostname}" has not "{query}"')
 def step_impl(context,hostname, query):
@@ -72,19 +79,34 @@ def step_impl(context,hostname, query):
 
     find_query_in_genlog_cmd = 'grep -ni "{0}" {1} | wc -l'.format(query, general_log_file)
     rc, sto, ste = node.ssh_conn.exec_command(find_query_in_genlog_cmd)
-    assert sto==0, "expect general log has no {0}, but it occurs {1} times".format(query,sto);
+    assert 0==int(sto), "expect general log has no {0}, but it occurs {1} times".format(query,sto);
 
 @Then('check general log in host "{hostname}" has "{query}"')
-def step_impl(context,hostname, query):
-    context.execute_steps('''
-    Then execute sql in "{0}"
-      | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-      | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'{1}' | length{(1)} | db1 |
-    '''.format(hostname,query))
+@Then('check general log in host "{hostname}" has "{query}" occured "{occurTimesExpr}" times')
+def step_impl(context,hostname, query,occurTimesExpr=None):
+    node = get_node(context.mysqls, hostname)
+    conn = DBUtil(node.ip, context.cfg_mysql['user'], context.cfg_mysql['password'], '', node.mysql_port, context)
+
+    res, err = conn.query("show variables like 'general_log_file'")
+    assert err is None, "get general log file fail for {0}".format(err[1])
+
+    general_log_file = res[0][1]
+
+    find_query_in_genlog_cmd = 'grep -ni "{0}" {1} | wc -l'.format(query, general_log_file)
+    rc, sto, ste = node.ssh_conn.exec_command(find_query_in_genlog_cmd)
+
+    if occurTimesExpr is None:
+        occurTimesExpr= "==1"
+    sameAsExpected = eval("{0}{1}".format(sto,occurTimesExpr))
+    assert sameAsExpected, "expect general log has '{0}' occured {1} times, but it occured {2} times".format(query,occurTimesExpr,sto);
 
 @Given('execute sql in "{hostname}"')
 def step_impl(context,hostname):
     execute_sql_in_host(context,hostname)
+
+@When('execute sql in "{hostname}" in "{user}" mode')
+def step_impl(context,hostname, user=""):
+    execute_sql_in_host(context, hostname, user)
 
 @Then('execute sql in "{hostname}"')
 @Then('execute sql in "{hostname}" in "{user}" mode')
@@ -124,6 +146,7 @@ def exec_sql(context, ip, port):
         conn_type = row["conn"]
         expect = row["expect"]
         db = row["db"]
+
         if db is None: db = ''
         do_exec_sql(context, ip, user, passwd, db, port, sql=sql, bClose=bClose, conn_type=conn_type, expect=expect)
 
@@ -246,7 +269,6 @@ def hasResultSet(res, expectRS, bHas):
     else:#for single query resultset
         if len(resExpect) == len(res) and type(resExpect[0])==type(res[0]):
             real = cmp(sorted(list(resExpect)),sorted(list(res)))==0
-            # LOGGER.debug("***zhj debug 1")
         else:
             real = res.__contains__(resExpect)
 
