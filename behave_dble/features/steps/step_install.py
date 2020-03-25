@@ -128,6 +128,7 @@ def set_dble_log_level(context, node, log_level):
         ssh_client.exec_command(cmd)
         return True
 
+@Given('Start dble in "{hostname}"')
 @Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
     node = get_node(context.dbles, hostname)
@@ -183,6 +184,10 @@ def check_dble_started(context, node):
 def stop_dbles(context):
     for node in context.dbles:
         stop_dble_in_node(context, node)
+
+@Given('stop dble in "{hostname}"')
+def step_impl(context, hostname):
+    stop_dble_in_hostname(context, hostname)
 
 @Then('stop dble in "{hostname}"')
 def stop_dble_in_hostname(context, hostname):
