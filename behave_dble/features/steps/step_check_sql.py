@@ -418,17 +418,13 @@ def step_impl(context, filename):
                     # context.logger.info("zhj debug1, tmp:{0}, tmp_line_nu:{1}".format(tmp, tmp_line_nu))
                     while tmp.startswith("#"):
                         if tmp_line_nu < total_lines:
-                            # context.logger.info("zhj debug2")
                             if tmp.startswith("#!sql_thread_"):
-                                # context.logger.info("zhj debug3")
                                 is_sql_thread_end = True
                                 break
                             else:
                                 tmp = lines[tmp_line_nu]
                                 tmp_line_nu += 1
-                                # context.logger.info("zhj debug4, tmp:{0}".format(tmp))
                         else:
-                            # context.logger.info("zhj debug5")
                             is_sql_thread_end = True
                             break
                     context.logger.info("is_sql_thread_end: {0}".format(is_sql_thread_end))
