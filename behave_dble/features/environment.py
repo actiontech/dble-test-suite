@@ -1,19 +1,15 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
-import os
-import sys
 
-from .steps.SqlUtil import turn_off_general_log
+from .steps.SqlUtil import turn_off_general_log, do_exec_sql
 from .steps.step_check_sql import reset_repl
-from .steps.lib.Node import get_ssh, get_sftp
-from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes
+from .steps.lib.Node import get_ssh, get_sftp, get_node
+from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time
 from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
 from .steps.restart import update_config_with_sedStr_and_restart_mysql
-
-from .steps.step_function import restore_sys_time
 
 logger = logging.getLogger('environment')
 
@@ -55,9 +51,6 @@ def before_all(context):
 
     context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])
     context.ssh_sftp = get_sftp(context.dbles, context.cfg_dble['dble']['ip'])
-
-    # steps_dir = "{0}/steps".format(os.getcwd())
-    # sys.path.append(steps_dir)
 
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
@@ -141,10 +134,10 @@ def after_scenario(context, scenario):
         /lower_case_table_names/d
         /server-id/a lower_case_table_names = 0
         """
-        restore_letter_sensitive_dic = get_case_tag_params(scenario.description, "{'restore_letter_sensitive'")
+        tag_para_dic = get_case_tag_params(scenario.description, "{'restore_letter_sensitive'")
 
-        if restore_letter_sensitive_dic:
-            paras = restore_letter_sensitive_dic["restore_letter_sensitive"]
+        if tag_para_dic:
+            paras = tag_para_dic["restore_letter_sensitive"]
         else:
             paras = ['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']
 
@@ -164,25 +157,53 @@ def after_scenario(context, scenario):
         for i in paras:
             turn_off_general_log(context, i)
 
+    if "restore_global_setting" in scenario.tags:
+        params_dic = get_case_tag_params(scenario.description, "{'restore_global_setting'")
+
+        if params_dic:
+            paras = params_dic["restore_global_setting"]
+        else:
+            paras = {}
+
+        logger.debug("try to restore restore_global_setting of mysqls: {0}".format(paras))
+
+        for mysql, mysql_vars in paras.items():
+            query = "set global "
+            for k, v in mysql_vars.items():
+                query = query + "{0}={1},".format(k, v)
+
+            sql = query[:-1]
+
+            node = get_node(context.mysqls, mysql)
+            ip = node.ip
+            port = node.mysql_port
+            user = context.cfg_mysql["user"]
+            passwd = context.cfg_mysql["password"]
+            db = ""
+            bClose = True
+            conn_type = "conn_0"
+            expect = "success"
+
+            do_exec_sql(context, ip, user, passwd, db, port, sql, bClose, conn_type, expect)
+
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
     if not stop_scenario_for_failed and not "skip_restart" in scenario.tags and not context.userDebug:
         reset_dble(context)
 
-
     logger.info('after_scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
 
-
-def get_case_tag_params(scenario):
-    restore_letter_sensitive_dic = None
-    for line in scenario.description:
+def get_case_tag_params(description, tag):
+    logger.debug("scenario description:{0}".format(type(description)))
+    tag_para_dic = None
+    for line in description:
         line_no_white = line.strip()
-        if line_no_white and line_no_white.startswith("{'restore_letter_sensitive'"):
-            restore_letter_sensitive_dic = eval(line)
+        if line_no_white and line_no_white.startswith(tag):
+            logger.debug("zhj debug4:{0}".format(description))
+            tag_para_dic = eval(line)
             break
-    return restore_letter_sensitive_dic
-
+    return tag_para_dic
 
 def before_step(context, step):
     logger.info('*' * 30)
