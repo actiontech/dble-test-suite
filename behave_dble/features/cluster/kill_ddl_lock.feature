@@ -23,7 +23,7 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
     <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
     <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
-        <dataHost balance="0" maxCon="5" minCon="4" name="ha_group1" switchType="1" slaveThreshold="100">
+        <dataHost balance="0" maxCon="5" minCon="4" name="ha_group1" slaveThreshold="100">
         <heartbeat>select user()</heartbeat>
         <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test"/>
     </dataHost>
