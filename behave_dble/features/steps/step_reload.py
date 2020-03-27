@@ -41,9 +41,6 @@ def get_admin_conn(context, user="", passwd=""):
     return conn
 
 @When('execute admin cmd "{adminsql}" success')
-def step_impl(context, adminsql):
-    exec_admin_cmd(context, adminsql)
-
 @Given('execute admin cmd "{adminsql}" success')
 @Then('execute admin cmd "{adminsql}"')
 @Then('execute admin cmd "{adminsql}" get the following output')
