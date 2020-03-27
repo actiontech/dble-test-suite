@@ -42,6 +42,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute admin cmd "reload @@config_all -r" success
     Then check general log in host "mysql-master1" has "set global autocommit=1"
     Then check general log in host "mysql-master2" has not "set global autocommit=1"
+#    create new conns,and check new conn will not set global xxx
+    Given turn on general log in "mysql-master1"
+    Given create "11" front connections executing "drop table if exists sharding_4_t1"
+    Then check general log in host "mysql-master1" has not "set global autocommit=1"
 
   @restore_general_log
   Scenario:select global vars to a certain writeHost fail at dble start, when heatbeat recover, try select global vars again and set global vars if nessessary #3
@@ -94,7 +98,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
   @restore_general_log @restore_global_setting
-  Scenario:backend mysql global var read_only=true, then every heartbeat will try to select the 4 global vars,and try to set autocommit and tx_isolation if their values different between dble and mysql#5
+  Scenario:backend mysql global var read_only=true, then every heartbeat will try to select the global vars,and try to set autocommit and tx_isolation if their values different between dble and mysql#5
     """
     {'restore_general_log':['mysql-master1']}
     {'restore_global_setting':{'mysql-master1':{'read_only':0}}}
@@ -112,7 +116,25 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | test  | 111111    | conn_0 | True    | set global autocommit=0                  | success |   |
       | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED' | success |   |
     Given turn on general log in "mysql-master1"
-    Given Start dble in "dble-1"
+    When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
     Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation" occured ">2" times
+
+  @restore_general_log @skip
+  Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="autocommit">0</property>
+        <property name="txIsolation">2</property>
+    </system>
+    """
+    Given stop dble in "dble-1"
+    Given execute sql in "mysql-master1"
+      | user  | passwd    | conn   | toClose | sql                                       | expect  |db |
+      | test  | 111111    | conn_0 | False   | set global autocommit=1                   | success |   |
+      | test  | 111111    | conn_0 | True    | set global tx_isolation='REPEATABLE-READ' | success |   |
+    Given turn on general log in "mysql-master1"
+    When Start dble in "dble-1"
+    Then check general log in host "mysql-master1" has "set global autocommit=0,tx_isolation='READ-COMMITTED'"
