@@ -6,6 +6,9 @@ Feature: test read load balance
   1.https://actiontech.github.io/dble-docs-cn/2.Function/2.03_separate_RW.html
   2.https://actiontech.github.io/dble-docs-cn/1.config_file/1.2_schema.xml.html balance part
   todo: may need take various of writehost or readhost status abnormal into consideration
+#0：不做均衡，直接分发到当前激活的writeHost，readhost将被忽略,不会尝试建立连接
+#1：在除当前激活writeHost之外随机选择read host
+#2：读操作在所有readHost和writeHost中均衡。
 
   @CRITICAL
   Scenario: dataHost balance="0", do not balance, all read send to master #1
@@ -185,59 +188,8 @@ Feature: test read load balance
     | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
     | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{5000} |  |
 
-  @CRITICAL
-  Scenario: dataHost balance="3", do balance bewteen read host #5
-    Given delete the following xml segment
-      |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-    """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="3" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test"/>
-            </writeHost>
-        </dataHost>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Then execute sql in "mysql-master2"
-    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
-    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
-    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "mysql-slave1"
-    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
-    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
-    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then execute sql in "mysql-slave2"
-    | user  | passwd    | conn   | toClose | sql                             | expect  | db  |
-    | test  | 111111    | conn_0 | True    | set global general_log=on       | success |     |
-    | test  | 111111    | conn_0 | True    | set global log_output='table'   | success |     |
-    | test  | 111111    | conn_0 | True    | truncate table mysql.general_log| success |     |
-    Then connect "dble-1" to execute "10000" of select for "test"
-    Then execute sql in "mysql-master2"
-    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | has{(0L,),} |  |
-    Then execute sql in "mysql-slave2"
-    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        | balance{5000} |  |
-    Then execute sql in "mysql-slave1"
-    | user  | passwd    | conn   | toClose | sql                                 | expect  | db     |
-    | test  | 111111    | conn_0 | True    | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'        |  balance{5000} |  |
-
   @NORMAL
-  Scenario: dataHost balance="3" and tempReadHostAvailable="1", do balance bewteen read host even writehost down #6
+  Scenario: dataHost balance="1" and tempReadHostAvailable="1", do balance bewteen read host even writehost down #6
      Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -252,7 +204,7 @@ Feature: test read load balance
         <dataNode dataHost="ha_group2" database="db2" name="dn2" />
         <dataNode dataHost="ha_group2" database="db3" name="dn3" />
         <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="3" tempReadHostAvailable="1" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+        <dataHost balance="1" tempReadHostAvailable="1" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -277,7 +229,7 @@ Feature: test read load balance
     Given start mysql in host "mysql-master2"
 
   @NORMAL
-  Scenario: dataHost balance="3" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
+  Scenario: dataHost balance="1" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -292,7 +244,7 @@ Feature: test read load balance
         <dataNode dataHost="ha_group2" database="db2" name="dn2" />
         <dataNode dataHost="ha_group2" database="db3" name="dn3" />
         <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="3" tempReadHostAvailable="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+        <dataHost balance="1" tempReadHostAvailable="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
