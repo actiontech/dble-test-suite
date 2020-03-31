@@ -8,6 +8,7 @@ Feature: test high-availability related commands
   dataHost @@switch name='xxx' master='xxx'
   show @@datasource
 
+  @skip #for issue http://10.186.18.11/jira/browse/DBLE0REQ-194
   Scenario: end to end ha switch test
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
      """
