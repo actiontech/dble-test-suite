@@ -225,6 +225,7 @@ def merge_cmd_strings(context,text,targetFile):
     context.logger.info("sed cmd : {0}".format(cmd))
     return cmd
 
+@Given ('update file content "{filename}" in "{hostname}" with sed cmds')
 @Given ('update file content "{filename}" in "{hostname}"')
 def update_file_content(context, sedStr,filename, hostname):
     sed_cmd = merge_cmd_strings(context,sedStr,filename)
