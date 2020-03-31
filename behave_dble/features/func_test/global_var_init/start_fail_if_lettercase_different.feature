@@ -72,6 +72,17 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
   @restore_letter_sensitive @skip
   Scenario: backend mysql heartbeat fail, restore the mysql but its lower_case_table_names are different with the running backend mysqls, then heartbeat to this backend mysql fail #4
     Given stop mysql in host "mysql-master1"
-    Given
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    Given update file content "/etc/my.cnf" in "mysql-master1" with sed cmds
+    """
+    /lower_case_table_names/d
+    /server-id/a lower_case_table_names = 1
+    """
+#    sleep more than heartbeat time to make sure heartbeat failed
+    Given sleep "3" seconds
+    Given record current dble log line number in "log_linenu"
+    Given start mysql in host "mysql-master1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    DBLE_DATA_HOST_LOWER_CASE_ERROR
+    """
 
