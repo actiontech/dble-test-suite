@@ -112,7 +112,7 @@ Feature: test some import nodes attr in schema.xml
     Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for data host[dh1.hostM1]
+    the max active Connections size can not be max than maxCon for data host\[dh1.hostM1\]
     """
   @NORMAL
   Scenario: if "dataHost" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
@@ -152,32 +152,27 @@ Feature: test some import nodes attr in schema.xml
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
-    error totally whack
+    the max active Connections size can not be max than maxCon for data host\[dh1.hostM1\]
     """
 
   @CRITICAL
   Scenario: select (colomn is not cacheKey set in schema.xml) from table -- cacheKey cache invalid
              select (contains column which is set as cacheKey in schema.xml) from table -- cacheKey cache  effective #6
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
-    """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="name" rule="hash-two" />
-    """
-    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                         | expect         | db     |
-        | test | 111111 | conn_0 | False    |drop table if exists test_table                              | success       | schema1 |
-        | test | 111111 | conn_0 | False    |create table test_table(id int,name varchar(20)) |success        | schema1 |
-        | test | 111111 | conn_0 | False    |insert into test_table values(1,'test1'),(2,'test2')         | success      | schema1 |
-        | test | 111111 | conn_0 | True     |select id from test_table                  | success       | schema1 |
+        | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
+        | test | 111111 | conn_0 | False    |drop table if exists sharding_2_t1                      | success | schema1 |
+        | test | 111111 | conn_0 | False    |create table sharding_2_t1(id int,name varchar(20))     | success | schema1 |
+        | test | 111111 | conn_0 | False    |insert into sharding_2_t1 values(1,'test1'),(2,'test2') | success | schema1 |
+        | test | 111111 | conn_0 | True     |select id from sharding_2_t1                            | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
         | user | passwd | conn   | toClose  | sql          | expect      | db     |
         | root | 111111 | conn_0 | True     | show @@cache | length{(2)} |        |
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                     | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table      | success        | schema1 |
+        | user | passwd | conn   | toClose  | sql                         | expect  | db      |
+        | test | 111111 | conn_0 | True     | select * from sharding_2_t1 | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql           | expect                                                                                   | db     |
-        | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,1L,1L,0L,1L,2018')}| |
+        | user | passwd | conn   | toClose  | sql           | expect                                                                             | db  |
+        | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`sharding_2_t1`',10000L,1L,1L,0L,1L,2018')}|     |
 
   @CRITICAL
   Scenario: primayKey cache effective when attribute "cacheKey" be set #7
