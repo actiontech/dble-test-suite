@@ -293,7 +293,7 @@ Feature: test "check full @@metadata...'"
       <table name="test_two" dataNode="dn2,dn4" rule="hash-two" cacheKey="id"/>
     </schema>
 
-    <dataHost balance="3" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="-1" >
+    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="-1" >
         <heartbeat>select user()</heartbeat>
         <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
         <readHost host="hostS2" url="172.100.9.2:3306" password="111111" user="test"/>
