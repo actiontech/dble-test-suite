@@ -31,7 +31,7 @@ def restart_mysql(context, host, sedStr=None):
     time.sleep(10)
 
     if sedStr:
-        update_file_content(context, sedStr, "/etc/my.cnf", host)
+        update_file_content(context, "/etc/my.cnf", host, sedStr)
 
     start_mysql(context, host)
 

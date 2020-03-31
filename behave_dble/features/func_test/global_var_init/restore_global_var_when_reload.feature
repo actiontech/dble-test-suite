@@ -28,6 +28,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Then check general log in host "mysql-master1" has not "set global autocommit=1"
     Then check general log in host "mysql-master2" has not "set global autocommit=1"
+    When execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                | expect  | db      |
+      | test  | 111111    | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+    Then check general log in host "mysql-master1" has not "SET autocommit=1"
+    Then check general log in host "mysql-master2" has not "SET autocommit=1"
 
   @restore_general_log
   Scenario: Backend Global vars are different with dble config,conn pool recreated will check it, and set the values same as dble config #2
@@ -35,13 +40,14 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     {'restore_general_log':['mysql-master1','mysql-master2']}
     """
     Given execute sql in "mysql-master1"
-      | user  | passwd    | conn   | toClose | sql                     | expect  |db |
-      | test  | 111111    | conn_0 | True    | set global autocommit=0 | success |   |
+      | user  | passwd    | conn   | toClose | sql                                      | expect  |db |
+      | test  | 111111    | conn_0 | False   | set global autocommit=0                  | success |   |
+      | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED' | success |   |
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
     When execute admin cmd "reload @@config_all -r" success
-    Then check general log in host "mysql-master1" has "set global autocommit=1"
-    Then check general log in host "mysql-master2" has not "set global autocommit=1"
+    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master2" has not "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 #    create new conns,and check new conn will not set global xxx
     Given turn on general log in "mysql-master1"
     Given create "11" front connections executing "drop table if exists sharding_4_t1"
@@ -69,7 +75,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "3" seconds
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @restore_general_log
+  @restore_general_log @skip
   Scenario:set global vars failed for user has no priviledges, then set session context if values are not same as config at conn used #4
     """
     {'restore_general_log':['mysql-master1']}
@@ -82,19 +88,32 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | test  | 111111    | conn_0 | False   | grant select on *.* to 'user1'@'%'             | success |   |
       | test  | 111111    | conn_0 | False   | set global tx_isolation='READ-COMMITTED'       | success |   |
       | test  | 111111    | conn_0 | True    | set global autocommit=0                        | success |   |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
-        <dataHost balance="0" maxCon="100" minCon="10" name="dh1" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="user1">
-            </writeHost>
-        </dataHost>
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="user1">
+    </writeHost>
     """
     Given turn on general log in "mysql-master1"
     Given Start dble in "dble-1"
+    #    try to set global but failed for having no priviledges
+    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+#    when dble start, it need to check metadata by show create table, during which will set session context if it find autocommit is different with config
+    Then check general log in host "mysql-master1" has "SET autocommit=1"
+#    create more than minCon conns to used out the conn pool, the next conn will be new created
+    Given create "11" front connections executing "drop table if exists sharding_4_t1"
+#    force rotate general log
+    Given turn on general log in "mysql-master1"
     When execute sql in "dble-1" in "user" mode
-      | user  | passwd    | conn   | toClose | sql                                | expect  | db      |
-      | test  | 111111    | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+      | user  | passwd    | conn   | toClose | sql                                | expect                      | db      |
+      | test  | 111111    | conn_0 | True    | drop table if exists sharding_4_t1 | DROP command denied to user | schema1 |
+    Then check general log in host "mysql-master1" has "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ"
+    Then check general log in host "mysql-master1" has "SET autocommit=1"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
+    </writeHost>
+    """
+    When execute admin cmd "reload @@config_all " success
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
   @restore_general_log @restore_global_setting
@@ -117,12 +136,15 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED' | success |   |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
     Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation" occured ">2" times
 
   @restore_general_log @skip
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
@@ -137,4 +159,179 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | test  | 111111    | conn_0 | True    | set global tx_isolation='REPEATABLE-READ' | success |   |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has "set global autocommit=0,tx_isolation='READ-COMMITTED'"
+    Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    When execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                | expect  | db      |
+      | test  | 111111    | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+    Then check general log in host "mysql-master1" has not "SET autocommit=0"
+    Then check general log in host "mysql-master2" has not "SET autocommit=0"
+
+  @restore_general_log @skip
+  Scenario: dble default autocommit=1, after executing implicit query(with which dble will add autocommit=0 to the session), the global var will be restored #7
+# with long gap heartbeat, when kill all backend conns except the ones you want to keep, then the following query will use the conn you keep, which make sure autocommit=0 conns afterwhile is set autocommit=1
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="dataNodeHeartbeatPeriod">120000</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
+    Given execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                | expect  |db |
+      | test  | 111111    | conn_0 | True    | create table sharding_2_t1(id int) | success |   |
+    Given record current dble log line number in "log_linenu"
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    Given execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                     | expect  | db      |
+      | test  | 111111    | conn_0 | True    | insert into sharding_2_t1 values(1),(2) | success | schema1 |
+    Given find backend conns of query "insert into sharrding_2_t1 values(1),(2)" used stored in "backendIds"
+    Then check general log in host "mysql-master1" has "SET autocommit=0"
+    Then check general log in host "mysql-master2" has "SET autocommit=0"
+    Given kill all backend conns of "mysql-master1" except ones in "backendIds"
+    Given kill all backend conns of "mysql-master2" except ones in "backendIds"
+    Given execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                         | expect  | db      |
+      | test  | 111111    | conn_0 | True    | select * from sharding_2_t1 | success | schema1 |
+    Then check general log in host "mysql-master1" has "SET autocommit=1"
+    Then check general log in host "mysql-master2" has "SET autocommit=1"
+
+  @restore_general_log @skip
+  Scenario:config autocommit=0, after executing explicit query(with which dble will add autocommit=0 to the session), the global var will not be restored #8
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="dataNodeHeartbeatPeriod">120000</property>
+        <property name="autocommit">0</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
+    Given execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                | expect  |db |
+      | test  | 111111    | conn_0 | True    | create table sharding_2_t1(id int) | success |   |
+    Given record current dble log line number in "log_linenu"
+    Given turn on general log in "mysql-master1"
+    Given turn on general log in "mysql-master2"
+    Given execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                                     | expect  | db      |
+      | test  | 111111    | conn_0 | True    | insert into sharding_2_t1 values(1),(2) | success | schema1 |
+    Given find backend conns of query "insert into sharrding_2_t1 values(1),(2)" used stored in "backendIds"
+    Then check general log in host "mysql-master1" has not "SET autocommit=0"
+    Then check general log in host "mysql-master2" has not "SET autocommit=0"
+    Given kill all backend conns of "mysql-master1" except ones in "backendIds"
+    Given kill all backend conns of "mysql-master2" except ones in "backendIds"
+    Given execute sql in "dble-1" in "user" mode
+      | user  | passwd    | conn   | toClose | sql                         | expect  | db      |
+      | test  | 111111    | conn_0 | True    | select * from sharding_2_t1 | success | schema1 |
+    Then check general log in host "mysql-master1" has not "SET autocommit=1"
+    Then check general log in host "mysql-master2" has not "SET autocommit=1"
+
+  @restore_general_log
+  Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by manager command, dble send set global query #9
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
+    """
+    Given stop dble in "dble-1"
+    Given execute sql in "mysql-master1"
+      | user  | passwd    | conn   | toClose | sql                                       | expect  |db |
+      | test  | 111111    | conn_0 | False   | set global autocommit=0                   | success |   |
+      | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  | success |   |
+    Given turn on general log in "mysql-master1"
+    When Start dble in "dble-1"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    When execute admin cmd "dataHost @@enable name='ha_group1'" success
+    Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+
+  @restore_general_log
+  Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by config and reload, dble send set global query #10
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
+    """
+    Given stop dble in "dble-1"
+    Given execute sql in "mysql-master1"
+      | user  | passwd    | conn   | toClose | sql                                       | expect  |db |
+      | test  | 111111    | conn_0 | False   | set global autocommit=0                   | success |   |
+      | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  | success |   |
+    Given turn on general log in "mysql-master1"
+    When Start dble in "dble-1"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="false">
+    </writeHost>
+    """
+    When execute admin cmd "reload @@config" success
+    Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+
+  @restore_general_log
+  Scenario:dble starts at disabled=true, global vars values are same, then change it to enable by manager command, dble will not send set global query #11
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
+    """
+    Given stop dble in "dble-1"
+    Given turn on general log in "mysql-master1"
+    When Start dble in "dble-1"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    When execute admin cmd "dataHost @@enable name='ha_group1'" success
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+
+  @restore_general_log
+  Scenario:dble starts at disabled=true, global vars values are same, then change it to enable by config and reload, dble will not send set global query #12
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
+    """
+    Given stop dble in "dble-1"
+    Given turn on general log in "mysql-master1"
+    When Start dble in "dble-1"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='READ-COMMITTED'"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="false">
+    </writeHost>
+    """
+    When execute admin cmd "reload @@config" success
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+
+  @restore_general_log
+  Scenario:dble disabled loop state by false-true-false, global vars values are different at step false-true, dble will not send set global query #13
+    """
+    {'restore_general_log':['mysql-master1']}
+    """
+    Given turn on general log in "mysql-master1"
+    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    """
+    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
+    </writeHost>
+    """
+    Given execute sql in "mysql-master1"
+      | user  | passwd    | conn   | toClose | sql                                       | expect  |db |
+      | test  | 111111    | conn_0 | False   | set global autocommit=0                   | success |   |
+      | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  | success |   |
+    Given execute admin cmd "dataHost @@enable name='ha_group1'" success
+    Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
