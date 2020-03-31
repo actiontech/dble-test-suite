@@ -13,7 +13,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
 #| readOnly             | false             | read_only              | OFF                    | Global             |
 
   @restore_general_log
-  Scenario: Backend Global vars are same with dble config,conn pool recreated will check again, and not set for values are same.#1
+  Scenario: Backend Global vars are same with dble config,conn pool recreated will trigger to check global vars again and will not reset for values are same.#1
     """
     {'restore_general_log':['mysql-master1','mysql-master2']}
     """
