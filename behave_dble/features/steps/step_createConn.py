@@ -44,7 +44,6 @@ def step_impl(context,num,maxNum):
     maxNum = int(maxNum)
 
     for i in range(0,num):
-        context.logger.info("````````````````````````````{0}".format(i))
         thread.start_new_thread(createConn,(context,i,''))
 
     time.sleep(15)
@@ -52,7 +51,7 @@ def step_impl(context,num,maxNum):
         assert len(errs)>0, "expect get err,but no err"
 
         hasExpect = re.search(context.text, errs[0][1], re.I)
-        assert hasExpect, "expect err:{0}, but real err is: {1}".format(context.text, errs[0])
+        assert hasExpect, "expect err:{0}, but real err is: {1}".format(context.text, errs[0][1])
     else:
         if errs:
             assert False, "expect no err,but outcomes:{0} when create conn".format(errs[0])
