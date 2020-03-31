@@ -225,6 +225,7 @@ def merge_cmd_strings(context,text,targetFile):
     context.logger.info("sed cmd : {0}".format(cmd))
     return cmd
 
+@Given ('update file content "{filename}" in "{hostname}" with sed cmds')
 @Given ('update file content "{filename}" in "{hostname}"')
 def update_file_content(context, sedStr,filename, hostname):
     sed_cmd = merge_cmd_strings(context,sedStr,filename)
@@ -368,12 +369,6 @@ def step_impl(context, t1, t2):
 def step_impl(context, cmd):
     rc, sto, err = context.ssh_client.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
-
-def restore_sys_time(context):
-    import os
-    res = os.system("ntpdate -u 0.centos.pool.ntp.org")
-    assert res==0, "restore sys time fail"
-    context.logger.info("restore sys time success")
 
 @Then('revert to current time by "{curtime}"')
 def step_impl(context, curtime):
