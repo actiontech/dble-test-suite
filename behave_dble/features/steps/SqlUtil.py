@@ -101,8 +101,9 @@ def step_impl(context,hostname, query,occurTimesExpr=None):
     assert sameAsExpected, "expect general log has '{0}' occured {1} times, but it occured {2} times".format(query,occurTimesExpr,sto);
 
 @Given('execute sql in "{hostname}"')
-@When('execute sql in "{hostname}" in "{user}" mode')
 @Then('execute sql in "{hostname}"')
+@When('execute sql in "{hostname}" in "{user}" mode')
+@Given('execute sql in "{hostname}" in "{user}" mode')
 @Then('execute sql in "{hostname}" in "{user}" mode')
 def execute_sql_in_host(context,hostname, user=""):
     if len(user.strip()) == 0:
