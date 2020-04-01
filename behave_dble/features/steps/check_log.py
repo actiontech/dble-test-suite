@@ -10,14 +10,17 @@ from hamcrest import *
 
 from features.steps.lib.Node import get_ssh
 
+from behave_dble.features.steps.lib.utils import get_node
+
 
 @Then('check "{logfile}" in "{hostname}" has the warnings')
 def step_impl(context,hostname, logfile):
     rs = context.table
 
-    logpath = "{0}/dble/logs/{1}".format(context.cfg_dble['install_dir'], logfile)
+    node = get_node(context.dbles,hostname)
+    logpath = "{0}/dble/logs/{1}".format(node.install_dir, logfile)
     cmd = "cat {0}".format(logpath)
-    ssh_client = get_ssh(context.dbles, hostname)
+    ssh_client = node.ssh_conn
     rc, sto, ste = ssh_client.exec_command(cmd)
     assert len(ste)==0, "cat dble.log failed for: {0}".format(ste[0:200])
 

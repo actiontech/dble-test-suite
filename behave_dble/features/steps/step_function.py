@@ -13,7 +13,7 @@ import re
 import time
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh,get_node
+from lib.utils import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *
@@ -26,29 +26,6 @@ def test_data_type(context, sql_name):
     LOGGER.info("test all data types")
     sql_path = "sharding_func/{0}".format(sql_name)
     context.execute_steps(u'Then execute sql in "{0}" to check read-write-split work fine and log dest slave'.format(sql_path))
-
-def create_node_conn(context):
-    context.manager_conn = get_admin_conn(context)
-    sql = "show @@datanode"
-    result, error = context.manager_conn.query(sql)
-    context.manager_conn.close()
-
-    datanode = {}
-    if type(result) == tuple:
-        for i in range(len(result)):
-
-            datanode[result[i][0]] = result[i][1]
-    port = 3306
-    node_conn = {}
-    for node in datanode.keys():
-        user = context.cfg_mysql['user']
-        password = context.cfg_mysql['password']
-        host = datanode[node].split('/')[0]
-        db = datanode[node].split('/')[1]
-        LOGGER.info("{0} create, host:{1}, db:{2}".format(node, host, db))
-        conn = DBUtil(host, user, password, db, port, context)
-        node_conn[node] = conn
-    return node_conn
 
 @Then('Test the use of limit by the sharding column')
 def test_use_limit(context):
@@ -179,12 +156,14 @@ def step_impl(context, filename):
             fp.write(context.text)
 
     # cp file to dble
-    remote_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
+    dble_node = get_node(context.dbles, "dble-1")
+    remote_file = "{0}/dble/{1}".format(dble_node.install_dir,filename)
     context.ssh_sftp.sftp_put(filename, remote_file)
 
     # create file in compare mysql
-    remote_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
-    compare_mysql_sftp = get_sftp(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
+    compare_mysql_node = get_node(context.mysqls, "mysql")
+    compare_mysql_sftp = compare_mysql_node.sftp_conn
+    remote_file = "{0}/data/{1}".format(compare_mysql_node.install_path, filename)
     compare_mysql_sftp.sftp_put(filename, remote_file)
 
 @Given('clean loaddata.sql used data')
@@ -389,11 +368,12 @@ def step_impl(context,mapFile,hostname):
 
 @Then('change start_time to current time "{curTime}" in "{mapFile}" in dble "{hostname}"')
 def step_impl(context,curTime,mapFile,hostname):
-    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    node = get_node(context.dbles, hostname)
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
     text = "START_TIME={0}".format(getattr(context,curTime)[0][0])
     context.logger.info("START_TIME = {0}".format(getattr(context,curTime)[0][0]))
     sed_cmd_str = "sed -i '/START_TIME/c {0}' {1}".format(text,targetFile)
-    ssh = get_ssh(context.dbles, hostname)
+    ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(sed_cmd_str)
     context.logger.info("execute cmd: {0}".format(sed_cmd_str))
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
@@ -471,18 +451,18 @@ def step_impl(context,host1,role,host2,oscmd='cd /usr/local/mysql/data'):
     if host1.startswith('dble'):
         node = get_node(context.dbles,host1)
         if role == "admin":
-            user = context.cfg_dble['manager_user']
-            password = context.cfg_dble['manager_password']
-            port = context.cfg_dble['manager_port']
+            user = node.manager_user
+            password = node.manager_password
+            port = node.manager_port
         else:
-            user = context.cfg_dble['client_user']
-            password = context.cfg_dble['client_password']
-            port = context.cfg_dble['client_port']
+            user = node.client_user
+            password = node.client_password
+            port = node.client_port
     else:
         node = get_node(context.mysqls,host1)
-        user = context.cfg_mysql['user']
-        password = context.cfg_mysql['password']
-        port = context.cfg_mysql['client_port']
+        user = node.mysql_user
+        password = node.mysql_password
+        port = node.mysql_port
     ip = node.ip
 
     if host2.startswith('dble'):
