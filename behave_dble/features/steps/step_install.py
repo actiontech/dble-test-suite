@@ -10,7 +10,7 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import *
-from lib.Node import get_node, get_ssh
+from lib.utils import get_node, get_ssh
 
 LOGGER = logging.getLogger('steps.install')
 
@@ -23,7 +23,7 @@ def uninstall_dble_in_node(context, node):
     dble_installed = stop_dble_in_node(context, node)
 
     if dble_installed:
-        cmd = "cd {0} && rm -rf dble".format(context.cfg_dble['install_dir'])
+        cmd = "cd {0} && rm -rf dble".format(node.install_dir)
         node.ssh_conn.exec_command(cmd)
 
 @given('uninstall dble in "{hostname}"')
@@ -63,13 +63,13 @@ def install_dble_in_node(context, node):
 
     ssh_client =node.ssh_conn
 
-    cmd = "cd {0} && rm -rf dble".format(context.cfg_dble['install_dir'])
+    cmd = "cd {0} && rm -rf dble".format(node.install_dir)
     ssh_client.exec_command(cmd)
 
     cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packet,
-                                           context.cfg_dble['install_dir'])
+                                           node.install_dir)
     ssh_client.exec_command(cmd)
-    cmd = "cd {0} && tar xf {1}".format(context.cfg_dble['install_dir'], dble_packet)
+    cmd = "cd {0} && tar xf {1}".format(node.install_dir, dble_packet)
     ssh_client.exec_command(cmd)
 
 @Given('install dble in "{hostname}"')
@@ -123,7 +123,7 @@ def set_dble_log_level(context, node, log_level):
         LOGGER.info("dble log level is already: {0}, do nothing!".format(log_level))
         return False
     else:
-        log = '{0}/dble/conf/log4j2.xml'.format(context.cfg_dble['install_dir'])
+        log = '{0}/dble/conf/log4j2.xml'.format(node.install_dir)
         cmd = "sed -i 's/{0}/{1}/g' {2} ".format(sto[1:-1], log_level, log)
         ssh_client.exec_command(cmd)
         return True
@@ -197,7 +197,7 @@ def stop_dble_in_hostname(context, hostname):
 
 def stop_dble_in_node(context, node):
     ssh_client = node.ssh_conn
-    dble_install_path = context.cfg_dble['install_dir']
+    dble_install_path = node.install_dir
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_pid_exist:
@@ -355,7 +355,7 @@ def conf_zk_in_node(context,node,hosts_form):
     assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
 def disable_cluster_config_in_node(context, node):
-    conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
+    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
     cmd = "[ -f {0} ] && sed -i 's/cluster=.*/cluster=false/g' {0}".format(conf_file)
 
     ssh_client = node.ssh_conn
@@ -391,7 +391,7 @@ def replace_config_in_node(context, node):
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_dir_exist:
-        cmd = 'rm -rf {0}/dble/conf_*'.format(context.cfg_dble['install_dir'])
+        cmd = 'rm -rf {0}/dble/conf_*'.format(node.install_dir)
         ssh_client.exec_command(cmd)
 
         cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(dble_install_path)
@@ -408,8 +408,9 @@ def replace_config_in_node(context, node):
 
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
-    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(context.cfg_dble["install_dir"])
-    ssh_client = get_ssh(context.dbles, "dble-1")
+    node = get_node(context.dbles, "dble-1")
+    ssh_client = node.ssh_conn
+    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
     ssh_client.exec_command(resetCmd)
 
 @Then ('Monitored folling nodes online')

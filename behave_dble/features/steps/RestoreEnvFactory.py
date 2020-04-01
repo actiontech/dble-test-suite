@@ -42,9 +42,10 @@ class RestoreEnvFactory(object):
                 paras = ['mysql-master1', 'mysql-master2', 'mysql-slave1', 'mysql-slave2']
 
             logger.debug("try to restore general_log of mysqls: {0}".format(paras))
-            for mysql_host in paras:
-                turn_off_general_log(context,mysql_host)
+            # for mysql_host in paras:
+            #     turn_off_general_log(context,mysql_host)
         if "restore_global_setting" in tags:
+            pass
 
     def get_case_tag_params(descriptionList, tagKey):
         restore_letter_sensitive_dic = None
