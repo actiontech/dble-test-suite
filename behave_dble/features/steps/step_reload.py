@@ -7,7 +7,7 @@ import logging
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
-from lib.Node import get_node, get_sftp
+from lib.utils import get_node, get_sftp
 from lib.XMLUtil import add_child_in_string, delete_child_node, get_xml_from_str, add_child_in_xml,change_root_node_properties
 
 LOGGER = logging.getLogger('steps.reload')
@@ -15,15 +15,15 @@ LOGGER = logging.getLogger('steps.reload')
 def get_dble_conn(context, default_db="schema1", node=None):
     if node is None:
         node = get_node(context.dbles, "dble-1")
-    conn = DBUtil(node.ip, context.cfg_dble['client_user'],
-                         context.cfg_dble['client_password'], default_db, context.cfg_dble['client_port'],
+    conn = DBUtil(node.ip, node.client_user,
+                         node.client_password, default_db, node.client_port,
                          context)
     return conn
 
 def get_dble_connect(context,host_name,default_db="schema1"):
     node = get_node(context.dbles, host_name)
-    conn = DBUtil(node.ip, context.cfg_dble['client_user'],
-                  context.cfg_dble['client_password'], default_db, context.cfg_dble['client_port'],
+    conn = DBUtil(node.ip, node.client_user,
+                  node.client_password, default_db, node.client_port,
                   context)
     return conn
 
@@ -177,10 +177,12 @@ def delete_xml_segment(context):
 
 @When('Add some data in "{mapFile}"')
 def add_file(context,mapFile):
-    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    node = get_node(context.dbles,"dble-1")
+
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
     text = str(context.text)
     cmd = "echo '{0}' > {1}".format(text, targetFile)
-    rc, sto, err = context.ssh_client.exec_command(cmd)
+    rc, sto, err = node.ssh_conn.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
 @When('Execute "{cmd}" on the managerment client and check system property with "{name}","{text}"')
@@ -199,18 +201,17 @@ def get_abs_path(context, file):
     return path
 
 def upload_and_replace_conf(context, filename, host='dble-1'):
+    node = get_node(context.dbles, host)
     local_file = get_abs_path(context, filename)
-    remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'],filename)
-    if host == 'dble-1':
-        context.ssh_sftp.sftp_put(local_file, remote_file)
-    else:
-        sftpClient = get_sftp(context.dbles, host)
-        sftpClient.sftp_put(local_file, remote_file)
+    remote_file = "{0}/dble/conf/{1}".format(node.install_dir,filename)
+    node.sftp_conn.sftp_put(local_file, remote_file)
 
 def get_encrypt(context, string):
-    cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(context.cfg_dble['install_dir'], string)
+    node= get_node(context.dbles, "dble-1")
 
-    rc, sto, ste = context.ssh_client.exec_command(cmd)
+    cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(node.install_dir, string)
+
+    rc, sto, ste = node.ssh_conn.exec_command(cmd)
     return sto.split('\n')[1]
 
 
@@ -230,9 +231,10 @@ def step_impl(context, cmd, result, host):
 
 @Given('get config xml version from template config and named as "{var_version}"')
 def step_impl(context, var_version):
-    cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
-    cmd_schema_version = "grep '<dble:schema' {0}/dble/conf/schema_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
-    cmd_rule_version = "grep '<dble:rule' {0}/dble/conf/rule_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(context.cfg_dble['install_dir'])
+    node = get_node(context.dbles, "dble-1")
+    cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
+    cmd_schema_version = "grep '<dble:schema' {0}/dble/conf/schema_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
+    cmd_rule_version = "grep '<dble:rule' {0}/dble/conf/rule_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
 
     rc1, sto1, ste1 = context.ssh_client.exec_command(cmd_server_version)
     rc2, sto2, ste2 = context.ssh_client.exec_command(cmd_schema_version)
