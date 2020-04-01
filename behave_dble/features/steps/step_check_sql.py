@@ -11,6 +11,8 @@ from time import sleep
 import MySQLdb
 from behave import *
 from hamcrest import *
+
+from behave_dble.features.steps.lib.utils import get_node
 from step_reload import get_dble_conn
 
 from lib.DBUtil import DBUtil
@@ -38,17 +40,11 @@ def get_log_linenu(context, log_linenu="log_linenu"):
     setattr(context,log_linenu, sdo.strip())
 
 
-def get_full_log_path(context):
-    logpath = "{0}/dble/logs/dble.log".format(context.cfg_dble['install_dir'])
+def get_full_log_path(context, host="dble-1"):
+    node = get_node(context.dbles, host)
+    logpath = "{0}/dble/logs/dble.log".format(node.install_dir)
     context.logger.info("log path: {0}".format(logpath))
     return logpath
-
-
-def get_read_dest_cmd(context):
-    logpath = get_full_log_path(context)
-    regIP = "\"[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\.[0-9]\{1,3\}\:[0-9]\{1,5\}\""
-    cmd = "sed '1,{0}d' {1}|grep 'routing query to mysqld' | grep -o -e {2}".format(context.log_linenu, logpath, regIP)
-    return cmd
 
 @Given('set sql cover log dir "{logdir}"')
 def step_impl(context, logdir):
@@ -81,10 +77,11 @@ def step_impl(context):
 
 
 def get_compare_conn(context, default_db="schema1"):
-    m_ip = context.cfg_mysql['compare_mysql']['master1']['ip']
-    m_port = context.cfg_mysql['compare_mysql']['master1']['port']
-    m_user = context.cfg_mysql['user']
-    m_passwd = context.cfg_mysql['password']
+    node = get_node(context.mysqls, "mysql")
+    m_ip = node.ip
+    m_port = node.mysql_port
+    m_user = node.mysql_user
+    m_passwd = node.mysql_password
 
     conn_mysql = DBUtil(m_ip, m_user, m_passwd, default_db, m_port, context)
     conn_dble = get_dble_conn(context, default_db)

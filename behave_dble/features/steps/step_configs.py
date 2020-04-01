@@ -7,8 +7,8 @@
 from lxml import etree as ET
 from behave import *
 
+from behave_dble.features.steps.lib.utils import get_node,get_ssh
 from step_reload import get_abs_path
-from lib.Node import get_ssh
 from lib.XMLUtil import get_node_by_keyvalue
 
 
@@ -35,6 +35,8 @@ def step_impl(context, host_name, target_file):
     :param target_file: fullpath file
     :return:
     """
-    local_file = get_abs_path(context, target_file)
-    source_remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble["install_dir"], target_file)
-    context.ssh_sftp.sftp_get(source_remote_file, local_file)
+    node = get_node(context.dbles, "dble-1")
+    local_file = get_abs_path(context, target_file, node)
+
+    source_remote_file = "{0}/dble/conf/{1}".format(node.install_dir, target_file)
+    node.sftp_conn.sftp_get(source_remote_file, local_file)
