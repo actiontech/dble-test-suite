@@ -5,28 +5,52 @@ cfg_sys:
   ssh_password: sshpass
   default_db: schema1
   sql_source: assets/sql
+  dble_conf_dir_in_behave: dble_conf/
 cfg_dble:
-  install_dir: /opt
-  conf_dir: dble_conf/
-  client_user: test
-  client_password: 111111
-  client_port: 8066
-  manager_user: root
-  manager_password: 111111
-  manager_port: 9066
   dble:
     ip: 172.100.9.1
     hostname: dble-1
+    install_dir: /opt
+    client_user: test
+    client_password: 111111
+    client_port: 8066
+    manager_user: root
+    manager_password: 111111
+    manager_port: 9066
   dble_cluster:
     dble-1:
       ip: 172.100.9.1
       hostname: dble-1
+      install_dir: /opt
+      conf_dir: dble_conf/
+      client_user: test
+      client_password: 111111
+      client_port: 8066
+      manager_user: root
+      manager_password: 111111
+      manager_port: 9066
     dble-2:
       ip: 172.100.9.2
       hostname: dble-2
+      install_dir: /opt
+      conf_dir: dble_conf/
+      client_user: test
+      client_password: 111111
+      client_port: 8066
+      manager_user: root
+      manager_password: 111111
+      manager_port: 9066
     dble-3:
       ip: 172.100.9.3
       hostname: dble-3
+      install_dir: /opt
+      conf_dir: dble_conf/
+      client_user: test
+      client_password: 111111
+      client_port: 8066
+      manager_user: root
+      manager_password: 111111
+      manager_port: 9066
   packet_name: actiontech-dble.tar.gz
 #    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.02.1/
 #    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.02.0/
@@ -41,38 +65,53 @@ cfg_dble:
   ftp_path: ftp://10.186.18.20/actiontech-dble/qa/9.9.9.9/
   sql_cover_log: sql_cover_log
 cfg_mysql:
-  user: test
-  password: 111111
-  client_port: 3306
-  install_path: /usr/local/mysql
   group1:
     master1:
       ip: 172.100.9.5
       port: 3306
       hostname: mysql-master1
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
   group2:
     master1:
       ip: 172.100.9.6
       port: 3306
       hostname: mysql-master2
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
     slave1:
       ip: 172.100.9.2
       port: 3306
       hostname: mysql-slave1
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
     slave2:
       ip: 172.100.9.3
       port: 3306
       hostname: mysql-slave2
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
   group3:
     master1:
       ip: 172.100.9.1
       port: 3306
       hostname: mysql-master3
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
   compare_mysql:
+  #mysql for comparing query result
     master1:
       ip: 172.100.9.4
       port: 3306
       hostname: mysql
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
 cfg_zookeeper:
   home: /opt/zookeeper
   port: 2181

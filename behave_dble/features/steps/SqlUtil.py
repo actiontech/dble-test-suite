@@ -14,8 +14,8 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
-from lib.XMLUtil import get_child_node
-from lib.Node import get_node
+from lib.XMLUtil import get_child_nodes
+from lib.utils import get_node
 from step_reload import get_abs_path
 
 LOGGER = logging.getLogger('steps')
@@ -32,7 +32,7 @@ def get_sql(type):
 @Given('turn on general log in "{hostname}"')
 def step_impl(context,hostname, user=""):
     node = get_node(context.mysqls, hostname)
-    conn = DBUtil(node.ip, context.cfg_mysql['user'], context.cfg_mysql['password'], '', node.mysql_port, context)
+    conn = DBUtil(node.ip, node.mysql_user, node.mysql_password, '', node.mysql_port, context)
 
     res, err = conn.query("set global log_output='file'")
     assert err is None, "get general log file fail for {0}".format(err[1])
@@ -57,8 +57,8 @@ def turn_off_general_log(context,hostname):
     node = get_node(context.mysqls, hostname)
     ip = node.ip
     port = node.mysql_port
-    user= context.cfg_mysql["user"]
-    passwd = context.cfg_mysql["password"]
+    user= node.mysql_user
+    passwd = node.mysql_password
     db=""
     sql="set global general_log=off"
     bClose=True
@@ -70,7 +70,7 @@ def turn_off_general_log(context,hostname):
 @Then('check general log in host "{hostname}" has not "{query}"')
 def step_impl(context,hostname, query):
     node = get_node(context.mysqls, hostname)
-    conn = DBUtil(node.ip, context.cfg_mysql['user'], context.cfg_mysql['password'], '', node.mysql_port, context)
+    conn = DBUtil(node.ip, node.mysql_user, node.mysql_password, '', node.mysql_port, context)
 
     res, err = conn.query("show variables like 'general_log_file'")
     assert err is None, "get general log file fail for {0}".format(err[1])
@@ -85,7 +85,7 @@ def step_impl(context,hostname, query):
 @Then('check general log in host "{hostname}" has "{query}" occured "{occurTimesExpr}" times')
 def step_impl(context,hostname, query,occurTimesExpr=None):
     node = get_node(context.mysqls, hostname)
-    conn = DBUtil(node.ip, context.cfg_mysql['user'], context.cfg_mysql['password'], '', node.mysql_port, context)
+    conn = DBUtil(node.ip, node.mysql_user, node.mysql_password, '', node.mysql_port, context)
 
     res, err = conn.query("show variables like 'general_log_file'")
     assert err is None, "get general log file fail for {0}".format(err[1])
@@ -319,14 +319,14 @@ def turn_on_general_log(context, shardings, user, passwd):
     dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
         dataNode_info['kv_map'] = {'name': sharding}
-        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+        dataNodes = get_child_nodes(parentNode, dataNode_info, fullpath)
         assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
         dataNode = dataNodes[0]
         db = dataNode.get('database')
         dataHost = dataNode.get("dataHost")
 
         dataHost_info['kv_map'] = {'name':dataHost}
-        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
+        dataHosts=get_child_nodes(parentNode, dataHost_info, fullpath)
         assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
         dataHost = dataHosts[0]
         ip_port = dataHost.find("writeHost").get("url")
@@ -375,14 +375,14 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
     dataHost_info = {'tag':'dataHost'}
     for sharding in sharding_list:
         dataNode_info['kv_map'] = {'name': sharding}
-        dataNodes = get_child_node(parentNode, dataNode_info, fullpath)
+        dataNodes = get_child_nodes(parentNode, dataNode_info, fullpath)
         assert len(dataNodes)==1, "find more than 1 dataNodes match!!!"
         dataNode = dataNodes[0]
         db = dataNode.get('database')
         dataHost = dataNode.get("dataHost")
 
         dataHost_info['kv_map'] = {'name':dataHost}
-        dataHosts=get_child_node(parentNode, dataHost_info, fullpath)
+        dataHosts=get_child_nodes(parentNode, dataHost_info, fullpath)
         assert len(dataHosts)==1, "find more than 1 dataHosts match!!!"
         dataHost = dataHosts[0]
         ip_port = dataHost.find("writeHost").get("url")
@@ -438,9 +438,9 @@ def do_batch_sql(context, hostname, db, sql):
     conn = None
     node = get_node(context.dbles, hostname)
     ip = node._ip
-    user = context.cfg_dble['client_user']
-    passwd = context.cfg_dble['client_password']
-    port = context.cfg_dble['client_port']
+    user = node.client_user
+    passwd = node.client_password
+    port = node.client_port
     try:
         conn = DBUtil(ip, user, passwd, db, port, context)
         res, err = conn.query(sql)
@@ -453,7 +453,7 @@ def do_batch_sql(context, hostname, db, sql):
         except:
             context.logger.info("close conn failed!")
     assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
-
+    
 @Then('execute sql "{sql}" in "{host}" with "{results}" result')
 def step_impl(context,sql,host,results):
     node = get_node(context.mysqls, host)

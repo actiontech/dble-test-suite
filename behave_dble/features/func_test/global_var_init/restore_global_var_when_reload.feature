@@ -34,7 +34,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has not "SET autocommit=1"
     Then check general log in host "mysql-master2" has not "SET autocommit=1"
 
-  @restore_general_log
+  @restore_general_log @skip
   Scenario: Backend Global vars are different with dble config,conn pool recreated will check it, and set the values same as dble config #2
     """
     {'restore_general_log':['mysql-master1','mysql-master2']}
@@ -335,3 +335,31 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | test  | 111111    | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  | success |   |
     Given execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+
+  @current
+  Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
+    Given stop mysql in host "mysql-master1"
+#    default dataNodeHeartbeatPeriod is 10, 11 makes sure heartbeat failed for mysql-master1
+    Given sleep "11" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    heartbeat to [172.100.9.5:3306] setError
+    """
+    Given start mysql in host "mysql-master1"
+    Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
+    Then check btrace "BtraceAddMetaLock1.java" output in "dble-1" with "2" times'
+    """
+    get into call
+    """
+    Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
+    """
+    get into fieldEofResponse
+    """
+    Given kill connection with query "select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only" in host "mysql-master1"
+    Given record current dble log line number in "log_linenu"
+    Given sleep "11" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    """
+    heartbeat to [172.100.9.5:3306] setError
+    """
+
