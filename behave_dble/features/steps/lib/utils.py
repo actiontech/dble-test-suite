@@ -12,7 +12,9 @@ import yaml
 from behave import *
 from hamcrest import *
 
-from features.steps.lib.Node import Node
+from behave_dble.features.steps.lib.DbleMeta import DbleMeta
+from behave_dble.features.steps.lib.MySQLMeta import MySQLMeta
+from .Node import Node
 
 logger = logging.getLogger('lib')
 
@@ -53,30 +55,19 @@ def load_yaml_config(config_path):
 @log_it
 def get_nodes(context , flag):
     nodes = []
-    ssh_user = context.cfg_sys['ssh_user']
-    ssh_password = context.cfg_sys['ssh_password']
 
     if flag=="dble":
-        ip = context.cfg_dble[flag]["ip"]
-        hostname = context.cfg_dble[flag]["hostname"]
-        node = Node(ip, ssh_user, ssh_password, hostname, context.cfg_dble["client_port"])
+        node = DbleMeta(context.cfg_dble[flag])
         nodes.append(node)
     elif flag == "dble_cluster":
         for _, childNode in context.cfg_dble[flag].iteritems():
-            hostname = childNode["hostname"]
-            ip = childNode["ip"]
-            node = Node(ip, ssh_user, ssh_password, hostname, context.cfg_dble["client_port"])
+            node = DbleMeta(childNode)
             nodes.append(node)
     elif flag == "mysqls":
         for k, v in context.cfg_mysql.iteritems():
-            if isinstance(v, dict) and v.has_key("master1"):#for mysql groups
-                for ck, cv in context.cfg_mysql[k].iteritems():
-                    ip = cv["ip"]
-                    hostname = cv["hostname"]
-                    port = cv["port"]
-                    logger.debug("**********mysql ip:{0}, hostname: {1}, port: {2}".format(ip, hostname, port))
-                    node = Node(ip, ssh_user, ssh_password, hostname, port)
-                    nodes.append(node)
+            for ck, cv in context.cfg_mysql[k].iteritems():
+                node = MySQLMeta(cv)
+                nodes.append(node)
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
     return nodes
@@ -91,3 +82,19 @@ def restore_sys_time():
     res = os.system("ntpdate -u 0.centos.pool.ntp.org")
     assert res == 0, "restore sys time fail"
     logger.debug("restore sys time success")
+
+def get_node(nodes, host):
+    for node in nodes:
+        if node.host_name == host or node.ip == host:
+            return node
+    assert False, 'Can not find node {0}'.format(host)
+
+# get ssh by host or ip
+def get_ssh(nodes, host):
+    node = get_node(nodes, host)
+    return node.ssh_conn
+
+# get sftp by host or ip
+def get_sftp(nodes, host):
+    node = get_node(nodes, host)
+    return node.sftp_conn

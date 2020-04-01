@@ -12,7 +12,7 @@ from behave import *
 from hamcrest import *
 
 from lib.DBUtil import DBUtil
-from . lib.Node import get_node, get_ssh
+from . lib.utils import get_node, get_ssh
 from . step_function import update_file_content, merge_cmd_strings
 
 
@@ -37,12 +37,14 @@ def restart_mysql(context, host, sedStr=None):
 
 @Given('stop mysql in host "{hostName}"')
 def stop_mysql(context, hostName):
-    mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
+    node = get_node(context.mysqls, hostName)
+
+    mysql_path = "{0}/support-files/mysql.server".format(node.install_path)
 
     cmd_status = "{0} status".format(mysql_path)
     cmd_stop = "{0} stop".format(mysql_path)
 
-    ssh = get_ssh(context.mysqls, hostName)
+    ssh = node.ssh_conn
     rc, status_out, std_err = ssh.exec_command(cmd_status)
 
     # if mysqld already stopped,do not stop it again
@@ -57,10 +59,11 @@ def stop_mysql(context, hostName):
 
 @Given('start mysql in host "{host}"')
 def start_mysql(context, host):
-    mysql_path = "{0}/support-files/mysql.server".format(context.cfg_mysql['install_path'])
+    node = get_node(context.mysqls, host)
+
+    mysql_path = "{0}/support-files/mysql.server".format(node.install_path)
 
     cmd_start = "{0} start".format(mysql_path)
-    node = get_node(context.mysqls, host)
     ssh = node.ssh_conn
     cd,out,err = ssh.exec_command(cmd_start)
     ssh.close()
@@ -73,8 +76,8 @@ def start_mysql(context, host):
     node = get_node(context.mysqls, host)
     ip = node.ip
     port = node.mysql_port
-    user = context.cfg_mysql['user']
-    passwd = context.cfg_mysql['password']
+    user = node.mysql_user
+    passwd = node.mysql_password
     connect_test(context, ip, user, passwd, port)
 
 @Given('connect after restart success')
