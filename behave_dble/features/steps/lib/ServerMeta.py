@@ -1,19 +1,25 @@
+# -*- coding=utf-8 -*-
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-from random import sample
+# @Time    : 2020/4/1 PM1:53
+# @Author  : irene-coming
+from behave_dble.features.steps.lib.SSHUtil import SSHClient, SFTPClient
 
-from . Logging import Logging
-from . SSHUtil import SSHClient, SFTPClient
 
-
-class Node(Logging):
-    def __init__(self, ip, ssh_user, ssh_password, host_name=None, mysql_port=None):
-        super(Node, self).__init__()
-        self._ip = ip
-        self._ssh_user = ssh_user
-        self._ssh_password = ssh_password
-        self._host_name = host_name
-        self._mysql_port = mysql_port
+class ServerMeta(object):
+    def __init__(self, *args, **kwargs):
+        """
+        create a data model of a server, including the server ssh user/password, prepare a long live ssh connection, and a long live sftp connection
+        :param str ip:
+        :param str ssh_user:
+        :param str ssh_password:
+        :param str host_name:
+        """
+        self._kwargs2 = kwargs.copy()
+        self._ip = self.kwargs2.pop("ip")
+        self._ssh_user = self.kwargs2.pop("ssh_user")
+        self._ssh_password = self.kwargs2.pop("ssh_password")
+        self._host_name = self.kwargs2.pop("host_name")
         self._ssh_conn = None
         self._sftp_conn = None
 
@@ -52,20 +58,9 @@ class Node(Logging):
         self._sftp_conn = value
 
     @property
-    def mysql_port(self):
-        return self._mysql_port
-
-    @mysql_port.setter
-    def mysql_port(self, value):
-        self._mysql_port = value
-
-    @property
     def host_name(self):
         return self._host_name
 
     @host_name.setter
     def host_name(self, value):
         self._host_name = value
-
-    def get_random_nodes(self, num=1):
-        return sample(self.nodes, num)
