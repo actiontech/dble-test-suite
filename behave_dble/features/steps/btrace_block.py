@@ -11,7 +11,8 @@ import time
 from behave import *
 from hamcrest import *
 
-from lib.Node import get_sftp, get_ssh
+from behave_dble.features.steps.lib.utils import get_node
+from lib.utils import get_sftp, get_ssh
 
 global btrace_threads
 btrace_threads = []
@@ -45,14 +46,15 @@ def run_btrace_script(sshClient, btraceScript):
 
 @Given('prepare a thread run btrace script "{btraceScript}" in "{host}"')
 def step_impl(context, btraceScript, host):
-    sshClient = get_ssh(context.dbles, host)
+    node = get_node(context.dbles, host)
+    sshClient = node.ssh_conn
 
     isBtraceRunning = check_btrace_running(sshClient,btraceScript)
     context.logger.info("isBtraceRunning:{0} before try to run {1}".format(isBtraceRunning, btraceScript))
     if not isBtraceRunning:
         sftpClient = get_sftp(context.dbles, host)
         localFile = "assets/{0}".format(btraceScript)
-        remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],btraceScript)
+        remoteFile = "{0}/dble/{1}".format(node.install_dir,btraceScript)
         sftpClient.sftp_put(localFile, remoteFile)
 
         global btrace_threads
@@ -63,7 +65,11 @@ def step_impl(context, btraceScript, host):
         thd.start()
         # run_btrace_script(sshClient, remoteFile)
 
-def run_mysql_query(sshClient, context):
+@Given('execute sqls in "{host}" at background')
+def step_impl(context, host):
+    node = get_node(context.dbles, host)
+    sshClient = node.ssh_conn
+
     context.logger.debug("btrace is running, start query!!!")
     time.sleep(5)
     for row in context.table:
@@ -73,15 +79,10 @@ def run_mysql_query(sshClient, context):
         db = row["db"]
         if db is None: db = ''
 
-        cmd = u"nohup {0}/bin/mysql -u{1} -p{2} -P{3} -c -D{4} -e'{5}' >/tmp/dble_query.log 2>&1 &".format(context.cfg_mysql['install_path'], user, passwd,context.cfg_dble['client_port'], db, sql)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e'{}' >/tmp/dble_query.log 2>&1 &".format(user, passwd,context.cfg_dble['client_port'], db, sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "impossible err occur"
 
-@Given('execute sqls in "{host}" at background')
-def step_impl(context, host):
-    sshClient = get_ssh(context.dbles, host)
-
-    run_mysql_query(sshClient, context)
 
 def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
     retry=0
@@ -103,8 +104,9 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
 @Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
 @Then('check btrace "{btraceScript}" output in "{host}"')
 def step_impl(context, btraceScript, host, num=1):
-    sshClient = get_ssh(context.dbles, host)
-    remoteFile = "{0}/dble/{1}".format(context.cfg_dble['install_dir'], btraceScript)
+    node = get_node(context.dbles, host)
+    sshClient = node.ssh_conn
+    remoteFile = "{0}/dble/{1}".format(node.install_dir, btraceScript)
     check_btrace_output(sshClient, remoteFile, context.text.strip(), context, int(num))
 
 def kill_query(sshClient,query, context):
@@ -165,7 +167,11 @@ def step_impl(context,result):
         output = getattr(context,"sql_thread_err")
     assert str(output).find(context.text.strip()),"not found '{0}' in sql '{1}'".format(context.text,result)
 
-def run_dble_query(sshClient, context):
+@Then('execute admin cmd  in "{host}" at background')
+def step_impl(context, host):
+    node = get_node(context.dbles, host)
+    sshClient = node.ssh_conn
+
     context.logger.debug("btrace is running, start query!!!")
     time.sleep(5)
     for row in context.table:
@@ -175,13 +181,6 @@ def run_dble_query(sshClient, context):
         db = row["db"]
         if db is None: db = ''
 
-        cmd = u"nohup {0}/bin/mysql -u{1} -p{2} -P{3} -c -D{4} -e\"{5}\" >/tmp/dble_query.log 2>&1 &".format(
-            context.cfg_mysql['install_path'], user, passwd, context.cfg_dble['manager_port'], db, sql)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(user, passwd, context.cfg_dble['manager_port'], db, sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste) == 0, "impossible err occur"
-
-@Then('execute admin cmd  in "{host}" at background')
-def step_impl(context, host):
-    sshClient = get_ssh(context.dbles, host)
-
-    run_dble_query(sshClient, context)
