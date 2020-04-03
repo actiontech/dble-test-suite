@@ -3,7 +3,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM1:35
 # @Author  : irene-coming
-from behave_dble.features.steps.lib import MySQLFacotry
+from .lib import MySQLFacotry
+from behave import *
 
 
 @Given('kill connection with query "{query}" in host "{hostname}"')
