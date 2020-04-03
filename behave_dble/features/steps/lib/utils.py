@@ -10,6 +10,7 @@ from pprint import pformat
 
 import yaml
 from behave import *
+from hamcrest import *
 
 from .DbleMeta import DbleMeta
 from .MySQLMeta import MySQLMeta
@@ -87,6 +88,35 @@ def get_nodes(context , flag):
 def step_impl(context, num):
     int_num = int(num)
     time.sleep(int_num)
+
+@Given ('update file content "{filename}" in "{hostname}" with sed cmds')
+@Given ('update file content "{filename}" in "{hostname}"')
+def update_file_content(context,filename, hostname, sed_str=None):
+    if not sed_str and len(context.text)>0:
+        sed_str = context.text
+
+    if hostname.startswith('dble'):
+        node = get_node(context.dbles, hostname)
+    else:
+        node = get_node(context.mysqls, hostname)
+
+    update_file_with_sed(sed_str, filename, node)
+
+def merge_cmd_strings(filename,sedStr):
+    sed_cmd_str = sedStr.strip()
+    sed_cmd_list = sed_cmd_str.splitlines()
+    cmd = "sed -i"
+    for sed_cmd in sed_cmd_list:
+        cmd += " -e '{0}'".format(sed_cmd.strip())
+    cmd += " {0}".format(filename)
+    logger.debug("sed cmd : {0},raw: {1}".format(cmd,sed_cmd_str))
+    return cmd
+
+def update_file_with_sed(sed_str, filename, node):
+    sed_cmd = merge_cmd_strings(filename, sed_str)
+    rc, stdout, stderr = node.ssh_conn.exec_command(sed_cmd)
+    assert_that(len(stderr) == 0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
+
 
 def restore_sys_time():
     import os

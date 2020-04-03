@@ -8,6 +8,9 @@ import logging
 import MySQLdb
 import re
 
+import time
+
+from behave_dble.features.steps.lib.utils import update_file_with_sed
 
 logger = logging.getLogger('MySQLObject')
 
@@ -47,3 +50,65 @@ class MySQLObject(object):
         cur.close()
         conn.close()
 
+    def restart(self, sed_str=None):
+        self.stop()
+
+        # to wait stop finished
+        time.sleep(10)
+
+        if sed_str:
+            update_file_with_sed(sed_str, "/etc/my.cnf", self._mysql_meta)
+
+        self.start()
+
+    def stop(self):
+        cmd_status = "{0} status".format(self._mysql_meta.mysql_init_shell)
+        cmd_stop = "{0} stop".format(self._mysql_meta.mysql_init_shell)
+
+        ssh = self._mysql_meta.ssh_conn
+        rc, status_out, std_err = ssh.exec_command(cmd_status)
+        ssh.close()
+
+        # if mysqld already stopped,do not stop it again
+        if status_out.find("MySQL running") != -1:
+            stop_cd, stop_out, stop_err = ssh.exec_command(cmd_stop)
+            success_p = "Shutting down MySQL.*?SUCCESS"
+            obj = re.search(success_p, stop_out)
+            isSuccess = obj is not None
+            assert isSuccess, "stop mysql in host:{0} err:{1}".format(hostName, stop_err)
+
+
+    def start(self):
+        cmd_start = "{0} start".format(self._mysql_meta.mysql_init_shell)
+
+        ssh = self._mysql_meta.ssh_conn
+        cd, out, err = ssh.exec_command(cmd_start)
+        ssh.close()
+
+        success_p = "Starting MySQL.*?SUCCESS"
+        obj = re.search(success_p, out)
+        isSuccess = obj is not None
+        assert isSuccess, "start mysql in host:{0} err: {1}".format(host, err)
+
+        self.connect_test()
+
+    def connect_test(self):
+        conn = None
+        isSuccess = False
+        max_try = 5
+        while conn is None:
+            try:
+                conn = MySQLdb(self.ip, self.user, self.passwd, '', self.port,autocommit=True)
+            except MySQLdb.Error, e:
+                logger.debug("connect to '{0}' failed for:{1}".format(self.ip, e))
+                conn = None
+            finally:
+                max_try -= 1
+                if max_try == 0 and conn is None: break
+                if conn is not None:
+                    isSuccess = True
+                    conn.close()
+
+            time.sleep(5)
+
+        assert isSuccess, "can not connect to {0} after 25s wait".format(self.ip)

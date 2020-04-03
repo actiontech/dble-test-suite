@@ -193,29 +193,6 @@ def step_impl(context, filename):
     rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
 
-
-def merge_cmd_strings(context,text,targetFile):
-    sed_cmd_str = text.strip()
-    sed_cmd_list = sed_cmd_str.splitlines()
-    cmd = "sed -i"
-    for sed_cmd in sed_cmd_list:
-        cmd += " -e '{0}'".format(sed_cmd.strip())
-    cmd += " {0}".format(targetFile)
-    context.logger.info("sed cmd : {0}".format(cmd))
-    return cmd
-
-@Given ('update file content "{filename}" in "{hostname}" with sed cmds')
-@Given ('update file content "{filename}" in "{hostname}"')
-def update_file_content(context, sedStr,filename, hostname):
-    sed_cmd = merge_cmd_strings(context,sedStr,filename)
-
-    if hostname.startswith('dble'):
-        ssh = get_ssh(context.dbles,hostname)
-    else:
-        ssh = get_ssh(context.mysqls, hostname)
-    rc, stdout, stderr = ssh.exec_command(sed_cmd)
-    assert_that(len(stderr)==0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
-
 @Given ('delete file "{filename}" on "{hostname}"')
 def step_impl(context,filename,hostname):
     cmd = "rm -rf {0}".format(filename)
