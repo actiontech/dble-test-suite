@@ -10,11 +10,10 @@ from pprint import pformat
 
 import yaml
 from behave import *
-from hamcrest import *
 
-from behave_dble.features.steps.lib.DbleMeta import DbleMeta
-from behave_dble.features.steps.lib.MySQLMeta import MySQLMeta
-from .Node import Node
+from .DbleMeta import DbleMeta
+from .MySQLMeta import MySQLMeta
+
 
 logger = logging.getLogger('lib')
 
@@ -57,16 +56,28 @@ def get_nodes(context , flag):
     nodes = []
 
     if flag=="dble":
-        node = DbleMeta(context.cfg_dble[flag])
+        cfg_dic = {}
+        cfg_dic.update(context.cfg_dble[flag])
+        cfg_dic.update(context.cfg_server)
+
+        node = DbleMeta(cfg_dic)
         nodes.append(node)
     elif flag == "dble_cluster":
         for _, childNode in context.cfg_dble[flag].iteritems():
-            node = DbleMeta(childNode)
+            cfg_dic = {}
+            cfg_dic.update(childNode)
+            cfg_dic.update(context.cfg_server)
+
+            node = DbleMeta(cfg_dic)
             nodes.append(node)
     elif flag == "mysqls":
         for k, v in context.cfg_mysql.iteritems():
             for ck, cv in context.cfg_mysql[k].iteritems():
-                node = MySQLMeta(cv)
+                cfg_dic = {}
+                cfg_dic.update(cv)
+                cfg_dic.update(context.cfg_server)
+
+                node = MySQLMeta(cfg_dic)
                 nodes.append(node)
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
