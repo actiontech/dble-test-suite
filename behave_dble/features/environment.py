@@ -2,13 +2,12 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
+from .steps.MySQLSteps import restart_mysql
 from .steps.SqlUtil import turn_off_general_log, do_exec_sql
 from .steps.step_check_sql import reset_repl
 from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time,get_ssh, get_sftp, get_node
 from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
-
-from .steps.restart import update_config_with_sedStr_and_restart_mysql
 
 logger = logging.getLogger('environment')
 
@@ -109,7 +108,6 @@ def after_feature(context, feature):
 def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
-    logger.info(context.text)
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
@@ -128,7 +126,7 @@ def after_scenario(context, scenario):
         reset_repl(context)
 
     if "restore_letter_sensitive" in scenario.tags:
-        sedStr= """
+        sed_str= """
         /lower_case_table_names/d
         /server-id/a lower_case_table_names = 0
         """
@@ -140,8 +138,8 @@ def after_scenario(context, scenario):
             paras = ['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']
 
         logger.debug("try to restore lower_case_table_names of mysqls: {0}".format(paras))
-        for i in paras:
-            update_config_with_sedStr_and_restart_mysql(context, i, sedStr)
+        for host_name in paras:
+            restart_mysql(context, host_name, sed_str)
 
     if "restore_general_log" in scenario.tags:
         params_dic = get_case_tag_params(scenario.description, "{'restore_general_log'")
@@ -204,9 +202,7 @@ def get_case_tag_params(description, tag):
     return tag_para_dic
 
 def before_step(context, step):
-    logger.info('*' * 30)
     logger.info('step start: <{0}>'.format(step.name))
 
 def after_step(context, step):
     logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
-    logger.info('*' * 30)

@@ -15,10 +15,10 @@ class MySQLMeta(ServerMeta):
         :param str install_path:
         """
         super(MySQLMeta, self).__init__(config_dic)
-        self._mysql_port = self._config_dic.pop("port")
-        self._mysql_user = self._config_dic.pop("user")
-        self._mysql_password = self._config_dic.pop("password")
-        self._install_path = self._config_dic.pop("install_path")
+        self.mysql_port = self._config_dic.pop("port")
+        self.mysql_user = self._config_dic.pop("user")
+        self.mysql_password = self._config_dic.pop("password")
+        self.install_path = self._config_dic.pop("install_path")
 
     @property
     def mysql_port(self):
@@ -48,7 +48,11 @@ class MySQLMeta(ServerMeta):
     def install_path(self):
         return self._install_path
 
-
     @install_path.setter
     def install_path(self, value):
         self._install_path = value
+        self._mysql_init_shell = "{0}/support-files/mysql.server".format(self.install_path)
+
+    @property
+    def mysql_init_shell(self):
+        return self._mysql_init_shell
