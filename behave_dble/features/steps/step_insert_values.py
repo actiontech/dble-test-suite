@@ -4,13 +4,16 @@
 # @Time    : 2018/5/3 PM4:44
 # @Author  : zhaohongjie@actionsky.com
 from SqlUtil import do_exec_sql
+from lib.utils import get_node
 from lib.generate_util import generate
 
 
 @Given('create table for insert')
 def step_impl(context):
-    ip = context.cfg_dble['dble']['ip']
-    port = context.cfg_dble['client_port']
+    node = get_node(context.dbles, "dble-1")
+
+    ip = node.ip
+    port = node.client_port
 
     sql = "drop table if exists test_table"
     do_exec_sql(context, ip, "test", "111111", "schema1", port, sql, False, "conn_0", "success")
@@ -27,6 +30,7 @@ def step_impl(context):
 
 @Then('insert "{num}" rows at one time')
 def step_impl(context, num):
+    node = get_node(context.dbles, "dble-1")
     sql = "insert into test_table values"
     gen = generate()
     value_nu = int(num)
@@ -39,7 +43,7 @@ def step_impl(context, num):
     pad_str = gen.rand_string(60)
     sql += "({0}, {0}, '{1}', '{2}')".format(i+1, c_str, pad_str)
 
-    ip = context.cfg_dble['dble']['ip']
-    port = context.cfg_dble['client_port']
+    ip = node.ip
+    port = node.client_port
     do_exec_sql(context, ip, "test", "111111", "schema1", port, sql, True, "conn_0", "success")
 
