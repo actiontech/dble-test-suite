@@ -120,7 +120,7 @@ def set_dble_log_level(context, node, log_level):
     rc, sto, ste = ssh_client.exec_command(cmd)
 
     if log_level in sto:
-        LOGGER.info("dble log level is already: {0}, do nothing!".format(log_level))
+        LOGGER.debug("dble log level is already: {0}, do nothing!".format(log_level))
         return False
     else:
         log = '{0}/dble/conf/log4j2.xml'.format(node.install_dir)
@@ -167,17 +167,17 @@ def check_dble_started(context, node):
         if dble_conn:dble_conn.close()
 
     context.dble_start_success = err is None
-    LOGGER.info("dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
+    LOGGER.debug("dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
     if not context.dble_start_success:
         if context.retry_start_dble < 5:
             context.retry_start_dble = context.retry_start_dble+1
             time.sleep(5)
             check_dble_started(context,node)
         else:
-            LOGGER.info("dble started failed after 5 times try")
+            LOGGER.debug("dble started failed after 5 times try")
             cmd = "cat /opt/dble/logs/wrapper.log"
             rc, sto, ste = node.ssh_conn.exec_command(cmd)
-            LOGGER.info("Please check the error message in wrapper.log:\n{0}".format(sto))
+            LOGGER.debug("Please check the error message in wrapper.log:\n{0}".format(sto))
             delattr(context, "retry_start_dble")
     else:
         delattr(context, "retry_start_dble")
