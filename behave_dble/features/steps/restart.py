@@ -105,8 +105,9 @@ def connect_test(context, ip, user, passwd, port):
 @Given('change file "{fileName}" in "{hostname}" locate "{dir}" with sed cmds')
 def step_impl(context,fileName,hostname,dir):
     if hostname.startswith('dble'):
-        ssh = get_ssh(context.dbles, hostname)
-        targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble[dir],fileName)
+        node = get_node(context.dbles, hostname)
+        ssh = node.ssh_conn
+        targetFile = "{0}/dble/conf/{1}".format(node.install_dir,fileName)
         cmd = merge_cmd_strings(context,context.text,targetFile)
         rc, stdout, stderr = ssh.exec_command(cmd)
     else:

@@ -28,14 +28,15 @@ def get_dble_connect(context,host_name,default_db="schema1"):
     return conn
 
 def get_admin_conn(context, user="", passwd=""):
+    node = get_node(context.dbles, "dble-1")
     if len(user.strip()) == 0:
-        user = context.cfg_dble['manager_user']
+        user = node.manager_user
     if len(passwd.strip()) == 0:
-        passwd = str(context.cfg_dble['manager_password'])
+        passwd = str(node.manager_password)
 
     conn = None
     try:
-        conn = DBUtil(context.cfg_dble['dble']['ip'], user, passwd, "", context.cfg_dble['manager_port'],context)
+        conn = DBUtil(node.ip, user, passwd, "", node.manager_port,context)
     except MySQLdb.Error, e:
         assert False, "create manager conn meets error:{0}".format(e.args)
     return conn
@@ -47,10 +48,11 @@ def get_admin_conn(context, user="", passwd=""):
 @Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
 @Then('execute admin cmd "{adminsql}" with "{result}" result')
 def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
+    node = get_node(context.dbles, "dble-1")
     if len(user.strip()) == 0:
-        user = context.cfg_dble['manager_user']
+        user = node.manager_user
     if len(passwd.strip()) == 0:
-        passwd = str(context.cfg_dble['manager_password'])
+        passwd = str(node.manager_password)
     if len(result.strip()) != 0:
         adminsql = "{0} {1}".format(adminsql, getattr(context, result)[0][0])
     if context.text: expect = context.text
