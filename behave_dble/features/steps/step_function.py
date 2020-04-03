@@ -359,10 +359,11 @@ def step_impl(context, curtime):
 
 @Then('add some data in "{mapFile}" in dble "{hostname}"')
 def step_impl(context,mapFile,hostname):
-    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    node = get_node(context.dbles, hostname)
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
     text = str(context.text)
     cmd = "echo '{0}' > {1}".format(text, targetFile)
-    ssh = get_ssh(context.dbles,hostname)
+    ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
