@@ -12,7 +12,7 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
-from behave_dble.features.steps.lib.utils import get_node
+from .lib.utils import get_node
 from step_reload import get_dble_conn
 
 from lib.DBUtil import DBUtil
@@ -453,9 +453,10 @@ def step_impl(context, filename):
 
 
 def dble_mng_connect_test(context, ip):
-    user = context.cfg_dble['manager_user']
-    passwd = str(context.cfg_dble['manager_password'])
-    port = context.cfg_dble['manager_port']
+    node = get_node(context.dbles,"dble-1")
+    user = node.manager_user
+    passwd = str(node.manager_password)
+    port = node.manager_port
 
     conn = None
     isSuccess = False

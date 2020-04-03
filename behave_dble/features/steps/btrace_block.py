@@ -9,10 +9,8 @@ from threading import Thread, Condition
 import time
 
 from behave import *
-from hamcrest import *
 
-from behave_dble.features.steps.lib.utils import get_node
-from lib.utils import get_sftp, get_ssh
+from lib.utils import get_sftp, get_ssh,get_node
 
 global btrace_threads
 btrace_threads = []
@@ -79,7 +77,7 @@ def step_impl(context, host):
         db = row["db"]
         if db is None: db = ''
 
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e'{}' >/tmp/dble_query.log 2>&1 &".format(user, passwd,context.cfg_dble['client_port'], db, sql)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e'{}' >/tmp/dble_query.log 2>&1 &".format(user, passwd,node.client_port, db, sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "impossible err occur"
 
@@ -181,6 +179,6 @@ def step_impl(context, host):
         db = row["db"]
         if db is None: db = ''
 
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(user, passwd, context.cfg_dble['manager_port'], db, sql)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(user, passwd, node.manager_port, db, sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste) == 0, "impossible err occur"
