@@ -116,7 +116,7 @@ def set_dbles_log_level(context, nodes, log_level):
 def set_dble_log_level(context, node, log_level):
     ssh_client = node.ssh_conn
     str_awk = "awk 'FS=\" \" {print $2}'"
-    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(context.cfg_dble['install_dir'], str_awk)
+    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(node.install_dir, str_awk)
     rc, sto, ste = ssh_client.exec_command(cmd)
 
     if log_level in sto:
@@ -137,7 +137,7 @@ def start_dble_in_hostname(context, hostname):
 
 def start_dble_in_node(context, node, expect_success=True):
     ssh_client = node.ssh_conn
-    cmd = "{0}/dble/bin/dble start".format(context.cfg_dble['install_dir'])
+    cmd = "{0}/dble/bin/dble start".format(node.install_dir)
     ssh_client.exec_command(cmd)
 
     check_dble_started(context, node)
@@ -158,8 +158,8 @@ def check_dble_started(context, node):
     ip = node._ip
     dble_conn = None
     try:
-        dble_conn = DBUtil(ip, context.cfg_dble['manager_user'], context.cfg_dble['manager_password'], "",
-                           context.cfg_dble['manager_port'], context)
+        dble_conn = DBUtil(ip, node.manager_user, node.manager_password, "",
+                           node.manager_port, context)
         res, err = dble_conn.query("show @@version")
     except MySQLdb.Error, e:
         err = e.args
@@ -335,7 +335,7 @@ def config_zk_in_dble_nodes(context,hosts_form):
 
 def conf_zk_in_node(context,node,hosts_form):
     ssh_client = node.ssh_conn
-    conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
+    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
     # zk_server_ip=context.cfg_zookeeper['ip']
     zk_server_port=context.cfg_zookeeper['port']
 
@@ -387,7 +387,7 @@ def replace_config_in_node(context, node):
     os.system(osCmd)
 
     ssh_client = node.ssh_conn
-    dble_install_path = context.cfg_dble['install_dir']
+    dble_install_path = node.install_dir
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_dir_exist:
@@ -403,7 +403,7 @@ def replace_config_in_node(context, node):
     files = os.listdir(sourceCfgDir)
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
-        remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
+        remote_file = "{0}/dble/conf/{1}".format(node.install_dir, file)
         node.sftp_conn.sftp_put(local_file, remote_file)
 
 @Given('reset dble registered nodes in zk')

@@ -4,6 +4,7 @@ import json
 import logging
 import sys
 
+from lib.utils import get_node
 from step_reload import get_dble_conn
 
 sys.path.append("..")
@@ -17,10 +18,11 @@ LOGGER = logging.getLogger('steps.safety')
 @Then('test only schema level privilege configed')
 def test_schema_permission(context):
     dble_conn = get_dble_conn(context)
+    node = get_node(context.dbles, "dble-1")
     for row in context.table:
         # prepare table
-        test_conn = DBUtil(context.cfg_dble['dble']['ip'], row['user'], row['password'], row['schema'],
-                           context.cfg_dble['client_port'], context)
+        test_conn = DBUtil(node.ip, row['user'], row['password'], row['schema'],
+                           node.client_port, context)
         sql = "drop table if exists {0}".format(row['table'])
         test_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(row['table'])
@@ -53,9 +55,10 @@ def test_schema_permission(context):
 def test_readonly_schema(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)
+    node = get_node(context.dbles, "dble-1")
     for item in text:
-        test_conn = DBUtil(context.cfg_dble['dble']['ip'], item['user'], item['password'], item['schema'],
-                           context.cfg_dble['client_port'], context)
+        test_conn = DBUtil(node.ip, item['user'], item['password'], item['schema'],
+                           node.client_port, context)
         sql = "drop table if exists {0}".format(item['table'])
         dble_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(item['table'])
@@ -104,9 +107,10 @@ def test_readonly_schema(context):
 def test_schema_table(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)
+    node = get_node(context.dbles, "dble-1")
     for item in text:
-        test_conn = DBUtil(context.cfg_dble['dble']['ip'], item['user'], item['password'], item['schema'],
-                           context.cfg_dble['client_port'], context)
+        test_conn = DBUtil(node.ip, item['user'], item['password'], item['schema'],
+                           node.client_port, context)
         sql = "drop table if exists {0}".format(item['single_table'])
         test_conn.query(sql)
         sql = "create table {0}(id int, data varchar(10))".format(item['single_table'])

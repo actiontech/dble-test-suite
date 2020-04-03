@@ -4,9 +4,9 @@
 # @Time    : 2020/4/1 PM1:44
 # @Author  : irene-coming
 
-from behave_dble.features.steps.lib.ServerMeta import ServerMeta
+from .ServerMeta import ServerMeta
 class MySQLMeta(ServerMeta):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, config_dic):
         """
         create a data model of a server, including the server ssh user/password, prepare a long live ssh connection, and a long live sftp connection
         :param str port:
@@ -14,12 +14,11 @@ class MySQLMeta(ServerMeta):
         :param str password:
         :param str install_path:
         """
-        super.__init__(self, args, kwargs)
-
-        self._mysql_port = self.kwargs2.pop("port")
-        self._mysql_user = self.kwargs2.pop("user")
-        self._mysql_password = self.kwargs2.pop("password")
-        self._install_path = self.kwargs2.pop("install_path")
+        super(MySQLMeta, self).__init__(config_dic)
+        self._mysql_port = self._config_dic.pop("port")
+        self._mysql_user = self._config_dic.pop("user")
+        self._mysql_password = self._config_dic.pop("password")
+        self._install_path = self._config_dic.pop("install_path")
 
     @property
     def mysql_port(self):

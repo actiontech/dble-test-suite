@@ -7,7 +7,7 @@
 from lxml import etree as ET
 from behave import *
 
-from behave_dble.features.steps.lib.utils import get_node,get_ssh
+from lib.utils import get_node,get_ssh
 from step_reload import get_abs_path
 from lib.XMLUtil import get_node_by_keyvalue
 
