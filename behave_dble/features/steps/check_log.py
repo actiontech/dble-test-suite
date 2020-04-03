@@ -4,13 +4,9 @@
 # @Time    : 2019/1/3 PM2:12
 # @Author  : zhaohongjie@actionsky.com
 import re
-
 from behave import *
-from hamcrest import *
 
-from features.steps.lib.Node import get_ssh
-
-from behave_dble.features.steps.lib.utils import get_node
+from lib.utils import get_node
 
 
 @Then('check "{logfile}" in "{hostname}" has the warnings')

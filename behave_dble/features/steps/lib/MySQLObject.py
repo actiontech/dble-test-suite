@@ -8,13 +8,14 @@ import logging
 import MySQLdb
 import re
 
-from behave_dble.features.steps.lib.MySQLMeta import MySQLMeta
 
 logger = logging.getLogger('MySQLObject')
 
-class MySQLObject(MySQLMeta):
-    def __init__(self):
+
+class MySQLObject(object):
+    def __init__(self, mysql_meta):
         self.super()
+        self._mysql_meta = mysql_meta
 
     def update_config_with_sedStr_and_restart(self):
         # update_config_with_sedStr_and_restart_mysql(context,self._name, sedStr)

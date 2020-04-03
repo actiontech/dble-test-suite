@@ -112,11 +112,11 @@ def execute_sql_in_host(context,hostname, user=""):
         port = node._mysql_port
     else:
         node = get_node(context.dbles, hostname)
-        ip = node._ip
+        ip = node.ip
         if user == 'admin':
-            port = context.cfg_dble['manager_port']
+            port = node.manager_port
         else:
-            port = context.cfg_dble['client_port']
+            port = node.client_port
     exec_sql(context, ip, port)
         
 def exec_sql(context, ip, port):
