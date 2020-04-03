@@ -3,11 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM1:53
 # @Author  : irene-coming
-from behave_dble.features.steps.lib.SSHUtil import SSHClient, SFTPClient
-
+from .SSHUtil import SSHClient, SFTPClient
 
 class ServerMeta(object):
-    def __init__(self, *args, **kwargs):
+    def __init__(self, config_dic):
         """
         create a data model of a server, including the server ssh user/password, prepare a long live ssh connection, and a long live sftp connection
         :param str ip:
@@ -15,11 +14,12 @@ class ServerMeta(object):
         :param str ssh_password:
         :param str host_name:
         """
-        self._kwargs2 = kwargs.copy()
-        self._ip = self.kwargs2.pop("ip")
-        self._ssh_user = self.kwargs2.pop("ssh_user")
-        self._ssh_password = self.kwargs2.pop("ssh_password")
-        self._host_name = self.kwargs2.pop("host_name")
+        self._config_dic = config_dic.copy()
+        self._ip = self._config_dic.pop("ip")
+        self._ssh_user = self._config_dic.pop("ssh_user")
+        self._ssh_password = self._config_dic.pop("ssh_password")
+        self._host_name = self._config_dic.pop("hostname")
+
         self._ssh_conn = None
         self._sftp_conn = None
 

@@ -2,11 +2,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
-from behave_dble.features.steps.step_reload import get_abs_path
 from .steps.SqlUtil import turn_off_general_log, do_exec_sql
 from .steps.step_check_sql import reset_repl
-from .steps.lib.utils import get_ssh, get_sftp, get_node
-from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time
+from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time,get_ssh, get_sftp, get_node
 from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
@@ -52,7 +50,6 @@ def before_all(context):
 
     context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])
     context.ssh_sftp = get_sftp(context.dbles, context.cfg_dble['dble']['ip'])
-
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
