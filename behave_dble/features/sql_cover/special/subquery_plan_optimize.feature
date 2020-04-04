@@ -9,22 +9,22 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
    """
    {'restore_letter_sensitive':['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']}
    """
-    Given change file "my.cnf" in "mysql-master1" locate "/etc" with sed cmds
+    Given update file content "/etc/my.cnf" in "mysql-master1" with sed cmds
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
     """
-    Given change file "my.cnf" in "mysql-master2" locate "/etc" with sed cmds
+    Given update file content "/etc/my.cnf" in "mysql-master2" with sed cmds
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
     """
-    Given change file "my.cnf" in "mysql-slave1" locate "/etc" with sed cmds
+    Given update file content "/etc/my.cnf" in "mysql-slave1" with sed cmds
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given change file "my.cnf" in "mysql-slave2" locate "/etc" with sed cmds
+    Given update file content "/etc/my.cnf" in "mysql-slave2" with sed cmds
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1

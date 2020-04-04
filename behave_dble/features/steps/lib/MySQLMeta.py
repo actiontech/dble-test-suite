@@ -42,7 +42,7 @@ class MySQLMeta(ServerMeta):
 
     @mysql_password.setter
     def mysql_password(self, value):
-        self._mysql_password = value
+        self._mysql_password = str(value)
 
     @property
     def install_path(self):
