@@ -10,14 +10,13 @@ import re
 
 import time
 
-from behave_dble.features.steps.lib.utils import update_file_with_sed
+from .utils import update_file_with_sed
 
 logger = logging.getLogger('MySQLObject')
 
 
 class MySQLObject(object):
     def __init__(self, mysql_meta):
-        self.super()
         self._mysql_meta = mysql_meta
 
     def update_config_with_sedStr_and_restart(self):
@@ -67,7 +66,6 @@ class MySQLObject(object):
 
         ssh = self._mysql_meta.ssh_conn
         rc, status_out, std_err = ssh.exec_command(cmd_status)
-        ssh.close()
 
         # if mysqld already stopped,do not stop it again
         if status_out.find("MySQL running") != -1:
@@ -77,13 +75,14 @@ class MySQLObject(object):
             isSuccess = obj is not None
             assert isSuccess, "stop mysql in host:{0} err:{1}".format(hostName, stop_err)
 
+        self._mysql_meta.close_ssh()
 
     def start(self):
         cmd_start = "{0} start".format(self._mysql_meta.mysql_init_shell)
 
         ssh = self._mysql_meta.ssh_conn
         cd, out, err = ssh.exec_command(cmd_start)
-        ssh.close()
+        self._mysql_meta.close_ssh()
 
         success_p = "Starting MySQL.*?SUCCESS"
         obj = re.search(success_p, out)
@@ -98,9 +97,9 @@ class MySQLObject(object):
         max_try = 5
         while conn is None:
             try:
-                conn = MySQLdb(self.ip, self.user, self.passwd, '', self.port,autocommit=True)
+                conn = MySQLdb(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '', self._mysql_meta.mysql_port,autocommit=True)
             except MySQLdb.Error, e:
-                logger.debug("connect to '{0}' failed for:{1}".format(self.ip, e))
+                logger.debug("connect to '{0}' failed for:{1}".format(self._mysql_meta.ip, e))
                 conn = None
             finally:
                 max_try -= 1
