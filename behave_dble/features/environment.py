@@ -202,7 +202,7 @@ def get_case_tag_params(description, tag):
     return tag_para_dic
 
 def before_step(context, step):
-    logger.info('step start: <{0}>'.format(step.name))
+    logger.info(step.name)
 
 def after_step(context, step):
-    logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
+    logger.info('{0}, status:{1}'.format(step.name, step.status))

@@ -51,7 +51,7 @@ class MySQLMeta(ServerMeta):
     @install_path.setter
     def install_path(self, value):
         self._install_path = value
-        self._mysql_init_shell = "{0}/support-files/mysql.server".format(self.install_path)
+        self._mysql_init_shell = "{0}/support-files/mysql.server".format(self._install_path)
 
     @property
     def mysql_init_shell(self):
