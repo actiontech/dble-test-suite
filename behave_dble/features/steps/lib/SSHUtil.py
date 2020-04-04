@@ -34,6 +34,7 @@ class SSHClient(Logging):
             self._ssh.close()
 
 
+
 class SFTPClient(Logging):
     def __init__(self, host, user, password, port=22):
         super(SFTPClient, self).__init__()
