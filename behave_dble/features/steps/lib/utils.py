@@ -8,6 +8,7 @@ from functools import wraps
 from logging import config
 from pprint import pformat
 
+import re
 import yaml
 from behave import *
 from hamcrest import *
@@ -90,17 +91,32 @@ def step_impl(context, num):
     time.sleep(int_num)
 
 @Given ('update file content "{filename}" in "{hostname}" with sed cmds')
-@Given ('update file content "{filename}" in "{hostname}"')
 def update_file_content(context,filename, hostname, sed_str=None):
     if not sed_str and len(context.text)>0:
         sed_str = context.text
 
     if hostname.startswith('dble'):
         node = get_node(context.dbles, hostname)
-    else:
+    elif hostname.startswith('dble'):
         node = get_node(context.mysqls, hostname)
+    else:
+        node = None
+
+    # replace all vars in file name with corresponding node attribute value
+    vars = re.findall(r'\{.*?\}', filename, re.I)
+    for var in vars:
+        filename = filename.replace(var, node[var])
 
     update_file_with_sed(sed_str, filename, node)
+
+def update_file_with_sed(sed_str, filename, node):
+    sed_cmd = merge_cmd_strings(filename, sed_str)
+    if node:
+        rc, stdout, stderr = node.ssh_conn.exec_command(sed_cmd)
+        assert_that(len(stderr) == 0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
+    else:
+        status = os.system(sed_cmd)
+        assert status == 0, "change {0} failed".format(filename)
 
 def merge_cmd_strings(filename,sedStr):
     sed_cmd_str = sedStr.strip()
@@ -111,12 +127,6 @@ def merge_cmd_strings(filename,sedStr):
     cmd += " {0}".format(filename)
     logger.debug("sed cmd : {0},raw: {1}".format(cmd,sed_cmd_str))
     return cmd
-
-def update_file_with_sed(sed_str, filename, node):
-    sed_cmd = merge_cmd_strings(filename, sed_str)
-    rc, stdout, stderr = node.ssh_conn.exec_command(sed_cmd)
-    assert_that(len(stderr) == 0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
-
 
 def restore_sys_time():
     import os
