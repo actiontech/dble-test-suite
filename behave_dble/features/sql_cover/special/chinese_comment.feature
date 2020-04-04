@@ -6,7 +6,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 
   @skip
   Scenario: #1 todo not complete yet #1
-    Given update file content "/opt/dble/conf/wrapper.conf" in "dble-1"
+    Given update file content "/opt/dble/conf/wrapper.conf" in "dble-1" with sed cmds
 
     """
     /additional.5/d
