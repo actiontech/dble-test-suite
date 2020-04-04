@@ -2,8 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
-from .steps.MySQLSteps import restart_mysql
-from .steps.SqlUtil import turn_off_general_log, do_exec_sql
+from .steps.MySQLSteps import restart_mysql,turn_off_general_log
+from .steps.SqlUtil import do_exec_sql
 from .steps.step_check_sql import reset_repl
 from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time,get_ssh, get_sftp, get_node
 from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
