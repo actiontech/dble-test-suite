@@ -27,7 +27,7 @@ Feature: show the ddl statement being executed in different scenario
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                       | expect  | db      |
       | test | 111111 | conn_1 | False   | drop table if exists test | success | schema1 |
-    Given change btrace "BtraceDelayAfterDdl.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
@@ -88,7 +88,7 @@ Feature: show the ddl statement being executed in different scenario
       | user | passwd | conn   | toClose | sql                       | expect  | db      |
       | test | 111111 | conn_1 | False   | drop table if exists test | success | schema1 |
       | test | 111111 | conn_2 | False   | drop table if exists test | success | schema2 |
-    Given change btrace "BtraceDelayAfterDdl.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
@@ -140,7 +140,7 @@ Feature: show the ddl statement being executed in different scenario
       | user | passwd | conn   | toClose | sql                        | expect  | db      |
       | test | 111111 | conn_1 | False   | drop table if exists test1 | success | schema1 |
       | test | 111111 | conn_2 | False   | drop table if exists test2 | success | schema1 |
-    Given change btrace "BtraceDelayAfterDdl.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}

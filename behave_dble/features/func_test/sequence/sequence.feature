@@ -139,7 +139,7 @@ Feature: Functional testing of global sequences
         <property name="sequnceHandlerType">2</property>
     """
     #case 1: Verify the illegal value of the WORKID
-     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/WORKID=.*/WORKID=32/
     """
@@ -147,7 +147,7 @@ Feature: Functional testing of global sequences
     """
      worker Id can't be greater than 31 or less than 0
     """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/WORKID=.*/WORKID=-1/
     """
@@ -155,13 +155,13 @@ Feature: Functional testing of global sequences
     """
      worker Id can't be greater than 31 or less than 0
     """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/WORKID=.*/WORKID=01/
     """
     Given Restart dble in "dble-1" success
     #case 2: Verify the illegal value of the DATAACENTERID
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/DATAACENTERID=.*/DATAACENTERID=32/
     """
@@ -169,7 +169,7 @@ Feature: Functional testing of global sequences
     """
      datacenter Id can't be greater than 31 or less than 0
     """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/DATAACENTERID=.*/DATAACENTERID=-1/
     """
@@ -177,13 +177,13 @@ Feature: Functional testing of global sequences
     """
      datacenter Id can't be greater than 31 or less than 0
     """
-     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/DATAACENTERID=.*/DATAACENTERID=01/
     """
     Given Restart dble in "dble-1" success
     #case 3: Verify the illegal value of the START_TIME
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/[#]*START_TIME=.* /START_TIME=2010\/11\/04 /
     """
@@ -192,13 +192,13 @@ Feature: Functional testing of global sequences
     """
     START_TIME in sequence_time_conf.properties parse exception, starting from 2010-11-04 09:42:54
     """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
      """
       s/[#]*START_TIME=.* /START_TIME=2010-11-04 /
     """
     Given Restart dble in "dble-1" success
     #case 4: START_TIME>the time of dble start
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
     """
     s/[#]*START_TIME=.* /START_TIME=2190-10-01 /
     """
@@ -208,7 +208,7 @@ Feature: Functional testing of global sequences
     START_TIME in sequence_time_conf.properties mustn'\''t be over than dble start time, starting from 2010-11-04 09:42:54
     """
     #case 5: START_TIME+69 years<the time of dble start
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
     """
     s/[#]*START_TIME=.* /START_TIME=1910-10-01 /
     """
@@ -218,7 +218,7 @@ Feature: Functional testing of global sequences
       | test | 111111 | conn_0 | True     |drop table if exists test_auto                        | success        | schema1 |
       | test | 111111 | conn_0 | True     |create table test_auto(id bigint,time char(120))    | success        | schema1 |
       | test | 111111 | conn_0 | True     |insert into test_auto values(1)                       | Global sequence has reach to max limit and can generate duplicate sequences        | schema1 |
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
     """
     s/[#]*START_TIME=.* /START_TIME=2010-11-04 /
     """

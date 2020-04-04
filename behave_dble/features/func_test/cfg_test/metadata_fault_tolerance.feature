@@ -43,7 +43,7 @@ Feature: fault tolerance detection
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                 | expect                                                                                                                                                                   | db      |
       | root | 111111 | conn_0 | True    | log @@file=dble.log | hasStr{sql=show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -155,7 +155,7 @@ Feature: fault tolerance detection
       | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
       | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -275,7 +275,7 @@ Feature: fault tolerance detection
       | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
       | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
