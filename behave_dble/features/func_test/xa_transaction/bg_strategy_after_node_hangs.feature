@@ -18,7 +18,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -58,7 +58,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -106,7 +106,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -156,7 +156,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -199,7 +199,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
       | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
