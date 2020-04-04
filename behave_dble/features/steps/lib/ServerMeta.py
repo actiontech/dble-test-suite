@@ -15,10 +15,10 @@ class ServerMeta(object):
         :param str host_name:
         """
         self._config_dic = config_dic.copy()
-        self._ip = self._config_dic.pop("ip")
-        self._ssh_user = self._config_dic.pop("ssh_user")
-        self._ssh_password = self._config_dic.pop("ssh_password")
-        self._host_name = self._config_dic.pop("hostname")
+        self.ip = self._config_dic.pop("ip")
+        self.ssh_user = self._config_dic.pop("ssh_user")
+        self.ssh_password = self._config_dic.pop("ssh_password")
+        self.host_name = self._config_dic.pop("hostname")
 
         self._ssh_conn = None
         self._sftp_conn = None
@@ -34,7 +34,7 @@ class ServerMeta(object):
     @property
     def ssh_conn(self):
         if self._ssh_conn is None:
-            self._ssh_conn = SSHClient(self.ip, self._ssh_user, self._ssh_password)
+            self._ssh_conn = SSHClient(self.ip, self.ssh_user, self.ssh_password)
             self._ssh_conn.connect()
 
             assert self._ssh_conn is not None, "get ssh to {0} fail".format(self._ip)
@@ -48,7 +48,7 @@ class ServerMeta(object):
     def sftp_conn(self):
         if self._sftp_conn is None:
             port = '22'
-            self._sftp_conn = SFTPClient(self.ip, self._ssh_user, self._ssh_password, int(port))
+            self._sftp_conn = SFTPClient(self.ip, self.ssh_user, self.ssh_password, int(port))
             self._sftp_conn.sftp_connect()
             assert self._sftp_conn is not None, "get sftp to {0} fail".format(self._ip)
         return self._sftp_conn
@@ -64,3 +64,7 @@ class ServerMeta(object):
     @host_name.setter
     def host_name(self, value):
         self._host_name = value
+
+    def close_ssh(self):
+        self.ssh_conn.close()
+        self.ssh_conn = None
