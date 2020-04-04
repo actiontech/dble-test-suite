@@ -101,7 +101,7 @@ Feature: reload @@config_all -fsr
       | test | 111111 | conn_1 | False   | create table sharding_4_t1 (id int)              | success | schema1 |
       | test | 111111 | conn_1 | False   | begin                                            | success | schema1 |
       | test | 111111 | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
     """
