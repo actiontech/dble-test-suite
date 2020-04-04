@@ -108,3 +108,61 @@ class MySQLObject(object):
 
         assert isSuccess, "can not connect to {0} after 25s wait".format(self._mysql_meta.ip)
 
+    def turn_on_general_log(self):
+        conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '',
+                               self._mysql_meta.mysql_port, autocommit=True)
+
+        res, err = conn.query("set global log_output='file'")
+        assert err is None, "get general log file fail for {0}".format(err[1])
+
+        res, err = conn.query("set global general_log=off")
+        assert err is None, "set general log off fail for {0}".format(err[1])
+
+        res, err = conn.query("show variables like 'general_log_file'")
+        assert err is None, "get general log file fail for {0}".format(err[1])
+
+        general_log_file = res[0][1]
+        ssh = self._mysql_meta.ssh_conn
+        rc, sto, ste = ssh.exec_command('rm -rf {0}'.format(general_log_file))
+        assert len(ste) == 0, "rm general_log_file fail for {0}".format(ste)
+
+        res, err = conn.query("set global general_log=on")
+        assert err is None, "set general log on fail for {0}".format(err[1])
+
+        conn.close()
+        self._mysql_meta.close_ssh()
+
+    def turn_off_general_log(self):
+        conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '',
+                               self._mysql_meta.mysql_port, autocommit=True)
+
+        res, err = conn.query("set global general_log=off")
+        assert err is None, "turn off general log fail for {0}".format(err[1])
+
+        conn.close()
+
+    def check_query_in_general_log(self, query, expect_exist, occur_times_expr=None):
+        conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '',
+                               self._mysql_meta.mysql_port, autocommit=True)
+        conn.close()
+
+        res, err = conn.query("show variables like 'general_log_file'")
+        assert err is None, "get general log file fail for {0}".format(err[1])
+
+        general_log_file = res[0][1]
+
+        find_query_in_genlog_cmd = 'grep -ni "{0}" {1} | wc -l'.format(query, general_log_file)
+
+        ssh = self._mysql_meta.ssh_conn
+        rc, sto, ste = ssh.exec_command(find_query_in_genlog_cmd)
+
+        if expect_exist:
+            if occur_times_expr is None:
+                expect_occur_times_expr = "==1"
+            real_occur_times_as_expected = eval("{0}{1}".format(sto, expect_occur_times_expr))
+            assert real_occur_times_as_expected, "expect '{0}' occured {1} times in general log, but it occured {2} times".format(
+                query, expect_occur_times_expr, sto);
+
+        else:
+            assert 0 == int(sto), "expect general log has no {0}, but it occurs {1} times".format(query, sto);
+
