@@ -23,7 +23,7 @@ Feature: reload @@config_all and recycl pool
     Then check resultset "rs_A" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.6/172.100.9.4/g
     """
@@ -41,7 +41,7 @@ Feature: reload @@config_all and recycl pool
       | 172.100.9.6 | false       |
     Then check "rs_B" only has "2" connection of "172.100.9.6"
 
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.2/g
     """
@@ -59,7 +59,7 @@ Feature: reload @@config_all and recycl pool
       | 172.100.9.4 |
     Then check "rs_C" only has "2" connection of "172.100.9.6"
 
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.5/172.100.9.6/g
     """

@@ -229,14 +229,14 @@ Feature: test some import nodes attr in schema.xml
     """
         <table name="test_table" dataNode="dn1,dn2,dn3,dn4"  rule="hash-four" />
     """
-    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
     """
     s/encache/rocksdb/
     s/ehcache/rocksdb/
     s/10000,1800/10000,0/
     """
     Given create filder content "/opt/dble/rocksdb" in "dble-1"
-    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1"
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
     """
     s/debug/info/
     """
@@ -252,12 +252,12 @@ Feature: test some import nodes attr in schema.xml
     Then check resultset "cache_rs_A" has lines with following column values
       | CACHE-0               | HIT-4   |
       | SQLRouteCache        | 1        |
-    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
     """
     s/rocksdb/encache/
     s/=rocksdb/=ehcache/
     """
-    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1"
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
     """
     s/info/debug/
     """
