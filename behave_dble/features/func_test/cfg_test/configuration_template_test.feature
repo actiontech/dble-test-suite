@@ -22,7 +22,7 @@ Feature: use template to generate configuration file, check function is normal
     """
     \cp -f /opt/dble/conf/server_template.xml /opt/dble/conf/server.xml
     """
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/ip1:3306/172.100.9.5:3306/
     s/ip2:3306/172.100.9.2:3306/
@@ -31,7 +31,7 @@ Feature: use template to generate configuration file, check function is normal
     s/your_user/test/
     s/your_psw/111111/
     """
-    Given change file "server.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/server.xml" in "dble-1" with sed cmds
     """
     s/user name="root"/user name="test"/
     s/user name="man1"/user name="root"/

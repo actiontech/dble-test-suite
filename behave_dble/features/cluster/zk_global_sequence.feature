@@ -17,19 +17,19 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
         <property name="sequnceHandlerType">3</property>
     """
     Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=01
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-     Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=02
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-     Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=03
@@ -91,7 +91,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
   @skip_restart
   Scenario: when values of key "INSTANCEID" are same and values of key "CLUSTERID" are different, check the correctness of the self-increment sequence #3
     Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=04
     """
@@ -118,15 +118,15 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
   @skip_restart
   Scenario: when values of key "INSTANCEID" and "CLUSTERID" are same, check the correctness of the self-increment sequence #4
     Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=01
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=01
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=01
     """
@@ -175,15 +175,15 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
   @skip_restart
   Scenario: when values of key "CLUSTERID" are same and values of key "INSTANCEID" are different, check the correctness of the self-increment sequence #5
     Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=02
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=03
     """
@@ -210,19 +210,19 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then get datatime "t2" by "t1" minus "1970-01-01"
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     /CLUSTERID/c CLUSTERID=01
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     /CLUSTERID/c CLUSTERID=01
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     /CLUSTERID/c CLUSTERID=01
