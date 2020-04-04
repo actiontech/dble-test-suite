@@ -19,10 +19,6 @@ class MySQLObject(object):
     def __init__(self, mysql_meta):
         self._mysql_meta = mysql_meta
 
-    def update_config_with_sedStr_and_restart(self):
-        # update_config_with_sedStr_and_restart_mysql(context,self._name, sedStr)
-        pass
-
     def create_conn(self):
         try:
             conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '', self._mysql_meta.mysql_port, autocommit = True)
@@ -73,7 +69,7 @@ class MySQLObject(object):
             success_p = "Shutting down MySQL.*?SUCCESS"
             obj = re.search(success_p, stop_out)
             isSuccess = obj is not None
-            assert isSuccess, "stop mysql in host:{0} err:{1}".format(hostName, stop_err)
+            assert isSuccess, "stop mysql err:{1}".format(stop_err)
 
         self._mysql_meta.close_ssh()
 
@@ -87,7 +83,7 @@ class MySQLObject(object):
         success_p = "Starting MySQL.*?SUCCESS"
         obj = re.search(success_p, out)
         isSuccess = obj is not None
-        assert isSuccess, "start mysql in host:{0} err: {1}".format(host, err)
+        assert isSuccess, "start mysql err: {1}".format(err)
 
         self.connect_test()
 
@@ -97,7 +93,7 @@ class MySQLObject(object):
         max_try = 5
         while conn is None:
             try:
-                conn = MySQLdb(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '', self._mysql_meta.mysql_port,autocommit=True)
+                conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '', self._mysql_meta.mysql_port,autocommit=True)
             except MySQLdb.Error, e:
                 logger.debug("connect to '{0}' failed for:{1}".format(self._mysql_meta.ip, e))
                 conn = None
@@ -110,4 +106,5 @@ class MySQLObject(object):
 
             time.sleep(5)
 
-        assert isSuccess, "can not connect to {0} after 25s wait".format(self.ip)
+        assert isSuccess, "can not connect to {0} after 25s wait".format(self._mysql_meta.ip)
+

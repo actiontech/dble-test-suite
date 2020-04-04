@@ -198,7 +198,7 @@ Feature: multiple reload
       | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
       | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -301,7 +301,7 @@ Feature: multiple reload
       | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
       | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
