@@ -31,7 +31,7 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True     | create table table_b (id int,c_flag char(255))| success   | schema1 |
       | test | 111111 | conn_0 | True     | explain select * from table_a where id=1       | has{('dn2', 'BASE SQL', 'select * from table_a where id=1'),}   | schema1 |
       | test | 111111 | conn_0 | True     | explain select * from table_b                    | hasStr{('dn1', 'BASE SQL', 'select * from table_b'),}   | schema1 |
-    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
      """
       /layedpool.TableID2DataNodeCache=encache,10000,18000/d
       /#layedpool.TableID2DataNodeCacheType=encache/d
@@ -55,7 +55,7 @@ Feature: #test the correctness of sql transformation
       | test | 111111 | conn_0 | True    | explain select * from table_a where id=1                    | hasStr{'select * from table_a where id=1'}   | schema1 |
       | test | 111111 | conn_0 | True    | explain select * from table_a where c_flag=1                | hasStr{'SELECT * FROM table_a WHERE c_flag = 1 LIMIT 100'}   | schema1 |
       | test | 111111 | conn_0 | True    | explain select * from table_a order by id limit 3,9        | hasStr{ASC LIMIT 12}   | schema1 |
-    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1"
+    Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
      """
       /#layedpool.TableID2DataNodeCache=encache,10000,18000/d
       /layedpool.TableID2DataNodeCacheType=encache/d
