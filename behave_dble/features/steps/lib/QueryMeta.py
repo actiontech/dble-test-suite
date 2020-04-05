@@ -7,48 +7,54 @@
 class QueryMeta(object):
     def __init__(self, info_dict, mode, meta):
         if mode == "mysql":
-            self.init_mysql_query_meta(dict, meta)
+            self.init_mysql_query_meta(info_dict, meta)
         elif mode == "admin":
-            self.init_dble_admin_query_meta(dict, meta)
+            self.init_dble_admin_query_meta(info_dict, meta)
         elif mode == "user":
-            self.init_dble_client_query_meta(dict, meta)
+            self.init_dble_client_query_meta(info_dict, meta)
         else:
             assert False, "execute queries mode can only be one of [mysq, admin, user]"
 
     def init_mysql_query_meta(self, info_dic, meta):
+        if info_dic is None: info_dic = {}
+
         self._user = info_dic.get("user", meta.mysql_user)
-        self._passwd = info_dic.get("passwd", meta.mysql_user)
+        self._passwd = str(info_dic.get("passwd", meta.mysql_user))
         self._port = info_dic.get("port", meta.mysql_port)
         self._ip = info_dic.get("ip", meta.ip)
 
         self._bClose = info_dic.get("toClose", "true")
-        self._charset = info_dic.get("charset", "utf8mb4")
+        self._charset = info_dic.get("charset", None)
         self._conn_id = info_dic.get("conn", None)
         self._expect = info_dic.get("expect", "success")
         self._db = info_dic.get("db", "")
         self._sql = info_dic.get("sql")
 
     def init_dble_admin_query_meta(self, info_dic, meta):
+        if info_dic is None: info_dic = {}
+
         self._user = info_dic.get("user", meta.manager_user)
-        self._passwd = info_dic.get("passwd", meta.manager_password)
+        self._passwd = str(info_dic.get("passwd", meta.manager_password))
         self._port = info_dic.get("port", meta.manager_port)
         self._ip = info_dic.get("ip", meta.ip)
 
         self._bClose = info_dic.get("toClose","true")
-        self._charset = info_dic.get("charset", "utf8mb4")
+        self._charset = info_dic.get("charset", None)
         self._conn_id = info_dic.get("conn", None)
         self._expect = info_dic.get("expect", "success")
         self._db = info_dic.get("db", "")
         self._sql = info_dic.get("sql")
 
     def init_dble_client_query_meta(self, info_dic, meta):
+        if info_dic is None: info_dic = {}
+
         self._user = info_dic.get("user",meta.client_user)
-        self._passwd = info_dic.get("passwd", meta.client_password)
+        self._passwd = str(info_dic.get("passwd", meta.client_password))
         self._port = info_dic.get("port",meta.client_port)
         self._ip = info_dic.get("ip", meta.ip)
 
         self._bClose = info_dic.get("toClose", "true")
-        self._charset = info_dic.get("charset", "utf8mb4")
+        self._charset = info_dic.get("charset", None)
         self._conn_id = info_dic.get("conn", None)
         self._expect = info_dic.get("expect", "success")
         self._db = info_dic.get("db", "")

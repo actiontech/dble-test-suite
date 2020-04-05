@@ -23,6 +23,9 @@ Feature:  insert into values (),(),()... to verify the max rows can be inserted
         </function>
         """
         Then execute admin cmd "reload @@config_all"
-        Given create table for insert
+        When execute sql in "dble-1" in "user" mode
+          | sql                             | db      |
+          | drop table if exists test_table | schema1 |
+          | create table test_table(id int,k int, c char(10), pad char(60) primary key (id), key k_1 (k)) | schema1 |
         Then insert "5000" rows at one time
 
