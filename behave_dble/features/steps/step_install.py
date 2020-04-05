@@ -9,6 +9,8 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
+from lib.MySQLMeta import MySQLMeta
+from lib.DbleMeta import DbleMeta
 from lib.DBUtil import *
 from lib.utils import get_node, get_ssh
 
@@ -454,4 +456,3 @@ def check_cluster_successd(context, expectNodes):
     else:
         delattr(context, "retry_check_zk_nodes")
 
-    
