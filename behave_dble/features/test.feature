@@ -1,16 +1,9 @@
 # -*- coding=utf-8 -*-
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-@setup
 Feature: global table sql cover test
-"""
-Given rm old logs "sql_cover_global" if exists
-Given reset replication and none system databases
-"""
 
-   Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
-     Given set sql cover log dir "sql_cover_global"
-     Given prepare loaddata.sql data for sql test
-     Then execute sql in file "sqls_util/syntax/loaddata.sql"
-     Given clear dirty data yield by sql
-     Given clean loaddata.sql used data
+   Scenario:a test
+     Given execute sql in "dble-1" in "user" mode
+     Given Restart dble in "dble-1" success
+

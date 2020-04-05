@@ -11,12 +11,10 @@ import re
 
 import time
 
-from behave_dble.features.steps.lib.QueryMeta import QueryMeta
-from .PreQueryPrepare import PreQueryPrepare
-from .PostQueryCheck import PostQueryCheck
-from .utils import update_file_with_sed
+from ConnUtil import MysqlConnUtil
+from utils import update_file_with_sed
 
-logger = logging.getLogger('MySQLObject')
+logger = logging.getLogger('lib.MySQLObject')
 
 
 class MySQLObject(object):
@@ -173,43 +171,32 @@ class MySQLObject(object):
         else:
             assert 0 == int(sto), "expect general log has no {0}, but it occurs {1} times".format(query, sto);
 
-
-    def execute_queries_in_behave_table(self, table):
-        for row in table:
-            self.exec_query_with_dict(row.as_dict())
-
-    def exec_query_with_dict(self, info_dic):
-        query_meta = QueryMeta(info_dic, "mysql", self._mysql_meta)
-        self.do_execute_query(query_meta)
-
     def do_execute_query(self, query_meta):
         conn = MySQLObject.long_live_conns.get(query_meta.conn_id,None)
-        if not conn:
+        if conn:
+            logger.debug("find a exist conn '{0}' to execute query".format(query_meta.conn_id))
+        else:
             logger.debug("Can't find a exist conn '{0}', try to create a new conn".format(query_meta.conn_id))
             try:
-                conn = MySQLdb.connect(host=query_meta.ip, user=query_meta.user, passwd=query_meta.passwd, db=query_meta.db, port=query_meta.port, autocommit=True, charset=query_meta.charset)
+                conn = MysqlConnUtil(host=query_meta.ip, user=query_meta.user, passwd=query_meta.passwd, db=query_meta.db, port=query_meta.port, autocommit=True, charset=query_meta.charset)
             except MySQLdb.Error, e:
                 err = e.args
                 assert err==query_meta.expect, "Expect query '{0}' get '{1}', create conn fail for '{2}'".format(query_meta.sql, query_meta.expect, err)
 
         assert conn, "expect {0} find or create success, but failed".format(query_meta.conn_id)
 
-        pre_delegater = PreQueryPrepare(query_meta)
-        pre_delegater.prepare()
-
         starttime = datetime.datetime.now()
-        res, err = conn.query(query_meta)
+        res, err = conn.execute(query_meta.sql)
         endtime = datetime.datetime.now()
 
         time_cost = endtime - starttime
 
-        post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
-        post_delegater.check_result()
-
         logger.debug("to close {0} {1}".format(query_meta.conn_id, query_meta.bClose))
 
         if query_meta.bClose.lower() == "false":
-            MySQLObject.long_live_conns.update(query_meta.conn_id, conn)
+            MySQLObject.long_live_conns.update({query_meta.conn_id:conn})
         else:
             MySQLObject.long_live_conns.pop(query_meta.conn_id, None)
             conn.close()
+
+        return res, err, time_cost
