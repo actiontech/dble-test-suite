@@ -2,14 +2,13 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
-from .steps.lib import MySQLMeta
-from .steps.lib import DbleMeta
-from .steps.MySQLSteps import restart_mysql,turn_off_general_log
-from .steps.SqlUtil import do_exec_sql
-from .steps.step_check_sql import reset_repl
-from .steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,get_ssh, get_sftp, get_node
-from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+from steps.lib.MySQLObject import MySQLObject
+from steps.step_check_sql import reset_repl
+from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,get_ssh, get_sftp
+from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
+from steps.dble_steps import *
+from steps.MySQLSteps import *
 
 logger = logging.getLogger('environment')
 
@@ -48,15 +47,14 @@ def before_all(context):
             disable_cluster_config_in_node(context, node)
 
     init_meta(context, "mysqls")
+    context.ssh_client = get_ssh(context.cfg_dble['dble']['hostname'])
+    context.ssh_sftp = get_sftp(context.cfg_dble['dble']['hostname'])
 
-    context.ssh_client = get_ssh(context.cfg_dble['dble']['ip'])
-    context.ssh_sftp = get_sftp(context.cfg_dble['dble']['ip'])
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
     init_dble_conf(context, para_dble_conf)
-
     reinstall = context.config.userdata["reinstall"].lower() == "true"
     reset = context.config.userdata["reset"].lower() == "true"
 
@@ -71,7 +69,6 @@ def before_all(context):
         reset_dble(context)
     else:
         logger.info('give new install')
-
     logger.info('Exit hook <{0}>'.format('before_all'))
 
 def reset_dble(context):
@@ -120,6 +117,10 @@ def after_scenario(context, scenario):
             conn = getattr(context, conn_name)
             conn.close()
             delattr(context, conn_name)
+    for conn_id,conn in MySQLObject.long_live_conns.items():
+        logger.debug("to close mysql conn: {}".format(conn_id))
+        conn.close()
+    MySQLObject.long_live_conns.clear()
 
     if "restore_sys_time" in scenario.tags:
         restore_sys_time(context)
@@ -171,18 +172,7 @@ def after_scenario(context, scenario):
                 query = query + "{0}={1},".format(k, v)
 
             sql = query[:-1]
-
-            node = get_node(mysql)
-            ip = node.ip
-            port = node.mysql_port
-            user = node.mysql_user
-            passwd = node.mysql_password
-            db = ""
-            bClose = True
-            conn_type = "conn_0"
-            expect = "success"
-
-            do_exec_sql(context, ip, user, passwd, db, port, sql, bClose, conn_type, expect)
+            execute_sql_in_host(mysql, {"sql":sql})
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
@@ -204,7 +194,8 @@ def get_case_tag_params(description, tag):
     return tag_para_dic
 
 def before_step(context, step):
-    logger.info(step.name)
+    logger.debug(step.name)
 
 def after_step(context, step):
     logger.info('{0}, status:{1}'.format(step.name, step.status))
+
