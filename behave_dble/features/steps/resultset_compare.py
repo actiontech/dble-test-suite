@@ -68,7 +68,7 @@ def step_impl(context, rs_name):
                 isFound = unicode(real_col) == unicode(expect_col)
                 if not isFound: break
             assert not isFound, "expect line not in resultset {0}".format(rs_name)
-        context.logger.info("expect row:{0}, not found".format(expect_row))
+        context.logger.debug("expect row:{0}, not found".format(expect_row))
 
 #once found expect, break loop
 @Then('check resultset "{rs_name}" has lines with following column values')
@@ -111,7 +111,7 @@ def step_impl(context, rs_name):
                     expect_max = int(expect[-1])+expect_min
                     real_col = int(real_col)
                     isFound = (real_col >= expect_min) and (real_col <= expect_max)
-                    context.logger.info("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
+                    context.logger.de("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
                 else:
                     expect_col = expect_row[i]
                     if (expect_row[i].rfind('[0-9].[0-9]') != -1):

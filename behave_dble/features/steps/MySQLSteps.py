@@ -3,7 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM1:35
 # @Author  : irene-coming
-from .lib import ObjectFactory
+from .lib.PostQueryCheck import PostQueryCheck
+from .lib.PreQueryPrepare import PreQueryPrepare
+from .lib.QueryMeta import QueryMeta
+from .lib.ObjectFactory import ObjectFactory
 from behave import *
 
 
@@ -54,7 +57,20 @@ def step_impl(context,host_name, query, occur_times_expr=None):
 
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
-def execute_sql_in_host(context, host_name):
+def step_impl(context, host_name):
+    for row in context.table:
+        execute_sql_in_host(host_name, row.as_dict())
+
+def execute_sql_in_host(host_name, info_dic=None):
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.execute_queries_in_behave_table(context.table)
+    query_meta = QueryMeta(info_dic, "mysql", mysql._mysql_meta)
+
+    pre_delegater = PreQueryPrepare(query_meta)
+    pre_delegater.prepare()
+
+    res, err, time_cost = mysql.do_execute_query(query_meta)
+
+    post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
+    post_delegater.check_result()
+
 
