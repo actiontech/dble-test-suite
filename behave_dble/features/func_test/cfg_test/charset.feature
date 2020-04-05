@@ -99,5 +99,5 @@ Feature: set charset in server.xml,check backend charsets are as set
         | user | passwd  | conn   | toClose | sql                                                                                    | expect  | db       |charset|
         | test | 111111  | conn_0 | False   | drop table if exists sharding_table                                                | success | schema1 |utf8   |
         | test | 111111  | conn_0 | False   | create table sharding_table(id varchar(50))default charset=utf8;               | success | schema1 |utf8   |
-        | test | 111111  | conn_0 | True    |  insert into sharding_table(id) values('京A00000')/*dest_node:dn2*/            |success  | schema1 |utf8   |
-        | test | 111111  | new    | True     | insert into sharding_table(id) values('京A00000')/*dest_node:dn2*/             | success | schema1 |utf8mb4  |
+        | test | 111111  | conn_0 | True    |  insert into sharding_table(id) values('京A00000')| dest_node:mysql-master2 | schema1 |utf8   |
+        | test | 111111  | new    | True     | insert into sharding_table(id) values('京A00000')| dest_node:mysql-master2 | schema1 |utf8mb4  |

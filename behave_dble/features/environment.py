@@ -2,10 +2,12 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
+from .steps.lib import MySQLMeta
+from .steps.lib import DbleMeta
 from .steps.MySQLSteps import restart_mysql,turn_off_general_log
 from .steps.SqlUtil import do_exec_sql
 from .steps.step_check_sql import reset_repl
-from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time,get_ssh, get_sftp, get_node
+from .steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,get_ssh, get_sftp, get_node
 from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
@@ -39,16 +41,16 @@ def before_all(context):
     context.userDebug = context.config.userdata["user_debug"].lower() == "true"
     context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
     if context.is_cluster:
-        context.dbles = get_nodes(context, "dble_cluster")
+        init_meta(context, "dble_cluster")
     else:
-        context.dbles = get_nodes(context, "dble")
-        for node in context.dbles:
+        init_meta(context, "dble")
+        for node in DbleMeta.dbles:
             disable_cluster_config_in_node(context, node)
 
-    context.mysqls = get_nodes(context, "mysqls")
+    init_meta(context, "mysqls")
 
-    context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])
-    context.ssh_sftp = get_sftp(context.dbles, context.cfg_dble['dble']['ip'])
+    context.ssh_client = get_ssh(context.cfg_dble['dble']['ip'])
+    context.ssh_sftp = get_sftp(context.cfg_dble['dble']['ip'])
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
@@ -74,16 +76,16 @@ def before_all(context):
 
 def reset_dble(context):
     replace_config(context)
-    set_dbles_log_level(context, context.dbles, 'debug')
-    restart_dbles(context, context.dbles)
+    set_dbles_log_level(context, DbleMeta.dbles, 'debug')
+    restart_dbles(context, DbleMeta.dbles)
 
 def after_all(context):
     logger.info('Enter hook <{0}>'.format('after_all'))
 
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         if node.ssh_conn:
             node.ssh_conn.close()
-    for node in context.mysqls:
+    for node in MySQLMeta.mysqls:
         if node.ssh_conn:
             node.ssh_conn.close()
 
@@ -170,7 +172,7 @@ def after_scenario(context, scenario):
 
             sql = query[:-1]
 
-            node = get_node(context.mysqls, mysql)
+            node = get_node(mysql)
             ip = node.ip
             port = node.mysql_port
             user = node.mysql_user

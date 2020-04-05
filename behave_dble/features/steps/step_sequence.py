@@ -45,10 +45,10 @@ def step_impl(context, totalsRowsInsert, table, threadNum):
 
 @Then('execute sqlFile to initialize sequence table')
 def step_impl(context):
-    node = get_node(context.mysqls, "mysql-master1")
+    node = get_node("mysql-master1")
 
     # copy dble's dbseq.sql to local
-    dble_node = get_node(context.dbles, "dble-1")
+    dble_node = get_node("dble-1")
     source_remote_file = "{0}/dble/conf/dbseq.sql".format(dble_node.install_dir)
     target_remote_file = "{0}/data/dbseq.sql".format(node.install_path)
     local_file  = "{0}/dbseq.sql".format(os.getcwd())
