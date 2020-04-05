@@ -61,16 +61,19 @@ def init_meta(context, flag):
         cfg_dic.update(context.cfg_server)
 
         node = DbleMeta(cfg_dic)
-        DbleMeta.dbles.append(node)
+        DbleMeta.dbles = (node,)
     elif flag == "dble_cluster":
+        nodes = []
         for _, childNode in context.cfg_dble[flag].iteritems():
             cfg_dic = {}
             cfg_dic.update(childNode)
             cfg_dic.update(context.cfg_server)
 
             node = DbleMeta(cfg_dic)
-            DbleMeta.dbles.append(node)
+            nodes.append(node)
+        DbleMeta.dbles = tuple(nodes)
     elif flag == "mysqls":
+        nodes = []
         for k, v in context.cfg_mysql.iteritems():
             for ck, cv in context.cfg_mysql[k].iteritems():
                 cfg_dic = {}
@@ -78,7 +81,9 @@ def init_meta(context, flag):
                 cfg_dic.update(context.cfg_server)
 
                 node = MySQLMeta(cfg_dic)
-                MySQLMeta.mysqls.append(node)
+                nodes.append(node)
+        MySQLMeta.mysqls = tuple(nodes)
+
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
 
@@ -132,6 +137,7 @@ def restore_sys_time():
     logger.debug("restore sys time success")
 
 def get_node(host):
+    logger.debug("try to get meta of '{}'".format(host))
     for node in MySQLMeta.mysqls+DbleMeta.dbles:
         if node.host_name == host or node.ip == host:
             return node
@@ -143,6 +149,6 @@ def get_ssh( host):
     return node.ssh_conn
 
 # get sftp by host or ip
-def get_sftp(nodes, host):
+def get_sftp(host):
     node = get_node(host)
     return node.sftp_conn
