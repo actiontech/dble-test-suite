@@ -54,16 +54,14 @@ def load_yaml_config(config_path):
     return parsed
 
 @log_it
-def get_nodes(context , flag):
-    nodes = []
-
+def init_meta(context, flag):
     if flag=="dble":
         cfg_dic = {}
         cfg_dic.update(context.cfg_dble[flag])
         cfg_dic.update(context.cfg_server)
 
         node = DbleMeta(cfg_dic)
-        nodes.append(node)
+        DbleMeta.dbles.append(node)
     elif flag == "dble_cluster":
         for _, childNode in context.cfg_dble[flag].iteritems():
             cfg_dic = {}
@@ -71,7 +69,7 @@ def get_nodes(context , flag):
             cfg_dic.update(context.cfg_server)
 
             node = DbleMeta(cfg_dic)
-            nodes.append(node)
+            DbleMeta.dbles.append(node)
     elif flag == "mysqls":
         for k, v in context.cfg_mysql.iteritems():
             for ck, cv in context.cfg_mysql[k].iteritems():
@@ -80,10 +78,9 @@ def get_nodes(context , flag):
                 cfg_dic.update(context.cfg_server)
 
                 node = MySQLMeta(cfg_dic)
-                nodes.append(node)
+                MySQLMeta.mysqls.append(node)
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
-    return nodes
 
 @Given('sleep "{num}" seconds')
 def step_impl(context, num):
@@ -96,9 +93,9 @@ def update_file_content(context,filename, hostname, sed_str=None):
         sed_str = context.text
 
     if hostname.startswith('dble'):
-        node = get_node(context.dbles, hostname)
+        node = get_node(hostname)
     elif hostname.startswith('dble'):
-        node = get_node(context.mysqls, hostname)
+        node = get_node(hostname)
     else:
         node = None
 
@@ -134,18 +131,18 @@ def restore_sys_time():
     assert res == 0, "restore sys time fail"
     logger.debug("restore sys time success")
 
-def get_node(nodes, host):
-    for node in nodes:
+def get_node(host):
+    for node in MySQLMeta.mysqls+DbleMeta.dbles:
         if node.host_name == host or node.ip == host:
             return node
     assert False, 'Can not find node {0}'.format(host)
 
 # get ssh by host or ip
-def get_ssh(nodes, host):
-    node = get_node(nodes, host)
+def get_ssh( host):
+    node = get_node(host)
     return node.ssh_conn
 
 # get sftp by host or ip
 def get_sftp(nodes, host):
-    node = get_node(nodes, host)
+    node = get_node(host)
     return node.sftp_conn

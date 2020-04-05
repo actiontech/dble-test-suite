@@ -16,7 +16,7 @@ LOGGER = logging.getLogger('steps.install')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         uninstall_dble_in_node(context, node)
 
 def uninstall_dble_in_node(context, node):
@@ -28,7 +28,7 @@ def uninstall_dble_in_node(context, node):
 
 @given('uninstall dble in "{hostname}"')
 def unistall_dble_by_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     uninstall_dble_in_node(context, node)
 
 def get_dble_install_packet_name(context):
@@ -74,12 +74,12 @@ def install_dble_in_node(context, node):
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     install_dble_in_node(context, node)
 
 @Given('install dble in all dble nodes')
 def install_dble_in_all_nodes(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         install_dble_in_node(context, node)
 
 def download_dble(context, dble_packet_name):
@@ -132,7 +132,7 @@ def set_dble_log_level(context, node, log_level):
 @When('Start dble in "{hostname}"')
 @Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     start_dble_in_node(context, node)
 
 def start_dble_in_node(context, node, expect_success=True):
@@ -183,7 +183,7 @@ def check_dble_started(context, node):
         delattr(context, "retry_start_dble")
 @Given("stop all dbles")
 def stop_dbles(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         stop_dble_in_node(context, node)
 
 @Given('stop dble in "{hostname}"')
@@ -192,7 +192,7 @@ def step_impl(context, hostname):
 
 @Then('stop dble in "{hostname}"')
 def stop_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     stop_dble_in_node(context, node)
 
 def stop_dble_in_node(context, node):
@@ -241,12 +241,12 @@ def restart_dbles(context, nodes):
 
 @Then('restart dble in "{hostname}" failed for')
 def check_restart_dble_failed(context,hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     restart_dble(context, node, False)
 
 @Given('Restart dble in "{hostname}" success')
 def step_impl(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     restart_dble(context, node)
 
 def restart_dble(context, node, expect_success=True):
@@ -256,12 +256,12 @@ def restart_dble(context, node, expect_success=True):
 @Then('start dble in order')
 def start_dble_in_order(context):
     start_dble_in_hostname(context, "dble-1")
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         if "dble-1" not in node.host_name:
             start_dble_in_node(context, node)
 
 def start_zk_services(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         start_zk_service(context, node)
 
 def start_zk_service(context, node):
@@ -317,18 +317,18 @@ def stop_zk_service(context, node):
     assert stop_success, "stop zkServer fail for: {0}".format(ste)
 
 def restart_zk_service(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         stop_zk_service(context, node)
 
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         start_zk_service(context, node)
 
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         check_zk_status(context, node)
 
 @Given('config zookeeper cluster in all dble nodes with "{hosts_form}"')
 def config_zk_in_dble_nodes(context,hosts_form):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         conf_zk_in_node(context, node,hosts_form)
 
     restart_zk_service(context)
@@ -364,19 +364,19 @@ def disable_cluster_config_in_node(context, node):
 
 @given('stop dble cluster and zk service')
 def dble_cluster_to_single(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         stop_dble_in_node(context, node)
         disable_cluster_config_in_node(context, node)
         stop_zk_service(context, node)
 
 @Given('replace config files in all dbles with command line config')
 def replace_config(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         replace_config_in_node(context,node)
 
 @Given('replace config files in "{nodeName}" with command line config')
 def step_impl(context, nodeName):
-    node = get_node(context.dbles, nodeName)
+    node = get_node(nodeName)
     replace_config_in_node(context, node)
 
 def replace_config_in_node(context, node):
@@ -408,7 +408,7 @@ def replace_config_in_node(context, node):
 
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     ssh_client = node.ssh_conn
     resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
     ssh_client.exec_command(resetCmd)
@@ -428,7 +428,7 @@ def check_cluster_successd(context, expectNodes):
 
     realNodes = []
     cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online|grep -v ':'|grep -v ^$ ".format(context.cfg_zookeeper['home'])
-    cmd_ssh = get_ssh(context.dbles, "dble-1")
+    cmd_ssh = get_ssh("dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
     LOGGER.debug("add debug to check the result of executing {0} is :sto:{1}".format(cmd,sto))
     sub_sto = re.findall(r'[[](.*)[]]', sto)
