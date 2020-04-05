@@ -3,7 +3,7 @@
 # Created by zhaohongjie at 2019/6/25
 @skip
 Feature: ddl metalock in dble test suites
-  # Enter feature description here
+  # this is a sample for using btrace
 
   Scenario: ddl metalock in dble released when client interruption occured during select 1 phrase #1
     Then execute sql in "dble-1" in "user" mode

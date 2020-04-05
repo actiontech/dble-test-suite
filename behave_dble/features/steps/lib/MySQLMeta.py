@@ -6,6 +6,7 @@
 
 from .ServerMeta import ServerMeta
 class MySQLMeta(ServerMeta):
+    mysqls = []
     def __init__(self, config_dic):
         """
         create a data model of a server, including the server ssh user/password, prepare a long live ssh connection, and a long live sftp connection
