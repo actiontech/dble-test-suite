@@ -6,7 +6,7 @@
 import logging
 import re
 
-from . import ObjectFactory
+from .ObjectFactory import ObjectFactory
 from hamcrest import *
 
 logger = logging.getLogger('MySQLObject')
@@ -24,11 +24,16 @@ class PostQueryCheck(object):
             if self._expect == "success":
                 assert self._real_err is None, "expect no err, but outcomes '{0}'".format(self._real_err)
                 break
-            dest_host = re.search(r'dest_node:(.*?)', self._expect, re.I)
+            dest_host = re.search(r'dest_node:(.*)', self._expect, re.I)
             if dest_host:
                 shardings_host = dest_host.group(1)
+                if  self._sql.lower().startswith("insert into"):
+                    target = self._sql.split("values")[1]
+                else:
+                    target = self._sql
+
                 mysql = ObjectFactory.create_mysql_object(shardings_host)
-                mysql.check_query_in_general_log(self._sql, expect_exist=True)
+                mysql.check_query_in_general_log(target, expect_exist=True)
                 break
 
             hasObj = re.search(r"has\{(.*?)\}", self._expect, re.I)
