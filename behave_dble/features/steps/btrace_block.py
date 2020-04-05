@@ -44,13 +44,13 @@ def run_btrace_script(sshClient, btraceScript):
 
 @Given('prepare a thread run btrace script "{btraceScript}" in "{host}"')
 def step_impl(context, btraceScript, host):
-    node = get_node(context.dbles, host)
+    node = get_node(host)
     sshClient = node.ssh_conn
 
     isBtraceRunning = check_btrace_running(sshClient,btraceScript)
     context.logger.info("isBtraceRunning:{0} before try to run {1}".format(isBtraceRunning, btraceScript))
     if not isBtraceRunning:
-        sftpClient = get_sftp(context.dbles, host)
+        sftpClient = get_sftp(host)
         localFile = "assets/{0}".format(btraceScript)
         remoteFile = "{0}/dble/{1}".format(node.install_dir,btraceScript)
         sftpClient.sftp_put(localFile, remoteFile)
@@ -65,7 +65,7 @@ def step_impl(context, btraceScript, host):
 
 @Given('execute sqls in "{host}" at background')
 def step_impl(context, host):
-    node = get_node(context.dbles, host)
+    node = get_node(host)
     sshClient = node.ssh_conn
 
     context.logger.debug("btrace is running, start query!!!")
@@ -102,7 +102,7 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
 @Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
 @Then('check btrace "{btraceScript}" output in "{host}"')
 def step_impl(context, btraceScript, host, num=1):
-    node = get_node(context.dbles, host)
+    node = get_node(host)
     sshClient = node.ssh_conn
     remoteFile = "{0}/dble/{1}".format(node.install_dir, btraceScript)
     check_btrace_output(sshClient, remoteFile, context.text.strip(), context, int(num))
@@ -114,13 +114,13 @@ def kill_query(sshClient,query, context):
 
 @Given('kill mysql query in "{host}" forcely')
 def step_impl(context, host):
-    sshClient = get_ssh(context.dbles, host)
+    sshClient = get_ssh(host)
 
     kill_query(sshClient, context.text, context)
 
 @Given('stop btrace script "{btraceScript}" in "{host}"')
 def step_impl(context,btraceScript,host):
-    sshClient = get_ssh(context.dbles, host)
+    sshClient = get_ssh(host)
 
     isBtraceRunning = check_btrace_running(sshClient,btraceScript)
     context.logger.info("isBtraceRunning:{0} before try to stop {1}".format(isBtraceRunning,btraceScript))
@@ -167,7 +167,7 @@ def step_impl(context,result):
 
 @Then('execute admin cmd  in "{host}" at background')
 def step_impl(context, host):
-    node = get_node(context.dbles, host)
+    node = get_node(host)
     sshClient = node.ssh_conn
 
     context.logger.debug("btrace is running, start query!!!")
