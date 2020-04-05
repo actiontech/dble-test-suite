@@ -14,11 +14,11 @@ Feature: show @@connection.sql test
         <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
             <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
         </schema>
-        <dataNode dataHost="172.100.9.1" database="db1" name="dn1" />
-        <dataNode dataHost="172.100.9.1" database="db2" name="dn2" />
-        <dataNode dataHost="172.100.9.1" database="db3" name="dn3" />
-        <dataNode dataHost="172.100.9.1" database="db4" name="dn4" />
-        <dataHost balance="0" maxCon="9" minCon="3" name="172.100.9.1" >
+        <dataNode dataHost="ha_test" database="db1" name="dn1" />
+        <dataNode dataHost="ha_test" database="db2" name="dn2" />
+        <dataNode dataHost="ha_test" database="db3" name="dn3" />
+        <dataNode dataHost="ha_test" database="db4" name="dn4" />
+        <dataHost balance="0" maxCon="9" minCon="3" name="ha_test" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.1:3306" user="test">
             </writeHost>

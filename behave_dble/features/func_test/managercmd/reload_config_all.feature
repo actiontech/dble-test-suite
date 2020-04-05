@@ -8,17 +8,22 @@ Feature: reload @@config_all base test, not including all cases in testlink
   reload @@config_all -s,  skip test new connections
 
   Background: prepare for reload @@config_all -?
+    Given delete the following xml segment
+      |file        | parent          | child                |
+      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
+      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
     <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
     </schema>
-    <dataNode name="dn1" dataHost="host1" database="db1"/>
-    <dataNode name="dn2" dataHost="host1" database="db2"/>
-    <dataNode name="dn3" dataHost="host1" database="db3"/>
-    <dataNode name="dn4" dataHost="host1" database="db4"/>
-    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
-    <heartbeat>show slave status</heartbeat>
+    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
+    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
+    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
+    <dataHost balance="0" maxCon="1000" minCon="5" name="ha_group1" slaveThreshold="100">
+    <heartbeat>select user()</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
     </writeHost>
     </dataHost>
@@ -53,8 +58,8 @@ Feature: reload @@config_all base test, not including all cases in testlink
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
-        <heartbeat>show slave status</heartbeat>
+    <dataHost balance="0" maxCon="1000" minCon="5" name="ha_group1" slaveThreshold="100">
+        <heartbeat>select user()</heartbeat>
         <writeHost host="hostW1" url="172.100.9.6:3306" password="111111" user="test"/>
     </dataHost>
     """
@@ -76,7 +81,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | test | 111111 | conn_0 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
+    <dataHost balance="0" maxCon="1000" minCon="5" name="ha_group1" slaveThreshold="100">
     <heartbeat>show slave status</heartbeat>
     <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
     </writeHost>
