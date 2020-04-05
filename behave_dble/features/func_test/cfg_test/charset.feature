@@ -34,12 +34,12 @@ Feature: set charset in server.xml,check backend charsets are as set
       | 172.100.9.2 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
       | 172.100.9.3 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd  | conn   | toClose | sql                                         | expect  | db     |charset|
-      | test | 111111  | conn_0 | False   | drop table if exists aly_test               | success | schema1 | utf8  |
-      | test | 111111  | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | schema1 | utf8  |
-      | test | 111111  | conn_0 | False   | insert into aly_test value(1, '中')         | success | schema1 | utf8  |
-      | test | 111111  | conn_0 | False   | select name from aly_test                   | has{('中')}| schema1 | utf8  |
-      | test | 111111  | conn_0 | False   | set names utf8mb4                              | success | schema1 | utf8  |
+      | conn   | toClose | sql                                         | expect  | db     |charset|
+      | conn_0 | False   | drop table if exists aly_test               | success | schema1 | utf8  |
+      | conn_0 | False   | create table aly_test(id int, name char(10)) default charset=utf8| success | schema1 | utf8  |
+      | conn_0 | False   | insert into aly_test value(1, '中')         | success | schema1 | utf8  |
+      | conn_0 | False   | select name from aly_test                   | has{('中')}| schema1 | utf8  |
+      | conn_0 | False   | set names utf8mb4                              | success | schema1 | utf8  |
     Then get resultset of admin cmd "show @@connection" named "conn_rs_A"
     Then check resultset "conn_rs_A" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
@@ -65,21 +65,22 @@ Feature: set charset in server.xml,check backend charsets are as set
       | 172.100.9.2 |     latin1              | latin1_swedish_ci       | latin1                   |
       | 172.100.9.3 |     latin1              | latin1_swedish_ci       | latin1                   |
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd  | conn   | toClose | sql                                         | expect  | db     |
-        | test | 111111  | conn_1 | False   | drop table if exists aly_test               | success | schema1 |
-        | test | 111111  | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8mb4| success | schema1 |
-        | test | 111111  | conn_1 | False   | insert into aly_test value(1, '中')         | ordinal not in range | schema1 |
+      | conn   | toClose | sql                                         | expect  | db     |
+      | conn_1 | False   | drop table if exists aly_test               | success | schema1 |
+      | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8mb4| success | schema1 |
+      | conn_1 | False   | insert into aly_test value(1, '中')         | ordinal not in range | schema1 |
     Then get resultset of admin cmd "show @@connection" named "conn_rs_B"
     Then check resultset "conn_rs_B" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
       |    latin1              | latin1_swedish_ci      | latin1                  |
     #   1.3 set backend charset latin1, but set front charset utf8 to indirectly change used backend charset;
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd  | conn   | toClose | sql                                 | expect  | db     |charset|
-        | test | 111111  | conn_2 | False   | insert into aly_test value(1, '中') | success | schema1 |utf8  |
-        | test | 111111  | conn_2 | False   | select name from aly_test           | has{('中')} | schema1 |utf8  |
-        | test | 111111  | conn_2 | True    | drop table if exists aly_test       | success | schema1 |utf8  |
+      | conn   | toClose | sql                                 | expect  | db     |charset|
+      | conn_2 | False   | insert into aly_test value(1, '中') | success | schema1 |utf8  |
+      | conn_2 | False   | select name from aly_test           | has{('中')} | schema1 |utf8  |
+      | conn_2 | True    | drop table if exists aly_test       | success | schema1 |utf8  |
 
+  @current
   Scenario: dble should map MySQL's utfmb4 character to utf8.
              In other words,non-ASCII sharding column should be routed to the same datanode whether client character-set is utfmb4 or utf8 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
@@ -96,8 +97,8 @@ Feature: set charset in server.xml,check backend charsets are as set
      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd  | conn   | toClose | sql                                                                                    | expect  | db       |charset|
-        | test | 111111  | conn_0 | False   | drop table if exists sharding_table                                                | success | schema1 |utf8   |
-        | test | 111111  | conn_0 | False   | create table sharding_table(id varchar(50))default charset=utf8;               | success | schema1 |utf8   |
-        | test | 111111  | conn_0 | True    |  insert into sharding_table(id) values('京A00000')| dest_node:mysql-master2 | schema1 |utf8   |
-        | test | 111111  | new    | True     | insert into sharding_table(id) values('京A00000')| dest_node:mysql-master2 | schema1 |utf8mb4  |
+      | conn   | toClose | sql                                                               | expect  | db      |charset|
+      | conn_0 | False   | drop table if exists sharding_table                               | success | schema1 |utf8   |
+      | conn_0 | False   | create table sharding_table(id varchar(50))default charset=utf8;  | success | schema1 |utf8   |
+      | conn_0 | True    | insert into sharding_table(id) values('京A00000')                 | dest_node:mysql-master2  | schema1  |utf8    |
+      | new    | True    | insert into sharding_table(id) values('京A00000')                 | dest_node:mysql-master2  | schema1  |utf8mb4 |
