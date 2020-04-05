@@ -21,14 +21,6 @@ from step_reload import get_abs_path
 LOGGER = logging.getLogger('steps')
 console_logger = logging.getLogger('mydebug')
 
-def get_sql(type):
-    if type == "read":
-        sql="select 1 "
-    else:
-        sql="drop table if exists char_columns"
-
-    return sql
-
 @Given('execute sql in "{hostname}"')
 @Then('execute sql in "{hostname}"')
 @When('execute sql in "{hostname}" in "{user}" mode')
@@ -36,11 +28,11 @@ def get_sql(type):
 @Then('execute sql in "{hostname}" in "{user}" mode')
 def execute_sql_in_host(context,hostname, user=""):
     if len(user.strip()) == 0:
-        node = get_node(context.mysqls, hostname)
+        node = get_node(hostname)
         ip = node._ip
         port = node._mysql_port
     else:
-        node = get_node(context.dbles, hostname)
+        node = get_node(hostname)
         ip = node.ip
         if user == 'admin':
             port = node.manager_port
@@ -62,10 +54,6 @@ def exec_sql(context, ip, port):
             setattr(context, "charset", charset)
 
         sql = row["sql"]
-        if sql == "default_read":
-            sql = get_sql("read")
-        elif sql == "default_write":
-            sql = get_sql("write")
 
         conn_type = row["conn"]
         expect = row["expect"]
@@ -261,7 +249,7 @@ def turn_on_general_log(context, shardings, user, passwd):
         ip_port = dataHost.find("writeHost").get("url")
         ip=ip_port.split(":")[0]
 
-        node = get_node(context.mysqls, ip)
+        node = get_node(ip)
         conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
 
         res, err = conn.query("set global log_output='file'")
@@ -317,7 +305,7 @@ def check_for_dest_sharding(context, sql, shardings, user, passwd):
         ip_port = dataHost.find("writeHost").get("url")
         ip=ip_port.split(":")[0]
 
-        node = get_node(context.mysqls, ip)
+        node = get_node(ip)
         conn = DBUtil(ip, user, passwd, db, node.mysql_port, context)
 
         res, err = conn.query("show variables like 'general_log_file'")
@@ -365,7 +353,7 @@ def step_impl(context, hostname, num, tablename="", dbname="schema1"):
     
 def do_batch_sql(context, hostname, db, sql):
     conn = None
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     ip = node._ip
     user = node.client_user
     passwd = node.client_password
@@ -385,7 +373,7 @@ def do_batch_sql(context, hostname, db, sql):
     
 @Then('execute sql "{sql}" in "{host}" with "{results}" result')
 def step_impl(context,sql,host,results):
-    node = get_node(context.mysqls, host)
+    node = get_node(host)
     ip = node._ip
     port = node._mysql_port
     resultList = []

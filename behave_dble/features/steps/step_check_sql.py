@@ -41,7 +41,7 @@ def get_log_linenu(context, log_linenu="log_linenu"):
 
 
 def get_full_log_path(context, host="dble-1"):
-    node = get_node(context.dbles, host)
+    node = get_node(host)
     logpath = "{0}/dble/logs/dble.log".format(node.install_dir)
     context.logger.info("log path: {0}".format(logpath))
     return logpath
@@ -77,7 +77,7 @@ def step_impl(context):
 
 
 def get_compare_conn(context, default_db="schema1"):
-    node = get_node(context.mysqls, "mysql")
+    node = get_node("mysql")
     m_ip = node.ip
     m_port = node.mysql_port
     m_user = node.mysql_user
@@ -453,7 +453,7 @@ def step_impl(context, filename):
 
 
 def dble_mng_connect_test(context, ip):
-    node = get_node(context.dbles,"dble-1")
+    node = get_node("dble-1")
     user = node.manager_user
     passwd = str(node.manager_password)
     port = node.manager_port

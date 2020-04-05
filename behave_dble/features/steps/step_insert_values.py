@@ -10,7 +10,7 @@ from lib.generate_util import generate
 
 @Given('create table for insert')
 def step_impl(context):
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
 
     ip = node.ip
     port = node.client_port
@@ -30,7 +30,7 @@ def step_impl(context):
 
 @Then('insert "{num}" rows at one time')
 def step_impl(context, num):
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     sql = "insert into test_table values"
     gen = generate()
     value_nu = int(num)

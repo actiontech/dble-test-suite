@@ -58,14 +58,14 @@ Feature:Date sharding function
         | user | passwd | conn   | toClose  | sql                                                                   | expect                                      | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                                   | success                                     | schema1 |
         | test | 111111 | conn_0 | False    | create table date_table(id date)                                  | success   | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values(null)/*dest_node:dn4*/           | success   | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success                                      | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success                                      | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success                                      | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success                                      | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success                                      | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success                                      | schema1 |
-        | test | 111111 | conn_0 | True     | insert into date_table values('2018-01-9')/*dest_node:dn4*/   | success                                      | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values(null)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')  | dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | True     | insert into date_table values('2018-01-9') | dest_node:mysql-master2 | schema1 |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                                   | success                                     | schema1 |
         | test | 111111 | conn_0 | False    | create table date_table(id timestamp, c timestamp)             | success   | schema1 |
         | test | 111111 | conn_0 | False    | insert into date_table values (null,null)              | Sharding column can't be null when the table in MySQL column is not null   | schema1 |
@@ -88,12 +88,12 @@ Feature:Date sharding function
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | schema1 |
         | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | schema1 |
         | test | 111111 | conn_0 | False    | insert into date_table values(null)                           | can't find any valid data node | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-8')/*dest_node:dn4*/    | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-9')/*dest_node:dn4*/    | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-8')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-9')| dest_node:mysql-master2 | schema1 |
         | test | 111111 | conn_0 | True     | insert into date_table values('2017-11-11')                    | can't find any valid data node | schema1 |
 
      #test: not sEndDate and set defaultNode
@@ -111,12 +111,12 @@ Feature:Date sharding function
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | schema1 |
         | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')| dest_node:mysql-master2 | schema1 |
         | test | 111111 | conn_0 | True     | insert into date_table values('2018-11-11')                   | can't find any valid data node | schema1 |
 
     #test: set not sEndDate and not defaultNode
@@ -133,11 +133,11 @@ Feature:Date sharding function
         | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | schema1 |
         | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')/*dest_node:dn1*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')/*dest_node:dn2*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')/*dest_node:dn3*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')/*dest_node:dn4*/    | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')| dest_node:mysql-master2 | schema1 |
         | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')                   | can't find any valid data node | schema1 |
         | test | 111111 | conn_0 | True     | insert into date_table values('2018-11-11')                   | can't find any valid data node | schema1 |
 
