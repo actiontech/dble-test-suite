@@ -3,11 +3,16 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM3:48
 # @Author  : irene-coming
+from .DbleObject import DbleObject
 from .MySQLObject import MySQLObject
 from .utils import get_node
 
 
-def createMySQLObject(context, id):
-    raw_mysql_meta = get_node(context.mysqls, id)
-    return MySQLObject(raw_mysql_meta)
+def create_mysql_object(id):
+    mysql_meta = get_node(id)
+    return MySQLObject(mysql_meta)
+
+def create_dble_object(id):
+    dble_meta = get_node(id)
+    return DbleObject(dble_meta)
 

@@ -14,7 +14,7 @@ from lib.XMLUtil import get_node_by_keyvalue
 
 @Then('check exist xml node "{node}" in "{target_file}" in host "{host_name}"')
 def step_impl(context, node, target_file,host_name):
-    sshClient = get_ssh(context.dbles,host_name)
+    sshClient = get_ssh(host_name)
     cmd = "cat {0}".format(target_file)
     rc, sto, ste = sshClient.exec_command(cmd)
     tree = ET.fromstring(sto)
@@ -35,7 +35,7 @@ def step_impl(context, host_name, target_file):
     :param target_file: fullpath file
     :return:
     """
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     local_file = get_abs_path(context, target_file, node)
 
     source_remote_file = "{0}/dble/conf/{1}".format(node.install_dir, target_file)

@@ -13,7 +13,7 @@ from lib.utils import get_node
 def step_impl(context,hostname, logfile):
     rs = context.table
 
-    node = get_node(context.dbles,hostname)
+    node = get_node(hostname)
     logpath = "{0}/dble/logs/{1}".format(node.install_dir, logfile)
     cmd = "cat {0}".format(logpath)
     ssh_client = node.ssh_conn

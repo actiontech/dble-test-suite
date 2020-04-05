@@ -14,21 +14,21 @@ LOGGER = logging.getLogger('steps.reload')
 
 def get_dble_conn(context, default_db="schema1", node=None):
     if node is None:
-        node = get_node(context.dbles, "dble-1")
+        node = get_node("dble-1")
     conn = DBUtil(node.ip, node.client_user,
                          node.client_password, default_db, node.client_port,
                          context)
     return conn
 
 def get_dble_connect(context,host_name,default_db="schema1"):
-    node = get_node(context.dbles, host_name)
+    node = get_node(host_name)
     conn = DBUtil(node.ip, node.client_user,
                   node.client_password, default_db, node.client_port,
                   context)
     return conn
 
 def get_admin_conn(context, user="", passwd=""):
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     if len(user.strip()) == 0:
         user = node.manager_user
     if len(passwd.strip()) == 0:
@@ -48,7 +48,7 @@ def get_admin_conn(context, user="", passwd=""):
 @Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
 @Then('execute admin cmd "{adminsql}" with "{result}" result')
 def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     if len(user.strip()) == 0:
         user = node.manager_user
     if len(passwd.strip()) == 0:
@@ -91,7 +91,7 @@ def step_impl(context, sql, rs_name, host_name):
 
 @Then('get resultset of cmd "{sql}" named "{rs_name}" in mysql "{host_name}"')
 def step_impl(context, sql, rs_name, host_name):
-    node = get_node(context.mysqls, host_name)
+    node = get_node(host_name)
     ip = node._ip
     port = node._mysql_port
     user = "test"
@@ -179,7 +179,7 @@ def delete_xml_segment(context):
 
 @When('Add some data in "{mapFile}"')
 def add_file(context,mapFile):
-    node = get_node(context.dbles,"dble-1")
+    node = get_node("dble-1")
 
     targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
     text = str(context.text)
@@ -203,13 +203,13 @@ def get_abs_path(context, file):
     return path
 
 def upload_and_replace_conf(context, filename, host='dble-1'):
-    node = get_node(context.dbles, host)
+    node = get_node(host)
     local_file = get_abs_path(context, filename)
     remote_file = "{0}/dble/conf/{1}".format(node.install_dir,filename)
     node.sftp_conn.sftp_put(local_file, remote_file)
 
 def get_encrypt(context, string):
-    node= get_node(context.dbles, "dble-1")
+    node= get_node("dble-1")
 
     cmd = "source /etc/profile && sh {0}/dble/bin/encrypt.sh {1}".format(node.install_dir, string)
 
@@ -219,7 +219,7 @@ def get_encrypt(context, string):
 
 @Then('execute cmd "{cmd}" with "{result}" in mysql "{host}"')
 def step_impl(context, cmd, result, host):
-    node = get_node(context.mysqls, host)
+    node = get_node(host)
     ip = node._ip
     port = node._mysql_port
     user = "test"
@@ -233,7 +233,7 @@ def step_impl(context, cmd, result, host):
 
 @Given('get config xml version from template config and named as "{var_version}"')
 def step_impl(context, var_version):
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     cmd_server_version = "grep '<dble:server' {0}/dble/conf/server_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
     cmd_schema_version = "grep '<dble:schema' {0}/dble/conf/schema_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
     cmd_rule_version = "grep '<dble:rule' {0}/dble/conf/rule_template.xml| grep -o 'version=\".*\"' | grep -o '[0-9]*\.[0-9]*'".format(node.install_dir)
