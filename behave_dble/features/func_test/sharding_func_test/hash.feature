@@ -38,14 +38,14 @@ Feature:hash sharding function test suits
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | schema1 |
         | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(null)/*dest_node:dn1*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(-1)/*dest_node:dn4*/    | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(-2)/*dest_node:dn3*/    | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(0)/*dest_node:dn1*/     | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(1)/*dest_node:dn2*/     | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(2)/*dest_node:dn3*/     | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(3)/*dest_node:dn4*/     | success | schema1 |
-        | test | 111111 | conn_0 | True     | insert into hash_table values(4)/*dest_node:dn1*/     | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(null)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-1)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-2)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(0)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(1)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(2)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(3)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | True     | insert into hash_table values(4)| dest_node:mysql-master1 | schema1 |
 
      #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
@@ -71,21 +71,21 @@ Feature:hash sharding function test suits
         | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists hash_table                       | success | schema1 |
         | test | 111111 | conn_0 | False    | create table hash_table(id int)                       | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(-1)/*dest_node:dn4*/    | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(-2)/*dest_node:dn4*/    | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(-300)/*dest_node:dn4*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(-301)/*dest_node:dn3*/  | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(0)/*dest_node:dn1*/     | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(1)/*dest_node:dn1*/     | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(2)/*dest_node:dn1*/     | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(199)/*dest_node:dn1*/   | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(200)/*dest_node:dn2*/   | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(399)/*dest_node:dn2*/   | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(400)/*dest_node:dn3*/   | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(599)/*dest_node:dn3*/   | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(600)/*dest_node:dn4*/   | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into hash_table values(999)/*dest_node:dn1*/   | success | schema1 |
-        | test | 111111 | conn_0 | True     | insert into hash_table values(1000)/*dest_node:dn1*/  | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-1)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-2)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-300)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(-301)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(0)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(1)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(2)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(199)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(200)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(399)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(400)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(599)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(600)| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into hash_table values(999)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | True     | insert into hash_table values(1000)| dest_node:mysql-master1 | schema1 |
     #clearn all conf
     Given delete the following xml segment
       |file        | parent                                        | child                                             |

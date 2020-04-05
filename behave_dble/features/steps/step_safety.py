@@ -18,7 +18,7 @@ LOGGER = logging.getLogger('steps.safety')
 @Then('test only schema level privilege configed')
 def test_schema_permission(context):
     dble_conn = get_dble_conn(context)
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     for row in context.table:
         # prepare table
         test_conn = DBUtil(node.ip, row['user'], row['password'], row['schema'],
@@ -55,7 +55,7 @@ def test_schema_permission(context):
 def test_readonly_schema(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     for item in text:
         test_conn = DBUtil(node.ip, item['user'], item['password'], item['schema'],
                            node.client_port, context)
@@ -107,7 +107,7 @@ def test_readonly_schema(context):
 def test_schema_table(context):
     text = json.loads(context.text)
     dble_conn = get_dble_conn(context)
-    node = get_node(context.dbles, "dble-1")
+    node = get_node("dble-1")
     for item in text:
         test_conn = DBUtil(node.ip, item['user'], item['password'], item['schema'],
                            node.client_port, context)

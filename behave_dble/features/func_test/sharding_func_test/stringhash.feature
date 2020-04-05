@@ -41,12 +41,12 @@ Feature: stringhash sharding function test suits
         | user | passwd | conn   | toClose  | sql                                                         | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | schema1 |
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values(null)/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn2*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn3*/ | success | schema1 |
-        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn4*/ | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values(null)| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')| dest_node:mysql-master2 | schema1 |
 
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
@@ -73,11 +73,11 @@ Feature: stringhash sharding function test suits
         | user | passwd | conn   | toClose  | sql                                                         | expect  | db     |
         | test | 111111 | conn_0 | False    | drop table if exists string_hash_table                      | success | schema1 |
         | test | 111111 | conn_0 | False    | create table string_hash_table(id varchar(10))              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')/*dest_node:dn1*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')/*dest_node:dn2*/ | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')/*dest_node:dn3*/ | success | schema1 |
-        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')/*dest_node:dn3*/ | success | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('aa')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('bb')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('jj')| dest_node:mysql-master2 | schema1 |
+        | test | 111111 | conn_0 | False    | insert into string_hash_table values('rr')| dest_node:mysql-master1 | schema1 |
+        | test | 111111 | conn_0 | True     | insert into string_hash_table values('zz')| dest_node:mysql-master1 | schema1 |
     #clearn all conf
     Given delete the following xml segment
       |file        | parent                                        | child                                                    |

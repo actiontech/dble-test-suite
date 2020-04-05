@@ -35,7 +35,7 @@ Feature: test some import nodes attr in schema.xml
 #        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
 #        | test | 111111 | conn_0 | False    | create table default_table(id int)              | success | schema1 |
-#        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)/*dest_node:dn5*/    | success | schema1 |
+#        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)| dest_node:mysql-master1 | schema1 |
 #        | test | 111111 | conn_0 | False    | select * from default_table                     | length{(3)} | schema1 |
 
   @TRIVIAL
