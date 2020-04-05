@@ -11,7 +11,7 @@ class PreQueryPrepare(object):
         self._expect = query_meta.expect
 
     def prepare(self):
-        need_check_sharding = re.search(r'dest_node:(.*?)', self._expect, re.I)
+        need_check_sharding = re.search(r'dest_node:(.*)', self._expect, re.I)
         if need_check_sharding:
             shardings_host = need_check_sharding.group(1)
             mysql = ObjectFactory.create_mysql_object(shardings_host)

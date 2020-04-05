@@ -114,16 +114,16 @@ class MySQLObject(object):
         assert isSuccess, "can not connect to {0} after 25s wait".format(self._mysql_meta.ip)
 
     def turn_on_general_log(self):
-        conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '',
-                               self._mysql_meta.mysql_port, autocommit=True)
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
 
-        res, err = conn.query("set global log_output='file'")
+        res, err = conn.execute("set global log_output='file'")
         assert err is None, "get general log file fail for {0}".format(err[1])
 
-        res, err = conn.query("set global general_log=off")
+        res, err = conn.execute("set global general_log=off")
         assert err is None, "set general log off fail for {0}".format(err[1])
 
-        res, err = conn.query("show variables like 'general_log_file'")
+        res, err = conn.execute("show variables like 'general_log_file'")
         assert err is None, "get general log file fail for {0}".format(err[1])
 
         general_log_file = res[0][1]
@@ -131,28 +131,28 @@ class MySQLObject(object):
         rc, sto, ste = ssh.exec_command('rm -rf {0}'.format(general_log_file))
         assert len(ste) == 0, "rm general_log_file fail for {0}".format(ste)
 
-        res, err = conn.query("set global general_log=on")
+        res, err = conn.execute("set global general_log=on")
         assert err is None, "set general log on fail for {0}".format(err[1])
 
         conn.close()
         self._mysql_meta.close_ssh()
 
     def turn_off_general_log(self):
-        conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '',
-                               self._mysql_meta.mysql_port, autocommit=True)
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
 
-        res, err = conn.query("set global general_log=off")
+        res, err = conn.execute("set global general_log=off")
         assert err is None, "turn off general log fail for {0}".format(err[1])
 
         conn.close()
 
     def check_query_in_general_log(self, query, expect_exist, occur_times_expr=None):
-        conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '',
-                               self._mysql_meta.mysql_port, autocommit=True)
-        conn.close()
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
 
-        res, err = conn.query("show variables like 'general_log_file'")
+        res, err = conn.execute("show variables like 'general_log_file'")
         assert err is None, "get general log file fail for {0}".format(err[1])
+        conn.close()
 
         general_log_file = res[0][1]
 
