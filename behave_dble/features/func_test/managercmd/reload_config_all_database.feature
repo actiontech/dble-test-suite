@@ -17,8 +17,8 @@ Feature: execute manager cmd "create database @@datanode"
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql                                  | expect  | db |
-      | root | 111111 | conn_0 | True    | create database @@datanode='dn2,dn4' | success |    |
+      | sql                                  | expect  |
+      | create database @@datanode='dn2,dn4' | success |
     Then get resultset of admin cmd "show @@backend" named "rs_B"
     Then check resultsets "rs_A" including resultset "rs_B" in following columns
       | column     | column_index |
@@ -26,9 +26,9 @@ Feature: execute manager cmd "create database @@datanode"
       | MYSQLID    | 2            |
       | HOST       | 3            |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int) | success | schema1 |
+      | conn   | toClose | sql                                | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1 | schema1 |
+      | conn_0 | True    | create table sharding_4_t1(id int) | schema1 |
     Given sleep "3" seconds
     Then get resultset of admin cmd "show @@backend" named "rs_C"
     Then check resultset "rs_C" has lines with following column values

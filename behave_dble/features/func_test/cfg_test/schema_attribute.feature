@@ -17,26 +17,26 @@ Feature: test some import nodes attr in schema.xml
       """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                             | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists test_table                 | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test_table                        | length{(3)} | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test_table order by id limit 1                       | length{(1)} | schema1 |
-        | test | 111111 | conn_0 | False     | drop table if exists test                        | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table test(id int)                 | success | schema1 |
-        | test | 111111 | conn_0 | False     | insert into test values(1),(2),(3),(4),(5)                        | success | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test                        | length{(3)} | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test order by id limit 4                        | length{(4)} | schema1 |
-        | test | 111111 | conn_0 | False     | drop table if exists sharding_4_t1                        | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table sharding_4_t1(id int)                 | success | schema1 |
-        | test | 111111 | conn_0 | False     | insert into sharding_4_t1 values(1),(2),(3),(4),(5)                        | success | schema1 |
-        | test | 111111 | conn_0 | True     | select * from sharding_4_t1 order by id limit 6                       | length{(5)} | schema1 |
-#        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
-#        | test | 111111 | conn_0 | False    | drop table if exists default_table              | success | schema1 |
-#        | test | 111111 | conn_0 | False    | create table default_table(id int)              | success | schema1 |
-#        | test | 111111 | conn_0 | False    | insert into default_table values(1),(2),(3),(4)| dest_node:mysql-master1 | schema1 |
-#        | test | 111111 | conn_0 | False    | select * from default_table                     | length{(3)} | schema1 |
+      | conn   | toClose | sql                                             | expect      | db      |
+      | conn_0 | False   | drop table if exists test_table                 | success     | schema1 |
+      | conn_0 | False   | create table test_table(id int)                 | success     | schema1 |
+      | conn_0 | False   | insert into test_table values(1),(2),(3),(4),(5)| success     | schema1 |
+      | conn_0 | False   | select * from test_table                        | length{(3)} | schema1 |
+      | conn_0 | False   | select * from test_table order by id limit 1    | length{(1)} | schema1 |
+      | conn_0 | False   | drop table if exists test                       | success     | schema1 |
+      | conn_0 | False   | create table test(id int)                       | success     | schema1 |
+      | conn_0 | False   | insert into test values(1),(2),(3),(4),(5)      | success     | schema1 |
+      | conn_0 | False   | select * from test                              | length{(3)} | schema1 |
+      | conn_0 | False   | select * from test order by id limit 4          | length{(4)} | schema1 |
+      | conn_0 | False   | drop table if exists sharding_4_t1              | success     | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int)              | success     | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4),(5) | success     | schema1 |
+      | conn_0 | True    | select * from sharding_4_t1 order by id limit 6     | length{(5)} | schema1 |
+#      | conn_0 | False    | drop table if exists default_table              | success | schema1 |
+#      | conn_0 | False    | drop table if exists default_table              | success | schema1 |
+#      | conn_0 | False    | create table default_table(id int)              | success | schema1 |
+#      | conn_0 | False    | insert into default_table values(1),(2),(3),(4)| dest_node:mysql-master1 | schema1 |
+#      | conn_0 | False    | select * from default_table                     | length{(3)} | schema1 |
 
   @TRIVIAL
   Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "needAddLimit=false"(for all table type) #2
@@ -53,19 +53,19 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                             | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists test_table                 | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table test_table(id int)                 | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)| success | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test_table                        | length{(3)} | schema1 |
-        | test | 111111 | conn_0 | False     | drop table if exists test                        | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table test(id int)                 | success | schema1 |
-        | test | 111111 | conn_0 | False     | insert into test values(1),(2),(3),(4),(5)                        | success | schema1 |
-        | test | 111111 | conn_0 | False     | select * from test                        | length{(5)} | schema1 |
-        | test | 111111 | conn_0 | False     | drop table if exists sharding_4_t1                        | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table sharding_4_t1(id int)                 | success | schema1 |
-        | test | 111111 | conn_0 | False     | insert into sharding_4_t1 values(1),(2),(3),(4),(5)                        | success | schema1 |
-        | test | 111111 | conn_0 | True     | select * from sharding_4_t1                        | length{(5)} | schema1 |
+      | conn   | toClose  | sql                                                 | expect      | db      |
+      | conn_0 | False    | drop table if exists test_table                     | success     | schema1 |
+      | conn_0 | False    | create table test_table(id int)                     | success     | schema1 |
+      | conn_0 | False    | insert into test_table values(1),(2),(3),(4),(5)    | success     | schema1 |
+      | conn_0 | False    | select * from test_table                            | length{(3)} | schema1 |
+      | conn_0 | False    | drop table if exists test                           | success     | schema1 |
+      | conn_0 | False    | create table test(id int)                           | success     | schema1 |
+      | conn_0 | False    | insert into test values(1),(2),(3),(4),(5)          | success     | schema1 |
+      | conn_0 | False    | select * from test                                  | length{(5)} | schema1 |
+      | conn_0 | False    | drop table if exists sharding_4_t1                  | success     | schema1 |
+      | conn_0 | False    | create table sharding_4_t1(id int)                  | success     | schema1 |
+      | conn_0 | False    | insert into sharding_4_t1 values(1),(2),(3),(4),(5) | success     | schema1 |
+      | conn_0 | True     | select * from sharding_4_t1                         | length{(5)} | schema1 |
 
 
   @TRIVIAL
@@ -76,13 +76,13 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                               | expect              | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists test_table   | success             | schema1 |
-        | test | 111111 | conn_0 | False    | create table test_table(id int)   | success             | schema1 |
-        | test | 111111 | conn_0 | False    | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
-        | test | 111111 | conn_0 | False    | drop table if exists test2_table  | success             | schema1 |
-        | test | 111111 | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
-        | test | 111111 | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
+      | conn   | toClose  | sql                               | expect              | db     |
+      | conn_0 | False    | drop table if exists test_table   | success             | schema1 |
+      | conn_0 | False    | create table test_table(id int)   | success             | schema1 |
+      | conn_0 | False    | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
+      | conn_0 | False    | drop table if exists test2_table  | success             | schema1 |
+      | conn_0 | False    | create table test2_table(id int)  | success             | schema1 |
+      | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
 
   @BLOCKER
   Scenario: test "dataHost" node attr "maxCon" #4
@@ -106,9 +106,9 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-    | user | passwd | conn   | toClose  | sql                                | expect  | db     |
-    | test | 111111 | conn_0 | True     | drop table if exists test_table    | success | schema1 |
-    | test | 111111 | conn_0 | True     | create table test_table(id int)    | success | schema1 |
+      | conn   | toClose  | sql                                | expect  | db      |
+      | conn_0 | False    | drop table if exists test_table    | success | schema1 |
+      | conn_0 | True     | create table test_table(id int)    | success | schema1 |
     Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
     """
@@ -138,16 +138,16 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                             | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists global_2_t1                                | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists single_shard                               | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table global_2_t1(id int,name varchar(33))               | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table single_shard(id int,name varchar(33))              | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into global_2_t1 set id = 1                              | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into single_shard set id = 1                             | success | schema1 |
-      | test | 111111 | conn_0 | True    | select a.id from global_2_t1 a,single_shard b where a.id = b.id | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists global_2_t1                                | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table global_2_t1(id int)                                | success | schema1 |
+      | conn   | toClose | sql                                                             | expect  | db      |
+      | conn_0 | False   | drop table if exists global_2_t1                                | success | schema1 |
+      | conn_0 | False   | drop table if exists single_shard                               | success | schema1 |
+      | conn_0 | False   | create table global_2_t1(id int,name varchar(33))               | success | schema1 |
+      | conn_0 | False   | create table single_shard(id int,name varchar(33))              | success | schema1 |
+      | conn_0 | False   | insert into global_2_t1 set id = 1                              | success | schema1 |
+      | conn_0 | False   | insert into single_shard set id = 1                             | success | schema1 |
+      | conn_0 | False   | select a.id from global_2_t1 a,single_shard b where a.id = b.id | success | schema1 |
+      | conn_0 | False   | drop table if exists global_2_t1                                | success | schema1 |
+      | conn_0 | True    | create table global_2_t1(id int)                                | success | schema1 |
 #   maxCon config is 3, but real created is 4(=sum(datanodes)+1)
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
@@ -159,20 +159,20 @@ Feature: test some import nodes attr in schema.xml
   Scenario: select (colomn is not cacheKey set in schema.xml) from table -- cacheKey cache invalid
              select (contains column which is set as cacheKey in schema.xml) from table -- cacheKey cache  effective #6
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
-        | test | 111111 | conn_0 | False    |drop table if exists sharding_2_t1                      | success | schema1 |
-        | test | 111111 | conn_0 | False    |create table sharding_2_t1(id int,name varchar(20))     | success | schema1 |
-        | test | 111111 | conn_0 | False    |insert into sharding_2_t1 values(1,'test1'),(2,'test2') | success | schema1 |
-        | test | 111111 | conn_0 | True     |select id from sharding_2_t1                            | success | schema1 |
+      | conn   | toClose  | sql                                                    | expect  | db      |
+      | conn_0 | False    |drop table if exists sharding_2_t1                      | success | schema1 |
+      | conn_0 | False    |create table sharding_2_t1(id int,name varchar(20))     | success | schema1 |
+      | conn_0 | False    |insert into sharding_2_t1 values(1,'test1'),(2,'test2') | success | schema1 |
+      | conn_0 | True     |select id from sharding_2_t1                            | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql          | expect      | db     |
-        | root | 111111 | conn_0 | True     | show @@cache | length{(2)} |        |
+      | sql          | expect      |
+      | show @@cache | length{(2)} |
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                         | expect  | db      |
-        | test | 111111 | conn_0 | True     | select * from sharding_2_t1 | success | schema1 |
+      | sql                         | expect  |
+      | select * from sharding_2_t1 | success |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql           | expect                                                                             | db  |
-        | root | 111111 | conn_0 | True     | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`sharding_2_t1`',10000L,1L,1L,0L,1L,2018')}|     |
+      | sql           | expect                                                                             |
+      | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`sharding_2_t1`',10000L,1L,1L,0L,1L,2018')}|
 
   @CRITICAL
   Scenario: primayKey cache effective when attribute "cacheKey" be set #7
@@ -182,33 +182,33 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                             | expect         | db     |
-        | test | 111111 | conn_0 | False    |drop table if exists test_table                              | success         | schema1 |
-        | test | 111111 | conn_0 | False    |create table test_table(id int,k int,c int)                |success          | schema1 |
-        | test | 111111 | conn_0 | False    |insert into test_table values(1,1,1),(2,2,2),(3,3,3),(4,4,4)      | success         | schema1 |
-        | test | 111111 | conn_0 | True     |select id from test_table                                     | success          | schema1 |
+      | toClose | sql                                                         | expect  | db      |
+      | False   |drop table if exists test_table                              | success | schema1 |
+      | False   |create table test_table(id int,k int,c int)                  | success | schema1 |
+      | False   |insert into test_table values(1,1,1),(2,2,2),(3,3,3),(4,4,4) | success | schema1 |
+      | True    |select id from test_table                                    | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                              | expect      | db     |
-        | root | 111111 | conn_0 | True     | show @@cache                                                    | length{(2)} |        |
+      | sql          | expect      |
+      | show @@cache | length{(2)} |
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                     | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table      | success        | schema1 |
+      | sql                         | expect   | db      |
+      |select * from test_table     | success  | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                              | expect                                                                                   | db     |
-        | root | 111111 | conn_0 | True     | show @@cache                                                    | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,0L,0L,4L,2018')}| |
+      | sql          | expect                                                                          |
+      | show @@cache | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,0L,0L,4L,2018')}|
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                              | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table where id=1                           | success        | schema1 |
+      | sql                                | expect  | db      |
+      |select * from test_table where id=1 | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                              | expect                                                                                   | db     |
-        | root | 111111 | conn_0 | True     | show @@cache                                                    | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,0L,0L,4L,2018')}| |
+      | sql          | expect                                                                          |
+      | show @@cache | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,0L,0L,4L,2018')}|
 
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                              | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table where k=1                            | success        | schema1 |
+      | sql                               | expect  | db      |
+      |select * from test_table where k=1 | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                              | expect                                                                                   | db     |
-        | root | 111111 | conn_0 | True     | show @@cache                                                    | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,1L,1L,4L,2018')}| |
+      | sql          | expect                                                                          |
+      | show @@cache | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,1L,1L,4L,2018')}|
 
   @NORMAL
   Scenario: primayKey cache invalid when attribute "cacheKey" not be set #8
@@ -218,11 +218,11 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
-        | test | 111111 | conn_0 | True     |select * from test_table                                     | success        | schema1 |
+      | sql                     | expect  | db      |
+      |select * from test_table | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
-        | root | 111111 | conn_0 | True     | show @@cache                                                  | length{(2)}   |        |
+      | sql          | expect      |
+      | show @@cache | length{(2)} |
 
    Scenario: Use the RocksDB database engine as a cache implementation  issue:1029  author: maofei #9
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
@@ -242,16 +242,16 @@ Feature: test some import nodes attr in schema.xml
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
-        | test | 111111 | conn_0 | True     |drop table if exists test_table                             | success        | schema1 |
-        | test | 111111 | conn_0 | True     |create table test_table(id int)                             | success        | schema1 |
-        | test | 111111 | conn_0 | True     |insert into test_table values(1)                            | success        | schema1 |
-        | test | 111111 | conn_0 | True     |select * from test_table                                     | success        | schema1 |
-        | test | 111111 | conn_0 | True     |select * from test_table                                     | success        | schema1 |
+      | conn   | toClose  | sql                             | expect  | db      |
+      | conn_0 | False    |drop table if exists test_table  | success | schema1 |
+      | conn_0 | False    |create table test_table(id int)  | success | schema1 |
+      | conn_0 | False    |insert into test_table values(1) | success | schema1 |
+      | conn_0 | False    |select * from test_table         | success | schema1 |
+      | conn_0 | True     |select * from test_table         | success | schema1 |
     Then get resultset of admin cmd "show @@cache" named "cache_rs_A"
     Then check resultset "cache_rs_A" has lines with following column values
-      | CACHE-0               | HIT-4   |
-      | SQLRouteCache        | 1        |
+      | CACHE-0              | HIT-4   |
+      | SQLRouteCache        | 1       |
     Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
     """
     s/rocksdb/encache/
@@ -283,17 +283,17 @@ Feature: test some import nodes attr in schema.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists test_table                  | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test_table(id int,name varchar(33)) | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_0 | False   | select * from test_table                         | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_1 | False   | select * from test_table                         | success | schema1 |
-      | test | 111111 | conn_2 | False   | set @x = 1                                       | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | commit                                           | success | schema1 |
-      | test | 111111 | conn_1 | True    | commit                                           | success | schema1 |
-      | test | 111111 | conn_2 | True    | set @x = 1                                       | success | schema1 |
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_0 | False   | drop table if exists test_table                  | success | schema1 |
+      | conn_0 | False   | create table test_table(id int,name varchar(33)) | success | schema1 |
+      | conn_0 | False   | begin                                            | success | schema1 |
+      | conn_0 | False   | select * from test_table                         | success | schema1 |
+      | conn_1 | False   | begin                                            | success | schema1 |
+      | conn_1 | False   | select * from test_table                         | success | schema1 |
+      | conn_2 | False   | set @x = 1                                       | error totally whack | schema1 |
+      | conn_0 | True    | commit                                           | success | schema1 |
+      | conn_1 | True    | commit                                           | success | schema1 |
+      | conn_2 | True    | set @x = 1                                       | success | schema1 |
 
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
@@ -320,8 +320,8 @@ Feature: test some import nodes attr in schema.xml
     Given restart mysql in "mysql-master2"
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
-        | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
+      | sql            | expect        |
+      | show @@backend | length{(3)}   |
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="3" name="ha_group1" slaveThreshold="100" >
@@ -340,8 +340,8 @@ Feature: test some import nodes attr in schema.xml
     Given restart mysql in "mysql-master2"
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql                                                            | expect         | db     |
-        | root | 111111 | conn_0 | True     | show @@backend                                                | length{(3)}   |        |
+      | sql            | expect      |
+      | show @@backend | length{(3)} |
 
   Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #12
 #  minConRecover logic, take this case as example:
@@ -375,8 +375,8 @@ Feature: test some import nodes attr in schema.xml
 #   wait 2s for minConRecover is a duration, but not at once
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-        | user | passwd | conn   | toClose  | sql             | expect        | db     |
-        | root | 111111 | conn_0 | True     | show @@backend  | length{(8)}   |        |
+      | sql             | expect      |
+      | show @@backend  | length{(8)} |
 
 
 

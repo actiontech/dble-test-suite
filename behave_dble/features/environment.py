@@ -9,6 +9,10 @@ from steps.step_install import replace_config, set_dbles_log_level, restart_dble
     install_dble_in_all_nodes
 from steps.dble_steps import *
 from steps.MySQLSteps import *
+from steps.step_function import *
+from steps.btrace_block import *
+from steps.step_createConn import *
+from steps.step_safety import *
 
 logger = logging.getLogger('environment')
 
@@ -188,7 +192,6 @@ def get_case_tag_params(description, tag):
     for line in description:
         line_no_white = line.strip()
         if line_no_white and line_no_white.startswith(tag):
-            logger.debug("zhj debug4:{0}".format(description))
             tag_para_dic = eval(line)
             break
     return tag_para_dic
