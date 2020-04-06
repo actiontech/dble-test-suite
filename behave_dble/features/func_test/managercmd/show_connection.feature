@@ -32,10 +32,14 @@ Feature: show @@connection.sql test
     Then execute sql in "dble-1" in "user" mode
       | sql                    | db       |
       | select sleep(0.0001)   | schema1  |
-    Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_A"       
+      | sql                   |       
+      | show @@connection.sql |
     Then removal result set "conn_rs_A" contains "@@connection" part
     Given sleep "2" seconds
-    Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_B"
+      | sql                   |
+      | show @@connection.sql |
     Then removal result set "conn_rs_B" contains "@@connection" part
     Then check resultsets "conn_rs_A" and "conn_rs_B" are same in following columns
       |column              | column_index |
@@ -48,10 +52,14 @@ Feature: show @@connection.sql test
     Then execute sql in "dble-1" in "user" mode
       | sql               | db       |
       | select sleep(0.1) | schema1  |
-    Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_C"
+      | sql                   |
+      | show @@connection.sql |
     Then removal result set "conn_rs_C" contains "@@connection" part
     Given sleep "2" seconds
-    Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_D"
+      | sql                   |
+      | show @@connection.sql |
     Then removal result set "conn_rs_D" contains "@@connection" part
     Then check resultsets "conn_rs_C" and "conn_rs_D" are same in following columns
       |column              | column_index |
@@ -65,10 +73,14 @@ Feature: show @@connection.sql test
       | sql              | expect  | db       |
       | select sleep(1)  | success | schema1   |
       | select sleep(0.1)| success | schema1   |
-    Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_E"
+      | sql                   |
+      | show @@connection.sql |
     Then removal result set "conn_rs_E" contains "@@connection" part
     Given sleep "2" seconds
-    Then get resultset of admin cmd "show @@connection.sql" named "conn_rs_F"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_F"
+      | sql                   |
+      | show @@connection.sql |
     Then removal result set "conn_rs_F" contains "@@connection" part
     Then check resultsets "conn_rs_E" and "conn_rs_F" are same in following columns
       |column              | column_index |

@@ -10,11 +10,15 @@ Feature:check metadata is right in cluster after alter table failed or succeed
       | user | passwd | conn   | toClose  | sql                         | expect   | db       |
       | test | 111111 | conn_0 | True     | drop table if exists test  | success  | schema1   |
       | test | 111111 | conn_0 | True     | create table test(id int)  | success  | schema1   |
-      Then get resultset of admin cmd "check full @@metadata where schema='schema1' and table='test'" named "rs_dble1_0"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_dble1_0"
+      | sql                                                           |
+      | check full @@metadata where schema='schema1' and table='test' |
       Then execute sql in "dble-2" in "user" mode
       | user | passwd | conn   | toClose  | sql                         | expect   | db       |
       | test | 111111 | conn_0 | True     | alter table test drop c   | Can't DROP                        |   schema1 |
-      Then get resultset of admin cmd "check full @@metadata where schema='schema1' and table='test'" named "rs_dble1_1"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_dble1_1"
+      | sql                                                           |
+      | check full @@metadata where schema='schema1' and table='test' |
       Then check resultsets "rs_dble1_0" and "rs_dble1_1" are same in following columns
       |column               | column_index |
       |schema          | 1              |

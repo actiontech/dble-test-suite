@@ -168,8 +168,8 @@ Feature: test some import nodes attr in schema.xml
       | sql          | expect      |
       | show @@cache | length{(2)} |
     Then execute sql in "dble-1" in "user" mode
-      | sql                         | expect  |
-      | select * from sharding_2_t1 | success |
+      | sql                         |  db      |
+      | select * from sharding_2_t1 |  schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | sql           | expect                                                                             |
       | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`sharding_2_t1`',10000L,1L,1L,0L,1L,2018')}|
@@ -248,7 +248,9 @@ Feature: test some import nodes attr in schema.xml
       | conn_0 | False    |insert into test_table values(1) | success | schema1 |
       | conn_0 | False    |select * from test_table         | success | schema1 |
       | conn_0 | True     |select * from test_table         | success | schema1 |
-    Then get resultset of admin cmd "show @@cache" named "cache_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "cache_rs_A"
+      | sql          |
+      | show @@cache |
     Then check resultset "cache_rs_A" has lines with following column values
       | CACHE-0              | HIT-4   |
       | SQLRouteCache        | 1       |

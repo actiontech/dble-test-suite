@@ -30,7 +30,9 @@ Feature: show @@sql, show @@sql.resultset
       | conn_0 | False    | select * from ta where id=2                | schema1 |
       | conn_0 | False    | delete from ta where id=1                  | schema1 |
       | conn_0 | True     | alter table ta drop column k               | schema1 |
-    Then get resultset of admin cmd "show @@sql" named "sql_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs_A"
+      | sql        |
+      | show @@sql |
     Then check resultset "sql_rs_A" has lines with following column values
         | ID-0 | USER-1 | SQL-4                                      |
         |    1 | test   | delete from ta where id=1                  |
@@ -41,7 +43,9 @@ Feature: show @@sql, show @@sql.resultset
         |    6 | test   | insert into ta value(3, repeat('c', 100))  |
         |    7 | test   | insert into ta value(2, repeat('b', 1500)) |
         |    8 | test   | insert into ta value(1, repeat('a', 1100)) |
-    Then get resultset of admin cmd "show @@sql.resultset" named "sql_rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs_B"
+      | sql                  |
+      | show @@sql.resultset |
     Then check resultset "sql_rs_B" has lines with following column values
         | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
         | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1185             |

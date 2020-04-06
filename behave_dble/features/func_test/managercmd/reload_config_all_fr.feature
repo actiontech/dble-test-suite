@@ -19,9 +19,13 @@ Feature: reload @@config_all -fr
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
     # 1 execute "reload @@config_all -rf" will rebuild backend conn
-    Then get resultset of admin cmd "show @@backend" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all -fr"
-    Then get resultset of admin cmd "show @@backend" named "rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_A" does not including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -37,7 +41,9 @@ Feature: reload @@config_all -fr
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fr"
-    Then get resultset of admin cmd "show @@backend" named "rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_C" does not including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -86,7 +92,9 @@ Feature: reload @@config_all -fr
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -fr"
-    Then get resultset of admin cmd "show @@backend" named "rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_D" does not including resultset "rs_C" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -114,7 +122,9 @@ Feature: reload @@config_all -fr
     s/172.100.9.4/172.100.9.6/g
     """
     Then execute admin cmd "reload @@config_all -f -r"
-    Then get resultset of admin cmd "show @@backend" named "rs_E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_E" does not including resultset "rs_D" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
