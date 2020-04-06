@@ -50,11 +50,11 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
         <readHost host="hostS1" url="172.100.9.2:3306" password="111111" user="testx"/>
     """
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                             | expect  | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1              | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                           | success | schema1 |
-      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                             | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int)              | schema1 |
+      | conn_0 | False   | begin                                           | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fs"
     Then get resultset of admin cmd "show @@backend" named "rs_D"
     Then check resultset "rs_D" has lines with following column values
@@ -65,16 +65,16 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | HOST-3      |
       | 172.100.9.2 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                      | expect      | db      |
-      | test | 111111 | new  | true    | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
+      | sql                                      | expect      | db      |
+      | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
 
     # 4 reload @@config_all -f -s : open transaction, add bad readHost, execute 'reload @@config_all -f -s', transaction closed successfully
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                             | expect  | db      |
-      | test | 111111 | conn_1 | false   | drop table if exists sharding_4_t1              | success | schema1 |
-      | test | 111111 | conn_1 | false   | create table sharding_4_t1(id int)              | success | schema1 |
-      | test | 111111 | conn_1 | false   | begin                                           | success | schema1 |
-      | test | 111111 | conn_1 | false   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                             | db      |
+      | conn_1 | false   | drop table if exists sharding_4_t1              | schema1 |
+      | conn_1 | false   | create table sharding_4_t1(id int)              | schema1 |
+      | conn_1 | false   | begin                                           | schema1 |
+      | conn_1 | false   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
@@ -94,5 +94,5 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | 172.100.9.6 |
       | 172.100.9.2 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                      | expect      | db      |
-      | test | 111111 | new  | true    | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
+      | sql                                      | expect      | db      |
+      | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
