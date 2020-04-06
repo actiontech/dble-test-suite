@@ -19,7 +19,7 @@ def step_impl(context, query, host_name):
 @Given('restart mysql in "{host_name}"')
 def restart_mysql(context, host_name, sed_str=None):
     if not sed_str and len(context.text)>0:
-        sed_str = context.text()
+        sed_str = context.text
 
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.restart(sed_str)

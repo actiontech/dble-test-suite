@@ -59,23 +59,23 @@ Feature: multi-tenancy, user-Permission
 
     #Standalone database: A tenant a database
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                   | expect            | db     |
-        | testA| testA  | conn_0 | False    | show databases                        | has{('mytestA',)},hasnot{('mytestB',)}  |        |
-        | testA| testA  | conn_0 | False    | use mytestB                           | Access denied for user |   |
-        | testA| testA  | conn_0 | False    | drop table if exists mytestA.test2    | success           |        |
-        | testA| testA  | conn_0 | False    | create table mytestA.test2(id int)    | success           |        |
-        | testA| testA  | conn_0 | True     | drop table if exists mytestA.test2    | success           |        |
-        | testB| testB  | conn_1 | False    | show databases                        | has{('mytestB',)},hasnot{('mytestA',)}  |        |
-        | testB| testB  | conn_1 | False    | use mytestA                           | Access denied for user |   |
-        | testB| testB  | conn_1 | False    | drop table if exists mytestA.test2    | Access denied for user |   |
-        | testB| testB  | conn_1 | False    | drop table if exists mytestB.test1    | success           |        |
-        | testB| testB  | conn_1 | False    | create table mytestB.test1(id int)    | success           |        |
-        | testB| testB  | conn_1 | True     | drop table if exists mytestB.test1    | success           |        |
-        | testC| testC  | conn_2 | False    | show databases                        | has{('mytestC',)},hasnot{('mytestD',)}  |        |
-        | testC| testC  | conn_2 | False    | use mytestD                           | Access denied for user |   |
-        | testC| testC  | conn_2 | False    | drop table if exists mytestC.sbtestC1 | success           |        |
-        | testC| testC  | conn_2 | False    | create table mytestC.sbtestC1(id int) | success           |        |
-        | testC| testC  | conn_2 | True     | drop table if exists mytestC.sbtestC1 | success           |        |
+        | user | passwd | conn   | toClose  | sql                                   | expect                                  |
+        | testA| testA  | conn_0 | False    | show databases                        | has{('mytestA',)},hasnot{('mytestB',)}  |
+        | testA| testA  | conn_0 | False    | use mytestB                           | Access denied for user                  |
+        | testA| testA  | conn_0 | False    | drop table if exists mytestA.test2    | success                                 |
+        | testA| testA  | conn_0 | False    | create table mytestA.test2(id int)    | success                                 |
+        | testA| testA  | conn_0 | True     | drop table if exists mytestA.test2    | success                                 |
+        | testB| testB  | conn_1 | False    | show databases                        | has{('mytestB',)},hasnot{('mytestA',)}  |
+        | testB| testB  | conn_1 | False    | use mytestA                           | Access denied for user                  |
+        | testB| testB  | conn_1 | False    | drop table if exists mytestA.test2    | Access denied for user                  |
+        | testB| testB  | conn_1 | False    | drop table if exists mytestB.test1    | success                                 |
+        | testB| testB  | conn_1 | False    | create table mytestB.test1(id int)    | success                                 |
+        | testB| testB  | conn_1 | True     | drop table if exists mytestB.test1    | success                                 |
+        | testC| testC  | conn_2 | False    | show databases                        | has{('mytestC',)},hasnot{('mytestD',)}  |
+        | testC| testC  | conn_2 | False    | use mytestD                           | Access denied for user                  |
+        | testC| testC  | conn_2 | False    | drop table if exists mytestC.sbtestC1 | success                                 |
+        | testC| testC  | conn_2 | False    | create table mytestC.sbtestC1(id int) | success                                 |
+        | testC| testC  | conn_2 | True     | drop table if exists mytestC.sbtestC1 | success                                 |
 
   @NORMAL
   Scenario: # Query statements with 2 subqueries can cause thread insecurities  from issue:917  author:maofei #2
@@ -87,10 +87,10 @@ Feature: multi-tenancy, user-Permission
     """
     Then execute admin cmd "Reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose  | sql                                   | expect            | db     |
-      |test  |111111  |conn_0  |True      |drop table if exists test_shard     |success           |schema1  |
-      |test  |111111  |conn_0  |True      |create table test_shard (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))     |success           |schema1  |
-      |test  |111111  |conn_0  |True      |insert into test_shard (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')     |success           |schema1  |
+      | conn   | toClose  | sql                                | expect           | db     |
+      |conn_0  | False    |drop table if exists test_shard     |success           |schema1 |
+      |conn_0  | False    |create table test_shard (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))     |success           |schema1  |
+      |conn_0  | True     |insert into test_shard (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001') |success |schema1  |
     Then connect "dble-1" to execute "100" of select
     """
     select * from test_shard where HEX(R_bit) not like (select '%A%') escape (select '%')
