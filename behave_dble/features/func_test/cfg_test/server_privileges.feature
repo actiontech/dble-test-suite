@@ -109,112 +109,112 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | show create table aly_test                      | success |      |
     #other user's privileges to a certain table does not affected by test_user
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                             | expect  | db   |
-      | test | 111111 | conn_1 | False   | use schema1                                      | success |      |
-      | test | 111111 | conn_1 | False   | drop table if exists aly_test                   | success |      |
-      | test | 111111 | conn_1 | False   | create table aly_test(id int, name varchar(10)) | success |      |
-      | test | 111111 | conn_1 | False   | insert into aly_test value(1,'a')               | success |      |
-      | test | 111111 | conn_1 | False   | update aly_test set name='b' where id=1         | success |      |
-      | test | 111111 | conn_1 | False   | select * from aly_test                          | success |      |
-      | test | 111111 | conn_1 | False   | delete from aly_test                            | success |      |
-      | test | 111111 | conn_1 | True    | show create table aly_test                      | success |      |
+      | conn   | toClose | sql                                             | expect  |
+      | conn_1 | False   | use schema1                                     | success |
+      | conn_1 | False   | drop table if exists aly_test                   | success |
+      | conn_1 | False   | create table aly_test(id int, name varchar(10)) | success |
+      | conn_1 | False   | insert into aly_test value(1,'a')               | success |
+      | conn_1 | False   | update aly_test set name='b' where id=1         | success |
+      | conn_1 | False   | select * from aly_test                          | success |
+      | conn_1 | False   | delete from aly_test                            | success |
+      | conn_1 | True    | show create table aly_test                      | success |
     #table has explict privileges, not all privileges available
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                             | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use schema1                                      | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists aly_order                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table aly_order(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into aly_order value(1,'a')              | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | update aly_order set name='b' where id=1        | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from aly_order                         | success |      |
-      | test_user | 111111 | conn_0 | False   | delete from aly_order                           | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success |      |
+      | user      | passwd | conn   | toClose | sql                                             | expect                            |
+      | test_user | 111111 | conn_0 | False   | use schema1                                     | success                           |
+      | test_user | 111111 | conn_0 | False   | drop table if exists aly_order                  | success                           |
+      | test_user | 111111 | conn_0 | False   | create table aly_order(id int, name varchar(10))| success                           |
+      | test_user | 111111 | conn_0 | False   | insert into aly_order value(1,'a')              | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | update aly_order set name='b' where id=1        | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from aly_order                         | success                           |
+      | test_user | 111111 | conn_0 | False   | delete from aly_order                           | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success                           |
     #table has not explicit privileges assign,using default schema privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                        | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use schema1                                 | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists test                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table test(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into test value(1,'a')              | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | update test set name='b' where id=1        | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from test                         | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | delete from test                           | DML privilege check is not passed |      |
+      | user      | passwd | conn   | toClose | sql                                        | expect                            |
+      | test_user | 111111 | conn_0 | False   | use schema1                                | success                           |
+      | test_user | 111111 | conn_0 | False   | drop table if exists test                  | success                           |
+      | test_user | 111111 | conn_0 | False   | create table test(id int, name varchar(10))| success                           |
+      | test_user | 111111 | conn_0 | False   | insert into test value(1,'a')              | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | update test set name='b' where id=1        | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from test                         | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | delete from test                           | DML privilege check is not passed |
     #table logic schema default node, use schema's default privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                               | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use schema1                                        | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists no_config_t                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table no_config_t(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into no_config_t value(1,'a')              | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | update no_config_t set name='b' where id=1        | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from no_config_t                         | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | delete from no_config_t                           | DML privilege check is not passed |      |
+      | user      | passwd | conn   | toClose | sql                                               | expect                            |
+      | test_user | 111111 | conn_0 | False   | use schema1                                       | success                           |
+      | test_user | 111111 | conn_0 | False   | drop table if exists no_config_t                  | success                           |
+      | test_user | 111111 | conn_0 | False   | create table no_config_t(id int, name varchar(10))| success                           |
+      | test_user | 111111 | conn_0 | False   | insert into no_config_t value(1,'a')              | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | update no_config_t set name='b' where id=1        | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from no_config_t                         | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | delete from no_config_t                           | DML privilege check is not passed |
     #table test1 has no dml privileges, schema has all dml privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                         | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use testdb                                  | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists test1                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table test1(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into test1 value(1,'a')              | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | update test1 set name='b' where id=1        | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from test1                         | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | delete from test1                           | DML privilege check is not passed |      |
+      | user      | passwd | conn   | toClose | sql                                         | expect                            |
+      | test_user | 111111 | conn_0 | False   | use testdb                                  | success                           |
+      | test_user | 111111 | conn_0 | False   | drop table if exists test1                  | success                           |
+      | test_user | 111111 | conn_0 | False   | create table test1(id int, name varchar(10))| success                           |
+      | test_user | 111111 | conn_0 | False   | insert into test1 value(1,'a')              | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | update test1 set name='b' where id=1        | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from test1                         | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | delete from test1                           | DML privilege check is not passed |
     #table test2 has part of dml privileges, schema has all dml privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                         | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use testdb                                  | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists test2                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table test2(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into test2 value(1,'a')              | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | update test2 set name='b' where id=1        | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from test2                         | success |      |
-      | test_user | 111111 | conn_0 | False   | delete from test2                           | DML privilege check is not passed |      |
+      | user      | passwd | conn   | toClose | sql                                         | expect                            |
+      | test_user | 111111 | conn_0 | False   | use testdb                                  | success                           |
+      | test_user | 111111 | conn_0 | False   | drop table if exists test2                  | success                           |
+      | test_user | 111111 | conn_0 | False   | create table test2(id int, name varchar(10))| success                           |
+      | test_user | 111111 | conn_0 | False   | insert into test2 value(1,'a')              | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | update test2 set name='b' where id=1        | success                           |
+      | test_user | 111111 | conn_0 | False   | select * from test2                         | success                           |
+      | test_user | 111111 | conn_0 | False   | delete from test2                           | DML privilege check is not passed |
     #table test4 in schema's default, test4 has explicit dml privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                         | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use testdb                                  | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists test4                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table test4(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into test4 value(1,'a')              | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | update test4 set name='b' where id=1        | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from test4                         | success |      |
-      | test_user | 111111 | conn_0 | False   | delete from test4                           | DML privilege check is not passed |      |
+      | user      | passwd | conn   | toClose | sql                                         | expect                            |
+      | test_user | 111111 | conn_0 | False   | use testdb                                  | success                           |
+      | test_user | 111111 | conn_0 | False   | drop table if exists test4                  | success                           |
+      | test_user | 111111 | conn_0 | False   | create table test4(id int, name varchar(10))| success                           |
+      | test_user | 111111 | conn_0 | False   | insert into test4 value(1,'a')              | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | update test4 set name='b' where id=1        | success                           |
+      | test_user | 111111 | conn_0 | False   | select * from test4                         | success                           |
+      | test_user | 111111 | conn_0 | False   | delete from test4                           | DML privilege check is not passed |
     #table test3 has no privileges setting, schema has all dml privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                         | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use testdb                                  | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists test3                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table test3(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into test3 value(1,'a')              | success |      |
-      | test_user | 111111 | conn_0 | False   | update test3 set name='b' where id=1        | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from test3                         | success |      |
-      | test_user | 111111 | conn_0 | False   | delete from test3                           | success |      |
+      | user      | passwd | conn   | toClose | sql                                         | expect  |
+      | test_user | 111111 | conn_0 | False   | use testdb                                  | success |
+      | test_user | 111111 | conn_0 | False   | drop table if exists test3                  | success |
+      | test_user | 111111 | conn_0 | False   | create table test3(id int, name varchar(10))| success |
+      | test_user | 111111 | conn_0 | False   | insert into test3 value(1,'a')              | success |
+      | test_user | 111111 | conn_0 | False   | update test3 set name='b' where id=1        | success |
+      | test_user | 111111 | conn_0 | False   | select * from test3                         | success |
+      | test_user | 111111 | conn_0 | False   | delete from test3                           | success |
     #table has different privileges do join or union
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                             | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join schema1.aly_order b on a.id=b.id | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join schema1.test b on a.id=b.id      | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.test a join schema1.no_config_t b on a.id=b.id   | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join testdb.test1 b on a.id=b.id     | DML privilege check is not passed |      |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join test2 b on a.id=b.id            | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from schema1.aly_order   | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from testdb.test1       | DML privilege check is not passed |      |
+      | user      | passwd | conn   | toClose | sql                                                                    | expect                            |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join schema1.aly_order b on a.id=b.id | success                           |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join schema1.test b on a.id=b.id      | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.test a join schema1.no_config_t b on a.id=b.id   | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join testdb.test1 b on a.id=b.id      | DML privilege check is not passed |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join test2 b on a.id=b.id             | success                           |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from schema1.aly_order   | success                           |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from testdb.test1        | DML privilege check is not passed |
 #@skip for https://github.com/actiontech/dble/issues/860      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from schema1.test       | DML privilege check is not passed |      |
     #clear tables and close conn
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                          | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use schema1                   | success |      |
-      | test_user | 111111 | conn_0 | False   | truncate table aly_test      | success |      |
-      | test_user | 111111 | conn_0 | False   | truncate table aly_order     | success |      |
-      | test_user | 111111 | conn_0 | False   | truncate table test          | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table aly_test          | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table aly_order         | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table test              | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table no_config_t       | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table testdb.test1      | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table testdb.test2      | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table testdb.test3      | success |      |
-      | test_user | 111111 | conn_0 | True    | drop table testdb.test4      | success |      |
+      | user      | passwd | conn   | toClose | sql                          | expect  |
+      | test_user | 111111 | conn_0 | False   | use schema1                  | success |
+      | test_user | 111111 | conn_0 | False   | truncate table aly_test      | success |
+      | test_user | 111111 | conn_0 | False   | truncate table aly_order     | success |
+      | test_user | 111111 | conn_0 | False   | truncate table test          | success |
+      | test_user | 111111 | conn_0 | False   | drop table aly_test          | success |
+      | test_user | 111111 | conn_0 | False   | drop table aly_order         | success |
+      | test_user | 111111 | conn_0 | False   | drop table test              | success |
+      | test_user | 111111 | conn_0 | False   | drop table no_config_t       | success |
+      | test_user | 111111 | conn_0 | False   | drop table testdb.test1      | success |
+      | test_user | 111111 | conn_0 | False   | drop table testdb.test2      | success |
+      | test_user | 111111 | conn_0 | False   | drop table testdb.test3      | success |
+      | test_user | 111111 | conn_0 | True    | drop table testdb.test4      | success |
 
   @NORMAL
   Scenario: check user privileges work right under check=false setting #4
@@ -251,16 +251,16 @@ Feature:test user's privileges under different combination
     Then execute admin cmd "reload @@config_all"
     #table has explict privileges, not all privileges available, with no check to privileges
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                             | expect  | db   |
-      | test_user | 111111 | conn_0 | False   | use schema1                                      | success |      |
-      | test_user | 111111 | conn_0 | False   | drop table if exists aly_order                  | success |      |
-      | test_user | 111111 | conn_0 | False   | create table aly_order(id int, name varchar(10))| success |      |
-      | test_user | 111111 | conn_0 | False   | insert into aly_order value(1,'a')              | success |      |
-      | test_user | 111111 | conn_0 | False   | update aly_order set name='b' where id=1        | success |      |
-      | test_user | 111111 | conn_0 | False   | select * from aly_order                         | success |      |
-      | test_user | 111111 | conn_0 | False   | delete from aly_order                           | success |      |
-      | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success |      |
-      | test_user | 111111 | conn_0 | True    | drop table aly_order                            | success |      |
+      | user      | passwd | conn   | toClose | sql                                             | expect  |
+      | test_user | 111111 | conn_0 | False   | use schema1                                     | success |
+      | test_user | 111111 | conn_0 | False   | drop table if exists aly_order                  | success |
+      | test_user | 111111 | conn_0 | False   | create table aly_order(id int, name varchar(10))| success |
+      | test_user | 111111 | conn_0 | False   | insert into aly_order value(1,'a')              | success |
+      | test_user | 111111 | conn_0 | False   | update aly_order set name='b' where id=1        | success |
+      | test_user | 111111 | conn_0 | False   | select * from aly_order                         | success |
+      | test_user | 111111 | conn_0 | False   | delete from aly_order                           | success |
+      | test_user | 111111 | conn_0 | False   | show create table aly_order                     | success |
+      | test_user | 111111 | conn_0 | True    | drop table aly_order                            | success |
 
   @CRITICAL @current
   Scenario: config only schema level privileges, tables in the schema privileges will inherit it #5
@@ -315,7 +315,7 @@ Feature:test user's privileges under different combination
     """
     Then execute admin cmd "reload @@config_all"
     Then test only schema level privilege configed
-      | user  | password | schema | dml   | table             |
+      | user  | password | schema  | dml   | table             |
       | testA | testA    | schema1 | 0000  | schema_permission |
       | testB | testB    | schema1 | 1111  | schema_permission |
       | testC | testC    | schema1 | 0001  | schema_permission |
@@ -354,7 +354,7 @@ Feature:test user's privileges under different combination
     """
     Then execute admin cmd "reload @@config_all"
     Then Test config readonly and schema permission feature
-      | user  | password | schema | dml   | table             |
+      | user  | password | schema  | dml   | table             |
       | testA | testA    | schema1 | 0000  | schema_permission |
       | testB | testB    | schema1 | 1111  | schema_permission |
       | testC | testC    | schema1 | 0001  | schema_permission |

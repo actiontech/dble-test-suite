@@ -92,22 +92,21 @@ def step_impl(context, num):
     int_num = int(num)
     time.sleep(int_num)
 
-@Given ('update file content "{filename}" in "{hostname}" with sed cmds')
-def update_file_content(context,filename, hostname, sed_str=None):
+@Given ('update file content "{filename}" in "{host_name}" with sed cmds')
+def update_file_content(context,filename, host_name, sed_str=None):
     if not sed_str and len(context.text)>0:
         sed_str = context.text
 
-    if hostname.startswith('dble'):
-        node = get_node(hostname)
-    elif hostname.startswith('dble'):
-        node = get_node(hostname)
-    else:
+    if host_name == "behave":
         node = None
+    else:
+        node = get_node(host_name)
 
-    # replace all vars in file name with corresponding node attribute value
-    vars = re.findall(r'\{.*?\}', filename, re.I)
+# replace all vars in file name with corresponding node attribute value
+    vars = re.findall(r'\{(.*?)\}', filename, re.I)
+    logger.debug("debug vars: {}".format(vars))
     for var in vars:
-        filename = filename.replace(var, node[var])
+        filename = filename.replace("{"+var+"}", getattr(node,var))
 
     update_file_with_sed(sed_str, filename, node)
 
