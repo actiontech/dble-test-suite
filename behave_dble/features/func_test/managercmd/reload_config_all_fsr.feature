@@ -96,11 +96,11 @@ Feature: reload @@config_all -fsr
 
     #4 execute "config_all -f -s -r" can close backend connection in transaction and rebuild all connection
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                schema1 |
-      | conn_1 | False   | create table sharding_4_t1 (id int)               schema1 |
-      | conn_1 | False   | begin                                             schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4)  schema1 |
+      | conn   | toClose | sql                                              | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1               | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)              | schema1 |
+      | conn_1 | False   | begin                                            | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
