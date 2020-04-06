@@ -5,11 +5,11 @@ Feature: test slow query log related manager command
   @NORMAL
   Scenario:test "enable @@slow_query_log"，"disable @@slow_query_log"，"show @@slow_query_log" #1
       Then execute sql in "dble-1" in "admin" mode
-        | user  | passwd    | conn   | toClose | sql                     | expect       | db  |
-        | root  | 111111    | conn_0 | False   | enable @@slow_query_log | success      |     |
-        | root  | 111111    | conn_0 | False   | show @@slow_query_log   | has{('1',)}  |     |
-        | root  | 111111    | conn_0 | False   | disable @@slow_query_log| success      |     |
-        | root  | 111111    | conn_0 | True    | show @@slow_query_log   | has{('0',)}  |     |
+        | conn   | toClose | sql                     | expect       |
+        | conn_0 | False   | enable @@slow_query_log | success      |
+        | conn_0 | False   | show @@slow_query_log   | has{('1',)}  |
+        | conn_0 | False   | disable @@slow_query_log| success      |
+        | conn_0 | True    | show @@slow_query_log   | has{('0',)}  |
 
   @NORMAL
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
@@ -24,18 +24,18 @@ Feature: test slow query log related manager command
       """
        Given Restart dble in "dble-1" success
        Then execute sql in "dble-1" in "admin" mode
-        | user   | passwd  | conn   | toClose | sql                            | expect        | db |
-        | root   | 111111  | conn_0 | False   | show @@slow_query.time         | has{('30',)}  |    |
-        | root   | 111111  | conn_0 | False   | reload @@slow_query.time = 200 | success       |    |
-        | root   | 111111  | conn_0 | False   | show @@slow_query.time         | has{('200',)} |    |
+        | conn   | toClose | sql                                   | expect        |
+        | conn_0 | False   | show @@slow_query.time                | has{('30',)}  |
+        | conn_0 | False   | reload @@slow_query.time = 200        | success       |
+        | conn_0 | False   | show @@slow_query.time                | has{('200',)} |
 
-        | root   | 111111  | conn_0 | False   | show @@slow_query.flushperiod         | has{('1000',)} |    |
-        | root   | 111111  | conn_0 | False   | reload @@slow_query.flushperiod = 200 | success        |    |
-        | root   | 111111  | conn_0 | False   | show @@slow_query.flushperiod         | has{('200',)}  |    |
+        | conn_0 | False   | show @@slow_query.flushperiod         | has{('1000',)} |
+        | conn_0 | False   | reload @@slow_query.flushperiod = 200 | success        |
+        | conn_0 | False   | show @@slow_query.flushperiod         | has{('200',)}  |
 
-        | root   | 111111  | conn_0 | False   | show @@slow_query.flushsize           | has{('5',)}    |    |
-        | root   | 111111  | conn_0 | False   | reload @@slow_query.flushsize = 50    | success        |    |
-        | root   | 111111  | conn_0 | True    | show @@slow_query.flushsize           | has{('50',)}   |    |
+        | conn_0 | False   | show @@slow_query.flushsize           | has{('5',)}    |
+        | conn_0 | False   | reload @@slow_query.flushsize = 50    | success        |
+        | conn_0 | True    | show @@slow_query.flushsize           | has{('50',)}   |
 
   @NORMAL
   Scenario: check slow query log written in assigned file #3
@@ -62,17 +62,17 @@ Feature: test slow query log related manager command
       query.log
       """
       Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose  | sql                            | expect   | db   |
-        | root         | 111111    | conn_0 | True     | disable @@slow_query_log       | success  |      |
+        | sql                            |
+        | disable @@slow_query_log       |
       Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose  | sql                             | expect    | db     |
-        | test         | 111111    | conn_0 | False    | drop table if exists a_test     |  success  | schema1 |
-        | test         | 111111    | conn_0 | False    | create table a_test(id int)     |  success  | schema1 |
-        | test         | 111111    | conn_0 | False    | alter table a_test add age int  |  success  | schema1 |
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,20) |  success  | schema1 |
-        | test         | 111111    | conn_0 | False    | select id from a_test           |  success  | schema1 |
-        | test         | 111111    | conn_0 | False    | select count(id) from a_test    |  success  | schema1 |
-        | test         | 111111    | conn_0 | True     | delete from a_test              |  success  | schema1 |
+        | conn   | toClose  | sql                             | db      |
+        | conn_0 | False    | drop table if exists a_test     | schema1 |
+        | conn_0 | False    | create table a_test(id int)     | schema1 |
+        | conn_0 | False    | alter table a_test add age int  | schema1 |
+        | conn_0 | False    | insert into a_test values(1,20) | schema1 |
+        | conn_0 | False    | select id from a_test           | schema1 |
+        | conn_0 | False    | select count(id) from a_test    | schema1 |
+        | conn_0 | True     | delete from a_test              | schema1 |
 
       Then check following text exist "N" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
       """
@@ -85,17 +85,17 @@ Feature: test slow query log related manager command
       delete from a_test
       """
       Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose | sql                     | expect  | db     |
-        | root         | 111111    | conn_0 | True    | enable @@slow_query_log |  success|        |
+        | sql                     |
+        | enable @@slow_query_log |
       Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose  | sql                             | expect  | db     |
-        | test         | 111111    | conn_0 | False    | drop table if exists a_test     | success |  schema1|
-        | test         | 111111    | conn_0 | False    | create table a_test(id int)     | success |  schema1|
-        | test         | 111111    | conn_0 | False    | alter table a_test add age int  | success |  schema1|
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,20) | success |  schema1|
-        | test         | 111111    | conn_0 | False    | select id from a_test           | success |  schema1|
-        | test         | 111111    | conn_0 | False    | select count(id) from a_test    | success |  schema1|
-        | test         | 111111    | conn_0 | True     | delete from a_test              | success |  schema1|
+        | conn   | toClose  | sql                             | db      |
+        | conn_0 | False    | drop table if exists a_test     | schema1 |
+        | conn_0 | False    | create table a_test(id int)     | schema1 |
+        | conn_0 | False    | alter table a_test add age int  | schema1 |
+        | conn_0 | False    | insert into a_test values(1,20) | schema1 |
+        | conn_0 | False    | select id from a_test           | schema1 |
+        | conn_0 | False    | select count(id) from a_test    | schema1 |
+        | conn_0 | True     | delete from a_test              | schema1 |
       Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
       """
       drop table if exists a_test
@@ -107,14 +107,14 @@ Feature: test slow query log related manager command
       delete from a_test
       """
      Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose | sql                     | expect  | db     |
-        | root         | 111111    | conn_0 | True    | enable @@slow_query_log |  success|        |
+       | sql                     |
+       | enable @@slow_query_log |
      Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose  | sql                                                             | expect                           | db     |
-        | test         | 111111    | conn_0 | False    | drop table if exists a_test                                     |  success                         | schema1 |
-        | test         | 111111    | conn_0 | False    | create table a_test(id int(10) unsigned NOT NULL,name char(1))  |  success                         | schema1 |
-        | test         | 111111    | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | schema1 |
-        | test         | 111111    | conn_0 | False    | insert into a_test values(3,3)                                  |  success                         | schema1 |
+       | conn   | toClose  | sql                                                             | expect                           | db      |
+       | conn_0 | False    | drop table if exists a_test                                     |  success                         | schema1 |
+       | conn_0 | False    | create table a_test(id int(10) unsigned NOT NULL,name char(1))  |  success                         | schema1 |
+       | conn_0 | False    | insert into a_test values(1,1),(2,1111)                         |  Data too long for column 'name' | schema1 |
+       | conn_0 | True     | insert into a_test values(3,3)                                  |  success                         | schema1 |
      Then check following text exist "Y" in file "/opt/dble/slowQuery/query.log" in host "dble-1"
      """
      drop table if exists a_test
