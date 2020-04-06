@@ -204,10 +204,8 @@ def step_impl(context,filename,hostname):
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname,num=None):
     cmd = context.text.strip()
-    if hostname.startswith("dble"):
-        ssh = get_ssh(hostname)
-    else :
-        ssh = get_ssh(hostname)
+    ssh = get_ssh(hostname)
+
     rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
     assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)

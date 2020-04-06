@@ -18,18 +18,18 @@ Feature: show @@sql, show @@sql.resultset
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                        | expect     | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists ta                    | success    | schema1 |
-        | test | 111111 | conn_0 | False    | create table ta(id int,k varchar(1500))    | success    | schema1 |
-        | test | 111111 | conn_0 | False    | insert into ta value(1, repeat('a', 1100)) | success    | schema1 |
-        | test | 111111 | conn_0 | False    | insert into ta value(2, repeat('b', 1500)) | success    | schema1 |
-        | test | 111111 | conn_0 | False    | insert into ta value(3, repeat('c', 100))  | success    | schema1 |
-        | test | 111111 | conn_0 | False    | update ta set k="c" where id=3             | success    | schema1 |
-        | test | 111111 | conn_0 | False    | select * from ta                           | success    | schema1 |
-        | test | 111111 | conn_0 | False    | select * from ta order by id limit 1       | success    | schema1 |
-        | test | 111111 | conn_0 | False    | select * from ta where id=2                | success    | schema1 |
-        | test | 111111 | conn_0 | False    | delete from ta where id=1                  | success    | schema1 |
-        | test | 111111 | conn_0 | True     | alter table ta drop column k               | success    | schema1 |
+      | conn   | toClose  | sql                                        | db      |
+      | conn_0 | False    | drop table if exists ta                    | schema1 |
+      | conn_0 | False    | create table ta(id int,k varchar(1500))    | schema1 |
+      | conn_0 | False    | insert into ta value(1, repeat('a', 1100)) | schema1 |
+      | conn_0 | False    | insert into ta value(2, repeat('b', 1500)) | schema1 |
+      | conn_0 | False    | insert into ta value(3, repeat('c', 100))  | schema1 |
+      | conn_0 | False    | update ta set k="c" where id=3             | schema1 |
+      | conn_0 | False    | select * from ta                           | schema1 |
+      | conn_0 | False    | select * from ta order by id limit 1       | schema1 |
+      | conn_0 | False    | select * from ta where id=2                | schema1 |
+      | conn_0 | False    | delete from ta where id=1                  | schema1 |
+      | conn_0 | True     | alter table ta drop column k               | schema1 |
     Then get resultset of admin cmd "show @@sql" named "sql_rs_A"
     Then check resultset "sql_rs_A" has lines with following column values
         | ID-0 | USER-1 | SQL-4                                      |
