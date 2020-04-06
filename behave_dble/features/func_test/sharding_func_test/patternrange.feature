@@ -32,20 +32,20 @@ Feature: PatternRange sharding function test suits
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table patternrange_table(id int)                      | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(null)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(-1)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(0)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(255)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(256)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(500)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(501)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(755)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(756)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | True     | insert into patternrange_table values(1001)| dest_node:mysql-master1 | schema1 |
+      | conn   | toClose  | sql                                          | expect                  | db      |
+      | conn_0 | False    | drop table if exists patternrange_table      | success                 | schema1 |
+      | conn_0 | False    | create table patternrange_table(id int)      | success                 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(null)  | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(-1)    | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(0)     | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(255)   | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(256)   | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(500)   | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(501)   | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(755)   | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(756)   | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(1000)  | dest_node:mysql-master1 | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(1001)  | dest_node:mysql-master1 | schema1 |
 
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
@@ -62,21 +62,21 @@ Feature: PatternRange sharding function test suits
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                   | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists patternrange_table                      | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table patternrange_table(id int)                      | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(0)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(255)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(256)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(500)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(501)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(755)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(756)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(1000)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | True     | insert into patternrange_table values(1001)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into patternrange_table values(null)                  | can't find any valid data node | schema1 |
-        | test | 111111 | conn_0 | True     | insert into patternrange_table values(-1)                    | can't find any valid data node | schema1 |
-        | test | 111111 | conn_0 | True     | insert into patternrange_table values(-2)                    | can't find any valid data node | schema1 |
+      | conn   | toClose  | sql                                          | expect                         | db      |
+      | conn_0 | False    | drop table if exists patternrange_table      | success                        | schema1 |
+      | conn_0 | False    | create table patternrange_table(id int)      | success                        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(0)     | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(255)   | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(256)   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(500)   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(501)   | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(755)   | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(756)   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(1000)  | dest_node:mysql-master1        | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(1001)  | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid data node | schema1 |
 
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
@@ -85,5 +85,5 @@ Feature: PatternRange sharding function test suits
       |file        | parent                                        | child                                  |
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'patternrange_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
-      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}   | {'tag':'table','kv_map':{'name':'patternrange_table'}}    |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'patternrange_table'}}    |
     Then execute admin cmd "reload @@config_all"

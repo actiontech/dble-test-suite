@@ -4,7 +4,7 @@
 # @Time    : 2020/3/25 AM10:46
 # @Author  : irene-coming
 import logging
-logger = logging.getLogger('after_scenario')
+logger = logging.getLogger('environment.after_scenario')
 class RestoreEnvFactory(object):
     def __init__(self,scenario):
         self._scenario = scenario

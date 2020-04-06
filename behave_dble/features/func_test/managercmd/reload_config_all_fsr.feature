@@ -18,9 +18,13 @@ Feature: reload @@config_all -fsr
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
     # 1 execute "reload @@config_all -fsr" can rebuild backend connection
-    Then get resultset of admin cmd "show @@backend" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all -fsr"
-    Then get resultset of admin cmd "show @@backend" named "rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_A" does not including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -42,7 +46,9 @@ Feature: reload @@config_all -fsr
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fsr"
-    Then get resultset of admin cmd "show @@backend" named "rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_C" does not including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -77,7 +83,9 @@ Feature: reload @@config_all -fsr
       | conn_0 | False   | begin                                            | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fsr"
-    Then get resultset of admin cmd "show @@backend" named "rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_D" does not including resultset "rs_C" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -96,17 +104,19 @@ Feature: reload @@config_all -fsr
 
     #4 execute "config_all -f -s -r" can close backend connection in transaction and rebuild all connection
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                schema1 |
-      | conn_1 | False   | create table sharding_4_t1 (id int)               schema1 |
-      | conn_1 | False   | begin                                             schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4)  schema1 |
+      | conn   | toClose | sql                                              | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1               | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)              | schema1 |
+      | conn_1 | False   | begin                                            | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
     """
     Then execute admin cmd "reload @@config_all -f -s -r"
-    Then get resultset of admin cmd "show @@backend" named "rs_E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_E" does not including resultset "rs_D" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |

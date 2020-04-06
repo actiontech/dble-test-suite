@@ -24,7 +24,7 @@ Feature: Functional testing of global sequences
     """
     `schema1`.`test_auto`=dn1
     """
-    Then execute sqlFile to initialize sequence table
+    Then initialize mysql-off-step sequence table
     Given Restart dble in "dble-1" success
     #case 1: can not assign value to sequenceColumn, and can assgin value to columns without sequenceColumn
     Then execute sql in "dble-1" in "user" mode

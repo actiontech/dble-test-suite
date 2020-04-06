@@ -41,68 +41,6 @@ def get_admin_conn(context, user="", passwd=""):
         assert False, "create manager conn meets error:{0}".format(e.args)
     return conn
 
-@When('execute admin cmd "{adminsql}" success')
-@Given('execute admin cmd "{adminsql}" success')
-@Then('execute admin cmd "{adminsql}"')
-@Then('execute admin cmd "{adminsql}" get the following output')
-@Then('execute admin cmd "{adminsql}" with user "{user}" passwd "{passwd}"')
-@Then('execute admin cmd "{adminsql}" with "{result}" result')
-def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
-    node = get_node("dble-1")
-    if len(user.strip()) == 0:
-        user = node.manager_user
-    if len(passwd.strip()) == 0:
-        passwd = str(node.manager_password)
-    if len(result.strip()) != 0:
-        adminsql = "{0} {1}".format(adminsql, getattr(context, result)[0][0])
-    if context.text: expect = context.text
-    else: expect = "success"
-
-    context.execute_steps(u"""
-    Then execute sql in "dble-1" in "admin" mode
-        | user    | passwd | conn    | toClose | sql      | expect   | db |
-        | {0}     | {1}    | new     | True    | {2}      | {3}      |    |
-    """.format(user, passwd, adminsql, expect))
-@Then('get resultset of admin cmd "{adminsql}" named "{rs_name}"')
-def step_impl(context, adminsql, rs_name):
-    manager_conn = get_admin_conn(context)
-    result, error = manager_conn.query(adminsql)
-    assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
-    setattr(context, rs_name, result)
-
-@Then('get resultset of user cmd "{sql}" named "{rs_name}"')
-@Then('get resultset of user cmd "{sql}" named "{rs_name}" with connection "{conn_type}"')
-def step_impl(context, sql, rs_name, conn_type=''):
-    if hasattr(context, conn_type):
-        dble_conn = getattr(context, conn_type)
-        LOGGER.debug("get dble_conn: {0}".format(conn_type))
-    else:
-        dble_conn = get_dble_conn(context)
-    result, error = dble_conn.query(sql)
-    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
-    setattr(context, rs_name, result)
-
-@Then('get result of user cmd "{sql}" named "{rs_name}" in dble "{host_name}"')
-def step_impl(context, sql, rs_name, host_name):
-    dble_conn = get_dble_connect(context, host_name)
-    result, error = dble_conn.query(sql)
-    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
-    setattr(context, rs_name, result)
-
-@Then('get resultset of cmd "{sql}" named "{rs_name}" in mysql "{host_name}"')
-def step_impl(context, sql, rs_name, host_name):
-    node = get_node(host_name)
-    ip = node._ip
-    port = node._mysql_port
-    user = "test"
-    passwd = "111111"
-    db = ""
-    conn = DBUtil(ip, user, passwd, db, port, context)
-    result,error = conn.query(sql)
-    assert error is None, "execute usersql {0}, get error:{1}".format(sql, error)
-    setattr(context,rs_name,result)
-
-
 @Then('removal result set "{rs_name}" contains "{key_word}" part')
 def step_impl(context, rs_name, key_word):
     rs_A = getattr(context, rs_name)
