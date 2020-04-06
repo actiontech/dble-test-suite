@@ -14,12 +14,13 @@ class SSHClient(Logging):
         self._ssh = None
 
     def connect(self):
-        self.logger.info('Create ssh client for ip <{0}>'.format(self._host))
+        self.logger.debug('Create ssh client for ip <{0}>'.format(self._host))
         self._ssh = paramiko.SSHClient()
         self._ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
         self._ssh.connect(self._host, port=22, username=self._user, password=self._password, timeout=60)
 
     def exec_command(self, command, timeout=60):
+        self.logger.debug("start to exec cmd: {}".format(command))
         stdin, stdout, stderr = self._ssh.exec_command(command, timeout=timeout)
         rc = stdout.channel.recv_exit_status()
         sto = stdout.read().strip('\n')

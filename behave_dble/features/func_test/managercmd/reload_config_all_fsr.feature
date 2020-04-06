@@ -71,11 +71,11 @@ Feature: reload @@config_all -fsr
     </dataHost>
     """
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db      |
-      | test | 111111 | conn_0 | false   | drop table if exists sharding_4_t1               | success | schema1 |
-      | test | 111111 | conn_0 | false   | create table sharding_4_t1 (id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                              | db      |
+      | conn_0 | false   | drop table if exists sharding_4_t1               | schema1 |
+      | conn_0 | false   | create table sharding_4_t1 (id int)              | schema1 |
+      | conn_0 | False   | begin                                            | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fsr"
     Then get resultset of admin cmd "show @@backend" named "rs_D"
     Then check resultsets "rs_D" does not including resultset "rs_C" in following columns
@@ -91,16 +91,16 @@ Feature: reload @@config_all -fsr
       | 172.100.9.4 |
       | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                    | expect      | db      |
-      | test | 111111 | new  | true    | select * from sharding_4_t1 where id=2 | length{(0)} | schema1 |
+      | sql                                    | expect      | db      |
+      | select * from sharding_4_t1 where id=2 | length{(0)} | schema1 |
 
     #4 execute "config_all -f -s -r" can close backend connection in transaction and rebuild all connection
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db      |
-      | test | 111111 | conn_1 | False   | drop table if exists sharding_4_t1               | success | schema1 |
-      | test | 111111 | conn_1 | False   | create table sharding_4_t1 (id int)              | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                               db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1                schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)               schema1 |
+      | conn_1 | False   | begin                                             schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4)  schema1 |
     Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
@@ -119,5 +119,5 @@ Feature: reload @@config_all -fsr
       | HOST-3      |
       | 172.100.9.4 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                | expect      | db      |
-      | test | 111111 | new  | True    | drop table if exists sharding_4_t1 | length{(0)} | schema1 |
+      | sql                                | expect      | db      |
+      | drop table if exists sharding_4_t1 | length{(0)} | schema1 |

@@ -7,13 +7,13 @@ Feature: ddl metalock in dble test suites
 
   Scenario: ddl metalock in dble released when client interruption occured during select 1 phrase #1
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                   | expect   | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1    | success  | schema1 |
-      | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int)    | success  | schema1 |
+      | conn   | toClose | sql                                | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1 | schema1 |
+      | conn_0 | True    | create table sharding_4_t1(id int) | schema1 |
     Given prepare a thread run btrace script "BtraceAddMetaLock.java" in "dble-1"
     Given execute sqls in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                 | db      |
-      | test | 111111 | conn_0 | True    | truncate table sharding_4_t1/*id123*/ | schema1 |
+      | sql                                   | db      |
+      | truncate table sharding_4_t1/*id123*/ | schema1 |
     Then check btrace "BtraceAddMetaLock.java" output in "dble-1"
     """
     enter metalock and start sleep
@@ -24,6 +24,6 @@ Feature: ddl metalock in dble test suites
     """
     Given stop btrace script "BtraceAddMetaLock.java" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                             | expect   | db      |
-      | test | 111111 | conn_0 | True    | truncate table sharding_4_t1    | success  | schema1 |
+      | sql                           | db      |
+      | truncate table sharding_4_t1  | schema1 |
     Given destroy btrace threads list

@@ -75,7 +75,7 @@ class PostQueryCheck(object):
             if isBalance:
                 assert_that(self._real_err is None, "expect query success, but failed for '{0}'".format(self._real_err))
                 bal_num = isBalance.group(1)
-                self.balance(context, self._real_res, int(bal_num))
+                self.balance(self._real_res, int(bal_num))
                 break
 
             hasString = re.search(r"hasStr\{(.*?)\}", self._expect, re.I)
@@ -104,12 +104,11 @@ class PostQueryCheck(object):
                 break
 
             if self._expect.lower() == "error totally whack":
-                assert_that(self._real_err, not_none(), "exec sql:{1} Err is None, expect:{0}".format(self._expect, sql))
+                assert_that(self._real_err, not_none(), "exec sql:{} Err is None, expect:{}".format(self._sql, self._expect))
                 break
 
-
-            assert_that(self._real_err, not_none(), "exec sql:{0} success, but expect fail for:{1}".format(self._sql, self._expect))
-            assert_that(self._real_err[1], contains_string(self._expect), "expect text: {0}, read err:{1}".format(self._expect, self._real_err))
+            assert_that(self._real_err, not_none(), "exec sql:{0} success, but expect failed for:{1}".format(self._sql, self._expect))
+            assert_that(self._real_err[1], contains_string(self._expect), "expect query failed for: {0}, real err:{1}".format(self._expect, self._real_err))
             break
 
     def hasResultSet(self, res, expectRS, bHas):
