@@ -73,13 +73,8 @@ def step_impl(context, host):
     context.logger.debug("btrace is running, start query!!!")
     time.sleep(5)
     for row in context.table:
-        user = row["user"]
-        passwd = row["passwd"]
-        sql = row["sql"]
-        db = row["db"]
-        if db is None: db = ''
-
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e'{}' >/tmp/dble_query.log 2>&1 &".format(user, passwd,node.client_port, db, sql)
+        query_meta = QueryMeta(row.as_dict(), "user", node)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e'{}' >/tmp/dble_query.log 2>&1 &".format(query_meta.user,query_meta.passwd,query_meta.port,query_meta.db,query_meta.sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "impossible err occur"
 

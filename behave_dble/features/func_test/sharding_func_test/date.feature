@@ -55,22 +55,20 @@ Feature:Date sharding function
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                                   | expect                                      | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists date_table                                   | success                                     | schema1 |
-        | test | 111111 | conn_0 | False    | create table date_table(id date)                                  | success   | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values(null)| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')  | dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | True     | insert into date_table values('2018-01-9') | dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | drop table if exists date_table                                   | success                                     | schema1 |
-        | test | 111111 | conn_0 | False    | create table date_table(id timestamp, c timestamp)             | success   | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values (null,null)              | Sharding column can't be null when the table in MySQL column is not null   | schema1 |
-
-
+      | conn   | toClose  | sql                                                          | expect                  | db      |
+      | conn_0 | False    | drop table if exists date_table                              | success                 | schema1 |
+      | conn_0 | False    | create table date_table(id date)                             | success                 | schema1 |
+      | conn_0 | False    | insert into date_table values(null)                          | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-11-11')                  | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-01')                  | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-11')                  | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-21')                  | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-31')                  | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into date_table values('2018-1-8')                    | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into date_table values('2018-01-9')                   | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | drop table if exists date_table                              | success                 | schema1 |
+      | conn_0 | False    | create table date_table(id timestamp, c timestamp)           | success                 | schema1 |
+      | conn_0 | True     | insert into date_table values (null,null)                    | Sharding column can't be null when the table in MySQL column is not null   | schema1 |
 
     #test: set sEndDate and no defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -84,17 +82,17 @@ Feature:Date sharding function
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values(null)                           | can't find any valid data node | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-8')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-01-9')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | True     | insert into date_table values('2017-11-11')                    | can't find any valid data node | schema1 |
+      | conn   | toClose  | sql                                          | expect                         | db      |
+      | conn_0 | False    | drop table if exists date_table              | success                        | schema1 |
+      | conn_0 | False    | create table date_table(id date)             | success                        | schema1 |
+      | conn_0 | False    | insert into date_table values(null)          | can't find any valid data node | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-01')  | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-11')  | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-21')  | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-31')  | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2018-01-8')   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2018-01-9')   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | True     | insert into date_table values('2017-11-11')  | can't find any valid data node | schema1 |
 
      #test: not sEndDate and set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -108,16 +106,16 @@ Feature:Date sharding function
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | True     | insert into date_table values('2018-11-11')                   | can't find any valid data node | schema1 |
+      | conn   | toClose  | sql                                           | expect                         | db      |
+      | conn_0 | False    | drop table if exists date_table               | success                        | schema1 |
+      | conn_0 | False    | create table date_table(id date)              | success                        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-11-11')   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-01')   | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-11')   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-21')   | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-31')   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2018-1-8')     | dest_node:mysql-master2        | schema1 |
+      | conn_0 | True     | insert into date_table values('2018-11-11')   | can't find any valid data node | schema1 |
 
     #test: set not sEndDate and not defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
@@ -130,16 +128,16 @@ Feature:Date sharding function
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                           | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists date_table                               | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table date_table(id date)                              | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-01')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-11')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-21')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-12-31')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2018-1-8')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into date_table values('2017-11-11')                   | can't find any valid data node | schema1 |
-        | test | 111111 | conn_0 | True     | insert into date_table values('2018-11-11')                   | can't find any valid data node | schema1 |
+      | conn   | toClose  | sql                                         | expect                         | db      |
+      | conn_0 | False    | drop table if exists date_table             | success                        | schema1 |
+      | conn_0 | False    | create table date_table(id date)            | success                        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-01') | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-11') | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-21') | dest_node:mysql-master1        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-12-31') | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2018-1-8')   | dest_node:mysql-master2        | schema1 |
+      | conn_0 | False    | insert into date_table values('2017-11-11') | can't find any valid data node | schema1 |
+      | conn_0 | True     | insert into date_table values('2018-11-11') | can't find any valid data node | schema1 |
 
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
@@ -151,8 +149,8 @@ Feature:Date sharding function
 
     #clearn all conf
     Given delete the following xml segment
-      |file        | parent                                        | child                                  |
+      |file        | parent                                        | child                                             |
       |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'date_rule'}} |
       |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'date_func'}}  |
-      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}   | {'tag':'table','kv_map':{'name':'date_table'}}    |
+      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'date_table'}}    |
     Then execute admin cmd "reload @@config_all"

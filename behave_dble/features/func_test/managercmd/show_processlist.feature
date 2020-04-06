@@ -22,7 +22,9 @@ Feature: #test show @@processlist
     </dataHost>
     """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@processlist" named "pro_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_A"
+      | sql                |
+      | show @@processlist |
     Then check resultset "pro_rs_A" has lines with following column values
       | Front_Id-0 | Datanode-1  | BconnID-2   | User-3    | db-5   | Command-6  | Time-7  | Info-9  |
       |    2        | NULL       | NULL        | root      | NULL   | NULL       | 0       | NULL    |
@@ -34,7 +36,9 @@ Feature: #test show @@processlist
       | conn_0 | False    | create table test_shard(id int,name varchar(20)) |  schema1  |
       | conn_0 | False    | begin                                            |  schema1  |
       | conn_0 | False    | select * from test_shard                         |  schema1  |
-    Then get resultset of admin cmd "show @@processlist" named "pro_rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_B"
+      | sql                |
+      | show @@processlist |
     Then check resultset "pro_rs_B" has lines with following column values
       | Front_Id-0 | Datanode-1 | User-3 | db-5 | Command-6 | Info-9 |
       | 3          | dn1        | test   | db1  | Sleep     | None   |
@@ -45,7 +49,9 @@ Feature: #test show @@processlist
       | conn   | toClose  | sql                 | db        |
       | conn_1 | False    | begin               |  schema1  |
       | conn_1 | False    | select * from test1 |  schema1  |
-    Then get resultset of admin cmd "show @@processlist" named "pro_rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_C"
+      | sql                |
+      | show @@processlist |
     Then check resultset "pro_rs_C" has lines with following column values
       | Front_Id-0 | Datanode-1   | User-3    | db-5   | Command-6    | Info-9  |
       |    3        | dn1         | test      | db1    | Sleep        | None    |
@@ -56,7 +62,9 @@ Feature: #test show @@processlist
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql    | db        |
       | conn_1 | True     | commit |  schema1  |
-    Then get resultset of admin cmd "show @@processlist" named "pro_rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_D"
+      | sql                |
+      | show @@processlist |
     Then check resultset "pro_rs_D" has not lines with following column values
       | Front_Id-0 | Datanode-1   | User-3  | db-5   | Command-6    | Info-9  |
       |    5       | dn1          | test    | db1    | Sleep        | None    |
