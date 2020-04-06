@@ -3,10 +3,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM1:35
 # @Author  : irene-coming
-from .lib.PostQueryCheck import PostQueryCheck
-from .lib.PreQueryPrepare import PreQueryPrepare
-from .lib.QueryMeta import QueryMeta
-from .lib.ObjectFactory import ObjectFactory
+from lib.PostQueryCheck import PostQueryCheck
+from lib.PreQueryPrepare import PreQueryPrepare
+from lib.QueryMeta import QueryMeta
+from lib.ObjectFactory import ObjectFactory
 from behave import *
 
 
@@ -18,7 +18,7 @@ def step_impl(context, query, host_name):
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
 def restart_mysql(context, host_name, sed_str=None):
-    if not sed_str and len(context.text)>0:
+    if not sed_str and context.text:
         sed_str = context.text
 
     mysql = ObjectFactory.create_mysql_object(host_name)
@@ -72,5 +72,7 @@ def execute_sql_in_host(host_name, info_dic=None):
 
     post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
     post_delegater.check_result()
+
+    return res,err
 
 

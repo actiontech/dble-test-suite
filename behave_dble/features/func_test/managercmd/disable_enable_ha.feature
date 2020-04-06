@@ -30,13 +30,17 @@ Feature: test high-availability related commands
     Then check exist xml node "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2','disabled':'true'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                        | expect              | db       |
+      | conn   | toClose  | sql                                        | expect              | db        |
       | conn_0 | true     | insert into sharding_4_t1 values(1),(2)    | error totally whack |  schema1  |
-    Then get resultset of admin cmd "show @@backend" named "show_be_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_be_rs"
+      | sql            |
+      | show @@backend |
     Then check resultset "show_be_rs" has not lines with following column values
     | HOST-3      | PORT-4 |
     | 172.100.9.6 | 3306   |
-    Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
+      | sql               |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
     | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   | true        |
@@ -47,7 +51,9 @@ Feature: test high-availability related commands
     <readHost host="slave1" user="test" password="111111" url="172.100.9.2:3306" disabled="true"/>
     """
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
+      | sql               |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
     | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   |  true       |
@@ -56,13 +62,17 @@ Feature: test high-availability related commands
     Then execute admin cmd "dataHost @@switch name='ha_group2' master='slave1'"
     Then check exist xml node "{'tag':'dataHost/writeHost/readHost','kv_map':{'host':'hostM2','disabled':'true'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
     Then check exist xml node "{'tag':'dataHost/writeHost','kv_map':{'host':'slave1','disabled':'true'}}" in "/opt/dble/conf/schema.xml" in host "dble-1"
-    Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
+      | sql               |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
     | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | true        |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
     Then execute admin cmd "dataHost @@enable name='ha_group2'"
-    Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
+      | sql               |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
     | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      1   | false       |
@@ -83,14 +93,18 @@ Feature: test high-availability related commands
       | sql                                                                                           | expect      | db  |
       | select count(*) from mysql.general_log where argument like'insert into sharding_4_t1 values%' | length{(1)} | db1 |
     Then execute admin cmd "dataHost @@disable name='ha_group2' node='slave1'"
-    Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
+      | sql               |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
     | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      1   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
     Then execute admin cmd "dataHost @@switch name='ha_group2' master='hostM2'"
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@datasource" named "show_ds_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_ds_rs"
+      | sql               |
+      | show @@datasource |
     Then check resultset "show_ds_rs" has lines with following column values
     | DATAHOST-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      1   | false       |

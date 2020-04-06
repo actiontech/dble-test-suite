@@ -20,14 +20,14 @@ Feature: jumpstringhash sharding function test suits
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql                                                                       | expect  | db     |
-        | test | 111111 | conn_0 | False    | drop table if exists jump_string_hash_table                         | success | schema1 |
-        | test | 111111 | conn_0 | False    | create table jump_string_hash_table(id varchar(10))                | success | schema1 |
-        | test | 111111 | conn_0 | False    | insert into jump_string_hash_table values(null)| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into jump_string_hash_table values('aa')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into jump_string_hash_table values('af')| dest_node:mysql-master2 | schema1 |
-        | test | 111111 | conn_0 | False    | insert into jump_string_hash_table values('rr')| dest_node:mysql-master1 | schema1 |
-        | test | 111111 | conn_0 | True     | insert into jump_string_hash_table values('zz')| dest_node:mysql-master2 | schema1 |
+      | conn   | toClose  | sql                                                 | expect                  | db      |
+      | conn_0 | False    | drop table if exists jump_string_hash_table         | success                 | schema1 |
+      | conn_0 | False    | create table jump_string_hash_table(id varchar(10)) | success                 | schema1 |
+      | conn_0 | False    | insert into jump_string_hash_table values(null)     | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into jump_string_hash_table values('aa')     | dest_node:mysql-master1 | schema1 |
+      | conn_0 | False    | insert into jump_string_hash_table values('af')     | dest_node:mysql-master2 | schema1 |
+      | conn_0 | False    | insert into jump_string_hash_table values('rr')     | dest_node:mysql-master1 | schema1 |
+      | conn_0 | True     | insert into jump_string_hash_table values('zz')     | dest_node:mysql-master2 | schema1 |
 
     #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
