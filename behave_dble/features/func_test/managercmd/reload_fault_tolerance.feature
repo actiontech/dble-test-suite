@@ -7,8 +7,8 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
 
   Scenario: execute "reload @@config_all" when another ddl is executing
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+      | sql                                | expect  | db      |
+      | drop table if exists sharding_4_t1 | success | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -16,15 +16,15 @@ Feature: execute manager cmd "reload @@config_all" and check fault tolerance
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                | db      |
-      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int) | schema1 |
+      | conn   | toClose | sql                                | db      |
+      | conn_0 | False   | create table sharding_4_t1(id int) | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     delay in removeMetaLock
     """
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql                 | expect                                                                  | db      |
-      | root | 111111 | conn_0 | True    | reload @@config_all | Reload config failure.The reason is There is other session is doing DDL | schema1 |
+      | sql                 | expect                                                                  |
+      | reload @@config_all | Reload config failure.The reason is There is other session is doing DDL |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"

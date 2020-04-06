@@ -42,8 +42,8 @@ Feature: schema config stable test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql      | expect   | db     |
-        | test | 111111 | conn_0 | True     | select 2 | success  | schema1 |
+      | sql      |
+      | select 2 |
 
   @BLOCKER
   Scenario: add mysqld with disabled="true", no readhost, reload success #2
@@ -73,8 +73,8 @@ Feature: schema config stable test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user | passwd | conn   | toClose  | sql      | expect   | db     |
-        | test | 111111 | conn_0 | True     | select 2 | success  | schema1 |
+      | sql      |
+      | select 2 |
 
   @NORMAL
   Scenario: set dataHost balance=0 in case which readHost will not be used, dble should still check whether readhost connectable #4

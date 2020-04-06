@@ -7,11 +7,11 @@ Feature: reload @@config_all and recycl pool
 
   Scenario: modifiy datahost url and execute reload @@config_all #1
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                             | expect  | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1              | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                           | success | schema1 |
-      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                             | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int)              | schema1 |
+      | conn_0 | False   | begin                                           | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all"
     Then get resultset of admin cmd "show @@backend" named "rs_A"
     Then check resultset "rs_A" has lines with following column values

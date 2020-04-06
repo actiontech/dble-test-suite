@@ -61,11 +61,11 @@ Feature: reload @@config_all -r
       | 172.100.9.4 |
       | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                 | expect  | db      |
-      | test | 111111 | conn_0 | true    | drop table if exists sharding_4_t1  | success | schema1 |
-      | test | 111111 | conn_0 | true    | create table sharding_4_t1(id int)  | success | schema1 |
-      | test | 111111 | conn_0 | false   | begin                               | success | schema1 |
-      | test | 111111 | conn_0 | false   | insert into sharding_4_t1 values(1) | success | schema1 |
+      | conn   | toClose | sql                                 | db      |
+      | conn_0 | false   | drop table if exists sharding_4_t1  | schema1 |
+      | conn_0 | false   | create table sharding_4_t1(id int)  | schema1 |
+      | conn_0 | false   | begin                               | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values(1) | schema1 |
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
       """
@@ -83,9 +83,9 @@ Feature: reload @@config_all -r
       | 172.100.9.4 |
       | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                    | expect      | db      |
-      | test | 111111 | conn_0 | false   | commit                                 | success     | schema1 |
-      | test | 111111 | conn_0 | True    | select * from sharding_4_t1 where id=1 | length{(0)} | schema1 |
+      | conn   | toClose | sql                                    | expect      | db      |
+      | conn_0 | false   | commit                                 | success     | schema1 |
+      | conn_0 | True    | select * from sharding_4_t1 where id=1 | length{(0)} | schema1 |
     Given sleep "2" seconds
     Then get resultset of admin cmd "show @@backend" named "F"
     Then check resultset "F" has not lines with following column values

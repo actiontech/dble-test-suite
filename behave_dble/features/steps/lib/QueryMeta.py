@@ -19,7 +19,7 @@ class QueryMeta(object):
         if info_dic is None: info_dic = {}
 
         self._user = info_dic.get("user", meta.mysql_user)
-        self._passwd = str(info_dic.get("passwd", meta.mysql_user))
+        self._passwd = str(info_dic.get("passwd", meta.mysql_password))
         self._port = info_dic.get("port", meta.mysql_port)
         self._ip = info_dic.get("ip", meta.ip)
 

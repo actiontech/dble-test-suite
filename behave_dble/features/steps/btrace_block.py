@@ -10,6 +10,8 @@ import time
 
 from behave import *
 
+from lib.MySQLObject import MySQLObject
+from lib.QueryMeta import QueryMeta
 from lib.utils import get_sftp, get_ssh,get_node
 
 global btrace_threads
@@ -136,8 +138,8 @@ def destroy_threads(context):
 
 @Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
 def step_impl(context, sql, conn_type=''):
-    assert hasattr(context, conn_type), "conn_type {0} is not exists"
-    conn = getattr(context, conn_type)
+    conn = MySQLObject.long_live_conns.get(conn_type,None)
+    assert conn, "conn '{0}' is not exists in long_live_conns".format(conn_type)
     global sql_threads
     thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
     sql_threads.append(thd)
@@ -146,7 +148,7 @@ def step_impl(context, sql, conn_type=''):
 
 def execute_sql_backgroud(context, conn, sql):
     sql_cmd = sql.strip()
-    res, err = conn.query(sql_cmd)
+    res, err = conn.execute(sql_cmd)
     setattr(context,"sql_thread_result",res)
     setattr(context,"sql_thread_err",err)
 
@@ -173,12 +175,8 @@ def step_impl(context, host):
     context.logger.debug("btrace is running, start query!!!")
     time.sleep(5)
     for row in context.table:
-        user = row["user"]
-        passwd = row["passwd"]
-        sql = row["sql"]
-        db = row["db"]
-        if db is None: db = ''
+        query_meta = QueryMeta(row.as_dict(), "admin", node)
 
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(user, passwd, node.manager_port, db, sql)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port, query_meta.sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste) == 0, "impossible err occur"
