@@ -27,7 +27,9 @@ Feature: set charset in server.xml,check backend charsets are as set
         </dataHost>
     """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_A"
+      | sql            |
+      | show @@backend |
     Then check resultset "backend_rs_A" has lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
       | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
@@ -40,7 +42,9 @@ Feature: set charset in server.xml,check backend charsets are as set
       | conn_0 | False   | insert into aly_test value(1, '中')         | success | schema1 | utf8  |
       | conn_0 | False   | select name from aly_test                   | has{('中')}| schema1 | utf8  |
       | conn_0 | False   | set names utf8mb4                              | success | schema1 | utf8  |
-    Then get resultset of admin cmd "show @@connection" named "conn_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_A"
+      | sql               |
+      | show @@connection |
     Then check resultset "conn_rs_A" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
       |    utf8mb4                | utf8mb4_general_ci        | utf8mb4                    |
@@ -53,7 +57,9 @@ Feature: set charset in server.xml,check backend charsets are as set
      """
 
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultset "backend_rs_B" has not lines with following column values
       | HOST-3      | CHARACTER_SET_CLIENT-13 | COLLATION_CONNECTION-14 | CHARACTER_SET_RESULTS-15 |
       | 172.100.9.6 |     utf8mb4                | utf8mb4_general_ci         | utf8mb4                     |
@@ -69,7 +75,9 @@ Feature: set charset in server.xml,check backend charsets are as set
       | conn_1 | False   | drop table if exists aly_test               | success | schema1 |
       | conn_1 | False   | create table aly_test(id int, name char(10)) default charset=utf8mb4| success | schema1 |
       | conn_1 | False   | insert into aly_test value(1, '中')         | ordinal not in range | schema1 |
-    Then get resultset of admin cmd "show @@connection" named "conn_rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "conn_rs_B"
+      | sql               |
+      | show @@connection |
     Then check resultset "conn_rs_B" has lines with following column values
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
       |    latin1              | latin1_swedish_ci      | latin1                  |

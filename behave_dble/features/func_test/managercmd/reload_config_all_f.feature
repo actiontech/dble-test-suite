@@ -16,9 +16,13 @@ Feature: reload @@config_all -f
       """
     Given Restart dble in "dble-1" success
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
-    Then get resultset of admin cmd "show @@backend" named "A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all -f"
-    Then get resultset of admin cmd "show @@backend" named "B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "B" including resultset "A" in following columns
       | column         | column_index |
       | processor      | 0            |
@@ -39,7 +43,9 @@ Feature: reload @@config_all -f
       <dataNode dataHost="ha_group1" database="db3" name="dn5" />
       """
     Then execute admin cmd "reload @@config_all -f"
-    Then get resultset of admin cmd "show @@backend" named "C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
+      | sql            |
+      | show @@backend |
     Then check resultset "C" has lines with following column values
       | PORT-4 | HOST-3      |
       | 3306   | 172.100.9.5 |
@@ -57,7 +63,9 @@ Feature: reload @@config_all -f
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -f"
-    Then get resultset of admin cmd "show @@backend" named "D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
+      | sql            |
+      | show @@backend |
     Then check resultset "D" has not lines with following column values
       | PORT-4 | HOST-3      |
       | 3306   | 172.100.9.6 |

@@ -38,9 +38,13 @@ Feature: reload @@config_all base test, not including all cases in testlink
 
   @CRITICAL @skip #for ci fail
   Scenario: reload @@config_all, eg:no writehost change, reload @@config_all does not rebuild backend connection pool #1
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "backend_rs_A" and "backend_rs_B" are same in following columns
       |column               | column_index |
       |processor            | 0            |
@@ -64,7 +68,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_C"
+      | sql            |
+      | show @@backend |
     Then check resultset "backend_rs_C" has not lines with following column values
       | PORT-4      | HOST-3       |
       | 3306        | 172.100.9.5  |
@@ -88,13 +94,17 @@ Feature: reload @@config_all base test, not including all cases in testlink
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_D"
+      | sql            |
+      | show @@backend |
     Then check resultset "backend_rs_D" has lines with following column values
       | PORT-4      | HOST-3      |
       | 3306        | 172.100.9.6 |
     #2 reload @@config_all -f, kill in use backend conn, do diff
     Then execute admin cmd "reload @@config_all -f"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_E"
+      | sql            |
+      | show @@backend |
     Then check resultset "backend_rs_E" has not lines with following column values
       | PORT-4      | HOST-3       |
       | 3306        | 172.100.9.6  |
@@ -111,7 +121,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |USER_VARIABLES       | 19           |
     #3 reload @@config_all -r, donot do diff, rebuild backend conn, skip in use backend conn
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_F"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_F"
+      | sql            |
+      | show @@backend |
     Then check resultsets "backend_rs_F" does not including resultset "backend_rs_E" in following columns
       |column            | column_index |
       |BACKEND_ID        | 1     |
@@ -138,10 +150,14 @@ Feature: reload @@config_all base test, not including all cases in testlink
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -f -r"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_G"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_G"
+      | sql            |
+      | show @@backend |
     Given stop mysql in host "mysql-master2"
     Then execute admin cmd "reload @@config_all -s"
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_H"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_H"
+      | sql            |
+      | show @@backend |
     Then check resultset "backend_rs_H" has not lines with following column values
       | PORT-4      | HOST-3       |
       | 3306        | 172.100.9.6  |
@@ -166,7 +182,9 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | conn_1 | False    | insert into test_shard values(1),(2),(3),(4)  | success    | schema1 |
     Then execute admin cmd "reload @@config_all -r -f -s"
     Given sleep "1" seconds
-    Then get resultset of admin cmd "show @@backend" named "backend_rs_I"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_I"
+      | sql            |
+      | show @@backend |
     Then check resultsets "backend_rs_I" does not including resultset "backend_rs_H" in following columns
       |column            | column_index |
       |BACKEND_ID        | 1     |

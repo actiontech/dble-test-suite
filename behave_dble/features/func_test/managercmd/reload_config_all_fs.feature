@@ -17,9 +17,13 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
     """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@backend" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all -fs"
-    Then get resultset of admin cmd "show @@backend" named "rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_A" and "rs_B" are same in following columns
       | column  | column_index |
       | MYSQLID | 2            |
@@ -35,7 +39,9 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
        <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fs"
-    Then get resultset of admin cmd "show @@backend" named "rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_B" has not lines with following column values
       | HOST-3      |
       | 172.100.9.6 |
@@ -56,7 +62,9 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
       | conn_0 | False   | begin                                           | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -fs"
-    Then get resultset of admin cmd "show @@backend" named "rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_D" has lines with following column values
       | HOST-3      |
       | 172.100.9.5 |
@@ -84,7 +92,9 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -f -s"
-    Then get resultset of admin cmd "show @@backend" named "rs_E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_E" has lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
