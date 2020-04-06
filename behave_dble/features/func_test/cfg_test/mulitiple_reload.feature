@@ -91,7 +91,9 @@ Feature: multiple reload
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | alter table test1 add name char(9) | success | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test1   | 1                          | 1                      |
@@ -138,7 +140,9 @@ Feature: multiple reload
       | conn | toClose | sql               | expect  |
       | new  | true    | reload @@metadata | success |
       | new  | true    | reload @@metadata | success |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_e"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_e"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_e" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -229,7 +233,9 @@ Feature: multiple reload
       | conn | toClose | sql                    | expect  | db |
       | new  | true    | reload @@config_all -r | success |    |
       | new  | true    | reload @@config_all -r | success |    |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -238,11 +244,15 @@ Feature: multiple reload
       | schema1  | test1   | 1                          | 1                      |
       | schema1  | test2   | 1                          | 1                      |
       | schema1  | test6   | 1                          | 1                      |
-    Then get resultset of admin cmd "check full @@metadata where consistent_in_memory=0" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                                |
+      | check full @@metadata where consistent_in_memory=0 |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test5   | 0                          | 0                      |
-    Then get resultset of admin cmd "check full @@metadata where consistent_in_memory=1" named "metadata_rs_c"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
+      | sql                                                |
+      | check full @@metadata where consistent_in_memory=1 |
     Then check resultset "metadata_rs_c" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -332,7 +342,9 @@ Feature: multiple reload
       | conn | toClose | sql               | expect  |
       | new  | true    | reload @@metadata | success |
       | new  | true    | reload @@metadata | success |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_e"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_e"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_e" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
