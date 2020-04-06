@@ -6,7 +6,7 @@
 #@skip
 Feature: if dble rebuild conn pool with reload, then global vars dble concerned will be redetected
 #dble cared global vars:
-#| dble config name     | dble config value | mysql variable name    | mysql variable value   | mysql effect Scope |
+#| dble config name     | dble default value | mysql variable name    | mysql default value   | mysql effect Scope |
 #| lowerCaseTableNames  | true              | lower_case_table_names | 0                      | global             |
 #| autocommit           | 1                 | autocommit             | ON                     | Global,Session     |
 #| txIsolation          | 3                 | tx_isolation           | REPEATABLE-READ(3)     | Global,Session     |
