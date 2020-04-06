@@ -13,6 +13,7 @@ from steps.step_function import *
 from steps.btrace_block import *
 from steps.step_createConn import *
 from steps.step_safety import *
+from steps.step_sequence import *
 
 logger = logging.getLogger('environment')
 
@@ -127,7 +128,7 @@ def after_scenario(context, scenario):
     MySQLObject.long_live_conns.clear()
 
     if "restore_sys_time" in scenario.tags:
-        restore_sys_time(context)
+        restore_sys_time()
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)

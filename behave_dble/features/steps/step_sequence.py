@@ -42,31 +42,3 @@ def step_impl(context, totalsRowsInsert, table, threadNum):
 
     for i in range(realThreadNum):
         threadsList[i].join()
-
-@Then('execute sqlFile to initialize sequence table')
-def step_impl(context):
-    node = get_node("mysql-master1")
-
-    # copy dble's dbseq.sql to local
-    dble_node = get_node("dble-1")
-    source_remote_file = "{0}/dble/conf/dbseq.sql".format(dble_node.install_dir)
-    target_remote_file = "{0}/data/dbseq.sql".format(node.install_path)
-    local_file  = "{0}/dbseq.sql".format(os.getcwd())
-
-    ssh_client = node.ssh_conn;
-
-    cmd="rm -rf {0}".format(local_file)
-    ssh_client.exec_command(cmd);
-
-    context.ssh_sftp.sftp_get(source_remote_file, local_file)
-    node.sftp_conn.sftp_put(local_file, target_remote_file)
-
-    cmd = "mysql -utest -p111111 db1 < {0}".format(target_remote_file)
-    ssh_client.exec_command(cmd)
-
-    #execute dbseq.sql at the node configed in sequence file
-    context.execute_steps(u"""
-    Then execute sql in "mysql-master1"
-        | user | passwd | conn   | toClose | sql                                                               | expect  | db     |
-        | test | 111111 | conn_0 | True    | insert into DBLE_SEQUENCE values ('`schema1`.`test_auto`', 3, 1)  | success | db1    |
-    """)
