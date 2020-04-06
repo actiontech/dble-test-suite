@@ -64,11 +64,11 @@ Feature: reload @@config_all -sr
     </dataHost>
     """
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db      |
-      | test | 111111 | conn_0 | false   | drop table if exists sharding_4_t1               | success | schema1 |
-      | test | 111111 | conn_0 | false   | create table sharding_4_t1 (id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                              | db      |
+      | conn_0 | false   | drop table if exists sharding_4_t1               | schema1 |
+      | conn_0 | false   | create table sharding_4_t1 (id int)              | schema1 |
+      | conn_0 | False   | begin                                            | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all -rs"
     Then get resultset of admin cmd "show @@backend" named "rs_D"
     Then check resultset "rs_D" has not lines with following column values
@@ -81,9 +81,9 @@ Feature: reload @@config_all -sr
       | 172.100.9.6 | true        |
     Then check "rs_D" only has "2" connection of "172.100.9.6"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                    | expect      | db      |
-      | test | 111111 | conn_0 | false   | commit                                 | success     | schema1 |
-      | test | 111111 | conn_0 | true    | select * from sharding_4_t1 where id=2 | length{(1)} | schema1 |
+      | conn   | toClose | sql                                    | expect      | db      |
+      | conn_0 | false   | commit                                 | success     | schema1 |
+      | conn_0 | true    | select * from sharding_4_t1 where id=2 | length{(1)} | schema1 |
     Given sleep "3" seconds
     Then get resultset of admin cmd "show @@backend" named "rs_E"
     Then check resultset "rs_E" has not lines with following column values
@@ -92,11 +92,11 @@ Feature: reload @@config_all -sr
 
     #4 start the transaction and change datanode, then execute "reload config_all -s -r" will rebuild connections except connections in transaction
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db      |
-      | test | 111111 | conn_0 | false   | drop table if exists sharding_4_t1               | success | schema1 |
-      | test | 111111 | conn_0 | false   | create table sharding_4_t1 (id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                              | db      |
+      | conn_0 | false   | drop table if exists sharding_4_t1               | schema1 |
+      | conn_0 | false   | create table sharding_4_t1 (id int)              | schema1 |
+      | conn_0 | False   | begin                                            | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
     Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
@@ -110,6 +110,6 @@ Feature: reload @@config_all -sr
       | 172.100.9.5 | true        |
       | 172.100.9.6 | false       |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                      | expect      | db      |
-      | test | 111111 | conn_0 | False   | commit                                   | success     | schema1 |
-      | test | 111111 | conn_0 | false   | select * from sharding_4_t1 where id = 2 | length{(1)} | schema1 |
+      | conn   | toClose | sql                                      | expect      | db      |
+      | conn_0 | False   | commit                                   | success     | schema1 |
+      | conn_0 | true    | select * from sharding_4_t1 where id = 2 | length{(1)} | schema1 |

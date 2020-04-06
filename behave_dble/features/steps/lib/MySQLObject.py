@@ -70,11 +70,13 @@ class MySQLObject(object):
 
         # if mysqld already stopped,do not stop it again
         if status_out.find("MySQL running") != -1:
+            logger.debug("try to stop mysql")
+
             stop_cd, stop_out, stop_err = ssh.exec_command(cmd_stop)
             success_p = "Shutting down MySQL.*?SUCCESS"
             obj = re.search(success_p, stop_out)
             isSuccess = obj is not None
-            assert isSuccess, "stop mysql err:{1}".format(stop_err)
+            assert isSuccess, "stop mysql err:{}".format(stop_err)
 
         self._mysql_meta.close_ssh()
 
@@ -84,12 +86,13 @@ class MySQLObject(object):
         ssh = self._mysql_meta.ssh_conn
         cd, out, err = ssh.exec_command(cmd_start)
         self._mysql_meta.close_ssh()
-
+        logger.debug("check mysql start success")
         success_p = "Starting MySQL.*?SUCCESS"
         obj = re.search(success_p, out)
         isSuccess = obj is not None
         assert isSuccess, "start mysql err: {1}".format(err)
 
+        logger.debug("start mysql connect_test")
         self.connect_test()
 
     def connect_test(self):
@@ -98,7 +101,9 @@ class MySQLObject(object):
         max_try = 5
         while conn is None:
             try:
-                conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '', self._mysql_meta.mysql_port,autocommit=True)
+                conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user,
+                                     passwd=self._mysql_meta.mysql_password, db='',
+                                     port=self._mysql_meta.mysql_port, autocommit=True)
             except MySQLdb.Error, e:
                 logger.debug("connect to '{0}' failed for:{1}".format(self._mysql_meta.ip, e))
                 conn = None
@@ -181,7 +186,7 @@ class MySQLObject(object):
                 conn = MysqlConnUtil(host=query_meta.ip, user=query_meta.user, passwd=query_meta.passwd, db=query_meta.db, port=query_meta.port, autocommit=True, charset=query_meta.charset)
             except MySQLdb.Error, e:
                 err = e.args
-                assert err==query_meta.expect, "Expect query '{0}' get '{1}', create conn fail for '{2}'".format(query_meta.sql, query_meta.expect, err)
+                return None, err, 0
 
         assert conn, "expect {0} find or create success, but failed".format(query_meta.conn_id)
 

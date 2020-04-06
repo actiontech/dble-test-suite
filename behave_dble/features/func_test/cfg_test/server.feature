@@ -45,8 +45,8 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd        | conn   | toClose | sql      | expect  | db     |
-        | test_user    | test_password | conn_0 | True    | select 1 | success | schema1 |
+      | sql      |
+      | select 1 |
 
   @TRIVIAL
   Scenario: config server.xml with only <user> node, start dble success #4
@@ -94,10 +94,10 @@ Feature: test config in server.xml
     Given Restart dble in "dble-1" success
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Then execute sql in "dble-1" in "admin" mode
-        | user        | passwd | conn   | toClose | sql      | expect  | db     |
-        | mng_user   | 111111 | conn_0 | True    | show @@version |Access denied for user 'mng_user'  |  |
+        | user       | passwd | sql            | expect                            |
+        | mng_user   | 111111 | show @@version |Access denied for user 'mng_user'  |
     Then execute sql in "dble-1" in "user" mode
-        | user        | passwd | conn   | toClose | sql      | expect  | db     |
+        | user        | passwd | conn   | toClose | sql      | expect  | db      |
         | test        | 111111 | conn_0 | True    | select 1 |success  | schema1 |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' | schema1 |
 
@@ -138,35 +138,35 @@ Feature: test config in server.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |success | schema1 |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table_12(id int) |success | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 567 and 1!= 1 |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 567 and 1 = 1 |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 2-1 |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | alter table test_table_1 add name varchar(20)   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | commit   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | delete from test_table_1 where id =1   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | drop table test_table_1   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | insert test_table_1 values(1)   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | intersect    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | lock tables test_table_1 read  |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | minus    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | call test_table_1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | replace into test_table_1(id)values (2)  |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | set xa =1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | describe test_table_1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 limit 0    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 1^1   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where id = 1&1     |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | start transation    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | truncate table test_table_1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | update test_table_1 set id =10 where id =1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | use schema1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | BEGIN select * from suntest;END;   |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | delete from test_table_1    |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | update test_table_1 set id =10   |error totally whack | schema1 |
+      | conn   | toClose | sql                                                 | expect             | db      |
+      | conn_0 | False   | create table if not exists test_table_1(id int)     |success             | schema1 |
+      | conn_0 | False   | create table if not exists test_table_12(id int)    |success             | schema1 |
+      | conn_0 | False   | select * from test_table_1 where 1 = 1 and 2 = 1;   |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 where id = 567 and 1!= 1 |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 where id = 567 and 1 = 1 |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 where id = 2-1           |error totally whack | schema1 |
+      | conn_0 | False   | alter table test_table_1 add name varchar(20)       |error totally whack | schema1 |
+      | conn_0 | False   | commit                                              |error totally whack | schema1 |
+      | conn_0 | False   | delete from test_table_1 where id =1                |error totally whack | schema1 |
+      | conn_0 | False   | drop table test_table_1                             |error totally whack | schema1 |
+      | conn_0 | False   | insert test_table_1 values(1)                       |error totally whack | schema1 |
+      | conn_0 | False   | intersect                                           |error totally whack | schema1 |
+      | conn_0 | False   | lock tables test_table_1 read                       |error totally whack | schema1 |
+      | conn_0 | False   | minus                                               |error totally whack | schema1 |
+      | conn_0 | False   | call test_table_1                                   |error totally whack | schema1 |
+      | conn_0 | False   | replace into test_table_1(id)values (2)             |error totally whack | schema1 |
+      | conn_0 | False   | set xa =1                                           |error totally whack | schema1 |
+      | conn_0 | False   | describe test_table_1                               |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 limit 0                  |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 where id = 1^1           |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 where id = 1&1           |error totally whack | schema1 |
+      | conn_0 | False   | start transation                                    |error totally whack | schema1 |
+      | conn_0 | False   | truncate table test_table_1                         |error totally whack | schema1 |
+      | conn_0 | False   | update test_table_1 set id =10 where id =1          |error totally whack | schema1 |
+      | conn_0 | False   | use schema1                                         |error totally whack | schema1 |
+      | conn_0 | False   | BEGIN select * from suntest;END;                    |error totally whack | schema1 |
+      | conn_0 | False   | delete from test_table_1                            |error totally whack | schema1 |
+      | conn_0 | False   | update test_table_1 set id =10                      |error totally whack | schema1 |
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -179,10 +179,10 @@ Feature: test config in server.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111 | conn_0 | False    | create table if not exists test_table_1(id int) |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
-        | test         | 111111 | conn_0 | False    | show tables |error totally whack | schema1 |
+      | conn   | toClose | sql                                               | expect             | db     |
+      | conn_0 | False   | create table if not exists test_table_1(id int)   |error totally whack | schema1 |
+      | conn_0 | False   | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
+      | conn_0 | False   | show tables                                       |error totally whack | schema1 |
 
   @CRITICAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #8
@@ -213,10 +213,10 @@ Feature: test config in server.xml
         | action       | action    | conn_1 | False    | select 1 | success | schema1 |
         | action       | action    | new    | True     | select 1 | Access denied for user 'action',too many connections for this user | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | root         | 111111    | conn_2 | False   | show @@version | success | schema1 |
-        | root         | 111111    | conn_3 |False    | show @@version | success | schema1 |
-        | root         | 111111    | new    | False   | show @@version | Access denied for user 'root',too many connections for this user | schema1 |
+      | conn   | toClose | sql            | expect  |
+      | conn_2 | False   | show @@version | success |
+      | conn_3 | False   | show @@version | success |
+      | new    | False   | show @@version | Access denied for user 'root',too many connections for this user |
 
   @NORMAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #9
@@ -240,11 +240,11 @@ Feature: test config in server.xml
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111    | conn_4 | False   | select 1 | success | schema1 |
-        | test         | 111111    | conn_5 | False   | select 1 | success | schema1 |
-        | action       | action    | conn_6 | False   | select 1 | success | schema1 |
-        | action       | action    | conn_7 | False   | select 1 | success | schema1 |
+        | user   | passwd    | conn   | toClose | sql      | expect  | db      |
+        | test   | 111111    | conn_4 | False   | select 1 | success | schema1 |
+        | test   | 111111    | conn_5 | False   | select 1 | success | schema1 |
+        | action | action    | conn_6 | False   | select 1 | success | schema1 |
+        | action | action    | conn_7 | False   | select 1 | success | schema1 |
 
   @CRITICAL
   Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #10
@@ -279,13 +279,13 @@ Feature: test config in server.xml
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose | sql      | expect  | db     |
-        | test         | 111111    | conn_0 | False   | select 1 | success | schema1 |
-        | test         | 111111    | new    | False   | select 1 | too many connections for this user | schema1 |
-        | action       | action    | conn_1 | False   | select 1 | too many connections for dble server | schema1 |
+        | user   | passwd    | conn   | toClose | sql      | expect  | db     |
+        | test   | 111111    | conn_0 | False   | select 1 | success | schema1 |
+        | test   | 111111    | new    | False   | select 1 | too many connections for this user | schema1 |
+        | action | action    | conn_1 | False   | select 1 | too many connections for dble server | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-        | user     | passwd    | conn   | toClose | sql            | expect  | db     |
-        | root     | 111111    | conn_2 | False   | show @@version | success | schema1 |
+      | sql            |
+      | show @@version |
 
   Scenario: test tableStructureCheckTask from issue:1098 #11
 
@@ -300,12 +300,12 @@ Feature: test config in server.xml
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd | conn    | toClose | sql                                                     | expect          |db       |
-      | test  | 111111 | conn_0  | True    | drop table if exists test_table                     | success         | schema1 |
-      | test  | 111111 | conn_0  | True    | create table test_table(id int,name char(20))     | success         | schema1 |
+      | conn    | toClose | sql                                           | expect  |db       |
+      | conn_0  | False   | drop table if exists test_table               | success | schema1 |
+      | conn_0  | True    | create table test_table(id int,name char(20)) | success | schema1 |
     Then execute sql in "mysql-master1"
-      | user  | passwd | conn    | toClose | sql                                            | expect          |db       |
-      | test  | 111111 | conn_0  | True    | alter table test_table drop name           | success         | db1     |
+      | sql                              | expect  |db   |
+      | alter table test_table drop name | success | db1 |
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
@@ -313,8 +313,8 @@ Feature: test config in server.xml
     are modified by other,Please Check IT
     """
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd | conn    | toClose | sql                                           | expect          |db       |
-      | test  | 111111 | conn_0  | True    | drop table if exists test_table           | success         | schema1 |
+      | sql                             | expect          |db       |
+      | drop table if exists test_table | success         | schema1 |
 
   Scenario: test 'sqlExecuteTimeout' from issue:1286 #12
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -329,16 +329,16 @@ Feature: test config in server.xml
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd | conn    | toClose  | sql                                                  | expect          |db       |
-      | test  | 111111 | conn_0  | False    | drop table if exists test_table                  | success         |schema1       |
-      | test  | 111111 | conn_0  | False    | create table test_table(id int,name char(20))  | success         |schema1       |
-      | test  | 111111 | conn_0  | False    | insert into test_table values(1,11),(2,22)      | success         |schema1       |
-      | test  | 111111 | conn_0  | False    | select sleep(3)               | success         | schema1 |
-      | test  | 111111 | conn_0  | False    | select sleep(30)               | success         | schema1 |
-      | test  | 111111 | conn_0  | False    | select sleep(50)              | success          | schema1 |
-      | test  | 111111 | conn_0  | False    | select sleep(60),id from test_table             | reason is [sql timeout]         | schema1 |
-      | test  | 111111 | conn_0  | False    | select sleep(61)                                   | reason is [sql timeout]         | schema1 |
-      | test  | 111111 | conn_0  | True     | select sleep(70),id from test_table              | reason is [sql timeout]         | schema1 |
+      | conn    | toClose  | sql                                           | expect                 |db       |
+      | conn_0  | False    | drop table if exists test_table               | success                | schema1 |
+      | conn_0  | False    | create table test_table(id int,name char(20)) | success                | schema1 |
+      | conn_0  | False    | insert into test_table values(1,11),(2,22)    | success                | schema1 |
+      | conn_0  | False    | select sleep(3)                               | success                | schema1 |
+      | conn_0  | False    | select sleep(30)                              | success                | schema1 |
+      | conn_0  | False    | select sleep(50)                              | success                | schema1 |
+      | conn_0  | False    | select sleep(60),id from test_table           | reason is [sql timeout]| schema1 |
+      | conn_0  | False    | select sleep(61)                              | reason is [sql timeout]| schema1 |
+      | conn_0  | True     | select sleep(70),id from test_table           | reason is [sql timeout]| schema1 |
 
 
 
