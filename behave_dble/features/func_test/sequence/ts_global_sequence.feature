@@ -12,7 +12,9 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" />
     """
-    Then get resultset of user cmd "select sysdate()" named "sysTime"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
+      | sql              |
+      | select sysdate() |
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=01
@@ -22,14 +24,17 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then change start_time to current time "sysTime" in "sequence_time_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | conn   | toClose | sql                                                     | db      |
+      | conn_0 | False   | drop table if exists mytest_auto_test                   | schema1 |
+      | conn_0 | False   | create table mytest_auto_test(id bigint,time char(120)) | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate())          | schema1 |
 
-    Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
-    Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs"
-
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs"
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "binary_a" from "rs" and add 0 if binary length less than 64 bits
     Then get binary range start "30" end "34" from "binary_a" named "binary_sub1"
     Then get binary range start "35" end "39" from "binary_a" named "binary_sub2"
@@ -45,8 +50,8 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                   | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test | success | schema1 |
+      | sql                                   | expect  | db      |
+      | drop table if exists mytest_auto_test | success | schema1 |
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=01
@@ -63,23 +68,25 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_0 | False   | drop table if exists mytest_auto_test                   | success | schema1 |
+      | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
     When connect ssh execute cmd "date -s 2009/01/01"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                    | expect                                          | db      |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
+      | sql                                    | expect                                          | db      |
+      | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
+      | sql                                     | expect  | db      |
+      | drop table if exists mytest_auto_test   | success | schema1 |
 
   Scenario: change configuration file, check the correctness of the self-increment sequence #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
     """
         <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id" />
     """
-    Then get resultset of user cmd "select sysdate()" named "sysTime"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
+      | sql              |
+      | select sysdate() |
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=02
@@ -89,13 +96,16 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then change start_time to current time "sysTime" in "sequence_time_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
-    Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
-    Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs"
-
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_0 | False   | drop table if exists mytest_auto_test                   | success | schema1 |
+      | conn_0 | False   | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs"
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "binary_a" from "rs" and add 0 if binary length less than 64 bits
     Then get binary range start "30" end "34" from "binary_a" named "binary_sub1"
     Then get binary range start "35" end "39" from "binary_a" named "binary_sub2"
@@ -111,8 +121,8 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                   | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test | success | schema1 |
+      | sql                                   | expect  | db      |
+      | drop table if exists mytest_auto_test | success | schema1 |
     When Add some data in "sequence_time_conf.properties"
     """
     WORKID=01

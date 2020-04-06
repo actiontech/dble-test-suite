@@ -28,7 +28,9 @@ Feature: show @@binlog.status
       | conn_0 | False    | drop database if exists db11 |
       | conn_0 | True     | drop database if exists db22 |
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@binlog.status" named "sql_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs"
+      | sql                  |
+      | show @@binlog.status |
     Then check resultset "sql_rs" has lines with following column values
         | Url-0 |
         | 172.100.9.5:3306 |
