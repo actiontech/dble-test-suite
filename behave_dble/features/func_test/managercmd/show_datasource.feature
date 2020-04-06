@@ -7,7 +7,9 @@ Feature: show_datasource
              requirment from github issue #942 #: result should not display negative number for "ACTIVE" column,github issue #1070 #1
 
      Given stop mysql in host "mysql-master1"
-     Then get resultset of admin cmd "show @@datasource" named "sql_rs"
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs"
+       | sql               |
+       | show @@datasource |
      Then check resultset "sql_rs" has lines with following column values
         | NAME-1 | HOST-2         |  PORT-3 | ACTIVE-5  | IDLE-6  |
         | hostM1 | 172.100.9.5   | 3306     |    0      |      0    |
@@ -23,7 +25,9 @@ Feature: show_datasource
 	   </dataHost>
     """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@datasource" named "sql_rs2"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs2"
+      | sql               |
+      | show @@datasource |
     Then check resultset "sql_rs2" has lines with following column values
         | NAME-1 | HOST-2        |  PORT-3  | ACTIVE-5 |
         | hostM1 | 172.100.9.5   | 3306     |    1     |

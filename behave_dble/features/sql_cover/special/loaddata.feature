@@ -12,13 +12,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
      """
     # load data in maxCharsPerColumn default value
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose | sql                                                                                                                          | expect  | db     |
-        | test         | 111111    | conn_0 | False   | drop table if exists sharding_4_t3                                                                                       | success | schema2 |
-        | test         | 111111    | conn_0 | False   | drop table if exists global_4_t1                                                                                         | success | schema2 |
-        | test         | 111111    | conn_0 | False   | create table sharding_4_t3(id char(20),aa mediumtext)                                                                 | success | schema2 |
-        | test         | 111111    | conn_0 | False   | create table global_4_t1(id char(20),aa mediumtext)                                                                   | success | schema2 |
-        | test         | 111111    | conn_0 | False   | load data infile "./test68888.txt" into table sharding_4_t3 fields terminated by ',' lines terminated by '\n';|error totally whack  | schema2 |
-        | test         | 111111    | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';  | error totally whack | schema2 |
+      | conn   | toClose | sql                                                                                                           | expect              | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t3                                                                            | success             | schema2 |
+      | conn_0 | False   | drop table if exists global_4_t1                                                                              | success             | schema2 |
+      | conn_0 | False   | create table sharding_4_t3(id char(20),aa mediumtext)                                                         | success             | schema2 |
+      | conn_0 | False   | create table global_4_t1(id char(20),aa mediumtext)                                                           | success             | schema2 |
+      | conn_0 | False   | load data infile "./test68888.txt" into table sharding_4_t3 fields terminated by ',' lines terminated by '\n';|error totally whack  | schema2 |
+      | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';  | error totally whack | schema2 |
 
      #load data with setting maxCharsPerColumn < max column length in test68888.ext
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -30,10 +30,10 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
      </system>
     """
     Given Restart dble in "dble-1" success
-     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose | sql                                    | expect  | db     |
-        | test         | 111111    | conn_0 | False   | load data infile "./test68888.txt" into table sharding_4_t3 fields terminated by ',' lines terminated by '\n'; |error totally whack  | schema2 |
-        | test         | 111111    | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';   | error totally whack | schema2 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                            | expect              | db      |
+      | conn_0 | False   | load data infile "./test68888.txt" into table sharding_4_t3 fields terminated by ',' lines terminated by '\n'; |error totally whack  | schema2 |
+      | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';   | error totally whack | schema2 |
 
     #load data with setting maxCharsPerColumn >= max column length in test68888.ext
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
@@ -46,9 +46,9 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-        | user         | passwd    | conn   | toClose | sql                                    | expect  | db     |
-        | test         | 111111    | conn_0 | False   | load data infile "./test68888.txt" into table sharding_4_t3 fields terminated by ',' lines terminated by '\n'; |success  | schema2 |
-        | test         | 111111    | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';   | success | schema2 |
+      | conn   | toClose | sql                                                                                                            | expect  | db      |
+      | conn_0 | False   | load data infile "./test68888.txt" into table sharding_4_t3 fields terminated by ',' lines terminated by '\n'; |success  | schema2 |
+      | conn_0 | True    | load data infile "./test68888.txt" into table global_4_t1 fields terminated by ',' lines terminated by '\n';   | success | schema2 |
 
     Given remove local and server file "test68888.txt"
 
@@ -64,15 +64,15 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       #4,4
      """
     Then execute sql in "dble-1" in "user" mode
-        | user   | passwd    | conn   | toClose | sql                                                                                                                                               | expect       | db     |
-        | test   | 111111    | conn_0 | True    | drop table if exists sharding_4_t1                                                                                                           | success      | schema1 |
-        | test   | 111111    | conn_0 | True    | CREATE TABLE sharding_4_t1 (name varchar(15) DEFAULT NULL,id int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1          | success      | schema1 |
-        | test   | 111111    | conn_0 | True    | load data infile './data.txt' into table sharding_4_t1 fields terminated by ',';                                                       |success       | schema1 |
-        | test   | 111111    | conn_0 | True    | load data infile './data2.txt' into table sharding_4_t1 fields terminated by ',';                                                      | success      | schema1 |
-        | test   | 111111    | conn_0 | True    | select * from sharding_4_t1                                                                                                                    | length{(4)} | schema1 |
-        | test   | 111111    | conn_0 | True    | select name from sharding_4_t1 where id=1                                                                                                    | has{('#1')} | schema1 |
-        | test   | 111111    | conn_0 | True    | select name from sharding_4_t1 where id=3                                                                                                    | has{('#3')} | schema1 |
-        | test   | 111111    | conn_0 | True    | select name from sharding_4_t1 where id=4                                                                                                    | has{('#4')} | schema1 |
+      | conn   | toClose | sql                                                                                                                     | expect       | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                                                      | success      | schema1 |
+      | conn_0 | False   | CREATE TABLE sharding_4_t1 (name varchar(15) DEFAULT NULL,id int(11) DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=latin1 | success      | schema1 |
+      | conn_0 | False   | load data infile './data.txt' into table sharding_4_t1 fields terminated by ',';                                        |success       | schema1 |
+      | conn_0 | False   | load data infile './data2.txt' into table sharding_4_t1 fields terminated by ',';                                       | success      | schema1 |
+      | conn_0 | False   | select * from sharding_4_t1                                                                                             | length{(4)}  | schema1 |
+      | conn_0 | False   | select name from sharding_4_t1 where id=1                                                                               | has{('#1')}  | schema1 |
+      | conn_0 | False   | select name from sharding_4_t1 where id=3                                                                               | has{('#3')}  | schema1 |
+      | conn_0 | True    | select name from sharding_4_t1 where id=4                                                                               | has{('#4')}  | schema1 |
 
   Scenario: load data for table using global sequence from issue:1048    #3
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
@@ -89,11 +89,11 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       dble
      """
     Then execute sql in "dble-1" in "user" mode
-        | user   | passwd    | conn   | toClose | sql                                                                                                                                                                                                                           | expect       | db     |
-        | test   | 111111    | conn_0 | False   | drop table if exists test_auto                                                                                                                                                                                            | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | create table test_auto(`id` bigint(20) NOT NULL AUTO_INCREMENT, `name` varchar(20) DEFAULT NULL,PRIMARY KEY (`id`))ENGINE=InnoDB AUTO_INCREMENT=1103846109324774874 DEFAULT CHARSET=latin1          | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | load data local infile './ld.txt' into table test_auto fields terminated by ',' lines terminated by '\n' (name);                                                                                               |success       | schema1 |
-        | test   | 111111    | conn_0 | False   | select * from test_auto                                                                                                                                                                                                     |length{(1)}  | schema1 |
+      | conn   | toClose | sql                                                                                                                                                                                         | expect      | db      |
+      | conn_0 | False   | drop table if exists test_auto                                                                                                                                                              | success     | schema1 |
+      | conn_0 | False   | create table test_auto(`id` bigint(20) NOT NULL AUTO_INCREMENT, `name` varchar(20) DEFAULT NULL,PRIMARY KEY (`id`))ENGINE=InnoDB AUTO_INCREMENT=1103846109324774874 DEFAULT CHARSET=latin1  | success     | schema1 |
+      | conn_0 | False   | load data local infile './ld.txt' into table test_auto fields terminated by ',' lines terminated by '\n' (name);                                                                            |success      | schema1 |
+      | conn_0 | False   | select * from test_auto                                                                                                                                                                     |length{(1)}  | schema1 |
     Given remove local and server file "ld.txt"
 
 
@@ -120,13 +120,13 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       3,fgh"
      """
     Then execute sql in "dble-1" in "user" mode
-        | user   | passwd    | conn   | toClose | sql                                                                                                                                                         | expect       | db     |
-        | test   | 111111    | conn_0 | False   | drop table if exists test_shard                                                                                                                         | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | create table test_shard(id int,name char(20))                                                                                                         | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | load data local infile './aa.txt' into table test_shard character SET 'utf8' fields terminated by ',' lines terminated by '\n';           |success       | schema1 |
-        | test   | 111111    | conn_0 | False   | load data local infile './bb.txt' into table test_shard character SET 'utf8' fields terminated by ',' lines terminated by '\n';           |success       | schema1 |
-        | test   | 111111    | conn_0 | False   | select * from test_shard                                                                                                                                  |length{(6)}  | schema1 |
-        | test   | 111111    | conn_0 | False   | drop table if exists test_shard                                                                                                                         |success       | schema1 |
+      | conn   | toClose | sql                                                                                                                              | expect       | db      |
+      | conn_0 | False   | drop table if exists test_shard                                                                                                  | success      | schema1 |
+      | conn_0 | False   | create table test_shard(id int,name char(20))                                                                                    | success      | schema1 |
+      | conn_0 | False   | load data local infile './aa.txt' into table test_shard character SET 'utf8' fields terminated by ',' lines terminated by '\n';  |success       | schema1 |
+      | conn_0 | False   | load data local infile './bb.txt' into table test_shard character SET 'utf8' fields terminated by ',' lines terminated by '\n';  |success       | schema1 |
+      | conn_0 | False   | select * from test_shard                                                                                                         |length{(6)}   | schema1 |
+      | conn_0 | False   | drop table if exists test_shard                                                                                                  |success       | schema1 |
     Given remove local and server file "aa.txt"
     Given remove local and server file "bb.txt"
 
@@ -137,10 +137,10 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
       201	"Mazojys	ddd	ggg"	"Fxoj"	"Finance"	7800
      """
     Then execute sql in "dble-1" in "user" mode
-        | user   | passwd    | conn   | toClose | sql                                                                                                                                                         | expect       | db     |
-        | test   | 111111    | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                                         | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | CREATE TABLE sharding_4_t1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)                                                                                                        | success      | schema1 |
-        | test   | 111111    | conn_0 | False   | load data infile "./tab.txt" into table sharding_4_t1  FIELDS   OPTIONALLY ENCLOSED BY '"'   LINES TERMINATED BY '\n';           |success       | schema1 |
-        | test   | 111111    | conn_0 | False   | select * from sharding_4_t1                                                                                                                                  |has{('Mazojys	ddd	ggg')}  | schema1 |
-        | test   | 111111    | conn_0 | True   | drop table if exists sharding_4_t1                                                                                                                         |success       | schema1 |
+      | conn   | toClose | sql                                                                                                                              | expect       | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                                                               | success      | schema1 |
+      | conn_0 | False   | CREATE TABLE sharding_4_t1(ID INT NOT NULL,FirstName VARCHAR(20),LastName VARCHAR(20),Department VARCHAR(20),Salary INT)         | success      | schema1 |
+      | conn_0 | False   | load data infile "./tab.txt" into table sharding_4_t1  FIELDS   OPTIONALLY ENCLOSED BY '"'   LINES TERMINATED BY '\n';           |success       | schema1 |
+      | conn_0 | False   | select * from sharding_4_t1                                                                                                      |has{('Mazojys	ddd	ggg')}  | schema1 |
+      | conn_0 | True   | drop table if exists sharding_4_t1                                                                                                |success       | schema1 |
     Given remove local and server file "tab.txt"
