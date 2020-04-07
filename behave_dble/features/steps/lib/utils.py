@@ -126,7 +126,7 @@ def merge_cmd_strings(filename,sedStr):
     for sed_cmd in sed_cmd_list:
         cmd += " -e '{0}'".format(sed_cmd.strip())
     cmd += " {0}".format(filename)
-    logger.debug("sed cmd : {0},raw: {1}".format(cmd,sed_cmd_str))
+    logger.debug("sed cmd: {0}".format(cmd))
     return cmd
 
 def restore_sys_time():

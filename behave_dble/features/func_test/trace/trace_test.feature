@@ -7,14 +7,16 @@ Feature: track SQL and analyze SQL execution
 
   Scenario: turn on mysql trace and analyze sql with trace #1
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                                         | expect      | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                                                          | success     | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))                                         | success     | schema1 |
-      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,'test1'),(2,'test2'),(3,'test3'),(4,'test4'),(5,'test5') | success     | schema1 |
-      | test | 111111 | conn_0 | False   | set @@trace=1                                                                               | success     | schema1 |
-      | test | 111111 | conn_0 | False   | select @@trace                                                                              | balance{1}  | schema1 |
-      | test | 111111 | conn_0 | False   | select * from sharding_4_t1 where id=1                                                      | length{(1)} | schema1 |
-    Then get resultset of user cmd "show trace" named "rs_A" with connection "conn_0"
+      | conn   | toClose | sql                                                                                         | expect      | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                          | success     | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))                                         | success     | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,'test1'),(2,'test2'),(3,'test3'),(4,'test4'),(5,'test5') | success     | schema1 |
+      | conn_0 | False   | set @@trace=1                                                                               | success     | schema1 |
+      | conn_0 | False   | select @@trace                                                                              | balance{1}  | schema1 |
+      | conn_0 | False   | select * from sharding_4_t1 where id=1                                                      | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_A"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
     Then check resultset "rs_A" has lines with following column values
       | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                                          |
       | Execute_SQL  | dn2         | SELECT * FROM sharding_4_t1 WHERE id = 1 LIMIT 100 |
@@ -23,7 +25,9 @@ Feature: track SQL and analyze SQL execution
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_0 | False   | select * from sharding_4_t1 | length{(5)} | schema1 |
-    Then get resultset of user cmd "show trace" named "rs_B" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
     Then check resultset "rs_B" has lines with following column values
       | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                             |
       | Execute_SQL  | dn1         | SELECT * FROM sharding_4_t1 LIMIT 100 |
@@ -36,18 +40,22 @@ Feature: track SQL and analyze SQL execution
       | Fetch_result | dn4         | SELECT * FROM sharding_4_t1 LIMIT 100 |
 
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                           | expect  | db      |
-      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(30,'test30') | success | schema1 |
-    Then get resultset of user cmd "show trace" named "rs_C" with connection "conn_0"
+      | conn   | toClose | sql                                           | expect  | db      |
+      | conn_0 | False   | insert into sharding_4_t1 values(30,'test30') | success | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_C"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
     Then check resultset "rs_C" has lines with following column values
       | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                                       |
       | Execute_SQL  | dn3         | INSERT INTO sharding_4_t1 VALUES (30, 'test30') |
       | Fetch_result | dn3         | INSERT INTO sharding_4_t1 VALUES (30, 'test30') |
 
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect     | db      |
-      | test | 111111 | conn_0 | False   | select count(*) from sharding_4_t1 | balance{6} | schema1 |
-    Then get resultset of user cmd "show trace" named "rs_D" with connection "conn_0"
+      | conn   | toClose | sql                                | expect     | db      |
+      | conn_0 | False   | select count(*) from sharding_4_t1 | balance{6} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_D"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
     Then check resultset "rs_D" has lines with following column values
       | OPERATION-0   | DATA_NODE-4     | SQL/REF-5                                                            |
       | Fetch_result  | dn1_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
@@ -65,7 +73,9 @@ Feature: track SQL and analyze SQL execution
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                    | expect     | db      |
       | test | 111111 | conn_0 | False   | select count(*) from sharding_4_t1 where id =(select id from sharding_4_t1 where id=1) | balance{1} | schema1 |
-    Then get resultset of user cmd "show trace" named "rs_E" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
     Then check resultset "rs_E" has lines with following column values
       | OPERATION-0      | DATA_NODE-4        | SQL/REF-5                                                                                                      |
       | Execute_SQL      | dn2_0              | select `sharding_4_t1`.`id` as `autoalias_scalar` from  `sharding_4_t1` where `sharding_4_t1`.`id` = 1 LIMIT 2 |
@@ -80,5 +90,5 @@ Feature: track SQL and analyze SQL execution
       | AGGREGATE        | aggregate_1        | merge_2                                                                                                        |
       | SHUFFLE_FIELD    | shuffle_field_2    | aggregate_1                                                                                                    |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                      | expect  | db      |
-      | test | 111111 | conn_0 | true    | drop table sharding_4_t1 | success | schema1 |
+      | conn   | toClose | sql                      | expect  | db      |
+      | conn_0 | true    | drop table sharding_4_t1 | success | schema1 |

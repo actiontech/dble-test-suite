@@ -33,18 +33,24 @@ Feature: test show user related manager command
       </user>
       """
        Then execute admin cmd "reload @@config_all"
-       Then get resultset of admin cmd "show @@user" named "user_rs_A"
+       Given execute single sql in "dble-1" in "admin" mode and save resultset in "user_rs_A"
+         | sql         |
+         | show @@user |
        Then check resultset "user_rs_A" has lines with following column values
       | Username-0 | Manager-1  | Readonly-2   | Max_con-3    |
       |    test1        | N         | N         | 40      |
-       Then get resultset of admin cmd "show @@user.privilege" named "userPrivilege_rs_A"
+       Given execute single sql in "dble-1" in "admin" mode and save resultset in "userPrivilege_rs_A"
+         | sql                   |
+         | show @@user.privilege |
        Then check resultset "userPrivilege_rs_A" has lines with following column values
       | Username-0 | Schema-1  | Table-2       | INSERT-3    | UPDATE-4   | SELECT-5 | DELETE-6  |
       |    test1   | schema    | test          | N           | N          | N        | N         |
       |    test1   | schema    | sharding_4_t1 | Y           | Y          | Y        | Y         |
       |    test1   | schema2   | sharding_4_t1 | Y           | N          | N        | Y         |
       |    test1   | schema2   | *             | N           | Y          | N        | Y         |
-       Then get resultset of admin cmd "show @@help" named "help_rs_A"
+       Given execute single sql in "dble-1" in "admin" mode and save resultset in "help_rs_A"
+         | sql         |
+         | show @@help |
        Then check resultset "help_rs_A" has lines with following column values
       | STATEMENT-0             | DESCRIPTION-1                                      |
       | show @@user             | Report all user in this dble                       |

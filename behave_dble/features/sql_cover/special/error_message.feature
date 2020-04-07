@@ -6,17 +6,17 @@ Feature: # Detecting the reasonableness of the alarm information returned by the
   @TRIVIAL @current
   Scenario: union with different number of columns #1
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn    | toClose| sql                                                                                | expect    | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists sharding_4_t1                                                 | success   | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists schema2.global_4_t1                                           | success   | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists single_node_t1                                                | success   | schema1 |
-      | test | 111111 | conn_0 | True    | create table sharding_4_t1(id int, name varchar(5))                                | success   | schema1 |
-      | test | 111111 | conn_0 | True    | create table schema2.global_4_t1(id int, name varchar(5))                          | success   | schema1 |
-      | test | 111111 | conn_0 | True    | create table single_node_t1(id int, name varchar(5),age int)                       | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema2.global_4_t1        | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from schema1.sharding_4_t1 union select * from schema1.single_node_t1     | The used SELECT statements have a different number of columns   | schema1 |
-      | test | 111111 | conn_0 | True    | alter table schema2.global_4_t1 drop column name                                   | success   | schema1 |
-      | test | 111111 | conn_0 | True    | select * from schema1.single_node_t1 union select * from schema2.global_4_t1       | The used SELECT statements have a different number of columns   | schema1 |
+      | conn   | toClose| sql                                                                                 | expect    | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                 | success   | schema1 |
+      | conn_0 | False   | drop table if exists schema2.global_4_t1                                           | success   | schema1 |
+      | conn_0 | False   | drop table if exists single_node_t1                                                | success   | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int, name varchar(5))                                | success   | schema1 |
+      | conn_0 | False   | create table schema2.global_4_t1(id int, name varchar(5))                          | success   | schema1 |
+      | conn_0 | False   | create table single_node_t1(id int, name varchar(5),age int)                       | success   | schema1 |
+      | conn_0 | False   | select * from schema1.sharding_4_t1 union select * from schema2.global_4_t1        | success   | schema1 |
+      | conn_0 | False   | select * from schema1.sharding_4_t1 union select * from schema1.single_node_t1     | The used SELECT statements have a different number of columns   | schema1 |
+      | conn_0 | False   | alter table schema2.global_4_t1 drop column name                                   | success   | schema1 |
+      | conn_0 | True    | select * from schema1.single_node_t1 union select * from schema2.global_4_t1       | The used SELECT statements have a different number of columns   | schema1 |
 
   @regression
   Scenario: unexpected explain  from issue：837 #2

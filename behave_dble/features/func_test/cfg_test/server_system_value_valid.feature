@@ -68,7 +68,12 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
     </system>
     """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@sysparam" named "sysparam_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql             |
+      | show @@sysparam |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql              |
+      | show @@sysparam  |
     Then check resultset "sysparam_rs" has lines with following column values
       | PARAM_NAME-0                | PARAM_VALUE-1                   |
       | bindIp                      | 0.0.0.0                         |
@@ -148,7 +153,9 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | maxCharsPerColumn           | 65535                           |
       | maxRowSizeToFile            | 10000                           |
       | useOuterHa                  | false                           |
-    Then get resultset of admin cmd "dryrun" named "dryrun_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
+      | sql             |
+      | dryrun          |
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
       | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
