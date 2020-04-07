@@ -25,31 +25,31 @@ Feature: multiple reload
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | False   | drop table if exists test1         | success | schema1 |
+      | conn_0 | False   | drop table if exists test2         | success | schema1 |
+      | conn_0 | False   | drop table if exists test3         | success | schema1 |
+      | conn_0 | False   | drop table if exists test4         | success | schema1 |
+      | conn_0 | False   | drop table if exists test5         | success | schema1 |
+      | conn_0 | False   | drop table if exists test6         | success | schema1 |
+      | conn_0 | False   | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn | toClose | sql                 | expect  | db |
-      | root | 111111 | new  | true    | reload @@config_all | success |    |
-      | root | 111111 | new  | true    | reload @@config_all | success |    |
+      | conn | toClose | sql                 | expect  |
+      | new  | False   | reload @@config_all | success |
+      | new  | true    | reload @@config_all | success |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
   Scenario: execute reload @@metadata with different session at the same time after init metadata successed #2
     Given delete the following xml segment
@@ -70,28 +70,30 @@ Feature: multiple reload
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | False   | drop table if exists test1         | success | schema1 |
+      | conn_0 | False   | drop table if exists test2         | success | schema1 |
+      | conn_0 | False   | drop table if exists test3         | success | schema1 |
+      | conn_0 | False   | drop table if exists test4         | success | schema1 |
+      | conn_0 | False   | drop table if exists test5         | success | schema1 |
+      | conn_0 | False   | drop table if exists test6         | success | schema1 |
+      | conn_0 | False   | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | true    | alter table test2 add name char(9) | success | schema1 |
+      | sql                                | expect  | db      |
+      | alter table test2 add name char(9) | success | schema1 |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | true    | alter table test1 add name char(9) | success | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+      | sql                                | expect  | db      |
+      | alter table test1 add name char(9) | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test1   | 1                          | 1                      |
@@ -135,10 +137,12 @@ Feature: multiple reload
       | schema1  | test5   | 1                          | 1                      |
       | schema1  | test6   | 1                          | 1                      |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn | toClose | sql               | expect  | db |
-      | root | 111111 | new  | true    | reload @@metadata | success |    |
-      | root | 111111 | new  | true    | reload @@metadata | success |    |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_e"
+      | conn | toClose | sql               | expect  |
+      | new  | true    | reload @@metadata | success |
+      | new  | true    | reload @@metadata | success |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_e"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_e" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -148,21 +152,21 @@ Feature: multiple reload
       | schema1  | test2   | 1                          | 1                      |
       | schema1  | test6   | 1                          | 1                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                             | expect  | db      |
-      | test | 111111 | conn_0 | true    | insert into test1 values(1,1,1) | success | schema1 |
-      | test | 111111 | conn_0 | true    | insert into test2 values(1,1,1) | success | schema1 |
-      | test | 111111 | conn_0 | true    | insert into test3 values(1,1)   | success | schema1 |
-      | test | 111111 | conn_0 | true    | insert into test4 values(1,1)   | success | schema1 |
-      | test | 111111 | conn_0 | true    | insert into test5 values(1,1)   | success | schema1 |
-      | test | 111111 | conn_0 | true    | insert into test6 values(1,1)   | success | schema1 |
+      | conn   | toClose | sql                             | expect  | db      |
+      | conn_0 | False   | insert into test1 values(1,1,1) | success | schema1 |
+      | conn_0 | False   | insert into test2 values(1,1,1) | success | schema1 |
+      | conn_0 | False   | insert into test3 values(1,1)   | success | schema1 |
+      | conn_0 | False   | insert into test4 values(1,1)   | success | schema1 |
+      | conn_0 | False   | insert into test5 values(1,1)   | success | schema1 |
+      | conn_0 | true    | insert into test6 values(1,1)   | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
   @btrace
   Scenario: execute reload @@config_all with different session at the same time after init metadata failed #3
@@ -184,52 +188,54 @@ Feature: multiple reload
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | False   | drop table if exists test1         | success | schema1 |
+      | conn_0 | False   | drop table if exists test2         | success | schema1 |
+      | conn_0 | False   | drop table if exists test3         | success | schema1 |
+      | conn_0 | False   | drop table if exists test4         | success | schema1 |
+      | conn_0 | False   | drop table if exists test5         | success | schema1 |
+      | conn_0 | False   | drop table if exists test6         | success | schema1 |
+      | conn_0 | False   | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                    | db      |
-      | root | 111111 | conn_0 | True    | reload @@config_all -r | schema1 |
+      | sql                    | db      |
+      | reload @@config_all -r | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test5 | success | db1 |
+      | sql              | expect  | db  |
+      | drop table test5 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test5 | success | db2 |
+      | sql              | expect  | db  |
+      | drop table test5 | success | db2 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn | toClose | sql                    | expect  | db |
-      | root | 111111 | new  | true    | reload @@config_all -r | success |    |
-      | root | 111111 | new  | true    | reload @@config_all -r | success |    |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+      | conn | toClose | sql                    | expect  | db |
+      | new  | true    | reload @@config_all -r | success |    |
+      | new  | true    | reload @@config_all -r | success |    |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -238,11 +244,15 @@ Feature: multiple reload
       | schema1  | test1   | 1                          | 1                      |
       | schema1  | test2   | 1                          | 1                      |
       | schema1  | test6   | 1                          | 1                      |
-    Then get resultset of admin cmd "check full @@metadata where consistent_in_memory=0" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                                |
+      | check full @@metadata where consistent_in_memory=0 |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test5   | 0                          | 0                      |
-    Then get resultset of admin cmd "check full @@metadata where consistent_in_memory=1" named "metadata_rs_c"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
+      | sql                                                |
+      | check full @@metadata where consistent_in_memory=1 |
     Then check resultset "metadata_rs_c" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -251,21 +261,21 @@ Feature: multiple reload
       | schema1  | test2   | 1                          | 1                      |
       | schema1  | test6   | 1                          | 1                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                           | expect              | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test2 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test3 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test4 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test5 values(1,1) | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test6 values(1,1) | success             | schema1 |
+      | conn   | toClose | sql                           | expect              | db      |
+      | conn_0 | False   | insert into test1 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test2 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test3 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test4 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test5 values(1,1) | error totally whack | schema1 |
+      | conn_0 | True    | insert into test6 values(1,1) | success             | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
   @btrace
   Scenario: execute reload @@metadata with different session at the same time after init metadata failed #4
@@ -287,52 +297,54 @@ Feature: multiple reload
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | False   | drop table if exists test1         | success | schema1 |
+      | conn_0 | False   | drop table if exists test2         | success | schema1 |
+      | conn_0 | False   | drop table if exists test3         | success | schema1 |
+      | conn_0 | False   | drop table if exists test4         | success | schema1 |
+      | conn_0 | False   | drop table if exists test5         | success | schema1 |
+      | conn_0 | False   | drop table if exists test6         | success | schema1 |
+      | conn_0 | False   | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql               | db      |
-      | root | 111111 | conn_0 | True    | reload @@metadata | schema1 |
+      | sql               |
+      | reload @@metadata |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test5 | success | db1 |
+      | sql              | expect  | db  |
+      | drop table test5 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test5 | success | db2 |
+      | sql              | expect  | db  |
+      | drop table test5 | success | db2 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn | toClose | sql               | expect  | db |
-      | root | 111111 | new  | true    | reload @@metadata | success |    |
-      | root | 111111 | new  | true    | reload @@metadata | success |    |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_e"
+      | conn | toClose | sql               | expect  |
+      | new  | true    | reload @@metadata | success |
+      | new  | true    | reload @@metadata | success |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_e"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_e" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test3   | 1                          | 1                      |
@@ -342,18 +354,18 @@ Feature: multiple reload
       | schema1  | test2   | 1                          | 1                      |
       | schema1  | test6   | 1                          | 1                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                           | expect              | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test2 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test3 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test4 values(1,1) | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test5 values(1,1) | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test6 values(1,1) | success             | schema1 |
+      | conn   | toClose | sql                           | expect              | db      |
+      | conn_0 | False   | insert into test1 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test2 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test3 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test4 values(1,1) | success             | schema1 |
+      | conn_0 | False   | insert into test5 values(1,1) | error totally whack | schema1 |
+      | conn_0 | True    | insert into test6 values(1,1) | success             | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |

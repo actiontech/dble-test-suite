@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import os
 import threading
-from behave_dble.features.steps.lib.Node import get_node
+from behave_dble.features.steps.lib.utils import get_node
 
 coding= 'utf8'
 import logging
@@ -42,29 +42,3 @@ def step_impl(context, totalsRowsInsert, table, threadNum):
 
     for i in range(realThreadNum):
         threadsList[i].join()
-
-@Then('execute sqlFile to initialize sequence table')
-def step_impl(context):
-    # copy dble's dbseq.sql to local
-    source_remote_file = "{0}/dble/conf/dbseq.sql".format(context.cfg_dble["install_dir"])
-    target_remote_file = "{0}/data/dbseq.sql".format(context.cfg_mysql["install_path"])
-    local_file  = "{0}/dbseq.sql".format(os.getcwd())
-
-    node = get_node(context.mysqls, "mysql-master1")
-    ssh_client = node.ssh_conn;
-
-    cmd="rm -rf {0}".format(local_file)
-    ssh_client.exec_command(cmd);
-
-    context.ssh_sftp.sftp_get(source_remote_file, local_file)
-    node.sftp_conn.sftp_put(local_file, target_remote_file)
-
-    cmd = "mysql -utest -p111111 db1 < {0}".format(target_remote_file)
-    ssh_client.exec_command(cmd)
-
-    #execute dbseq.sql at the node configed in sequence file
-    context.execute_steps(u"""
-    Then execute sql in "mysql-master1"
-        | user | passwd | conn   | toClose | sql                                                               | expect  | db     |
-        | test | 111111 | conn_0 | True    | insert into DBLE_SEQUENCE values ('`schema1`.`test_auto`', 3, 1)  | success | db1    |
-    """)

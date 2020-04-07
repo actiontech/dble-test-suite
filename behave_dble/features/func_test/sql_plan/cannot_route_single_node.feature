@@ -26,13 +26,14 @@ Feature: following complex queries are not able to send one datanode
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                  | expect  | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_two_node2(id int, c_flag int, c_decimal float) | success | schema1 |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_two_node                               | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_two_node(id int, c_flag int, c_decimal float)  | success | schema1 |
-
-    Then get resultset of user cmd "explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1" named "rs_A" with connection "conn_0"
+      | conn   | toClose | sql                                                                  | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
+      | conn_0 | False   | create table sharding_two_node2(id int, c_flag int, c_decimal float) | success | schema1 |
+      | conn_0 | False   | drop table if exists sharding_two_node                               | success | schema1 |
+      | conn_0 | False   | create table sharding_two_node(id int, c_flag int, c_decimal float)  | success | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_A"
+      | conn   | toClose | sql                                                                                                             |
+      | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1|
     Then check resultset "rs_A" has lines with following column values
       | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` ORDER BY `a`.`c_flag` ASC  |
@@ -46,7 +47,9 @@ Feature: following complex queries are not able to send one datanode
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                      |
       | where_filter_1    | WHERE_FILTER    | join_1                                                                                                |
       | shuffle_field_2   | SHUFFLE_FIELD   | where_filter_1                                                                                        |
-    Then get resultset of user cmd "explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)" named "rs_B" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_B"
+      | conn   | toClose | sql                                                                                                                                            |
+      | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)|
     Then check resultset "rs_B" has lines with following column values
       | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                                                                      |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 513) ORDER BY `a`.`c_flag` ASC  |
@@ -60,8 +63,9 @@ Feature: following complex queries are not able to send one datanode
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                                               |
       | where_filter_1    | WHERE_FILTER    | join_1                                                                                                                                         |
       | shuffle_field_2   | SHUFFLE_FIELD   | where_filter_1                                                                                                                                 |
-
-    Then get resultset of user cmd "explain select * from sharding_two_node a join sharding_two_node2 b where (a.id = b.id and a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )" named "rs_C" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_C"
+      | conn   | toClose | sql                                                                                                                                                |
+      | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where (a.id = b.id and a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )|
     Then check resultset "rs_C" has lines with following column values
       | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                         |
       | dn1_0           | BASE SQL      | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 2) |
@@ -75,7 +79,9 @@ Feature: following complex queries are not able to send one datanode
       | where_filter_1  | WHERE_FILTER  | join_1                                                                                                            |
       | shuffle_field_2 | SHUFFLE_FIELD | where_filter_1                                                                                                    |
 
-    Then get resultset of user cmd "explain select * from sharding_two_node a join sharding_two_node2 b where a.c_flag=b.c_flag and a.id =2" named "rs_D" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_D"
+      | conn   | toClose | sql                                                                                                     |
+      | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where a.c_flag=b.c_flag and a.id =2 |
     Then check resultset "rs_D" has lines with following column values
       | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                                               |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where `a`.`id` = 2 ORDER BY `a`.`c_flag` ASC |
@@ -87,16 +93,18 @@ Feature: following complex queries are not able to send one datanode
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                       |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                        |
       | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                                  |
-
-    Then get resultset of user cmd "explain select b.*,a.* from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 or (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )))" named "rs_E" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_E"
+      | conn   | toClose | sql                                                                                                                                                                            |
+      | conn_0 | False   | explain select b.*,a.* from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 or (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 ))) |
     Then check resultset "rs_E" has lines with following column values
       | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                       |
       | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((`a`.`id` = 1) OR (`a`.`id` = 2) OR (a.c_decimal IN (1))) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (a.c_decimal IN (1))) |
       | dn2_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((`a`.`id` = 1) OR (`a`.`id` = 2) OR (a.c_decimal IN (1))) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (a.c_decimal IN (1))) |
       | merge_1         | MERGE         | dn1_0; dn2_0                                                                                                                                                                                                                                                                                                                                                    |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                                                                                                                                                                                                                         |
-
-    Then get resultset of user cmd "explain select * from sharding_two_node where c_flag = (select c_flag from sharding_two_node2 where id =1 )" named "rs_F" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_F"
+      | conn   | toClose | sql                                                                                                         |
+      | conn_0 | False   | explain select * from sharding_two_node where c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
     Then check resultset "rs_F" has lines with following column values
       | DATA_NODE-0        | TYPE-1                | SQL/REF-2                                                                                                                                                                                           |
       | dn1_0              | BASE SQL              | select `sharding_two_node2`.`c_flag` as `autoalias_scalar` from  `sharding_two_node2` where `sharding_two_node2`.`id` = 1 LIMIT 2                                                                   |
@@ -108,8 +116,9 @@ Feature: following complex queries are not able to send one datanode
       | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `sharding_two_node`.`id`,`sharding_two_node`.`c_flag`,`sharding_two_node`.`c_decimal` from  `sharding_two_node` where `sharding_two_node`.`c_flag` = '{NEED_TO_REPLACE}' |
       | merge_2            | MERGE                 | dn1_1; dn2_0                                                                                                                                                                                        |
       | shuffle_field_2    | SHUFFLE_FIELD         | merge_2                                                                                                                                                                                             |
-
-    Then get resultset of user cmd "explain select * from sharding_two_node where id =1 union select * from sharding_two_node2" named "rs_G" with connection "conn_0"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_G"
+      | conn   | toClose | sql                                                                                        |
+      | conn_0 | False   | explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 |
     Then check resultset "rs_G" has lines with following column values
       | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                                                                     |
       | dn1_0           | BASE SQL      | select `sharding_two_node`.`id`,`sharding_two_node`.`c_flag`,`sharding_two_node`.`c_decimal` from  `sharding_two_node` where `sharding_two_node`.`id` = 1     |

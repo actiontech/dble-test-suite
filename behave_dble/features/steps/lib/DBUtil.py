@@ -25,7 +25,7 @@ class DBUtil:
             self._cursor = self._conn.cursor()
         except MySQLdb.Error, e:
             errMsg = e.args
-            context.logger.info("create connect err: {0}".format(errMsg))
+            context.logger.debug("create connect err: {0}".format(errMsg))
             raise
 
     def query(self, sql):
@@ -47,7 +47,7 @@ class DBUtil:
 
         if errMsg is not None:
             showErr = "host:{1} execute sql:{2} err: {0}".format(errMsg, self._host, sql[0:500])
-            self._context.logger.info(showErr);
+            self._context.logger.debug(showErr);
         else:
             logger.debug("{0}:{1} sql executed without err".format(self._host, self._port))
             for row in result:

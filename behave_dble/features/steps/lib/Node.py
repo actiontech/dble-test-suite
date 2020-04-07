@@ -69,20 +69,3 @@ class Node(Logging):
 
     def get_random_nodes(self, num=1):
         return sample(self.nodes, num)
-
-def get_node(nodes, host):
-    for node in nodes:
-        if node.host_name == host or node.ip == host:
-            return node
-    assert False, 'Can not find node {0}'.format(host)
-
-# get ssh by host or ip
-def get_ssh(nodes, host):
-    node = get_node(nodes, host)
-    return node.ssh_conn
-
-# get sftp by host or ip
-def get_sftp(nodes, host):
-    node = get_node(nodes, host)
-    return node.sftp_conn
-

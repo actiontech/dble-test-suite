@@ -26,24 +26,24 @@ Feature: fault tolerance detection
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | True    | drop table if exists test1         | success | schema1 |
+      | conn_0 | True    | drop table if exists test2         | success | schema1 |
+      | conn_0 | True    | drop table if exists test3         | success | schema1 |
+      | conn_0 | True    | drop table if exists test4         | success | schema1 |
+      | conn_0 | True    | drop table if exists test5         | success | schema1 |
+      | conn_0 | True    | drop table if exists test6         | success | schema1 |
+      | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql                 | expect                                                                                                                                                                   | db      |
-      | root | 111111 | conn_0 | True    | log @@file=dble.log | hasStr{sql=show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+      | conn   | toClose | sql                 | expect                                                                                                                                                                   | db      |
+      | conn_0 | True    | log @@file=dble.log | hasStr{sql=show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -57,20 +57,22 @@ Feature: fault tolerance detection
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test4 | success | db1 |
+      | conn   | toClose | sql              | expect  | db  |
+      | conn_0 | True    | drop table test4 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test4 | success | db2 |
+      | conn   | toClose | sql              | expect  | db  |
+      | conn_0 | True    | drop table test4 | success | db2 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | reload_time-2 | table_structure-3 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | null          | null              | 0                          | 0                      |
@@ -80,16 +82,18 @@ Feature: fault tolerance detection
       | schema1  | test6   | null          | null              | 0                          | 0                      |
       | schema1  | test1   | null          | null              | 0                          | 0                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                             | expect              | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test2 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test3 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test4 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test5 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test6 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test1 add name char | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test4 add name char | doesn't exist       | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_b"
+      | conn   | toClose | sql                             | expect              | db      |
+      | conn_0 | True    | insert into test1 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | True    | insert into test2 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | True    | insert into test3 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | True    | insert into test4 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | True    | insert into test5 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | True    | insert into test6 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | True    | alter table test1 add name char | success             | schema1 |
+      | conn_0 | True    | alter table test4 add name char | doesn't exist       | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 0                          | 0                      |
@@ -99,10 +103,12 @@ Feature: fault tolerance detection
       | schema1  | test6   | 0                          | 0                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql               | expect  | db      |
-      | root | 111111 | conn_0 | True    | show @@version    | success | schema1 |
-      | root | 111111 | conn_0 | True    | reload @@metadata | success | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_c"
+      | conn   | toClose | sql               | expect  | db      |
+      | conn_0 | True    | show @@version    | success | schema1 |
+      | conn_0 | True    | reload @@metadata | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_c" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 0                          | 0                      |
@@ -112,13 +118,13 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | True    | drop table if exists test1 | success | schema1 |
+      | conn_0 | True    | drop table if exists test2 | success | schema1 |
+      | conn_0 | True    | drop table if exists test3 | success | schema1 |
+      | conn_0 | True    | drop table if exists test4 | success | schema1 |
+      | conn_0 | True    | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
 
   @btrace
@@ -141,21 +147,21 @@ Feature: fault tolerance detection
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | True    | drop table if exists test1         | success | schema1 |
+      | conn_0 | True    | drop table if exists test2         | success | schema1 |
+      | conn_0 | True    | drop table if exists test3         | success | schema1 |
+      | conn_0 | True    | drop table if exists test4         | success | schema1 |
+      | conn_0 | True    | drop table if exists test5         | success | schema1 |
+      | conn_0 | True    | drop table if exists test6         | success | schema1 |
+      | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -169,20 +175,22 @@ Feature: fault tolerance detection
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test5 | success | db1 |
+      | conn   | toClose | sql              | expect  | db  |
+      | conn_0 | True    | drop table test5 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test5 | success | db2 |
+      | conn   | toClose | sql              | expect  | db  |
+      | conn_0 | True    | drop table test5 | success | db2 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -191,7 +199,9 @@ Feature: fault tolerance detection
       | schema1  | test3   | 0                          | 0                      |
       | schema1  | test6   | 0                          | 0                      |
       | schema1  | test1   | 0                          | 0                      |
-    Then get resultset of admin cmd "check full @@metadata where reload_time is null" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                             |
+      | check full @@metadata where reload_time is null |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | reload_time-2 | table_structure-3 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test5   | null          | null              | 0                          | 0                      |
@@ -200,17 +210,19 @@ Feature: fault tolerance detection
       | schema1  | test6   | null          | null              | 0                          | 0                      |
       | schema1  | test1   | null          | null              | 0                          | 0                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                             | expect              | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test2 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test3 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test4 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test5 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test6 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test1 add name char | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test4 add name char | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test5 add name char | doesn't exist       | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_c"
+      | conn   | toClose | sql                             | expect              | db      |
+      | conn_0 | False   | insert into test1 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | insert into test2 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | insert into test3 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | insert into test4 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test5 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | insert into test6 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | alter table test1 add name char | success             | schema1 |
+      | conn_0 | False   | alter table test4 add name char | success             | schema1 |
+      | conn_0 | True    | alter table test5 add name char | doesn't exist       | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_c" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -220,10 +232,12 @@ Feature: fault tolerance detection
       | schema1  | test6   | 0                          | 0                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql               | expect  | db      |
-      | root | 111111 | conn_0 | True    | show @@version    | success | schema1 |
-      | root | 111111 | conn_0 | True    | reload @@metadata | success | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_d"
+      | conn   | toClose | sql               | expect  | db      |
+      | conn_0 | True    | show @@version    | success | schema1 |
+      | conn_0 | True    | reload @@metadata | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_d"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_d" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -233,13 +247,13 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
   @btrace
   Scenario: disconnected at the end of "show create table", does not affect other functions, can be restored by "reload @@metaData" #3
@@ -261,21 +275,21 @@ Feature: fault tolerance detection
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | False   | drop table if exists test1         | success | schema1 |
+      | conn_0 | False   | drop table if exists test2         | success | schema1 |
+      | conn_0 | False   | drop table if exists test3         | success | schema1 |
+      | conn_0 | False   | drop table if exists test4         | success | schema1 |
+      | conn_0 | False   | drop table if exists test5         | success | schema1 |
+      | conn_0 | False   | drop table if exists test6         | success | schema1 |
+      | conn_0 | False   | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Given change btrace "BtraceClusterDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getSpecialNodeTablesHandlerFinished/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -289,20 +303,22 @@ Feature: fault tolerance detection
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test1 | success | db1 |
+      | conn   | toClose | sql              | expect  | db  |
+      | conn_0 | True    | drop table test1 | success | db1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
     """
     get into getSpecialNodeTablesHandlerFinished
     """
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql              | expect  | db  |
-      | test | 111111 | conn_0 | True    | drop table test1 | success | db2 |
+      | conn   | toClose | sql              | expect  | db  |
+      | conn_0 | True    | drop table test1 | success | db2 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -312,16 +328,18 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 0                          | 0                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                             | expect              | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test2 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test3 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test4 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test5 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test6 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test1 add name char | doesn't exist       | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test4 add name char | success             | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_b"
+      | conn   | toClose | sql                             | expect              | db      |
+      | conn_0 | False   | insert into test1 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | insert into test2 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test3 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test4 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test5 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test6 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | alter table test1 add name char | doesn't exist       | schema1 |
+      | conn_0 | True    | alter table test4 add name char | success             | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -331,17 +349,17 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 0                          | 0                      |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql               | expect  | db      |
-      | root | 111111 | conn_0 | True    | show @@version    | success | schema1 |
-      | root | 111111 | conn_0 | True    | reload @@metadata | success | schema1 |
+      | conn   | toClose | sql               | expect  | db      |
+      | conn_0 | True    | show @@version    | success | schema1 |
+      | conn_0 | True    | reload @@metadata | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |
 
 
   Scenario: table structure is not recognized and metadata is not generated #4
@@ -363,27 +381,29 @@ Feature: fault tolerance detection
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5         | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6         | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test1(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test2(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test3(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test4(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
+      | conn   | toClose | sql                                | expect  | db      |
+      | conn_0 | False   | drop table if exists test1         | success | schema1 |
+      | conn_0 | False   | drop table if exists test2         | success | schema1 |
+      | conn_0 | False   | drop table if exists test3         | success | schema1 |
+      | conn_0 | False   | drop table if exists test4         | success | schema1 |
+      | conn_0 | False   | drop table if exists test5         | success | schema1 |
+      | conn_0 | False   | drop table if exists test6         | success | schema1 |
+      | conn_0 | False   | create table test1(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test2(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test3(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test4(id int,age int) | success | schema1 |
+      | conn_0 | False   | create table test5(id int,age int) | success | schema1 |
+      | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                     | expect              | db      |
-      | test | 111111 | conn_0 | True    | drop table test5                        | success             | schema1 |
-      | test | 111111 | conn_0 | True    | create table test5(id int storage disk) | error totally whack | schema1 |
+      | conn   | toClose | sql                                     | expect              | db      |
+      | conn_0 | False   | drop table test5                        | success             | schema1 |
+      | conn_0 | True    | create table test5(id int storage disk) | error totally whack | schema1 |
 
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -393,17 +413,19 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                             | expect              | db      |
-      | test | 111111 | conn_0 | True    | insert into test1 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test2 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test3 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test4 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test5 values(1,1)   | error totally whack | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test6 values(1,1)   | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test1 add name char | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test4 add name char | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test5 add name char | error totally whack | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_b"
+      | conn   | toClose | sql                             | expect              | db      |
+      | conn_0 | False   | insert into test1 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test2 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test3 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test4 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | insert into test5 values(1,1)   | error totally whack | schema1 |
+      | conn_0 | False   | insert into test6 values(1,1)   | success             | schema1 |
+      | conn_0 | False   | alter table test1 add name char | success             | schema1 |
+      | conn_0 | False   | alter table test4 add name char | success             | schema1 |
+      | conn_0 | True    | alter table test5 add name char | error totally whack | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -413,20 +435,20 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql        | expect       | db  |
-      | test | 111111 | conn_0 | True    | desc test4 | hasStr{name} | db1 |
-      | test | 111111 | conn_0 | True    | desc test4 | hasStr{name} | db2 |
-      | test | 111111 | conn_0 | True    | desc test1 | hasStr{name} | db1 |
-      | test | 111111 | conn_0 | True    | desc test1 | hasStr{name} | db2 |
+      | conn   | toClose | sql        | expect       | db  |
+      | conn_0 | False   | desc test4 | hasStr{name} | db1 |
+      | conn_0 | False   | desc test4 | hasStr{name} | db2 |
+      | conn_0 | False   | desc test1 | hasStr{name} | db1 |
+      | conn_0 | True    | desc test1 | hasStr{name} | db2 |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql               | expect  | db      |
-      | root | 111111 | conn_0 | True    | show @@version    | success | schema1 |
-      | root | 111111 | conn_0 | True    | reload @@metadata | success | schema1 |
+      | conn   | toClose | sql               | expect  | db      |
+      | conn_0 | False   | show @@version    | success | schema1 |
+      | conn_0 | True    | reload @@metadata | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                        | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists test1 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test2 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test3 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test4 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test5 | success | schema1 |
-      | test | 111111 | conn_0 | True    | drop table if exists test6 | success | schema1 |
+      | conn   | toClose | sql                        | expect  | db      |
+      | conn_0 | False   | drop table if exists test1 | success | schema1 |
+      | conn_0 | False   | drop table if exists test2 | success | schema1 |
+      | conn_0 | False   | drop table if exists test3 | success | schema1 |
+      | conn_0 | False   | drop table if exists test4 | success | schema1 |
+      | conn_0 | False   | drop table if exists test5 | success | schema1 |
+      | conn_0 | True    | drop table if exists test6 | success | schema1 |

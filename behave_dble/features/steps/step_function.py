@@ -13,7 +13,7 @@ import re
 import time
 
 from lib.DBUtil import DBUtil
-from lib.Node import get_sftp,get_ssh,get_node
+from lib.utils import get_sftp,get_ssh,get_node
 from lib.generate_util import generate
 
 from behave import *
@@ -26,29 +26,6 @@ def test_data_type(context, sql_name):
     LOGGER.info("test all data types")
     sql_path = "sharding_func/{0}".format(sql_name)
     context.execute_steps(u'Then execute sql in "{0}" to check read-write-split work fine and log dest slave'.format(sql_path))
-
-def create_node_conn(context):
-    context.manager_conn = get_admin_conn(context)
-    sql = "show @@datanode"
-    result, error = context.manager_conn.query(sql)
-    context.manager_conn.close()
-
-    datanode = {}
-    if type(result) == tuple:
-        for i in range(len(result)):
-
-            datanode[result[i][0]] = result[i][1]
-    port = 3306
-    node_conn = {}
-    for node in datanode.keys():
-        user = context.cfg_mysql['user']
-        password = context.cfg_mysql['password']
-        host = datanode[node].split('/')[0]
-        db = datanode[node].split('/')[1]
-        LOGGER.info("{0} create, host:{1}, db:{2}".format(node, host, db))
-        conn = DBUtil(host, user, password, db, port, context)
-        node_conn[node] = conn
-    return node_conn
 
 @Then('Test the use of limit by the sharding column')
 def test_use_limit(context):
@@ -140,9 +117,9 @@ def step_impl(context, fildername,hostname):
     cmd = "mkdir {0}".format(fildername)
     context.logger.info("sed cmd is :{0}".format(cmd))
     if hostname.startswith('dble'):
-        ssh = get_ssh(context.dbles, hostname)
+        ssh = get_ssh(hostname)
     else:
-        ssh = get_ssh(context.mysqls, hostname)
+        ssh = get_ssh(hostname)
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr) == 0, "create filder content with:{1}, got err:{0}".format(stderr, cmd))
 
@@ -179,12 +156,14 @@ def step_impl(context, filename):
             fp.write(context.text)
 
     # cp file to dble
-    remote_file = "{0}/dble/{1}".format(context.cfg_dble['install_dir'],filename)
+    dble_node = get_node("dble-1")
+    remote_file = "{0}/dble/{1}".format(dble_node.install_dir,filename)
     context.ssh_sftp.sftp_put(filename, remote_file)
 
     # create file in compare mysql
-    remote_file = "{0}/data/{1}".format(context.cfg_mysql['install_path'], filename)
-    compare_mysql_sftp = get_sftp(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
+    compare_mysql_node = get_node("mysql")
+    compare_mysql_sftp = compare_mysql_node.sftp_conn
+    remote_file = "{0}/data/{1}".format(compare_mysql_node.install_path, filename)
     compare_mysql_sftp.sftp_put(filename, remote_file)
 
 @Given('clean loaddata.sql used data')
@@ -210,37 +189,14 @@ def step_impl(context, filename):
     assert len(stderr)==0, "rm file in dble fail for {0}".format(stderr)
 
     # remove file in compare mysql
-    dble_node_ssh = get_ssh(context.mysqls, context.cfg_mysql['compare_mysql']['master1']['hostname'])
+    dble_node_ssh = get_ssh(context.cfg_mysql['compare_mysql']['master1']['hostname'])
     rc, stdout, stderr = dble_node_ssh.exec_command(cmd)
     assert len(stderr)==0, "rm file in compare mysql fail for {0}".format(stderr)
-
-
-def merge_cmd_strings(context,text,targetFile):
-    sed_cmd_str = text.strip()
-    sed_cmd_list = sed_cmd_str.splitlines()
-    cmd = "sed -i"
-    for sed_cmd in sed_cmd_list:
-        cmd += " -e '{0}'".format(sed_cmd.strip())
-    cmd += " {0}".format(targetFile)
-    context.logger.info("sed cmd : {0}".format(cmd))
-    return cmd
-
-@Given ('update file content "{filename}" in "{hostname}" with sed cmds')
-@Given ('update file content "{filename}" in "{hostname}"')
-def update_file_content(context, sedStr,filename, hostname):
-    sed_cmd = merge_cmd_strings(context,sedStr,filename)
-
-    if hostname.startswith('dble'):
-        ssh = get_ssh(context.dbles,hostname)
-    else:
-        ssh = get_ssh(context.mysqls, hostname)
-    rc, stdout, stderr = ssh.exec_command(sed_cmd)
-    assert_that(len(stderr)==0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
 
 @Given ('delete file "{filename}" on "{hostname}"')
 def step_impl(context,filename,hostname):
     cmd = "rm -rf {0}".format(filename)
-    ssh = get_ssh(context.dbles,hostname)
+    ssh = get_ssh(hostname)
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
@@ -248,10 +204,8 @@ def step_impl(context,filename,hostname):
 @Given('execute oscmd in "{hostname}"')
 def step_impl(context,hostname,num=None):
     cmd = context.text.strip()
-    if hostname.startswith("dble"):
-        ssh = get_ssh(context.dbles, hostname)
-    else :
-        ssh = get_ssh(context.mysqls, hostname)
+    ssh = get_ssh(hostname)
+
     rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
     assert stderr.find("error") == -1, "execute cmd: {0}  err:{1}".format(cmd,stderr)
@@ -268,7 +222,7 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
     strs = context.text.strip()
     strs_list = strs.splitlines()
 
-    ssh = get_ssh(context.dbles,hostname)
+    ssh = get_ssh(hostname)
     for str in strs_list:
         cmd = "tail -n +{2} {1} | grep -n \'{0}\'".format(str,filename,checkFromLine)
         rc, stdout, stderr = ssh.exec_command(cmd)
@@ -282,7 +236,7 @@ def step_impl(context,flag,dirname,hostname):
     strs = context.text.strip()
     strs_list = strs.splitlines()
 
-    ssh = get_ssh(context.dbles, hostname)
+    ssh = get_ssh(hostname)
     for str in strs_list[1:]:
         cmd = "find {0} -name {1}".format(dirname, str)
         rc, stdout, stderr = ssh.exec_command(cmd)
@@ -380,20 +334,22 @@ def step_impl(context, curtime):
 
 @Then('add some data in "{mapFile}" in dble "{hostname}"')
 def step_impl(context,mapFile,hostname):
-    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    node = get_node(hostname)
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
     text = str(context.text)
     cmd = "echo '{0}' > {1}".format(text, targetFile)
-    ssh = get_ssh(context.dbles,hostname)
+    ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
 @Then('change start_time to current time "{curTime}" in "{mapFile}" in dble "{hostname}"')
 def step_impl(context,curTime,mapFile,hostname):
-    targetFile = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], mapFile)
+    node = get_node(hostname)
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
     text = "START_TIME={0}".format(getattr(context,curTime)[0][0])
     context.logger.info("START_TIME = {0}".format(getattr(context,curTime)[0][0]))
     sed_cmd_str = "sed -i '/START_TIME/c {0}' {1}".format(text,targetFile)
-    ssh = get_ssh(context.dbles, hostname)
+    ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(sed_cmd_str)
     context.logger.info("execute cmd: {0}".format(sed_cmd_str))
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
@@ -428,9 +384,9 @@ def step_impl(context,host):
 @Given('get resultset of oscmd in "{host}" with pattern "{pattern}" named "{resultName}"')
 def impl_step(context,host,pattern,resultName):
     if host.startswith('dble'):
-        ssh = get_ssh(context.dbles, host)
+        ssh = get_ssh(host)
     else:
-        ssh = get_ssh(context.mysqls, host)
+        ssh = get_ssh(host)
     oscmd = context.text.strip()
     rc, stdout, stderr = ssh.exec_command(oscmd)
     assert_that(len(stderr) == 0, 'expect no err ,but: {0}'.format(stderr))
@@ -443,9 +399,9 @@ def impl_step(context,host,pattern,resultName):
 def step_impl(context,result,hostname):
     cmd = context.text.strip()
     if hostname.startswith("dble"):
-        ssh = get_ssh(context.dbles, hostname)
+        ssh = get_ssh(hostname)
     else:
-        ssh = get_ssh(context.mysqls, hostname)
+        ssh = get_ssh(hostname)
     rc, stdout, stderr = ssh.exec_command(cmd)
     context.logger.info("execute cmd:{0}".format(cmd))
     stderr = stderr.lower()
@@ -469,26 +425,26 @@ def step_impl(context,host1,role,host2,oscmd='cd /usr/local/mysql/data'):
     password = ''
     port = ''
     if host1.startswith('dble'):
-        node = get_node(context.dbles,host1)
+        node = get_node(host1)
         if role == "admin":
-            user = context.cfg_dble['manager_user']
-            password = context.cfg_dble['manager_password']
-            port = context.cfg_dble['manager_port']
+            user = node.manager_user
+            password = node.manager_password
+            port = node.manager_port
         else:
-            user = context.cfg_dble['client_user']
-            password = context.cfg_dble['client_password']
-            port = context.cfg_dble['client_port']
+            user = node.client_user
+            password = node.client_password
+            port = node.client_port
     else:
-        node = get_node(context.mysqls,host1)
-        user = context.cfg_mysql['user']
-        password = context.cfg_mysql['password']
-        port = context.cfg_mysql['client_port']
+        node = get_node(host1)
+        user = node.mysql_user
+        password = node.mysql_password
+        port = node.mysql_port
     ip = node.ip
 
     if host2.startswith('dble'):
-        ssh = get_ssh(context.dbles,host2)
+        ssh = get_ssh(host2)
     else:
-        ssh = get_ssh(context.mysqls,host2)
+        ssh = get_ssh(host2)
 
     sql_cmd_str = context.text.strip()
     sql_cmd_list = sql_cmd_str.splitlines()
@@ -503,7 +459,7 @@ def step_impl(context,host1,role,host2,oscmd='cd /usr/local/mysql/data'):
 
 @Then('check log "{file}" output in "{host}"')
 def step_impl(context,file,host):
-    sshClient = get_ssh(context.dbles, host)
+    sshClient = get_ssh(host)
     retry = 0
     isFound = False
     while retry < 5:
@@ -521,7 +477,7 @@ def step_impl(context,file,host):
 
 @Then('check the occur times of following key in file "{filename}" in "{hostname}"')
 def step_impl(context, filename, hostname):
-    ssh = get_ssh(context.dbles, hostname)
+    ssh = get_ssh(hostname)
     for row in context.table:
         str = row["key"]
         num = row["occur_times"]

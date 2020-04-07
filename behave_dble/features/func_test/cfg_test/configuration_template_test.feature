@@ -22,7 +22,7 @@ Feature: use template to generate configuration file, check function is normal
     """
     \cp -f /opt/dble/conf/server_template.xml /opt/dble/conf/server.xml
     """
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/ip1:3306/172.100.9.5:3306/
     s/ip2:3306/172.100.9.2:3306/
@@ -31,7 +31,7 @@ Feature: use template to generate configuration file, check function is normal
     s/your_user/test/
     s/your_psw/111111/
     """
-    Given change file "server.xml" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/server.xml" in "dble-1" with sed cmds
     """
     s/user name="root"/user name="test"/
     s/user name="man1"/user name="root"/
@@ -40,12 +40,12 @@ Feature: use template to generate configuration file, check function is normal
     Given Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql                                          | expect  | db |
-      | root | 111111 | conn_0 | True    | create database @@dataNode='dn1,dn2,dn3,dn4' | success |    |
+      | conn   | toClose | sql                                          | expect  |
+      | conn_0 | True    | create database @@dataNode='dn1,dn2,dn3,dn4' | success |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                 | expect                                                                         | db     |
-      | test | 111111 | conn_0 | True    | drop table if exists tb_hash_string | success                                                                        | testdb |
-      | test | 111111 | conn_0 | True    | drop table if exists tb_global2     | success                                                                        | testdb |
-      | test | 111111 | conn_0 | True    | create table tb_hash_string(id int) | success                                                                        | testdb |
-      | test | 111111 | conn_0 | True    | create table tb_global2(id int)     | success                                                                        | testdb |
-      | test | 111111 | conn_0 | True    | show all tables                     | hasStr{(('tb_global2', 'GLOBAL TABLE'), ('tb_hash_string', 'SHARDING TABLE'))} | testdb |
+      | conn   | toClose | sql                                 | expect                                                                         | db     |
+      | conn_0 | True    | drop table if exists tb_hash_string | success                                                                        | testdb |
+      | conn_0 | True    | drop table if exists tb_global2     | success                                                                        | testdb |
+      | conn_0 | True    | create table tb_hash_string(id int) | success                                                                        | testdb |
+      | conn_0 | True    | create table tb_global2(id int)     | success                                                                        | testdb |
+      | conn_0 | True    | show all tables                     | hasStr{(('tb_global2', 'GLOBAL TABLE'), ('tb_hash_string', 'SHARDING TABLE'))} | testdb |

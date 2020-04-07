@@ -16,20 +16,22 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
         <property name="sequnceHandlerType">3</property>
     """
-    Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
+      | sql               |
+      | select sysdate()  |
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=01
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-     Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=02
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-     Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=03
@@ -46,8 +48,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
-    Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
-    Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
+      | sql                               |
+      | select time from mytest_auto_test |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_id"
+      | sql                                         |
+      | select conv(id,10,2) from mytest_auto_test  |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -65,8 +71,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
-    Then get result of user cmd "select time from mytest_auto_test" named "ts_time" in dble "dble-2"
-    Then get result of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id" in dble "dble-2"
+    Given execute single sql in "dble-2" in "user" mode and save resultset in "ts_time"
+      | sql                               |
+      | select time from mytest_auto_test |
+    Given execute single sql in "dble-2" in "user" mode and save resultset in "rs_id"
+      | sql                                        |
+      | select conv(id,10,2) from mytest_auto_test |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -81,7 +91,9 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
 
   @skip_restart @restore_sys_time
   Scenario: when "system time" less than "start time + 17years", execute insert sql will error #2
-    Then get resultset of user cmd "select sysdate()" named "curTime"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "curTime"
+      | sql              |
+      | select sysdate() |
     When connect ssh execute cmd "date -s 2009/01/01"
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                    | expect                                          | db      |
@@ -90,8 +102,10 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
 
   @skip_restart
   Scenario: when values of key "INSTANCEID" are same and values of key "CLUSTERID" are different, check the correctness of the self-increment sequence #3
-    Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
+      | sql               |
+      | select sysdate()  |
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=04
     """
@@ -101,8 +115,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | user | passwd | conn   | toClose | sql                                            | expect  | db      |
       | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
-    Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
-    Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
+      | sql                               |
+      | select time from mytest_auto_test |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_id"
+      | sql                                        |
+      | select conv(id,10,2) from mytest_auto_test |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -117,16 +135,18 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
 
   @skip_restart
   Scenario: when values of key "INSTANCEID" and "CLUSTERID" are same, check the correctness of the self-increment sequence #4
-    Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
+      | sql              |
+      | select sysdate() |
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=01
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=01
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /CLUSTERID/c CLUSTERID=01
     """
@@ -140,8 +160,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | user | passwd | conn   | toClose | sql                                            | expect  | db      |
       | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
-    Then get resultset of user cmd "select time from mytest_auto_test" named "ts_time"
-    Then get resultset of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id"
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
+      | sql                               |
+      | select time from mytest_auto_test |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_id"
+      | sql                                        |
+      | select conv(id,10,2) from mytest_auto_test |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -158,8 +182,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | user | passwd | conn   | toClose | sql                                            | expect  | db      |
       | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
-    Then get result of user cmd "select time from mytest_auto_test" named "ts_time" in dble "dble-2"
-    Then get result of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id" in dble "dble-2"
+    Given execute single sql in "dble-2" in "user" mode and save resultset in "ts_time"
+      | sql                               |
+      | select time from mytest_auto_test |
+    Given execute single sql in "dble-2" in "user" mode and save resultset in "rs_id"
+      | sql                                        |
+      | select conv(id,10,2) from mytest_auto_test |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -174,16 +202,18 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
 
   @skip_restart
   Scenario: when values of key "CLUSTERID" are same and values of key "INSTANCEID" are different, check the correctness of the self-increment sequence #5
-    Then get resultset of user cmd "select sysdate()" named "sysTime"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
+      | sql              |
+      | select sysdate() |
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=02
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=03
     """
@@ -197,8 +227,12 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | user | passwd | conn   | toClose | sql                                            | expect  | db      |
       | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
       | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
-    Then get result of user cmd "select time from mytest_auto_test" named "ts_time" in dble "dble-2"
-    Then get result of user cmd "select conv(id,10,2) from mytest_auto_test" named "rs_id" in dble "dble-2"
+    Given execute single sql in "dble-2" in "user" mode and save resultset in "ts_time"
+      | sql                               |
+      | select time from mytest_auto_test |
+    Given execute single sql in "dble-2" in "user" mode and save resultset in "rs_id"
+      | sql                                        |
+      | select conv(id,10,2) from mytest_auto_test |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -210,19 +244,19 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then get datatime "t2" by "t1" minus "1970-01-01"
     Then datatime "t2" plus start_time "sysTime" to get "t3"
     Then check time "ts_time" equal to "t3"
-    Given change file "sequence_distributed_conf.properties" in "dble-1" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     /CLUSTERID/c CLUSTERID=01
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-2" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     /CLUSTERID/c CLUSTERID=01
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-    Given change file "sequence_distributed_conf.properties" in "dble-3" locate "install_dir" with sed cmds
+    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=01
     /CLUSTERID/c CLUSTERID=01

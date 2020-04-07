@@ -68,7 +68,12 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
     </system>
     """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@sysparam" named "sysparam_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql             |
+      | show @@sysparam |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql              |
+      | show @@sysparam  |
     Then check resultset "sysparam_rs" has lines with following column values
       | PARAM_NAME-0                | PARAM_VALUE-1                   |
       | bindIp                      | 0.0.0.0                         |
@@ -81,20 +86,20 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | complexExecutor             | 4                               |
       | writeToBackendExecutor      | 4                               |
       | fakeMySQLVersion            | 5.6.24                          |
-      | sequnceHandlerType          | Local TimeStamp(like Snowflake) |
+      | sequenceHandlerType         | Local TimeStamp(like Snowflake) |
       | serverBacklog               | 2048                            |
       | serverNodeId                | 1                               |
       | showBinlogStatusTimeout     | 300ms                           |
-      | maxCon                      | 0                            |
+      | maxCon                      | 0                               |
       | useCompression              | 0                               |
       | usingAIO                    | 0                               |
-      | useZKSwitch                 | true                            |
+      | autocommit                  | 1                               |
       | useThreadUsageStat          | 0                               |
       | usePerformanceMode          | 0                               |
       | useCostTimeStat             | 0                               |
       | maxCostStatSize             | 100                             |
       | costSamplePercent           | 1                               |
-      | charset                     | utf8mb4                            |
+      | charset                     | utf8mb4                         |
       | maxPacketSize               | 16M                             |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
@@ -107,11 +112,12 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | recordTxn                   | 0                               |
       | transactionLogBaseDir       | /txlogs                         |
       | transactionLogBaseName      | server-tx                       |
-      | transactionRatateSize       | 16M                             |
+      | transactionRotateSize       | 16M                             |
       | xaRecoveryLogBaseDir        | /tmlogs                         |
       | xaRecoveryLogBaseName       | tmlog                           |
       | xaSessionCheckPeriod        | 1000ms                          |
       | xaLogCleanPeriod            | 1000ms                          |
+      | xaRetryCount                | 0                               |
       | useJoinStrategy             | true                            |
       | nestLoopConnSize            | 4                               |
       | nestLoopRowsSize            | 2000                            |
@@ -133,8 +139,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | backSocketSoRcvbuf          | 4194304B                        |
       | backSocketSoSndbuf          | 1048576B                        |
       | backSocketNoDelay           | 1                               |
-      | clusterHeartbeatUser        | _HEARTBEAT_USER_                |
-      | clusterHeartbeatPass        | _HEARTBEAT_PASS_                |
       | viewPersistenceConfBaseDir  | ./viewConf/                     |
       | viewPersistenceConfBaseName | viewJson                        |
       | joinQueueSize               | 1024                            |
@@ -146,7 +150,12 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | flushSlowLogPeriod          | 1s                              |
       | flushSlowLogSize            | 1000                            |
       | sqlSlowTime                 | 100ms                           |
-    Then get resultset of admin cmd "dryrun" named "dryrun_rs"
+      | maxCharsPerColumn           | 65535                           |
+      | maxRowSizeToFile            | 10000                           |
+      | useOuterHa                  | false                           |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
+      | sql             |
+      | dryrun          |
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
       | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
