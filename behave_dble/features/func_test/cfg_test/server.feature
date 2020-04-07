@@ -58,7 +58,7 @@ Feature: test config in server.xml
   @TRIVIAL
   Scenario: both single & multiple manager user reload and do management cmd success #5
     Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "show @@version" with user "root" passwd "111111"
+    Then execute admin cmd "show @@version"
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <user name="test_user">

@@ -70,7 +70,9 @@ Feature: fault tolerance detection
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | reload_time-2 | table_structure-3 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | null          | null              | 0                          | 0                      |
@@ -89,7 +91,9 @@ Feature: fault tolerance detection
       | conn_0 | True    | insert into test6 values(1,1)   | error totally whack | schema1 |
       | conn_0 | True    | alter table test1 add name char | success             | schema1 |
       | conn_0 | True    | alter table test4 add name char | doesn't exist       | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 0                          | 0                      |
@@ -102,7 +106,9 @@ Feature: fault tolerance detection
       | conn   | toClose | sql               | expect  | db      |
       | conn_0 | True    | show @@version    | success | schema1 |
       | conn_0 | True    | reload @@metadata | success | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_c"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_c" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 0                          | 0                      |
@@ -182,7 +188,9 @@ Feature: fault tolerance detection
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -191,7 +199,9 @@ Feature: fault tolerance detection
       | schema1  | test3   | 0                          | 0                      |
       | schema1  | test6   | 0                          | 0                      |
       | schema1  | test1   | 0                          | 0                      |
-    Then get resultset of admin cmd "check full @@metadata where reload_time is null" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                             |
+      | check full @@metadata where reload_time is null |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | reload_time-2 | table_structure-3 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test5   | null          | null              | 0                          | 0                      |
@@ -210,7 +220,9 @@ Feature: fault tolerance detection
       | conn_0 | False   | alter table test1 add name char | success             | schema1 |
       | conn_0 | False   | alter table test4 add name char | success             | schema1 |
       | conn_0 | True    | alter table test5 add name char | doesn't exist       | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_c"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_c" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -223,7 +235,9 @@ Feature: fault tolerance detection
       | conn   | toClose | sql               | expect  | db      |
       | conn_0 | True    | show @@version    | success | schema1 |
       | conn_0 | True    | reload @@metadata | success | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_d"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_d"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_d" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -302,7 +316,9 @@ Feature: fault tolerance detection
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -321,7 +337,9 @@ Feature: fault tolerance detection
       | conn_0 | False   | insert into test6 values(1,1)   | success             | schema1 |
       | conn_0 | False   | alter table test1 add name char | doesn't exist       | schema1 |
       | conn_0 | True    | alter table test4 add name char | success             | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -383,7 +401,9 @@ Feature: fault tolerance detection
       | conn_0 | True    | create table test5(id int storage disk) | error totally whack | schema1 |
 
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_a"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_a" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |
@@ -403,7 +423,9 @@ Feature: fault tolerance detection
       | conn_0 | False   | alter table test1 add name char | success             | schema1 |
       | conn_0 | False   | alter table test4 add name char | success             | schema1 |
       | conn_0 | True    | alter table test5 add name char | error totally whack | schema1 |
-    Then get resultset of admin cmd "check full @@metadata where schema='schema1'" named "metadata_rs_b"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_b"
+      | sql                                          |
+      | check full @@metadata where schema='schema1' |
     Then check resultset "metadata_rs_b" has lines with following column values
       | schema-0 | table-1 | consistent_in_data_nodes-4 | consistent_in_memory-5 |
       | schema1  | test4   | 1                          | 1                      |

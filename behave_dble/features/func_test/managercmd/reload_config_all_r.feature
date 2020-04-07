@@ -15,9 +15,13 @@ Feature: reload @@config_all -r
       <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
       """
     Given Restart dble in "dble-1" success
-    Then get resultset of admin cmd "show @@backend" named "A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "show @@backend" named "B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "B" including resultset "A" in following columns
       | column | column_index |
       | HOST   | 3            |
@@ -35,7 +39,9 @@ Feature: reload @@config_all -r
       <dataNode dataHost="ha_group1" database="db3" name="dn5" />
       """
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "show @@backend" named "C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
+      | sql            |
+      | show @@backend |
     Then check resultset "B" has not lines with following column values
       | HOST-3      |
       | 172.100.9.6 |
@@ -47,12 +53,14 @@ Feature: reload @@config_all -r
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
     <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100">
-    <heartbeat>show slave status</heartbeat>
+    <heartbeat>select user()</heartbeat>
     <writeHost host="hostW1" url="172.100.9.4:3306" password="111111" user="test"/>
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "show @@backend" named "D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
+      | sql            |
+      | show @@backend |
     Then check resultset "D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.6 |
@@ -76,7 +84,9 @@ Feature: reload @@config_all -r
       <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
       """
     Then execute admin cmd "reload @@config_all -r"
-    Then get resultset of admin cmd "show @@backend" named "E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
+      | sql            |
+      | show @@backend |
     Then check "E" only has "1" connection of "172.100.9.4"
     Then check resultset "E" has lines with following column values
       | HOST-3      |
@@ -86,8 +96,11 @@ Feature: reload @@config_all -r
       | conn   | toClose | sql                                    | expect      | db      |
       | conn_0 | false   | commit                                 | success     | schema1 |
       | conn_0 | True    | select * from sharding_4_t1 where id=1 | length{(0)} | schema1 |
-    Given sleep "2" seconds
-    Then get resultset of admin cmd "show @@backend" named "F"
+# dble recycle transaction conn at 5 seconds, so wait 6s here
+    Given sleep "6" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "F"
+      | sql            |
+      | show @@backend |
     Then check resultset "F" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |

@@ -14,12 +14,12 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
-      | test | 111111 | conn_0 | False   | create table sharding_4_t1(id int,name char)            | success | schema1 |
-      | test | 111111 | conn_0 | False   | set autocommit=0                                        | success | schema1 |
-      | test | 111111 | conn_0 | False   | set xa=on                                               | success | schema1 |
-      | test | 111111 | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name char)            | success | schema1 |
+      | conn_0 | False   | set autocommit=0                                        | success | schema1 |
+      | conn_0 | False   | set xa=on                                               | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -36,24 +36,24 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given destroy sql threads list
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect      | db      |
-      | test | 111111 | conn_1 | False   | select * from sharding_4_t1                             | length{(0)} | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                                   | success     | schema1 |
-      | test | 111111 | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success     | schema1 |
-      | test | 111111 | conn_1 | True    | commit                                                  | success     | schema1 |
-      | test | 111111 | new    | True    | select * from sharding_4_t1                             | length{(4)} | schema1 |
-      | test | 111111 | new    | True    | delete from sharding_4_t1                               | success     | schema1 |
+      | conn   | toClose | sql                                                     | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1                             | length{(0)} | schema1 |
+      | conn_1 | False   | begin                                                   | success     | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success     | schema1 |
+      | conn_1 | True    | commit                                                  | success     | schema1 |
+      | new    | True    | select * from sharding_4_t1                             | length{(4)} | schema1 |
+      | new    | True    | delete from sharding_4_t1                               | success     | schema1 |
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
   @btrace
   Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql                        | expect  | db |
-      | test | 111111 | conn_0 | True    | set global general_log=off | success |    |
+      | sql                        | expect  |
+      | set global general_log=off | success |
     Then execute sql in "mysql-master2"
-      | user | passwd | conn   | toClose | sql                        | expect  | db |
-      | test | 111111 | conn_4 | True    | set global general_log=off | success |    |
+      | sql                        | expect  |
+      | set global general_log=off | success |
     Given execute oscmd in "mysql-master1"
     """
     rm -rf /tmp/general.log
@@ -65,15 +65,15 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql                                            | expect  | db |
-      | test | 111111 | conn_0 | False   | set global log_output=file                     | success |    |
-      | test | 111111 | conn_0 | False   | set global general_log_file='/tmp/general.log' | success |    |
-      | test | 111111 | conn_0 | False   | set global general_log=on                      | success |    |
+      | conn   | toClose | sql                                            |
+      | conn_0 | False   | set global log_output=file                     |
+      | conn_0 | False   | set global general_log_file='/tmp/general.log' |
+      | conn_0 | False   | set global general_log=on                      |
     Then execute sql in "mysql-master2"
-      | user | passwd | conn   | toClose | sql                                            | expect  | db |
-      | test | 111111 | conn_4 | False   | set global log_output=file                     | success |    |
-      | test | 111111 | conn_4 | False   | set global general_log_file='/tmp/general.log' | success |    |
-      | test | 111111 | conn_4 | False   | set global general_log=on                      | success |    |
+      | conn   | toClose | sql                                            |
+      | conn_4 | False   | set global log_output=file                     |
+      | conn_4 | False   | set global general_log_file='/tmp/general.log' |
+      | conn_4 | False   | set global general_log=on                      |
 
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
@@ -83,9 +83,9 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql         | expect  | db      |
-      | test | 111111 | conn_1 | False   | set xa = on | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin       | success | schema1 |
+      | conn   | toClose | sql         | expect  | db      |
+      | conn_1 | False   | set xa = on | success | schema1 |
+      | conn_1 | False   | begin       | success | schema1 |
     Given prepare a thread execute sql "insert into schema1.sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)" with "conn_1"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
     """
@@ -96,11 +96,11 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     cat /opt/dble/BtraceXaDelay.java.log
     """
     Then execute sql "xa start" in "mysql-master1" with "rs_A" result
-      | user | passwd | conn   | toClose | expect  | db |
-      | test | 111111 | conn_2 | False   | success |    |
+      | conn   | toClose | expect  |
+      | conn_2 | False   | success |
     Then execute sql "xa start" in "mysql-master2" with "rs_A" result
-      | user | passwd | conn   | toClose | expect  | db |
-      | test | 111111 | conn_3 | False   | success |    |
+      | conn   | toClose | expect  |
+      | conn_3 | False   | success |
     Given destroy sql threads list
     Then check sql thread output in "err"
     """
@@ -109,9 +109,9 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                         | expect      | db      |
-      | test | 111111 | conn_1 | False   | rollback                    | success     | schema1 |
-      | test | 111111 | conn_1 | False   | select * from sharding_4_t1 | length{(0)} | schema1 |
+      | conn   | toClose | sql                         | expect      | db      |
+      | conn_1 | False   | rollback                    | success     | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1 | length{(0)} | schema1 |
     Given sleep "3" seconds
     Then get result of oscmd named "rs_B" in "mysql-master1"
     """
@@ -134,11 +134,11 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Then check result "rs_D" value is "1"
     Then check result "rs_E" value is "1"
     Then execute sql in "mysql-master1"
-      | user | passwd | conn   | toClose | sql                        | expect  | db |
-      | test | 111111 | conn_0 | True    | set global general_log=off | success |    |
+      | conn   | toClose | sql                        | expect  |
+      | conn_0 | True    | set global general_log=off | success |
     Then execute sql in "mysql-master2"
-      | user | passwd | conn   | toClose | sql                        | expect  | db |
-      | test | 111111 | conn_4 | True    | set global general_log=off | success |    |
+      | conn   | toClose | sql                        | expect  |
+      | conn_4 | True    | set global general_log=off | success |
     Given execute oscmd in "mysql-master1"
     """
     rm -rf /tmp/general.log

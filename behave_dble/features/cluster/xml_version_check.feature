@@ -9,7 +9,9 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Given add attribute "{"version":"9.9.9.9"}" to rootnode in "rule.xml"
     Then execute admin cmd "reload @@config_all"
     Given sleep "2" seconds
-    Then get resultset of admin cmd "dryrun" named "dryrun_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
+      | sql    |
+      | dryrun |
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                                                                    |
       | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the rule.xml version is 9.9.9.9.There must be some incompatible config between two versions, please check it             |
@@ -54,7 +56,9 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       """
       The dble-config-version is [0-9].[0-9],but the schema.xml version
       """
-    Then get resultset of admin cmd "dryrun" named "dryrun_rs"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
+      | sql    |
+      | dryrun |
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                                                                    |
       | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the rule.xml version is 1.1.There must be some incompatible config between two versions, please check it             |

@@ -13,7 +13,9 @@ Feature: reload @@config_all and recycl pool
       | conn_0 | False   | begin                                           | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | schema1 |
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@backend" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_A" has lines with following column values
       | HOST-3      | BORROWED-10 |
       | 172.100.9.5 | false       |
@@ -28,7 +30,9 @@ Feature: reload @@config_all and recycl pool
     s/172.100.9.6/172.100.9.4/g
     """
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@backend" named "rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_B" has lines with following column values
       | HOST-3      | BORROWED-10 |
       | 172.100.9.4 | false       |
@@ -46,7 +50,9 @@ Feature: reload @@config_all and recycl pool
     s/172.100.9.4/172.100.9.2/g
     """
     Then execute admin cmd "reload @@config_all"
-    Then get resultset of admin cmd "show @@backend" named "rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_C" has lines with following column values
       | HOST-3      | BORROWED-10 |
       | 172.100.9.2 | false       |
@@ -64,7 +70,9 @@ Feature: reload @@config_all and recycl pool
     s/172.100.9.5/172.100.9.6/g
     """
     Then execute admin cmd "reload @@config_all -f"
-    Then get resultset of admin cmd "show @@backend" named "rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
+      | sql            |
+      | show @@backend |
     Then check resultset "rs_D" has lines with following column values
       | HOST-3      | BORROWED-10 |
       | 172.100.9.6 | false       |
