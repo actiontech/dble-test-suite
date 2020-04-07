@@ -54,7 +54,7 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                       | expect  | db      |
       | test | 111111 | conn_0 | false   | drop table if exists test | success | schema1 |
-    Given change btrace "BtraceDelayAfterDdl.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayAfterDdlExecuted/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
@@ -77,7 +77,9 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | root | 111111 | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                           |    |
       | root | 111111 | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |    |
       | root | 111111 | conn_1 | true    | reload @@metadata                                   | success                           |    |
-    Then get resultset of admin cmd "show @@backend.statistics" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | sql                       |
+      | show @@backend.statistics |
     Then check resultset "rs_A" has lines with following column values
       | TOTAL-3 |
       | 5       |

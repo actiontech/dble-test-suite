@@ -2,21 +2,25 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
-from .steps.SqlUtil import turn_off_general_log, do_exec_sql
-from .steps.step_check_sql import reset_repl
-from .steps.lib.Node import get_ssh, get_sftp, get_node
-from .steps.lib.utils import setup_logging ,load_yaml_config, get_nodes,restore_sys_time
-from .steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
+from steps.lib.MySQLObject import MySQLObject
+from steps.step_check_sql import reset_repl
+from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,get_ssh, get_sftp
+from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
-
-from .steps.restart import update_config_with_sedStr_and_restart_mysql
+from steps.dble_steps import *
+from steps.MySQLSteps import *
+from steps.step_function import *
+from steps.btrace_block import *
+from steps.step_createConn import *
+from steps.step_safety import *
+from steps.step_sequence import *
 
 logger = logging.getLogger('environment')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
     if para_dble_conf_lower in ["sql_cover_mixed", "sql_cover_global", "template", "sql_cover_nosharding","sql_cover_sharding"]:
-        conf = "{0}{1}".format(context.cfg_dble['conf_dir'], para_dble_conf_lower)
+        conf = "{0}{1}".format(context.cfg_sys['dble_conf_dir_in_behave'], para_dble_conf_lower)
     else:
         assert False, 'cmdline dble_conf\'s value can only be one of ["template", "sql_cover_mixed", "sql_cover_global", "sql_cover_nosharding","sql_cover_sharding"]'
 
@@ -41,23 +45,21 @@ def before_all(context):
     context.userDebug = context.config.userdata["user_debug"].lower() == "true"
     context.is_cluster = context.config.userdata["is_cluster"].lower() == "true"
     if context.is_cluster:
-        context.dbles = get_nodes(context, "dble_cluster")
+        init_meta(context, "dble_cluster")
     else:
-        context.dbles = get_nodes(context, "dble")
-        for node in context.dbles:
+        init_meta(context, "dble")
+        for node in DbleMeta.dbles:
             disable_cluster_config_in_node(context, node)
 
-    context.mysqls = get_nodes(context, "mysqls")
-
-    context.ssh_client = get_ssh(context.dbles, context.cfg_dble['dble']['ip'])
-    context.ssh_sftp = get_sftp(context.dbles, context.cfg_dble['dble']['ip'])
+    init_meta(context, "mysqls")
+    context.ssh_client = get_ssh(context.cfg_dble['dble']['hostname'])
+    context.ssh_sftp = get_sftp(context.cfg_dble['dble']['hostname'])
 
     try:
         para_dble_conf = context.config.userdata.pop('dble_conf')
     except KeyError:
         raise KeyError('Not define userdata dble_conf, usage: behave -D dble_conf=XXX ...')
     init_dble_conf(context, para_dble_conf)
-
     reinstall = context.config.userdata["reinstall"].lower() == "true"
     reset = context.config.userdata["reset"].lower() == "true"
 
@@ -72,21 +74,20 @@ def before_all(context):
         reset_dble(context)
     else:
         logger.info('give new install')
-
     logger.info('Exit hook <{0}>'.format('before_all'))
 
 def reset_dble(context):
     replace_config(context)
-    set_dbles_log_level(context, context.dbles, 'debug')
-    restart_dbles(context, context.dbles)
+    set_dbles_log_level(context, DbleMeta.dbles, 'debug')
+    restart_dbles(context, DbleMeta.dbles)
 
 def after_all(context):
     logger.info('Enter hook <{0}>'.format('after_all'))
 
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         if node.ssh_conn:
             node.ssh_conn.close()
-    for node in context.mysqls:
+    for node in MySQLMeta.mysqls:
         if node.ssh_conn:
             node.ssh_conn.close()
 
@@ -111,7 +112,6 @@ def after_feature(context, feature):
 def before_scenario(context, scenario):
     logger.info('#' * 30)
     logger.info('Scenario start: <{0}>'.format(scenario.name))
-    logger.info(context.text)
 
 def after_scenario(context, scenario):
     logger.info('Enter hook after_scenario')
@@ -122,15 +122,19 @@ def after_scenario(context, scenario):
             conn = getattr(context, conn_name)
             conn.close()
             delattr(context, conn_name)
+    for conn_id,conn in MySQLObject.long_live_conns.items():
+        logger.debug("to close mysql conn: {}".format(conn_id))
+        conn.close()
+    MySQLObject.long_live_conns.clear()
 
     if "restore_sys_time" in scenario.tags:
-        restore_sys_time(context)
+        restore_sys_time()
 
     if "aft_reset_replication" in scenario.tags:
         reset_repl(context)
 
     if "restore_letter_sensitive" in scenario.tags:
-        sedStr= """
+        sed_str= """
         /lower_case_table_names/d
         /server-id/a lower_case_table_names = 0
         """
@@ -142,8 +146,8 @@ def after_scenario(context, scenario):
             paras = ['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']
 
         logger.debug("try to restore lower_case_table_names of mysqls: {0}".format(paras))
-        for i in paras:
-            update_config_with_sedStr_and_restart_mysql(context, i, sedStr)
+        for host_name in paras:
+            restart_mysql(context, host_name, sed_str)
 
     if "restore_general_log" in scenario.tags:
         params_dic = get_case_tag_params(scenario.description, "{'restore_general_log'")
@@ -173,18 +177,7 @@ def after_scenario(context, scenario):
                 query = query + "{0}={1},".format(k, v)
 
             sql = query[:-1]
-
-            node = get_node(context.mysqls, mysql)
-            ip = node.ip
-            port = node.mysql_port
-            user = context.cfg_mysql["user"]
-            passwd = context.cfg_mysql["password"]
-            db = ""
-            bClose = True
-            conn_type = "conn_0"
-            expect = "success"
-
-            do_exec_sql(context, ip, user, passwd, db, port, sql, bClose, conn_type, expect)
+            execute_sql_in_host(mysql, {"sql":sql})
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
@@ -200,15 +193,13 @@ def get_case_tag_params(description, tag):
     for line in description:
         line_no_white = line.strip()
         if line_no_white and line_no_white.startswith(tag):
-            logger.debug("zhj debug4:{0}".format(description))
             tag_para_dic = eval(line)
             break
     return tag_para_dic
 
 def before_step(context, step):
-    logger.info('*' * 30)
-    logger.info('step start: <{0}>'.format(step.name))
+    logger.debug(step.name)
 
 def after_step(context, step):
-    logger.info('step end: <{0}>, status:{1}'.format(step.name, step.status))
-    logger.info('*' * 30)
+    logger.info('{0}, status:{1}'.format(step.name, step.status))
+

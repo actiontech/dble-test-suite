@@ -9,26 +9,28 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
+from lib.MySQLMeta import MySQLMeta
+from lib.DbleMeta import DbleMeta
 from lib.DBUtil import *
-from lib.Node import get_node, get_ssh
+from lib.utils import get_node, get_ssh
 
 LOGGER = logging.getLogger('steps.install')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         uninstall_dble_in_node(context, node)
 
 def uninstall_dble_in_node(context, node):
     dble_installed = stop_dble_in_node(context, node)
 
     if dble_installed:
-        cmd = "cd {0} && rm -rf dble".format(context.cfg_dble['install_dir'])
+        cmd = "cd {0} && rm -rf dble".format(node.install_dir)
         node.ssh_conn.exec_command(cmd)
 
 @given('uninstall dble in "{hostname}"')
 def unistall_dble_by_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     uninstall_dble_in_node(context, node)
 
 def get_dble_install_packet_name(context):
@@ -63,23 +65,23 @@ def install_dble_in_node(context, node):
 
     ssh_client =node.ssh_conn
 
-    cmd = "cd {0} && rm -rf dble".format(context.cfg_dble['install_dir'])
+    cmd = "cd {0} && rm -rf dble".format(node.install_dir)
     ssh_client.exec_command(cmd)
 
     cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packet,
-                                           context.cfg_dble['install_dir'])
+                                           node.install_dir)
     ssh_client.exec_command(cmd)
-    cmd = "cd {0} && tar xf {1}".format(context.cfg_dble['install_dir'], dble_packet)
+    cmd = "cd {0} && tar xf {1}".format(node.install_dir, dble_packet)
     ssh_client.exec_command(cmd)
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     install_dble_in_node(context, node)
 
 @Given('install dble in all dble nodes')
 def install_dble_in_all_nodes(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         install_dble_in_node(context, node)
 
 def download_dble(context, dble_packet_name):
@@ -116,14 +118,14 @@ def set_dbles_log_level(context, nodes, log_level):
 def set_dble_log_level(context, node, log_level):
     ssh_client = node.ssh_conn
     str_awk = "awk 'FS=\" \" {print $2}'"
-    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(context.cfg_dble['install_dir'], str_awk)
+    cmd = "cat {0}/dble/conf/log4j2.xml | grep -e '<asyncRoot*' | {1} | cut -d= -f2 ".format(node.install_dir, str_awk)
     rc, sto, ste = ssh_client.exec_command(cmd)
 
     if log_level in sto:
-        LOGGER.info("dble log level is already: {0}, do nothing!".format(log_level))
+        LOGGER.debug("dble log level is already: {0}, do nothing!".format(log_level))
         return False
     else:
-        log = '{0}/dble/conf/log4j2.xml'.format(context.cfg_dble['install_dir'])
+        log = '{0}/dble/conf/log4j2.xml'.format(node.install_dir)
         cmd = "sed -i 's/{0}/{1}/g' {2} ".format(sto[1:-1], log_level, log)
         ssh_client.exec_command(cmd)
         return True
@@ -132,12 +134,12 @@ def set_dble_log_level(context, node, log_level):
 @When('Start dble in "{hostname}"')
 @Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     start_dble_in_node(context, node)
 
 def start_dble_in_node(context, node, expect_success=True):
     ssh_client = node.ssh_conn
-    cmd = "{0}/dble/bin/dble start".format(context.cfg_dble['install_dir'])
+    cmd = "{0}/dble/bin/dble start".format(node.install_dir)
     ssh_client.exec_command(cmd)
 
     check_dble_started(context, node)
@@ -158,8 +160,8 @@ def check_dble_started(context, node):
     ip = node._ip
     dble_conn = None
     try:
-        dble_conn = DBUtil(ip, context.cfg_dble['manager_user'], context.cfg_dble['manager_password'], "",
-                           context.cfg_dble['manager_port'], context)
+        dble_conn = DBUtil(ip, node.manager_user, node.manager_password, "",
+                           node.manager_port, context)
         res, err = dble_conn.query("show @@version")
     except MySQLdb.Error, e:
         err = e.args
@@ -167,23 +169,23 @@ def check_dble_started(context, node):
         if dble_conn:dble_conn.close()
 
     context.dble_start_success = err is None
-    LOGGER.info("dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
+    LOGGER.debug("dble started success:{0}, loop {1}, err:{2}".format(context.dble_start_success, context.retry_start_dble, err))
     if not context.dble_start_success:
         if context.retry_start_dble < 5:
             context.retry_start_dble = context.retry_start_dble+1
             time.sleep(5)
             check_dble_started(context,node)
         else:
-            LOGGER.info("dble started failed after 5 times try")
+            LOGGER.debug("dble started failed after 5 times try")
             cmd = "cat /opt/dble/logs/wrapper.log"
             rc, sto, ste = node.ssh_conn.exec_command(cmd)
-            LOGGER.info("Please check the error message in wrapper.log:\n{0}".format(sto))
+            LOGGER.debug("Please check the error message in wrapper.log:\n{0}".format(sto))
             delattr(context, "retry_start_dble")
     else:
         delattr(context, "retry_start_dble")
 @Given("stop all dbles")
 def stop_dbles(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         stop_dble_in_node(context, node)
 
 @Given('stop dble in "{hostname}"')
@@ -192,12 +194,12 @@ def step_impl(context, hostname):
 
 @Then('stop dble in "{hostname}"')
 def stop_dble_in_hostname(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     stop_dble_in_node(context, node)
 
 def stop_dble_in_node(context, node):
     ssh_client = node.ssh_conn
-    dble_install_path = context.cfg_dble['install_dir']
+    dble_install_path = node.install_dir
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_pid_exist:
@@ -241,12 +243,12 @@ def restart_dbles(context, nodes):
 
 @Then('restart dble in "{hostname}" failed for')
 def check_restart_dble_failed(context,hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     restart_dble(context, node, False)
 
 @Given('Restart dble in "{hostname}" success')
 def step_impl(context, hostname):
-    node = get_node(context.dbles, hostname)
+    node = get_node(hostname)
     restart_dble(context, node)
 
 def restart_dble(context, node, expect_success=True):
@@ -256,12 +258,12 @@ def restart_dble(context, node, expect_success=True):
 @Then('start dble in order')
 def start_dble_in_order(context):
     start_dble_in_hostname(context, "dble-1")
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         if "dble-1" not in node.host_name:
             start_dble_in_node(context, node)
 
 def start_zk_services(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         start_zk_service(context, node)
 
 def start_zk_service(context, node):
@@ -317,25 +319,25 @@ def stop_zk_service(context, node):
     assert stop_success, "stop zkServer fail for: {0}".format(ste)
 
 def restart_zk_service(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         stop_zk_service(context, node)
 
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         start_zk_service(context, node)
 
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         check_zk_status(context, node)
 
 @Given('config zookeeper cluster in all dble nodes with "{hosts_form}"')
 def config_zk_in_dble_nodes(context,hosts_form):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         conf_zk_in_node(context, node,hosts_form)
 
     restart_zk_service(context)
 
 def conf_zk_in_node(context,node,hosts_form):
     ssh_client = node.ssh_conn
-    conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
+    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
     # zk_server_ip=context.cfg_zookeeper['ip']
     zk_server_port=context.cfg_zookeeper['port']
 
@@ -355,7 +357,7 @@ def conf_zk_in_node(context,node,hosts_form):
     assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
 
 def disable_cluster_config_in_node(context, node):
-    conf_file = "{0}/dble/conf/myid.properties".format(context.cfg_dble['install_dir'])
+    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
     cmd = "[ -f {0} ] && sed -i 's/cluster=.*/cluster=false/g' {0}".format(conf_file)
 
     ssh_client = node.ssh_conn
@@ -364,19 +366,19 @@ def disable_cluster_config_in_node(context, node):
 
 @given('stop dble cluster and zk service')
 def dble_cluster_to_single(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         stop_dble_in_node(context, node)
         disable_cluster_config_in_node(context, node)
         stop_zk_service(context, node)
 
 @Given('replace config files in all dbles with command line config')
 def replace_config(context):
-    for node in context.dbles:
+    for node in DbleMeta.dbles:
         replace_config_in_node(context,node)
 
 @Given('replace config files in "{nodeName}" with command line config')
 def step_impl(context, nodeName):
-    node = get_node(context.dbles, nodeName)
+    node = get_node(nodeName)
     replace_config_in_node(context, node)
 
 def replace_config_in_node(context, node):
@@ -387,11 +389,11 @@ def replace_config_in_node(context, node):
     os.system(osCmd)
 
     ssh_client = node.ssh_conn
-    dble_install_path = context.cfg_dble['install_dir']
+    dble_install_path = node.install_dir
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_dir_exist:
-        cmd = 'rm -rf {0}/dble/conf_*'.format(context.cfg_dble['install_dir'])
+        cmd = 'rm -rf {0}/dble/conf_*'.format(node.install_dir)
         ssh_client.exec_command(cmd)
 
         cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(dble_install_path)
@@ -403,13 +405,14 @@ def replace_config_in_node(context, node):
     files = os.listdir(sourceCfgDir)
     for file in files:
         local_file = "{0}/{1}".format(sourceCfgDir, file)
-        remote_file = "{0}/dble/conf/{1}".format(context.cfg_dble['install_dir'], file)
+        remote_file = "{0}/dble/conf/{1}".format(node.install_dir, file)
         node.sftp_conn.sftp_put(local_file, remote_file)
 
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
-    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(context.cfg_dble["install_dir"])
-    ssh_client = get_ssh(context.dbles, "dble-1")
+    node = get_node("dble-1")
+    ssh_client = node.ssh_conn
+    resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
     ssh_client.exec_command(resetCmd)
 
 @Then ('Monitored folling nodes online')
@@ -427,7 +430,7 @@ def check_cluster_successd(context, expectNodes):
 
     realNodes = []
     cmd = "cd {0}/bin && ./zkCli.sh ls /dble/cluster-1/online|grep -v ':'|grep -v ^$ ".format(context.cfg_zookeeper['home'])
-    cmd_ssh = get_ssh(context.dbles, "dble-1")
+    cmd_ssh = get_ssh("dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
     LOGGER.debug("add debug to check the result of executing {0} is :sto:{1}".format(cmd,sto))
     sub_sto = re.findall(r'[[](.*)[]]', sto)
@@ -453,4 +456,3 @@ def check_cluster_successd(context, expectNodes):
     else:
         delattr(context, "retry_check_zk_nodes")
 
-    

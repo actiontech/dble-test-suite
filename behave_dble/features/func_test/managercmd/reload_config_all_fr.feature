@@ -19,9 +19,13 @@ Feature: reload @@config_all -fr
     Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
 
     # 1 execute "reload @@config_all -rf" will rebuild backend conn
-    Then get resultset of admin cmd "show @@backend" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | sql            |
+      | show @@backend |
     Then execute admin cmd "reload @@config_all -fr"
-    Then get resultset of admin cmd "show @@backend" named "rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_A" does not including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -37,7 +41,9 @@ Feature: reload @@config_all -fr
     <dataNode dataHost="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all -fr"
-    Then get resultset of admin cmd "show @@backend" named "rs_C"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_C"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_C" does not including resultset "rs_B" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -66,11 +72,11 @@ Feature: reload @@config_all -fr
     </dataHost>
     """
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db      |
-      | test | 111111 | conn_0 | false   | drop table if exists sharding_4_t1               | success | schema1 |
-      | test | 111111 | conn_0 | false   | create table sharding_4_t1 (id int)              | success | schema1 |
-      | test | 111111 | conn_0 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_0 | false   | drop table if exists sharding_4_t1               | success | schema1 |
+      | conn_0 | false   | create table sharding_4_t1 (id int)              | success | schema1 |
+      | conn_0 | False   | begin                                            | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
 
     Then execute admin cmd "reload @@config_all -fr" get the following output
     """
@@ -86,7 +92,9 @@ Feature: reload @@config_all -fr
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -fr"
-    Then get resultset of admin cmd "show @@backend" named "rs_D"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_D"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_D" does not including resultset "rs_C" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -99,22 +107,24 @@ Feature: reload @@config_all -fr
       | 172.100.9.4 |
       | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                    | expect      | db      |
-      | test | 111111 | new  | true    | select * from sharding_4_t1 where id=2 | length{(0)} | schema1 |
+      | sql                                    | expect      | db      |
+      | select * from sharding_4_t1 where id=2 | length{(0)} | schema1 |
 
     #4 Start the transaction and change dataNode, then execute "reload @@config_all -f -r"  causing transaction closed
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                              | expect  | db      |
-      | test | 111111 | conn_1 | False   | drop table if exists sharding_4_t1               | success | schema1 |
-      | test | 111111 | conn_1 | False   | create table sharding_4_t1 (id int)              | success | schema1 |
-      | test | 111111 | conn_1 | False   | begin                                            | success | schema1 |
-      | test | 111111 | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
-    Given change file "schema.xml" in "dble-1" locate "install_dir" with sed cmds
+      | conn   | toClose | sql                                              | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1               | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)              | schema1 |
+      | conn_1 | False   | begin                                            | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | schema1 |
+    Given update file content "{install_dir}/dble/conf/schema.xml" in "dble-1" with sed cmds
     """
     s/172.100.9.4/172.100.9.6/g
     """
     Then execute admin cmd "reload @@config_all -f -r"
-    Then get resultset of admin cmd "show @@backend" named "rs_E"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
+      | sql            |
+      | show @@backend |
     Then check resultsets "rs_E" does not including resultset "rs_D" in following columns
       | column     | column_index |
       | BACKEND_ID | 1            |
@@ -127,5 +137,5 @@ Feature: reload @@config_all -fr
       | 172.100.9.6 |
       | 172.100.9.5 |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn | toClose | sql                                | expect      | db      |
-      | test | 111111 | new  | True    | drop table if exists sharding_4_t1 | length{(0)} | schema1 |
+      | sql                                | expect      | db      |
+      | drop table if exists sharding_4_t1 | length{(0)} | schema1 |

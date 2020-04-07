@@ -27,19 +27,19 @@ Feature: test default db change right; cross db table with same name not affecte
   @BLOCKER @skip_restart
   Scenario: default db not set;cross db table not affected by others; and cross db sql works right #1
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                             | expect  | db   |
-      | test | 111111 | conn_0 | False   | drop table if exists test1                      | No database selected |      |
-      | test | 111111 | conn_0 | False   | drop table if exists schema1.test1               | success |      |
-      | test | 111111 | conn_0 | False   | drop table if exists schema1.test                | success |      |
-      | test | 111111 | conn_0 | False   | drop table if exists testdb.test1               | success |      |
-      | test | 111111 | conn_0 | False   | use schema1                                      | success |      |
-      | test | 111111 | conn_0 | False   | create table test1(id int,c int)                | success |      |
-      | test | 111111 | conn_0 | False   | use testdb                                      | success |      |
-      | test | 111111 | conn_0 | False   | create table test1(id int)                      | success |      |
-      | test | 111111 | conn_0 | False   | select c from schema1.test1                      | success |      |
-#      | test | 111111 | conn_0 | False   | select * from test1 join schema1.test1 using(id) | success |      |    #865
-      | test | 111111 | conn_0 | False   | select * from test1 join testdb.test1 using(id) | Not unique table/alias |      |
-#      | test | 111111 | conn_0 | False   | select * from schema1.test1 join testdb.test1 using(id) | success |      |    #865
-      | test | 111111 | conn_0 | False   | drop table test1                                | success |      |
-      | test | 111111 | conn_0 | False   | select c from schema1.test1                      | success |      |
-      | test | 111111 | conn_0 | True    | select c from test1     | Table 'db2.test1' doesn't exist |      |
+      | conn   | toClose | sql                                             | expect  |
+      | conn_0 | False   | drop table if exists test1                      | No database selected |
+      | conn_0 | False   | drop table if exists schema1.test1              | success |
+      | conn_0 | False   | drop table if exists schema1.test               | success |
+      | conn_0 | False   | drop table if exists testdb.test1               | success |
+      | conn_0 | False   | use schema1                                     | success |
+      | conn_0 | False   | create table test1(id int,c int)                | success |
+      | conn_0 | False   | use testdb                                      | success |
+      | conn_0 | False   | create table test1(id int)                      | success |
+      | conn_0 | False   | select c from schema1.test1                     | success |
+#      | conn_0 | False   | select * from test1 join schema1.test1 using(id) | success |    #865
+      | conn_0 | False   | select * from test1 join testdb.test1 using(id) | Not unique table/alias |
+#      | conn_0 | False   | select * from schema1.test1 join testdb.test1 using(id) | success |    #865
+      | conn_0 | False   | drop table test1                                | success |
+      | conn_0 | False   | select c from schema1.test1                     | success |
+      | conn_0 | True    | select c from test1                             | Table 'db2.test1' doesn't exist |

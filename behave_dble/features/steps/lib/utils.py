@@ -8,11 +8,14 @@ from functools import wraps
 from logging import config
 from pprint import pformat
 
+import re
 import yaml
 from behave import *
 from hamcrest import *
 
-from features.steps.lib.Node import Node
+from .DbleMeta import DbleMeta
+from .MySQLMeta import MySQLMeta
+
 
 logger = logging.getLogger('lib')
 
@@ -51,43 +54,100 @@ def load_yaml_config(config_path):
     return parsed
 
 @log_it
-def get_nodes(context , flag):
-    nodes = []
-    ssh_user = context.cfg_sys['ssh_user']
-    ssh_password = context.cfg_sys['ssh_password']
-
+def init_meta(context, flag):
     if flag=="dble":
-        ip = context.cfg_dble[flag]["ip"]
-        hostname = context.cfg_dble[flag]["hostname"]
-        node = Node(ip, ssh_user, ssh_password, hostname, context.cfg_dble["client_port"])
-        nodes.append(node)
+        cfg_dic = {}
+        cfg_dic.update(context.cfg_dble[flag])
+        cfg_dic.update(context.cfg_server)
+
+        node = DbleMeta(cfg_dic)
+        DbleMeta.dbles = (node,)
     elif flag == "dble_cluster":
+        nodes = []
         for _, childNode in context.cfg_dble[flag].iteritems():
-            hostname = childNode["hostname"]
-            ip = childNode["ip"]
-            node = Node(ip, ssh_user, ssh_password, hostname, context.cfg_dble["client_port"])
+            cfg_dic = {}
+            cfg_dic.update(childNode)
+            cfg_dic.update(context.cfg_server)
+
+            node = DbleMeta(cfg_dic)
             nodes.append(node)
+        DbleMeta.dbles = tuple(nodes)
     elif flag == "mysqls":
+        nodes = []
         for k, v in context.cfg_mysql.iteritems():
-            if isinstance(v, dict) and v.has_key("master1"):#for mysql groups
-                for ck, cv in context.cfg_mysql[k].iteritems():
-                    ip = cv["ip"]
-                    hostname = cv["hostname"]
-                    port = cv["port"]
-                    logger.debug("**********mysql ip:{0}, hostname: {1}, port: {2}".format(ip, hostname, port))
-                    node = Node(ip, ssh_user, ssh_password, hostname, port)
-                    nodes.append(node)
+            for ck, cv in context.cfg_mysql[k].iteritems():
+                cfg_dic = {}
+                cfg_dic.update(cv)
+                cfg_dic.update(context.cfg_server)
+
+                node = MySQLMeta(cfg_dic)
+                nodes.append(node)
+        MySQLMeta.mysqls = tuple(nodes)
+
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
-    return nodes
 
 @Given('sleep "{num}" seconds')
 def step_impl(context, num):
     int_num = int(num)
     time.sleep(int_num)
 
+@Given ('update file content "{filename}" in "{host_name}" with sed cmds')
+def update_file_content(context,filename, host_name, sed_str=None):
+    if not sed_str and len(context.text)>0:
+        sed_str = context.text
+
+    if host_name == "behave":
+        node = None
+    else:
+        node = get_node(host_name)
+
+# replace all vars in file name with corresponding node attribute value
+    vars = re.findall(r'\{(.*?)\}', filename, re.I)
+    logger.debug("debug vars: {}".format(vars))
+    for var in vars:
+        filename = filename.replace("{"+var+"}", getattr(node,var))
+
+    update_file_with_sed(sed_str, filename, node)
+
+def update_file_with_sed(sed_str, filename, node):
+    sed_cmd = merge_cmd_strings(filename, sed_str)
+    if node:
+        rc, stdout, stderr = node.ssh_conn.exec_command(sed_cmd)
+        assert_that(len(stderr) == 0, "update file content with:{1}, got err:{0}".format(stderr, sed_cmd))
+    else:
+        status = os.system(sed_cmd)
+        assert status == 0, "change {0} failed".format(filename)
+
+def merge_cmd_strings(filename,sedStr):
+    sed_cmd_str = sedStr.strip()
+    sed_cmd_list = sed_cmd_str.splitlines()
+    cmd = "sed -i"
+    for sed_cmd in sed_cmd_list:
+        cmd += " -e '{0}'".format(sed_cmd.strip())
+    cmd += " {0}".format(filename)
+    logger.debug("sed cmd: {0}".format(cmd))
+    return cmd
+
 def restore_sys_time():
     import os
     res = os.system("ntpdate -u 0.centos.pool.ntp.org")
     assert res == 0, "restore sys time fail"
     logger.debug("restore sys time success")
+
+def get_node(host):
+    logger.debug("try to get meta of '{}'".format(host))
+    for node in MySQLMeta.mysqls+DbleMeta.dbles:
+        if node.host_name == host or node.ip == host:
+            return node
+    assert False, 'Can not find node {0}'.format(host)
+
+# get ssh by host or ip
+def get_ssh( host):
+    node = get_node(host)
+    return node.ssh_conn
+
+# get sftp by host or ip
+def get_sftp(host):
+    node = get_node(host)
+    return node.sftp_conn
