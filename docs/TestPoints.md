@@ -302,7 +302,6 @@ dble集群安装测试
 dble集群到单节点转化测试
 - scenario 1: 安装zk集群,退化成单dble，然后再恢复zk集群
 - scenario 2: 配置3个dble到集群，则配置的dble都在线，停止其中一台dble服务，则停止的dble退出集群
-- scenario 3: 配置3台dble到zk集群，再重启dble-1，则dble-1中配置文件dnindex.properties包含"localhost1=0"
 #### behave_dble/features/install_uninstall/stop_dble_cluster.feature
 停止dble集群测试
 - scenario 1: 停止dble集群及zk服务

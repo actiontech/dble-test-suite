@@ -91,6 +91,7 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Given get config xml version from template config and named as "current_version"
     Given add current version from var "current_version" to rootnode in "server.xml"
     Given add current version from var "current_version" to rootnode in "rule.xml"
+#    in zk cluster, reload @@config_all to sync config to other nodes
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
