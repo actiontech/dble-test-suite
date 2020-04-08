@@ -280,17 +280,6 @@ def step_impl(context, sql_cover_log):
     if os.path.exists(sql_cover_log):
         shutil.rmtree(sql_cover_log)
 
-@Given('reset replication and none system databases')
-def reset_repl(context):
-    import subprocess
-    try:
-        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
-    except subprocess.CalledProcessError as e:
-        out_bytes = e.output  # Output generated before error
-        context.logger.debug(out_bytes.decode('utf-8'))
-    finally:
-        context.logger.debug(out_bytes.decode('utf-8'))
-
 @Given('reset views in "{dblelist}" if exists')
 def step_impl(context, dblelist):
     import subprocess

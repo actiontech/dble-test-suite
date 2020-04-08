@@ -3,12 +3,11 @@
 import logging
 
 from steps.lib.MySQLObject import MySQLObject
-from steps.step_check_sql import reset_repl
-from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,get_ssh, get_sftp
+from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 from steps.dble_steps import *
-from steps.MySQLSteps import *
+from steps.mysql_steps import *
 from steps.step_function import *
 from steps.btrace_block import *
 from steps.step_createConn import *
@@ -131,7 +130,7 @@ def after_scenario(context, scenario):
         restore_sys_time()
 
     if "aft_reset_replication" in scenario.tags:
-        reset_repl(context)
+        reset_repl()
 
     if "restore_letter_sensitive" in scenario.tags:
         sed_str= """
