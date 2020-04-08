@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
+@skip
 Feature: dble start fail if global var lower_case_table_names are not consistent in all dataHosts
 #  lower_case_table_names default value in mysql under linux is 0
 

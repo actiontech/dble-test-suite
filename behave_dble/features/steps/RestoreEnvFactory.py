@@ -4,6 +4,9 @@
 # @Time    : 2020/3/25 AM10:46
 # @Author  : irene-coming
 import logging
+
+from lib import utils
+
 logger = logging.getLogger('environment.after_scenario')
 class RestoreEnvFactory(object):
     def __init__(self,scenario):
@@ -14,7 +17,7 @@ class RestoreEnvFactory(object):
             self.restore_sys_time()
 
         if "aft_reset_replication" in self._scenario.tags:
-            Utils.reset_repl(context)
+            utils.reset_repl()
 
         if "restore_letter_sensitive" in self._scenario.tags:
             sedStr= """
