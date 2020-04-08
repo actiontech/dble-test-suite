@@ -31,7 +31,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     /CLUSTERID/c CLUSTERID=02
     /START_TIME/c START_TIME=2010-11-04 09:42:54
     """
-     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
+     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-3" with sed cmds
     """
     /INSTANCEID/c INSTANCEID=zk
     /CLUSTERID/c CLUSTERID=03
@@ -44,16 +44,16 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
+      | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
-      | sql                               |
-      | select time from mytest_auto_test |
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_id"
-      | sql                                         |
-      | select conv(id,10,2) from mytest_auto_test  |
+      | sql                                         | db      |
+      | select conv(id,10,2) from mytest_auto_test  | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -67,16 +67,16 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
     Then execute sql in "dble-2" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect  | db      |
-      | test | 111111 | conn_0 | True    | drop table if exists mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_0 | False   | drop table if exists mytest_auto_test                   | success | schema1 |
+      | conn_0 | False   | create table mytest_auto_test(id bigint,time char(120)) | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate())          | success | schema1 |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "ts_time"
-      | sql                               |
-      | select time from mytest_auto_test |
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "rs_id"
-      | sql                                        |
-      | select conv(id,10,2) from mytest_auto_test |
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -96,8 +96,8 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
       | select sysdate() |
     When connect ssh execute cmd "date -s 2009/01/01"
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                    | expect                                          | db      |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
+      | sql                                    | expect                                          | db      |
+      | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
     Then revert to current time by "curTime"
 
   @skip_restart
@@ -112,15 +112,15 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
-      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
+      | conn   | toClose | sql                                            | expect  | db      |
+      | conn_0 | False   | delete from mytest_auto_test                   | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
-      | sql                               |
-      | select time from mytest_auto_test |
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_id"
-      | sql                                        |
-      | select conv(id,10,2) from mytest_auto_test |
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -157,15 +157,15 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
-      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
+      | conn   | toClose | sql                                            | expect  | db      |
+      | conn_0 | False   | delete from mytest_auto_test                   | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "ts_time"
-      | sql                               |
-      | select time from mytest_auto_test |
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_id"
-      | sql                                        |
-      | select conv(id,10,2) from mytest_auto_test |
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -179,15 +179,15 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then check time "ts_time" equal to "t3"
 
     Then execute sql in "dble-2" in "user" mode
-      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
-      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
+      | conn   | toClose | sql                                            | expect  | db      |
+      | conn_0 | False   | delete from mytest_auto_test                   | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "ts_time"
-      | sql                               |
-      | select time from mytest_auto_test |
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "rs_id"
-      | sql                                        |
-      | select conv(id,10,2) from mytest_auto_test |
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
@@ -224,15 +224,15 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                            | expect  | db      |
-      | test | 111111 | conn_0 | True    | delete from mytest_auto_test                   | success | schema1 |
-      | test | 111111 | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
+      | conn   | toClose | sql                                            | expect  | db      |
+      | conn_0 | False   | delete from mytest_auto_test                   | success | schema1 |
+      | conn_0 | True    | insert into mytest_auto_test values(curdate()) | success | schema1 |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "ts_time"
-      | sql                               |
-      | select time from mytest_auto_test |
+      | sql                               | db      |
+      | select time from mytest_auto_test | schema1 |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "rs_id"
-      | sql                                        |
-      | select conv(id,10,2) from mytest_auto_test |
+      | sql                                        | db      |
+      | select conv(id,10,2) from mytest_auto_test | schema1 |
     Then get id binary named "a" from "rs_id" and add 0 if binary length less than 64 bits
     Then get binary range start "15" end "18" from "a" named "result1"
     Then get binary range start "10" end "14" from "a" named "result2"
