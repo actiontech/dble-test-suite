@@ -230,9 +230,9 @@ Feature: multiple reload
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn | toClose | sql                    | expect  | db |
-      | new  | true    | reload @@config_all -r | success |    |
-      | new  | true    | reload @@config_all -r | success |    |
+      | conn | toClose | sql                    | expect  |
+      | new  | true    | reload @@config_all -r | success |
+      | new  | true    | reload @@config_all -r | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_a"
       | sql                                          |
       | check full @@metadata where schema='schema1' |
