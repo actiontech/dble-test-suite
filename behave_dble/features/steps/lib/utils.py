@@ -17,7 +17,7 @@ from .DbleMeta import DbleMeta
 from .MySQLMeta import MySQLMeta
 
 
-logger = logging.getLogger('lib')
+logger = logging.getLogger('lib.utils')
 
 def log_it(func):
     @wraps(func)
@@ -151,3 +151,14 @@ def get_ssh( host):
 def get_sftp(host):
     node = get_node(host)
     return node.sftp_conn
+
+@Given('reset replication and none system databases')
+def reset_repl(context):
+    import subprocess
+    try:
+        out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
+    except subprocess.CalledProcessError as e:
+        out_bytes = e.output  # Output generated before error
+        logger.debug(out_bytes.decode('utf-8'))
+    finally:
+        logger.debug(out_bytes.decode('utf-8'))
