@@ -45,15 +45,15 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     Then start dble in order
 
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql                                                     | expect                               | db |
-      | root | 111111 | conn_0 | True    | create database @@dataNode='dn$1-4'                     | success                              |    |
-      | root | 111111 | conn_0 | True    | show @@help                                             | hasStr{show @@ddl}                   |    |
-      | root | 111111 | conn_0 | True    | show @@help                                             | hasStr{kill @@ddl_lock where schema} |    |
-      | root | 111111 | conn_0 | True    | kill @@ddl_lock where schema='schema1' and table='test' | success                              |    |
-      | root | 111111 | conn_0 | True    | kill @@ddl_lock where schema=schema1 and table=test     | success                              |    |
+      | conn   | toClose | sql                                                     | expect                               |
+      | conn_0 | False   | create database @@dataNode='dn$1-4'                     | success                              |
+      | conn_0 | False   | show @@help                                             | hasStr{show @@ddl}                   |
+      | conn_0 | False   | show @@help                                             | hasStr{kill @@ddl_lock where schema} |
+      | conn_0 | False   | kill @@ddl_lock where schema='schema1' and table='test' | success                              |
+      | conn_0 | True    | kill @@ddl_lock where schema=schema1 and table=test     | success                              |
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                       | expect  | db      |
-      | test | 111111 | conn_0 | false   | drop table if exists test | success | schema1 |
+      | conn   | toClose | sql                       | expect  | db      |
+      | conn_0 | false   | drop table if exists test | success | schema1 |
     Given update file content "./assets/BtraceDelayAfterDdl.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -67,16 +67,16 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     get into delayAfterDdlExecuted
     """
     Then execute sql in "dble-2" in "admin" mode
-      | user | passwd | conn   | toClose | sql                                                 | expect                            | db |
-      | root | 111111 | conn_2 | false   | show @@ddl                                          | hasStr{drop table if exists test} |    |
-      | root | 111111 | conn_2 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                           |    |
-      | root | 111111 | conn_2 | true    | show @@ddl                                          | hasNoStr{drop table if exists test} |    |
+      | conn   | toClose | sql                                                 | expect                              |
+      | conn_2 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
+      | conn_2 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
+      | conn_2 | true    | show @@ddl                                          | hasNoStr{drop table if exists test} |
     Then execute sql in "dble-1" in "admin" mode
-      | user | passwd | conn   | toClose | sql                                                 | expect                            | db |
-      | root | 111111 | conn_1 | false   | show @@ddl                                          | hasStr{drop table if exists test} |    |
-      | root | 111111 | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                           |    |
-      | root | 111111 | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |    |
-      | root | 111111 | conn_1 | true    | reload @@metadata                                   | success                           |    |
+      | conn   | toClose | sql                                                 | expect                              |
+      | conn_1 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
+      | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
+      | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |
+      | conn_1 | true    | reload @@metadata                                   | success                             |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql                       |
       | show @@backend.statistics |
@@ -89,19 +89,19 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
     Given destroy sql threads list
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                            | expect      | db      |
-      | test | 111111 | new    | true    | create table test(id int)      | success     | schema1 |
-      | test | 111111 | new    | true    | insert into test values(1),(2) | success     | schema1 |
-      | test | 111111 | conn_4 | false   | begin                          | success     | schema1 |
-      | test | 111111 | conn_4 | false   | select * from test             | length{(2)} | schema1 |
-      | test | 111111 | conn_1 | false   | begin                          | success     | schema1 |
-      | test | 111111 | conn_1 | false   | select * from test             | length{(2)} | schema1 |
-      | test | 111111 | conn_2 | false   | begin                          | success     | schema1 |
-      | test | 111111 | conn_2 | false   | select * from test             | length{(2)} | schema1 |
-      | test | 111111 | conn_3 | false   | begin                          | success     | schema1 |
-      | test | 111111 | conn_3 | false   | select * from test             | length{(2)} | schema1 |
-      | test | 111111 | conn_4 | true    | commit                         | success     | schema1 |
-      | test | 111111 | conn_1 | true    | commit                         | success     | schema1 |
-      | test | 111111 | conn_2 | true    | commit                         | success     | schema1 |
-      | test | 111111 | conn_3 | true    | commit                         | success     | schema1 |
-      | test | 111111 | new    | true    | drop table if exists test      | success     | schema1 |
+      | conn   | toClose | sql                            | expect      | db      |
+      | new    | true    | create table test(id int)      | success     | schema1 |
+      | new    | true    | insert into test values(1),(2) | success     | schema1 |
+      | conn_4 | false   | begin                          | success     | schema1 |
+      | conn_4 | false   | select * from test             | length{(2)} | schema1 |
+      | conn_1 | false   | begin                          | success     | schema1 |
+      | conn_1 | false   | select * from test             | length{(2)} | schema1 |
+      | conn_2 | false   | begin                          | success     | schema1 |
+      | conn_2 | false   | select * from test             | length{(2)} | schema1 |
+      | conn_3 | false   | begin                          | success     | schema1 |
+      | conn_3 | false   | select * from test             | length{(2)} | schema1 |
+      | conn_4 | true    | commit                         | success     | schema1 |
+      | conn_1 | true    | commit                         | success     | schema1 |
+      | conn_2 | true    | commit                         | success     | schema1 |
+      | conn_3 | true    | commit                         | success     | schema1 |
+      | new    | true    | drop table if exists test      | success     | schema1 |

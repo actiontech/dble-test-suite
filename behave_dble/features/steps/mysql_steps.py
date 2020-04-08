@@ -3,6 +3,9 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM1:35
 # @Author  : irene-coming
+from threading import Thread
+
+from lib.MySQLObject import MySQLObject
 from lib.PostQueryCheck import PostQueryCheck
 from lib.PreQueryPrepare import PreQueryPrepare
 from lib.QueryMeta import QueryMeta
@@ -75,4 +78,18 @@ def execute_sql_in_host(host_name, info_dic=None):
 
     return res,err
 
+@Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
+def step_impl(context, sql, conn_type=''):
+    conn = MySQLObject.long_live_conns.get(conn_type,None)
+    assert conn, "conn '{0}' is not exists in long_live_conns".format(conn_type)
+    global sql_threads
+    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
+    sql_threads.append(thd)
+    thd.setDaemon(True)
+    thd.start()
 
+def execute_sql_backgroud(context, conn, sql):
+    sql_cmd = sql.strip()
+    res, err = conn.execute(sql_cmd)
+    setattr(context,"sql_thread_result",res)
+    setattr(context,"sql_thread_err",err)
