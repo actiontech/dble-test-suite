@@ -19,11 +19,11 @@ from lib.generate_util import generate
 from behave import *
 from hamcrest import *
 from step_reload import get_admin_conn, get_dble_conn
-LOGGER = logging.getLogger('steps.function')
+logger = logging.getLogger('steps.function')
 
 @then('Test the data types supported by the sharding column in "{sql_name}"')
 def test_data_type(context, sql_name):
-    LOGGER.info("test all data types")
+    logger.info("test all data types")
     sql_path = "sharding_func/{0}".format(sql_name)
     context.execute_steps(u'Then execute sql in "{0}" to check read-write-split work fine and log dest slave'.format(sql_path))
 
@@ -125,7 +125,7 @@ def step_impl(context, fildername,hostname):
 
 @Given('create local and server file "{filename}" and fill with text')
 def step_impl(context, filename):
-    LOGGER.debug("*** debug context.text:{0}".format(context.text))
+    logger.debug("*** debug context.text:{0}".format(context.text))
 
     text = context.text
 
@@ -254,6 +254,7 @@ def step_impl(context, binary_name, rs_name):
         binary_str = '0' + binary_str;
         binary_len = binary_len + 1;
     assert_that(len(binary_str) == 64), "expect binary length is 64 , not {0}".format(len(binary_str))
+    logger.debug("binary {} is: {}".format(binary_name,binary_str))
     setattr(context, binary_name, binary_str);
 
 
@@ -264,6 +265,7 @@ def step_impl(context, start_index, end_index, binary_name, binary_sub_name):
     end_index = int(end_index)
     binary_sub = binary[start_index:end_index + 1]
     setattr(context, binary_sub_name, binary_sub)
+    logger.debug("{} is: {}".format(binary_sub_name, binary_sub))
 
 
 @When('connect "{binary_a}" and "{binary_b}" to get new binary "{binary_c}"')
@@ -272,6 +274,7 @@ def step_impl(context, binary_a, binary_b, binary_c):
     binary_b = getattr(context, binary_b)
     binary_str = binary_a + binary_b
     setattr(context, binary_c, binary_str)
+    logger.debug("{} is: {}".format(binary_c, binary_str))
 
 
 @Then('convert binary "{binary_sub5}"  to decimal "{decimal_sub5}"')

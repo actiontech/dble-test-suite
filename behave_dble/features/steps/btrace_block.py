@@ -10,7 +10,6 @@ import time
 
 from behave import *
 
-from lib.MySQLObject import MySQLObject
 from lib.QueryMeta import QueryMeta
 from lib.utils import get_sftp, get_ssh,get_node
 
@@ -131,22 +130,6 @@ def destroy_threads(context):
         context.logger.debug("join btrace thread: {0}".format(thd.name))
         thd.join()
 
-@Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
-def step_impl(context, sql, conn_type=''):
-    conn = MySQLObject.long_live_conns.get(conn_type,None)
-    assert conn, "conn '{0}' is not exists in long_live_conns".format(conn_type)
-    global sql_threads
-    thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
-    sql_threads.append(thd)
-    thd.setDaemon(True)
-    thd.start()
-
-def execute_sql_backgroud(context, conn, sql):
-    sql_cmd = sql.strip()
-    res, err = conn.execute(sql_cmd)
-    setattr(context,"sql_thread_result",res)
-    setattr(context,"sql_thread_err",err)
-
 @Given('destroy sql threads list')
 def step_impl(context):
     global sql_threads
@@ -161,17 +144,3 @@ def step_impl(context,result):
     elif result.lower() == "err":
         output = getattr(context,"sql_thread_err")
     assert str(output).find(context.text.strip()),"not found '{0}' in sql '{1}'".format(context.text,result)
-
-@Then('execute admin cmd  in "{host}" at background')
-def step_impl(context, host):
-    node = get_node(host)
-    sshClient = node.ssh_conn
-
-    context.logger.debug("btrace is running, start query!!!")
-    time.sleep(5)
-    for row in context.table:
-        query_meta = QueryMeta(row.as_dict(), "admin", node)
-
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port, query_meta.sql)
-        rc, sto, ste = sshClient.exec_command(cmd)
-        assert len(ste) == 0, "impossible err occur"
