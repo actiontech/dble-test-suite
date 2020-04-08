@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
-#@skip
+@skip
 Feature: if dble rebuild conn pool with reload, then global vars dble concerned will be redetected
 #dble cared global vars:
 #| dble config name     | dble default value | mysql variable name    | mysql default value   | mysql effect Scope |
@@ -347,7 +347,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given start mysql in host "mysql-master1"
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
-    Then check btrace "BtraceAddMetaLock1.java" output in "dble-1" with "2" times'
+    Then check btrace "BtraceAddMetaLock1.java" output in "dble-1" with "2" times
     """
     get into call
     """

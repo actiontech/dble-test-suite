@@ -58,7 +58,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
         <property name="bufferPoolChunkSize">4096     </property>
         <property name="bufferPoolPageNumber">512      </property>
         <property name="bufferPoolPageSize">2097152  </property>
-        <property name="clearBigSqLResultSetMapMs">600000   </property>
+        <property name="clearBigSQLResultSetMapMs">600000   </property>
         <property name="sqlRecordCount">10            </property>
         <property name="maxResultSet">524288          </property>
         <property name="backSocketSoRcvbuf">4194304   </property>
@@ -132,7 +132,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | sqlRecordCount              | 10                              |
       | maxResultSet                | 524288B                         |
       | bufferUsagePercent          | 80%                             |
-      | clearBigSqLResultSetMapMs   | 600000ms                        |
+      | clearBigSQLResultSetMapMs   | 600000ms                        |
       | frontSocketSoRcvbuf         | 1048576B                        |
       | frontSocketSoSndbuf         | 4194304B                        |
       | frontSocketNoDelay          | 1                               |
