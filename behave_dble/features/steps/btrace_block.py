@@ -16,9 +16,6 @@ from lib.utils import get_sftp, get_ssh,get_node
 global btrace_threads
 btrace_threads = []
 
-global sql_threads
-sql_threads = []
-
 def check_btrace_running(sshClient, btraceScript):
     cmd = "ps -ef |grep -v -w grep| grep -F -c {0}".format(btraceScript)
     rc, sto, ste = sshClient.exec_command(cmd)
@@ -128,13 +125,6 @@ def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
         context.logger.debug("join btrace thread: {0}".format(thd.name))
-        thd.join()
-
-@Given('destroy sql threads list')
-def step_impl(context):
-    global sql_threads
-    for thd in sql_threads:
-        context.logger.debug("join sql thread: {0}".format(thd.name))
         thd.join()
 
 @Then('check sql thread output in "{result}"')
