@@ -81,7 +81,7 @@ Feature: to verify issue https://github.com/actiontech/dble/issues/1000
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequnceHandlerType">2</property>
+        <property name="sequenceHandlerType">2</property>
     """
     Given Restart dble in "dble-1" success
     Given create local and server file "ld.txt" and fill with text

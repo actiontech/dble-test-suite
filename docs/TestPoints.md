@@ -342,7 +342,7 @@ maxCharsPerColumn为默认值时，单列字符长度为68888时，loaddata导�
 maxCharsPerColumn参数值<68888，导入的单列字符长度为68888时返回报错”error totally whack“
 maxCharsPerColumn参数值>=68888，导入的单列字符长度为68888时导入成功
 - scenario 2: 导入的行以”#“开始，loaddata导入成功，”#“插入到第一列中
-- scenario 3: laoddata导入全局序列（sequnceHandlerType=2）成功
+- scenario 3: laoddata导入全局序列（sequenceHandlerType=2）成功
 - scenario 4: 导入的列值开头包含“"”，loaddata导入成功
 - scenario 5: 导入的数据值中含有tab,loaddata导入成功
 #### behave_dble/features/sql_cover/special/manager.feature
