@@ -10,19 +10,17 @@ import random
 import time
 import MySQLdb
 
-from mysql_steps import *
-from lib.DBUtil import DBUtil
+from steps.mysql_steps import *
+from steps.lib.DBUtil import DBUtil
 from behave import *
 from hamcrest import *
 
-from lib.ObjectFactory import ObjectFactory
-from lib.PostQueryCheck import PostQueryCheck
-from lib.PreQueryPrepare import PreQueryPrepare
-from lib.QueryMeta import QueryMeta
-from lib.generate_util import generate
-from lib.MySQLMeta import MySQLMeta
-from lib.DbleMeta import DbleMeta
-from lib.utils import get_node
+from steps.lib.ObjectFactory import ObjectFactory
+from steps.lib.PostQueryCheck import PostQueryCheck
+from steps.lib.PreQueryPrepare import PreQueryPrepare
+from steps.lib.QueryMeta import QueryMeta
+from steps.lib.generate_util import generate
+from steps.lib.utils import get_node
 
 logger = logging.getLogger('steps.dble_steps')
 
