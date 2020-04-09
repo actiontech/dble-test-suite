@@ -13,8 +13,8 @@ import yaml
 from behave import *
 from hamcrest import *
 
-from .DbleMeta import DbleMeta
-from .MySQLMeta import MySQLMeta
+from steps.lib.DbleMeta import DbleMeta
+from steps.lib.MySQLMeta import MySQLMeta
 
 
 logger = logging.getLogger('lib.utils')
@@ -43,9 +43,6 @@ def setup_logging(logging_cfg_file):
         with open(logging_cfg_file, 'rt') as f:
             dict_config = yaml.load(f.read(), Loader=yaml.FullLoader)
         logging.config.dictConfig(dict_config)
-    else:
-        print 'No such logging config file : <{0}>'.format(logging_cfg_file)
-        exit(1)
 
 @log_it
 def load_yaml_config(config_path):
@@ -137,6 +134,7 @@ def restore_sys_time():
 
 def get_node(host):
     logger.debug("try to get meta of '{}'".format(host))
+    logger.debug("debug2: {}".format(DbleMeta))
     for node in MySQLMeta.mysqls+DbleMeta.dbles:
         if node.host_name == host or node.ip == host:
             return node

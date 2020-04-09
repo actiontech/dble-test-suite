@@ -5,13 +5,15 @@
 # @Author  : irene-coming
 from threading import Thread
 
-from lib.MySQLObject import MySQLObject
-from lib.PostQueryCheck import PostQueryCheck
-from lib.PreQueryPrepare import PreQueryPrepare
-from lib.QueryMeta import QueryMeta
-from lib.ObjectFactory import ObjectFactory
+from steps.lib.MySQLObject import MySQLObject
+from steps.lib.PostQueryCheck import PostQueryCheck
+from steps.lib.PreQueryPrepare import PreQueryPrepare
+from steps.lib.QueryMeta import QueryMeta
+from steps.lib.ObjectFactory import ObjectFactory
 from behave import *
 
+global sql_threads
+sql_threads = []
 
 @Given('kill connection with query "{query}" in host "{host_name}"')
 def step_impl(context, query, host_name):
@@ -93,3 +95,10 @@ def execute_sql_backgroud(context, conn, sql):
     res, err = conn.execute(sql_cmd)
     setattr(context,"sql_thread_result",res)
     setattr(context,"sql_thread_err",err)
+
+@Given('destroy sql threads list')
+def step_impl(context):
+    global sql_threads
+    for thd in sql_threads:
+        context.logger.debug("join sql thread: {0}".format(thd.name))
+        thd.join()

@@ -11,8 +11,8 @@ import re
 
 import time
 
-from ConnUtil import MysqlConnUtil
-from utils import update_file_with_sed
+from steps.lib.ConnUtil import MysqlConnUtil
+from steps.lib.utils import update_file_with_sed
 
 logger = logging.getLogger('lib.MySQLObject')
 
