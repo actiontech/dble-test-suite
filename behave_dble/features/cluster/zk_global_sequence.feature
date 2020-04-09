@@ -14,7 +14,7 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequnceHandlerType">3</property>
+        <property name="sequenceHandlerType">3</property>
     """
     Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
       | sql               |

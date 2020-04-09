@@ -9,7 +9,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
     """
     <system>
-        <property name="sequnceHandlerType">20</property>
+        <property name="sequenceHandlerType">20</property>
         <property name="useSqlStat">false        </property>
         <property name="useCompression">true    </property>
         <property name="charset">utf-8</property>
@@ -165,7 +165,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequnceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
+      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
@@ -182,7 +182,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequnceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
+      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
       | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |

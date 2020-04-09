@@ -6,7 +6,7 @@ Feature: Functional testing of global sequences
   insert without value of global sequence column success
 
   @BLOCKER
-  Scenario: test global sequnceHandlerType: 1(MySQL-offset-step) #1
+  Scenario: test global sequenceHandlerType: 1(MySQL-offset-step) #1
 #    case points:
 #  1.sequence column can't be inserted by client, and other limits to query
 #  2.sequence column value should be unique
@@ -18,7 +18,7 @@ Feature: Functional testing of global sequences
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequnceHandlerType">1</property>
+        <property name="sequenceHandlerType">1</property>
     """
     When Add some data in "sequence_db_conf.properties"
     """
@@ -65,7 +65,7 @@ Feature: Functional testing of global sequences
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
   @BLOCKER  @current
-  Scenario: test global sequnceHandlerType: 2(snowflake) #2
+  Scenario: test global sequenceHandlerType: 2(snowflake) #2
 #    case points:
 #  1.sequence column can't be inserted by client
 #  2.sequence column value should be unique
@@ -78,7 +78,7 @@ Feature: Functional testing of global sequences
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequnceHandlerType">2</property>
+        <property name="sequenceHandlerType">2</property>
     """
     Given Restart dble in "dble-1" success
     #case 1: can not assign value to sequenceColumn, and can assgin value to columns without sequenceColumn
@@ -136,7 +136,7 @@ Feature: Functional testing of global sequences
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
-        <property name="sequnceHandlerType">2</property>
+        <property name="sequenceHandlerType">2</property>
     """
     #case 1: Verify the illegal value of the WORKID
      Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
