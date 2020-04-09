@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
-@skip
+#@skip
 Feature: if dble rebuild conn pool with reload, then global vars dble concerned will be redetected
 #dble cared global vars:
 #| dble config name     | dble default value | mysql variable name    | mysql default value   | mysql effect Scope |
@@ -140,7 +140,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation" occured ">2" times
 
-  @restore_general_log @skip
+  @restore_general_log
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
     """
     {'restore_general_log':['mysql-master1']}
@@ -166,7 +166,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has not "SET autocommit=0"
     Then check general log in host "mysql-master2" has not "SET autocommit=0"
 
-  @restore_general_log @skip
+  @restore_general_log
   Scenario: dble default autocommit=1, after executing implicit query(with which dble will add autocommit=0 to the session), the global var will be restored #7
 # with long gap heartbeat, when kill all backend conns except the ones you want to keep, then the following query will use the conn you keep, which make sure autocommit=0 conns afterwhile is set autocommit=1
     """
@@ -199,7 +199,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has "SET autocommit=1"
     Then check general log in host "mysql-master2" has "SET autocommit=1"
 
-  @restore_general_log @skip
+  @restore_general_log
   Scenario:config autocommit=0, after executing explicit query(with which dble will add autocommit=0 to the session), the global var will not be restored #8
     """
     {'restore_general_log':['mysql-master1']}
