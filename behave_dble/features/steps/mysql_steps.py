@@ -35,9 +35,12 @@ def stop_mysql(context, host_name):
     mysql.stop()
 
 @Given('start mysql in host "{host_name}"')
-def start_mysql(context, host_name):
+def start_mysql(context, host_name, sed_str=None):
+    if not sed_str and context.text is not None and len(context.text)>0:
+        sed_str = context.text
+
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.start()
+    mysql.start(sed_str)
 
 @Given('turn on general log in "{host_name}"')
 def step_impl(context,host_name):
@@ -102,3 +105,10 @@ def step_impl(context):
     for thd in sql_threads:
         context.logger.debug("join sql thread: {0}".format(thd.name))
         thd.join()
+
+
+@Given('kill all backend conns in "{host_name}"')
+@Given('kill all backend conns in "{host_name}" except ones in "{exclude_conn_ids}"')
+def step_impl(context, host_name, exclude_conn_ids=None):
+    mysql = ObjectFactory.create_mysql_object(host_name)
+    mysql.kill_all_conns(exclude_conn_ids)
