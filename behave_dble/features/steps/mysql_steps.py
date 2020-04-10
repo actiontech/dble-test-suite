@@ -61,7 +61,7 @@ def step_impl(context,host_name, query):
 @Then('check general log in host "{host_name}" has "{query}" occured "{occur_times_expr}" times')
 def step_impl(context,host_name, query, occur_times_expr=None):
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.check_query_in_general_log(query, expect_exist=True, occur_times_expr=occur_times_expr)
+    mysql.check_query_in_general_log(query, expect_exist=True, expect_occur_times_expr=occur_times_expr)
 
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
@@ -110,5 +110,8 @@ def step_impl(context):
 @Given('kill all backend conns in "{host_name}"')
 @Given('kill all backend conns in "{host_name}" except ones in "{exclude_conn_ids}"')
 def step_impl(context, host_name, exclude_conn_ids=None):
+    if exclude_conn_ids:
+        exclude_ids = getattr(context, exclude_conn_ids, None)
+
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.kill_all_conns(exclude_conn_ids)
+    mysql.kill_all_conns(exclude_ids)

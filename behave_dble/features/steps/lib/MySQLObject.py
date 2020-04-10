@@ -164,7 +164,7 @@ class MySQLObject(object):
         conn.close()
         self._mysql_meta.close_ssh()
 
-    def check_query_in_general_log(self, query, expect_exist, occur_times_expr=None):
+    def check_query_in_general_log(self, query, expect_exist, expect_occur_times_expr=None):
         conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
                              port=self._mysql_meta.mysql_port, autocommit=True)
 
@@ -180,7 +180,7 @@ class MySQLObject(object):
         rc, sto, ste = ssh.exec_command(find_query_in_genlog_cmd)
 
         if expect_exist:
-            if occur_times_expr is None:
+            if expect_occur_times_expr is None:
                 expect_occur_times_expr = "==1"
             real_occur_times_as_expected = eval("{0}{1}".format(sto, expect_occur_times_expr))
             assert real_occur_times_as_expected, "expect '{0}' occured {1} times in general log, but it occured {2} times".format(
@@ -224,10 +224,11 @@ class MySQLObject(object):
                              port=self._mysql_meta.mysql_port, autocommit=True)
         res, err = conn.execute("show processlist")
 
+        logger.debug("debug 1: {}".format(exclude_conn_ids))
         for row in res:
             conn_id = row[0]
             not_show_processlist = row[7] != "show processlist"#for excluding show processlist conn itself
-            if not_show_processlist and exclude_conn_ids and conn_id not in exclude_conn_ids:
+            if not_show_processlist and exclude_conn_ids and str(conn_id) not in exclude_conn_ids:
                 conn.execute("kill {}".format(conn_id))
                 assert err is None, "turn off general log fail for {0}".format(err[1])
         logger.debug("kill connections success, excluding connection ids:{}".format(exclude_conn_ids))
