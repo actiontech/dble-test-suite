@@ -56,23 +56,21 @@ class MySQLObject(object):
         # to wait stop finished
         time.sleep(10)
 
-        if sed_str:
-            update_file_with_sed(sed_str, "/etc/my.cnf", self._mysql_meta)
-
-        self.start()
+        self.start(sed_str)
 
     def stop(self):
         cmd_status = "{0} status".format(self._mysql_meta.mysql_init_shell)
         cmd_stop = "{0} stop".format(self._mysql_meta.mysql_init_shell)
 
-        ssh = self._mysql_meta.ssh_conn
-        rc, status_out, std_err = ssh.exec_command(cmd_status)
+        rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
 
         # if mysqld already stopped,do not stop it again
         if status_out.find("MySQL running") != -1:
+            self.turn_off_general_log_and_clean()
+
             logger.debug("try to stop mysql")
 
-            stop_cd, stop_out, stop_err = ssh.exec_command(cmd_stop)
+            stop_cd, stop_out, stop_err = self._mysql_meta.ssh_conn.exec_command(cmd_stop)
             success_p = "Shutting down MySQL.*?SUCCESS"
             obj = re.search(success_p, stop_out)
             isSuccess = obj is not None
@@ -80,7 +78,10 @@ class MySQLObject(object):
 
         self._mysql_meta.close_ssh()
 
-    def start(self):
+    def start(self, sed_str=None):
+        if sed_str:
+            self.update_config(sed_str)
+
         cmd_start = "{0} start".format(self._mysql_meta.mysql_init_shell)
 
         ssh = self._mysql_meta.ssh_conn
@@ -94,6 +95,9 @@ class MySQLObject(object):
 
         logger.debug("start mysql connect_test")
         self.connect_test()
+
+    def update_config(self, sed_str):
+        update_file_with_sed(sed_str, "/etc/my.cnf", self._mysql_meta)
 
     def connect_test(self):
         conn = None
@@ -118,7 +122,28 @@ class MySQLObject(object):
 
         assert isSuccess, "can not connect to {0} after 25s wait".format(self._mysql_meta.ip)
 
-    def turn_on_general_log(self):
+    def turn_on_general_log(self, to_clean_old_file=True):
+        if to_clean_old_file:
+            self.turn_off_general_log_and_clean()
+
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
+
+        res, err = conn.execute("set global general_log=on")
+        assert err is None, "set general log on fail for {0}".format(err[1])
+
+        conn.close()
+
+    def turn_off_general_log(self):
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
+
+        res, err = conn.execute("set global general_log=off")
+        assert err is None, "turn off general log fail for {0}".format(err[1])
+
+        conn.close()
+
+    def turn_off_general_log_and_clean(self):
         conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
                              port=self._mysql_meta.mysql_port, autocommit=True)
 
@@ -136,20 +161,8 @@ class MySQLObject(object):
         rc, sto, ste = ssh.exec_command('rm -rf {0}'.format(general_log_file))
         assert len(ste) == 0, "rm general_log_file fail for {0}".format(ste)
 
-        res, err = conn.execute("set global general_log=on")
-        assert err is None, "set general log on fail for {0}".format(err[1])
-
         conn.close()
         self._mysql_meta.close_ssh()
-
-    def turn_off_general_log(self):
-        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
-                             port=self._mysql_meta.mysql_port, autocommit=True)
-
-        res, err = conn.execute("set global general_log=off")
-        assert err is None, "turn off general log fail for {0}".format(err[1])
-
-        conn.close()
 
     def check_query_in_general_log(self, query, expect_exist, occur_times_expr=None):
         conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
@@ -205,3 +218,17 @@ class MySQLObject(object):
             conn.close()
 
         return res, err, time_cost
+
+    def kill_all_conns(self, exclude_conn_ids=None):
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
+        res, err = conn.execute("show processlist")
+
+        for row in res:
+            conn_id = row[0]
+            not_show_processlist = row[7] != "show processlist"#for excluding show processlist conn itself
+            if not_show_processlist and exclude_conn_ids and conn_id not in exclude_conn_ids:
+                conn.execute("kill {}".format(conn_id))
+                assert err is None, "turn off general log fail for {0}".format(err[1])
+        logger.debug("kill connections success, excluding connection ids:{}".format(exclude_conn_ids))
+        conn.close()

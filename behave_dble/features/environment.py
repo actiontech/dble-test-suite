@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import logging
 
+from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
@@ -144,35 +145,8 @@ def after_scenario(context, scenario):
         for host_name in paras:
             restart_mysql(context, host_name, sed_str)
 
-    if "restore_general_log" in scenario.tags:
-        params_dic = get_case_tag_params(scenario.description, "{'restore_general_log'")
-
-        if params_dic:
-            paras = params_dic["restore_general_log"]
-        else:
-            paras = ['mysql-master1', 'mysql-master2', 'mysql-slave1', 'mysql-slave2']
-
-        logger.debug("try to restore general_log of mysqls: {0}".format(paras))
-        for i in paras:
-            turn_off_general_log(context, i)
-
-    if "restore_global_setting" in scenario.tags:
-        params_dic = get_case_tag_params(scenario.description, "{'restore_global_setting'")
-
-        if params_dic:
-            paras = params_dic["restore_global_setting"]
-        else:
-            paras = {}
-
-        logger.debug("try to restore restore_global_setting of mysqls: {0}".format(paras))
-
-        for mysql, mysql_vars in paras.items():
-            query = "set global "
-            for k, v in mysql_vars.items():
-                query = query + "{0}={1},".format(k, v)
-
-            sql = query[:-1]
-            execute_sql_in_host(mysql, {"sql":sql})
+    restore_obj = RestoreEnvObject(scenario)
+    restore_obj.restore()
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
