@@ -420,7 +420,7 @@ Feature: verify hint sql
       | conn_0 | True    | /*!dble:sql=select * from test_shard where id =1*/drop procedure if exists delete_matches                                                                            | success | schema1 |
 
   Scenario: support create function   author:maofei #10
-    Then execute sql in "dble-1" in "test" mode
+    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                                                                  | expect                               | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                                                                                                                                                                                                                   | success                              | schema1 |
       | conn_0 | False   | drop table if exists test1                                                                                                                                                                                                                                                                                                           | success                              | schema1 |
