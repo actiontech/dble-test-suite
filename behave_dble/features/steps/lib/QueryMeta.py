@@ -13,7 +13,7 @@ class QueryMeta(object):
         elif mode == "user":
             self.init_dble_client_query_meta(info_dict, meta)
         else:
-            assert False, "execute queries mode can only be one of [mysq, admin, user]"
+            assert False, "execute queries mode can only be one of [mysql, admin, user], but mode is '{}'".format(mode)
 
     def init_mysql_query_meta(self, info_dic, meta):
         if info_dic is None: info_dic = {}

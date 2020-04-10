@@ -99,98 +99,98 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       | conn_0 | False   | CREATE TABLE schema2.global_4_t1(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARSET=UTF8 | success   | schema1 |
       | conn_0 | True    | CREATE TABLE schema2.sharding_4_t2(`id` int(10) unsigned NOT NULL,`m_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`m_id`))DEFAULT CHARSET=UTF8 | success   | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_A"
-      | sql                                               |
-      | explain select * from sharding_4_t1,sharding_2_t1 |
+      | sql                                               | db      |
+      | explain select * from sharding_4_t1,sharding_2_t1 | schema1 |
     Then check resultset "explain_result_A" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0     | TYPE-1       |
-        | expect_result_line:5                    | merge_1          | MERGE        |
-        | expect_result_line:9                    | merge_2          | MERGE        |
+        | expect_result_line    | DATA_NODE-0     | TYPE-1      |
+        | expect_result_line:5  | merge_1         | MERGE       |
+        | expect_result_line:9  | merge_2         | MERGE       |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_B"
-      | sql                                                                |
-      | explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id=b.id |
+      | sql                                                                | db      |
+      | explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id=b.id | schema1 |
     Then check resultset "explain_result_B" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0                | TYPE-1                 |
-        | expect_result_line:5                    | merge_and_order_1          | MERGE_AND_ORDER        |
-        | expect_result_line:9                    | merge_and_order_2          | MERGE_AND_ORDER        |
+        | expect_result_line     | DATA_NODE-0                | TYPE-1           |
+        | expect_result_line:5   | merge_and_order_1          | MERGE_AND_ORDER  |
+        | expect_result_line:9   | merge_and_order_2          | MERGE_AND_ORDER  |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_C"
-      | sql                                                                              |
-      | explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id=b.id and a.id>b.id |
+      | sql                                                                              | db      |
+      | explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id=b.id and a.id>b.id | schema1 |
     Then check resultset "explain_result_C" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0                | TYPE-1                 |
-        | expect_result_line:5                    | merge_and_order_1          | MERGE_AND_ORDER        |
-        | expect_result_line:9                    | merge_and_order_2          | MERGE_AND_ORDER        |
-        | expect_result_line:12                   | where_filter_1             | WHERE_FILTER            |
+        | expect_result_line      | DATA_NODE-0                | TYPE-1          |
+        | expect_result_line:5    | merge_and_order_1          | MERGE_AND_ORDER |
+        | expect_result_line:9    | merge_and_order_2          | MERGE_AND_ORDER |
+        | expect_result_line:12   | where_filter_1             | WHERE_FILTER    |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_D"
-      | sql                                                                |
-      | explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id>b.id |
+      | sql                                                                | db      |
+      | explain select * from sharding_4_t1 a,sharding_2_t1 b on a.id>b.id | schema1 |
     Then check resultset "explain_result_D" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
-        | expect_result_line:5                    | merge_1          | MERGE         |
-        | expect_result_line:9                    | merge_2          | MERGE         |
+        | expect_result_line                      | DATA_NODE-0     | TYPE-1       |
+        | expect_result_line:5                    | merge_1         | MERGE        |
+        | expect_result_line:9                    | merge_2         | MERGE        |
         | expect_result_line:12                   | where_filter_1  | WHERE_FILTER |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_E"
-      | sql                                                                   |
-      | explain select * from sharding_4_t1 union select * from sharding_2_t1 |
+      | sql                                                                   | db      |
+      | explain select * from sharding_4_t1 union select * from sharding_2_t1 | schema1 |
     Then check resultset "explain_result_E" has lines with following column values
         | expect_result_line                      | DATA_NODE-0     | TYPE-1       |
-        | expect_result_line:5                    | merge_1          | MERGE        |
-        | expect_result_line:9                    | merge_2          | MERGE        |
+        | expect_result_line:5                    | merge_1          | MERGE       |
+        | expect_result_line:9                    | merge_2          | MERGE       |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_F"
-      | sql                                                                                                                  |
-      | explain select a.id,b.id,c.pad from sharding_4_t1 a,sharding_2_t1 b,sharding_3_t1 c where a.id=c.pad and b.id=c.m_id |
+      | sql                                                                                                                  | db      |
+      | explain select a.id,b.id,c.pad from sharding_4_t1 a,sharding_2_t1 b,sharding_3_t1 c where a.id=c.pad and b.id=c.m_id | schema1 |
     Then check resultset "explain_result_F" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0         | TYPE-1            |
-        | expect_result_line:5                    | merge_1             | MERGE             |
-        | expect_result_line:9                    | merge_2             | MERGE             |
-        | expect_result_line:17                   | merge_and_order_1  | MERGE_AND_ORDER |
+        | expect_result_line      | DATA_NODE-0         | TYPE-1            |
+        | expect_result_line:5    | merge_1             | MERGE             |
+        | expect_result_line:9    | merge_2             | MERGE             |
+        | expect_result_line:17   | merge_and_order_1   | MERGE_AND_ORDER   |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_G"
-      | sql                                                        |
-      | explain select * from tb_parent a,tb_child1 b on a.id=b.id |
+      | sql                                                        | db      |
+      | explain select * from tb_parent a,tb_child1 b on a.id=b.id | schema1 |
     Then check resultset "explain_result_G" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0                 | TYPE-1                  |
-        | expect_result_line:3                    | merge_and_order_1          | MERGE_AND_ORDER        |
-        | expect_result_line:7                    | merge_and_order_2          | MERGE_AND_ORDER        |
+        | expect_result_line                      | DATA_NODE-0          | TYPE-1                |
+        | expect_result_line:3                    | merge_and_order_1    | MERGE_AND_ORDER       |
+        | expect_result_line:7                    | merge_and_order_2    | MERGE_AND_ORDER       |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_H"
-      | sql                                                               |
-      | explain select * from tb_parent a,tb_child1 b on a.id=b.child1_id |
+      | sql                                                               | db      |
+      | explain select * from tb_parent a,tb_child1 b on a.id=b.child1_id | schema1 |
     Then check resultset "explain_result_H" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:3                    | merge_1          | MERGE        |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_er_child"
-      | sql                                           |
-      | explain insert into tb_child1 values(1,1,1,1) |
+      | sql                                           | db      |
+      | explain insert into tb_child1 values(1,1,1,1) | schema1 |
     Then check resultset "explain_result_er_child" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
-        | expect_result_line:1                    | dn2          |  BASE SQL        |
+        | expect_result_line                      | DATA_NODE-0  | TYPE-1       |
+        | expect_result_line:1                    | dn2          |  BASE SQL    |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_I"
-      | sql                                                                             |
-      | explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.id=b.id |
+      | sql                                                                             | db      |
+      | explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.id=b.id | schema1 |
     Then check resultset "explain_result_I" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE        |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_J"
-      | sql                                                                               |
-      | explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.pad=b.pad |
+      | sql                                                                               | db      |
+      | explain select * from sharding_4_t1 a join schema2.sharding_4_t2 b on a.pad=b.pad | schema1 |
     Then check resultset "explain_result_J" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0                 | TYPE-1                  |
-        | expect_result_line:5                    | merge_and_order_1          | MERGE_AND_ORDER        |
-        | expect_result_line:11                   | merge_and_order_2          | MERGE_AND_ORDER        |
+        | expect_result_line     | DATA_NODE-0         | TYPE-1                 |
+        | expect_result_line:5   | merge_and_order_1   | MERGE_AND_ORDER        |
+        | expect_result_line:11  | merge_and_order_2   | MERGE_AND_ORDER        |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_K"
-      | sql                                                                                 |
-      | explain select * from schema2.global_4_t2 a join schema2.global_4_t1 b on a.id=b.id |
+      | sql                                                                                 | db      |
+      | explain select * from schema2.global_4_t2 a join schema2.global_4_t1 b on a.id=b.id | schema1 |
     Then check resultset "explain_result_K" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:2                    | merge_1          | MERGE        |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_M"
-      | sql                                                                           |
-      | explain select * from sharding_4_t1 a join schema2.global_4_t1 b on a.id=b.id |
+      | sql                                                                           | db      |
+      | explain select * from sharding_4_t1 a join schema2.global_4_t1 b on a.id=b.id | schema1 |
     Then check resultset "explain_result_M" has lines with following column values
         | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
         | expect_result_line:5                    | merge_1          | MERGE        |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_L"
-      | sql                                                                                           |
-      | explain select * from (select * from sharding_4_t1) a join schema2.global_4_t1 b on a.id=b.id |
+      | sql                                                                                           | db      |
+      | explain select * from (select * from sharding_4_t1) a join schema2.global_4_t1 b on a.id=b.id | schema1 |
     Then check resultset "explain_result_L" has lines with following column values
-        | expect_result_line                     | DATA_NODE-0                 | TYPE-1             |
-        | expect_result_line:5                   | merge_and_order_1          | MERGE_AND_ORDER   |
-        | expect_result_line:10                  | merge_1                     | MERGE               |
+        | expect_result_line     | DATA_NODE-0        | TYPE-1            |
+        | expect_result_line:5   | merge_and_order_1  | MERGE_AND_ORDER   |
+        | expect_result_line:10  | merge_1            | MERGE             |
