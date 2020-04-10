@@ -134,7 +134,6 @@ def restore_sys_time():
 
 def get_node(host):
     logger.debug("try to get meta of '{}'".format(host))
-    logger.debug("debug2: {}".format(DbleMeta))
     for node in MySQLMeta.mysqls+DbleMeta.dbles:
         if node.host_name == host or node.ip == host:
             return node
