@@ -82,7 +82,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "3" seconds
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @restore_global_setting  @current
+  @restore_global_setting
   Scenario:set global vars failed for user has no priviledges, then set session context if values are not same as config at conn used #4
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -103,18 +103,18 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     Given Start dble in "dble-1"
     #    try to set global but failed for having no priviledges
-    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
+    Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'" occured ">0" times
 #    when dble start, it need to check metadata by show create table, during which will set session context if it find autocommit is different with config
-    Then check general log in host "mysql-master1" has "SET autocommit=1"
-#    create more than minCon conns to used out the conn pool, the next conn will be new created
-    Given create "11" front connections executing "drop table if exists sharding_4_t1"
+    Then check general log in host "mysql-master1" has "SET autocommit=1" occured ">0" times
+    Given kill all backend conns in "mysql-master1"
 #    force rotate general log
     Given turn on general log in "mysql-master1"
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect                      | db      |
       | drop table if exists sharding_4_t1 | DROP command denied to user | schema1 |
-    Then check general log in host "mysql-master1" has "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ"
-    Then check general log in host "mysql-master1" has "SET autocommit=1"
+    Then check general log in host "mysql-master1" has "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ" occured "==2" times
+#    ddl for sharding table, use autocommit=0,and so, no need to set autocommit=1
+    Then check general log in host "mysql-master1" has not "SET autocommit=1"
     Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
     """
     <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
@@ -143,8 +143,9 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
+#    a heartbeat period is 2, 5 means wait more than 2 heartbeat period
     Given sleep "5" seconds
-    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit, @@read_only,@@tx_isolation" occured ">2" times
+    Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" occured ">2" times
 
   @restore_global_setting
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
@@ -187,6 +188,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
       | sql                                | expect  |db      |
+      | drop table if exists sharding_2_t1 | success |schema1 |
       | create table sharding_2_t1(id int) | success |schema1 |
     Given record current dble log line number in "log_linenu"
     Given turn on general log in "mysql-master1"
@@ -194,9 +196,14 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute sql in "dble-1" in "user" mode
       | sql                                     | expect  | db      |
       | insert into sharding_2_t1 values(1),(2) | success | schema1 |
-    Given find backend conns of query "insert into sharrding_2_t1 values(1),(2)" used and stored in "backendIds"
+# find backend conns of query "insert into sharrding_2_t1 values(1),(2)" used in dble.log
+    Given execute linux command in "dble-1" and save result in "backendIds"
+    """
+    tail -n +%log_linenu% /opt/dble/logs/dble.log | grep -i "INSERT INTO sharding_2_t1" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    """
     Then check general log in host "mysql-master1" has "SET autocommit=0"
     Then check general log in host "mysql-master2" has "SET autocommit=0"
+# make sure new client session will use conn in backendIds
     Given kill all backend conns in "mysql-master1" except ones in "backendIds"
     Given kill all backend conns in "mysql-master2" except ones in "backendIds"
     Given execute sql in "dble-1" in "user" mode
@@ -220,6 +227,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given Restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
       | sql                                | expect  |db      |
+      | drop table if exists sharding_2_t1 | success |schema1 |
       | create table sharding_2_t1(id int) | success |schema1 |
     Given record current dble log line number in "log_linenu"
     Given turn on general log in "mysql-master1"
@@ -227,7 +235,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute sql in "dble-1" in "user" mode
       | sql                                     | expect  | db      |
       | insert into sharding_2_t1 values(1),(2) | success | schema1 |
-    Given find backend conns of query "insert into sharrding_2_t1 values(1),(2)" used and stored in "backendIds"
+    Given execute linux command in "dble-1" and save result in "backendIds"
+    """
+    tail -n +%log_linenu% /opt/dble/logs/dble.log | grep -i "INSERT INTO sharding_2_t1" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    """
     Then check general log in host "mysql-master1" has not "SET autocommit=0"
     Then check general log in host "mysql-master2" has not "SET autocommit=0"
     Given kill all backend conns in "mysql-master1" except ones in "backendIds"
@@ -238,7 +249,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has not "SET autocommit=1"
     Then check general log in host "mysql-master2" has not "SET autocommit=1"
 
-  @restore_global_setting
+  @restore_global_setting   @current
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by manager command, dble send set global query #9
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -259,7 +270,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @restore_global_setting
+  @restore_global_setting  @current
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by config and reload, dble send set global query #10
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
