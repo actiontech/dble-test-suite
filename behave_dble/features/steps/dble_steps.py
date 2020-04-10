@@ -199,3 +199,7 @@ def step_impl(context, host):
         cmd = u"nohup mysql -u{} -p{} -P{} -c -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port, query_meta.sql)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste) == 0, "impossible err occur"
+
+@Given('find backend conns of query "{query}" used and stored in "{query_used_ids}"')
+def step_impl(context, query, query_used_ids):
+    pass
