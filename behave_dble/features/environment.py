@@ -7,7 +7,7 @@ from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
 from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh
-from steps.mysql_steps import turn_off_general_log, execute_sql_in_host, restart_mysql
+from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
 
@@ -168,7 +168,6 @@ def get_case_tag_params(description, tag):
 
 def before_step(context, step):
     logger.debug(step.name)
-    logger.debug("debug1: {}".format(DbleMeta))
 
 def after_step(context, step):
     logger.info('{0}, status:{1}'.format(step.name, step.status))
