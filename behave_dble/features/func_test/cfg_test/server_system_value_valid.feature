@@ -100,7 +100,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | maxCostStatSize             | 100                             |
       | costSamplePercent           | 1                               |
       | charset                     | utf8mb4                         |
-      | maxPacketSize               | 16M                             |
+      | maxPacketSize               | 16777216                        |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
