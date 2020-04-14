@@ -31,7 +31,7 @@ class MySQLObject(object):
             assert False, "create connection failed for: {}".format(e.args)
         return conn
 
-    def killConnByQuery(self, query):
+    def kill_conn_with_query(self, query):
         conn = self.create_conn()
         cur = conn.cursor()
         cur.execute("show processlist")
@@ -224,12 +224,26 @@ class MySQLObject(object):
                              port=self._mysql_meta.mysql_port, autocommit=True)
         res, err = conn.execute("show processlist")
 
-        logger.debug("debug 1: {}".format(exclude_conn_ids))
         for row in res:
             conn_id = row[0]
             not_show_processlist = row[7] != "show processlist"#for excluding show processlist conn itself
             if not_show_processlist and exclude_conn_ids and str(conn_id) not in exclude_conn_ids:
                 conn.execute("kill {}".format(conn_id))
-                assert err is None, "turn off general log fail for {0}".format(err[1])
+                assert err is None, "kill conn '{}' failed for {}".format(conn_id,err[1])
         logger.debug("kill connections success, excluding connection ids:{}".format(exclude_conn_ids))
+        conn.close()
+
+    def kill_conns(self, conn_ids):
+        conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user, passwd=self._mysql_meta.mysql_password, db='',
+                             port=self._mysql_meta.mysql_port, autocommit=True)
+        res, err = conn.execute("show processlist")
+
+        logger.debug("debug 1: {}".format(conn_ids))
+        for row in res:
+            conn_id = row[0]
+            not_show_processlist = row[7] != "show processlist"#for excluding show processlist conn itself
+            if not_show_processlist and str(conn_id) in conn_ids:
+                conn.execute("kill {}".format(conn_id))
+                assert err is None, "kill conn '{}' failed for {}".format(conn_id,err[1])
+        logger.debug("kill connections success, killed connection ids:{}".format(conn_ids))
         conn.close()
