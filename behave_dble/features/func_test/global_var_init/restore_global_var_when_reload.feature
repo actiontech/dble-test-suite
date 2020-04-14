@@ -249,7 +249,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has not "SET autocommit=1"
     Then check general log in host "mysql-master2" has not "SET autocommit=1"
 
-  @restore_global_setting   @current
+  @restore_global_setting   @skip #skip for http://10.186.18.11/jira/browse/DBLE0REQ-219
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by manager command, dble send set global query #9
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -270,7 +270,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @restore_global_setting  @current
+  @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by config and reload, dble send set global query #10
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -353,17 +353,19 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
+  @current
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
     Given stop mysql in host "mysql-master1"
 #    default dataNodeHeartbeatPeriod is 10, 11 makes sure heartbeat failed for mysql-master1
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to [172.100.9.5:3306] setError
+    heartbeat to \[172.100.9.5:3306\] setError
     """
-    Given start mysql in host "mysql-master1"
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
-    Then check btrace "BtraceAddMetaLock1.java" output in "dble-1" with "2" times
+    Given sleep "2" seconds
+    Given start mysql in host "mysql-master1"
+    Then check btrace "BtraceSelectGlobalVars1.java" output in "dble-1" with "2" times
     """
     get into call
     """
@@ -376,6 +378,6 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to [172.100.9.5:3306] setError
+    heartbeat to \[172.100.9.5:3306\] setError
     """
 

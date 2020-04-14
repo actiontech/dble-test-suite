@@ -7,10 +7,10 @@
 Feature: dble start fail if global var lower_case_table_names are not consistent in all dataHosts
 #  lower_case_table_names default value in mysql under linux is 0
 
-  @restore_letter_sensitive @current
+  @restore_global_setting @current
   Scenario: dble start fail if global var lower_case_table_names of writeHosts are not consistent in 2 dataHosts #1
     """
-    {'restore_letter_sensitive':['mysql-master1']}
+    {'restore_global_setting':{'mysql-master1':{'lower_case_table_names':0}}}
     """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
@@ -23,10 +23,10 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different
     """
 
-  @restore_letter_sensitive
+  @restore_global_setting
   Scenario: dble start fail if global var lower_case_table_names are not consistent between readHost and writeHost #2
     """
-    {'restore_letter_sensitive':['mysql-master2']}
+    {'restore_global_setting':{'mysql-master2':{'lower_case_table_names':0}}}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -47,10 +47,10 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different
     """
 
-  @restore_letter_sensitive @skip
+  @restore_global_setting
   Scenario: dble reload fail if global var lower_case_table_names are not consistent between new added writehost and the old ones' #3
     """
-    {'restore_letter_sensitive':['mysql-master1']}
+    {'restore_global_setting':{'mysql-master1':{'lower_case_table_names':0}}}
     """
     Given delete the following xml segment
       |file        | parent          | child                                             |
@@ -70,8 +70,11 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different.These MySQL's value is not 0 :ha_group1:hostM1
     """
 
-  @restore_letter_sensitive @skip
+  @restore_global_setting
   Scenario: backend mysql heartbeat fail, restore the mysql but its lower_case_table_names are different with the running backend mysqls, then heartbeat to this backend mysql fail #4
+    """
+    {'restore_global_setting':{'mysql-master1':{'lower_case_table_names':0}}}
+    """
     Given stop mysql in host "mysql-master1"
     Given update file content "/etc/my.cnf" in "mysql-master1" with sed cmds
     """
