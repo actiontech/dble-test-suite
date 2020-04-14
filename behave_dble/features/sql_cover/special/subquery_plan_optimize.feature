@@ -4,7 +4,7 @@
 Feature: subquery execute plan should be optimized for ER/Global table join #dble github issue #685 #1057
   As developer suggestion, the "explain ...(query)" resultset line count can indicate whether the query plan is optimized
 
-  @NORMAL
+  @NORMAL @restore_letter_sensitive
   Scenario: check ER tables subquery execute plan optimized #1
    """
    {'restore_letter_sensitive':['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']}
