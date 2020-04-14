@@ -152,7 +152,7 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | sqlSlowTime                 | 100ms                           |
       | maxCharsPerColumn           | 65535                           |
       | maxRowSizeToFile            | 10000                           |
-      | useOuterHa                  | false                           |
+      | useOuterHa                  | true                            |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
       | sql             |
       | dryrun          |
