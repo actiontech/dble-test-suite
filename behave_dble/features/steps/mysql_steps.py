@@ -18,7 +18,7 @@ sql_threads = []
 @Given('kill connection with query "{query}" in host "{host_name}"')
 def step_impl(context, query, host_name):
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.killConnByQuery(query)
+    mysql.kill_conn_with_query(query)
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
@@ -115,3 +115,10 @@ def step_impl(context, host_name, exclude_conn_ids=None):
 
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_all_conns(exclude_ids)
+
+@Given('kill mysql conns in "{host_name}" in "{conn_ids}"')
+def step_impl(context, host_name, conn_ids):
+    conn_ids = getattr(context, conn_ids, None)
+    assert len(conn_ids)>0, "no conns in '{}' to kill".format(conn_ids)
+    mysql = ObjectFactory.create_mysql_object(host_name)
+    mysql.kill_conns(conn_ids)
