@@ -363,21 +363,29 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     heartbeat to \[172.100.9.5:3306\] setError
     """
     Given prepare a thread run btrace script "BtraceSelectGlobalVars1.java" in "dble-1"
+#    sleep 2s for wait btrace in working
     Given sleep "2" seconds
+    Given record current dble log line number in "log_linenu"
     Given start mysql in host "mysql-master1"
-    Then check btrace "BtraceSelectGlobalVars1.java" output in "dble-1" with "2" times
+#    run into this btrace code means heartbeat of mysql-master1 has recover success then try to send global var detect query and be blocked 3s by btrace
+    Then check btrace "BtraceSelectGlobalVars1.java" output in "dble-1"
     """
     get into call
     """
+#   dble received feedback of global var detect query, but the connection is still in use state
     Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
     """
     get into fieldEofResponse
     """
-    Given kill connection with query "select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only" in host "mysql-master1"
-    Given record current dble log line number in "log_linenu"
-    Given sleep "11" seconds
+    # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
+    Given execute linux command in "dble-1" and save result in "backendIds"
+    """
+    tail -n +%log_linenu% /opt/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    """
+    Given kill mysql conns in "mysql-master1" in "backendIds"
+#    4s is BtraceSelectGlobalVars2.java block time
+    Given sleep "4" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     heartbeat to \[172.100.9.5:3306\] setError
     """
-
