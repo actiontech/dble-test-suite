@@ -24,13 +24,13 @@ def step_impl(context, host_name, result_var=None):
     node_vars = re.findall(r'\{node:(.*?)\}', linux_cmd, re.I)
     logger.debug("debug node attr vars: {}".format(node_vars))
     for var in node_vars:
-        linux_cmd = linux_cmd.replace("{" + var + "}", getattr(node, var))
+        linux_cmd = linux_cmd.replace("{node:" + var + "}", getattr(node, var))
 
     # replace all vars in linux_cmd with corresponding context attribute value, context attr var in %% mode
     context_vars = re.findall(r'\{context:(.*?)\}', linux_cmd, re.I)
     logger.debug("debug context attr vars: {}".format(context_vars))
     for var in context_vars:
-        linux_cmd = linux_cmd.replace("%" + var + "%", getattr(context, var))
+        linux_cmd = linux_cmd.replace("{context:" + var + "}", getattr(context, var))
 
     rc, sto, ste = node.ssh_conn.exec_command(linux_cmd)
 
