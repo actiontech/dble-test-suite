@@ -112,6 +112,8 @@ def step_impl(context):
 def step_impl(context, host_name, exclude_conn_ids=None):
     if exclude_conn_ids:
         exclude_ids = getattr(context, exclude_conn_ids, None)
+    else:
+        exclude_ids = []
 
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_all_conns(exclude_ids)
