@@ -196,16 +196,30 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute sql in "dble-1" in "user" mode
       | sql                                     | expect  | db      |
       | insert into sharding_2_t1 values(1),(2) | success | schema1 |
-# find backend conns of query "insert into sharrding_2_t1 values(1),(2)" used in dble.log
-    Given execute linux command in "dble-1" and save result in "backendIds"
+# find backend conns of query "insert into sharrding_2_t1 values(1),(2)" and heartbeat used in dble.log
+    Given execute linux command in "dble-1" and save result in "heartbeat_master1"
     """
-    tail -n +%log_linenu% /opt/dble/logs/dble.log | grep -i "INSERT INTO sharding_2_t1" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -iE "do heartbeat" |grep "host=172.100.9.5" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
+    Given execute linux command in "dble-1" and save result in "heartbeat_master2"
+    """
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -iE "do heartbeat" |grep "host=172.100.9.6" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    """
+    Given execute linux command in "mysql-master1" and save result in "backendIds_master1"
+    """
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master1.log | awk '{print $2}'
+    """
+    Given execute linux command in "mysql-master2" and save result in "backendIds_master2"
+    """
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master1.log | awk '{print $2}'
+    """
+    Given merge resultset of "heartbeat_master1" and "backendIds_master1" into "ids_to_kill_master1"
+    Given merge resultset of "heartbeat_master2" and "backendIds_master2" into "ids_to_kill_master2"
     Then check general log in host "mysql-master1" has "SET autocommit=0"
     Then check general log in host "mysql-master2" has "SET autocommit=0"
 # make sure new client session will use conn in backendIds
-    Given kill all backend conns in "mysql-master1" except ones in "backendIds"
-    Given kill all backend conns in "mysql-master2" except ones in "backendIds"
+    Given kill all backend conns in "mysql-master1" except ones in "ids_to_kill_master1"
+    Given kill all backend conns in "mysql-master2" except ones in "ids_to_kill_master2"
     Given execute sql in "dble-1" in "user" mode
       | sql                         | expect  | db      |
       | select * from sharding_2_t1 | success | schema1 |
@@ -235,21 +249,35 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute sql in "dble-1" in "user" mode
       | sql                                     | expect  | db      |
       | insert into sharding_2_t1 values(1),(2) | success | schema1 |
-    Given execute linux command in "dble-1" and save result in "backendIds"
+    Given execute linux command in "dble-1" and save result in "heartbeat_master1"
     """
-    tail -n +%log_linenu% /opt/dble/logs/dble.log | grep -i "INSERT INTO sharding_2_t1" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -iE "do heartbeat" |grep "host=172.100.9.5" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
+    Given execute linux command in "dble-1" and save result in "heartbeat_master2"
+    """
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -iE "do heartbeat" |grep "host=172.100.9.6" | grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    """
+    Given execute linux command in "mysql-master1" and save result in "backendIds_master1"
+    """
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master1.log | awk '{print $2}'
+    """
+    Given execute linux command in "mysql-master2" and save result in "backendIds_master2"
+    """
+    grep -i "INSERT INTO sharding_2_t1" {node:install_path}/data/mysql-master1.log | awk '{print $2}'
+    """
+    Given merge resultset of "heartbeat_master1" and "backendIds_master1" into "ids_to_kill_master1"
+    Given merge resultset of "heartbeat_master2" and "backendIds_master2" into "ids_to_kill_master2"
     Then check general log in host "mysql-master1" has not "SET autocommit=0"
     Then check general log in host "mysql-master2" has not "SET autocommit=0"
-    Given kill all backend conns in "mysql-master1" except ones in "backendIds"
-    Given kill all backend conns in "mysql-master2" except ones in "backendIds"
+    Given kill all backend conns in "mysql-master1" except ones in "ids_to_kill_master1"
+    Given kill all backend conns in "mysql-master2" except ones in "ids_to_kill_master2"
     Given execute sql in "dble-1" in "user" mode
       | sql                         | expect  | db      |
       | select * from sharding_2_t1 | success | schema1 |
     Then check general log in host "mysql-master1" has not "SET autocommit=1"
     Then check general log in host "mysql-master2" has not "SET autocommit=1"
 
-  @restore_global_setting   @skip #skip for http://10.186.18.11/jira/browse/DBLE0REQ-219
+  @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by manager command, dble send set global query #9
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -353,7 +381,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @current
+  @current #for last step cannot pass
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
     Given stop mysql in host "mysql-master1"
 #    default dataNodeHeartbeatPeriod is 10, 11 makes sure heartbeat failed for mysql-master1
@@ -367,24 +395,24 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given sleep "2" seconds
     Given record current dble log line number in "log_linenu"
     Given start mysql in host "mysql-master1"
+    Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
 #    run into this btrace code means heartbeat of mysql-master1 has recover success then try to send global var detect query and be blocked 3s by btrace
     Then check btrace "BtraceSelectGlobalVars1.java" output in "dble-1"
     """
     get into call
     """
 #   dble received feedback of global var detect query, but the connection is still in use state
-    Given prepare a thread run btrace script "BtraceSelectGlobalVars2.java" in "dble-1"
+    Then check btrace "BtraceSelectGlobalVars2.java" output in "dble-1"
     """
     get into fieldEofResponse
     """
     # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
     Given execute linux command in "dble-1" and save result in "backendIds"
     """
-    tail -n +%log_linenu% /opt/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:} /opt/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
     Given kill mysql conns in "mysql-master1" in "backendIds"
-#    4s is BtraceSelectGlobalVars2.java block time
-    Given sleep "4" seconds
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     heartbeat to \[172.100.9.5:3306\] setError
