@@ -82,7 +82,7 @@ class RestoreEnvObject(object):
                     sed_str += "/{0}/d\n/server-id/a {0}={1}\n".format(k, v)
 
                 mysql = ObjectFactory.create_mysql_object(host_name)
-                mysql.start(sed_str)
+                mysql.restart(sed_str)
 
     def get_tag_params(self, tagKey):
         description = self._scenario.description

@@ -20,7 +20,7 @@ public final class BtraceSelectGlobalVars2 {
     public static void fieldEofResponse(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into fieldEofResponse");
         BTraceUtils.print(" sleep __________________________ ");
-        Thread.sleep(4000L);
+        Thread.sleep(10000L);
     }
 
 }
