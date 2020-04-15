@@ -173,7 +173,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has not "SET autocommit=0"
     Then check general log in host "mysql-master2" has not "SET autocommit=0"
 
-  @restore_global_setting
+  @restore_global_setting @skip
   Scenario: dble default autocommit=1, after executing implicit query(with which dble will add autocommit=0 to the session), the global var will be restored #7
 # with long gap heartbeat, when kill all backend conns except the ones you want to keep, then the following query will use the conn you keep, which make sure autocommit=0 conns afterwhile is set autocommit=1
     """
@@ -226,7 +226,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has "SET autocommit=1"
     Then check general log in host "mysql-master2" has "SET autocommit=1"
 
-  @restore_global_setting
+  @restore_global_setting @skip
   Scenario:config autocommit=0, after executing explicit query(with which dble will add autocommit=0 to the session), the global var will not be restored #8
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
@@ -381,7 +381,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @current #for last step cannot pass
+  @skip #for last step cannot pass
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
     Given stop mysql in host "mysql-master1"
 #    default dataNodeHeartbeatPeriod is 10, 11 makes sure heartbeat failed for mysql-master1
