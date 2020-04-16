@@ -297,6 +297,7 @@ Feature: test some import nodes attr in schema.xml
       | conn_1 | True    | commit                                           | success | schema1 |
       | conn_2 | True    | set @x = 1                                       | success | schema1 |
 
+  @skip
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
@@ -318,8 +319,16 @@ Feature: test some import nodes attr in schema.xml
     </dataHost>
     """
     Given Restart dble in "dble-1" success
-    Given restart mysql in "mysql-master1"
-    Given restart mysql in "mysql-master2"
+    Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
+    """
+    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    """
+    Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
+    Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master2"
+    """
+    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    """
+    Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect        |
@@ -338,13 +347,22 @@ Feature: test some import nodes attr in schema.xml
     </dataHost>
     """
     Then execute admin cmd "reload @@config_all -f"
-    Given restart mysql in "mysql-master1"
-    Given restart mysql in "mysql-master2"
-    Given sleep "5" seconds
+    Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
+    """
+    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    """
+    Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
+    Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master2"
+    """
+    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    """
+    Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
+    Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect      |
       | show @@backend | length{(3)} |
 
+  @current
   Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #12
 #  minConRecover logic, take this case as example:
 #  minCon_of_config=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,already_created=num_dns+1=3+1=4
@@ -373,9 +391,13 @@ Feature: test some import nodes attr in schema.xml
     </dataHost>
     """
     Given Restart dble in "dble-1" success
-    Given restart mysql in "mysql-master1"
-#   wait 2s for minConRecover is a duration, but not at once
-    Given sleep "2" seconds
+    Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
+    """
+    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    """
+    Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
+#   wait 4s for minConRecover is a duration
+    Given sleep "4" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql             | expect      |
       | show @@backend  | length{(8)} |
