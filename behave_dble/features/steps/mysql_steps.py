@@ -18,7 +18,7 @@ sql_threads = []
 @Given('kill connection with query "{query}" in host "{host_name}"')
 def step_impl(context, query, host_name):
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.killConnByQuery(query)
+    mysql.kill_conn_with_query(query)
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
@@ -35,9 +35,12 @@ def stop_mysql(context, host_name):
     mysql.stop()
 
 @Given('start mysql in host "{host_name}"')
-def start_mysql(context, host_name):
+def start_mysql(context, host_name, sed_str=None):
+    if not sed_str and context.text is not None and len(context.text)>0:
+        sed_str = context.text
+
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.start()
+    mysql.start(sed_str)
 
 @Given('turn on general log in "{host_name}"')
 def step_impl(context,host_name):
@@ -58,7 +61,7 @@ def step_impl(context,host_name, query):
 @Then('check general log in host "{host_name}" has "{query}" occured "{occur_times_expr}" times')
 def step_impl(context,host_name, query, occur_times_expr=None):
     mysql = ObjectFactory.create_mysql_object(host_name)
-    mysql.check_query_in_general_log(query, expect_exist=True, occur_times_expr=occur_times_expr)
+    mysql.check_query_in_general_log(query, expect_exist=True, expect_occur_times_expr=occur_times_expr)
 
 @Given('execute sql in "{host_name}"')
 @Then('execute sql in "{host_name}"')
@@ -102,3 +105,22 @@ def step_impl(context):
     for thd in sql_threads:
         context.logger.debug("join sql thread: {0}".format(thd.name))
         thd.join()
+
+
+@Given('kill all backend conns in "{host_name}"')
+@Given('kill all backend conns in "{host_name}" except ones in "{exclude_conn_ids}"')
+def step_impl(context, host_name, exclude_conn_ids=None):
+    if exclude_conn_ids:
+        exclude_ids = getattr(context, exclude_conn_ids, None)
+    else:
+        exclude_ids = []
+
+    mysql = ObjectFactory.create_mysql_object(host_name)
+    mysql.kill_all_conns(exclude_ids)
+
+@Given('kill mysql conns in "{host_name}" in "{conn_ids}"')
+def step_impl(context, host_name, conn_ids):
+    conn_ids = getattr(context, conn_ids, None)
+    assert len(conn_ids)>0, "no conns in '{}' to kill".format(conn_ids)
+    mysql = ObjectFactory.create_mysql_object(host_name)
+    mysql.kill_conns(conn_ids)
