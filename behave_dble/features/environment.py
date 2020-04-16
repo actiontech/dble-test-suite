@@ -59,7 +59,7 @@ def before_all(context):
     reinstall = context.config.userdata["reinstall"].lower() == "true"
     reset = context.config.userdata["reset"].lower() == "true"
 
-    logger.info("run test with environment reinstall: {0}, reset: {1}, new install: {2}".format(reinstall, reset, not reinstall or reset))
+    logger.info("run test with environment reinstall: {0}, reset: {1}".format(reinstall, reset))
 
     context.need_download = context.config.userdata["install_from_local"].lower() != "true"
 
