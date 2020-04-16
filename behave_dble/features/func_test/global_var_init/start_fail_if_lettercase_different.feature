@@ -128,6 +128,6 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     Given sleep "3" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    this dataHost\[=172.100.9.5:3306\]'s lower_case is wrong, set heartbeat Error
+    this dataHost\[=172.100.9.5:3306\].s lower_case is wrong, set heartbeat Error
     """
 
