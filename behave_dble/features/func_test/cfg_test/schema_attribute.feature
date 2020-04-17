@@ -362,7 +362,6 @@ Feature: test some import nodes attr in schema.xml
       | sql            | expect      |
       | show @@backend | length{(3)} |
 
-  @current
   Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #12
 #  minConRecover logic, take this case as example:
 #  minCon_of_config=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,already_created=num_dns+1=3+1=4
