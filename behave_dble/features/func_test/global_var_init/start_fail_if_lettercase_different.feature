@@ -114,6 +114,13 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="dataNodeHeartbeatPeriod">2000</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master1"
     Given update file content "/etc/my.cnf" in "mysql-master1" with sed cmds
     """
