@@ -10,7 +10,7 @@ Feature: test read load balance
 #1：在除当前激活writeHost之外随机选择read host
 #2：读操作在所有readHost和writeHost中均衡。
 
-  @CRITICAL
+  @CRITICAL @current
   Scenario: dataHost balance="0", do not balance, all read send to master #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -45,7 +45,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       | success |
       | conn_0 | False   | set global log_output='table'   | success |
       | conn_0 | True    | truncate table mysql.general_log| success |
-    Then connect "dble-1" to execute "1000" of select for "test"
+    Given execute sql "1000" times in "dble-1" at concurrent
+      | toClose | sql                                | db      |
+      | False   | select name from test where id ={} | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect         |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |
@@ -87,7 +89,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       |
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
-    Then connect "dble-1" to execute "1000" of select for "test"
+    Given execute sql "1000" times in "dble-1" at concurrent
+      | toClose | sql                                | db      |
+      | False   | select name from test where id ={} | schema1 |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{1000} |
@@ -129,7 +133,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       |
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
-    Then connect "dble-1" to execute "10000" of select for "test"
+    Given execute sql "10000" times in "dble-1" at concurrent
+      | toClose | sql                                 | db      |
+      | False   | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |
@@ -177,7 +183,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       |
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
-    Then connect "dble-1" to execute "10000" of select for "test"
+    Given execute sql "10000" times in "dble-1" at concurrent
+      | toClose | sql                                 | db      |
+      | False   | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                 | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'  | balance{2500} |
@@ -222,7 +230,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       |
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
-    Then connect "dble-1" to execute "1000" of select for "test"
+    Given execute sql "1000" times in "dble-1" at concurrent
+      | toClose | sql                                 | db      |
+      | False   | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect         |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |
@@ -271,7 +281,7 @@ Feature: test read load balance
       | sql                            |
       | set global log_output='file'   |
 
-  @CRITICAL @current
+  @CRITICAL
   Scenario: dataHost balance="2", 1m weight=1, 1s weight=1, 1s weight=0, and weight=0 indicates that traffic is not accepted   #8
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -311,7 +321,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       |
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
-    Then connect "dble-1" to execute "10000" of select for "test"
+    Given execute sql "10000" times in "dble-1" at concurrent
+      | toClose | sql                                 | db      |
+      | False   | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |
@@ -331,7 +343,7 @@ Feature: test read load balance
       | sql                          |
       | set global general_log=off   |
 
-  @CRITICAL @current
+  @CRITICAL
   Scenario: dataHost balance="2", 1m weight=0, the write node only accepts write traffic and does not receive read traffic   #9
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -376,7 +388,9 @@ Feature: test read load balance
       | conn_0 | False   | set global general_log=on       |
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
-    Then connect "dble-1" to execute "10000" of select for "test"
+    Given execute sql "10000" times in "dble-1" at concurrent
+      | toClose | sql                                 | db      |
+      | False   | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(0L,),}   |
