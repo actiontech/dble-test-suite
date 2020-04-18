@@ -31,25 +31,6 @@ class MySQLObject(object):
             assert False, "create connection failed for: {}".format(e.args)
         return conn
 
-    def kill_conn_with_query(self, query):
-        conn = self.create_conn()
-        cur = conn.cursor()
-        cur.execute("show processlist")
-        res = cur.fetchall()
-
-        for row in res:
-            command_col = row[4]
-            if re.search(query, command_col, re.I):
-                id_to_kill= row[0]
-                break;
-
-        assert id_to_kill, "Can not find the query '{0}' to kill by show processlist, which resultset is {1}".format(query, res)
-
-        cur.execute("kill {0}".format(id_to_kill))
-
-        cur.close()
-        conn.close()
-
     def restart(self, sed_str=None):
         self.stop()
 
