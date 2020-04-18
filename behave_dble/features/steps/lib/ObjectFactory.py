@@ -6,9 +6,9 @@
 import logging
 
 
-from DbleObject import DbleObject
-from MySQLObject import MySQLObject
-from utils import get_node
+from steps.lib.DbleObject import DbleObject
+from steps.lib.MySQLObject import MySQLObject
+from steps.lib.utils import get_node
 logger = logging.getLogger('lib')
 
 class ObjectFactory(object):
