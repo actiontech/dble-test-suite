@@ -6,10 +6,10 @@
 import logging
 import re
 
-from .ObjectFactory import ObjectFactory
+from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
 
-logger = logging.getLogger('MySQLObject')
+logger = logging.getLogger('steps.lib.MySQLObject')
 
 class PostQueryCheck(object):
     def __init__(self, real_res, real_err=None, time_cost=0, query_meta=None):
@@ -22,6 +22,7 @@ class PostQueryCheck(object):
     def check_result(self):
         while True:
             if self._expect == "success":
+                logger.debug("sql:{},err:{}".format(self._sql, self._real_err))
                 assert self._real_err is None, "expect no err, but outcomes '{0}'".format(self._real_err)
                 break
             dest_host = re.search(r'dest_node:(.*)', self._expect, re.I)
@@ -93,7 +94,6 @@ class PostQueryCheck(object):
                 assert str(notExpectRS) not in str(self._real_res), "not expect containing text: {0}, resultset:{1}".format(
                     notExpectRS, self._real_res)
                 break
-
 
             executeTime = re.search(r"execute_time\{(.*?)\}", self._expect, re.I)
             if executeTime:
