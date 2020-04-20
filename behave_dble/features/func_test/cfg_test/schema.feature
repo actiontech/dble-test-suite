@@ -23,12 +23,7 @@ Feature: schema basic config test
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    # todo : dble should start only with <dataNode>
-    Then restart dble in "dble-1" failed for
-    """
-    dataNode dn1 reference dataHost:172.100.9.5 not exists!
-    """
-
+    Then restart dble in "dble-1" success
     #schema.xml only has <dataHost>,  dble starts successful
     Given delete the following xml segment
       |file        | parent          | child               |
