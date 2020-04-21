@@ -360,10 +360,9 @@ Feature: verify hint sql
       | conn_0 | False   | drop table if exists test_global           | success | schema1 |
       | conn_0 | False   | create table test_global(id int)           | success | schema1 |
       | conn_0 | True    | create index index_test on test_global(id) | success | schema1 |
-    Then connect "dble-1" to execute "100" of select
-    """
-    show index from test_global /*test*/
-    """
+    Given execute sql "100" times in "dble-1" at concurrent
+      | toClose | sql                                   | db      |
+      | False   | show index from test_global /*test*/  | schema1 |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     dn5{show index from test_global/*test*/}
