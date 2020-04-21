@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 import MySQLdb
 import logging
-
+import re
 from behave import *
 from hamcrest import *
 from lib.DBUtil import DBUtil
@@ -182,6 +182,34 @@ def step_impl(context, var_version):
 
     assert sto1==sto2==sto3, "versions in server_template.xml schema_template.xml rule_template.xml are not the same"
     setattr(context, var_version, sto1)
+
+@Then('get first mysqlId of "{host}" from "{result}" named "{mysqlID}"')
+def step_impl(context,host,result,mysqlID):
+    session_list = getattr(context,result)
+    list_session = filter(lambda x : x, session_list[0][2].split("MySQLConnection"))
+    ip = get_node(context.mysqls, host)._ip
+    pattern = re.compile(ip)
+    for i in list_session:
+        matchObj1 = re.search(pattern,i)
+        if matchObj1:
+            matchObj2 = re.search("mysqlId=([0-9]*)",i)
+            break
+    assert matchObj2, "not found mysqlID in {0}".format(host)
+    setattr(context, mysqlID, matchObj2.group(1))
+    context.logger.info("mysqlID is {0}".format(matchObj2.group(1)))
+
+@Then('kill mysql connection by "{mysqlID}" in "{host}"')
+def step_impl(context,mysqlID,host):
+    id = getattr(context,mysqlID)
+    ip = get_node(context.mysqls, host)._ip
+    user = context.cfg_mysql['user']
+    passwd = context.cfg_mysql['password']
+    port = context.cfg_mysql['client_port']
+    db = ''
+    sql = "kill {0}".format(id)
+    conn = DBUtil(ip, user, passwd, db, port, context)
+    res,err = conn.query(sql)
+    assert err is None, "kill connection is failed: {0}".format(err)
 
 @Then('record reloadTime of "{tbName}" from "{rs_name}" named "{rtName}"')
 def record_time(context, tbName, rs_name, rtName):
