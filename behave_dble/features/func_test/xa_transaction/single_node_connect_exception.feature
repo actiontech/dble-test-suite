@@ -16,7 +16,7 @@ Feature: backend node disconnect,causing xa abnormal
       | conn_0 | False   | set autocommit=0                                        | success | schema1 |
       | conn_0 | False   | set xa = on                                             | success | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -28,7 +28,9 @@ Feature: backend node disconnect,causing xa abnormal
     """
     before xa end
     """
-    Then get resultset of admin cmd "show @@session" named "rs_A"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+       | sql               |
+       | show @@session  |
     Then get first mysqlId of "mysql-master1" from "rs_A" named "mysqlID1"
     Then kill mysql connection by "mysqlID1" in "mysql-master1"
     Given destroy sql threads list
@@ -55,12 +57,12 @@ Feature: backend node disconnect,causing xa abnormal
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
-      | conn_1 | False   | create table sharding_4_t1(id int,name char)            | success | schema1 |
-      | conn_1 | False   | set autocommit=0                                        | success | schema1 |
+      | conn_1 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1(id int,name char)       | success | schema1 |
       | conn_1 | False   | set xa = on                                             | success | schema1 |
+      | conn_1 | False   | begin                                                    | success | schema1 |
       | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given change btrace "BtraceXaDelay.java" locate "./assets" with sed cmds
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaEnd/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
@@ -69,7 +71,9 @@ Feature: backend node disconnect,causing xa abnormal
     Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_1"
     Given sleep "5" seconds
-    Then get resultset of admin cmd "show @@session" named "rs_B"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
+       | sql               |
+       | show @@session  |
     Then get first mysqlId of "mysql-master1" from "rs_B" named "mysqlID2"
     Then kill mysql connection by "mysqlID2" in "mysql-master1"
     Given destroy sql threads list
