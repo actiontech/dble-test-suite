@@ -17,14 +17,15 @@ Feature: schema basic config test
     Then execute admin cmd "reload @@config_all"
 
   @TRIVIAL
-  Scenario: config with no use datanode (has no counter-part datahost), expect reload success but at present fail, config no use datahost reload success #2
-    #schema.xml only has dataNodes,  dble starts successful,
+  Scenario: config with no use datanode (has no counter-part datahost), expect reload success, config no use datahost reload success #2
+    #schema.xml only has dataNodes,  dble starts success
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Then restart dble in "dble-1" success
-    #schema.xml only has <dataHost>,  dble starts successful
+      |server.xml  |{'tag':'root'}   | {'tag':'user','kv_map':{'name':'test'}}  |
+    Then Restart dble in "dble-1" success
+    #schema.xml only has <dataHost>,  dble starts success
     Given delete the following xml segment
       |file        | parent          | child               |
       |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
@@ -36,7 +37,8 @@ Feature: schema basic config test
             </writeHost>
         </dataHost>
     """
-    Given Restart dble in "dble-1" success
+    Then Restart dble in "dble-1" success
+
   @TRIVIAL
   Scenario: when config file contains illegal label<test/>, reload fail #3
     Given add xml segment to node with attribute "{'tag':'root','prev': 'dataHost'}" in "schema.xml"
