@@ -100,6 +100,7 @@ def step_impl(context, host_name, num, concur="100"):
     def do_thread_tasks(host_name, info_dic, base_id, tasks_count, eflag):
         my_dic = info_dic.copy()
         my_dic["conn"] = "concurr_conn_{}".format(i)
+        my_dic["toClose"] = "False"
         last_count = tasks_count-1
         sql_raw = my_dic["sql"]
         for k in range(tasks_count):
