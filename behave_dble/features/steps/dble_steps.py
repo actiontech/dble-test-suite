@@ -111,39 +111,7 @@ def step_impl(context, hostname, num, tablename, dbname="schema1"):
         else:
             sql = sql + ("({0},'{1}'),".format(i, inspection_num))
 
-    do_batch_sql(context, hostname, dbname, sql)
-
-
-@Then('connect "{hostname}" to execute "{num}" of select')
-def step_impl(context, hostname, num, dbname="schema1"):
-    end = int(num)
-    for i in range(1, end + 1):
-        if 0 == i % 1000:
-            time.sleep(60)
-        if context.text:
-            sql = context.text.strip()
-
-        do_batch_sql(context, hostname, dbname, sql)
-
-def do_batch_sql(context, hostname, db, sql):
-    conn = None
-    node = get_node(hostname)
-    ip = node._ip
-    user = node.client_user
-    passwd = node.client_password
-    port = node.client_port
-    try:
-        conn = DBUtil(ip, user, passwd, db, port, context)
-        res, err = conn.query(sql)
-    except MySQLdb.Error, e:
-        errMsg = e.args
-        context.logger.info("try to create conn and exec sql:{0} failed:{1}".format(sql, errMsg))
-    finally:
-        try:
-            conn.close()
-        except:
-            context.logger.info("close conn failed!")
-    assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
+    execute_sql_in_host(hostname, {"sql":sql,"db":dbname}, "user")
 
 @Then('initialize mysql-off-step sequence table')
 def step_impl(context):
