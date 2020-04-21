@@ -243,7 +243,7 @@ def step_impl(context, var_version):
 def step_impl(context,host,result,mysqlID):
     session_list = getattr(context,result)
     list_session = filter(lambda x : x, session_list[0][2].split("MySQLConnection"))
-    ip = get_node(context.mysqls, host)._ip
+    ip = get_node(host)._ip
     pattern = re.compile(ip)
     for i in list_session:
         matchObj1 = re.search(pattern,i)
@@ -257,10 +257,11 @@ def step_impl(context,host,result,mysqlID):
 @Then('kill mysql connection by "{mysqlID}" in "{host}"')
 def step_impl(context,mysqlID,host):
     id = getattr(context,mysqlID)
-    ip = get_node(context.mysqls, host)._ip
-    user = context.cfg_mysql['user']
-    passwd = context.cfg_mysql['password']
-    port = context.cfg_mysql['client_port']
+    node=get_node(host)
+    ip = node._ip
+    user = node.mysql_user
+    passwd = node.mysql_password
+    port = node.mysql_port
     db = ''
     sql = "kill {0}".format(id)
     conn = DBUtil(ip, user, passwd, db, port, context)
