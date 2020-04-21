@@ -46,8 +46,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   | success |
       | conn_0 | True    | truncate table mysql.general_log| success |
     Given execute sql "1000" times in "dble-1" at concurrent
-      | toClose | sql                                | db      |
-      | False   | select name from test where id ={} | schema1 |
+      | sql                                | db      |
+      | select name from test where id ={} | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect         |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |
@@ -90,8 +90,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
     Given execute sql "1000" times in "dble-1" at concurrent
-      | toClose | sql                                | db      |
-      | False   | select name from test where id ={} | schema1 |
+      | sql                                | db      |
+      | select name from test where id ={} | schema1 |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{1000} |
@@ -134,8 +134,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
     Given execute sql "10000" times in "dble-1" at concurrent
-      | toClose | sql                                 | db      |
-      | False   | select name from test where id ={}  | schema1 |
+      | sql                                 | db      |
+      | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |
@@ -184,8 +184,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
     Given execute sql "10000" times in "dble-1" at concurrent
-      | toClose | sql                                 | db      |
-      | False   | select name from test where id ={}  | schema1 |
+      | sql                                 | db      |
+      | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                 | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'  | balance{2500} |
@@ -231,8 +231,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
     Given execute sql "1000" times in "dble-1" at concurrent
-      | toClose | sql                                 | db      |
-      | False   | select name from test where id ={}  | schema1 |
+      | sql                                 | db      |
+      | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect         |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(1000L,),} |
@@ -322,8 +322,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
     Given execute sql "10000" times in "dble-1" at concurrent
-      | toClose | sql                                 | db      |
-      | False   | select name from test where id ={}  | schema1 |
+      | sql                                 | db      |
+      | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |
@@ -389,8 +389,8 @@ Feature: test read load balance
       | conn_0 | False   | set global log_output='table'   |
       | conn_0 | True    | truncate table mysql.general_log|
     Given execute sql "10000" times in "dble-1" at concurrent
-      | toClose | sql                                 | db      |
-      | False   | select name from test where id ={}  | schema1 |
+      | sql                                 | db      |
+      | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | has{(0L,),}   |
