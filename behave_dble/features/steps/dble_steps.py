@@ -55,22 +55,6 @@ def step_impl(context, host_name, mode_name):
     for row in context.table:
         execute_sql_in_host(host_name, row.as_dict(), mode_name)
 
-def execute_dble_sql_in_host(host_name, info_dic=None, mode_name="user"):
-    # logger.debug("debug4:{},{}".format(type(info_dic), info_dic))
-
-    dble = ObjectFactory.create_dble_object(host_name)
-    query_meta = QueryMeta(info_dic, mode_name, dble._dble_meta)
-
-    pre_delegater = PreQueryPrepare(query_meta)
-    pre_delegater.prepare()
-
-    res, err, time_cost = dble.do_execute_query(query_meta)
-
-    post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
-    post_delegater.check_result()
-
-    return res,err
-
 @Then('execute sql "{sql}" in "{host}" with "{results}" result')
 def step_impl(context,sql,host,results):
     for row in context.table:
