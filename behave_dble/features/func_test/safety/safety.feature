@@ -91,7 +91,6 @@ Feature: multi-tenancy, user-Permission
       |conn_0  | False    |drop table if exists test_shard     |success           |schema1 |
       |conn_0  | False    |create table test_shard (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))     |success           |schema1  |
       |conn_0  | True     |insert into test_shard (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001') |success |schema1  |
-    Then connect "dble-1" to execute "100" of select
-    """
-    select * from test_shard where HEX(R_bit) not like (select '%A%') escape (select '%')
-    """
+    Given execute sql "100" times in "dble-1" at concurrent
+      | toClose | sql                                                                                    | db      |
+      | False   | select * from test_shard where HEX(R_bit) not like (select '%A%') escape (select '%')  | schema1 |

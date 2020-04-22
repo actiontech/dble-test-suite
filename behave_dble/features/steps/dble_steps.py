@@ -53,23 +53,7 @@ def exec_admin_cmd(context, adminsql, user="", passwd="", result=""):
 @Then('execute sql in "{host_name}" in "{mode_name}" mode')
 def step_impl(context, host_name, mode_name):
     for row in context.table:
-        execute_dble_sql_in_host(host_name, row.as_dict(), mode_name)
-
-def execute_dble_sql_in_host(host_name, info_dic=None, mode_name="user"):
-    # logger.debug("debug4:{},{}".format(type(info_dic), info_dic))
-
-    dble = ObjectFactory.create_dble_object(host_name)
-    query_meta = QueryMeta(info_dic, mode_name, dble._dble_meta)
-
-    pre_delegater = PreQueryPrepare(query_meta)
-    pre_delegater.prepare()
-
-    res, err, time_cost = dble.do_execute_query(query_meta)
-
-    post_delegater = PostQueryCheck(res, err, time_cost, query_meta)
-    post_delegater.check_result()
-
-    return res,err
+        execute_sql_in_host(host_name, row.as_dict(), mode_name)
 
 @Then('execute sql "{sql}" in "{host}" with "{results}" result')
 def step_impl(context,sql,host,results):
@@ -80,7 +64,7 @@ def step_impl(context,sql,host,results):
             sql = sql + ' ' +'"{0}"'.format(result)
             dict.update("sql", sql)
 
-            execute_dble_sql_in_host(host, dict, "user")
+            execute_sql_in_host(host, dict, "user")
 
 @Then('insert "{num}" rows at one time')
 def step_impl(context, num):
@@ -96,7 +80,7 @@ def step_impl(context, num):
     pad_str = gen.rand_string(60)
     sql += "({0}, {0}, '{1}', '{2}')".format(i+1, c_str, pad_str)
 
-    execute_dble_sql_in_host("dble-1", {"sql":sql}, "user")
+    execute_sql_in_host("dble-1", {"sql":sql}, "user")
 
 
 @Then('connect "{hostname}" to insert "{num}" of data for "{tablename}"')
@@ -111,44 +95,7 @@ def step_impl(context, hostname, num, tablename, dbname="schema1"):
         else:
             sql = sql + ("({0},'{1}'),".format(i, inspection_num))
 
-    do_batch_sql(context, hostname, dbname, sql)
-
-
-@Then('connect "{hostname}" to execute "{num}" of select')
-@Then('connect "{hostname}" to execute "{num}" of select for "{tablename}"')
-@Then('connect "{hostname}" to execute "{num}" of select for "{dbname}"."{tablename}"')
-def step_impl(context, hostname, num, tablename="", dbname="schema1"):
-    end = int(num)
-    for i in range(1, end + 1):
-        if 0 == i % 1000:
-            time.sleep(60)
-        if context.text:
-            sql = context.text.strip()
-        else:
-            id == random.randint(1, end)
-            sql = ("select name from {0} where id ={1};".format(tablename, i))
-        do_batch_sql(context, hostname, dbname, sql)
-
-
-def do_batch_sql(context, hostname, db, sql):
-    conn = None
-    node = get_node(hostname)
-    ip = node._ip
-    user = node.client_user
-    passwd = node.client_password
-    port = node.client_port
-    try:
-        conn = DBUtil(ip, user, passwd, db, port, context)
-        res, err = conn.query(sql)
-    except MySQLdb.Error, e:
-        errMsg = e.args
-        context.logger.info("try to create conn and exec sql:{0} failed:{1}".format(sql, errMsg))
-    finally:
-        try:
-            conn.close()
-        except:
-            context.logger.info("close conn failed!")
-    assert_that(err is None, "excute batch sql: '{0}' failed! outcomes:'{1}'".format(sql, err))
+    execute_sql_in_host(hostname, {"sql":sql,"db":dbname}, "user")
 
 @Then('initialize mysql-off-step sequence table')
 def step_impl(context):
@@ -179,10 +126,8 @@ def step_impl(context):
 def step_impl(context, host_name, result_key, mode_name=None):
     row = context.table[0]
     info_dict = row.as_dict()
-    if mode_name in ["admin", "user"]:#query to dble
-        res, _ = execute_dble_sql_in_host(host_name, info_dict, mode_name)
-    else:
-        res, _ = execute_sql_in_host(host_name, info_dict)
+
+    res, _ = execute_sql_in_host(host_name, info_dict, mode_name)
 
     setattr(context, result_key, res)
 
