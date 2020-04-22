@@ -10,7 +10,7 @@ Feature: test read load balance
 #1：在除当前激活writeHost之外随机选择read host
 #2：读操作在所有readHost和writeHost中均衡。
 
-  @CRITICAL @current
+  @CRITICAL
   Scenario: dataHost balance="0", do not balance, all read send to master #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
