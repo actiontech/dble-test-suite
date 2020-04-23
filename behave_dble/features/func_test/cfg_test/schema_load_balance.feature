@@ -281,7 +281,7 @@ Feature: test read load balance
       | sql                            |
       | set global log_output='file'   |
 
-  @CRITICAL
+  @CRITICAL @current
   Scenario: dataHost balance="2", 1m weight=1, 1s weight=1, 1s weight=0, and weight=0 indicates that traffic is not accepted   #8
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -306,6 +306,11 @@ Feature: test read load balance
         </dataHost>
     """
     Given Restart dble in "dble-1" success
+    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
+    """
+    /replicate-ignore-table/d
+    /server-id/a replicate-ignore-table = mysql.general_log
+    """
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                             |
       | conn_0 | False   | set global general_log=on       |
