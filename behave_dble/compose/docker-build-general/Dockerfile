@@ -6,7 +6,12 @@ RUN echo "Asia/shanghai" > /etc/timezone;
 RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 #libaio numaactl.x86_64 needed by mysql
-RUN yum install -y wget net-tools libaio numactl.x86_64 openssh-clients openssh-server
+RUN yum install -y wget net-tools libaio numactl.x86_64 openssh-clients openssh-server gcc python3-dev mysql-devel libmysqlclient
+
+#install libs for custom_mysql_ha
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install --upgrade pip3
+RUN pip3 install -r /tmp/requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 
 #install jdk
 COPY jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
