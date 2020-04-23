@@ -115,7 +115,7 @@ Feature: test read load balance
         <dataNode dataHost="ha_group2" database="db2" name="dn2" />
         <dataNode dataHost="ha_group2" database="db3" name="dn3" />
         <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
@@ -159,7 +159,7 @@ Feature: test read load balance
         <dataNode dataHost="ha_group2" database="db2" name="dn2" />
         <dataNode dataHost="ha_group2" database="db3" name="dn3" />
         <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
@@ -297,7 +297,7 @@ Feature: test read load balance
         <dataNode dataHost="ha_group2" database="db2" name="dn2" />
         <dataNode dataHost="ha_group2" database="db3" name="dn3" />
         <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
@@ -359,7 +359,7 @@ Feature: test read load balance
         <dataNode dataHost="ha_group2" database="db2" name="dn2" />
         <dataNode dataHost="ha_group2" database="db3" name="dn3" />
         <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
             <heartbeat>select user()</heartbeat>
             <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="0">
               <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
