@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/2
 
-#2.19.11.0#dble-7868
+#2.20.04.0#dble-8175
 @skip
 Feature: retry policy after xa transaction commit failed for network anomaly
 
@@ -21,7 +21,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -34,7 +34,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
     """
-    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "5" times
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
     before xa commit
     """
@@ -66,7 +66,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -85,7 +85,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given sleep "10" seconds
     Given execute oscmd in "dble-1" and "5" less than result
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given execute oscmd in "mysql-master1"
     """
@@ -94,7 +94,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given sleep "10" seconds
     Then execute oscmd many times in "dble-1" and result is same
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect      | db      |
@@ -117,7 +117,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -139,7 +139,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Then execute admin cmd "kill @@xa_session" with "rs_A" result
     Then execute oscmd many times in "dble-1" and result is same
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given execute oscmd in "mysql-master1"
     """
@@ -184,7 +184,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
