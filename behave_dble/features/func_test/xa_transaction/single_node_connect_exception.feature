@@ -4,7 +4,7 @@
 # Created by yangxiaoliang at 2020/2/26
 # modified by wjl1619 at 2020/04/21
 
-# 2.19.11.0#dble-7870
+#2.20.04.0#dble-8177
 Feature: backend node disconnect,causing xa abnormal
 
   @btrace
@@ -19,7 +19,7 @@ Feature: backend node disconnect,causing xa abnormal
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -65,7 +65,7 @@ Feature: backend node disconnect,causing xa abnormal
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaEnd/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaEnd/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
