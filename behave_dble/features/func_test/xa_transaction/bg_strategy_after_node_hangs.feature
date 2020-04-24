@@ -3,8 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/26
 
-#2.19.11.0#dble-7867
-@skip #for xa is in debugging of dev
+#2.20.04.0#dble-8174
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
   @btrace
@@ -21,7 +20,8 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /beforeInnerRetry/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -31,9 +31,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa prepare
     """
     Given stop mysql in host "mysql-master1"
-    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "5" times
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
     """
-    before xa commit
+    before inner retry
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
@@ -61,32 +61,28 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_0"
     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
-    before xa prepare
+    before xa commit
     """
     Given stop mysql in host "mysql-master1"
     Given destroy sql threads list
-    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "5" times
-    """
-    before add xa
-    """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given execute oscmd in "dble-1" and "5" less than result
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
     Then execute oscmd many times in "dble-1" and result is same
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect      | db      |
@@ -109,7 +105,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -128,7 +124,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Then execute admin cmd "kill @@xa_session" with "rs_A" result
     Then execute oscmd many times in "dble-1" and result is same
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
@@ -161,7 +157,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -204,8 +200,8 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
-    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+    /delayBeforeXaPrepare/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -224,7 +220,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given destroy btrace threads list
     Given execute oscmd in "dble-1" and "5" less than result
     """
-    cat /opt/dble/logs/dble.log |grep "at the 0th time in background" |wc -l
+    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
