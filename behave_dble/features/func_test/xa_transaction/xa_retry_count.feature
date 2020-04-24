@@ -70,13 +70,8 @@ Feature: change xaRetryCount value and check result
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
-  Scenario: recover mysql node in xaRetryCount and check data not lost #3
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
-    """
-    <property name="xaRetryCount">3</property>
-    """
-    Given Restart dble in "dble-1" success
+  @btrace @current
+  Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -87,15 +82,15 @@ Feature: change xaRetryCount value and check result
     Given update file content "./assets/BtraceXaDelay_backgroundRetry.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
-    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay_backgroundRetry.java" in "dble-1"
     Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_1"
-    Then check btrace "BtraceXaDelay_backgroundRetry.java" output in "dble-1" with "4" times
+    Then check btrace "BtraceXaDelay_backgroundRetry.java" output in "dble-1"
     """
-    before xa prepare
+    before xa commit
     """
     Given stop mysql in host "mysql-master1"
     Given destroy sql threads list
@@ -104,7 +99,7 @@ Feature: change xaRetryCount value and check result
     before add xa
     """
     Given start mysql in host "mysql-master1"
-    #sleep 15s for waitting backgroud retry succeed
+    #sleep 15s for waitting backgroud retry succeed,10s make sure heartbeat recover, and 5s wait xa commit, loop to try commit at per 1s
     Given sleep "15" seconds
     Then get result of oscmd named "rs_B" in "dble-1"
     """
