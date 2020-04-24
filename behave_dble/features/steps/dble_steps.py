@@ -22,6 +22,8 @@ from steps.lib.QueryMeta import QueryMeta
 from steps.lib.generate_util import generate
 from steps.lib.utils import get_node
 
+from steps.mysql_steps import execute_sql_in_host
+
 logger = logging.getLogger('steps.dble_steps')
 
 
@@ -62,9 +64,9 @@ def step_impl(context,sql,host,results):
         resultList = getattr(context,results)
         for result in resultList:
             sql = sql + ' ' +'"{0}"'.format(result)
-            dict.update("sql", sql)
+            dict.update({"sql": sql})
 
-            execute_sql_in_host(host, dict, "user")
+            execute_sql_in_host(host, dict, "mysql")
 
 @Then('insert "{num}" rows at one time')
 def step_impl(context, num):
