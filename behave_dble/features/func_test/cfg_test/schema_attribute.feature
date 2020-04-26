@@ -370,6 +370,7 @@ Feature: test some import nodes attr in schema.xml
 #  minConRecover_num_loop2:(10-6)/3 = 1, already_created=already_created + minConRecover_num_loop2=6+1=7
 #  minConRecover_num_loop3:(10-7)/3 = 1, already_created=already_created + minConRecover_num_loop3=7+1=8
 #  minConRecover_num_loop4:(10-8)/3 = 0, formula get result 0,end loop, and the real restored conns num is 8, that is show @@backend resultset count
+#  minConRecover_num ignore heartbeat conn, so case need add extra heartbeat conn,that is 8+1=9
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
         <property name="dataNodeIdleCheckPeriod">1000</property>
@@ -395,11 +396,11 @@ Feature: test some import nodes attr in schema.xml
     mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
-#   wait 4s for minConRecover is a duration
-    Given sleep "4" seconds
+#   wait 6s for minConRecover is a duration
+    Given sleep "6" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql             | expect      |
-      | show @@backend  | length{(8)} |
+      | show @@backend  | length{(9)} |
 
 
 
