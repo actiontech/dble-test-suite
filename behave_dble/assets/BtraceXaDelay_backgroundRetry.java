@@ -31,7 +31,8 @@ public final class BtraceXaDelay_backgroundRetry {
     public static void delayBeforeXaCommit(String rrnName, String xaId) throws Exception {
         if (isFirst) {
             BTraceUtils.println("--------------");
-            BTraceUtils.println("before xa commit " + xaId + " in " + rrnName);
+            BTraceUtils.println("before xa commit first:" + xaId + " in " + rrnName);
+            BTraceUtils.println("--------------");
             Thread.sleep(100L);
             isFirst=false;
         } else {
