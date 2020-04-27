@@ -72,23 +72,30 @@ Feature: change xaRetryCount value and check result
 
   @btrace @current
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                     | expect  | db      |
-      | conn_1 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
-      | conn_1 | False   | create table sharding_4_t1(id int,name char)            | success | schema1 |
-      | conn_1 | False   | set autocommit=0                                        | success | schema1 |
-      | conn_1 | False   | set xa=on                                               | success | schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    """
+    <system>
+        <property name="dataNodeHeartbeatPeriod">2000</property>
+    </system>
+    """
+    Given Restart dble in "dble-1" success
+#   delayBeforeXaCommit sleep time must long enough for stopping dble
     Given update file content "./assets/BtraceXaDelay_backgroundRetry.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
     /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay_backgroundRetry.java" in "dble-1"
-    Given sleep "5" seconds
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_2_t1                      | success | schema1 |
+      | conn_1 | False   | create table sharding_2_t1(id int,name char)            | success | schema1 |
+      | conn_1 | False   | set autocommit=0                                        | success | schema1 |
+      | conn_1 | False   | set xa=on                                               | success | schema1 |
+      | conn_1 | False   | insert into sharding_2_t1 values(1,1),(2,2)             | success | schema1 |
     Given prepare a thread execute sql "commit" with "conn_1"
-    Then check btrace "BtraceXaDelay_backgroundRetry.java" output in "dble-1"
+    Then check btrace "BtraceXaDelay_backgroundRetry.java" output in "dble-1" with ">0" times
     """
     before xa commit
     """
@@ -99,20 +106,13 @@ Feature: change xaRetryCount value and check result
     before add xa
     """
     Given start mysql in host "mysql-master1"
-    #sleep 15s for waitting backgroud retry succeed,10s make sure heartbeat recover, and 5s wait xa commit, loop to try commit at per 1s
-    Given sleep "15" seconds
-    Then get result of oscmd named "rs_B" in "dble-1"
-    """
-    cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
-    """
-    Then check result "rs_B" value less than "3"
+    #sleep 5s for waitting backgroud retry succeed,2s make sure heartbeat recover, and 3s wait xa commit, loop to try commit at per 1s
+    Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                  | expect      | db      |
-      | conn_2 | False   | select * from sharding_4_t1          | length{(4)} | schema1 |
-      | conn_2 | False   | delete from sharding_4_t1 where id=1 | success     | schema1 |
-      | conn_2 | False   | delete from sharding_4_t1 where id=2 | success     | schema1 |
-      | conn_2 | False   | delete from sharding_4_t1 where id=3 | success     | schema1 |
-      | conn_2 | True    | delete from sharding_4_t1 where id=4 | success     | schema1 |
+      | conn_2 | False   | select * from sharding_2_t1          | length{(2)} | schema1 |
+      | conn_2 | False   | delete from sharding_2_t1 where id=1 | success     | schema1 |
+      | conn_2 | True    | delete from sharding_2_t1 where id=2 | success     | schema1 |
     Given stop btrace script "BtraceXaDelay_backgroundRetry.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceXaDelay_backgroundRetry.java" on "dble-1"

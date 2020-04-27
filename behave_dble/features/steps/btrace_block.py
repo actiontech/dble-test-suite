@@ -59,6 +59,9 @@ def step_impl(context, btraceScript, host):
 
         thd.setDaemon(True)
         thd.start()
+
+        # for btrace into work
+        time.sleep(2)
         # run_btrace_script(sshClient, remoteFile)
 
 @Given('execute sqls in "{host}" at background')
@@ -75,15 +78,16 @@ def step_impl(context, host):
         assert len(ste)==0, "impossible err occur"
 
 
-def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
+def check_btrace_output(sshClient, btraceScript, expectTxt, context, num_expr):
     retry=0
     isFound = False
-    while retry < 200:
-        time.sleep(5)  # a interval wait for query run into
+    while retry < 500:
+        time.sleep(2)  # a interval wait for query run into
         cmd = "cat {0}.log | grep -o '{1}' | wc -l".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
         assert len(ste)==0, "btrace err:{0}".format(ste)
-        isFound = int(sto)==num
+        isFound_str = "{}{}".format(sto, num_expr)
+        isFound=eval(isFound_str)
         if isFound:
             context.logger.debug("query blocked by btrace is found in {0}s".format((retry+1)*5))
             break
@@ -92,13 +96,20 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num):
 
     assert isFound, "can not find expect text '{0}' in {1}.log".format(expectTxt, btraceScript)
 
-@Then('check btrace "{btraceScript}" output in "{host}" with "{num}" times')
+@Then('check btrace "{btraceScript}" output in "{host}" with "{num_expr}" times')
 @Then('check btrace "{btraceScript}" output in "{host}"')
-def step_impl(context, btraceScript, host, num=1):
+def step_impl(context, btraceScript, host, num_expr="==1"):
     node = get_node(host)
     sshClient = node.ssh_conn
     remoteFile = "{0}/dble/{1}".format(node.install_dir, btraceScript)
-    check_btrace_output(sshClient, remoteFile, context.text.strip(), context, int(num))
+
+    try:
+        int(num_expr)
+        num_expr = "=={}".format(num_expr)
+    except Exception as e:
+        context.logger.debug("num already in expr")
+
+    check_btrace_output(sshClient, remoteFile, context.text.strip(), context, num_expr)
 
 def kill_query(sshClient,query, context):
     cmd = u"kill -9 `ps -ef | grep -F '{0}'| grep -v grep | awk '{{print $2}}'`".format(query)
