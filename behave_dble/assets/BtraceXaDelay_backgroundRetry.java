@@ -38,6 +38,7 @@ public final class BtraceXaDelay_backgroundRetry {
         } else {
             BTraceUtils.println("--------------");
             BTraceUtils.println("before xa commit " + xaId + " in " + rrnName);
+            Thread.sleep(100L);
         }
     }
 
