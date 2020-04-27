@@ -99,7 +99,7 @@ class MySQLObject(object):
                     isSuccess = True
                     conn.close()
 
-            time.sleep(5)
+            time.sleep(2)
 
         assert isSuccess, "can not connect to {0} after 25s wait".format(self._mysql_meta.ip)
 
