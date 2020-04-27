@@ -69,8 +69,8 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       | conn_0 | True     | create table table_b (id int,c_flag char(255)) | success   | schema1 |
     Then get query plan and make sure it is optimized
         |query | expect_result_count |
-        |explain select * from table_a a, table_b b on a.id =b.id | 2 |
-        |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 2 |
+        |explain select * from table_a a, table_b b on a.id =b.id | 1 |
+        |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 1 |
 
   Scenario: the optimization of merge #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
@@ -175,12 +175,6 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         | expect_result_line     | DATA_NODE-0         | TYPE-1                 |
         | expect_result_line:5   | merge_and_order_1   | MERGE_AND_ORDER        |
         | expect_result_line:11  | merge_and_order_2   | MERGE_AND_ORDER        |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_K"
-      | sql                                                                                 | db      |
-      | explain select * from schema2.global_4_t2 a join schema2.global_4_t1 b on a.id=b.id | schema1 |
-    Then check resultset "explain_result_K" has lines with following column values
-        | expect_result_line                      | DATA_NODE-0      | TYPE-1       |
-        | expect_result_line:2                    | merge_1          | MERGE        |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "explain_result_M"
       | sql                                                                           | db      |
       | explain select * from sharding_4_t1 a join schema2.global_4_t1 b on a.id=b.id | schema1 |

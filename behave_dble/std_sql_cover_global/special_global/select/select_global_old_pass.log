@@ -416,6 +416,10 @@ dble:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012'
 dble:[((Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('300000'), 'CUSTKEY_003', 2L))]
 ===file:special_global/select/select_global_old.sql, id:209, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by count(O_ORDERKEY),sums]===
 dble:[((Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('300000'), 'CUSTKEY_003', 2L))]
+===file:special_global/select/select_global_old.sql, id:210, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
+dble:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
+===file:special_global/select/select_global_old.sql, id:211, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
+dble:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
 ===file:special_global/select/select_global_old.sql, id:212, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by counts asc,2 desc]===
 dble:[((Decimal('88888888'), 'CUSTKEY_333', 1L), (Decimal('500'), 'CUSTKEY_111', 1L), (Decimal('323456'), 'CUSTKEY_012', 1L), (Decimal('300000'), 'CUSTKEY_003', 2L))]
 ===file:special_global/select/select_global_old.sql, id:213, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_003' and 'CUSTKEY_500' group by 2 asc having sums>400 order by counts asc,2 desc]===
@@ -488,10 +492,22 @@ dble:[[('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003')]]
 dble:[[('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003')]]
 ===file:special_global/select/select_global_old.sql, id:249, sql:[select O_ORDERKEY,O_CUSTKEY from test1 as a where a.O_CUSTKEY<=(select min(C_CUSTKEY)+1 from schema2.test2)]===
 dble:[[('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003'), ('ORDERKEY_004', 'CUSTKEY_111'), ('ORDERKEY_005', 'CUSTKEY_132'), ('ORDERKEY_006', 'CUSTKEY_420'), ('ORDERKEY_007', 'CUSTKEY_980'), ('ORDERKEY_010', 'CUSTKEY_333'), ('ORDERKEY_011', 'CUSTKEY_012')]]
+===file:special_global/select/select_global_old.sql, id:250, sql:[select count(*) from schema2.test2 as a where a.c_CUSTKEY=(select max(C_CUSTKEY) from test1 where C_CUSTKEY=a.C_CUSTKEY)]===
+dble:[((1L,),)]
+===file:special_global/select/select_global_old.sql, id:251, sql:[select C_CUSTKEY  from schema2.test2 as a where (select count(*) from test1 where O_CUSTKEY=a.C_CUSTKEY)=2]===
+dble:[(('CUSTKEY_003',),)]
 ===file:special_global/select/select_global_old.sql, id:252, sql:[select count(*) from test1 as a where a.id <> all(select id from schema2.test2)]===
 dble:[[(3L,)]]
 ===file:special_global/select/select_global_old.sql, id:253, sql:[select count(*) from test1 as a where 56000< all(select id from schema2.test2)]===
 dble:[[(0L,)]]
+===file:special_global/select/select_global_old.sql, id:254, sql:[select count(*) from schema2.test2 as a where 2>all(select count(*) from test1 where O_CUSTKEY=C_CUSTKEY)]===
+dble:[((6L,),)]
+===file:special_global/select/select_global_old.sql, id:257, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)]===
+dble:[((1L, 'CUSTKEY_003', 'ORDERKEY_001', 200000L), (2L, 'CUSTKEY_003', 'ORDERKEY_002', 100000L), (4L, 'CUSTKEY_111', 'ORDERKEY_004', 500L), (5L, 'CUSTKEY_132', 'ORDERKEY_005', 100L), (6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L), (7L, 'CUSTKEY_980', 'ORDERKEY_007', 12000L), (10L, 'CUSTKEY_333', 'ORDERKEY_010', 88888888L), (11L, 'CUSTKEY_012', 'ORDERKEY_011', 323456L))]
+===file:special_global/select/select_global_old.sql, id:258, sql:[select distinct O_ORDERKEY,O_CUSTKEY from test1 a where exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)]===
+dble:[(('ORDERKEY_001', 'CUSTKEY_003'), ('ORDERKEY_002', 'CUSTKEY_003'), ('ORDERKEY_011', 'CUSTKEY_012'), ('ORDERKEY_004', 'CUSTKEY_111'), ('ORDERKEY_005', 'CUSTKEY_132'), ('ORDERKEY_010', 'CUSTKEY_333'), ('ORDERKEY_006', 'CUSTKEY_420'), ('ORDERKEY_007', 'CUSTKEY_980'))]
+===file:special_global/select/select_global_old.sql, id:259, sql:[select count(*) from test1 a where not exists(select * from schema2.test2 where a.O_CUSTKEY=schema2.test2.C_CUSTKEY)]===
+dble:[((0L,),)]
 ===file:special_global/select/select_global_old.sql, id:263, sql:[drop table if exists test1]===
 dble:[[]]
 ===file:special_global/select/select_global_old.sql, id:264, sql:[drop table if exists schema2.test2]===
