@@ -127,10 +127,10 @@ def merge_cmd_strings(filename,sedStr):
     return cmd
 
 def restore_sys_time():
-    import os
-    res = os.system("ntpdate -u 0.centos.pool.ntp.org")
-    assert res == 0, "restore sys time fail"
-    logger.debug("restore sys time success")
+    import subprocess
+    res=subprocess.Popen('ntpdate -u 0.centos.pool.ntp.org',shell=True,stdout=subprocess.PIPE)
+    out, err = res.communicate()
+    assert_that(err is None, "expect no err, but err is: {0}".format(err))
 
 def get_node(host):
     logger.debug("try to get meta of '{}'".format(host))
