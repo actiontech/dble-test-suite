@@ -98,7 +98,6 @@ Feature: when global sequence with zookeeper mode, if system time exceeds 17 yea
     Then execute sql in "dble-1" in "user" mode
       | sql                                    | expect                                          | db      |
       | insert into mytest_auto_test values(1) | Clock moved backwards.  Refusing to generate id | schema1 |
-    Then revert to current time by "curTime"
 
   @skip_restart
   Scenario: when values of key "INSTANCEID" are same and values of key "CLUSTERID" are different, check the correctness of the self-increment sequence #3
