@@ -17,6 +17,15 @@ for((i=0; i<count; i=i+1)); do
 	&& ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 < /deleteDb.sql"
 done
 
+#clear xa id in mysql-master
+for((i=1; i<3; i=i+1)); do
+	echo "clear xa in ${mysql_install[$i]}"
+	xid=(`ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e 'xa recover'|grep -v data|awk '{print $4}'"`)
+	for ((j=0;j<${#xid[@]};j++));do
+        ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e\"xa rollback '${xid[j]}'\""
+    done
+done
+
 echo "reset master mysql-master2"
 ssh root@${mysql_install[2]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master;\" "
 ssh root@${mysql_install[2]}  "sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' -e '/\[mysqld\]/a log-bin=mysql-bin \nbinlog_format=row \nrelay-log=mysql-relay-bin' /etc/my.cnf"
