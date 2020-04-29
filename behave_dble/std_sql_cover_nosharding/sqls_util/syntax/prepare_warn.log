@@ -1,6 +1,3 @@
-===file:sqls_util/syntax/prepare.sql, id:96, sql:[execute pre_test]===
-mysql err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.t_id,b.id as b_id,a.pad from test1 a,(select all * from test2) b where a.t_id=b' at line 1")
-dble err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '.t_id,b.id as b_id,a.pad from test1 a,(select all * from test2) b where a.t_id=b' at line 1")
 ===file:sqls_util/syntax/prepare.sql, id:110, sql:[select * from view_test/*error:no view*/]===
 mysql err:(1146, "Table 'db3.view_test' doesn't exist")
 dble err:(1146, "Table 'db3.view_test' doesn't exist")
