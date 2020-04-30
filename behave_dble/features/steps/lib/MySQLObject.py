@@ -47,7 +47,7 @@ class MySQLObject(object):
 
         # if mysqld already stopped,do not stop it again
         if status_out.find("MySQL running") != -1:
-            self.turn_off_general_log_and_clean()
+            # self.turn_off_general_log_and_clean()
 
             logger.debug("try to stop mysql")
 
