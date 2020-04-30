@@ -31,6 +31,11 @@ def restart_mysql(context, host_name, sed_str=None):
 @Given('stop mysql in host "{host_name}"')
 def stop_mysql(context, host_name):
     mysql = ObjectFactory.create_mysql_object(host_name)
+
+    # this is temp for debug stop mysql fail
+    execute_sql_in_host(host_name,{'sql':'show processlist'})
+    # end debug stop mysql fail
+
     mysql.stop()
 
 @Given('start mysql in host "{host_name}"')
