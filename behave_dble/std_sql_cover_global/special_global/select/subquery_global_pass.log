@@ -110,6 +110,10 @@ dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), 
 dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
 ===file:special_global/select/subquery_global.sql, id:62, sql:[select id,t_id,name,pad from test1 where 2>all(select id from test1 where pad<1)]===
 dble:[[(1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L), (2L, 2L, 'test_2', 2L), (3L, 3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, 4L, '$test$4', 3L), (5L, 5L, 'test...5', 1L), (6L, 6L, 'test6', 6L)]]
+===file:special_global/select/subquery_global.sql, id:64, sql:[select id,t_id,name,pad from test1 where row(id,pad)=(select id,pad from schema3.test3 limit 1)]===
+dble:[((1L, 1L, 'test\xe4\xb8\xadid\xe4\xb8\xba1', 1L),)]
+===file:special_global/select/subquery_global.sql, id:67, sql:[SELECT pad FROM test1 AS x WHERE x.id = (SELECT pad FROM schema3.test3 AS y WHERE x.id = (SELECT pad FROM schema2.test2 WHERE y.id = schema2.test2.id))]===
+dble:[((1L,), (2L,), (4L,), (3L,))]
 ===file:special_global/select/subquery_global.sql, id:68, sql:[select co1,co2,co3 from (select id as co1,name as co2,pad as co3 from test1)as tb where co1>1]===
 dble:[[(2L, 'test_2', 2L), (3L, 'test\xe4\xb8\xadid\xe4\xb8\xba3', 4L), (4L, '$test$4', 3L), (5L, 'test...5', 1L), (6L, 'test6', 6L)]]
 ===file:special_global/select/subquery_global.sql, id:69, sql:[select avg(sum_column1) from (select sum(id) as sum_column1 from test1 group by pad) as t1]===
