@@ -115,8 +115,3 @@ server.3=dble-3:2888:3888
 ```
 
 #### 4.start all zk servers by "zkServer.sh start", then view status with 'zkServer.sh status'
-
-### ToDo list:
-两会话并发交替问题：
-1. block确认
-2. hang后超时多久连接重建
