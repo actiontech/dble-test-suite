@@ -36,7 +36,7 @@ def step_impl(context, host_name, target_file):
     :return:
     """
     node = get_node("dble-1")
-    local_file = get_abs_path(context, target_file, node)
+    local_file = get_abs_path(context, target_file)
 
     source_remote_file = "{0}/dble/conf/{1}".format(node.install_dir, target_file)
     node.sftp_conn.sftp_get(source_remote_file, local_file)
