@@ -46,7 +46,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different
     """
 
-  @restore_mysql_config @skip #for issue http://10.186.18.11/jira/browse/DBLE0REQ-228
+  @restore_mysql_config
   Scenario: dble reload fail if global var lower_case_table_names are not consistent between new added writehost and the old ones' #3
     """
     {'restore_mysql_config':{'mysql-master2':{'lower_case_table_names':0}}}
@@ -100,13 +100,15 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
         </writeHost>
     </dataHost>
     """
+    #reload @@config_all returns failed,and failed info includes the output
     Then execute admin cmd "reload @@config_all" get the following output
     """
     these MySQL's value is not 0 :ha_group2:hostM2
     """
+    #dryrun returns success,and success info includes the output
     Then execute admin cmd "dryrun" get the following output
     """
-    The values of lower_case_table_names for backend MySQLs are different.These MySQL's value is not 0 :ha_group2:hostM2
+    hasStr{these MySQL's value is not 0 :ha_group2:hostM2}
     """
 
   @restore_mysql_config
