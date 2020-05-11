@@ -123,30 +123,15 @@ def after_scenario(context, scenario):
         conn.close()
     MySQLObject.long_live_conns.clear()
 
-    if "restore_sys_time" in scenario.tags:
-        restore_sys_time()
+    if not context.userDebug:
+        if "restore_sys_time" in scenario.tags:
+            restore_sys_time()
 
-    if "aft_reset_replication" in scenario.tags:
-        reset_repl()
+        if "aft_reset_replication" in scenario.tags:
+            reset_repl()
 
-    if "restore_letter_sensitive" in scenario.tags:
-        sed_str= """
-        /lower_case_table_names/d
-        /server-id/a lower_case_table_names = 0
-        """
-        tag_para_dic = get_case_tag_params(scenario.description, "{'restore_letter_sensitive'")
-
-        if tag_para_dic:
-            paras = tag_para_dic["restore_letter_sensitive"]
-        else:
-            paras = ['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']
-
-        logger.debug("try to restore lower_case_table_names of mysqls: {0}".format(paras))
-        for host_name in paras:
-            restart_mysql(context, host_name, sed_str)
-
-    restore_obj = RestoreEnvObject(scenario)
-    restore_obj.restore()
+        restore_obj = RestoreEnvObject(scenario)
+        restore_obj.restore()
 
     # status-failed vs userDebug: even scenario success, reserve the config files for userDebug
     stop_scenario_for_failed = context.config.stop and scenario.status == "failed"
@@ -155,16 +140,6 @@ def after_scenario(context, scenario):
 
     logger.info('after_scenario end: <{0}>'.format(scenario.name))
     logger.info('#' * 30)
-
-def get_case_tag_params(description, tag):
-    logger.debug("scenario description:{0}".format(type(description)))
-    tag_para_dic = None
-    for line in description:
-        line_no_white = line.strip()
-        if line_no_white and line_no_white.startswith(tag):
-            tag_para_dic = eval(line)
-            break
-    return tag_para_dic
 
 def before_step(context, step):
     logger.debug(step.name)
