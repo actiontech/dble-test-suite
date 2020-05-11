@@ -9,10 +9,10 @@ Feature: check collation/lower_case_table_names works right for dble
 #  lower_case_table_names=1,CHARACTER SET utf8 COLLATE latin1_swedish_ci is case insensitive, from issue 1229
 
 
-  @BLOCKER @restore_letter_sensitive
+  @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
    """
-   {'restore_letter_sensitive':['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']}
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
    """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
