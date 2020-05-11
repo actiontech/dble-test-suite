@@ -199,7 +199,7 @@ Feature:test user's privileges under different combination
       | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test a join test2 b on a.id=b.id             | success                           |
       | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from schema1.aly_order   | success                           |
       | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from testdb.test1        | DML privilege check is not passed |
-#@skip for https://github.com/actiontech/dble/issues/860      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from schema1.test       | DML privilege check is not passed |      |
+      | test_user | 111111 | conn_0 | False   | select * from schema1.aly_test union select * from schema1.test       | DML privilege check is not passed  |
     #clear tables and close conn
     Then execute sql in "dble-1" in "user" mode
       | user      | passwd | conn   | toClose | sql                          | expect  |
