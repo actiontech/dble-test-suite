@@ -2,10 +2,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
-  @NORMAL @restore_letter_sensitive
+  @NORMAL @restore_mysql_config
   Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
    """
-   {'restore_letter_sensitive':['mysql-master1']}
+    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
    """
     Given delete the following xml segment
     |file        | parent          | child               |
