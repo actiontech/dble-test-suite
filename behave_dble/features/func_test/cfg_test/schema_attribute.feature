@@ -297,7 +297,7 @@ Feature: test some import nodes attr in schema.xml
       | conn_1 | True    | commit                                           | success | schema1 |
       | conn_2 | True    | set @x = 1                                       | success | schema1 |
 
-  @skip
+  @skip #case is not so hit point, or condition is not accurate enough to make case pass, ci sometimes fail
   Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
               increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
@@ -357,7 +357,7 @@ Feature: test some import nodes attr in schema.xml
     mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
-    Given sleep "2" seconds
+    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect      |
       | show @@backend | length{(3)} |
