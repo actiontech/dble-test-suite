@@ -5,7 +5,6 @@
 #2.19.11.0#dble-7854
 Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all -f -s", transaction will be closed successfully
 
-  @skip #for issue http://10.186.18.11/jira/browse/DBLE0REQ-181
   Scenario: open transaction, and execute "reload @@config_all -fs" or "reload @@config_all -f -s", transaction closed successfully
     #1 reload @@config_all -fs : schema.xml is unchanged, backend connection is unchanged too
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
