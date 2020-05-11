@@ -36,7 +36,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     Given Restart dble in "dble-1" success
 
-  @CRITICAL @skip #for ci fail
+  @CRITICAL
   Scenario: reload @@config_all, eg:no writehost change, reload @@config_all does not rebuild backend connection pool #1
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_A"
       | sql            |
