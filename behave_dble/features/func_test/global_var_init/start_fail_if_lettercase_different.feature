@@ -46,10 +46,10 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     The values of lower_case_table_names for backend MySQLs are different
     """
 
-  @restore_mysql_config @skip #for issue http://10.186.18.11/jira/browse/DBLE0REQ-228
+  @restore_mysql_config @current #for issue http://10.186.18.11/jira/browse/DBLE0REQ-228
   Scenario: dble reload fail if global var lower_case_table_names are not consistent between new added writehost and the old ones' #3
     """
-    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
+    {'restore_mysql_config':{'mysql-master2':{'lower_case_table_names':0}}}
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
     """
@@ -102,7 +102,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    The values of lower_case_table_names for backend MySQLs are different.These MySQL's value is not 0 :ha_group2:hostM2
+    these MySQL's value is not 0 :ha_group2:hostM2
     """
     Then execute admin cmd "dryrun" get the following output
     """

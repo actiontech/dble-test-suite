@@ -17,38 +17,11 @@ class RestoreEnvObject(object):
         
     def restore(self):
         # if "restore_sys_time" in self._scenario.tags:
-        #     self.restore_sys_time()
+        #     utils.restore_sys_time()
         #
         # if "aft_reset_replication" in self._scenario.tags:
         #     utils.reset_repl()
         #
-        # if "restore_letter_sensitive" in self._scenario.tags:
-        #     sedStr= """
-        #     /lower_case_table_names/d
-        #     /server-id/a lower_case_table_names = 0
-        #     """
-        #     restore_letter_sensitive_dic = self.get_case_tag_params(self._scenario.description, "{'restore_letter_sensitive'")
-        #
-        #     if restore_letter_sensitive_dic:
-        #         paras = restore_letter_sensitive_dic["restore_letter_sensitive"]
-        #     else:
-        #         paras = ['mysql-master1','mysql-master2','mysql-slave1','mysql-slave2']
-        #
-        #     logger.debug("try to restore lower_case_table_names of mysqls: {0}".format(paras))
-        #     for mysql_name in paras:
-        #         mysql = MySQLObject(mysql_name)
-        #         mysql.update_config_with_sedStr_and_restart(context, sedStr)
-        # if "restore_general_log" in self._scenario.tags:
-        #     params_dic = self.get_case_tag_params(self._scenario.description, "{'restore_general_log'")
-        #
-        #     if params_dic:
-        #         paras = params_dic["restore_general_log"]
-        #     else:
-        #         paras = ['mysql-master1', 'mysql-master2', 'mysql-slave1', 'mysql-slave2']
-        #
-        #     logger.debug("try to restore general_log of mysqls: {0}".format(paras))
-        #     # for mysql_host in paras:
-        #     #     turn_off_general_log(context,mysql_host)
         if "restore_global_setting" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_global_setting'")
 
