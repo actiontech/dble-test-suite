@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/9
 
-#2.20.04.04#dble-8184
+#2.20.04.0#dble-8184
 Feature: following complex queries are able to send one datanode
       #1.explain select count(*) from sharding_two_node a where a.id =1;
       #2.explain select * from sharding_two_node a join sharding_two_node2 b on a.id = b.id where a.id =1 and b.id=1;
@@ -38,7 +38,8 @@ Feature: following complex queries are able to send one datanode
     """
     <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
     <table name="a_three" cacheKey="id" dataNode="dn1,dn2,dn3" rule="hash-three" />
-    <table name="test_global" dataNode="dn1,dn2,dn3" type="global"/>
+    <table name="test_global_1" dataNode="dn1" type="global"/>
+    <table name="test_global" dataNode="dn1,dn2,dn3,dn4" type="global"/>
     <table name="aly_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     <table name="aly_order" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
     <table name="a_manager" cacheKey="id" dataNode="dn2,dn1,dn4,dn3" rule="hash-four" />
@@ -62,6 +63,8 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | create table a_manager(id int, c char(5))                                              | success | schema1 |
       | conn_0 | False   | drop table if exists a_three                                                           | success | schema1 |
       | conn_0 | False   | create table a_three(id int, c char(5))                                                | success | schema1 |
+      | conn_0 | False   | drop table if exists test_global_1                                                       | success | schema1 |
+      | conn_0 | False   | create table test_global_1(id int, cc char(5))                                           | success | schema1 |
       | conn_0 | False   | drop table if exists test_global                                                       | success | schema1 |
       | conn_0 | False   | create table test_global(id int, cc char(5))                                           | success | schema1 |
       | conn_0 | False   | insert into aly_test values(1,'a'),(1,'b'),(null,'c'),(2,'d'),(3,'c'),(4,'d'),(4,null) | success | schema1 |
@@ -126,12 +129,12 @@ Feature: following complex queries are able to send one datanode
       | dn4_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC |
       | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0; dn3_0; dn4_0                                                              |
       | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                       |
-#      | dn1_1                      | BASE SQL                 | select `test_global`.`id`,`test_global`.`cc` from  `test_global`                                                               |
-#      | merge_1                    | MERGE                    | dn1_1                                                                                                                          |
+      | /*AllowDiff*/dn1_1        | BASE SQL                 | select `test_global`.`id`,`test_global`.`cc` from  `test_global`        |
+      | merge_1                    | MERGE                    | /*AllowDiff*/dn1_1                                                                                     |
       | join_1                     | JOIN                     | shuffle_field_1; merge_1                                                                |
       | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                  |
-#      | dn2_1                      | BASE SQL                 | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1 ORDER BY autoalias_scalar ASC |
-#      | merge_2                    | MERGE                    | dn2_1                                                                                                                          |
+      | /*AllowDiff*/dn2_1        | BASE SQL                 | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1 ORDER BY autoalias_scalar ASC |
+      | merge_2                    | MERGE                    | /*AllowDiff*/dn2_1                                                                                                                          |
       | distinct_1                 | DISTINCT                 | merge_2                                                                                 |
       | shuffle_field_4            | SHUFFLE_FIELD            | distinct_1                                                                              |
       | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_4                                                                         |
@@ -145,14 +148,14 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_order where id=(select 1) |
     Then check resultset "rs_7" has lines with following column values
       | DATA_NODE-0        | TYPE-1           | SQL/REF-2 |
-#      | dn1_0              | BASE SQL              | select 1 as `autoalias_scalar`                                                                                             |
-#      | merge_1            | MERGE                 | dn1_0                                                                                                                      |
+      | /*AllowDiff*/dn1_0  | BASE SQL              | select 1 as `autoalias_scalar`                                                                                       |
+      | merge_1               | MERGE                                | /*AllowDiff*/dn1_0                                                                                                     |
       | scalar_sub_query_1 | SCALAR_SUB_QUERY | merge_1   |
-#      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
-#      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
-#      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
-#      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
-#      | merge_2            | MERGE                 | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                 |
+      | /*AllowDiff*/dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
+      | /*AllowDiff*/dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
+      | /*AllowDiff*/dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
+      | /*AllowDiff*/dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` = '{NEED_TO_REPLACE}' |
+      | merge_2            | MERGE                 | /*AllowDiff*/dn1_1; dn2_0; dn3_0; dn4_0                                                                                                 |
       | shuffle_field_1    | SHUFFLE_FIELD    | merge_2   |
 
 
@@ -207,16 +210,10 @@ Feature: following complex queries are able to send one datanode
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_13"
       | conn   | toClose | sql                                                                        |
-      | conn_0 | False   | explain select * from aly_test a,  test_global where a.c=test_global.cc and a.id =3 and test_global.id=1 |
+      | conn_0 | False   | explain select * from aly_test a, test_global where a.c=test_global.cc and a.id =3 and test_global.id=1 |
     Then check resultset "rs_13" has lines with following column values
       | DATA_NODE-0     | TYPE-1        | SQL/REF-2                |
-#      | dn4_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where `a`.`id` = 3 ORDER BY `a`.`c` ASC                                          |
-#      | merge_1         | MERGE         | dn4_0                                                                                                                         |
-      | shuffle_field_1 | SHUFFLE_FIELD | merge_1                  |
-#      | dn2_0           | BASE SQL      | select `test_global`.`id`,`test_global`.`cc` from  `test_global` where `test_global`.`id` = 1 order by `test_global`.`cc` ASC |
-#      | merge_2         | MERGE         | dn2_0                                                                                                                         |
-      | join_1          | JOIN          | shuffle_field_1; merge_2 |
-      | shuffle_field_2 | SHUFFLE_FIELD | join_1                   |
+      | dn4           | BASE SQL      | select * from aly_test a, test_global where a.c=test_global.cc and a.id =3 and test_global.id=1                                         |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_14"
       | conn   | toClose | sql                                                                        |
@@ -384,8 +381,45 @@ Feature: following complex queries are able to send one datanode
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_30"
       | conn   | toClose | sql                                                                        |
-      | conn_0 | True    | explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 |
+      | conn_0 | False    | explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 |
     Then check resultset "rs_30" has lines with following column values
       | DATA_NODE-0 | TYPE-1   | SQL/REF-2                                                                                      |
       | dn1         | BASE SQL | select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 |
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_31"
+      | conn   | toClose | sql                                                                        |
+      | conn_0 | False   | explain select * from aly_order join test_global_1 where aly_order.id in ( select id from aly_test where id=1) |
+    Then check resultset "rs_31" has lines with following column values
+      | DATA_NODE-0                | TYPE-1                   | SQL/REF-2                                                                               |
+      | dn1_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC |
+      | dn2_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC |
+      | dn3_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC |
+      | dn4_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC |
+      | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0; dn3_0; dn4_0                                                              |
+      | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                       |
+      | dn1_1                      | BASE SQL                 | select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`              |
+      | merge_1                    | MERGE                    | dn1_1                                                                                       |
+      | join_1                     | JOIN                     | shuffle_field_1; merge_1                                                                |
+      | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                  |
+      | dn2_1                      | BASE SQL                 | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1 ORDER BY autoalias_scalar ASC |
+      | merge_2                    | MERGE                    | dn2_1                                                                                                                          |
+      | distinct_1                 | DISTINCT                 | merge_2                                                                                 |
+      | shuffle_field_4            | SHUFFLE_FIELD            | distinct_1                                                                              |
+      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_4                                                                         |
+      | shuffle_field_5            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                              |
+      | join_2                     | JOIN                     | shuffle_field_2; shuffle_field_5                                                        |
+      | shuffle_field_3            | SHUFFLE_FIELD            | join_2                                                                                  |
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
+      | conn   | toClose | sql                                                                        |
+      | conn_0 | True   | explain select * from aly_test a,  test_global_1 where a.c=test_global_1.cc and a.id =3 and test_global_1.id=1 |
+    Then check resultset "rs_32" has lines with following column values
+      | DATA_NODE-0     | TYPE-1        | SQL/REF-2                |
+      | dn4_0           | BASE SQL      | select `a`.`id`,`a`.`c` from  `aly_test` `a` where `a`.`id` = 3 ORDER BY `a`.`c` ASC                                          |
+      | merge_1         | MERGE         | dn4_0                                                                                                                         |
+      | shuffle_field_1 | SHUFFLE_FIELD | merge_1                  |
+      | dn1_0           | BASE SQL      | select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1` where `test_global_1`.`id` = 1 order by `test_global_1`.`cc` ASC |
+      | merge_2         | MERGE         | dn1_0                                                                                                                         |
+      | join_1          | JOIN          | shuffle_field_1; merge_2 |
+      | shuffle_field_2 | SHUFFLE_FIELD | join_1                   |
 
