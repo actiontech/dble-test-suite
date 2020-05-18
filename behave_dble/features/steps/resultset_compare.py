@@ -111,7 +111,7 @@ def step_impl(context, rs_name):
                     expect_max = int(expect[-1])+expect_min
                     real_col = int(real_col)
                     isFound = (real_col >= expect_min) and (real_col <= expect_max)
-                    context.logger.de("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
+                    context.logger.debug("col index:{0}, expect col_min:{1}<= real_col:{2}<=col_max:{3}".format(i, expect_min, real_col, expect_max))
                 else:
                     expect_col = expect_row[i]
                     if (expect_row[i].rfind('[0-9].[0-9]') != -1):
