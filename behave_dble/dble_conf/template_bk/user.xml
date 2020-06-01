@@ -1,0 +1,6 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:user SYSTEM "user.dtd"><dble:user xmlns:dble="http://dble.cloud/">
+	<managerUser name="root" password="111111"  readOnly="false"/>
+	<shardingUser name="test" password="111111" schemas="schema1" readOnly="false"/>
+    <rwSplitUser name="test" password="111111" dbGroup="ha_group1" maxCon="20"/>
+</dble:user>
