@@ -49,8 +49,12 @@ ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database testdb\" "
 
 for((i=0; i<4; i=i+1)); do
-    echo "add some user and database in ${mysql_install[$i]}"
+    echo "add some users and database in ${mysql_install[$i]}"
     ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"drop user if exists 'test'@'%';create user 'test'@'%' identified by '111111'\" "
-		ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
-		ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db1;create database db2;create database db3;create database db4\" "
+	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
+	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"drop user if exists 'sharding'@'%';create user 'sharding'@'%' identified by '111111'\" "
+	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'sharding'@'%' with grant option\" "
+	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"drop user if exists 'rwSplit'@'%';create user 'rwSplit'@'%' identified by '111111'\" "
+	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'rwSplit'@'%' with grant option\" "
+	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database db1;create database db2;create database db3;create database db4\" "
 done

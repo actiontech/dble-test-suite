@@ -13,9 +13,6 @@ clusterIP=172.100.9.1:2181
 # rootPath=dble
 #cluster namespace, please use the same one in one cluster
 clusterID=cluster-1
-#it must be different for every node in cluster
-myid=1
-serverID=server_1
 # if HA need sync by cluster, only useful when useOuterHa=true
 needSyncHa=false
 # unit is millisecond
