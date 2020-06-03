@@ -8,7 +8,6 @@ Feature: set charset in server.xml,check backend charsets are as set
   but verify the default value here for convenient.
 
   @BLOCKER
-  @skip_restart
   Scenario: set dble config charset same or different to session charset, session charset priorier to config charset #1
     #   1.1 set backend charset utf8mb4, front charset utf8mb4;
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -94,13 +93,13 @@ Feature: set charset in server.xml,check backend charsets are as set
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
        <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-            <shardingTable name="sharding_table" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+            <shardingTable name="sharding_table" shardingNode="dn1,dn2" function="hash-string-into-two" shardingColumn="id" />
        </schema>
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-Dcharset/d
-    /# connection/a -Dcharset=latin1
+    /# connection/a -Dcharset=utf-8
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode

@@ -9,21 +9,24 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
    """
     Given delete the following xml segment
     |file        | parent          | child               |
-    |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-    |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-    |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+    |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-      <schema dataNode="DN1" name="schema1" sqlMaxLimit="100">
-          <table dataNode="DN1,dn3" name="test1" type="global" />
-       </schema>
-       <dataNode dataHost="ha_group1" database="db1" name="DN1" />
-       <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-       <dataHost balance="0" maxCon="9" minCon="3" name="ha_group1" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-            </writeHost>
-       </dataHost>
+     <schema shardingNode="DN1" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test1" shardingNode="DN1,dn3" />
+    </schema>
+    <shardingNode dbGroup="ha_group1" database="db1" name="DN1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="9" minCon="3" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
@@ -37,18 +40,18 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
     /server-id/a lower_case_table_names = 1
     """
     Given Restart dble in "dble-1" success
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-       <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-           <table dataNode="dn1,dn3" name="test" type="global" />
+       <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+           <globalTable name="test" shardingNode="dn1,dn3" />
        </schema>
     """
     Then restart dble in "dble-1" failed for
     """
     dataNode 'DN1' is not found
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-       <dataNode dataHost="ha_group1" database="db1" name="dn1" />
+       <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
     """
     Given Restart dble in "dble-1" success
