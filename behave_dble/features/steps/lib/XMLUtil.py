@@ -139,12 +139,12 @@ def add_child_in_xml(file, pos_kv_map, childNode):
             firstLoop = False
 
     doctype = ""
-    if file.find('rule.xml') > -1:
-        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
-    elif file.find('schema.xml') > -1:
-        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
-    elif file.find('server.xml') > -1:
-        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
+    if file.find('db.xml') > -1:
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
+    elif file.find('sharding.xml') > -1:
+        doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
+    elif file.find('user.xml') > -1:
+        doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
