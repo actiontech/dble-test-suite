@@ -11,23 +11,6 @@ Feature: set charset in server.xml,check backend charsets are as set
   @skip_restart
   Scenario: set dble config charset same or different to session charset, session charset priorier to config charset #1
     #   1.1 set backend charset utf8mb4, front charset utf8mb4;
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-#     """
-#     <system>
-#         <property name="charset">utf-8</property>
-#     </system>
-#     """
-#
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-#    """
-#        <dataHost maxCon="100" minCon="10" name="ha_group2" balance="1" >
-#            <heartbeat>select user()</heartbeat>
-#            <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-#                <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="111111"/>
-#                <readHost host="hosts2" url="172.100.9.3:3306" user="test" password="111111"/>
-#            </writeHost>
-#        </dataHost>
-#    """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-Dcharset/d
@@ -68,12 +51,6 @@ Feature: set charset in server.xml,check backend charsets are as set
       | CHARACTER_SET_CLIENT-7 | COLLATION_CONNECTION-8 | CHARACTER_SET_RESULTS-9 |
       |    utf8mb4                | utf8mb4_general_ci        | utf8mb4                    |
     #   1.2 set backend charset latin1, front charset default latin1;
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-#     """
-#     <system>
-#     <property name="charset">latin1</property>
-#     </system>
-#     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-Dcharset/d
@@ -114,18 +91,6 @@ Feature: set charset in server.xml,check backend charsets are as set
   @current
   Scenario: dble should map MySQL's utfmb4 character to utf8.
              In other words,non-ASCII sharding column should be routed to the same datanode whether client character-set is utfmb4 or utf8 #2
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-#     """
-#       <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-#            <table name="sharding_table" dataNode="dn1,dn2" rule="hash-string" />
-#       </schema>
-#    """
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-#     """
-#     <system>
-#         <property name="charset">utf-8</property>
-#     </system>
-#     """
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
        <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
