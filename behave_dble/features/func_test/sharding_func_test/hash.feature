@@ -4,14 +4,8 @@ Feature:hash sharding function test suits
   @smoke
   Scenario: hash function #1
     #test: <= 2880
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <tableRule name="hash_rule">
-            <rule>
-                <columns>id</columns>
-                <algorithm>hash_func</algorithm>
-            </rule>
-        </tableRule>
         <function class="Hash" name="hash_func">
             <property name="partitionCount">4</property>
             <property name="partitionLength">721</property>
@@ -22,16 +16,16 @@ Feature:hash sharding function test suits
     Sum(count[i]*length[i]) must be less than 2880
     """
     #test: uniform
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="Hash" name="hash_func">
             <property name="partitionCount">4</property>
             <property name="partitionLength">1</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
+        <shardingTable name="hash_table" shardingNode="dn1,dn2,dn3,dn4" function="hash_func" shardingColumn="id"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -55,16 +49,16 @@ Feature:hash sharding function test suits
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "hashInteger.sql"
     #test: non-uniform
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="Hash" name="hash_func">
             <property name="partitionCount">3,1</property>
             <property name="partitionLength">200,300</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="hash_table" dataNode="dn1,dn2,dn3,dn4" rule="hash_rule" />
+        <shardingTable name="hash_table" shardingNode="dn1,dn2,dn3,dn4" function="hash_func" shardingColumn="id"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -89,7 +83,6 @@ Feature:hash sharding function test suits
     #clearn all conf
     Given delete the following xml segment
       |file        | parent                                        | child                                             |
-      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'hash_rule'}} |
-      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'hash_func'}}  |
-      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'hash_table'}}    |
+      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'hash_func'}}  |
+      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'hash_table'}}    |
     Then execute admin cmd "reload @@config_all"
