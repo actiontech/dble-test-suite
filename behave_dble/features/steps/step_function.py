@@ -54,7 +54,7 @@ def test_use_limit(context):
 
     sql = "insert into {0} (data) values ('{1}')".format(tb, name)
     result, errMes = conn.query(sql)
-    assert_that(str(errMes[1]), contains_string("bad insert sql, sharding column/joinKey:ID not provided"))
+    assert_that(str(errMes[1]), contains_string("bad insert sql, sharding column/joinColumn:ID not provided"))
 
     sql = "insert into {0} values (1+1, '{1}')".format(tb, name)
     result, errMes = conn.query(sql)
@@ -67,7 +67,7 @@ def test_use_limit(context):
 
     sql = "insert into {0} values ('{1}')".format(tb, name)
     result, errMes = conn.query(sql)
-    assert_that(str(errMes[1]), contains_string("bad insert sql, sharding column/joinKey:ID not provided"))
+    assert_that(str(errMes[1]), contains_string("bad insert sql, sharding column/joinColumn:ID not provided"))
 
     conn.query(drop_sql)
 
