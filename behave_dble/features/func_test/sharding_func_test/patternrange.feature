@@ -5,23 +5,17 @@ Feature: PatternRange sharding function test suits
   @BLOCKER
   Scenario: PatternRange sharding function #1
     #test: set defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <tableRule name="patternrange_rule">
-            <rule>
-                <columns>id</columns>
-                <algorithm>patternrange_func</algorithm>
-            </rule>
-        </tableRule>
         <function class="PatternRange" name="patternrange_func">
             <property name="mapFile">partition.txt</property>
             <property name="patternValue">1000</property>
             <property name="defaultNode">3</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="patternrange_table" dataNode="dn1,dn2,dn3,dn4" rule="patternrange_rule" />
+        <shardingTable name="patternrange_table" shardingNode="dn1,dn2,dn3,dn4" function="patternrange_func" shardingColumn="id"/>
     """
     When Add some data in "partition.txt"
     """
@@ -53,7 +47,7 @@ Feature: PatternRange sharding function test suits
     {"table":"patternrange_table","key":"id"}
     """
     #test: not defaultNode
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="PatternRange" name="patternrange_func">
             <property name="mapFile">partition.txt</property>
@@ -74,16 +68,15 @@ Feature: PatternRange sharding function test suits
       | conn_0 | False    | insert into patternrange_table values(756)   | dest_node:mysql-master2        | schema1 |
       | conn_0 | False    | insert into patternrange_table values(1000)  | dest_node:mysql-master1        | schema1 |
       | conn_0 | True     | insert into patternrange_table values(1001)  | dest_node:mysql-master1        | schema1 |
-      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid data node | schema1 |
-      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid data node | schema1 |
-      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid data node | schema1 |
+      | conn_0 | False    | insert into patternrange_table values(null)  | can't find any valid shardingNode | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-1)    | can't find any valid shardingNode | schema1 |
+      | conn_0 | True     | insert into patternrange_table values(-2)    | can't find any valid shardingNode | schema1 |
 
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
-      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'patternrange_rule'}} |
-      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
-      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'table','kv_map':{'name':'patternrange_table'}}    |
+      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
+      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'patternrange_table'}}    |
     Then execute admin cmd "reload @@config_all"
