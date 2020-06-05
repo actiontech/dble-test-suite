@@ -1,22 +1,16 @@
 Feature: jumpstringhash sharding function test suits
 
   Scenario: jumpstringhash function #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <tableRule name="jump_string_hash_rule">
-            <rule>
-                <columns>id</columns>
-                <algorithm>jump_string_hash_func</algorithm>
-            </rule>
-        </tableRule>
         <function class="jumpStringHash" name="jump_string_hash_func">
             <property name="partitionCount">4</property>
             <property name="hashSlice">0:2</property>
         </function>
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="jump_string_hash_table" dataNode="dn1,dn2,dn3,dn4" rule="jump_string_hash_rule" />
+        <shardingTable name="jump_string_hash_table" shardingNode="dn1,dn2,dn3,dn4" function="jump_string_hash_func" shardingColumn="id"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -37,7 +31,6 @@ Feature: jumpstringhash sharding function test suits
     #clearn all conf
     Given delete the following xml segment
       |file        | parent                                        | child                                                    |
-      |rule.xml    | {'tag':'root'}                                | {'tag':'tableRule','kv_map':{'name':'jump_string_hash_rule'}} |
-      |rule.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'jump_string_hash_func'}}  |
-      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}   | {'tag':'table','kv_map':{'name':'jump_string_hash_table'}}    |
+      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'jump_string_hash_func'}}  |
+      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}   | {'tag':'shardingTable','kv_map':{'name':'jump_string_hash_table'}}    |
     Then execute admin cmd "reload @@config_all"
