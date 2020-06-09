@@ -9,19 +9,20 @@ Feature: multiple reload
   Scenario: execute reload @@config_all with different session at the same time after init metadata successed #1
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     </schema>
-        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -54,19 +55,20 @@ Feature: multiple reload
   Scenario: execute reload @@metadata with different session at the same time after init metadata successed #2
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     </schema>
-        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -172,19 +174,20 @@ Feature: multiple reload
   Scenario: execute reload @@config_all with different session at the same time after init metadata failed #3
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     </schema>
-        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -281,19 +284,20 @@ Feature: multiple reload
   Scenario: execute reload @@metadata with different session at the same time after init metadata failed #4
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     </schema>
-        <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-        <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
