@@ -10,18 +10,17 @@ Feature: test slow query log related manager command
         | conn_0 | False   | show @@slow_query_log   | has{('1',)}  |
         | conn_0 | False   | disable @@slow_query_log| success      |
         | conn_0 | True    | show @@slow_query_log   | has{('0',)}  |
-
   @NORMAL
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
-      Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-      """
-      <system>
-           <property name="enableSlowLog">1 </property>
-            <property name="sqlSlowTime">30 </property>
-            <property name="flushSlowLogPeriod">1000 </property>
-           <property name="flushSlowLogSize">5 </property>
-      </system>
-      """
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /-DsqlSlowTime=100/d
+    /the threshold for judging if the query is slow , unit is millisecond/a -DsqlSlowTime=30
+    /-DflushSlowLogPeriod=1/d
+    /the max period for flushing the slow query log from memory to disk  after last time , unit is second/a -DflushSlowLogPeriod=1000
+    /-DflushSlowLogSize=1000/d
+    /the max records for flushing the slow query log from memory to disk after last time/a -DflushSlowLogSize=5
+    """
        Given Restart dble in "dble-1" success
        Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose | sql                                   | expect        |
@@ -40,19 +39,19 @@ Feature: test slow query log related manager command
   @NORMAL
   Scenario: check slow query log written in assigned file #3
       Given delete file "/opt/dble/slowQuery" on "dble-1"
-      Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-      """
-       <system>
-            <property name="enableSlowLog">1</property>
-            <property name="slowLogBaseDir">./slowQuery</property>
-            <property name="slowLogBaseName">query</property>
-            <property name="sqlSlowTime">1</property>
-       </system>
+      Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /-DslowLogBaseName/d
+    /the slow query log location/a -DslowLogBaseName=query
+    /-DslowLogBaseDir/d
+    /the slow query log location/a -DslowLogBaseDir=./slowQuery
+    /-DsqlSlowTime/d
+    /the threshold for judging if the query is slow , unit is millisecond/a -DsqlSlowTime=1
+    """
+     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
-     Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
-     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="a_test" rule="hash-four" />
+        <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="a_test" function="hash-four" shardingColumn="id" />
         </schema>
      """
       Given Restart dble in "dble-1" success

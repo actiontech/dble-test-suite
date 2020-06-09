@@ -5,21 +5,18 @@ Feature: test "check full @@metadata...'"
 
   @CRITICAL
   Scenario: config same table name in different schema #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
-    <table name="test_shard" dataNode="dn2,dn3" rule="hash-two"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
+    <shardingTable name="test_shard" shardingNode="dn2,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
-    <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
-    <table name="test_shard" dataNode="dn4,dn5" rule="hash-two"/>
+    <schema name="testdb" sqlMaxLimit="100" shardingNode="dn1">
+    <shardingTable name="test_shard" shardingNode="dn4,dn5" function="hash-two" shardingColumn="id"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,testdb</property>
-    </user>
+    <shardingUser name="test" password="111111" schemas="schema1,testdb"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -51,20 +48,17 @@ Feature: test "check full @@metadata...'"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                            | expect                               |
       | check full @@metadata where schema='schema1' and table='test1' | hasStr{`name2` char(1) DEFAULT NULL} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,testdb</property>
-    </user>
+     <shardingUser name="test" password="111111" schemas="schema1,testdb"/>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
-    <table name="test1" dataNode="dn2,dn3" rule="hash-two"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
+    <shardingTable name="test1" shardingNode="dn2,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
-    <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
-    <table name="test1" dataNode="dn4,dn5" type="global"/>
+    <schema name="testdb" sqlMaxLimit="100" shardingNode="dn1">
+    <globalTable name="test1" shardingNode="dn4,dn5"/>
     </schema>
     """
     Given Restart dble in "dble-1" success
@@ -87,20 +81,17 @@ Feature: test "check full @@metadata...'"
 
   @CRITICAL
   Scenario: config no-sharding table's name is same as global table's name, their metadatas are not affected by each other #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,testdb</property>
-    </user>
+     <shardingUser name="test" password="111111" schemas="schema1,testdb"/>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
-    <table name="test1" dataNode="dn2,dn3" rule="hash-two"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
+    <shardingTable name="test1" shardingNode="dn2,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
-    <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
-    <table name="test1" dataNode="dn4,dn5" type="global"/>
+    <schema name="testdb" sqlMaxLimit="100" shardingNode="dn1">
+    <globalTable name="test1" shardingNode="dn4,dn5"/>
     </schema>
     """
     Given Restart dble in "dble-1" success
@@ -131,9 +122,9 @@ Feature: test "check full @@metadata...'"
       | conn   | toClose  | sql                         |
       | conn_0 | False    | drop database if exists db3 |
       | conn_0 | True     | create database db3         |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -167,23 +158,23 @@ Feature: test "check full @@metadata...'"
       | drop table if exists test | success | schema1 |
 
   @CRITICAL @current
-  Scenario: backend tables in datanode are inconsistent or lack in some datanode for a config sharding/global table, check metadata and query #5
+  Scenario: backend tables in shardingnode are inconsistent or lack in some shardingnode for a config sharding/global table, check metadata and query #5
     """
-    5.1 the table structure of the sharding table in the datanode is different
-    5.2 Part of the datanode sharding table does not exist
-    5.3 the table structure of the global table in the datanode is different'
-    5.4 Part of the datanode global table does not exist
+    5.1 the table structure of the sharding table in the shardingnode is different
+    5.2 Part of the shardingnode sharding table does not exist
+    5.3 the table structure of the global table in the shardingnode is different'
+    5.4 Part of the shardingnode global table does not exist
     ps:the order of show create table is stable: show create table test4;show create table test5;show create table test2;show create table test3;show create table test6;show create table test1;
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
-      <table name="test2" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
-      <table name="test3" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
-      <table name="test4" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
-      <table name="test5" dataNode="dn1,dn2,dn3,dn4" type="global"/>
-      <table name="test6" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+      <shardingTable name="test1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <shardingTable name="test2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <shardingTable name="test3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <shardingTable name="test4" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <globalTable name="test5" shardingNode="dn1,dn2,dn3,dn4"/>
+      <shardingTable name="test6" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -212,10 +203,10 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | alter table test2 drop name     | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect            | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test4`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test2`} | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test2`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =1       | hasNoStr{`test4`} | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test4`}   | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasNoStr{`test2`} | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasStr{`test2`}   | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasNoStr{`test4`} | schema1 |
       | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}  | schema1 |
       | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}     | schema1 |
       | conn_0 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}    | schema1 |
@@ -234,7 +225,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | alter table test2 add name char  | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect            | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test4`}   | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test4`}   | schema1 |
       | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}    | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                            | expect                           | db        |
@@ -254,10 +245,10 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | alter table test2 drop name     | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect            | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =0       | hasNoStr{`test2`} | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =1       | hasStr{`test2`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =1       | hasNoStr{`test5`} | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test5`}   | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasNoStr{`test2`} | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasStr{`test2`}   | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasNoStr{`test5`} | schema1 |
       | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}  | schema1 |
       | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}     | schema1 |
       | conn_0 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}    | schema1 |
@@ -276,7 +267,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | alter table test2 add name char  | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect          | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_data_nodes =0       | hasStr{`test5`} | schema1 |
+      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test5`} | schema1 |
       | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}  | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect                           | db        |
@@ -285,20 +276,23 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | drop table if exists test2  | success                          | schema1   |
 
   @NORMAL
-  Scenario: Some of datahost's writehost(with or without readhost) cannot be connectted, check metadata and query #6
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+  Scenario: Some of datahost's dbInstance(with or dbInstance ) cannot be connectted, check metadata and query #6
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
-      <table name="test_two" dataNode="dn2,dn4" rule="hash-two" cacheKey="id"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+      <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <shardingTable name="test_two" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id"/>
     </schema>
-
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="-1" >
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup name="ha_group2" rwSplitMode="0">
         <heartbeat>select user()</heartbeat>
-        <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-        <readHost host="hostS2" url="172.100.9.2:3306" password="111111" user="test"/>
-        </writeHost>
-    </dataHost>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+       <dbInstance name="hostS2" url="172.100.9.2:3306" user="test" password="111111" maxCon="1000" minCon="10">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -309,7 +303,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | create table test_shard(id int,name char,age int)     | success  | schema1 |
       | conn_0 | False   | create table test_two(id int,name char,age int)       | success  | schema1 |
       | conn_0 | True    | create table test_no_shard(id int,name1 char,age int) | success  | schema1 |
-    #6.1 Unable to connect to datahost does not exist readhost
+    #6.1 Unable to connect to dbGroup does not exist dbInstance
     Given stop mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -326,7 +320,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | reload @@metadata                                                  | success                            |
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
-    #6.2 Unable to connect to datahost has readhost
+    #6.2 Unable to connect to dbGroup has dbInstance
     Given stop mysql in host "mysql-master2"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -351,10 +345,10 @@ Feature: test "check full @@metadata...'"
 
   @regression
   Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #7
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" cacheKey="id"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+      <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
@@ -396,21 +390,24 @@ Feature: test "check full @@metadata...'"
 
   @regression
   Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
-      <schema name="schema1" sqlMaxLimit="100" dataNode="dn1">
-      <table name="test_shard" dataNode="dn1,dn2,dn3,dn4" rule="hash-four"/>
-      <table name="mytest_auto_test1" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="R_REGIONKEY" />
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
+      <shardingTable name="test_shard" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      <shardingTable name="mytest_auto_test1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="R_REGIONKEY" />
       </schema>
-      <dataNode name="dn1" dataHost="host1" database="db1"/>
-      <dataNode name="dn2" dataHost="host1" database="db2"/>
-      <dataNode name="dn3" dataHost="host1" database="db3"/>
-      <dataNode name="dn4" dataHost="host1" database="db4"/>
-      <dataHost balance="0" maxCon="1000" minCon="5" name="host1" slaveThreshold="100">
-      <heartbeat>show slave status</heartbeat>
-      <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
-      </writeHost>
-      </dataHost>
+      <shardingNode name="dn1" dbGroup="host1" database="db1"/>
+      <shardingNode name="dn2" dbGroup="host1" database="db2"/>
+      <shardingNode name="dn3" dbGroup="host1" database="db3"/>
+      <shardingNode name="dn4" dbGroup="host1" database="db4"/>
+      """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+      <dbGroup name="host1" rwSplitMode="0" delayThreshold="100">
+         <heartbeat>show slave status</heartbeat>
+         <dbInstance name="hostM2" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="5" primary="true">
+         </dbInstance>
+      </dbGroup>
       """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -428,12 +425,10 @@ Feature: test "check full @@metadata...'"
       """
       CREATE TABLE `test_shard`
       """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
        """
-       <system>
-       <property name="checkTableConsistency">1</property>
-       <property name="checkTableConsistencyPeriod">1000</property>
-       </system>
+       s/-DcheckTableConsistency=0/-DcheckTableConsistency=1/
+       s/-DcheckTableConsistencyPeriod=60000/-DcheckTableConsistencyPeriod=1000/
        """
     Given Restart dble in "dble-1" success
     Then check following text exist "N" in file "dble.log" in host "dble-1"
@@ -447,7 +442,7 @@ Feature: test "check full @@metadata...'"
       """
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                      | expect                  |
-      | check full @@metadata where consistent_in_data_nodes =0  | hasNoStr{`test_shard`}  |
+      | check full @@metadata where consistent_in_sharding_nodes =0  | hasNoStr{`test_shard`}  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      | expect   | db     |
       | conn_0 | False   | drop table if exists mytest_auto_test1                   | success  | schema1 |
@@ -465,24 +460,21 @@ Feature: test "check full @@metadata...'"
       """
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                     | expect                          | db     |
-      | check full @@metadata where consistent_in_data_nodes =0 | hasNoStr{`mytest_auto_test1`}   | schema1 |
+      | check full @@metadata where consistent_in_sharding_nodes =0 | hasNoStr{`mytest_auto_test1`}   | schema1 |
 
   Scenario: add filter for reload @@metadata #9
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,schema2</property>
-    </user>
+     <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-    <table name="test1" dataNode="dn1,dn3" rule="hash-two"/>
-    <table name="test11" dataNode="dn1,dn3" rule="hash-two"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+    <shardingTable name="test1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+    <shardingTable name="test11" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
-    <schema name="schema2" sqlMaxLimit="100" dataNode="dn5">
-    <table name="test2" dataNode="dn2,dn4" type="global"/>
+    <schema name="schema2" sqlMaxLimit="100" shardingNode="dn5">
+    <globalTable name="test2" shardingNode="dn2,dn4"/>
     </schema>
     """
     Given Restart dble in "dble-1" success
