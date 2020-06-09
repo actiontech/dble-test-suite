@@ -9,37 +9,9 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
 # NumberRange NumberRange
 # StringHash StringHash
 # hash hash
-  @TRIVIAL
-  Scenario: illegal tableRule will make reload fail #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
-    """
-        <tableRule name="add_rule">
-            <rule>
-                <columns>id</columns>
-            </rule>
-        </tableRule>
-    """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Reload config failure
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
-    """
-        <tableRule name="add_rule">
-            <rule>
-                <columns>id_edit</columns>
-                <algorithm>-</algorithm>
-            </rule>
-        </tableRule>
-    """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Reload config failure
-    """
-
   @NORMAL
-  Scenario: config Hash sharding will reload success #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+  Scenario: config Hash sharding will reload success #1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="Hash" name="rule_func1">
             <property name="partitionCount">4</property>
@@ -53,8 +25,8 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     Then execute admin cmd "reload @@config_all"
 
   @TRIVIAL
-  Scenario: config NumberRange sharding will reload success #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+  Scenario: config NumberRange sharding will reload success #2
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="NumberRange" name="rule_func1">
             <property name="mapFile">numberrange.txt</property>
@@ -75,8 +47,8 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     Then execute admin cmd "reload @@config_all"
 
   @TRIVIAL
-  Scenario: config Enum sharding will relaod success #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+  Scenario: config Enum sharding will relaod success #3
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="Enum" name="add_rule">
             <property name="mapFile">enum.txt</property>
