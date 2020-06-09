@@ -4,32 +4,34 @@
 Feature: test read load balance
   requirements reference:
   1.https://actiontech.github.io/dble-docs-cn/2.Function/2.03_separate_RW.html
-  2.https://actiontech.github.io/dble-docs-cn/1.config_file/1.2_schema.xml.html balance part
-  todo: may need take various of writehost or readhost status abnormal into consideration
-#0：不做均衡，直接分发到当前激活的writeHost，readhost将被忽略,不会尝试建立连接
-#1：在除当前激活writeHost之外随机选择read host
-#2：读操作在所有readHost和writeHost中均衡。
+  2.https://actiontech.github.io/dble-docs-cn/1.config_file/1.2_schema.xml.html rwSplitMode part
+  todo: may need take various of dbInstance with primary="true" or dbInstance with primary="false" status abnormal into consideration
+#0：不做均衡，直接分发到当前激活的write dbInstance，read dbInstance将被忽略,不会尝试建立连接
+#1：在除当前激活write dbInstance之外随机选择read dbInstance
+#2：读操作在所有read dbInstance和write dbInstance中均衡。
 
   @CRITICAL
-  Scenario: dataHost balance="0", do not balance, all read send to master #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+  Scenario: dbGroup rwSplitMode="0", do not balance, all read send to master #1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3"/>
+      </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4'"
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4'"
     Then execute sql in "dble-1" in "user" mode
       | toClose | sql                                         | expect   | db      |
       | False   | drop table if exists test                   | success  | schema1 |
@@ -56,27 +58,29 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' |  has{(0L,),} |
 
   @CRITICAL
-  Scenario: dataHost balance="1", do balance on read host or standby write host #2
+  Scenario: dbGroup rwSplitMode="1", do balance on read dbInstance #2
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="1" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3"/>
+      </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "mysql-slave1"
@@ -100,27 +104,29 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{0} |
 
   @NORMAL
-  Scenario: dataHost balance="2", do balance bewteen read host and write host #3
+  Scenario: dbGroup rwSplitMode="2", do balance bewteen read dbInstance and write dbInstance #3
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10"/>
+      </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "mysql-master2"
@@ -144,28 +150,30 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%' | balance{5000} |
 
   @CRITICAL
-  Scenario: dataHost balance="2", do balance bewteen read host and write host according to their weight #4
+  Scenario: dbGroup rwSplitMode="2", do balance bewteen read dbInstance and write dbInstance according to their readWeight #4
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
-              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="2"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" readWeight="1" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3306" user="test" maxCon="150" minCon="10" readWeight="2"/>
+      </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "mysql-master2"
@@ -197,27 +205,32 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'SELECT name%FROM test%'  | balance{5000} |
 
   @NORMAL
-  Scenario: dataHost balance="1" and tempReadHostAvailable="1", do balance bewteen read host even writehost down #6
+  @skip #for connect pool refactor 2020/6/5
+  Scenario: dbGroup rwSplitMode="1" and tempReadHostAvailable="1", do balance bewteen read dbInstance even write dbInstance down #6
      Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="1" tempReadHostAvailable="1" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true">
+          </dbInstance>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3">
+          </dbInstance>
+      </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -239,27 +252,41 @@ Feature: test read load balance
     Given start mysql in host "mysql-master2"
 
   @NORMAL
-  Scenario: dataHost balance="1" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
+  @skip #for connect pool refactor and remove tempReadHostAvailable on 3.20.07 2020/6/5
+  Scenario: dbGroup balance="1" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+#    """
+#        <dataHost balance="1" tempReadHostAvailable="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
+#            <heartbeat>select user()</heartbeat>
+#            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
+#              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
+#            </writeHost>
+#        </dataHost>
+#    """
+        Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="1" tempReadHostAvailable="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true">
+          </dbInstance>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3">
+          </dbInstance>
+      </dbGroup>
     """
      Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
     """
@@ -282,28 +309,30 @@ Feature: test read load balance
       | set global log_output='file'   |
 
   @CRITICAL @current
-  Scenario: dataHost balance="2", 1m weight=1, 1s weight=1, 1s weight=0, and weight=0 indicates that traffic is not accepted   #8
+  Scenario: dbGroup rwSplitMode="2", 1m readWeight=1, 1s readWeight=1, 1s readWeight=0, and readWeight=0 indicates that traffic is not accepted   #8
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="1">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
-              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="0"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true" readWeight="1"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3306" user="test" maxCon="150" minCon="10" readWeight="0"/>
+      </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
@@ -349,28 +378,30 @@ Feature: test read load balance
       | set global general_log=off   |
 
   @CRITICAL
-  Scenario: dataHost balance="2", 1m weight=0, the write node only accepts write traffic and does not receive read traffic   #9
+  Scenario: dbGroup rwSplitMode="2", 1m readWeight=0, the write node only accepts write traffic and does not receive read traffic   #9
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataHost'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" rule="hash-four" />
-        </schema>
-        <dataNode dataHost="ha_group2" database="db1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="db2" name="dn2" />
-        <dataNode dataHost="ha_group2" database="db3" name="dn3" />
-        <dataNode dataHost="ha_group2" database="db4" name="dn4" />
-        <dataHost balance="2" maxCon="150" minCon="10" name="ha_group2" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test" weight="0">
-              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test" weight="1"/>
-              <readHost host="hostM3" url="172.100.9.3:3306" password="111111" user="test" weight="1"/>
-            </writeHost>
-        </dataHost>
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true" readWeight="0"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
+      </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
