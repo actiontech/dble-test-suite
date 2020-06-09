@@ -5,37 +5,42 @@
 #2.19.11.0#dble-7850
 Feature: reload @@config_all -s
 
-  Scenario: execute manager cmd "reload @@config_all -s" after change user of writeHost and password of readHost #1
+  Scenario: execute manager cmd "reload @@config_all -s" after change user of dbInstance and password of dbInstance #1
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
-    <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
-    <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
-    <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100">
-    <heartbeat>show slave status</heartbeat>
-    <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
-    <readHost host="hostS1" url="172.100.9.6:3306" password="errpwd" user="test"/>
-    </writeHost>
-    </dataHost>
+    <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
+    <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
+    <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
+    <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
+    <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup name="ha_group1" rwSplitMode="0" delayThreshold="100">
+        <heartbeat>show slave status</heartbeat>
+        <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1">
+        </dbInstance>
+        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="errpwd" maxCon="1000" minCon="10" readWeight="2">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -s"
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    there are some datasource connection failed, pls check these datasource:{DataHost[ha_group1.hostS1]}
+    there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostS1]}
     """
 
-    Given add xml segment to node with attribute "{'tag':'root','prev':'dataNode'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100">
-    <heartbeat>show slave status</heartbeat>
-    <writeHost host="hostM1" url="172.100.9.5:3306" password="111111" user="test">
-    <readHost host="hostS1" url="172.100.9.6:3306" password="111111" user="test"/>
-    </writeHost>
-    </dataHost>
+    <dbGroup name="ha_group1" rwSplitMode="0" delayThreshold="100">
+        <heartbeat>show slave status</heartbeat>
+        <dbInstance name="hostM1" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true" readWeight="1">
+        </dbInstance>
+        <dbInstance name="hostS1" url="172.100.9.6:3306" user="test" password="111111" maxCon="1000" minCon="10" readWeight="2">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -s"

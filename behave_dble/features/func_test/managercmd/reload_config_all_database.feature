@@ -3,24 +3,24 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/19
 #2.19.11.0#dble-7851
-Feature: execute manager cmd "create database @@datanode"
+Feature: execute manager cmd "create database @@shardingnode"
 
-  Scenario: modify dataNode in schema.xml and execute manager cmd "create database @@datanode" to create database
+  Scenario: modify shardingNode in sharding.xml and execute manager cmd "create database @@shardingnode" to create database
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql            |
       | show @@backend |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-    <dataNode dataHost="ha_group2" database="dn1" name="dn2" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-    <dataNode dataHost="ha_group2" database="dn2" name="dn4" />
-    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group2" database="dn1" name="dn2" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <shardingNode dbGroup="ha_group2" database="dn2" name="dn4" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                  | expect  |
-      | create database @@datanode='dn2,dn4' | success |
+      | create database @@shardingNode='dn2,dn4' | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
       | sql            |
       | show @@backend |
