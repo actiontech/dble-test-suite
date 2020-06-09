@@ -337,7 +337,8 @@ def config_zk_in_dble_nodes(context,hosts_form):
 
 def conf_zk_in_node(context,node,hosts_form):
     ssh_client = node.ssh_conn
-    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
+    cluster_conf = "{0}/dble/conf/cluster.cnf".format(node.install_dir)
+    bootstrap_conf = "{0}/dble/conf/bootstrap.cnf".format(node.install_dir)
     # zk_server_ip=context.cfg_zookeeper['ip']
     zk_server_port=context.cfg_zookeeper['port']
 
@@ -346,19 +347,26 @@ def conf_zk_in_node(context,node,hosts_form):
     zk_server_ip = context.cfg_zookeeper[zk_server_id]['ip']
     # LOGGER.info("zk_server_ip:{0}".format(zk_server_ip))
     if hosts_form == "local zookeeper host":
-        cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{3}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
+        # update cluster.cnf:
+        cmd1 = "sed -i -e 's/clusterEnable=.*/clusterEnable=true/g' -e 's/clusterIP=.*/clusterIP={1}:{2}/g' -e 's/# rootPath=.*/rootPath=\/dble/g' {0}".format(cluster_conf, zk_server_ip, zk_server_port)
+        # update bootstrap.cnf:
+        cmd2 = "sed -i -e 's/MaxDirectMemorySize=.*/MaxDirectMemorySize=2G/g' -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(myid, bootstrap_conf)
     else:
         zk_server_ip_1 = context.cfg_zookeeper['zookeeper-1']['ip']
         zk_server_ip_2 = context.cfg_zookeeper['zookeeper-2']['ip']
         zk_server_ip_3 = context.cfg_zookeeper['zookeeper-3']['ip']
-        cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{5},{3}:{5},{4}:{5}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip_1,zk_server_ip_2,zk_server_ip_3,zk_server_port)
+        cmd1 = "sed -i -e 's/clusterEnable=.*/clusterEnable=true/g' -e 's/clusterIP=.*/clusterIP={1}:{4},{2}:{4},{3}:{4}/g' -e 's/# rootPath=.*/rootPath=\/dble/g' {0}".format(cluster_conf, zk_server_ip_1,zk_server_ip_2,zk_server_ip_3,zk_server_port)
+        cmd2 = "sed -i -e 's/MaxDirectMemorySize=.*/MaxDirectMemorySize=2G/g' -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(
+            myid, bootstrap_conf)
 
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
+    rc1, sto1, ste1 = ssh_client.exec_command(cmd1)
+    rc2, sto2, ste2 = ssh_client.exec_command(cmd2)
+    assert_that(ste1, is_(""), "expect std err empty, but was:{0}".format(ste1))
+    assert_that(ste2, is_(""), "expect std err empty, but was:{0}".format(ste2))
 
 def disable_cluster_config_in_node(context, node):
-    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
-    cmd = "[ -f {0} ] && sed -i 's/cluster=.*/cluster=false/g' {0}".format(conf_file)
+    conf_file = "{0}/dble/conf/cluster.cnf".format(node.install_dir)
+    cmd = "[ -f {0} ] && sed -i 's/clusterEnable=.*/clusterEnable=false/g' {0}".format(conf_file)
 
     ssh_client = node.ssh_conn
     rc, sto, ste = ssh_client.exec_command(cmd)
