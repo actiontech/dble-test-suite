@@ -34,27 +34,17 @@ Feature: check collation/lower_case_table_names works right for dble
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <schema name="DBTEST">
-            <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-            <table name="uos_page_ret_inst" dataNode="dn4" />
-            <table name="uos_tache_def" dataNode="dn3" />
+             <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+             <singleTable name="uos_page_ret_inst" shardingNode="dn4"/>
+             <singleTable name="uos_tache_def" shardingNode="dn3"/>
         </schema>
     """
-    Given delete the following xml segment
-      |file        | parent           | child          |
-      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
      """
-      <user name="root">
-        <property name="password">111111</property>
-        <property name="manager">true</property>
-      </user>
-      <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1, DbTest</property>
-      </user>
+      <shardingUser name="test" password="111111" schemas="schema1, DbTest" readOnly="false"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -104,35 +94,25 @@ Feature: check collation/lower_case_table_names works right for dble
 
   @BLOCKER @current
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema name="DBTEST">
-            <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
-        </schema>
+     <schema name="DBTEST">
+         <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+     </schema>
     """
-    Given delete the following xml segment
-      |file        | parent           | child          |
-      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
      """
-      <user name="root">
-        <property name="password">111111</property>
-        <property name="manager">true</property>
-      </user>
-      <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1, DbTest</property>
-      </user>
+      <shardingUser name="test" password="111111" schemas="schema1, DbTest" readOnly="false"/>
     """
     Then restart dble in "dble-1" failed for
     """
     schema DbTest referred by user test is not exist!
     """
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <schema name="DbTest">
-            <table name="Test_Table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+             <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
         </schema>
     """
     Given Restart dble in "dble-1" success
