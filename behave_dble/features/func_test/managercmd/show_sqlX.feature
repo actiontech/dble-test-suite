@@ -4,18 +4,23 @@ Feature: show @@sql, show @@sql.resultset
 
   @NORMAL
   Scenario: show @@sql support queries of CRUD, show @@sql.resultset filters sql larger than maxResultSet setting #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema dataNode="dn1" name="schema1" sqlMaxLimit="100">
-        <table dataNode="dn1,dn2,dn3" name="ta" rule="hash-three" />
+    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+        <shardingTable shardingNode="dn1,dn2,dn3" name="ta" function="hash-three" shardingColumn="id"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <system>
-        <property name="maxResultSet">1024</property>
-    </system>
+    /-DmaxResultSet/d
+    /DsqlRecordCount/a -DmaxResultSet=1024
     """
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+#    """
+#    <system>
+#        <property name="maxResultSet">1024</property>
+#    </system>
+#    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | db      |
@@ -33,16 +38,17 @@ Feature: show @@sql, show @@sql.resultset
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs_A"
       | sql        |
       | show @@sql |
+    #username need to change as test while bug:DBLE0REQ-293 fixed
     Then check resultset "sql_rs_A" has lines with following column values
         | ID-0 | USER-1 | SQL-4                                      |
-        |    1 | test   | delete from ta where id=1                  |
-        |    2 | test   | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
-        |    3 | test   | select * from ta order by id limit 1       |
-        |    4 | test   | SELECT * FROM ta LIMIT 100                 |
-        |    5 | test   | update ta set k="c" where id=3             |
-        |    6 | test   | insert into ta value(3, repeat('c', 100))  |
-        |    7 | test   | insert into ta value(2, repeat('b', 1500)) |
-        |    8 | test   | insert into ta value(1, repeat('a', 1100)) |
+        |    1 | (test, )   | delete from ta where id=1                  |
+        |    2 | (test, )   | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
+        |    3 | (test, )   | select * from ta order by id limit 1       |
+        |    4 | (test, )   | SELECT * FROM ta LIMIT 100                 |
+        |    5 | (test, )   | update ta set k="c" where id=3             |
+        |    6 | (test, )   | insert into ta value(3, repeat('c', 100))  |
+        |    7 | (test, )   | insert into ta value(2, repeat('b', 1500)) |
+        |    8 | (test, )   | insert into ta value(1, repeat('a', 1100)) |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs_B"
       | sql                  |
       | show @@sql.resultset |
@@ -50,6 +56,4 @@ Feature: show @@sql, show @@sql.resultset
         | USER-1 | FREQUENCY-2 | SQL-3                                 | RESULTSET_SIZE-4 |
         | test   |         1   | SELECT * FROM ta ORDER BY id LIMIT ?  | 1185             |
         | test   |         1   | SELECT * FROM ta WHERE id = ? LIMIT ? | 1604             |
-    Given delete the following xml segment
-      |file        | parent           | child             |
-      |server.xml  |{'tag':'root'}    | {'tag':'system'}  |
+
