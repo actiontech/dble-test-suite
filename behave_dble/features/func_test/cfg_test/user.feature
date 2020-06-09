@@ -1,18 +1,15 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-Feature: test config in server.xml
+Feature: test config in user.xml
 
   @TRIVIAL
   Scenario: add client user with illegal label, reload fail #1
      #1.1  client user with illegal label got error
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="schemas">schema1</property>
-        <property name="test">0</property>
-    </user>
+     <shardingUser name="test_user" password="test_password" schemas="schema1" readOnly="false" test="0"/>
     """
+
     Then execute admin cmd "reload @@config_all"
     """
     These properties of user[test_user]  are not recognized: test
@@ -20,13 +17,11 @@ Feature: test config in server.xml
 
   @TRIVIAL
   Scenario: add client user with schema which does not exist, start dble fail #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-     <user name="test_user3">
-        <property name="password">test_password</property>
-        <property name="schemas">testdb</property>
-     </user>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+     <shardingUser name="test_user3" password="test_password" schemas="testdb" readOnly="false"/>
+    """
+
     Then Restart dble in "dble-1" failed for
      """
      schema testdb referred by user test_user3 is not exist!
@@ -34,14 +29,11 @@ Feature: test config in server.xml
 
   @BLOCKER
   Scenario: add client user with usingDecrypt=1, start/reload success, query success #3
-    Given encrypt passwd and add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="schemas">schema1</property>
-        <property name="usingDecrypt">1</property>
-    </user>
+     <shardingUser name="test_user" password="test_password" schemas="schema1" readOnly="false" usingDecrypt="1"/>
     """
+
     Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -49,28 +41,19 @@ Feature: test config in server.xml
       | select 1 |
 
   @TRIVIAL
-  Scenario: config server.xml with only <user> node, start dble success #4
-    Given delete the following xml segment
-      |file        | parent           | child            |
-      |server.xml  | {'tag':'root'}   | {'tag':'system'} |
-    Given Restart dble in "dble-1" success
-
-  @TRIVIAL
-  Scenario: both single & multiple manager user reload and do management cmd success #5
+  Scenario: both single & multiple manager user reload and do management cmd success #4
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="manager">true</property>
-    </user>
+     <managerUser  name="test_user" password="test_password" readOnly="false"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
   @CRITICAL
-  Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #6
+  @skip #need discuss
+  Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #5
     Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
     """
     <firewall>
@@ -80,17 +63,25 @@ Feature: test config in server.xml
         </whitehost>
     </firewall>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+#    """
+#    <user name="test_user">
+#        <property name="password">111111</property>
+#        <property name="schemas">schema1</property>
+#    </user>
+#    <user name="mng_user">
+#        <property name="password">111111</property>
+#        <property name="schemas">schema1</property>
+#    </user>
+#    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">111111</property>
-        <property name="schemas">schema1</property>
-    </user>
-    <user name="mng_user">
-        <property name="password">111111</property>
-        <property name="schemas">schema1</property>
-    </user>
+    <shardingUser name="test_user" password="111111" schemas="schema1" readOnly="false whiteIPs="172.100.9.253"/>
+    <managerUser  name="mng_user" password="111111" readOnly="false" whiteIPs="172.100.9.8"/>
+    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false whiteIPs="172.100.9.253,172.100.9.8"/>
+    <managerUser  name="root" password="111111" readOnly="false" whiteIPs="172.100.9.253,172.100.9.8"/>
     """
+
     Given Restart dble in "dble-1" success
     Then execute admin cmd "show @@version" with user "root" passwd "111111"
     Then execute sql in "dble-1" in "admin" mode
@@ -102,11 +93,12 @@ Feature: test config in server.xml
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' | schema1 |
 
   @CRITICAL
-  Scenario: config sql blacklist #7
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+  @skip #need discuss
+  Scenario: config sql blacklist #6
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "user.xml"
     """
-    <firewall>
-        <blacklist check="true">
+        <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
+        <blacklist name="blacklist1">
                 <property name="conditionDoubleConstAllow">false</property>
                 <property name="conditionAndAlwayFalseAllow">false</property>
                  <property name="conditionAndAlwayTrueAllow">false</property>
@@ -134,7 +126,6 @@ Feature: test config in server.xml
                  <property name="deleteWhereNoneCheck">false</property>
                  <property name="updateWhereNoneCheck">false</property>
         </blacklist>
-    </firewall>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -167,15 +158,13 @@ Feature: test config in server.xml
       | conn_0 | False   | BEGIN select * from suntest;END;                    |error totally whack | schema1 |
       | conn_0 | False   | delete from test_table_1                            |error totally whack | schema1 |
       | conn_0 | False   | update test_table_1 set id =10                      |error totally whack | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "user.xml"
     """
-    <firewall>
-        <blacklist check="true">
+        <blacklist name="blacklist1">
                 <property name="selelctAllow">false</property>
                 <property name="createTableAllow">false</property>
                 <property name="showAllow">false</property>
         </blacklist>
-    </firewall>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -185,25 +174,12 @@ Feature: test config in server.xml
       | conn_0 | False   | show tables                                       |error totally whack | schema1 |
 
   @CRITICAL
-  Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #8
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-      <user name="root">
-        <property name="password">111111</property>
-        <property name="manager">true</property>
-        <property name="maxCon">2</property>
-      </user>
-      <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1</property>
-         <property name="maxCon">1</property>
-      </user>
-      <user name="action">
-        <property name="password">action</property>
-        <property name="schemas">schema1</property>
-        <property name="readOnly">true</property>
-        <property name="maxCon">1</property>
-      </user>
+  Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #7
+   Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <managerUser name="root" password="111111"  readOnly="false" maxCon="2"/>
+    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" maxCon="1"/>
+    <shardingUser name="action" password="action" schemas="schema1" readOnly="true" maxCon="1"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -219,24 +195,12 @@ Feature: test config in server.xml
       | new    | False   | show @@version | Access denied for user 'root',too many connections for this user |
 
   @NORMAL
-  Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #9
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-      <user name="root">
-        <property name="password">111111</property>
-        <property name="manager">true</property>
-      </user>
-      <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1</property>
-         <property name="maxCon">0</property>
-      </user>
-      <user name="action">
-        <property name="password">action</property>
-        <property name="schemas">schema1</property>
-        <property name="readOnly">true</property>
-        <property name="maxCon">0</property>
-      </user>
+  Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #8
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <managerUser name="root" password="111111"  readOnly="false"/>
+    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" maxCon="0"/>
+    <shardingUser name="action" password="action" schemas="schema1" readOnly="true" maxCon="0"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -247,35 +211,21 @@ Feature: test config in server.xml
         | action | action    | conn_7 | False   | select 1 | success | schema1 |
 
   @CRITICAL
-  Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #10
-    Given delete the following xml segment
-      |file        | parent           | child          |
-      |server.xml  | {'tag':'root'}   | {'tag':'root'} |
-
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-     <system>
-           <property name="processors">1</property>
-          <property name="processorExecutor">1</property>
-          <property name="maxCon">1</property>
-     </system>
-
-     <user name="root">
-          <property name="password">111111</property>
-          <property name="manager">true</property>
-     </user>
-     <user name="test">
-          <property name="password">111111</property>
-          <property name="schemas">schema1</property>
-          <property name="maxCon">1</property>
-     </user>
-     <user name="action">
-          <property name="password">action</property>
-          <property name="schemas">schema1</property>
-          <property name="readOnly">true</property>
-          <property name="maxCon">1</property>
-     </user>
-
+  Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #9
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      /-Dprocessors/d
+      /-DprocessorExecutor/d
+      /-DmaxCon/d
+      /#  base config/a -Dprocessors=1
+      /#  base config/a -DprocessorExecutor=1
+      /#  base config/a -DmaxCon=1
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <managerUser name="root" password="111111"  readOnly="false"/>
+    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" maxCon="1"/>
+    <shardingUser name="action" password="action" schemas="schema1" readOnly="true" maxCon="1"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -287,16 +237,17 @@ Feature: test config in server.xml
       | sql            |
       | show @@version |
 
-  Scenario: test tableStructureCheckTask from issue:1098 #11
-
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+  Scenario: test tableStructureCheckTask from issue:1098 #10
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-       <property name="checkTableConsistency">1</property>
-	    <property name="checkTableConsistencyPeriod">1000</property>
+      /-DcheckTableConsistency/d
+      /-DcheckTableConsistencyPeriod/d
+      /# consistency/a -DcheckTableConsistency=1
+      /# consistency/a -DcheckTableConsistencyPeriod=1000
     """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" />
+        <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -309,14 +260,15 @@ Feature: test config in server.xml
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    structure are not consistent in different data node
+    structure are not consistent in different shardingNode
     are modified by other,Please Check IT
     """
     Then execute sql in "dble-1" in "user" mode
       | sql                             | expect          |db       |
       | drop table if exists test_table | success         | schema1 |
 
-  Scenario: test 'sqlExecuteTimeout' from issue:1286 #12
+  @skip #for connection poll refactor
+  Scenario: test 'sqlExecuteTimeout' from issue:1286 #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
      """
      <system>
@@ -327,6 +279,15 @@ Feature: test config in server.xml
      </system>
 
     """
+#     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#    """
+#      /-DfakeMySQLVersion/d
+#      /-DprocessorExecutor/d
+#      /-DmaxCon/d
+#      /# if need out HA/a -DfakeMySQLVersion=5.7.13
+#      /#  base config/a -DprocessorExecutor=1
+#      /#  base config/a -DmaxCon=1
+#    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose  | sql                                           | expect                 |db       |
