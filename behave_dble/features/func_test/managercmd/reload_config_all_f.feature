@@ -5,17 +5,17 @@
 #2.19.11.0#dble-7848
 Feature: reload @@config_all -f
 
-  Scenario: execute manager cmd "reload @@config_all -f" after add or change dataNode/dataHost #1
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
+  Scenario: execute manager cmd "reload @@config_all -f" after add or change shardingNode/dbGroup #1
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
       """
-      <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-      <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
-      <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
-      <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
-      <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
+      <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
+      <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
+      <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
+      <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
+      <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
       """
     Given Restart dble in "dble-1" success
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql            |
       | show @@backend |
@@ -34,13 +34,13 @@ Feature: reload @@config_all -f
       | CLOSED         | 9            |
       | SYS_VARIABLES  | 18           |
       | USER_VARIABLES | 19           |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
       """
-      <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-      <dataNode dataHost="ha_group2" database="db1" name="dn2" />
-      <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-      <dataNode dataHost="ha_group2" database="db2" name="dn4" />
-      <dataNode dataHost="ha_group1" database="db3" name="dn5" />
+      <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+      <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+      <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
       """
     Then execute admin cmd "reload @@config_all -f"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
@@ -55,12 +55,13 @@ Feature: reload @@config_all -f
       | 3306   | 172.100.9.6 |
 
 
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100">
-    <heartbeat>show slave status</heartbeat>
-    <writeHost host="hostW1" url="172.100.9.4:3306" password="111111" user="test"/>
-    </dataHost>
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>show slave status</heartbeat>
+        <dbInstance name="hostW1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -f"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
@@ -73,13 +74,13 @@ Feature: reload @@config_all -f
       | PORT-4 | HOST-3      |
       | 3306   | 172.100.9.4 |
       | 3306   | 172.100.9.5 |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
-      <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-      <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
-      <dataNode name="dn3" dataHost="ha_group1" database="db3"/>
-      <dataNode name="dn4" dataHost="ha_group1" database="db4"/>
-      <dataNode name="dn5" dataHost="ha_group1" database="db5"/>
+      <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
+      <shardingNode name="dn2" dbGroup="ha_group1" database="db2"/>
+      <shardingNode name="dn3" dbGroup="ha_group1" database="db3"/>
+      <shardingNode name="dn4" dbGroup="ha_group1" database="db4"/>
+      <shardingNode name="dn5" dbGroup="ha_group1" database="db5"/>
       """
     Then execute admin cmd "reload @@config_all -f"
     Then execute sql in "dble-1" in "user" mode
