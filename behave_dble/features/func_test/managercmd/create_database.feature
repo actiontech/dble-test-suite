@@ -1,17 +1,17 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/12/7
-Feature: test "create databsae @@datanode='dn1,dn2,...'"
+Feature: test "create databsae @@shardingnode='dn1,dn2,...'"
 
   @NORMAL
-  Scenario: "create database @@..." for all used datanode #1
-     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
+  Scenario: "create database @@..." for all used shardingnode #1
+     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
      """
-        <dataNode dataHost="ha_group1" database="da1" name="dn1" />
-        <dataNode dataHost="ha_group2" database="da1" name="dn2" />
-        <dataNode dataHost="ha_group1" database="da2" name="dn3" />
-        <dataNode dataHost="ha_group2" database="da2" name="dn4" />
-        <dataNode dataHost="ha_group1" database="da3" name="dn5" />
+        <shardingNode dbGroup="ha_group1" database="da1" name="dn1" />
+        <shardingNode dbGroup="ha_group2" database="da1" name="dn2" />
+        <shardingNode dbGroup="ha_group1" database="da2" name="dn3" />
+        <shardingNode dbGroup="ha_group2" database="da2" name="dn4" />
+        <shardingNode dbGroup="ha_group1" database="da3" name="dn5" />
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                         | expect   |
@@ -23,7 +23,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       | conn_0 | False    | drop database if exists da1 | success  |
       | conn_0 | True     | drop database if exists da2 | success  |
     Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                       | expect          |
       | conn_0 | False    | show databases like 'da1' | has{('da1',),}  |
@@ -44,14 +44,14 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       | conn_0 | True     | drop database if exists da2 | success  |
 
   @NORMAL
-  Scenario: "create database @@..." for part of used datanode #2
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "schema.xml"
+  Scenario: "create database @@..." for part of used shardingNode #2
+    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
     """
-         <dataNode dataHost="ha_group1" database="da11" name="dn1" />
-        <dataNode dataHost="ha_group2" database="da11" name="dn2" />
-        <dataNode dataHost="ha_group1" database="da21" name="dn3" />
-        <dataNode dataHost="ha_group2" database="da21" name="dn4" />
-        <dataNode dataHost="ha_group1" database="da31" name="dn5" />
+        <shardingNode dbGroup="ha_group1" database="da11" name="dn1" />
+        <shardingNode dbGroup="ha_group2" database="da11" name="dn2" />
+        <shardingNode dbGroup="ha_group1" database="da21" name="dn3" />
+        <shardingNode dbGroup="ha_group2" database="da21" name="dn4" />
+        <shardingNode dbGroup="ha_group1" database="da31" name="dn5" />
     """
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                          | expect   |
@@ -63,7 +63,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       | conn_0 | False    | drop database if exists da11 | success  |
       | conn_0 | True     | drop database if exists da21 | success  |
     Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2'"
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2'"
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da11' | has{('da11',),} |
@@ -73,7 +73,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       | conn   | toClose  | sql                         | expect           |
       | conn_0 | False    | show databases like 'da11'  |  has{('da11',),} |
       | conn_0 | True     | show databases like 'da21'  |  length{(0)}     |
-    Then execute admin cmd "create database @@dataNode ='dn1,dn2,dn3,dn4,dn5'"
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect           |
       | conn_0 | False    | show databases like 'da11' | has{('da11',),}  |
@@ -94,20 +94,20 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       | conn_0 | True     | drop database if exists da21 | success  |
 
   @NORMAL
-  Scenario: "create database @@..." for datanode of style 'dn$x-y' #3
+  Scenario: "create database @@..." for shardingNode of style 'dn$x-y' #3
     Given delete the following xml segment
       |file        | parent          | child               |
-      |schema.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |schema.xml  |{'tag':'root'}   | {'tag':'dataNode'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
-        <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn10,dn11,dn20,dn21" name="test" rule="hash-four" />
+        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+            <shardingTable shardingNode="dn10,dn11,dn20,dn21" name="test" function="hash-four" shardingColumn="id"/>
         </schema>
 
-         <dataNode dataHost="ha_group1" database="da0$0-1" name="dn1$0-1" />
-        <dataNode dataHost="ha_group2" database="da0$0-1" name="dn2$0-1" />
-        <dataNode dataHost="ha_group1" database="da31" name="dn5" />
+         <shardingNode dbGroup="ha_group1" database="da0$0-1" name="dn1$0-1" />
+        <shardingNode dbGroup="ha_group2" database="da0$0-1" name="dn2$0-1" />
+        <shardingNode dbGroup="ha_group1" database="da31" name="dn5" />
      """
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                          | expect   |
@@ -119,7 +119,7 @@ Feature: test "create databsae @@datanode='dn1,dn2,...'"
       | conn_0 | False    | drop database if exists da00 | success  |
       | conn_0 | True     | drop database if exists da01 | success  |
     Then execute admin cmd "reload @@config_all" get the following output
-    Then execute admin cmd "create database @@dataNode ='dn10,dn11,dn20,dn21'"
+    Then execute admin cmd "create database @@shardingNode ='dn10,dn11,dn20,dn21'"
     Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                        | expect          |
       | conn_0 | False    | show databases like 'da00' | has{('da00',),} |
