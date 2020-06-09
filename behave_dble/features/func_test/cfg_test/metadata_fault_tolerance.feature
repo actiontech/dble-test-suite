@@ -10,19 +10,21 @@ Feature: fault tolerance detection
   Scenario: disconnected at the beginning of "show create table", does not affect other functions, can be restored by "reload @@metaData" #1
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
+
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -131,19 +133,20 @@ Feature: fault tolerance detection
   Scenario: disconnected at the middle of "show create table", does not affect other functions, can be restored by "reload @@metaData" #2
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -259,19 +262,20 @@ Feature: fault tolerance detection
   Scenario: disconnected at the end of "show create table", does not affect other functions, can be restored by "reload @@metaData" #3
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -365,19 +369,20 @@ Feature: fault tolerance detection
   Scenario: table structure is not recognized and metadata is not generated #4
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
-        <table name="test1" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test2" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test3" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test4" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test5" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="test6" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
+        <shardingTable name="test1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="test3" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test4" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test5" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test6" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
-    <dataNode name="dn1" dataHost="ha_group1" database="db1"/>
-    <dataNode name="dn2" dataHost="ha_group1" database="db2"/>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
