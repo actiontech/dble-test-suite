@@ -8,9 +8,7 @@
 -Dcom.sun.management.jmxremote.authenticate=false
 -Dcom.sun.management.jmxremote.ssl=false
 -Dcom.sun.management.jmxremote.host=127.0.0.1
--Xmx4G
--Xms1G
--XX:MaxDirectMemorySize=1G
+
 #  base config
 -DhomePath=.
 -DinstanceName=1
