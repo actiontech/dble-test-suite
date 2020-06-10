@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/9
 #2.19.11.0#dble-7876
-Feature: following complex queries are not able to send one datanode
+Feature: following complex queries are not able to send one shardingnode
       #1. explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1
       #2. explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)
       #3. explain select * from sharding_two_node a join sharding_two_node2 b where (a.id = b.id and a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )
@@ -13,15 +13,15 @@ Feature: following complex queries are not able to send one datanode
       #7. explain select * from sharding_two_node where id =1 union select * from sharding_two_node2
 
   Scenario: execute "explain sql" and check result
-    Given add xml segment to node with attribute "{'tag':'function','kv_map':{'name':'two-long'}}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'function','kv_map':{'name':'hash-two'}}" in "sharding.xml"
     """
     <property name="partitionLength">512</property>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-    <table name="sharding_two_node" dataNode="dn1,dn2" rule="hash-two"/>
-    <table name="sharding_two_node2" dataNode="dn1,dn2" rule="hash-two"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+    <shardingTable name="sharding_two_node" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+    <shardingTable name="sharding_two_node2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
     """
     Given Restart dble in "dble-1" success
