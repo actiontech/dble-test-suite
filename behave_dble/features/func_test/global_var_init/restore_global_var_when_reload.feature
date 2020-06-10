@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
-
+@skip
 Feature: if dble rebuild conn pool with reload, then global vars dble concerned will be redetected
 #dble cared global vars:
 #| dble config name     | dble default value | mysql variable name    | mysql default value   | mysql effect Scope |
@@ -56,6 +56,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | drop table if exists sharding_4_t1 | schema1 |
     Then check general log in host "mysql-master1" has not "set global autocommit=1"
 
+  @skip
   @restore_mysql_config
   Scenario:select global vars to a certain writeHost fail at dble start, when heatbeat recover, try select global vars again and set global vars if nessessary #3
     """
@@ -95,10 +96,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | False   | grant select on *.* to 'user1'@'%'             | success |
       | conn_0 | False   | set global tx_isolation='READ-COMMITTED'       | success |
       | conn_0 | True    | set global autocommit=0                        | success |
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="user1">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user1" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given turn on general log in "mysql-master1"
     Given Start dble in "dble-1"
@@ -115,14 +119,18 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master1" has "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ" occured "==2" times
 #    ddl for sharding table, use autocommit=0,and so, no need to set autocommit=1
     Then check general log in host "mysql-master1" has not "SET autocommit=1"
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     When execute admin cmd "reload @@config_all " success
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
+  @skip
   @restore_global_setting
   Scenario:backend mysql global var read_only=true, then every heartbeat will try to select the global vars,and try to set autocommit and tx_isolation if their values different between dble and mysql#5
     """
@@ -152,12 +160,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <system>
-        <property name="autocommit">0</property>
-        <property name="txIsolation">2</property>
-    </system>
+    s/#-Dautocommit=1/-Dautocommit=0/
+    s/-DtxIsolation=2/-DtxIsolation=2/
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -172,7 +178,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | drop table if exists sharding_4_t1 | success | schema1 |
     Then check general log in host "mysql-master1" has not "SET autocommit=0"
     Then check general log in host "mysql-master2" has not "SET autocommit=0"
-
+  @skip
   @restore_global_setting
   Scenario: dble default autocommit=1, after executing implicit query(with which dble will add autocommit=0 to the session), the global var will be restored #7
 # with long gap heartbeat, when kill all backend conns except the ones you want to keep, then the following query will use the conn you keep, which make sure autocommit=0 conns afterwhile is set autocommit=1
@@ -226,7 +232,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | select * from sharding_2_t1 | success | schema1 |
     Then check general log in host "mysql-master1" has "SET autocommit=1"
     Then check general log in host "mysql-master2" has "SET autocommit=1"
-
+  @skip
   @restore_global_setting
   Scenario:config autocommit=0, after executing explicit query(with which dble will add autocommit=0 to the session), the global var will not be restored #8
     """
@@ -285,10 +291,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -306,10 +315,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
@@ -319,10 +331,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="false">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
+        </dbInstance>
+    </dbGroup>
     """
     When execute admin cmd "reload @@config" success
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
@@ -332,10 +347,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given stop dble in "dble-1"
     Given turn on general log in "mysql-master1"
@@ -349,19 +367,25 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given stop dble in "dble-1"
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='READ-COMMITTED'"
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="false">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="false">
+        </dbInstance>
+    </dbGroup>
     """
     When execute admin cmd "reload @@config" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
@@ -372,10 +396,13 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
     Given turn on general log in "mysql-master1"
-    Given add xml segment to node with attribute "{'tag':'dataHost','kv_map':{'name':'ha_group1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true">
-    </writeHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                                       |
@@ -383,7 +410,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  |
     Given execute admin cmd "dataHost @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
-
+  @skip
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
     Given stop mysql in host "mysql-master1"
 #    default dataNodeHeartbeatPeriod is 10, 11 makes sure heartbeat failed for mysql-master1
