@@ -5,16 +5,13 @@ Feature:test user's privileges under different combination
 
   @TRIVIAL
   Scenario: config privileges, including exist schema, different privileges, not exist schema,reload success #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema dataNode="dn5" name="testdb" sqlMaxLimit="100"></schema>
+    <schema shardingNode="dn5" name="testdb" sqlMaxLimit="100"></schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="schemas">schema1,testdb</property>
-        <property name="readOnly">true</property>
+    <shardingUser name="test_user" password="test_password" schemas="schema1,testdb" readOnly="true">
         <privileges check="true">
             <schema name="schema1" dml="0000" >
                 <table name="tableA" dml="1111"></table>
@@ -25,19 +22,16 @@ Feature:test user's privileges under different combination
                 <table name="test2" dml="0110"></table>
             </schema>
         </privileges>
-    </user>
+    </shardingUser>
+
     """
     Then execute admin cmd "reload @@config_all"
 
   @CRITICAL
   Scenario: add readonly client user, user can only read to table in schema's default node and to global table #2
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
      """
-     <user name="test_user">
-        <property name="password">test_password</property>
-        <property name="schemas">schema1</property>
-        <property name="readOnly">true</property>
-     </user>
+     <shardingUser name="test_user" password="test_password" schemas="schema1" readOnly="true"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -64,24 +58,23 @@ Feature:test user's privileges under different combination
   tables have no explict privileges use schema's privilege,
   tables in default schema node will use default privileges or explict privileges configed for them,
   tables have different privileges do join or union
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="aly_test" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="aly_order" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
-    </schema>
-    <schema name="testdb" sqlMaxLimit="100" dataNode="dn1">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test1" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test2" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test3" rule="hash-four" />
-    </schema>
+      <schema name="schema1" shardingNode="dn5" sqlMaxLimit="100">
+          <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="aly_order" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+      </schema>
+
+      <schema name="testdb" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="test2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="test3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,testdb</property>
+    <shardingUser name="test_user" password="111111" schemas="schema1,testdb">
         <privileges check="true">
             <schema name="schema1" dml="0000" >
                 <table name="aly_test" dml="1111"></table>
@@ -93,7 +86,7 @@ Feature:test user's privileges under different combination
                 <table name="test4" dml="0110"></table>
             </schema>
         </privileges>
-    </user>
+    </shardingUser>
     """
     Then execute admin cmd "reload @@config_all"
     #table has explict privileges, and all privileges available
@@ -218,24 +211,23 @@ Feature:test user's privileges under different combination
 
   @NORMAL
   Scenario: check user privileges work right under check=false setting #4
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="aly_test" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="aly_order" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test" type="global" />
-    </schema>
-    <schema name="testdb" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2,dn3,dn4" name="test1" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test2" rule="hash-four" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test3" rule="hash-four" />
-    </schema>
+      <schema name="schema1" shardingNode="dn5" sqlMaxLimit="100">
+          <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="aly_order" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+      </schema>
+
+      <schema name="testdb" sqlMaxLimit="100">
+          <shardingTable name="test1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="test2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="test3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="test_user">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,testdb</property>
+    <shardingUser name="test_user" password="111111" schemas="schema1,testdb">
         <privileges check="false">
             <schema name="schema1" dml="0000" >
                 <table name="aly_test" dml="1111"></table>
@@ -246,7 +238,7 @@ Feature:test user's privileges under different combination
                 <table name="test2" dml="0110"></table>
             </schema>
         </privileges>
-    </user>
+    </shardingUser>
     """
     Then execute admin cmd "reload @@config_all"
     #table has explict privileges, not all privileges available, with no check to privileges
@@ -264,54 +256,42 @@ Feature:test user's privileges under different combination
 
   @CRITICAL @current
   Scenario: config only schema level privileges, tables in the schema privileges will inherit it #5
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table dataNode="dn1,dn2,dn3,dn4" name="schema_permission" rule="hash-four"/>
+        <shardingTable name="schema_permission" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="testA">
-        <property name="password">testA</property>
-        <property name="schemas">schema1</property>
+    <shardingUser name="testA" password="testA" schemas="schema1">
         <privileges check="true">
             <schema name="schema1" dml="0000" />
         </privileges>
-    </user>
-    <user name="testB">
-        <property name="password">testB</property>
-        <property name="schemas">schema1</property>
+    </shardingUser>
+    <shardingUser name="testB" password="testB" schemas="schema1">
         <privileges check="true">
             <schema name="schema1" dml="1111" />
         </privileges>
-    </user>
-    <user name="testC">
-        <property name="password">testC</property>
-        <property name="schemas">schema1</property>
+    </shardingUser>
+    <shardingUser name="testC" password="testC" schemas="schema1">
         <privileges check="true">
             <schema name="schema1" dml="0001" />
         </privileges>
-    </user>
-    <user name="testD">
-        <property name="password">testD</property>
-        <property name="schemas">schema1</property>
+    </shardingUser>
+    <shardingUser name="testD" password="testD" schemas="schema1">
         <privileges check="true">
             <schema name="schema1" dml="0010" />
         </privileges>
-    </user>
-    <user name="testE">
-        <property name="password">testE</property>
-        <property name="schemas">schema1</property>
-        <privileges check="true">
+    </shardingUser>
+    <shardingUser name="testE" password="testE" schemas="schema1">
+      <privileges check="true">
             <schema name="schema1" dml="0100" />
         </privileges>
-    </user>
-    <user name="testF">
-        <property name="password">testF</property>
-        <property name="schemas">schema1</property>
-        <privileges check="true">
+    </shardingUser>
+    <shardingUser name="testF" password="testF" schemas="schema1">
+      <privileges check="true">
             <schema name="schema1" dml="1000" />
         </privileges>
-    </user>
+    </shardingUser>
     """
     Then execute admin cmd "reload @@config_all"
     Then test only schema level privilege configed
@@ -325,32 +305,23 @@ Feature:test user's privileges under different combination
 
   @BLOCKER
   Scenario: mix privilege config: readonly + schema #6
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="readonly_schema1">
-        <property name="password">readonly_schema1</property>
-        <property name="schemas">schema1</property>
-        <property name="readOnly">true</property>
-        <privileges check="true">
+    <shardingUser name="readonly_schema1" password="readonly_schema1" schemas="schema1" readOnly="true">
+      <privileges check="true">
             <schema name="schema1" dml="1111" />
         </privileges>
-    </user>
-    <user name="readonly_schema2">
-        <property name="password">readonly_schema2</property>
-        <property name="schemas">schema1</property>
-        <property name="readOnly">true</property>
-        <privileges check="true">
+    </shardingUser>
+    <shardingUser name="readonly_schema2" password="readonly_schema2" schemas="schema1" readOnly="true">
+      <privileges check="true">
             <schema name="schema1" dml="0000" />
         </privileges>
-    </user>
-    <user name="readonly_schema3">
-        <property name="password">readonly_schema3</property>
-        <property name="schemas">schema1</property>
-        <property name="readOnly">true</property>
-        <privileges check="true">
+    </shardingUser>
+    <shardingUser name="readonly_schema3" password="readonly_schema3" schemas="schema1" readOnly="true">
+      <privileges check="true">
             <schema name="schema1" dml="1101" />
         </privileges>
-    </user>
+    </shardingUser>
     """
     Then execute admin cmd "reload @@config_all"
     Then Test config readonly and schema permission feature
@@ -369,19 +340,17 @@ Feature:test user's privileges under different combination
     """
     Given delete the following xml segment
       |file        | parent                 | child                                               |
-      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema1'}} |
-      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema2'}} |
-      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'readonly_schema3'}} |
+      |user.xml  | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'readonly_schema1'}} |
+      |user.xml  | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'readonly_schema2'}} |
+      |user.xml  | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'readonly_schema3'}} |
     Then execute admin cmd "reload @@config_all"
 
   @NORMAL
   Scenario: config both table and schema privileges, table's privilege prior to schema's #7
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <user name="schema_table1">
-        <property name="password">schema_table1</property>
-        <property name="schemas">schema1</property>
-        <privileges check="true">
+    <shardingUser name="schema_table1" password="schema_table1" schemas="schema1">
+     <privileges check="true">
             <schema name="schema1" dml="1111">
                 <table name="table1" dml="1111"></table>
                 <table name="table2" dml="0000"></table>
@@ -391,10 +360,8 @@ Feature:test user's privileges under different combination
                 <table name="table6" dml="1000"></table>
             </schema>
         </privileges>
-    </user>
-    <user name="schema_table2">
-        <property name="password">schema_table2</property>
-        <property name="schemas">schema1</property>
+    </shardingUser>
+    <shardingUser name="schema_table2" password="schema_table2" schemas="schema1">
         <privileges check="true">
             <schema name="schema1" dml="0000">
                 <table name="table1" dml="1111"></table>
@@ -405,7 +372,7 @@ Feature:test user's privileges under different combination
                 <table name="table6" dml="1000"></table>
             </schema>
         </privileges>
-    </user>
+    </shardingUser>
     """
     Then execute admin cmd "reload @@config_all"
     Then Test config schema and table permission feature
@@ -432,7 +399,7 @@ Feature:test user's privileges under different combination
     """
     Given delete the following xml segment
       |file        | parent                 | child                                            |
-      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'schema_table1'}} |
-      |server.xml  | {'tag':'root'}         | {'tag':'user','kv_map':{'name':'schema_table2'}} |
-      |schema.xml  | {'tag':'schema','kv_map':{'name':'schema1'}} | {'tag':'table','kv_map':{'name':'schema_permission'}} |
+      |user.xml  | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'schema_table1'}} |
+      |user.xml  | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'schema_table2'}} |
+      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}} | {'tag':'shardingTable','kv_map':{'name':'schema_permission'}} |
     Then execute admin cmd "reload @@config_all"
