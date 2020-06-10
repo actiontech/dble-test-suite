@@ -6,20 +6,21 @@
 Feature: two logical databases: declare the database of all tables when querying or declare the database of partial tables when querying
 
   Scenario: create two logical databases by configuration, declare the database of all tables when querying or declare the database of partial tables when querying #1
-    Given add xml segment to node with attribute "{'tag':'user','kv_map':{'name':'test'}}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <property name="schemas">schema1,schema2</property>
+    <shardingUser name="test" password="111111" schemas="schema1,schema2" readOnly="false"/>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-    <table name="sharding_2_t1" dataNode="dn1,dn2" rule="hash-two"/>
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+    <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
     </schema>
     <schema name="schema2" sqlMaxLimit="100">
-    <table name="sharding_2_t2" dataNode="dn1,dn2" rule="hash-two"/>
+    <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "rule.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <function name="two-long" class="Hash">
     <property name="partitionCount">2</property>

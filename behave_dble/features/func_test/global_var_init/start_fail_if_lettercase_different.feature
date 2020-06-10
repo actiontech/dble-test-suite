@@ -3,11 +3,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/3/13 下午12:14
 # @Author  : irene-coming
-Feature: dble start fail if global var lower_case_table_names are not consistent in all dataHosts
+Feature: dble start fail if global var lower_case_table_names are not consistent in all dbGroups
 #  lower_case_table_names default value in mysql under linux is 0
 
   @restore_mysql_config
-  Scenario: dble start fail if global var lower_case_table_names of writeHosts are not consistent in 2 dataHosts #1
+  Scenario: dble start fail if global var lower_case_table_names of dbInstance are not consistent in 2 dbGroups #1
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
     """
@@ -16,7 +16,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
     """
-#    in template config, there has 2 dataHosts, dataHost's default lower_case_table_names is 0
+#    in template config, there has 2 dbGroups, dbGroups's default lower_case_table_names is 0
     Then restart dble in "dble-1" failed for
     """
     The values of lower_case_table_names for backend MySQLs are different
