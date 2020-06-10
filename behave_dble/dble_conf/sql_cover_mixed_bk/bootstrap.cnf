@@ -10,14 +10,12 @@
 -Dcom.sun.management.jmxremote.host=127.0.0.1
 -Xmx4G
 -Xms1G
--XX:MaxDirectMemorySize=1G
+-XX:MaxDirectMemorySize=2G
 #  base config
 -DhomePath=.
 -DinstanceName=1
 # valid for sequenceHandlerType=2 or 3
 -DinstanceId=1
 -DserverId=server_1
-
-# processor
--Dprocessors=1
--DprocessorExecutor=1
+#system config
+-DserverPort=8066
