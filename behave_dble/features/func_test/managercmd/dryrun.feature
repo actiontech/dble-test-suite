@@ -1,8 +1,9 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/4/10
-Feature: # dryrun test
 @skip
+Feature: # dryrun test
+
   Scenario: #type value "default" in schema.xml  from issue:1109  #1
     Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
     """
