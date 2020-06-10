@@ -1,0 +1,102 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">
+<dble:sharding xmlns:dble="http://dble.cloud/">
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <singleTable name="sharding_1_t1" shardingNode="dn5" />
+        <singleTable name="sharding_1_t2" shardingNode="dn5" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_2_t2" shardingNode="dn3,dn4" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_3_t1" shardingNode="dn1,dn2,dn3" function="hash-three" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+
+        <shardingTable name="sharding_enum_t1" shardingNode="dn1,dn2,dn3,dn4" function="enum_integer_rule" shardingColumn="id"/>
+        <shardingTable name="sharding_enum_string_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-enum_string_rule" shardingColumn="id"/>
+
+        <shardingTable name="sharding_date_t1" shardingNode="dn1,dn2,dn3,dn4" function="date_default_rule" shardingColumn="id"/>
+    </schema>
+
+    <schema name="schema2" sqlMaxLimit="100">
+        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <globalTable name="global_4_t1" shardingNode="dn1,dn2,dn3,dn4" />
+        <globalTable name="global_4_t2" shardingNode="dn1,dn2,dn3,dn4" />
+    </schema>
+
+    <schema name="schema2" sqlMaxLimit="100">
+        <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+
+    <function name="hash-two" class="Hash">
+        <property name="partitionCount">2</property>
+        <property name="partitionLength">1</property>
+    </function>
+    <function name="hash-three" class="Hash">
+        <property name="partitionCount">3</property>
+        <property name="partitionLength">1</property>
+    </function>
+    <function name="hash-four" class="Hash">
+		<property name="partitionCount">4</property>
+		<property name="partitionLength">1</property>
+	</function>
+    <function name="hash-three-step10" class="Hash">
+        <property name="partitionCount">3</property>
+        <property name="partitionLength">10</property>
+    </function>
+	<function name="fixed_uniform" class="Hash">
+		<property name="partitionCount">4</property>
+		<property name="partitionLength">256</property>
+	</function>
+	<function name="fixed_nonuniform_string_rule" class="Hash">
+		<property name="partitionCount">2,1</property>
+		<property name="partitionLength">256,512</property>
+	</function>
+	<function name="fixed_uniform_string_rule" class="StringHash">
+		<property name="partitionCount">4</property>
+		<property name="partitionLength">256</property>
+		<property name="hashSlice">0:2</property>
+	</function>
+	<function name="fixed_nonuniform_string_rule" class="StringHash">
+		<property name="partitionCount">2,1</property>
+		<property name="partitionLength">256,512</property>
+		<property name="hashSlice">0:2</property>
+	</function>
+	<function name="enum_integer_rule" class="Enum">
+		<property name="mapFile">enum-integer.txt</property>
+		<property name="type">0</property>
+		<property name="defaultNode">0</property>
+	</function>
+	<function name="enum_string_rule" class="Enum">
+		<property name="mapFile">enum-string.txt</property>
+		<property name="type">1</property>
+		<property name="defaultNode">0</property>
+	</function>
+	<function name="range_rule" class="NumberRange">
+		<property name="mapFile">range.txt</property>
+		<!--<property name="defaultNode">0</property>-->
+	</function>
+	<function name="range_string" class="NumberRange">
+		<property name="mapFile">range_default.txt</property>
+		<property name="defaultNode">3</property>
+	</function>
+	<function name="date_rule" class="Date">
+		<property name="dateFormat">yyyy-MM-dd</property>
+		<property name="sBeginDate">2016-12-01</property>
+		<property name="sEndDate">2017-01-9</property>
+		<property name="sPartionDay">10</property>
+		<!--<property name="defaultNode">0</property>-->
+	</function>
+	<function name="date_default_rule" class="Date">
+		<property name="dateFormat">yyyy-MM-dd</property>
+		<property name="sBeginDate">2016-12-01</property>
+		<property name="sEndDate">2017-01-9</property>
+		<property name="sPartionDay">10</property>
+		<property name="defaultNode">0</property>
+	</function>
+    
+</dble:sharding>
