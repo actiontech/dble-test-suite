@@ -2,6 +2,6 @@
 <!DOCTYPE dble:user SYSTEM "user.dtd">
 <dble:user xmlns:dble="http://dble.cloud/">
 	<managerUser name="root" password="111111"/>
-	<shardingUser name="test" password="111111" schemas="schema1"/>
+	<shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" maxCon="20"/>
 </dble:user>

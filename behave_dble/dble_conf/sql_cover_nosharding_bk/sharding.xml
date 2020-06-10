@@ -1,0 +1,17 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">
+<dble:sharding xmlns:dble="http://dble.cloud/">
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+    </schema>
+
+    <schema name="schema2" sqlMaxLimit="100" shardingNode="dn5">
+    </schema>
+
+    <schema name="schema3" sqlMaxLimit="100" shardingNode="dn6">
+    </schema>
+
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
+    
+</dble:sharding>
