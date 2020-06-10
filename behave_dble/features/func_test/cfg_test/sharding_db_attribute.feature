@@ -234,7 +234,7 @@ Feature: test some import nodes attr in sharding.xml
     Then execute sql in "dble-1" in "admin" mode
       | sql          | expect      |
       | show @@cache | length{(2)} |
-   @curr @skip_restart
+
    Scenario: Use the RocksDB database engine as a cache implementation  issue:1029  author: maofei #9
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
