@@ -185,7 +185,7 @@ def delete_child_node(file, kv_child, kv_parent):
 
     doctype = ""
     if file.find('db.xml') > -1:
-        doctype = '<dble:db xmlns:dble="http://dble.cloud/">'
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
     elif file.find('sharding.xml') > -1:
         doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
     elif file.find('user.xml') > -1:
