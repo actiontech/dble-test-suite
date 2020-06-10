@@ -12,7 +12,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn1">
