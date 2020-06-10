@@ -15,12 +15,6 @@ Feature: show @@sql, show @@sql.resultset
     /-DmaxResultSet/d
     /DsqlRecordCount/a -DmaxResultSet=1024
     """
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-#    """
-#    <system>
-#        <property name="maxResultSet">1024</property>
-#    </system>
-#    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | db      |
