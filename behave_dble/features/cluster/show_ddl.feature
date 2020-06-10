@@ -8,10 +8,10 @@ Feature: show the ddl statement being executed in different scenario
   @btrace
   Scenario: one database with one table #1
     Given stop dble cluster and zk service
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-      <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-        <table name="test" dataNode="dn3,dn4" type="global"/>
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+        <globalTable name="test" shardingNode="dn3,dn4"/>
       </schema>
     """
     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
@@ -61,25 +61,19 @@ Feature: show the ddl statement being executed in different scenario
   @btrace
   Scenario: different database with same name of table #2
     Given stop dble cluster and zk service
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-      <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-        <table name="test" dataNode="dn3,dn4" type="global"/>
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+        <globalTable name="test" shardingNode="dn3,dn4"/>
       </schema>
-      <schema name="schema2" sqlMaxLimit="100" dataNode="dn1">
-        <table name="test" dataNode="dn1,dn2" type="global"/>
+      <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
+        <globalTable name="test" shardingNode="dn1,dn2"/>
       </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-      <user name="test">
-         <property name="password">111111</property>
-         <property name="schemas">schema1,schema2</property>
-      </user>
-      <user name="root">
-         <property name="password">111111</property>
-         <property name="manager">true</property>
-      </user>
+    <managerUser name="root" password="111111"  readOnly="false"/>
+    <shardingUser name="test" password="111111" schemas="schema1,schema2" readOnly="false"/>
     """
     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
     Given reset dble registered nodes in zk
@@ -126,11 +120,11 @@ Feature: show the ddl statement being executed in different scenario
   @btrace
   Scenario: same database with different table #3
     Given stop dble cluster and zk service
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-      <schema name="schema1" sqlMaxLimit="100" dataNode="dn5">
-        <table name="test1" dataNode="dn1,dn2" type="global"/>
-        <table name="test2" dataNode="dn3,dn4" type="global"/>
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+        <globalTable name="test1" shardingNode="dn1,dn2"/>
+        <globalTable name="test2" shardingNode="dn3,dn4"/>
       </schema>
     """
     Given config zookeeper cluster in all dble nodes with "local zookeeper host"
