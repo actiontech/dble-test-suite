@@ -49,10 +49,10 @@ Feature: backend node disconnect,causing xa abnormal
 
   @btrace
   Scenario:backend node connection is abnormal, causing xa end is abnormal, transaction manual rollback
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <property name="processors">2</property>
-    <property name="processorExecutor">2</property>
+    /-Dprocessors=1/c -Dprocessors=2
+    /-DprocessorExecutor=1/c -DprocessorExecutor=2
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
