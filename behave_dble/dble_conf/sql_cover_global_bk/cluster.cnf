@@ -12,7 +12,7 @@ clusterIP=172.100.9.1:2181
 #clusterPort=5700
 # rootPath=dble
 #cluster namespace, please use the same one in one cluster
-clusterID=cluster-1
+clusterId=cluster-1
 # if HA need sync by cluster, only useful when useOuterHa=true
 needSyncHa=false
 
