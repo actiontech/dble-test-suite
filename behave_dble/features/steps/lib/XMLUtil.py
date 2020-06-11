@@ -259,56 +259,38 @@ def change_node_properties(file, kv_map, is_delete=False):
     with open(file, 'wb') as f:
         f.writelines(xmlstr)
 
-
+#This part is just for self-testing
 if __name__ == "__main__":
     import sys
 
     command = sys.argv[1]
-    if command == "rule":
+    if command == "db":
         seg = """
-        <tableRule name="date_rule">
-            <rule>
-                <columns>id</columns>
-                <algorithm>date_func</algorithm>
-            </rule>
-        </tableRule>
-        <function class="Date" name="date_func">
+        <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+            <heartbeat>select user()</heartbeat>
+            <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            </dbInstance>
+        </dbGroup>        
+        """
+        add_child_in_string('dble_conf/conf_template/db.xml', {"tag": "root", "kv_map": {}}, seg)
+    elif command == "user":
+        seg = """
+        <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+        """
+        fullpath = "../../../dble_conf/template_bk/user.xml"
+
+        add_child_in_string(fullpath, {'tag': 'root'}, seg)
+    elif command == "sharding":
+        seg = """
+        <function class="date_rule" name="date_func">
             <property name="dateFormat">yyyy-MM-dd</property>
             <property name="sEndDate">2018-01-31</property>
             <property name="sPartionDay">10</property>
         </function>
-        """
-        add_child_in_string('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map": {}}, seg)
-    elif command == "schema":
-        seg = """
-        <schema dataNode="dn2" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn2,dn4" name="test2" type="global" />
-        </schema>
-        <dataNode dataHost="ha_group1" database="db1" name="dn2" />
-        <dataNode dataHost="ha_group1" database="db2" name="dn4" />
-        <dataHost balance="1" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true"></writeHost>
-        </dataHost>
-        """
-
-        fullpath = "../../../dble_conf/template_bk/schema.xml"
-
-        add_child_in_string(fullpath, {'tag': 'root'}, seg)
-    elif command == "server":
-        seg = """
-      <firewall>
-          <whitehost>
-              <host host="10.186.23.68" user="test"/>
-              <host host="10.186.23.68" user="root"/>
-              <host host="172.100.9.253" user="root"/>
-              <host host="172.100.9.253" user="test"/>
-          </whitehost>
-      </firewall>
             """
-        add_child_in_string('../../../dble_conf/template_bk/server.xml', {"tag": "root", "prev": 'system'}, seg)
+        add_child_in_string('../../../dble_conf/template_bk/sharding.xml', {"tag": "root", "prev": 'system'}, seg)
     elif command == "delete":
-        file = "../../../dble_conf/template_bk/server.xml"
+        file = "../../../dble_conf/template_bk/sharidng.xml"
         kv_child = eval("{'tag':'root'}")
         kv_parent = eval("{'tag':'root'}")
         delete_child_node(file, kv_child, kv_parent)
