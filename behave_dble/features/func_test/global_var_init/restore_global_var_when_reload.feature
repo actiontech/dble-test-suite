@@ -162,8 +162,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    s/#-Dautocommit=1/-Dautocommit=0/
-    s/-DtxIsolation=2/-DtxIsolation=2/
+    a/-Dautocommit=0
+    a/-DtxIsolation=2
     """
     Given stop dble in "dble-1"
     Given execute sql in "mysql-master1"
