@@ -52,7 +52,7 @@
 		<property name="partitionCount">4</property>
 		<property name="partitionLength">256</property>
 	</function>
-	<function name="fixed_nonuniform_string_rule" class="Hash">
+	<function name="fixed_nonuniform" class="Hash">
 		<property name="partitionCount">2,1</property>
 		<property name="partitionLength">256,512</property>
 	</function>
