@@ -12,8 +12,7 @@ Feature: show @@sql, show @@sql.resultset
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DmaxResultSet/d
-    /DsqlRecordCount/a -DmaxResultSet=1024
+    $a -DmaxResultSet=1024
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
