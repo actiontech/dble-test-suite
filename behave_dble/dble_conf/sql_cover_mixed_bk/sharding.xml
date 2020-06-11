@@ -10,7 +10,7 @@
         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
 
         <shardingTable name="sharding_enum_t1" shardingNode="dn1,dn2,dn3,dn4" function="enum_integer_rule" shardingColumn="id"/>
-        <shardingTable name="sharding_enum_string_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-enum_string_rule" shardingColumn="id"/>
+        <shardingTable name="sharding_enum_string_t1" shardingNode="dn1,dn2,dn3,dn4" function="enum_string_rule" shardingColumn="id"/>
 
         <shardingTable name="sharding_date_t1" shardingNode="dn1,dn2,dn3,dn4" function="date_default_rule" shardingColumn="id"/>
     </schema>
