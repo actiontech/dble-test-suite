@@ -14,12 +14,9 @@ Feature: test slow query log related manager command
   Scenario: test "show @@slow_query.time", "reload @@slow_query.time", "show @@slow_query.flushperid", "reload @@slow_query.flushperid", "show @@slow_query.flushsize", "reload @@slow_query.flushsize" #2
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DsqlSlowTime=100/d
-    /the threshold for judging if the query is slow , unit is millisecond/a -DsqlSlowTime=30
-    /-DflushSlowLogPeriod=1/d
-    /the max period for flushing the slow query log from memory to disk  after last time , unit is second/a -DflushSlowLogPeriod=1000
-    /-DflushSlowLogSize=1000/d
-    /the max records for flushing the slow query log from memory to disk after last time/a -DflushSlowLogSize=5
+    $a -DsqlSlowTime=30
+    $a -DflushSlowLogPeriod=1000
+    $a -DflushSlowLogSize=5
     """
        Given Restart dble in "dble-1" success
        Then execute sql in "dble-1" in "admin" mode
@@ -41,12 +38,9 @@ Feature: test slow query log related manager command
       Given delete file "/opt/dble/slowQuery" on "dble-1"
       Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DslowLogBaseName/d
-    /the slow query log location/a -DslowLogBaseName=query
-    /-DslowLogBaseDir/d
-    /the slow query log location/a -DslowLogBaseDir=./slowQuery
-    /-DsqlSlowTime/d
-    /the threshold for judging if the query is slow , unit is millisecond/a -DsqlSlowTime=1
+    $a -DslowLogBaseName=query
+    $a -DslowLogBaseDir=./slowQuery
+    $a -DsqlSlowTime=1
     """
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
