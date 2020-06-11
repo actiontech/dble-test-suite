@@ -5,27 +5,24 @@
 
 #2.20.04.0#dble-8176
 Feature: change xaRetryCount value and check result
-
+  @skip
   Scenario: Setting xaRetryCount to an illegal value, dble report warning #1
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <property name="xaRetryCount">-1</property>
+    $a -DxaRetryCount=-1
     """
-    Then execute sql in "dble-1" in "admin" mode
-      | sql    | expect                                                                          |
-      | dryrun | hasStr{Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced} |
     Given Restart dble in "dble-1" success
     Then check "dble.log" in "dble-1" has the warnings
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
-      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced |
+      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, use 0 replaced |
 
   @btrace
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <property name="xaRetryCount">3</property>
+    $a -DxaRetryCount=3
     """
     Given Restart dble in "dble-1" success
 
@@ -73,12 +70,16 @@ Feature: change xaRetryCount value and check result
 
   @btrace @current
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <system>
-        <property name="dataNodeHeartbeatPeriod">2000 </property>
-    </system>
+    $a -DdataNodeHeartbeatPeriod=2000
     """
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+#    """
+#    <system>
+#        <property name="dataNodeHeartbeatPeriod">2000 </property>
+#    </system>
+#    """
     Given Restart dble in "dble-1" success
 #   delayBeforeXaCommit sleep time must long enough for stopping dble
     Given update file content "./assets/BtraceXaDelay_backgroundRetry2.java" in "behave" with sed cmds
