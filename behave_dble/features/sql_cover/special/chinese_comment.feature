@@ -6,21 +6,14 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 
   @skip
   Scenario: #1 todo not complete yet #1
-    Given update file content "/opt/dble/conf/wrapper.conf" in "dble-1" with sed cmds
-
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /additional.5/d
-    /additional.4/a wrapper.java.additional.5=-Dfile.encoding=GBK
+    s/-Dfile.encoding=UTF-8/-Dfile.encoding=GBK/
+    a/charset=utf8mb4
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-    <system>
-        <property name="charset">utf8mb4</property>
-    </system>
-    """
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
-    """
-        <table name="test_table" dataNode="dn1,dn2,dn3,dn4" cacheKey="id" rule="hash-four" />
+        <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" shardingColumn="id" function="hash-four" />
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
