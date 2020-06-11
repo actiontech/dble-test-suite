@@ -1,71 +1,72 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2019/1/3
-Feature: if childnodes value of system in server.xml are invalid, replace them with default values
+Feature: if childnodes value of system in bootstrap.cnf are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
   @NORMAL
+  @skip #waiting for warning msg changed
   Scenario: config all system property, some values are illegal, start dble success #1
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    <system>
-        <property name="sequenceHandlerType">20</property>
-        <property name="useSqlStat">false        </property>
-        <property name="useCompression">true    </property>
-        <property name="charset">utf-8</property>
-        <property name="txIsolation">30       </property>
-        <property name="recordTxn">false       </property>
-        <property name="bufferUsagePercent">80%        </property>
-        <property name="frontSocketNoDelay">true         </property>
-        <property name="backSocketNoDelay">true          </property>
-        <property name="usingAIO">false    </property>
-        <property name="checkTableConsistency">false       </property>
-        <property name="useCostTimeStat">false       </property>
-        <property name="useThreadUsageStat">false       </property>
-        <property name="usePerformanceMode">false       </property>
-        <property name="usePerformanceMode">false       </property>
-        <property name="enableSlowLog">false </property>
-        <property name="useJoinStrategy">true     </property>
+    $a\sequenceHandlerType=20
+    $a\showBinlogStatusTimeout=60000
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      $a\-DuseSqlStat=false
+      $a\-DuseCompression=true
+      $a\-Dcharset=utf-8
+      $a\-DtxIsolation=30
+      $a\-DrecordTxn=false
+      $a\-DbufferUsagePercent=80%
+      $a\-DfrontSocketNoDelay=true
+      $a\-DbackSocketNoDelay=true
+      $a\-DusingAIO=false
+      $a\-DcheckTableConsistency=false
+      $a\-DuseCostTimeStat=false
+      $a\-DuseThreadUsageStat=false
+      $a\-DusePerformanceMode=false
+      $a\-DusePerformanceMode=false
+      $a\-DenableSlowLog=false
+      $a\-DuseJoinStrategy=true
+      $a\-DbindIp=0.0.0.0
+      $a\-DserverPort=8066
+      $a\-DmanagerPort=9066
+      $a\-Dprocessors=4
+      $a\-DprocessorExecutor=4
+      $a\-DbackendProcessors=4
+      $a\-DbackendProcessorExecutor=4
+      $a\-DcomplexExecutor=4
+      $a\-DwriteToBackendExecutor=4
+      $a\-DfakeMySQLVersion=5.6.24
+      $a\-DmaxPacketSize=16777216
+      $a\-DcheckTableConsistencyPeriod=60000
+      $a\-DshardingNodeIdleCheckPeriod=300000
+      $a\-DshardingNodeHeartbeatPeriod=10000
+      $a\-DprocessorCheckPeriod=1000
+      $a\-DsqlExecuteTimeout=300
+      $a\-DidleTimeout=1800000
+      $a\-DtransactionLogBaseDir=/txlogs
+      $a\-DtransactionLogBaseName=server-tx
+      $a\-DtransactionRatateSize=16
+      $a\-DxaSessionCheckPeriod=1000
+      $a\-DxaLogCleanPeriod=1000
+      $a\-DxaRecoveryLogBaseDir=/tmlogs
+      $a\-DxaRecoveryLogBaseName=tmlog
+      $a\-DnestLoopConnSize=4
+      $a\-DnestLoopRowsSize=2000
+      $a\-DbufferPoolChunkSize=4096
+      $a\-DbufferPoolPageNumber=512
+      $a\-DbufferPoolPageSize=2097152
+      $a\-DclearBigSQLResultSetMapMs=600000
+      $a\-DsqlRecordCount=10
+      $a\-DmaxResultSet=524288
+      $a\-DbackSocketSoRcvbuf=4194304
+      $a\-DbackSocketSoSndbuf=1048576
+      $a\-DfrontSocketSoRcvbuf=1048576
+      $a\-DfrontSocketSoSndbuf=4194304
 
-        <property name="bindIp">0.0.0.0</property>
-        <property name="serverPort">8066</property>
-        <property name="managerPort">9066</property>
-        <property name="processors">4</property>
-        <property name="processorExecutor">4</property>
-        <property name="backendProcessors">4</property>
-        <property name="backendProcessorExecutor">4</property>
-        <property name="complexExecutor">4</property>
-        <property name="writeToBackendExecutor">4</property>
-        <property name="fakeMySQLVersion">5.6.24   </property>
-        <property name="serverNodeId">1   </property>
-        <property name="showBinlogStatusTimeout">60000</property>
-        <property name="maxPacketSize">16777216</property>
-        <property name="checkTableConsistencyPeriod">60000</property>
-        <property name="dataNodeIdleCheckPeriod">300000  </property>
-        <property name="dataNodeHeartbeatPeriod">10000   </property>
-        <property name="processorCheckPeriod">1000    </property>
-        <property name="sqlExecuteTimeout">300     </property>
-        <property name="idleTimeout">1800000 </property>
-        <property name="transactionLogBaseDir">/txlogs </property>
-        <property name="transactionLogBaseName">server-tx</property>
-        <property name="transactionRatateSize">16       </property>
-        <property name="xaSessionCheckPeriod">1000     </property>
-        <property name="xaLogCleanPeriod">1000     </property>
-        <property name="xaRecoveryLogBaseDir">/tmlogs  </property>
-        <property name="xaRecoveryLogBaseName">tmlog    </property>
-        <property name="nestLoopConnSize">4        </property>
-        <property name="nestLoopRowsSize">2000     </property>
-        <property name="bufferPoolChunkSize">4096     </property>
-        <property name="bufferPoolPageNumber">512      </property>
-        <property name="bufferPoolPageSize">2097152  </property>
-        <property name="clearBigSQLResultSetMapMs">600000   </property>
-        <property name="sqlRecordCount">10            </property>
-        <property name="maxResultSet">524288          </property>
-        <property name="backSocketSoRcvbuf">4194304   </property>
-        <property name="backSocketSoSndbuf">1048576   </property>
-        <property name="frontSocketSoRcvbuf">1048576  </property>
-        <property name="frontSocketSoSndbuf">4194304  </property>
-    </system>
     """
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
@@ -88,8 +89,6 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | fakeMySQLVersion            | 5.6.24                          |
       | sequenceHandlerType         | Local TimeStamp(like Snowflake) |
       | serverBacklog               | 2048                            |
-      | serverNodeId                | 1                               |
-      | showBinlogStatusTimeout     | 300ms                           |
       | maxCon                      | 0                               |
       | useCompression              | 0                               |
       | usingAIO                    | 0                               |
@@ -104,8 +103,8 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
-      | dataNodeIdleCheckPeriod     | 300 Seconds                     |
-      | dataNodeHeartbeatPeriod     | 10 Seconds                      |
+      | shardingNodeIdleCheckPeriod     | 300 Seconds                     |
+      | shardingNodeHeartbeatPeriod     | 10 Seconds                      |
       | processorCheckPeriod        | 1 Seconds                       |
       | idleTimeout                 | 30 Minutes                      |
       | sqlExecuteTimeout           | 300 Seconds                     |
@@ -139,13 +138,13 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | backSocketSoRcvbuf          | 4194304B                        |
       | backSocketSoSndbuf          | 1048576B                        |
       | backSocketNoDelay           | 1                               |
-      | viewPersistenceConfBaseDir  | ./viewConf/                     |
+      | viewPersistenceConfBaseDir  | /opt/dble/viewConf/         |
       | viewPersistenceConfBaseName | viewJson                        |
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
       | enableSlowLog               | 0                               |
-      | slowLogBaseDir              | ./slowlogs/                     |
+      | slowLogBaseDir              |/opt/dble/slowlogs/             |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
       | flushSlowLogSize            | 1000                            |
@@ -153,37 +152,17 @@ Feature: if childnodes value of system in server.xml are invalid, replace them w
       | maxCharsPerColumn           | 65535                           |
       | maxRowSizeToFile            | 10000                           |
       | useOuterHa                  | true                            |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dryrun_rs"
-      | sql             |
-      | dryrun          |
-    Then check resultset "dryrun_rs" has lines with following column values
-      | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
-      | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
-      | Xml     | WARNING | property [ bufferUsagePercent ] '80%' data type should be int, skip            |
-      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8mb4 replaced       |
-      | Xml     | WARNING | property [ checkTableConsistency ] 'false' data type should be int, skip       |
-      | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
-      | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
-      | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
-      | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
-      | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
-      | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
-      | Xml     | WARNING | property [ usePerformanceMode ] 'false' data type should be int, skip          |
-      | Xml     | WARNING | property [ useSqlStat ] 'false' data type should be int, skip                  |
-      | Xml     | WARNING | property [ useThreadUsageStat ] 'false' data type should be int, skip          |
-      | Xml     | WARNING | property [ usingAIO ] 'false' data type should be int, skip                    |
     And check "dble.log" in "dble-1" has the warnings
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                       |
       | Xml     | WARNING | property [ backSocketNoDelay ] 'true' data type should be int, skip            |
       | Xml     | WARNING | property [ bufferUsagePercent ] '80%' data type should be int, skip            |
-      | Xml     | WARNING | Property [ charset ] 'utf-8' in server.xml is illegal, use utf8mb4 replaced       |
+      | Xml     | WARNING | Property [ charset ] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced       |
       | Xml     | WARNING | property [ checkTableConsistency ] 'false' data type should be int, skip       |
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in server.xml is illegal, use 2 replaced  |
-      | Xml     | WARNING | Property [ txIsolation ] '30' in server.xml is illegal, use 3 replaced         |
+      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in bootstrap.cnf is illegal, use 2 replaced  |
+      | Xml     | WARNING | Property [ txIsolation ] '30' in bootstrap.cnf is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
       | Xml     | WARNING | property [ usePerformanceMode ] 'false' data type should be int, skip          |
