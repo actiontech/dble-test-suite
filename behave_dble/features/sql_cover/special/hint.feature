@@ -3,21 +3,21 @@
 Feature: verify hint sql
 
   @NORMAL
-  Scenario: test hint format: /*!dble:datanode=xxx*/ #1
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+  Scenario: test hint format: /*!dble:shardingNode=xxx*/ #1
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="test_table" dataNode="dn1,dn3" rule="hash-two" />
-        <table name="test_shard" dataNode="dn1,dn3" rule="hash-two" />
-        <table name="test_index" dataNode="dn1,dn3" rule="hash-two" />
+        <shardingTable name="test_table" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test_index" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                         | expect  | db      |
       | conn_0 | False   | drop table if exists test_table                                                                             | success | schema1 |
       | conn_0 | False   | drop table if exists test_index                                                                             | success | schema1 |
-      | conn_0 | False   | /*!dble:datanode=dn1*/ create table test_table(id int,name varchar(20))                                     | success | schema1 |
-      | conn_0 | False   | /*!dble:datanode=dn1*/ create table test_index(id int,name varchar(20),index ddd (name) KEY_BLOCK_SIZE = 1) | success | schema1 |
-      | conn_0 | True    | /*!dble:datanode=dn1*/ insert into test_table values(2,'test2')                                             | success | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/ create table test_table(id int,name varchar(20))                                     | success | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/ create table test_index(id int,name varchar(20),index ddd (name) KEY_BLOCK_SIZE = 1) | success | schema1 |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/ insert into test_table values(2,'test2')                                             | success | schema1 |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                      | expect                  | db  |
       | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
@@ -27,45 +27,45 @@ Feature: verify hint sql
       | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect                                   | db      |
-      | conn_0 | False   | /*!dble:datanod=dn1*/ drop table test_table                                                          | Not supported hint sql type : datanod    | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/ drop table test_table                                                         | success                                  | schema1 |
+      | conn_0 | False   | /*!dble:shardingNod=dn1*/ drop table test_table                                                     | Not supported hint sql type : shardingnod    | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/ drop table test_table                                                     | success                                  | schema1 |
       | conn_0 | False   | drop table if exists test_shard                                                                      | success                                  | schema1 |
       | conn_0 | False   | create table test_table (id int ,name varchar(20))                                                   | success                                  | schema1 |
       | conn_0 | False   | create table test_shard(id int,name varchar(20))                                                     | success                                  | schema1 |
       | conn_0 | False   | insert into test_table values(1,'test_table1'),(2,'test_table2'),(3,'test_table3'),(4,'test_table4') | success                                  | schema1 |
       | conn_0 | False   | insert into test_shard values(4,'test_shard4'),(5,'test_shard5'),(6,'test_shard6'),(7,'test_shard7') | success                                  | schema1 |
-      | conn_0 | False   | /*!dble:datanode=dn1*/ select * from test_table                                                      | has{(2,'test_table2'),(4,'test_table4')} | schema1 |
-      | conn_0 | False   | /*!dble:datanode=dn1,dn3*/ select * from test_table                                                  | can't find hint datanode:dn1,dn3         | schema1 |
-      | conn_0 | True    | /*!dble:datanode=dn1*/ update test_table set name = 'dn1'                                            | success                                  | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/ select * from test_table                                                      | has{(2,'test_table2'),(4,'test_table4')} | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1,dn3*/ select * from test_table                                                  | can't find hint shardingnode:dn1,dn3         | schema1 |
+      | conn_0 | True    | /*!dble:shardingNode=dn1*/ update test_table set name = 'dn1'                                            | success                                  | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                                   | db  |
       | select * from test_table | has{(2,'dn1'),(4,'dn1')}                 | db1 |
       | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                           | expect  | db      |
-      | /*!dble:datanode=dn1*/ delete from test_table | success | schema1 |
+      | /*!dble:shardingNode=dn1*/ delete from test_table | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                                   | db  |
       | select * from test_table | length{(0)}                              | db1 |
       | select * from test_table | has{(1,'test_table1'),(3,'test_table3')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                                                     | expect  | db      |
-      | /*!dble:datanode=dn1*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
+      | /*!dble:shardingNode=dn1*/ insert into test_table select id,name from test_shard where id>4 | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                     | db  |
       | select * from test_table | has{(6, 'test_shard6')}    | db1 |
       | select * from test_table | hasnot{(6, 'test_shard6')} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                                                   | expect  | db      |
-      | /*!dble:datanode=dn3*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
+      | /*!dble:shardingNode=dn3*/ replace test_table select id,name from test_shard where id < 7 | success | schema1 |
     Then execute sql in "mysql-master1"
       | sql                      | expect                     | db  |
       | select * from test_table | hasnot{(5, 'test_shard5')} | db1 |
       | select * from test_table | has{(5, 'test_shard5')}    | db2 |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                             | expect    | db      |
-      | /*!dble:datanode=dn3*/ select count(*) from test_shard          | has{(2),} | schema1 |
-      | /*!dble:datanode=dn1*/ alter table test_table add c varchar(20) | success   | schema1 |
+      | /*!dble:shardingNode=dn3*/ select count(*) from test_shard          | has{(2),} | schema1 |
+      | /*!dble:shardingNode=dn1*/ alter table test_table add c varchar(20) | success   | schema1 |
     Then execute sql in "mysql-master1"
       | sql             | expect       | db  |
       | desc test_table | length{(3)}} | db1 |
@@ -73,11 +73,11 @@ Feature: verify hint sql
 
   @NORMAL
   Scenario: test hint format: /*!dble:sql=xxx*/ #2
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="test_table" dataNode="dn1,dn3" rule="hash-two" />
-        <table name="test_shard" dataNode="dn1,dn3" rule="hash-two" />
-        <table name="test_index" dataNode="dn1,dn3" rule="hash-two" />
+        <shardingTable name="test_table" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test_index" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -147,32 +147,34 @@ Feature: verify hint sql
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 1 #3
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" >
-         <table name="test_table" dataNode="dn2,dn4" rule="hash-two" />
+         <shardingTable name="test_table" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id"/>
       </schema>
-      <schema name="schema2" dataNode="dn2">
+      <schema name="schema2" shardingNode="dn2">
       </schema>
-       <dataNode dataHost="ha_group2" database="db1" name="dn2" />
-       <dataNode dataHost="ha_group2" database="db2" name="dn4" />
-      <dataHost balance="1" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
-               <heartbeat>select user()</heartbeat>
-               <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-                  <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
-               </writeHost>
-       </dataHost>
+       <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+       <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,schema2</property>
-    </user>
+    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        </dbInstance>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" readWeight="2">
+        </dbInstance>
+    </dbGroup>
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+    """
+
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                  | expect  | db      |
@@ -239,31 +241,32 @@ Feature: verify hint sql
   Scenario: test hint format: /*!dble:db_type=xxx*/ while load balance type 2 #4
     Given delete the following xml segment
       | file       | parent         | child              |
-      | schema.xml | {'tag':'root'} | {'tag':'schema'}   |
-      | schema.xml | {'tag':'root'} | {'tag':'dataNode'} |
-      | schema.xml | {'tag':'root'} | {'tag':'dataHost'} |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" >
-         <table name="test_table" dataNode="dn2,dn4" rule="hash-two" />
+         <shardingTable name="test_table" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id"/>
       </schema>
-      <schema name="schema2" dataNode="dn2">
+      <schema name="schema2" shardingNode="dn2">
       </schema>
-       <dataNode dataHost="ha_group2" database="db1" name="dn2" />
-       <dataNode dataHost="ha_group2" database="db2" name="dn4" />
-      <dataHost balance="2" maxCon="1000" minCon="10" name="ha_group2" slaveThreshold="100" >
-               <heartbeat>select user()</heartbeat>
-               <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-                  <readHost host="hostS1" password="111111" url="172.100.9.2:3306" user="test"/>
-               </writeHost>
-       </dataHost>
+       <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+       <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,schema2</property>
-    </user>
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        </dbInstance>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" readWeight="2">
+        </dbInstance>
+    </dbGroup>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -326,13 +329,12 @@ Feature: verify hint sql
       | conn_0 | False   | select * from mysql.general_log where argument  like 'select COUNT(*)%from%test_table%' | length{(0)} |
       | conn_0 | False   | set global log_output='file'                                                            | success     |
       | conn_0 | True    | set global general_log=off                                                              | success     |
-
   @TRIVIAL
   Scenario: hint for specail sql syntax: call procedure #6
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
       """
-        <table name="test_sp" dataNode="dn1,dn3" rule="hash-two" />
-        <table name="test_shard" dataNode="dn1,dn3" rule="hash-two" />
+        <shardingTable name="test_sp" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -350,7 +352,7 @@ Feature: verify hint sql
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                 | expect                     | db      |
-      | conn_0 | False   | /*!dble:datanode=dn1*/call select_name                              | has{[((2L, 'test_sp2'),)]} | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                              | has{[((2L, 'test_sp2'),)]} | schema1 |
       | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | has{[((2L, 'test_sp2'),)]} | schema1 |
 
   @regression
@@ -402,9 +404,9 @@ Feature: verify hint sql
 
   Scenario: support multi-statement in procedure   author:wujinling #9
     #from issue:1228
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
-      """
-        <table name="test_shard" dataNode="dn1,dn3" rule="hash-two" />
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+     """
+        <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -426,35 +428,35 @@ Feature: verify hint sql
       | conn_0 | False   | create table sharding_4_t1 (id int ,name varchar(20))                                                                                                                                                                                                                                                                                | success                              | schema1 |
       | conn_0 | False   | create table test1 (id int ,name varchar(20))                                                                                                                                                                                                                                                                                        | success                              | schema1 |
       | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4),(5,5)                                                                                                                                                                                                                                                                        | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists test1                                                                                                                                                                                                                                                                                  | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists test_get                                                                                                                                                                                                                                                                               | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/CREATE FUNCTION test1(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select name into x from sharding_4_t1 where id =v_id; RETURN x; END                                                                                                                                              | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/CREATE FUNCTION test_get(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select test1(v_id) into x ; RETURN x; END                                                                                                                                                                     | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/select test1(4)                                                                                                                                                                                                                                                                                                | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/select test_get(4)                                                                                                                                                                                                                                                                                             | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function test1                                                                                                                                                                                                                                                                                            | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/select test_get(4)                                                                                                                                                                                                                                                                                             | FUNCTION db1.test1 does not exist    | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function test_get                                                                                                                                                                                                                                                                                         | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function test_get                                                                                                                                                                                                                                                                                         | FUNCTION db1.test_get does not exist | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists `test-1`                                                                                                                                                                                                                                                                               | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists `test-get`                                                                                                                                                                                                                                                                             | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/CREATE FUNCTION `test-1`(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select name into x from sharding_4_t1 where id =v_id; RETURN x; END                                                                                                                                           | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/CREATE FUNCTION `test-get`(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select `test-1`(v_id) into x ; RETURN x; END                                                                                                                                                                | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/select `test-get`(4)                                                                                                                                                                                                                                                                                           | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists test1                                                                                                                                                                                                                                                                                  | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists test_get                                                                                                                                                                                                                                                                               | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/CREATE FUNCTION test1(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select name into x from sharding_4_t1 where id =v_id; RETURN x; END                                                                                                                                              | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/CREATE FUNCTION test_get(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select test1(v_id) into x ; RETURN x; END                                                                                                                                                                     | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select test1(4)                                                                                                                                                                                                                                                                                                | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select test_get(4)                                                                                                                                                                                                                                                                                             | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function test1                                                                                                                                                                                                                                                                                            | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select test_get(4)                                                                                                                                                                                                                                                                                             | FUNCTION db1.test1 does not exist    | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function test_get                                                                                                                                                                                                                                                                                         | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function test_get                                                                                                                                                                                                                                                                                         | FUNCTION db1.test_get does not exist | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists `test-1`                                                                                                                                                                                                                                                                               | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists `test-get`                                                                                                                                                                                                                                                                             | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/CREATE FUNCTION `test-1`(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select name into x from sharding_4_t1 where id =v_id; RETURN x; END                                                                                                                                           | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/CREATE FUNCTION `test-get`(v_id int) RETURNS VARCHAR(255) BEGIN DECLARE x VARCHAR(255) DEFAULT ''; select `test-1`(v_id) into x ; RETURN x; END                                                                                                                                                                | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select `test-get`(4)                                                                                                                                                                                                                                                                                           | success                              | schema1 |
       | conn_0 | False   | select `test-get`(4),id from sharding_4_t1                                                                                                                                                                                                                                                                                           | Unknown function `TEST-GET`          | schema1 |
       | conn_0 | False   | select `test-get`(4),id from sharding_4_t1,test1                                                                                                                                                                                                                                                                                     | error totally whack                  | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists myTime                                                                                                                                                                                                                                                                                 | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/CREATE FUNCTION myTime() RETURNS VARCHAR(30) RETURN DATE_FORMAT(NOW(),'%Y%m%d %H%i%s');                                                                                                                                                                                                                        | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/select myTime()                                                                                                                                                                                                                                                                                                | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/drop function if exists caseTest                                                                                                                                                                                                                                                                               | success                              | schema1 |
-      | conn_0 | False   | /*#dble:datanode=dn1*/create function caseTest(str varchar(5),num int) returns int begin case str when 'power' then set @result=power(num,2); when 'ceil' then set @result=ceil(num); when 'floor' then set @result=floor(num); when 'round' then set @result=round(num); else set @result=0; end case; return (select @result); end | success                              | schema1 |
-      | conn_0 | True    | /*#dble:datanode=dn1*/select caseTest('power',2)                                                                                                                                                                                                                                                                                     | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists myTime                                                                                                                                                                                                                                                                                 | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/CREATE FUNCTION myTime() RETURNS VARCHAR(30) RETURN DATE_FORMAT(NOW(),'%Y%m%d %H%i%s');                                                                                                                                                                                                                        | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select myTime()                                                                                                                                                                                                                                                                                                | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/drop function if exists caseTest                                                                                                                                                                                                                                                                               | success                              | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/create function caseTest(str varchar(5),num int) returns int begin case str when 'power' then set @result=power(num,2); when 'ceil' then set @result=ceil(num); when 'floor' then set @result=floor(num); when 'round' then set @result=round(num); else set @result=0; end case; return (select @result); end | success                              | schema1 |
+      | conn_0 | True    | /*#dble:shardingNode=dn1*/select caseTest('power',2)                                                                                                                                                                                                                                                                                     | success                              | schema1 |
 
   @run
   Scenario: support dble import/export by using GUI  author:wujinling,2019.09.19 #11
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
-      """
-        <table name="test_shard" dataNode="dn1,dn3" rule="hash-two" />
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+     """
+        <shardingTable name="test_shard" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -486,7 +488,7 @@ Feature: verify hint sql
      Target Server Version : 50713
      File Encoding         : 65001
 
-     Date: 08/07/2019 16:01:38
+     Date: 11/06/2020 16:01:38
      */
 
      SET NAMES utf8mb4;
@@ -504,7 +506,6 @@ Feature: verify hint sql
      """
       mysql -h127.0.0.1 -utest -P8066 -p111111 schema1 < /opt/dble/hint_test.sql
      """
-
     Then execute sql in "dble-1" in "user" mode
       | sql                      | expect      | db      |
       | select * from test_shard | length{(9)} | schema1 |
