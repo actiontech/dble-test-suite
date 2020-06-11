@@ -4,23 +4,20 @@
 Feature: test default db change right; cross db table with same name not affected by others; and cross db sql works right
 
   Background: config for this test suites
-    Given add xml segment to node with attribute "{'tag':'root'}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn1,dn2" name="test1" type="global" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test2" rule="hash-four" />
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+            <globalTable shardingNode="dn1,dn2" name="test1" />
+            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test2" function="hash-four" shardingColumn="id" />
     </schema>
     <schema name="testdb" sqlMaxLimit="100">
-            <table dataNode="dn3,dn4" name="test1" rule="hash-two" />
-            <table dataNode="dn1,dn2,dn3,dn4" name="test3" rule="hash-four" />
+            <shardingTable shardingNode="dn3,dn4" name="test1" function="hash-two" shardingColumn="id" />
+            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test3" function="hash-four" shardingColumn="id" />
     </schema>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-    """
-    <user name="test">
-        <property name="password">111111</property>
-        <property name="schemas">schema1,testdb</property>
-    </user>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+     """
+     <shardingUser name="test" password="111111" schemas="schema1,testdb" readOnly="false"/>
     """
     Then execute admin cmd "reload @@config_all"
 
