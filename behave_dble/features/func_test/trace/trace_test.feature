@@ -3,6 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/24
 #2.19.11.0#dble-7872
+  @skip
 Feature: track SQL and analyze SQL execution
 
   Scenario: turn on mysql trace and analyze sql with trace #1
@@ -21,7 +22,6 @@ Feature: track SQL and analyze SQL execution
       | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                                          |
       | Execute_SQL  | dn2         | SELECT * FROM sharding_4_t1 WHERE id = 1 LIMIT 100 |
       | Fetch_result | dn2         | SELECT * FROM sharding_4_t1 WHERE id = 1 LIMIT 100 |
-
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_0 | False   | select * from sharding_4_t1 | length{(5)} | schema1 |

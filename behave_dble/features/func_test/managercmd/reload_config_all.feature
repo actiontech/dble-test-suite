@@ -33,7 +33,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    s/#-DbackendProcessorExecutor=12/-DbackendProcessorExecutor=4/
+    a/-DbackendProcessorExecutor=4
     """
     Given Restart dble in "dble-1" success
 
