@@ -11,7 +11,7 @@ Feature: test high-availability related commands
   Scenario: end to end ha switch test
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
-     s/-DuseOuterHa=true/-DuseOuterHa=true/
+     a/-DuseOuterHa=true
     """
     Given Restart dble in "dble-1" success
 #   a transaction in processing
@@ -114,5 +114,5 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      0   | true       |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      1   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | R      |      0   | true        |
