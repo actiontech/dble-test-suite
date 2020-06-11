@@ -427,8 +427,8 @@ Feature: test "check full @@metadata...'"
       """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
        """
-       s/-DcheckTableConsistency=0/-DcheckTableConsistency=1/
-       s/-DcheckTableConsistencyPeriod=60000/-DcheckTableConsistencyPeriod=1000/
+       a/-DcheckTableConsistency=1
+       a/-DcheckTableConsistencyPeriod=1000
        """
     Given Restart dble in "dble-1" success
     Then check following text exist "N" in file "dble.log" in host "dble-1"
