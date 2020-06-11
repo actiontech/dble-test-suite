@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/7/25
+@skip
 Feature: #test the correctness of sql transformation
 
   Scenario: #test the explain result of `limit` #1
@@ -17,10 +18,10 @@ Feature: #test the correctness of sql transformation
       | conn_0 | False    | explain select distinct(id) from sharding_4_t1           | hasStr{SELECT id FROM sharding_4_t1 GROUP BY id LIMIT 100'}  | schema1 |
       | conn_0 | False    | explain select 1                                         | hasStr{('dn5', 'BASE SQL', 'select 1'),}                     | schema1 |
       | conn_0 | True     | explain select * from sharding_4_t1,sharding_3_t1        | hasNoStr{LIMIT}                                              | schema1 |
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="table_a" dataNode="dn1,dn2" rule="hash-two" cacheKey="id"/>
-        <table name="table_b" dataNode="dn1,dn2" rule="hash-two" needAddLimit="false"/>
+        <shardingTable name="table_a" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+        <shardingTable name="table_b" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" sqlMaxLimit="-1"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -33,10 +34,8 @@ Feature: #test the correctness of sql transformation
       | conn_0 | True     | explain select * from table_b                    | hasStr{('dn1', 'BASE SQL', 'select * from table_b'),}           | schema1 |
     Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
      """
-      /layedpool.TableID2DataNodeCache=encache,10000,18000/d
-      /#layedpool.TableID2DataNodeCacheType=encache/d
-      /# default cache/a #layedpool.TableID2DataNodeCache=encache,10000,18000
-      /# no default cache,but set cache type/a layedpool.TableID2DataNodeCacheType=encache
+      a/#layedpool.TableID2DataNodeCache=encache,10000,18000
+      a/layedpool.TableID2DataNodeCacheType=encache
     """
     Then check following text exist "Y" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
@@ -57,10 +56,10 @@ Feature: #test the correctness of sql transformation
       | conn_0 | True    | explain select * from table_a order by id limit 3,9       | hasStr{ASC LIMIT 12}   | schema1 |
     Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
      """
-      /#layedpool.TableID2DataNodeCache=encache,10000,18000/d
-      /layedpool.TableID2DataNodeCacheType=encache/d
-      /# default cache/a layedpool.TableID2DataNodeCache=encache,10000,18000
-      /# no default cache,but set cache type/a #layedpool.TableID2DataNodeCacheType=encache
+      d/#layedpool.TableID2DataNodeCache=encache,10000,18000
+      d/layedpool.TableID2DataNodeCacheType=encache
+      a/layedpool.TableID2DataNodeCache=encache,10000,18000
+      a/#layedpool.TableID2DataNodeCacheType=encache
     """
     Then check following text exist "Y" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
