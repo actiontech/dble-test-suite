@@ -350,7 +350,7 @@ def conf_zk_in_node(context,node,hosts_form):
         # update cluster.cnf:
         cmd1 = "sed -i -e 's/clusterEnable=.*/clusterEnable=true/g' -e 's/clusterIP=.*/clusterIP={1}:{2}/g' -e 's/# rootPath=.*/rootPath=\/dble/g' {0}".format(cluster_conf, zk_server_ip, zk_server_port)
         # update bootstrap.cnf:
-        cmd2 = "sed -i -e 's/MaxDirectMemorySize=.*/MaxDirectMemorySize=2G/g' -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(myid, bootstrap_conf)
+        cmd2 = "sed -i -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(myid, bootstrap_conf)
     else:
         zk_server_ip_1 = context.cfg_zookeeper['zookeeper-1']['ip']
         zk_server_ip_2 = context.cfg_zookeeper['zookeeper-2']['ip']
