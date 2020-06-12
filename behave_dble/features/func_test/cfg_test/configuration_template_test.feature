@@ -5,7 +5,7 @@
 # 2.19.11.0#dble-7843
 Feature: use template to generate configuration file, check function is normal
 
-  @skip
+  @skip #this case need refactor later
   Scenario: overwrite dble configuration by configuration templates
       #1.overwrite configuration by template, and modifying mysql node ip, dble can start normally
       #2.create databases by admin commands "create database"
