@@ -69,7 +69,6 @@ Feature: test some import nodes attr in sharding.xml
 
 
   @TRIVIAL
-  @skip #for issue: http://10.186.18.11/jira/browse/DBLE0REQ-294
   Scenario: config "table" attr "name" with multiple values #3
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
      """
