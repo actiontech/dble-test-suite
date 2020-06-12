@@ -12,8 +12,7 @@ Feature: set charset in server.xml,check backend charsets are as set
     #   1.1 set backend charset utf8mb4, front charset utf8mb4;
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-Dcharset/d
-    /# connection/a -Dcharset=utf-8
+    $a\-Dcharset=utf-8
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -52,8 +51,7 @@ Feature: set charset in server.xml,check backend charsets are as set
     #   1.2 set backend charset latin1, front charset default latin1;
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-Dcharset/d
-    /# connection/a -Dcharset=latin1
+    $a\-Dcharset=latin1
     """
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_B"
@@ -98,8 +96,7 @@ Feature: set charset in server.xml,check backend charsets are as set
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-Dcharset/d
-    /# connection/a -Dcharset=utf-8
+    $a\-Dcharset=utf-8
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
