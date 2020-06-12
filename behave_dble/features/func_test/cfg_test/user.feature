@@ -214,12 +214,7 @@ Feature: test config in user.xml
   Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #9
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-      /-Dprocessors/d
-      /-DprocessorExecutor/d
-      /-DmaxCon/d
-      /#  base config/a -Dprocessors=1
-      /#  base config/a -DprocessorExecutor=1
-      /#  base config/a -DmaxCon=1
+      $a\-DmaxCon=1
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -240,10 +235,8 @@ Feature: test config in user.xml
   Scenario: test tableStructureCheckTask from issue:1098 #10
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-      /-DcheckTableConsistency/d
-      /-DcheckTableConsistencyPeriod/d
-      /# consistency/a -DcheckTableConsistency=1
-      /# consistency/a -DcheckTableConsistencyPeriod=1000
+      $a\-DcheckTableConsistency=1
+      $a\-DcheckTableConsistencyPeriod=1000
     """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
@@ -281,12 +274,7 @@ Feature: test config in user.xml
     """
 #     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
 #    """
-#      /-DfakeMySQLVersion/d
-#      /-DprocessorExecutor/d
-#      /-DmaxCon/d
-#      /# if need out HA/a -DfakeMySQLVersion=5.7.13
-#      /#  base config/a -DprocessorExecutor=1
-#      /#  base config/a -DmaxCon=1
+
 #    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
