@@ -12,14 +12,18 @@ Feature: Functional testing of global sequences
 #  2.sequence column value should be unique
 #  3.single thread insert values to sequenceColumn, the values should be continuous
 #  4.multiple thread insert values to sequenceColumn, the vlaues should be unique, and insert time should be tolerable(<1s)
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
+        <shardingTable name="test_auto" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
     """
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-        <property name="sequenceHandlerType">1</property>
+        $a sequenceHandlerType=1
     """
+#    Given add xml segment to node with attribute "{'tag':'system'}" in "sharding.xml"
+#    """
+#        <property name="sequenceHandlerType">1</property>
+#    """
     When Add some data in "sequence_db_conf.properties"
     """
     `schema1`.`test_auto`=dn1
@@ -72,14 +76,19 @@ Feature: Functional testing of global sequences
 #  3.multiple thread insert values to sequenceColumn, the vlaues should be unique
 #  4.int type for current type sequence type is err, expect bigint
 
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
+        <shardingTable name="test_auto" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
     """
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-        <property name="sequenceHandlerType">2</property>
+        /sequenceHandlerType/d
+        $a sequenceHandlerType=2
     """
+#    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+#    """
+#        <property name="sequenceHandlerType">2</property>
+#    """
     Given Restart dble in "dble-1" success
     #case 1: can not assign value to sequenceColumn, and can assgin value to columns without sequenceColumn
     Then execute sql in "dble-1" in "user" mode
@@ -123,6 +132,7 @@ Feature: Functional testing of global sequences
       | sql                                                            | expect      | db      |
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
+
   Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
   #    case points:
   #  1.Verify the illegal value of the WORKID
@@ -130,87 +140,116 @@ Feature: Functional testing of global sequences
   #  3.Verify the illegal value of the START_TIME
   #  4.START_TIME>the time of dble start
   #  5.START_TIME+69 years<the time of dble start
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="test_auto" dataNode="dn1,dn2,dn3,dn4" incrementColumn="id" rule="hash-four" />
+        <shardingTable name="test_auto" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
     """
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-        <property name="sequenceHandlerType">2</property>
+        /sequenceHandlerType/d
+        $a sequenceHandlerType=2
     """
+#    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+#    """
+#        <property name="sequenceHandlerType">2</property>
+#    """
     #case 1: Verify the illegal value of the WORKID
-     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-     """
-      s/WORKID=.*/WORKID=32/
+#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#    """
+#        s/instanceId=.*/instanceId=64/
+#    """
+#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#    """
+#    s/WORKID=.*/WORKID=32/
+#    """
+#    Then restart dble in "dble-1" failed for
+#    """
+#        instanceId can't be greater than 1023 or less than 0
+#    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
+        s/instanceId=.*/instanceId=-1/
+    """
+#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#     """
+#      s/WORKID=.*/WORKID=-1/
+#    """
     Then restart dble in "dble-1" failed for
     """
-     worker Id can't be greater than 31 or less than 0
+        instanceId can't be greater than 1023 or less than 0
     """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-     """
-      s/WORKID=.*/WORKID=-1/
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    Then restart dble in "dble-1" failed for
+        s/instanceId=.*/instanceId=33/
     """
-     worker Id can't be greater than 31 or less than 0
-    """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-     """
-      s/WORKID=.*/WORKID=01/
-    """
+#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#     """
+#      s/WORKID=.*/WORKID=01/
+#    """
     Given Restart dble in "dble-1" success
     #case 2: Verify the illegal value of the DATAACENTERID
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-     """
-      s/DATAACENTERID=.*/DATAACENTERID=32/
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
+        s/instanceId=.*/instanceId=1025/
+    """
+#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#     """
+#      s/DATAACENTERID=.*/DATAACENTERID=32/
+#    """
     Then restart dble in "dble-1" failed for
     """
-     datacenter Id can't be greater than 31 or less than 0
+        instanceId can't be greater than 1023 or less than 0
     """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-     """
-      s/DATAACENTERID=.*/DATAACENTERID=-1/
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
+        s/instanceId=.*/instanceId=-31/
+    """
+#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#     """
+#      s/DATAACENTERID=.*/DATAACENTERID=-1/
+#    """
     Then restart dble in "dble-1" failed for
     """
-     datacenter Id can't be greater than 31 or less than 0
+        instanceId can't be greater than 1023 or less than 0
     """
-     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-     """
-      s/DATAACENTERID=.*/DATAACENTERID=01/
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
+        s/instanceId=.*/instanceId=33/
+    """
+#     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#     """
+#      s/DATAACENTERID=.*/DATAACENTERID=01/
+#    """
     Given Restart dble in "dble-1" success
     #case 3: Verify the illegal value of the START_TIME
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
      """
-      s/[#]*START_TIME=.* /START_TIME=2010\/11\/04 /
+      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010\/11\/04 /
     """
     Given Restart dble in "dble-1" success
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-    START_TIME in sequence_time_conf.properties parse exception, starting from 2010-11-04 09:42:54
-    """
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+#    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#    """
+#    START_TIME in sequence_time_conf.properties parse exception, starting from 2010-11-04 09:42:54
+#    """
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
      """
-      s/[#]*START_TIME=.* /START_TIME=2010-11-04 /
+      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-11-04 /
     """
     Given Restart dble in "dble-1" success
     #case 4: START_TIME>the time of dble start
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    s/[#]*START_TIME=.* /START_TIME=2190-10-01 /
+    s/[#]*sequenceStartTime=.* /sequenceStartTime=2190-10-01 /
     """
     Given Restart dble in "dble-1" success
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-    START_TIME in sequence_time_conf.properties mustn'\''t be over than dble start time, starting from 2010-11-04 09:42:54
-    """
+#    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#    """
+#    sequenceStartTime in cluster.cnf mustn'\''t be over than dble start time, starting from 2010-11-04 09:42:54
+#    """
     #case 5: START_TIME+69 years<the time of dble start
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    s/[#]*START_TIME=.* /START_TIME=1910-10-01 /
+    s/[#]*sequenceStartTime=.* /sequenceStartTime=1910-10-01 /
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -218,9 +257,9 @@ Feature: Functional testing of global sequences
       | conn_0 | False    |drop table if exists test_auto                   | success        | schema1 |
       | conn_0 | False    |create table test_auto(id bigint,time char(120)) | success        | schema1 |
       | conn_0 | True     |insert into test_auto values(1)                  | Global sequence has reach to max limit and can generate duplicate sequences | schema1 |
-    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    s/[#]*START_TIME=.* /START_TIME=2010-11-04 /
+    s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-11-04 /
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
