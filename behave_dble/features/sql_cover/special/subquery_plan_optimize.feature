@@ -33,10 +33,10 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
     Given restart mysql in "mysql-master2"
     Given restart mysql in "mysql-slave1"
     Given restart mysql in "mysql-slave2"
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="table_a" dataNode="dn1,dn2" rule="hash-two" />
-        <table name="table_b" dataNode="dn1,dn2" rule="hash-two" />
+        <shardingTable name="table_a" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="table_b" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     """
     Then execute admin cmd "reload @@config_all"
 #    default heartbeat period is 10 seconds,wait enough time for heartbeat recover
@@ -55,10 +55,10 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
 
   @regression
   Scenario: check Global tables subquery execute plan optimized #2
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="table_a" dataNode="dn1,dn2" type="global" />
-        <table name="table_b" dataNode="dn1,dn2" type="global" />
+        <globalTable name="table_a" shardingNode="dn1,dn2"/>
+        <globalTable name="table_b" shardingNode="dn1,dn2"/>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -73,11 +73,11 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 1 |
 
   Scenario: the optimization of merge #3
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="tb_parent" dataNode="dn1,dn2" rule="hash-two">
-             <childTable name="tb_child1" joinKey="child1_id" parentKey="id"/>
-        </table>
+        <shardingTable name="tb_parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id">
+             <childTable name="tb_child1" joinColumn="child1_id" parentColumn="id"/>
+        </shardingTable>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
