@@ -4,42 +4,57 @@
 # Created by yangxiaoliang at 2019/11/6
 # 2.19.11.0#dble-7890
 Feature: when global sequence with zookeeper mode, if system time exceeds 17 years after startup time ,it will report an error
-
+  @skip
   @skip_restart
   Scenario: when "insert time" greater than "start time" and less than "start time + 17years", check the correctness of the self-increment sequence #1
     Given reset dble registered nodes in zk
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "schema.xml"
+    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
-        <table name="mytest_auto_test" dataNode="dn1,dn2,dn3,dn4" rule="hash-four" incrementColumn="id"/>
+        <shardingTable name="mytest_auto_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" incrementColumn="id" shardingColumn="id"/>
     """
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-        <property name="sequenceHandlerType">3</property>
+    $a sequenceHandlerType=3
+    $a sequenceStartTime=2010-11-04 09:42:54
+    $a sequenceInstanceByZk=true
     """
+    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-2" with sed cmds
+    """
+    $a sequenceHandlerType=3
+    $a sequenceStartTime=2010-11-04 09:42:54
+    $a sequenceInstanceByZk=true
+    """
+    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-2" with sed cmds
+    """
+    $a sequenceHandlerType=3
+    $a sequenceStartTime=2010-11-04 09:42:54
+    $a sequenceInstanceByZk=true
+    """
+
     Given execute single sql in "dble-1" in "user" mode and save resultset in "sysTime"
       | sql               |
       | select sysdate()  |
-    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
-    """
-    /INSTANCEID/c INSTANCEID=zk
-    /CLUSTERID/c CLUSTERID=01
-    /START_TIME/c START_TIME=2010-11-04 09:42:54
-    """
-     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
-    """
-    /INSTANCEID/c INSTANCEID=zk
-    /CLUSTERID/c CLUSTERID=02
-    /START_TIME/c START_TIME=2010-11-04 09:42:54
-    """
-     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-3" with sed cmds
-    """
-    /INSTANCEID/c INSTANCEID=zk
-    /CLUSTERID/c CLUSTERID=03
-    /START_TIME/c START_TIME=2010-11-04 09:42:54
-    """
-    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-1"
-    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-2"
-    Then change start_time to current time "sysTime" in "sequence_distributed_conf.properties" in dble "dble-3"
+#    Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-1" with sed cmds
+#    """
+#    /INSTANCEID/c INSTANCEID=zk
+#    /CLUSTERID/c CLUSTERID=01
+#    /START_TIME/c START_TIME=2010-11-04 09:42:54
+#    """
+#     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-2" with sed cmds
+#    """
+#    /INSTANCEID/c INSTANCEID=zk
+#    /CLUSTERID/c CLUSTERID=02
+#    /START_TIME/c START_TIME=2010-11-04 09:42:54
+#    """
+#     Given update file content "{install_dir}/dble/conf/sequence_distributed_conf.properties" in "dble-3" with sed cmds
+#    """
+#    /INSTANCEID/c INSTANCEID=zk
+#    /CLUSTERID/c CLUSTERID=03
+#    /START_TIME/c START_TIME=2010-11-04 09:42:54
+#    """
+    Then change start_time to current time "sysTime" in "cluster.cnf" in dble "dble-1"
+    Then change start_time to current time "sysTime" in "cluster.cnf" in dble "dble-2"
+    Then change start_time to current time "sysTime" in "cluster.cnf" in dble "dble-3"
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
