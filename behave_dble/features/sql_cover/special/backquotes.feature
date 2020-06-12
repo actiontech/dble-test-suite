@@ -32,8 +32,8 @@ Feature: verify table name or schema name enclosed by backquotes can work fine
       | conn_0 | False    |   create table sharding_enum_string_t1(id_0 int,id char(3))                                                            | success        | schema1 |
       | conn_0 | False    |   insert into sharding_enum_string_t1 values(1,'aaa'),(2,'bbb'),(3,'ccc')                                              | success        | schema1 |
       | conn_0 | False    |   select * from sharding_enum_string_t1                                                                                | length{(3)}    | schema1 |
-      | conn_0 | False    |  /*!dble:datanode=dn2*/ select * from `sharding_enum_string_t1` where id='bbb'                                         | length{(1)}    | schema1 |
-      | conn_0 | False    |  /*!dble:datanode=dn2*/ select * from `db1`.`sharding_enum_string_t1` where id='bbb'                                   | length{(1)}    |         |
+      | conn_0 | False    |  /*!dble:shardingnode=dn2*/ select * from `sharding_enum_string_t1` where id='bbb'                                         | length{(1)}    | schema1 |
+      | conn_0 | False    |  /*!dble:shardingnode=dn2*/ select * from `db1`.`sharding_enum_string_t1` where id='bbb'                                   | length{(1)}    |         |
       | conn_0 | False    |   explain select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having `sid` > 1 | success        | schema1 |
       | conn_0 | False    |   explain select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1   | success        | schema1 |
       | conn_0 | False    |   explain select `a`.`id_0` as sid from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1     | success        | schema1 |
