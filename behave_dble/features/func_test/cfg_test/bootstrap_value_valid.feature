@@ -5,7 +5,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
   @NORMAL
-  @skip #waiting for warning msg changed
+  @skip #waiting for warning msg change finished 2020.06.12
   Scenario: config all system property, some values are illegal, start dble success #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -161,7 +161,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | Xml     | WARNING | property [ enableSlowLog ] 'false' data type should be int, skip               |
       | Xml     | WARNING | property [ frontSocketNoDelay ] 'true' data type should be int, skip           |
       | Xml     | WARNING | property [ recordTxn ] 'false' data type should be int, skip                   |
-      | Xml     | WARNING | Property [ sequenceHandlerType ] '20' in bootstrap.cnf is illegal, use 2 replaced  |
+      | Xml     | WARNING | sequenceHandlerType value is 20, it will use default value:2                   |
       | Xml     | WARNING | Property [ txIsolation ] '30' in bootstrap.cnf is illegal, use 3 replaced         |
       | Xml     | WARNING | property [ useCompression ] 'true' data type should be int, skip               |
       | Xml     | WARNING | property [ useCostTimeStat ] 'false' data type should be int, skip             |
