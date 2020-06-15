@@ -13,8 +13,6 @@ Feature: db config stable test
     Given Restart dble in "dble-1" success
 
   @NORMAL
-  @curr
-  @skip_restart
   Scenario: config contains only 1 stopped mysqld, reload @@config_all fail, start the mysqld, reload @@config_all success #1
     Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"

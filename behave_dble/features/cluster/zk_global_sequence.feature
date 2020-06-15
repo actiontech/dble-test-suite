@@ -4,8 +4,8 @@
 # Created by yangxiaoliang at 2019/11/6
 # 2.19.11.0#dble-7890
 Feature: when global sequence with zookeeper mode, if system time exceeds 17 years after startup time ,it will report an error
-  @skip
-  @skip_restart
+
+  @skip_restart @skip #because of need to chanage case
   Scenario: when "insert time" greater than "start time" and less than "start time + 17years", check the correctness of the self-increment sequence #1
     Given reset dble registered nodes in zk
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
