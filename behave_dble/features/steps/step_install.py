@@ -356,7 +356,7 @@ def conf_zk_in_node(context,node,hosts_form):
         zk_server_ip_2 = context.cfg_zookeeper['zookeeper-2']['ip']
         zk_server_ip_3 = context.cfg_zookeeper['zookeeper-3']['ip']
         cmd1 = "sed -i -e 's/clusterEnable=.*/clusterEnable=true/g' -e 's/clusterIP=.*/clusterIP={1}:{4},{2}:{4},{3}:{4}/g' -e 's/# rootPath=.*/rootPath=\/dble/g' {0}".format(cluster_conf, zk_server_ip_1,zk_server_ip_2,zk_server_ip_3,zk_server_port)
-        cmd2 = "sed -i -e 's/MaxDirectMemorySize=.*/MaxDirectMemorySize=2G/g' -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(
+        cmd2 = "sed -i -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(
             myid, bootstrap_conf)
 
     rc1, sto1, ste1 = ssh_client.exec_command(cmd1)
