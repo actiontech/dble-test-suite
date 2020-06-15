@@ -49,7 +49,7 @@ Feature: show @@connection.sql test
       |START_TIME          | 5            |
       |EXECUTE_TIME        | 6            |
       |SQL                 | 7            |
-
+  @skip
   @TRIVIAL
   Scenario: query execute time >1ms #2
     Then execute sql in "dble-1" in "user" mode
