@@ -7,12 +7,12 @@ Feature: test config in user.xml
      #1.1  client user with illegal label got error
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <shardingUser name="test_user" password="test_password" schemas="schema1" readOnly="false" test="0"/>
+     <shardingUser name="test_user" password="test_password" schemas="schema1" test="0"/>
     """
 
     Then execute admin cmd "reload @@config_all"
     """
-    These properties of user[test_user]  are not recognized: test
+    Attribute "test" must be declared for element type "shardingUser"
     """
 
   @TRIVIAL
@@ -177,22 +177,25 @@ Feature: test config in user.xml
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #7
    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <managerUser name="root" password="111111"  readOnly="false" maxCon="2"/>
-    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" maxCon="1"/>
+    <managerUser name="root" password="111111" maxCon="2"/>
+    <shardingUser name="test" password="111111" schemas="schema1" maxCon="1"/>
     <shardingUser name="action" password="action" schemas="schema1" readOnly="true" maxCon="1"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
         | user         | passwd    | conn   | toClose  | sql      | expect  | db     |
         | test         | 111111    | conn_0 | False    | select 1 | success | schema1 |
-        | test         | 111111    | new    | True     | select 1 | Access denied for user 'test',too many connections for this user | schema1 |
+        | test         | 111111    | new    | True     | select 1 | too many connections for this user | schema1 |
+        | test         | 111111    | new    | True     | select 1 | test | schema1 |
         | action       | action    | conn_1 | False    | select 1 | success | schema1 |
-        | action       | action    | new    | True     | select 1 | Access denied for user 'action',too many connections for this user | schema1 |
+        | action       | action    | new    | True     | select 1 | too many connections for this user | schema1 |
+        | action       | action    | new    | True     | select 1 | action | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | show @@version | success |
       | conn_3 | False   | show @@version | success |
-      | new    | False   | show @@version | Access denied for user 'root',too many connections for this user |
+      | new    | False   | show @@version | too many connections for this user |
+      | new    | False   | show @@version | root |
 
   @NORMAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #8
