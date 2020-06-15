@@ -52,7 +52,6 @@ Feature:test user's privileges under different combination
         | test      | 111111        | conn_0 | True    | drop table if exists test_table                    | success        | schema1|
 
   @BLOCKER
-  @skip #blocked by issue:http://10.186.18.11/jira/browse/DBLE0REQ-308
   Scenario: check user privileges work right under check=true setting, including: #3
   tables' explict privileges prior to schema's,
   one client users' privileges not affected by others,
@@ -347,7 +346,6 @@ Feature:test user's privileges under different combination
     Then execute admin cmd "reload @@config_all"
 
   @NORMAL
-  @skip #blocked by issue:http://10.186.18.11/jira/browse/DBLE0REQ-308
   Scenario: config both table and schema privileges, table's privilege prior to schema's #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
