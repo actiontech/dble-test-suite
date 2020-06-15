@@ -21,3 +21,6 @@
 # processor
 -Dprocessors=1
 -DprocessorExecutor=1
+
+#for code coverage
+wrapper.java.additional.1=-javaagent:lib/jacocoagent.jar=output=file,destfile=logs/dble_jacoco.exec
