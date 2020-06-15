@@ -19,3 +19,6 @@
 -DserverId=server_1
 #system config
 -DserverPort=8066
+
+#for code coverage
+wrapper.java.additional.1=-javaagent:lib/jacocoagent.jar=output=file,destfile=logs/dble_jacoco.exec
