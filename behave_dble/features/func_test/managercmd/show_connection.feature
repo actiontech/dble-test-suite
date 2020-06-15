@@ -49,7 +49,7 @@ Feature: show @@connection.sql test
       |START_TIME          | 5            |
       |EXECUTE_TIME        | 6            |
       |SQL                 | 7            |
-  @skip
+  @skip #blocked by issue:http://10.186.18.11/jira/browse/DBLE0REQ-308
   @TRIVIAL
   Scenario: query execute time >1ms #2
     Then execute sql in "dble-1" in "user" mode
