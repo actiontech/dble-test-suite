@@ -38,6 +38,7 @@ Feature: test slow query log related manager command
       Given delete file "/opt/dble/slowQuery" on "dble-1"
       Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
+    $a -DenableSlowLog=1
     $a -DslowLogBaseName=query
     $a -DslowLogBaseDir=./slowQuery
     $a -DsqlSlowTime=1
