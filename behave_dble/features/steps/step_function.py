@@ -274,7 +274,6 @@ def step_impl(context, binary_a, binary_b, binary_c):
     binary_b = getattr(context, binary_b)
     binary_str = binary_a + binary_b
     setattr(context, binary_c, binary_str)
-    print("{} is: {}\n".format(binary_c, binary_str))
     logger.debug("{} is: {}".format(binary_c, binary_str))
 
 
@@ -285,7 +284,7 @@ def step_impl(context, binary_sub5, decimal_sub5, value=''):
     sql = "select conv({0},2,10)".format(binary)
     result = get_result(context, sql)
     setattr(context, decimal_sub5, result[0][0])
-    print("{} is: {}\n".format(decimal_sub5, getattr(context, decimal_sub5)))
+    logger.debug("{} is: {}\n".format(decimal_sub5, getattr(context, decimal_sub5)))
     if len(value.strip()) != 0:
         assert_that(result[0][0] == value), "expect value is {0}, but is {1}".format(value, result[0][0])
 
@@ -293,13 +292,13 @@ def step_impl(context, binary_sub5, decimal_sub5, value=''):
 @Then('convert decimal "{decimal_sub}" to datatime "{dt_name}"')
 def step_impl(context, decimal_sub, dt_name):
     unixtime = int(getattr(context, decimal_sub)) / 1000
-    print("unixtime is {0}".format(unixtime))
+    logger.debug("unixtime is {0}".format(unixtime))
     sql = "select from_unixtime('{0}')".format(unixtime)
-    print("sql is {0}".format(sql))
+    logger.debug("sql is {0}".format(sql))
     result = get_result(context, sql)
-    print("result is {0}\n".format(result))
+    logger.debug("result is {0}\n".format(result))
     setattr(context, dt_name, result[0][0])
-    print("{} is: {}\n".format(dt_name, getattr(context, dt_name)))
+    logger.debug("{} is: {}\n".format(dt_name, getattr(context, dt_name)))
 
 
 @Then('get datatime "{dt_name2}" by "{dt_name1}" minus "1970-01-01"')
@@ -308,8 +307,8 @@ def step_impl(context, dt_name2, dt_name1):
     sql = "select datediff('{0}','1970-01-01')".format(dt_name1_str)
     result = get_result(context, sql)
     setattr(context, dt_name2, result[0][0])
-    print("context.{0} is {1}\n".format(dt_name1, getattr(context, dt_name1)))
-    print("context.{0} is {1}\n".format(dt_name2, getattr(context, dt_name2)))
+    logger.debug("context.{0} is {1}\n".format(dt_name1, getattr(context, dt_name1)))
+    logger.debug("context.{0} is {1}\n".format(dt_name2, getattr(context, dt_name2)))
 
 
 @Then('datatime "{dt_name1}" plus start_time "{sys_time}" to get "{dt_name2}"')
@@ -319,7 +318,7 @@ def step_impl(context, dt_name1, sys_time, dt_name2):
     sql = "select date_add('{0}', interval {1} day)".format(start_time, dt_name1_str)
     result = get_result(context, sql)
     setattr(context, dt_name2, result[0][0])
-    print("context.{0} is {1}\n".format(dt_name2, getattr(context, dt_name2)))
+    logger.debug("context.{0} is {1}\n".format(dt_name2, getattr(context, dt_name2)))
 
 
 @Then('check time "{t1}" equal to "{t2}"')
@@ -363,7 +362,7 @@ def step_impl(context,time_param,curTime,mapFile,hostname):
     sed_cmd_str = "sed -i '/{0}/c {1}' {2}".format(time_param,text,targetFile)
     ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(sed_cmd_str)
-    print("execute cmd: {0}\n".format(sed_cmd_str))
+    logger.debug("execute cmd: {0}\n".format(sed_cmd_str))
     context.logger.info("execute cmd: {0}".format(sed_cmd_str))
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
