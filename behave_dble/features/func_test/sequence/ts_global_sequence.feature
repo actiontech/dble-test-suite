@@ -18,7 +18,8 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         s/instanceId=.*/instanceId=33/
     """
-    Then change sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
+    Then add sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
+#    Then change sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | db      |
@@ -86,7 +87,7 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         s/instanceId=.*/instanceId=994/
     """
-    Then change sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
+    Then add sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |

@@ -353,6 +353,20 @@ def step_impl(context,mapFile,hostname):
     rc, sto, err = ssh.exec_command(cmd)
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
 
+@Then('add {time_param} to current time "{curTime}" in "{mapFile}" in dble "{hostname}"')
+def step_impl(context,time_param,curTime,mapFile,hostname):
+    node = get_node(hostname)
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, mapFile)
+    text = "{0}={1}".format(time_param,getattr(context,curTime)[0][0])
+    context.logger.info("{0} = {1}".format(time_param,getattr(context,curTime)[0][0]))
+    sed_cmd_str = "sed -i '$a {0}' {1}".format(text,targetFile)
+    ssh = node.ssh_conn
+    rc, sto, err = ssh.exec_command(sed_cmd_str)
+    print (("execute cmd: {0}\n\n\n".format(sed_cmd_str)))
+    logger.debug("execute cmd: {0}\n".format(sed_cmd_str))
+    context.logger.info("execute cmd: {0}".format(sed_cmd_str))
+    assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
+
 @Then('change {time_param} to current time "{curTime}" in "{mapFile}" in dble "{hostname}"')
 def step_impl(context,time_param,curTime,mapFile,hostname):
     node = get_node(hostname)
@@ -362,6 +376,7 @@ def step_impl(context,time_param,curTime,mapFile,hostname):
     sed_cmd_str = "sed -i '/{0}/c {1}' {2}".format(time_param,text,targetFile)
     ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(sed_cmd_str)
+    print (("execute cmd: {0}\n\n\n".format(sed_cmd_str)))
     logger.debug("execute cmd: {0}\n".format(sed_cmd_str))
     context.logger.info("execute cmd: {0}".format(sed_cmd_str))
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
