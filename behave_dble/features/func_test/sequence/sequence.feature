@@ -124,15 +124,13 @@ Feature: Functional testing of global sequences
       | sql                                                            | expect      | db      |
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
-
-  @test-01
+  @skip
   Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
   #    case points:
-  #  1.Verify the illegal value of the WORKID
-  #  2.Verify the illegal value of the DATAACENTERID
-  #  3.Verify the illegal value of the START_TIME
-  #  4.START_TIME>the time of dble start
-  #  5.START_TIME+69 years<the time of dble start
+  #  1.Verify the illegal value of the instanceId
+  #  2.Verify the illegal value of the sequenceStartTime
+  #  3.sequenceStartTime>the time of dble start
+  #  4.sequenceStartTime+69 years<the time of dble start
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
         <shardingTable name="test_auto" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
@@ -204,11 +202,11 @@ Feature: Functional testing of global sequences
 #    """
 #    sequenceStartTime in cluster.cnf mustn'\''t be over than dble start time, starting from 2010-11-04 09:42:54
 #    """
-    #case 5: START_TIME+69 years<the time of dble start
+    #case 5: sequenceStartTime+69 years<the time of dble start
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
       /sequenceStartTime/d
-      $a sequenceStartTime=1810-10-01 09:42:54
+      $a sequenceStartTime=1910-10-01 09:42:54
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
