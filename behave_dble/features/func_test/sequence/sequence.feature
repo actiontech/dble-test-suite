@@ -20,10 +20,6 @@ Feature: Functional testing of global sequences
     """
         $a sequenceHandlerType=1
     """
-#    Given add xml segment to node with attribute "{'tag':'system'}" in "sharding.xml"
-#    """
-#        <property name="sequenceHandlerType">1</property>
-#    """
     When Add some data in "sequence_db_conf.properties"
     """
     `schema1`.`test_auto`=dn1
@@ -85,10 +81,6 @@ Feature: Functional testing of global sequences
         /sequenceHandlerType/d
         $a sequenceHandlerType=2
     """
-#    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
-#    """
-#        <property name="sequenceHandlerType">2</property>
-#    """
     Given Restart dble in "dble-1" success
     #case 1: can not assign value to sequenceColumn, and can assgin value to columns without sequenceColumn
     Then execute sql in "dble-1" in "user" mode
@@ -133,6 +125,7 @@ Feature: Functional testing of global sequences
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
 
+  @test-01
   Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
   #    case points:
   #  1.Verify the illegal value of the WORKID
@@ -149,31 +142,10 @@ Feature: Functional testing of global sequences
         /sequenceHandlerType/d
         $a sequenceHandlerType=2
     """
-#    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
-#    """
-#        <property name="sequenceHandlerType">2</property>
-#    """
-    #case 1: Verify the illegal value of the WORKID
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#        s/instanceId=.*/instanceId=64/
-#    """
-#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-#    """
-#    s/WORKID=.*/WORKID=32/
-#    """
-#    Then restart dble in "dble-1" failed for
-#    """
-#        instanceId can't be greater than 1023 or less than 0
-#    """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
         s/instanceId=.*/instanceId=-1/
     """
-#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-#     """
-#      s/WORKID=.*/WORKID=-1/
-#    """
     Then restart dble in "dble-1" failed for
     """
         instanceId can't be greater than 1023 or less than 0
@@ -182,20 +154,12 @@ Feature: Functional testing of global sequences
     """
         s/instanceId=.*/instanceId=33/
     """
-#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-#     """
-#      s/WORKID=.*/WORKID=01/
-#    """
     Given Restart dble in "dble-1" success
     #case 2: Verify the illegal value of the DATAACENTERID
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
         s/instanceId=.*/instanceId=1025/
     """
-#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-#     """
-#      s/DATAACENTERID=.*/DATAACENTERID=32/
-#    """
     Then restart dble in "dble-1" failed for
     """
         instanceId can't be greater than 1023 or less than 0
@@ -204,10 +168,6 @@ Feature: Functional testing of global sequences
     """
         s/instanceId=.*/instanceId=-31/
     """
-#    Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-#     """
-#      s/DATAACENTERID=.*/DATAACENTERID=-1/
-#    """
     Then restart dble in "dble-1" failed for
     """
         instanceId can't be greater than 1023 or less than 0
@@ -216,16 +176,12 @@ Feature: Functional testing of global sequences
     """
         s/instanceId=.*/instanceId=33/
     """
-#     Given update file content "/opt/dble/conf/sequence_time_conf.properties" in "dble-1" with sed cmds
-#     """
-#      s/DATAACENTERID=.*/DATAACENTERID=01/
-#    """
     Given Restart dble in "dble-1" success
     #case 3: Verify the illegal value of the START_TIME
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
      """
-      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010\/11\/04 /
-    """
+     $a sequenceStartTime=2010\/11\/04 09:42:54
+     """
     Given Restart dble in "dble-1" success
 #    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
 #    """
@@ -233,13 +189,15 @@ Feature: Functional testing of global sequences
 #    """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
      """
-      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-11-04 /
-    """
+      /sequenceStartTime/d
+      $a sequenceStartTime=2010-11-04 09:42:54
+     """
     Given Restart dble in "dble-1" success
     #case 4: START_TIME>the time of dble start
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    s/[#]*sequenceStartTime=.* /sequenceStartTime=2190-10-01 /
+      /sequenceStartTime/d
+      $a sequenceStartTime=2190-10-01 09:42:54
     """
     Given Restart dble in "dble-1" success
 #    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -249,7 +207,8 @@ Feature: Functional testing of global sequences
     #case 5: START_TIME+69 years<the time of dble start
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    s/[#]*sequenceStartTime=.* /sequenceStartTime=1910-10-01 /
+      /sequenceStartTime/d
+      $a sequenceStartTime=1810-10-01 09:42:54
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -259,7 +218,8 @@ Feature: Functional testing of global sequences
       | conn_0 | True     |insert into test_auto values(1)                  | Global sequence has reach to max limit and can generate duplicate sequences | schema1 |
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-    s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-11-04 /
+      /sequenceStartTime/d
+      $a sequenceStartTime=2010-11-04 09:42:54
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
