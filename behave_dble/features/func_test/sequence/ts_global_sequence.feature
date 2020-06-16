@@ -6,7 +6,7 @@
 #2.19.11.0#dble-7889
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
 
-  Scenario: when "insert time" greater than "start time" and less than "start time + 69years", check the correctness of the self-increment sequence #1
+  Scenario: when "insert time" greater than "sequenceStartTime" and less than "sequenceStartTime + 69years", check the correctness of the self-increment sequence #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
         <shardingTable name="mytest_auto_test" shardingNode="dn1,dn2,dn3,dn4" incrementColumn="id" shardingColumn="id" function="hash-four" />
@@ -56,7 +56,7 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
 
   @restore_sys_time
-  Scenario: when "system time" less than "start time + 69years", execute insert sql will error
+  Scenario: when "system time" less than "sequenceStartTime + 69years", execute insert sql will error
     note: this scenerio has issue: https://github.com/actiontech/dble/issues/1665  #2
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
