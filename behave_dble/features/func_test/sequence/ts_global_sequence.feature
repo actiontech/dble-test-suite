@@ -6,7 +6,6 @@
 #2.19.11.0#dble-7889
 Feature: when global sequence with timestamp mode, if system time exceeds 69 years after startup time ,it will error #1
 
-
   Scenario: when "insert time" greater than "start time" and less than "start time + 69years", check the correctness of the self-increment sequence #1
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
@@ -19,16 +18,6 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         s/instanceId=.*/instanceId=33/
     """
-#    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-#     """
-#      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-10-01 /
-#    """
-#    When Add some data in "sequence_time_conf.properties"
-#    """
-#    WORKID=01
-#    DATAACENTERID=01
-#    #START_TIME=2010-10-01 09:42:54
-#    """
     Then change sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -64,16 +53,6 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         s/instanceId=.*/instanceId=33/
     """
-#    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-#     """
-#      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-10-01 /
-#    """
-#    When Add some data in "sequence_time_conf.properties"
-#    """
-#    WORKID=01
-#    DATAACENTERID=01
-#    #START_TIME=2010-10-01 09:42:54
-#    """
 
   @restore_sys_time
   Scenario: when "system time" less than "start time + 69years", execute insert sql will error
@@ -95,7 +74,6 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
       | sql                                     | expect  | db      |
       | drop table if exists mytest_auto_test   | success | schema1 |
 
-  @skip
   Scenario: change configuration file, check the correctness of the self-increment sequence #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
@@ -108,16 +86,6 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         s/instanceId=.*/instanceId=994/
     """
-#    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-#    """
-#        s/[#]*sequenceStartTime=.* /#sequenceStartTime=2010-11-04 /
-#    """
-#    When Add some data in "sequence_time_conf.properties"
-#    """
-#    WORKID=02
-#    DATAACENTERID=31
-#    #START_TIME=2010-11-04 09:42:54
-#    """
     Then change sequenceStartTime to current time "sysTime" in "cluster.cnf" in dble "dble-1"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -155,7 +123,3 @@ Feature: when global sequence with timestamp mode, if system time exceeds 69 yea
     """
         s/instanceId=.*/instanceId=33/
     """
-#    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-#    """
-#        s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-10-01 /
-#    """
