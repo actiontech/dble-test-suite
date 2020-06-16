@@ -132,7 +132,7 @@ def step_impl(context, host_name, result_key, mode_name=None):
     res, _ = execute_sql_in_host(host_name, info_dict, mode_name)
 
     setattr(context, result_key, res)
-    print("the {0} is {1}\n\n\n\n".format(key, getattr(context, result_key)))
+    # print("the {0} is {1}\n\n\n\n".format(key, getattr(context, result_key)))
 
 @Then('execute admin cmd  in "{host}" at background')
 def step_impl(context, host):
