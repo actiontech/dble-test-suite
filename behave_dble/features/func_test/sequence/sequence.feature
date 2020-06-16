@@ -78,7 +78,6 @@ Feature: Functional testing of global sequences
     """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-        /sequenceHandlerType/d
         $a sequenceHandlerType=2
     """
     Given Restart dble in "dble-1" success
@@ -102,7 +101,7 @@ Feature: Functional testing of global sequences
       | conn_0 | False   | insert into test_auto values('abc')                  | please make sure your table structure has incrementColumn | schema1 |
       | conn_0 | False   | insert into test_auto(name) values('abc')            | please make sure your table structure has incrementColumn | schema1 |
       | conn_0 | True    | drop table if exists test_auto                       | success | schema1 |
-    #case 4: int type for current type sequence type is err, expect bigint
+    #case 4: int type for current sequence type is err, sequence type expect bigint
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                          | expect            | db     |
       | conn_0 | False   | drop table if exists test_auto                                               | success           | schema1 |
@@ -124,7 +123,6 @@ Feature: Functional testing of global sequences
       | sql                                                            | expect      | db      |
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
-  @skip
   Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
   #    case points:
   #  1.Verify the illegal value of the instanceId
@@ -137,7 +135,6 @@ Feature: Functional testing of global sequences
     """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-        /sequenceHandlerType/d
         $a sequenceHandlerType=2
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -153,7 +150,7 @@ Feature: Functional testing of global sequences
         s/instanceId=.*/instanceId=33/
     """
     Given Restart dble in "dble-1" success
-    #case 2: Verify the illegal value of the DATAACENTERID
+    #case 2: Verify the illegal value of the instanceId
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
         s/instanceId=.*/instanceId=1025/
@@ -175,7 +172,7 @@ Feature: Functional testing of global sequences
         s/instanceId=.*/instanceId=33/
     """
     Given Restart dble in "dble-1" success
-    #case 3: Verify the illegal value of the START_TIME
+    #case 3: Verify the illegal value of the sequenceStartTime
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
      """
      $a sequenceStartTime=2010\/11\/04 09:42:54
@@ -183,19 +180,17 @@ Feature: Functional testing of global sequences
     Given Restart dble in "dble-1" success
 #    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
 #    """
-#    START_TIME in sequence_time_conf.properties parse exception, starting from 2010-11-04 09:42:54
+#    sequenceStartTime in cluster.cnf parse exception, starting from 2010-11-04 09:42:54
 #    """
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
      """
-      /sequenceStartTime/d
-      $a sequenceStartTime=2010-11-04 09:42:54
+      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-11-04 /
      """
     Given Restart dble in "dble-1" success
-    #case 4: START_TIME>the time of dble start
+    #case 4: sequenceStartTime>the time of dble start
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-      /sequenceStartTime/d
-      $a sequenceStartTime=2190-10-01 09:42:54
+      s/[#]*sequenceStartTime=.* /sequenceStartTime=2190-10-01 /
     """
     Given Restart dble in "dble-1" success
 #    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -205,8 +200,7 @@ Feature: Functional testing of global sequences
     #case 5: sequenceStartTime+69 years<the time of dble start
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-      /sequenceStartTime/d
-      $a sequenceStartTime=1910-10-01 09:42:54
+      s/[#]*sequenceStartTime=.* /sequenceStartTime=1910-10-01 /
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -216,8 +210,7 @@ Feature: Functional testing of global sequences
       | conn_0 | True     |insert into test_auto values(1)                  | Global sequence has reach to max limit and can generate duplicate sequences | schema1 |
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
-      /sequenceStartTime/d
-      $a sequenceStartTime=2010-11-04 09:42:54
+      s/[#]*sequenceStartTime=.* /sequenceStartTime=2010-11-04 /
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
