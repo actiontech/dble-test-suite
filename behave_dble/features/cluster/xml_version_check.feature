@@ -77,9 +77,9 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup balance="0" name="ha_group1" delayThreshold="100" >
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance host="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="2" minCon="1" primary="true">
+    <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="2" minCon="1" primary="true">
     </dbInstance>
     </dbGroup>
     """
