@@ -30,7 +30,7 @@ Feature: #test show @@processlist
       | show @@processlist |
     Then check resultset "pro_rs_A" has lines with following column values
       | Front_Id-0 | shardingNode-1  | MysqlId-2   | User-3    | db-5   | Command-6  | Time-7  | Info-9  |
-      |    2        | NULL       | NULL        | root:      | NULL   | NULL       | 0       | NULL    |
+      |    2        | NULL       | NULL        | root      | NULL   | NULL       | 0       | NULL    |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                              | db        |
       | conn_0 | False    | drop table if exists test1                       |  schema1  |
@@ -44,10 +44,10 @@ Feature: #test show @@processlist
       | show @@processlist |
     Then check resultset "pro_rs_B" has lines with following column values
       | Front_Id-0 | shardingNode-1 | User-3 | db-5 | Command-6 | Info-9 |
-      | 3          | dn1        | test:   | db1  | Sleep     | None   |
-      | 3          | dn2        | test:   | db1  | Sleep     | None   |
-      | 3          | dn3        | test:   | db2  | Sleep     | None   |
-      | 3          | dn4        | test:   | db2  | Sleep     | None   |
+      | 3          | dn1        | test   | db1  | Sleep     | None   |
+      | 3          | dn2        | test   | db1  | Sleep     | None   |
+      | 3          | dn3        | test   | db2  | Sleep     | None   |
+      | 3          | dn4        | test   | db2  | Sleep     | None   |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                 | db        |
       | conn_1 | False    | begin               |  schema1  |
@@ -57,11 +57,11 @@ Feature: #test show @@processlist
       | show @@processlist |
     Then check resultset "pro_rs_C" has lines with following column values
       | Front_Id-0 | shardingNode-1   | User-3    | db-5   | Command-6    | Info-9  |
-      |    3        | dn1         | test:      | db1    | Sleep        | None    |
-      |    3        | dn2         | test:      | db1    | Sleep        | None    |
-      |    3        | dn3         | test:      | db2    | Sleep        | None    |
-      |    3        | dn4         | test:      | db2    | Sleep        | None    |
-      |    5        | dn1         | test:      | db1    | Sleep        | None    |
+      |    3        | dn1         | test      | db1    | Sleep        | None    |
+      |    3        | dn2         | test      | db1    | Sleep        | None    |
+      |    3        | dn3         | test      | db2    | Sleep        | None    |
+      |    3        | dn4         | test      | db2    | Sleep        | None    |
+      |    5        | dn1         | test      | db1    | Sleep        | None    |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql    | db        |
       | conn_1 | True     | commit |  schema1  |
