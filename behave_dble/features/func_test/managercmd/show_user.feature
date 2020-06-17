@@ -3,7 +3,7 @@
 # Created by wujinling at 2019/8/27
 Feature: test show user related manager command
 
-  @NORMAL @skip
+  @NORMAL
   Scenario: test "show @@user"，"show @@user.privilege" #1
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
