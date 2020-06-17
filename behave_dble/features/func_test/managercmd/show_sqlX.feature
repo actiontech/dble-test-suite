@@ -31,17 +31,16 @@ Feature: show @@sql, show @@sql.resultset
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs_A"
       | sql        |
       | show @@sql |
-    #username need to change as test while bug:DBLE0REQ-293 fixed
     Then check resultset "sql_rs_A" has lines with following column values
         | ID-0 | USER-1 | SQL-4                                      |
-        |    1 | (test, )   | delete from ta where id=1                  |
-        |    2 | (test, )   | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
-        |    3 | (test, )   | select * from ta order by id limit 1       |
-        |    4 | (test, )   | SELECT * FROM ta LIMIT 100                 |
-        |    5 | (test, )   | update ta set k="c" where id=3             |
-        |    6 | (test, )   | insert into ta value(3, repeat('c', 100))  |
-        |    7 | (test, )   | insert into ta value(2, repeat('b', 1500)) |
-        |    8 | (test, )   | insert into ta value(1, repeat('a', 1100)) |
+        |    1 | test   | delete from ta where id=1                  |
+        |    2 | test   | SELECT * FROM ta WHERE id = 2 LIMIT 100    |
+        |    3 | test   | select * from ta order by id limit 1       |
+        |    4 | test   | SELECT * FROM ta LIMIT 100                 |
+        |    5 | test   | update ta set k="c" where id=3             |
+        |    6 | test   | insert into ta value(3, repeat('c', 100))  |
+        |    7 | test   | insert into ta value(2, repeat('b', 1500)) |
+        |    8 | test   | insert into ta value(1, repeat('a', 1100)) |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "sql_rs_B"
       | sql                  |
       | show @@sql.resultset |
