@@ -4,7 +4,6 @@
 Feature: test some import nodes attr in sharding.xml
 
   @BLOCKER
-  @skip #now limit part is not finished yet,need test later.last sql not pass. 2020.06.10
   Scenario: config "schema" node attr "sqlMaxLimit" while "table" node attr "sqlMaxLimit=true" (for all table type) #1
     Given delete the following xml segment
       |file         | parent           | child                 |
@@ -318,18 +317,18 @@ Feature: test some import nodes attr in sharding.xml
         <property name="dataNodeIdleCheckPeriod">1000</property>
         <property name="dataNodeHeartbeatPeriod">300000000</property>
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="1" name="ha_group1" slaveThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-    </writeHost>
-    </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="1" name="ha_group2" slaveThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-    </writeHost>
-    </dataHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="1" primary="true">
+        </dbInstance>
+    </dbGroup>
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="1" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
@@ -346,18 +345,18 @@ Feature: test some import nodes attr in sharding.xml
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect        |
       | show @@backend | length{(3)}   |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dataHost balance="0" maxCon="1000" minCon="3" name="ha_group1" slaveThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-    </writeHost>
-    </dataHost>
-    <dataHost balance="0" maxCon="1000" minCon="2" name="ha_group2" slaveThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <writeHost host="hostM2" password="111111" url="172.100.9.6:3306" user="test">
-    </writeHost>
-    </dataHost>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="3" primary="true">
+        </dbInstance>
+    </dbGroup>
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="2" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config_all -f"
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
@@ -391,17 +390,20 @@ Feature: test some import nodes attr in sharding.xml
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema dataNode="dn5" name="schema1" sqlMaxLimit="100">
-        <table name="sharding_2_t1" dataNode="dn1,dn3" rule="hash-two" />
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
     </schema>
-    <dataNode dataHost="ha_group1" database="db1" name="dn1" />
-    <dataNode dataHost="ha_group1" database="db2" name="dn3" />
-    <dataNode dataHost="ha_group1" database="db3" name="dn5" />
-    <dataHost balance="0" maxCon="1000" minCon="10" name="ha_group1" slaveThreshold="100" >
-    <heartbeat>select user()</heartbeat>
-    <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test">
-    </writeHost>
-    </dataHost>
+    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
