@@ -1,10 +1,10 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
+Feature: shardingNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
   @NORMAL @restore_mysql_config
-  @skip #blocked by issue http://10.186.18.11/jira/browse/DBLE0REQ-313
-  Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
+
+  Scenario: shardingNode's lettercase is insensitive, but reference to the shardingNode name must consistent #1
    """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
    """
@@ -49,7 +49,7 @@ Feature: dataNode's lettercase is insensitive, that should not be affected by lo
     """
     Then restart dble in "dble-1" failed for
     """
-    dataNode 'DN1' is not found
+    shardingNode 'DN1' is not found
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
