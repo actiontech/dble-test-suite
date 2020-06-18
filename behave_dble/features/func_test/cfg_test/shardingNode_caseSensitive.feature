@@ -3,6 +3,7 @@
 Feature: dataNode's lettercase is insensitive, that should not be affected by lower_case_table_names
 
   @NORMAL @restore_mysql_config
+  @skip #blocked by issue http://10.186.18.11/jira/browse/DBLE0REQ-313
   Scenario: dataNode's lettercase is insensitive, but reference to the dataNode name must consistent #1
    """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
