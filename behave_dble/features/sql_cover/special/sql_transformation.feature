@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/7/25
-@skip
+
 Feature: #test the correctness of sql transformation
 
   Scenario: #test the explain result of `limit` #1
@@ -56,10 +56,8 @@ Feature: #test the correctness of sql transformation
       | conn_0 | True    | explain select * from table_a order by id limit 3,9       | hasStr{ASC LIMIT 12}   | schema1 |
     Given update file content "/opt/dble/conf/cacheservice.properties" in "dble-1" with sed cmds
      """
-      d/#layedpool.TableID2DataNodeCache=encache,10000,18000
-      d/layedpool.TableID2DataNodeCacheType=encache
-      a/layedpool.TableID2DataNodeCache=encache,10000,18000
-      a/#layedpool.TableID2DataNodeCacheType=encache
+      s/#layedpool.TableID2DataNodeCache=encache,10000,18000/layedpool.TableID2DataNodeCache=encache,10000,18000/
+      s/layedpool.TableID2DataNodeCacheType=encache/#layedpool.TableID2DataNodeCacheType=encache/
     """
     Then check following text exist "Y" in file "/opt/dble/conf/cacheservice.properties" in host "dble-1"
     """
