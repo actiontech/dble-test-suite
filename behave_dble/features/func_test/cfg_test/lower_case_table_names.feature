@@ -10,6 +10,7 @@ Feature: check collation/lower_case_table_names works right for dble
 
 
   @BLOCKER @restore_mysql_config
+  @skip #blocked by issue http://10.186.18.11/jira/browse/DBLE0REQ-313
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
