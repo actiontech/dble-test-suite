@@ -2,7 +2,6 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2018/11/6
 
-@skip #blocked by issue:http://10.186.18.11/jira/browse/DBLE0REQ-308
 Feature: show @@connection.sql test
 
   Background: prepare env
@@ -51,7 +50,7 @@ Feature: show @@connection.sql test
       |START_TIME          | 5            |
       |EXECUTE_TIME        | 6            |
       |SQL                 | 7            |
-  @skip #blocked by issue:http://10.186.18.11/jira/browse/DBLE0REQ-308
+ 
   @TRIVIAL
   Scenario: query execute time >1ms #2
     Then execute sql in "dble-1" in "user" mode
