@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2019/12/24
 #2.19.11.0#dble-7872
-  @skip
+
 Feature: track SQL and analyze SQL execution
 
   Scenario: turn on mysql trace and analyze sql with trace #1
@@ -19,9 +19,9 @@ Feature: track SQL and analyze SQL execution
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_A" has lines with following column values
-      | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                                          |
-      | Execute_SQL  | dn2         | SELECT * FROM sharding_4_t1 WHERE id = 1 LIMIT 100 |
-      | Fetch_result | dn2         | SELECT * FROM sharding_4_t1 WHERE id = 1 LIMIT 100 |
+      | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                          |
+      | Execute_SQL  | dn2         | select * from sharding_4_t1 where id=1 |
+      | Fetch_result | dn2         | select * from sharding_4_t1 where id=1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                         | expect      | db      |
       | test | 111111 | conn_0 | False   | select * from sharding_4_t1 | length{(5)} | schema1 |
@@ -29,7 +29,7 @@ Feature: track SQL and analyze SQL execution
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_B" has lines with following column values
-      | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                             |
+      | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                             |
       | Execute_SQL  | dn1         | SELECT * FROM sharding_4_t1 LIMIT 100 |
       | Execute_SQL  | dn2         | SELECT * FROM sharding_4_t1 LIMIT 100 |
       | Execute_SQL  | dn3         | SELECT * FROM sharding_4_t1 LIMIT 100 |
@@ -46,7 +46,7 @@ Feature: track SQL and analyze SQL execution
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_C" has lines with following column values
-      | OPERATION-0  | DATA_NODE-4 | SQL/REF-5                                       |
+      | OPERATION-0  | SHARDING_NODE-4 | SQL/REF-5                                       |
       | Execute_SQL  | dn3         | INSERT INTO sharding_4_t1 VALUES (30, 'test30') |
       | Fetch_result | dn3         | INSERT INTO sharding_4_t1 VALUES (30, 'test30') |
 
@@ -57,18 +57,18 @@ Feature: track SQL and analyze SQL execution
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_D" has lines with following column values
-      | OPERATION-0   | DATA_NODE-4     | SQL/REF-5                                                            |
-      | Fetch_result  | dn1_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | Execute_SQL   | dn2_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | Fetch_result  | dn2_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | Execute_SQL   | dn3_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | Fetch_result  | dn3_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | Execute_SQL   | dn4_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | Fetch_result  | dn4_0           | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
-      | MERGE         | merge_1         | dn1_0; dn2_0; dn3_0; dn4_0                                           |
-      | AGGREGATE     | aggregate_1     | merge_1                                                              |
-      | LIMIT         | limit_1         | aggregate_1                                                          |
-      | SHUFFLE_FIELD | shuffle_field_1 | limit_1                                                              |
+      | OPERATION-0   | SHARDING_NODE-4     | SQL/REF-5                                                            |
+      | Fetch_result  | dn1_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | Execute_SQL   | dn2_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | Fetch_result  | dn2_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | Execute_SQL   | dn3_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | Fetch_result  | dn3_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | Execute_SQL   | dn4_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | Fetch_result  | dn4_0               | select COUNT(*) as `_$COUNT$_rpda_0` from  `sharding_4_t1` LIMIT 100 |
+      | MERGE         | merge_1             | dn1_0; dn2_0; dn3_0; dn4_0                                           |
+      | AGGREGATE     | aggregate_1         | merge_1                                                              |
+      | LIMIT         | limit_1             | aggregate_1                                                          |
+      | SHUFFLE_FIELD | shuffle_field_1     | limit_1                                                              |
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                                                    | expect     | db      |
@@ -77,7 +77,7 @@ Feature: track SQL and analyze SQL execution
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_E" has lines with following column values
-      | OPERATION-0      | DATA_NODE-4        | SQL/REF-5                                                                                                      |
+      | OPERATION-0      | SHARDING_NODE-4    | SQL/REF-5                                                                                                      |
       | Execute_SQL      | dn2_0              | select `sharding_4_t1`.`id` as `autoalias_scalar` from  `sharding_4_t1` where `sharding_4_t1`.`id` = 1 LIMIT 2 |
       | Fetch_result     | dn2_0              | select `sharding_4_t1`.`id` as `autoalias_scalar` from  `sharding_4_t1` where `sharding_4_t1`.`id` = 1 LIMIT 2 |
       | MERGE            | merge_1            | dn2_0                                                                                                          |
