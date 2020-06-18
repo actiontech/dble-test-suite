@@ -22,7 +22,7 @@
         <globalTable name="global_4_t2" shardingNode="dn1,dn2,dn3,dn4" />
     </schema>
 
-    <schema name="schema3" sqlMaxLimit="100">
+    <schema name="schema3" >
         <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
     </schema>
 
