@@ -82,8 +82,8 @@ Feature: test high-availability related commands
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5   | DISABLED-11 |
-    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      1   | false       |
-    | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      1   | false       |
+    | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |     1+1    | false       |
+    | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |     1+1    | false       |
 #     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'slave1'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    dble-2 is slave1's server
