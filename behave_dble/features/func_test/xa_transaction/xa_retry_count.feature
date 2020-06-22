@@ -68,18 +68,12 @@ Feature: change xaRetryCount value and check result
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @current @skip #failed for connection pool refactor, waiting dev fixed
+  @btrace @current
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a -DdataNodeHeartbeatPeriod=2000
+    $a\-DshardingNodeHeartbeatPeriod=2000
     """
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-#    """
-#    <system>
-#        <property name="dataNodeHeartbeatPeriod">2000 </property>
-#    </system>
-#    """
     Given Restart dble in "dble-1" success
 #   delayBeforeXaCommit sleep time must long enough for stopping dble
     Given update file content "./assets/BtraceXaDelay_backgroundRetry2.java" in "behave" with sed cmds
