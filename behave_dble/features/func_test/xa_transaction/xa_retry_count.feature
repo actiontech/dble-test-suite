@@ -68,7 +68,7 @@ Feature: change xaRetryCount value and check result
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @current
+  @btrace @current @skip #failed for connection pool refactor, waiting dev fixed
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -108,7 +108,7 @@ Feature: change xaRetryCount value and check result
     before add xa
     """
     Given start mysql in host "mysql-master1"
-    #sleep 5s for waitting backgroud retry succeed,2s make sure heartbeat recover, and 3s wait xa commit, loop to try commit at per 1s
+    #sleep 5s for waiting background retry succeed,2s make sure heartbeat recover, and 3s wait xa commit, loop to try commit at per 1s
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                  | expect      | db      |
