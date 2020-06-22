@@ -202,8 +202,7 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'select name%from test%'  | balance{5000} |
 
   @NORMAL
-  @skip #for connect pool refactor 2020/6/5
-  Scenario: dbGroup rwSplitMode="1" and tempReadHostAvailable="1", do balance bewteen read dbInstance even write dbInstance down #6
+  Scenario: dbGroup rwSplitMode="1" and read dbInstance default available, do balance bewteen read dbInstance even write dbInstance down #6
      Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -229,9 +228,9 @@ Feature: test read load balance
           </dbInstance>
       </dbGroup>
     """
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-        <property name="dataNodeHeartbeatPeriod">1000</property>
+     $a -DshardingNodeHeartbeatPeriod=1000
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
@@ -249,23 +248,14 @@ Feature: test read load balance
     Given start mysql in host "mysql-master2"
 
   @NORMAL
-  @skip #for connect pool refactor and remove tempReadHostAvailable on 3.20.07 2020/6/5
-  Scenario: dbGroup balance="1" and tempReadHostAvailable="0", don't balance bewteen read host if writehost down #7
+  Scenario: dbGroup rwSplitMode="1" and read dbInstance default available, don't balance bewteen read dbInstance if write dbInstance  down #7
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
       |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-#    """
-#        <dataHost balance="1" tempReadHostAvailable="0" maxCon="9" minCon="3" name="ha_group2" slaveThreshold="100" >
-#            <heartbeat>select user()</heartbeat>
-#            <writeHost host="hostM1" password="111111" url="172.100.9.6:3306" user="test">
-#              <readHost host="hostM2" url="172.100.9.2:3306" password="111111" user="test"/>
-#            </writeHost>
-#        </dataHost>
-#    """
-        Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
           <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
@@ -285,15 +275,15 @@ Feature: test read load balance
           </dbInstance>
       </dbGroup>
     """
-     Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-        <property name="dataNodeHeartbeatPeriod">1000</property>
+     $a -DshardingNodeHeartbeatPeriod=1000
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
       | sql                   | expect              | db       |
-      | select name from test | error totally whack | schema1  |
+      | select name from test | success             | schema1  |
     Given start mysql in host "mysql-master2"
     Then execute sql in "mysql-master2"
       | sql                            |
