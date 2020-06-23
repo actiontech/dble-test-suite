@@ -17,11 +17,11 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_A" has lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.5 | false       |
-      | 172.100.9.5 | true        |
-      | 172.100.9.6 | false       |
-      | 172.100.9.6 | true        |
+      | HOST-3      | STATE-10 |
+      | 172.100.9.5 | IDLE       |
+      | 172.100.9.5 | IN USE        |
+      | 172.100.9.6 | IDLE       |
+      | 172.100.9.6 | IN USE        |
     Then check resultset "rs_A" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
@@ -34,15 +34,15 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_B" has lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.4 | false       |
-      | 172.100.9.4 | true        |
-      | 172.100.9.5 | false       |
-      | 172.100.9.5 | true        |
-      | 172.100.9.6 | true        |
+      | HOST-3      | STATE-10 |
+      | 172.100.9.4 | IDLE       |
+      | 172.100.9.4 | IDLE        |
+      | 172.100.9.5 | IDLE       |
+      | 172.100.9.5 | IN USE        |
+      | 172.100.9.6 | IN USE        |
     Then check resultset "rs_B" has not lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.6 | false       |
+      | HOST-3      | STATE-10 |
+      | 172.100.9.6 | IDLE       |
     Then check "rs_B" only has "2" connection of "172.100.9.6"
 
     Given update file content "{install_dir}/dble/conf/db.xml" in "dble-1" with sed cmds
@@ -54,12 +54,12 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_C" has lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.2 | false       |
-      | 172.100.9.2 | true        |
-      | 172.100.9.5 | false       |
-      | 172.100.9.5 | true        |
-      | 172.100.9.6 | true        |
+      | HOST-3      | STATE-10 |
+      | 172.100.9.2 | IDLE       |
+      | 172.100.9.2 | IDLE       |
+      | 172.100.9.5 | IDLE       |
+      | 172.100.9.5 | IN USE        |
+      | 172.100.9.6 | IN USE        |
     Then check resultset "rs_C" has not lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
@@ -74,11 +74,11 @@ Feature: reload @@config_all and recycl pool
       | sql            |
       | show @@backend |
     Then check resultset "rs_D" has lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.6 | false       |
-      | 172.100.9.6 | true        |
-      | 172.100.9.2 | false       |
-      | 172.100.9.2 | true        |
+      | HOST-3      | STATE-10 |
+      | 172.100.9.6 | IDLE       |
+      | 172.100.9.6 | IDLE        |
+      | 172.100.9.2 | IDLE       |
+      | 172.100.9.2 | IDLE        |
     Then check resultset "rs_D" has not lines with following column values
       | HOST-3      |
       | 172.100.9.5 |
