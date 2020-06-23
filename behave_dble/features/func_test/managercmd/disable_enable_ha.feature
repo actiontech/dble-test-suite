@@ -9,7 +9,7 @@ Feature: test high-availability related commands
   show @@dbinstance
 
 
-  @skip #because pool close conntion issue
+  #@skip #because pool close conntion issue
   Scenario: end to end ha switch test
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
@@ -26,8 +26,8 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@disable name='ha_group2'"
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                         | expect                       | db       |
-      | conn_0 | true     | select * from sharding_4_t1 | ha command disable dbInstance|  schema1 |
+      | conn   | toClose  | sql                         | expect                        | db       |
+      | conn_0 | true     | select * from sharding_4_t1 |  [ha_group2.hostM2] is disabled|  schema1 |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
@@ -44,7 +44,7 @@ Feature: test high-availability related commands
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
+    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   | true        |
     | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   | false       |
     Given update "bootstrap.cnf" from "dble-1"
@@ -64,7 +64,7 @@ Feature: test high-availability related commands
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-11 |
+    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   |  true      |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | R    |      0   |  true       |
     | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   |  false      |
@@ -75,7 +75,7 @@ Feature: test high-availability related commands
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | true        |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
     Then execute admin cmd "dbGroup @@enable name='ha_group2'"
@@ -83,7 +83,7 @@ Feature: test high-availability related commands
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5| DISABLED-11 |
+    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5| DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |     0   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |     0   | false       |
 #     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
@@ -106,7 +106,7 @@ Feature: test high-availability related commands
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |      0   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |      0   | true        |
     Then execute admin cmd "dbGroup @@switch name='ha_group2' master='hostM2'"
@@ -115,6 +115,6 @@ Feature: test high-availability related commands
       | sql               |
       | show @@dbinstance |
     Then check resultset "show_ds_rs" has lines with following column values
-    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-11 |
+    | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      0   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | R      |      0   | true        |
