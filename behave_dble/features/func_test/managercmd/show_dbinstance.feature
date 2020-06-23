@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yexiaoli at 2019/3/5
-Feature: show_datasource
+Feature: show_dbinstance
 
   Scenario: verify manage-cmd show @@dbinstance
              requirment from github issue #942 #: result should not display negative number for "ACTIVE" column,github issue #1070 #1
@@ -30,4 +30,4 @@ Feature: show_datasource
       | show @@dbinstance |
     Then check resultset "sql_rs2" has lines with following column values
         | NAME-1 | HOST-2        |  PORT-3  | ACTIVE-5 |
-        | hostM1 | 172.100.9.5   | 3306     |    1     |
+        | hostM1 | 172.100.9.5   | 3306     |    0     |

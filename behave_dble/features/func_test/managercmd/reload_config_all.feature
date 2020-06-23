@@ -57,7 +57,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |CLOSED               | 9            |
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
-
+  @skip
   @BLOCKER
   Scenario: reload @@config_all, eg:remove old dbInstance and add new, drop backend connection pool for old dbInstance, create new connection pool, backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
 
