@@ -276,7 +276,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | True    | drop table if exists test2  | success                          | schema1   |
 
   @NORMAL
-  Scenario: Some of datahost's dbInstance(with or dbInstance ) cannot be connectted, check metadata and query #6
+  Scenario: Some of dbGroup's dbInstance(with or dbInstance ) cannot be connectted, check metadata and query #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
