@@ -84,10 +84,11 @@ Feature: reload @@config_all -sr
       | HOST-3      |
       | 172.100.9.2 |
     Then check resultset "rs_D" has lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.4 | false       |
-      | 172.100.9.5 | true        |
-      | 172.100.9.6 | true        |
+    #need discuss
+      | HOST-3      | STATE-10 |
+      | 172.100.9.4 | IDLE       |
+      | 172.100.9.5 | IN USE        |
+      | 172.100.9.6 | IN USE        |
     Then check "rs_D" only has "2" connection of "172.100.9.6"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect      | db      |
@@ -101,7 +102,7 @@ Feature: reload @@config_all -sr
       | HOST-3      |
       | 172.100.9.6 |
 
-    #4 start the transaction and change datanode, then execute "reload config_all -s -r" will rebuild connections except connections in transaction
+    #4 start the transaction and change dbGroup, then execute "reload config_all -s -r" will rebuild connections except connections in transaction
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | db      |
       | conn_0 | false   | drop table if exists sharding_4_t1               | schema1 |
@@ -118,10 +119,10 @@ Feature: reload @@config_all -sr
       | show @@backend |
     Then check "rs_G" only has "2" connection of "172.100.9.4"
     Then check resultset "rs_G" has lines with following column values
-      | HOST-3      | BORROWED-10 |
-      | 172.100.9.4 | true        |
-      | 172.100.9.5 | true        |
-      | 172.100.9.6 | false       |
+      | HOST-3      | STATE-10 |
+      | 172.100.9.4 | IN USE        |
+      | 172.100.9.5 | IN USE        |
+      | 172.100.9.6 | IDLE       |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect      | db      |
       | conn_0 | False   | commit                                   | success     | schema1 |
