@@ -223,14 +223,12 @@ Feature: test read load balance
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true">
+              <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
           <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3">
+              <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
       </dbGroup>
-    """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-     $a -DheartbeatPeriodMillis=1000
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
@@ -270,14 +268,12 @@ Feature: test read load balance
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true">
+             <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
           <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3">
+             <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
       </dbGroup>
-    """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-     $a -DheartbeatPeriodMillis=1000
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
