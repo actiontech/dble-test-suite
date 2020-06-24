@@ -230,7 +230,7 @@ Feature: test read load balance
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-     $a -DshardingNodeHeartbeatPeriod=1000
+     $a -DheartbeatPeriodMillis=1000
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
@@ -277,7 +277,7 @@ Feature: test read load balance
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-     $a -DshardingNodeHeartbeatPeriod=1000
+     $a -DheartbeatPeriodMillis=1000
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
