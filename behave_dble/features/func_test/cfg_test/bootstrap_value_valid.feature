@@ -42,7 +42,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DmaxPacketSize=16777216
       $a\-DcheckTableConsistencyPeriod=60000
       $a\-DshardingNodeIdleCheckPeriod=300000
-      $a\-DshardingNodeHeartbeatPeriod=10000
+      $a\-DheartbeatPeriodMillis=10000
       $a\-DprocessorCheckPeriod=1000
       $a\-DsqlExecuteTimeout=300
       $a\-DidleTimeout=1800000
@@ -103,7 +103,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
       | shardingNodeIdleCheckPeriod     | 300 Seconds                     |
-      | shardingNodeHeartbeatPeriod     | 10 Seconds                      |
+      | heartbeatPeriodMillis     | 10 Seconds                      |
       | processorCheckPeriod        | 1 Seconds                       |
       | idleTimeout                 | 30 Minutes                      |
       | sqlExecuteTimeout           | 300 Seconds                     |
