@@ -84,7 +84,7 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
 
   @BLOCKER
-  @skip #for connection pool refactor,maxCon does not work now 2020.06.10
+    @skip
   Scenario: test "dbInstance" node attr "maxCon" #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -113,14 +113,14 @@ Feature: test some import nodes attr in sharding.xml
       | conn   | toClose  | sql                                | expect  | db      |
       | conn_0 | False    | drop table if exists test_table    | success | schema1 |
       | conn_0 | True     | create table test_table(id int)    | success | schema1 |
-    Then create "14" conn while maxCon="15" finally close all conn
     Then create "15" conn while maxCon="15" finally close all conn
+    Then create "20" conn while maxCon="15" finally close all conn
     """
     the max active Connections size can not be max than maxCon for data dbInstance\[ha_group1.hostM1\]
     """
   @NORMAL
   @skip #for connection pool refactor,maxCon does not work now 2020.06.10
-  Scenario: if "dbGroup" node attr "maxCon" less than or equal the count of related datanodes, maxCon will be count(related dataNodes)+1; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
+  Scenario: if "dbGroup" node attr "maxCon" less than or equal the count of related dbGroups, maxCon will be equal dbGroups; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
     Given delete the following xml segment
       |file        | parent          | child                |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -157,83 +157,14 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | False   | select a.id from global_2_t1 a,single_shard b where a.id = b.id | success | schema1 |
       | conn_0 | False   | drop table if exists global_2_t1                                | success | schema1 |
       | conn_0 | True    | create table global_2_t1(id int)                                | success | schema1 |
-#   maxCon config is 3, but real created is 4(=sum(datanodes)+1)
+#   maxCon config is 3, but real created is 4(=sum(dbGroups)+1)
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
     the max active Connections size can not be max than maxCon for dbInstance\[ha_group1.hostM1\]
     """
 
-  @CRITICAL
-  Scenario: select (colomn is not cacheKey set in sharding.xml) from table -- cacheKey cache invalid
-             select (contains column which is set as cacheKey in sharding.xml) from table -- cacheKey cache  effective #6
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                                    | expect  | db      |
-      | conn_0 | False    |drop table if exists sharding_2_t1                      | success | schema1 |
-      | conn_0 | False    |create table sharding_2_t1(id int,name varchar(20))     | success | schema1 |
-      | conn_0 | False    |insert into sharding_2_t1 values(1,'test1'),(2,'test2') | success | schema1 |
-      | conn_0 | True     |select id from sharding_2_t1                            | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect      |
-      | show @@cache | length{(2)} |
-    Then execute sql in "dble-1" in "user" mode
-      | sql                         |  db      |
-      | select * from sharding_2_t1 |  schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql           | expect                                                                             |
-      | show @@cache  | match{('TableID2DataNodeCache.`schema1`_`sharding_2_t1`',10000L,1L,1L,0L,1L,2018')}|
-
-  @CRITICAL
-  Scenario: primayKey cache effective when attribute "cacheKey" be set #7 #need remove?
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
-    """
-        <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" in "user" mode
-      | toClose | sql                                                         | expect  | db      |
-      | False   |drop table if exists test_table                              | success | schema1 |
-      | False   |create table test_table(id int,k int,c int)                  | success | schema1 |
-      | False   |insert into test_table values(1,1,1),(2,2,2),(3,3,3),(4,4,4) | success | schema1 |
-      | True    |select id from test_table                                    | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect      |
-      | show @@cache | length{(2)} |
-    Then execute sql in "dble-1" in "user" mode
-      | sql                         | expect   | db      |
-      |select * from test_table     | success  | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect                                                                          |
-      | show @@cache | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,0L,0L,4L,2018')}|
-    Then execute sql in "dble-1" in "user" mode
-      | sql                                | expect  | db      |
-      |select * from test_table where id=1 | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect                                                                          |
-      | show @@cache | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,0L,0L,4L,2018')}|
-
-    Then execute sql in "dble-1" in "user" mode
-      | sql                               | expect  | db      |
-      |select * from test_table where k=1 | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect                                                                          |
-      | show @@cache | match{('TableID2DataNodeCache.`schema1`_`test_table`',10000L,4L,1L,1L,4L,2018')}|
-
-  @NORMAL
-  Scenario: primayKey cache invalid when attribute "cacheKey" not be set #8 #do not understand...
-    Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
-    """
-        <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-two" shardingColumn="id"/>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" in "user" mode
-      | sql                     | expect  | db      |
-      |select * from test_table | success | schema1 |
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect      |
-      | show @@cache | length{(2)} |
-
-   Scenario: Use the RocksDB database engine as a cache implementation  issue:1029  author: maofei #9
+   Scenario: Use the RocksDB database engine as a cache implementation  issue:1029  author: maofei #6
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
         <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
@@ -275,7 +206,7 @@ Feature: test some import nodes attr in sharding.xml
     Given delete file "/opt/dble/rocksdb" on "dble-1"
 
   @skip #for connection pool refactor,maxCon does not work now 2020.06.10
-  Scenario: execute `set @x=1` gets error when the max active Connections size max than "maxCon",heartbeat take account into maxCon   from issue:1177 author: maofei #10
+  Scenario: execute `set @x=1` gets error when the max active Connections size max than "maxCon",heartbeat take account into maxCon  from issue:1177 author: maofei #7
      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
         <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
@@ -310,12 +241,12 @@ Feature: test some import nodes attr in sharding.xml
 
   @skip #case is not so hit point, or condition is not accurate enough to make case pass, ci sometimes fail;
         # now case need refactor for connect pool refactor,2020/06/04
-  Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db +1);
-              increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #11
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+  Scenario:  when minCon<= the number of db, the minimum number of surviving connections = (the number of db);
+              increase in the number of connections after each test = (the minimum number of connections to survive - the number of connections already exists) / 3 from issue:1125 author: maofei #8
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-        <property name="dataNodeIdleCheckPeriod">1000</property>
-        <property name="dataNodeHeartbeatPeriod">300000000</property>
+        $a -DshardingNodeIdleCheckPeriod=1000
+        $a -DshardingNodeHeartbeatPeriod=300000000
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -373,8 +304,9 @@ Feature: test some import nodes attr in sharding.xml
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect      |
       | show @@backend | length{(3)} |
-  @skip # now case need refactor for connect pool refactor,2020/06/04
-  Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #12
+
+  @skip # new case need refactor for connect pool refactor,2020/06/04
+  Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #9
 #  minConRecover logic, take this case as example:
 #  minCon_of_config=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,already_created=num_dns+1=3+1=4
 #  main logic: minConRecover_num_each_loop=floor((minCon_of_config-already_created)/3), end loop until this formula get result 0
@@ -383,10 +315,11 @@ Feature: test some import nodes attr in sharding.xml
 #  minConRecover_num_loop3:(10-7)/3 = 1, already_created=already_created + minConRecover_num_loop3=7+1=8
 #  minConRecover_num_loop4:(10-8)/3 = 0, formula get result 0,end loop, and the real restored conns num is 8, that is show @@backend resultset count
 #  minConRecover_num ignore heartbeat conn, so case need add extra heartbeat conn,that is 8+1=9
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-        <property name="dataNodeIdleCheckPeriod">1000</property>
-        <property name="dataNodeHeartbeatPeriod">300000000</property>
+        $a -DshardingNodeIdleCheckPeriod=1000
+        $a -DshardingNodeHeartbeatPeriod=300000000
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
