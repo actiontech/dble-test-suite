@@ -70,9 +70,21 @@ Feature: change xaRetryCount value and check result
 
   @btrace @current
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    $a\-DheartbeatPeriodMillis=2000
+      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+          </dbInstance>
+      </dbGroup>
+
+      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+          </dbInstance>
+      </dbGroup>
     """
     Given Restart dble in "dble-1" success
 #   delayBeforeXaCommit sleep time must long enough for stopping dble
