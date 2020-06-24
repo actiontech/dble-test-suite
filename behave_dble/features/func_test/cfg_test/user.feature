@@ -52,33 +52,12 @@ Feature: test config in user.xml
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
 
   @CRITICAL
-  @skip #need discuss
-  Scenario:config ip whitehost to both management and client user, client user not in whitehost access denied #5
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "server.xml"
-    """
-    <firewall>
-        <whitehost>
-            <host host="172.100.9.253" user="root,test"/>
-            <host host="172.100.9.8" user="root,test"/>
-        </whitehost>
-    </firewall>
-    """
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-#    """
-#    <user name="test_user">
-#        <property name="password">111111</property>
-#        <property name="schemas">schema1</property>
-#    </user>
-#    <user name="mng_user">
-#        <property name="password">111111</property>
-#        <property name="schemas">schema1</property>
-#    </user>
-#    """
+  Scenario:config ip white dbInstance to both management and client user, client user not in white dbInstance access denied #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-    <shardingUser name="test_user" password="111111" schemas="schema1" readOnly="false whiteIPs="172.100.9.253"/>
-    <managerUser  name="mng_user" password="111111" readOnly="false" whiteIPs="172.100.9.8"/>
-    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false whiteIPs="172.100.9.253,172.100.9.8"/>
+    <shardingUser name="test_user" password="111111" schemas="schema1" readOnly="false" whiteIPs="172.100.9.253"/>
+    <shardingUser  name="mng_user" password="111111" schemas="schema1" readOnly="false" whiteIPs="172.100.9.8"/>
+    <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" whiteIPs="172.100.9.253,172.100.9.8"/>
     <managerUser  name="root" password="111111" readOnly="false" whiteIPs="172.100.9.253,172.100.9.8"/>
     """
 
@@ -92,40 +71,42 @@ Feature: test config in user.xml
         | test        | 111111 | conn_0 | True    | select 1 |success  | schema1 |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' | schema1 |
 
+
   @CRITICAL
-  @skip #need discuss
   Scenario: config sql blacklist #6
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-        <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
-        <blacklist name="blacklist1">
-                <property name="conditionDoubleConstAllow">false</property>
-                <property name="conditionAndAlwayFalseAllow">false</property>
-                 <property name="conditionAndAlwayTrueAllow">false</property>
-                 <property name="constArithmeticAllow">false</property>
-                 <property name="alterTableAllow">false</property>
-                 <property name="commitAllow">false</property>
-                 <property name="deleteAllow">false</property>
-                 <property name="dropTableAllow">false</property>
-                 <property name="insertAllow">false</property>
-                 <property name="intersectAllow">false</property>
-                 <property name="lockTableAllow">false</property>
-                 <property name="minusAllow">false</property>
-                 <property name="callAllow">false</property>
-                 <property name="replaceAllow">false</property>
-                 <property name="setAllow">false</property>
-                 <property name="describeAllow">false</property>
-                 <property name="limitZeroAllow">false</property>
-                 <property name="conditionOpXorAllow">false</property>
-                 <property name="conditionOpBitwseAllow">false</property>
-                 <property name="startTransactionAllow">false</property>
-                 <property name="truncateAllow">false</property>
-                 <property name="updateAllow">false</property>
-                 <property name="useAllow">false</property>
-                 <property name="blockAllow">false</property>
-                 <property name="deleteWhereNoneCheck">false</property>
-                 <property name="updateWhereNoneCheck">false</property>
-        </blacklist>
+       <managerUser name="root" password="111111"/>
+       <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
+       <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" maxCon="20"/>
+       <blacklist name="blacklist1">
+            <property name="conditionDoubleConstAllow">false</property>
+            <property name="conditionAndAlwayFalseAllow">false</property>
+             <property name="conditionAndAlwayTrueAllow">false</property>
+             <property name="constArithmeticAllow">false</property>
+             <property name="alterTableAllow">false</property>
+             <property name="commitAllow">false</property>
+             <property name="deleteAllow">false</property>
+             <property name="dropTableAllow">false</property>
+             <property name="insertAllow">false</property>
+             <property name="intersectAllow">false</property>
+             <property name="lockTableAllow">false</property>
+             <property name="minusAllow">false</property>
+             <property name="callAllow">false</property>
+             <property name="replaceAllow">false</property>
+             <property name="setAllow">false</property>
+             <property name="describeAllow">false</property>
+             <property name="limitZeroAllow">false</property>
+             <property name="conditionOpXorAllow">false</property>
+             <property name="conditionOpBitwseAllow">false</property>
+             <property name="startTransactionAllow">false</property>
+             <property name="truncateAllow">false</property>
+             <property name="updateAllow">false</property>
+             <property name="useAllow">false</property>
+             <property name="blockAllow">false</property>
+             <property name="deleteWhereNoneCheck">false</property>
+             <property name="updateWhereNoneCheck">false</property>
+       </blacklist>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -158,7 +139,7 @@ Feature: test config in user.xml
       | conn_0 | False   | BEGIN select * from suntest;END;                    |error totally whack | schema1 |
       | conn_0 | False   | delete from test_table_1                            |error totally whack | schema1 |
       | conn_0 | False   | update test_table_1 set id =10                      |error totally whack | schema1 |
-    Given add xml segment to node with attribute "{'tag':'root','prev':'system'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
         <blacklist name="blacklist1">
                 <property name="selelctAllow">false</property>
@@ -168,10 +149,12 @@ Feature: test config in user.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               | expect             | db     |
-      | conn_0 | False   | create table if not exists test_table_1(id int)   |error totally whack | schema1 |
+      | conn   | toClose | sql                                               | expect  | db     |
+      | conn_0 | False   | create table if not exists test_table_1(id int);   |success | schema1 |
       | conn_0 | False   | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
-      | conn_0 | False   | show tables                                       |error totally whack | schema1 |
+      | conn_0 | False   | show tables                                       |success | schema1 |
+      | new | False   | create table if not exists test_table_1(id int);   |error totally whack | schema1 |
+      | new| False   | show tables                                       |error totally whack | schema1 |
 
   @CRITICAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #7
@@ -263,22 +246,29 @@ Feature: test config in user.xml
       | sql                             | expect          |db       |
       | drop table if exists test_table | success         | schema1 |
 
-  @skip #for connection poll refactor
   Scenario: test 'sqlExecuteTimeout' from issue:1286 #11
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
-     """
-     <system>
-          <property name="fakeMySQLVersion">5.7.13</property>
-	      <property name="dataNodeIdleCheckPeriod">10</property>
-	      <property name="processorCheckPeriod">10</property>
-	      <property name="sqlExecuteTimeout">60</property>
-     </system>
-
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-#     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
+    $a -DfakeMySQLVersion=5.7.13
+    $a -DprocessorCheckPeriod=10
+    $a -DsqlExecuteTimeout=60
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="timeBetweenEvictionRunsMillis">10</property>
+    </dbInstance>
+    </dbGroup>
 
-#    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="timeBetweenEvictionRunsMillis">10</property>
+        </dbInstance>
+    </dbGroup>
+    """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose  | sql                                           | expect                 |db       |
