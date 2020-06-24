@@ -72,7 +72,7 @@ Feature: change xaRetryCount value and check result
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-DshardingNodeHeartbeatPeriod=2000
+    $a\-DheartbeatPeriodMillis=2000
     """
     Given Restart dble in "dble-1" success
 #   delayBeforeXaCommit sleep time must long enough for stopping dble
