@@ -17,16 +17,14 @@ Feature: sharding basic config test
     Then execute admin cmd "reload @@config_all"
 
   @TRIVIAL
-  @skip #need discuss, remove?
-  Scenario: config with no use shardingNode (has no counter-part dbGroup), expect reload success, config no use dbGroup reload success #2
-    #sharding.xml only has shardingNodes,  dble starts success
+  Scenario: config with no shardingUser in user.xml, expect reload success #2
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
       |sharding.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
       |user.xml      |{'tag':'root'}   | {'tag':'shardingUser'}  |
     Then Restart dble in "dble-1" success
-    #schema.xml only has <dataHost>,  dble starts success
+    #user.xml no shardingUser,  dble starts success
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
