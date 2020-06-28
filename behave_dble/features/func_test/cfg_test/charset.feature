@@ -12,7 +12,7 @@ Feature: set charset in server.xml,check backend charsets are as set
     #   1.1 set backend charset utf8mb4, front charset utf8mb4;
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-Dcharset=utf-8
+    $a\-Dcharset=utf8mb4
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -96,7 +96,7 @@ Feature: set charset in server.xml,check backend charsets are as set
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-Dcharset=utf-8
+    $a\-Dcharset=utf8mb4
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
