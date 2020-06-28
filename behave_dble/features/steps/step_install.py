@@ -287,8 +287,8 @@ def start_zk_service(context, node):
             time.sleep(5)
             start_zk_service(context, node)
         else:
-            LOGGER.info("dble started failed after 5 times try")
-            delattr(context, "retry_start_dble")
+            LOGGER.info("zk started failed after 5 times try")
+            delattr(context, "retry_start_zk")
     else:
         context.start_zk_service = True
         delattr(context, "retry_start_zk")
@@ -423,11 +423,20 @@ def replace_config_in_node(context, node):
     # for code coverage end
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
+    if not hasattr(context, "reset_zk_time"):
+        context.reset_zk_time = 0
+		
     node = get_node("dble-1")
     ssh_client = node.ssh_conn
     resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
-    ssh_client.exec_command(resetCmd)
+    rc, sto, ste=ssh_client.exec_command(resetCmd)
+    if context.reset_zk_time < 3:
+	    context.reset_zk_time = context.reset_zk_time + 1
+	    reset_zk_nodes(context)
 
+    delattr(context, "reset_zk_time")
+	
+    
 @Then ('Monitored folling nodes online')
 def step_impl(context):
     text = context.text.strip().encode('utf-8')
