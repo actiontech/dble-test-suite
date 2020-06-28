@@ -433,8 +433,6 @@ def reset_zk_nodes(context):
     if context.reset_zk_time < 3:
 	    context.reset_zk_time = context.reset_zk_time + 1
 	    reset_zk_nodes(context)
-
-    delattr(context, "reset_zk_time")
 	
     
 @Then ('Monitored folling nodes online')
