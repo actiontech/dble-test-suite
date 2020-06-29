@@ -8,8 +8,6 @@ Feature: test high-availability related commands
   dbGroup @@switch name='xxx' master='xxx'
   show @@dbinstance
 
-
-  #@skip #because pool close conntion issue
   Scenario: end to end ha switch test
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
      """
@@ -27,7 +25,7 @@ Feature: test high-availability related commands
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                         | expect                        | db       |
-      | conn_0 | true     | select * from sharding_4_t1 |  [ha_group2.hostM2] is disabled|  schema1 |
+      | conn_0 | true     | select * from sharding_4_t1 |  MySQL server has gone away|  schema1 |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
