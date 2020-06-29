@@ -86,6 +86,17 @@ def add_child_in_string(file, pos_kv_map, childNodeInString):
     childNode = get_xml_from_str(childNodeInString)
     return add_child_in_xml(file, pos_kv_map, childNode)
 
+def add_child_in_string_with_duplicate_name(file, pos_kv_map, childNodeInString):
+    """
+    add child to file or to file content in memory
+    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
+    :param childNodeInString: child node xml in string format
+    :param file_local: xml file name in local
+    :param file_content: xml content
+    :return: if file_local is not None, return none, elif file_content is not None, return xmlStr
+    """
+    childNode = get_xml_from_str(childNodeInString)
+    return add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode)
 
 def add_child_in_xml(file, pos_kv_map, childNode):
     """
@@ -114,6 +125,69 @@ def add_child_in_xml(file, pos_kv_map, childNode):
         for child in childNode:
             # delete the same name nodes,and get the first deleted node idx
             firstDelIdx = del_node_by_name(parentNode, child)
+
+            # find same tag node count
+            sameTagChildMaxIdx = get_Insert_Idx(parentNode, childNode[0])
+
+            if firstDelIdx == -1 and sameTagChildMaxIdx == 0:  # there is no same tag
+                if firstLoop:
+                    if prevTag is None:  # for the first child to insert,if no prev node, insert index is 0
+                        idx = 0
+                    else:
+                        idx = idxByPrevNode
+                else:  # not first child, insert as last of parentNode
+                    idx = k
+            else:
+                if firstDelIdx == -1:  # there is no same name tag, insert as last of same tag
+                    idx = sameTagChildMaxIdx
+                else:  # there is same name tag, insert at the same name tag
+                    idx = firstDelIdx
+            # print "debug6: idx ", idx, "child,", child.get('name')
+            parentNode.insert(idx, child)
+
+            k = get_Insert_Idx(parentNode,
+                               child)  # lastInsertTypeNodeMaxIdx, prepare for next child which has no same tag
+            firstLoop = False
+
+    doctype = ""
+    if file.find('db.xml') > -1:
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
+    elif file.find('sharding.xml') > -1:
+        doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
+    elif file.find('user.xml') > -1:
+        doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
+
+    xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
+    with open(file, 'wb') as f:
+        f.writelines(xmlstr)
+
+def add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode):
+    """
+    for each child to insert, insert position priority: same name node index > max(same tag index) > lastInsertTypeNodeMaxIdx
+    :param file:
+    :param pos_kv_map: the child node's position info, eg:{'tag':'root',"prev": 'dataNode'}, root is parent node tag, child's prev node tag is dataNode
+    :param childNode:
+    """
+    ET.register_namespace("dble", "http://dble.cloud/")
+    tree = ET.parse(file)
+
+    parentNodes = get_parent_nodes(tree, pos_kv_map)
+
+    prevTag = pos_kv_map.get("prev", None)
+
+    for parentNode in parentNodes:
+        idxByPrevNode = 0
+        if prevTag:
+            firstPrevNode = parentNode.find(prevTag)
+            firstPrevIdx = parentNode.index(firstPrevNode)
+            prevNodes = parentNode.findall(prevTag)
+            idxByPrevNode = firstPrevIdx + len(prevNodes)
+
+        k = 0
+        firstLoop = True
+        for child in childNode:
+            # delete the same name nodes,and get the first deleted node idx
+            firstDelIdx = -1  # assign the variable with default value -1 for duplicate name
 
             # find same tag node count
             sameTagChildMaxIdx = get_Insert_Idx(parentNode, childNode[0])
