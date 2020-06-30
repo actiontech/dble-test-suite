@@ -245,6 +245,11 @@ def check_restart_dble_failed(context,hostname):
     node = get_node(hostname)
     restart_dble(context, node, False)
 
+@Then('start dble in "{hostname}" failed for')
+def check_restart_dble_failed(context,hostname):
+    node = get_node(hostname)
+    start_dble_in_node(context, node, False)
+    
 @Given('Restart dble in "{hostname}" success')
 @Then('Restart dble in "{hostname}" success')
 def step_impl(context, hostname):
