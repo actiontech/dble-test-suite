@@ -116,17 +116,26 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     hasStr{these MySQL's value is not 0 :ha_group2:hostM2}
     """
-  @skip
   @restore_mysql_config
   Scenario: backend mysql heartbeat fail, restore the mysql but its lower_case_table_names are different with the running backend mysqls, then heartbeat to this backend mysql fail #4
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0}}}
     """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <system>
-        <property name="dataNodeHeartbeatPeriod">2000</property>
-    </system>
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+        </dbInstance>
+    </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+           <property name="heartbeatPeriodMillis">2000</property>
+        </dbInstance>
+    </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master1"
@@ -143,6 +152,6 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     Given sleep "3" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    this dataHost\[=172.100.9.5:3306\].s lower_case is wrong, set heartbeat Error
+    this dbInstance\[=172.100.9.5:3306\].s lower_case is wrong, set heartbeat Error
     """
 
