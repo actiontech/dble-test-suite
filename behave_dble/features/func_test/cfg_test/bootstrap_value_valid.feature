@@ -4,7 +4,7 @@
 Feature: if childnodes value of system in bootstrap.cnf are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
-  @NORMAL @test-00
+  @NORMAL
   Scenario: config all system property, some values are illegal, start dble success #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -151,7 +151,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       The specified MySQL Version (5.6.24.00) is not valid, the version should look like 'x.y.z'
     """
     
-  @test-01
   Scenario: if bootstrap.cnf is not exist, check the log
     Given delete file "/opt/dble/conf/bootstrap.cnf" on "dble-1"
     Then restart dble in "dble-1" failed for
@@ -159,7 +158,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
         Configuration file not found: conf/bootstrap.cnf
     """
 
-  @test-02
   Scenario: if bootstrap.dynamic.cnf is not exist, check the log
     Given delete file "/opt/dble/conf/bootstrap.dynamic.cnf" on "dble-1"
     Given Restart dble in "dble-1" success
@@ -169,7 +167,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       """
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
-  @test-03
   Scenario: if bootstrap.cnf is empty, check the log
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
