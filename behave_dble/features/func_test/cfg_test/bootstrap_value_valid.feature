@@ -193,3 +193,27 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
         You must config instanceName in bootstrap.cnf and make sure it is an unique key for cluster
     """
 
+  Scenario: config cluster.cnf with illegal values, restart dble fail
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+    """
+    /clusterEnable/c clusterEnable=1
+    /clusterMode/c clusterMode=1
+    /clusterIP/c clusterIP=5.5
+    /clusterId/c clusterId=5.5
+    /needSyncHa/c needSyncHa=1
+    $a\clusterPort=555
+    $a\rootPath=///opt/dble/viewConf/
+    $a\showBinlogStatusTimeout=60000.1
+    $a\sequenceHandlerType=5.5
+    $a\sequenceStartTime=2010/11/04 09:42:54
+    $a\sequenceInstanceByZk=1
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    property [ clusterEnable ] '1' data type should be boolean
+    property [ needSyncHa ] '1' data type should be boolean
+    property [ sequenceHandlerType ] '5.5' data type should be int
+    property [ sequenceInstanceByZk ] '1' data type should be boolean
+    sequenceStartTime in cluster.cnf invalid format, you can use default value 2010-11-04 09:42:54
+    property [ showBinlogStatusTimeout ] '60000.1' data type should be long
+    """
