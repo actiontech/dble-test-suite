@@ -25,7 +25,7 @@ def check_btrace_running(sshClient, btraceScript):
     # root     31011 31010  0 Jun26 ?        00:00:58 /usr/java/jdk1.8.0_121/bin/java -Dcom.sun.btrace.unsafe=true -cp /opt/btrace/build/btrace-client.jar:/usr/java/jdk1.8.0_121/lib/tools.jar:/usr/share/lib/java/dtrace.jar com.sun.btrace.client.Main -o /opt/dble/BtraceAddMetaLock.java.log 30919 /opt/dble/BtraceAddMetaLock.java
 
 def stop_btrace(sshClient, btraceScript):
-    cmd = "kill -SIGINT `jps | grep Main | awk '{{print $1}}'`".format(btraceScript)
+    cmd = "jps | grep Main | awk '{{print $1}}'|xargs kill -9".format(btraceScript)
     rc, sto, ste = sshClient.exec_command(cmd)
     assert len(ste) == 0, "kill btrace err:{0}".format(ste)
     time.sleep(5)
