@@ -4,9 +4,10 @@
 # Created by yangxiaoliang at 2019/12/26
 
 #2.20.04.0#dble-8174
+  @skip
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace
+  @btrace @skip
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times , #1
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -71,6 +72,21 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa commit
     """
     Given stop mysql in host "mysql-master1"
+    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
+    Given destroy btrace threads list
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    """
+    Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
+    Given sleep "5" seconds
+
+     Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before add xa
+    """
+    Given sleep "10" seconds
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
