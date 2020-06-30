@@ -262,7 +262,6 @@ Feature: config all dble config files correct and restart dble
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root_test" passwd "111111"
 
-  @test-00
   Scenario: config db property, start dble success #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
