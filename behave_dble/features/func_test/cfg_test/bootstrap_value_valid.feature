@@ -151,7 +151,6 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       The specified MySQL Version (5.6.24.00) is not valid, the version should look like 'x.y.z'
     """
 
-  @test-00
   Scenario: config bootstrap property, some parameter spell illegal, start dble failed #2
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
