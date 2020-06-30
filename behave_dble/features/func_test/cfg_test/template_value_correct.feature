@@ -1,6 +1,5 @@
 Feature: config all dble config files correct and restart dble
 
-  @test-bc-01
   Scenario: config bootstrap property, start dble success #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -163,7 +162,6 @@ Feature: config all dble config files correct and restart dble
       | maxRowSizeToFile            | 10000                           |
       | useOuterHa                  | true                            |
 
-  @test-bc-02
   Scenario: config cluster property, start dble success #2
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -184,7 +182,6 @@ Feature: config all dble config files correct and restart dble
       | sequenceStartTime       | 2010-11-04 09:42:54 |
       | sequenceInstanceByZk    | false               |
 
-  @test-bc-03
   Scenario: config user property, start dble success #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -265,7 +262,6 @@ Feature: config all dble config files correct and restart dble
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root_test" passwd "111111"
 
-  @test-bc-04
   Scenario: config db property, start dble success #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -276,7 +272,6 @@ Feature: config all dble config files correct and restart dble
     """
   Then execute admin cmd "reload @@config_all"
 
-  @test-bc-05
   Scenario: config sharding property, start dble success #3
     Given add xml segment to node with attribute "{'tag':'schema'}" in "sharding.xml"
     """
