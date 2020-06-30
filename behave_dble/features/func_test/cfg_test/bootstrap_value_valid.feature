@@ -150,6 +150,23 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property [ xaSessionCheckPeriod ] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       The specified MySQL Version (5.6.24.00) is not valid, the version should look like 'x.y.z'
     """
+
+  @test-00
+  Scenario: config bootstrap property, some parameter spell illegal, start dble failed #2
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+    """
+    $a\sequenceHandlerType=20
+    $a\showBinlogStatusTimeout=60000
+    """
+    # invalid data
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      $a\-DmaxCom=-1
+    """
+    Then restart dble in "dble-1" failed for
+    """
+      These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: maxCom
+    """
     
   Scenario: if bootstrap.cnf is not exist, check the log
     Given delete file "/opt/dble/conf/bootstrap.cnf" on "dble-1"
