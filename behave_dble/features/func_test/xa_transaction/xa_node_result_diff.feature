@@ -86,7 +86,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | conn_1 | False   | set xa = on | success | schema1 |
       | conn_1 | False   | begin       | success | schema1 |
     Given prepare a thread execute sql "insert into schema1.sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)" with "conn_1"
-    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
     before xa start
     """
