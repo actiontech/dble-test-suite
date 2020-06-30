@@ -4,7 +4,6 @@
 
 # 2.19.11.0#dble-7860
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
-
   @btrace
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1
     Given stop dble cluster and zk service
@@ -79,7 +78,7 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | show @@backend.statistics |
     Then check resultset "rs_A" has lines with following column values
       | TOTAL-3 |
-      | 5       |
+      | 6       |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
