@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/3/11
 Feature: #test show @@processlist
-@skip
+
   Scenario: use `show @@processlist` to view the correspondence between front and backend session #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -15,12 +15,12 @@ Feature: #test show @@processlist
     """
     <dbGroup rwSplitMode="0"  name="ha_group1" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" primary="true" maxCon="5" minCon="5">
+    <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" primary="true" maxCon="4" minCon="4">
     </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0"  name="ha_group2" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" primary="true" maxCon="5" minCon="5">
+    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" primary="true" maxCon="4" minCon="4">
     </dbInstance>
     </dbGroup>
     """
