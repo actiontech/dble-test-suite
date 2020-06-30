@@ -94,7 +94,7 @@ Feature: reload @@config_all -sr
       | conn   | toClose | sql                                    | expect      | db      |
       | conn_0 | false   | commit                                 | success     | schema1 |
       | conn_0 | true    | select * from sharding_4_t1 where id=2 | length{(1)} | schema1 |
-    Given sleep "3" seconds
+    Given sleep "6" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_E"
       | sql            |
       | show @@backend |
