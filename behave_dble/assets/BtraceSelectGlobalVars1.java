@@ -14,7 +14,7 @@ public final class BtraceSelectGlobalVars1 {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.config.helper.GetAndSyncDataSourceKeyVariables",
+            clazz = "com.actiontech.dble.config.helper.GetAndSyncDbInstanceKeyVariables",
             method = "call"
     )
     public static void call(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
