@@ -16,9 +16,9 @@ Feature: test show user related manager command
       Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
 
       """
-      <shardingUser name="test1" password="123456" schemas="schema,schema2" maxCon="40" readOnly="false">
+      <shardingUser name="test1" password="123456" schemas="schema1,schema2" maxCon="40" readOnly="false">
       <privileges check="true">
-      <schema name="schema" dml="0111" >
+      <schema name="schema1" dml="0111" >
       <table name="test" dml="0000"></table>
       <table name="sharding_4_t1" dml="1111"></table>
       </schema>
@@ -40,8 +40,8 @@ Feature: test show user related manager command
          | show @@user.privilege |
        Then check resultset "userPrivilege_rs_A" has lines with following column values
       | Username-0 | Schema-1  | Table-2       | INSERT-3    | UPDATE-4   | SELECT-5 | DELETE-6  |
-      |    test1   | schema    | test          | N           | N          | N        | N         |
-      |    test1   | schema    | sharding_4_t1 | Y           | Y          | Y        | Y         |
+      |    test1   | schema1    | test          | N           | N          | N        | N         |
+      |    test1   | schema1    | sharding_4_t1 | Y           | Y          | Y        | Y         |
       |    test1   | schema2   | sharding_4_t1 | Y           | N          | N        | Y         |
       |    test1   | schema2   | *             | N           | Y          | N        | Y         |
        Given execute single sql in "dble-1" in "admin" mode and save resultset in "help_rs_A"
