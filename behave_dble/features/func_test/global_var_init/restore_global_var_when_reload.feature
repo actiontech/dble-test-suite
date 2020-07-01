@@ -172,7 +172,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
 #    a heartbeat period is 2, 5 means wait more than 2 heartbeat period
     Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" occured ">2" times
-@skip
+
   @restore_global_setting
   Scenario:config autocommit/txIsolation to not default value, and backend mysql values are different, dble will set backend same as dble configed #6
     """
@@ -190,7 +190,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='REPEATABLE-READ' |
     Given turn on general log in "mysql-master1"
     When Start dble in "dble-1"
-    Then check general log in host "mysql-master1" has "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
+    Then check general log in host "mysql-master1" has not "SET global autocommit=0,tx_isolation='READ-COMMITTED'"
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect  | db      |
       | drop table if exists sharding_4_t1 | success | schema1 |
@@ -260,7 +260,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | select * from sharding_2_t1 | success | schema1 |
     Then check general log in host "mysql-master1" has "SET autocommit=1"
     Then check general log in host "mysql-master2" has "SET autocommit=1"
-  @skip
+
   @restore_global_setting
   Scenario:config autocommit=0, after executing explicit query(with which dble will add autocommit=0 to the session), the global var will not be restored #8
     """
@@ -314,15 +314,15 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     """
     Given merge resultset of "heartbeat_master1" and "backendIds_master1" into "ids_to_kill_master1"
     Given merge resultset of "heartbeat_master2" and "backendIds_master2" into "ids_to_kill_master2"
-    Then check general log in host "mysql-master1" has not "SET autocommit=0"
-    Then check general log in host "mysql-master2" has not "SET autocommit=0"
+    Then check general log in host "mysql-master1" has "SET autocommit=0"
+    Then check general log in host "mysql-master2" has "SET autocommit=0"
     Given kill all backend conns in "mysql-master1" except ones in "ids_to_kill_master1"
     Given kill all backend conns in "mysql-master2" except ones in "ids_to_kill_master2"
     Given execute sql in "dble-1" in "user" mode
       | sql                         | expect  | db      |
       | select * from sharding_2_t1 | success | schema1 |
-    Then check general log in host "mysql-master1" has not "SET autocommit=1"
-    Then check general log in host "mysql-master2" has not "SET autocommit=1"
+    Then check general log in host "mysql-master1" has "SET autocommit=1"
+    Then check general log in host "mysql-master2" has "SET autocommit=1"
 
   @restore_global_setting
   Scenario:dble starts at disabled=true, global vars values are different, then change it to enable by manager command, dble send set global query #9
@@ -448,7 +448,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | True    | set global tx_isolation='READ-COMMITTED'  |
     Given execute admin cmd "dbGroup @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
-@skip
+
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
     Given stop mysql in host "mysql-master1"
 #    default heartbeatPeriodMillis is 10, 11 makes sure heartbeat failed for mysql-master1
