@@ -8,6 +8,18 @@ from behave import *
 
 from lib.utils import get_node
 
+@Then('check "{file}" in "{hostname}" was empty')
+def step_impl(context,hostname, file):
+    node = get_node(hostname)
+    path = "{0}".format(file)
+    print ("{0}".format(file))
+    cmd = "cat {0}".format(path)
+    ssh_client = node.ssh_conn
+    rc, sto, ste = ssh_client.exec_command(cmd)
+    print ("rc:{0}; sto:{1}; ste:{2}\n".format(rc, sto, ste))
+    assert len(sto)==0, "cat file is not empty!"
+    assert len(ste)==0, "cat file failed for: {0}".format(ste[0:200])
+
 
 @Then('check "{logfile}" in "{hostname}" has the warnings')
 def step_impl(context,hostname, logfile):
