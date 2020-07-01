@@ -213,8 +213,8 @@ Feature: sharding basic config test
     flowControlStartThreshold=200
     flowControlStopThreshold=100
     """
-  @skip
-  Scenario: Multi_sharding
+
+  Scenario: config with Multi_sharding tables, reload success
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -222,11 +222,12 @@ Feature: sharding basic config test
             <shardingTable name="tb_parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id">
             <childTable name="tb_child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201">
                 <childTable name="tb_grandson1" joinColumn="grandson1_id" parentColumn="child1_id"/>
+                     <childTable name="tb_great_grandson1" joinColumn="great_grandson1_id" parentColumn="grandson1_id"/>
                 <childTable name="tb_grandson2" joinColumn="grandson2_id" parentColumn="child1_id2"/>
             </childTable>
             <childTable name="tb_child2" joinColumn="child2_id" parentColumn="id"/>
             <childTable name="tb_child3" joinColumn="child3_id" parentColumn="id2"/>
         </shardingTable>
-         </schema>
+        </schema>
     """
     Then execute admin cmd "reload @@config_all"
