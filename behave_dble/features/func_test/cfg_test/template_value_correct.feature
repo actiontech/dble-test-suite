@@ -8,7 +8,7 @@ Feature: config all dble config files correct and restart dble
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-      $a\-DmaxCon=0
+      $a\-DmaxCon=1024
       $a\-DserverBacklog=2048
       $a\-DuseOuterHa=true
       $a\-Dautocommit=1
