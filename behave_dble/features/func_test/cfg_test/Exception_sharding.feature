@@ -220,7 +220,7 @@ Feature: sharding basic config test
         <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
             <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
             <shardingTable name="tb_parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id">
-            <childTable name="tb_child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201">
+            <childTable name="tb_child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201" incrementColumn="id">
                 <childTable name="tb_grandson1" joinColumn="grandson1_id" parentColumn="child1_id"/>
                      <childTable name="tb_great_grandson1" joinColumn="great_grandson1_id" parentColumn="grandson1_id"/>
                 <childTable name="tb_grandson2" joinColumn="grandson2_id" parentColumn="child1_id2"/>
