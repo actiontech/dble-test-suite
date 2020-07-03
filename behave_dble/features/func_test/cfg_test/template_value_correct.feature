@@ -101,7 +101,7 @@ Feature: config all dble config files correct and restart dble
       | fakeMySQLVersion            | 5.6.24                          |
       | sequenceHandlerType         | Local TimeStamp(like Snowflake) |
       | serverBacklog               | 2048                            |
-      | maxCon                      | 0                               |
+      | maxCon                      | 1024                            |
       | useCompression              | 0                               |
       | usingAIO                    | 0                               |
       | autocommit                  | 1                               |
