@@ -1,5 +1,6 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+# Created by chenhuiming at 2020/7/2
 
 Feature: db heartbeat test
 
@@ -27,10 +28,12 @@ Feature: db heartbeat test
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-          <heartbeat errorRetryCount="1" timeout="10">select @@read_only</heartbeat>
+          <heartbeat errorRetryCount="-1" timeout="10">select @@read_only</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """
-    Then execute admin cmd "reload @@config_all"
-    Then Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    dbGroup ha_group1 errorRetryCount should be greater than 0!
+    """
