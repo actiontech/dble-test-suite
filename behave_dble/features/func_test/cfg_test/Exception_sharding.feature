@@ -231,3 +231,17 @@ Feature: sharding basic config test
         </schema>
     """
     Then execute admin cmd "reload @@config_all"
+
+  Scenario: config with no sqlMaxLimit, reload success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+        <schema shardingNode="dn5" name="schema1">
+            <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+            <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+            <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
+
+
+    

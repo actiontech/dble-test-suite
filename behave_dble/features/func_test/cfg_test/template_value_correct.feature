@@ -120,7 +120,7 @@ Feature: config all dble config files correct and restart dble
       | checkTableConsistencyPeriod | 60000ms                         |
       | processorCheckPeriod        | 1 Seconds                       |
       | sqlExecuteTimeout           | 300 Seconds                     |
-      | recordTxn                   | 0                               |
+      | recordTxn                   | 1                               |
       | transactionLogBaseDir       | /txlogs                         |
       | transactionLogBaseName      | server-tx                       |
       | transactionRotateSize       | 16M                             |
