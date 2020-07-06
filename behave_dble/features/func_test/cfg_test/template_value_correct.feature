@@ -114,7 +114,7 @@ Feature: config all dble config files correct and restart dble
       | maxCostStatSize             | 100                             |
       | costSamplePercent           | 1                               |
       | charset                     | utf8mb4                         |
-      | maxPacketSize               | 1073741824                      |
+      | maxPacketSize               | 4096                      |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
