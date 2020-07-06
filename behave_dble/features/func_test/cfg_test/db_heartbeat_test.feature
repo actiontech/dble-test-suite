@@ -24,7 +24,7 @@ Feature: db heartbeat test
     Then execute admin cmd "reload @@config_all"
     Then Restart dble in "dble-1" success
 
-  Scenario: config heartbeat with errorRetryCount, reload success #2
+  Scenario: config errorRetryCount with illegal value, reload fail #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
