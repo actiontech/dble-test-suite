@@ -62,7 +62,7 @@ Feature: config all dble config files correct and restart dble
       $a\-DcomplexExecutor=4
       $a\-DwriteToBackendExecutor=4
       $a\-DfakeMySQLVersion=5.6.24
-      $a\-DmaxPacketSize=1073741824
+      $a\-DmaxPacketSize=4096
       $a\-DcheckTableConsistencyPeriod=60000
       $a\-DprocessorCheckPeriod=1000
       $a\-DsqlExecuteTimeout=300
