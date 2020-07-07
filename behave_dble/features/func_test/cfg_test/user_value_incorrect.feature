@@ -116,3 +116,52 @@ Feature:  config user config files incorrect and restart dble or reload configs
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql      | expect                    | db     |
       | test | 111111 | conn_5 | False   | select 1 | Unknown database 'hosts1' | hosts1 |
+
+  Scenario:  config user property, login the system #9
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
+    """
+      <managerUser name="root_test1" password="111111" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
+      <managerUser name="root_test1" password="222222" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+      User [name:root_test1] has already existed
+    """
+
+  Scenario:  config user property, login the system #10
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
+    """
+      <shardingUser name="sharding_test1" password="111111" schemas="schema1" maxCon="0"/>
+      <shardingUser name="sharding_test1" password="222222" schemas="schema1" maxCon="0"/>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+      User [sharding_test1] has already existed
+    """
+
+  Scenario:  config user property, login the system #11
+    Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
+    """
+      <blacklist name="blacklist1">
+        <property name="selectHavingAlwayTrueCheck">true</property>
+      </blacklist>
+      <blacklist name="blacklist1">
+        <property name="selectWhereAlwayTrueCheck">true</property>
+      </blacklist>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+      blacklist[blacklist1]  has already existed
+    """
+
+  Scenario:  config user property, login the system #12
+    Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
+    """
+      <blacklist name="blacklist1">
+        <property name="selectHavingAlwayTrueCheck_fake">true</property>
+      </blacklist>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+      blacklist item(s) is not recognized: selectHavingAlwayTrueCheck_fake
+    """
