@@ -37,9 +37,15 @@ Feature: check collation/lower_case_table_names works right for dble
     """
         <schema name="DBTEST">
              <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-             <singleTable name="uos_page_ret_inst" shardingNode="dn4"/>
-             <singleTable name="uos_tache_def" shardingNode="dn3"/>
+             <singleTable name="Uos_Page_ret_inst" shardingNode="dn4" sqlMaxLimit="105"/>
+             <singleTable name="UOS_Tache_def" shardingNode="dn3" sqlMaxLimit="105"/>
         </schema>
+
+        <shardingNode dbGroup="ha_group1" database="DB1" name="dn1" />
+        <shardingNode dbGroup="ha_group2" database="DB1" name="dn2" />
+        <shardingNode dbGroup="ha_group1" database="DB2" name="dn3" />
+        <shardingNode dbGroup="ha_group2" database="DB2" name="dn4" />
+        <shardingNode dbGroup="ha_group1" database="DB3" name="dn5" />
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
      """
@@ -147,3 +153,52 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
       | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                  |success             | schema1 |
 
+  @BLOCKER @restore_mysql_config
+  Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
+  """
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
+   """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Given delete the following xml segment
+      | file     | parent         | child                  |
+      | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" shardingNode="dn5" sqlMaxLimit="100">
+          <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <shardingTable name="aly_order" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+      </schema>
+    """
+    Given add xml segment to node with attribute "{'tag':'root','prev':'managerUser'}" in "user.xml"
+    """
+    <shardingUser name="test_user" password="111111" schemas="SCHEMA1">
+        <privileges check="true">
+            <schema name="SCHEMA1" dml="0000" >
+                <table name="Aly_Test" dml="1111"></table>
+                <table name="Aly_Order" dml="0010"></table>
+            </schema>
+        </privileges>
+    </shardingUser>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user      | passwd | conn   | toClose | sql                                             | expect  | db |
+      | test_user | 111111 | conn_0 | False   | use schema1                                     | success |    |
+      | test_user | 111111 | conn_0 | False   | drop table if exists aly_test                   | success |    |
+      | test_user | 111111 | conn_0 | False   | create table aly_test(id int, name varchar(10)) | success |    |
+      | test_user | 111111 | conn_0 | False   | insert into aly_test value(1,'a')               | success |    |
+      | test_user | 111111 | conn_0 | False   | update aly_test set name='b' where id=1         | success |    |
+      | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |    |
+      | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |    |
+      | test_user | 111111 | conn_0 | False   | show create table aly_test                      | success |    |
