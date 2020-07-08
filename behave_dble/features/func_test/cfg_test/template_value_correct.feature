@@ -43,7 +43,7 @@ Feature: config all dble config files correct and restart dble
       $a\-DuseCompression=0
       $a\-Dcharset=utf8mb4
       $a\-DtxIsolation=3
-      $a\-DrecordTxn=0
+      $a\-DrecordTxn=1
       $a\-DbufferUsagePercent=80
       $a\-DfrontSocketNoDelay=1
       $a\-DbackSocketNoDelay=1
