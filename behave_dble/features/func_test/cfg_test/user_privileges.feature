@@ -403,3 +403,37 @@ Feature:test user's privileges under different combination
       |user.xml  | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'schema_table2'}} |
       |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}} | {'tag':'shardingTable','kv_map':{'name':'schema_permission'}} |
     Then execute admin cmd "reload @@config_all"
+
+  Scenario: config privileges check with false #8
+    Given delete the following xml segment
+      | file     | parent         | child                  |
+      | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" shardingNode="dn5" sqlMaxLimit="100">
+          <shardingTable name="aly_test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+      </schema>
+    """
+    Given add xml segment to node with attribute "{'tag':'root','prev':'managerUser'}" in "user.xml"
+    """
+      <shardingUser name="test_user" password="111111" schemas="schema1">
+          <privileges check="false">
+              <schema name="schema1" dml="0000" >
+                  <table name="aly_test" dml="0000"></table>
+              </schema>
+          </privileges>
+      </shardingUser>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user      | passwd | conn   | toClose | sql                                             | expect  | db |
+      | test_user | 111111 | conn_0 | False   | use schema1                                     | success |    |
+      | test_user | 111111 | conn_0 | False   | drop table if exists aly_test                   | success |    |
+      | test_user | 111111 | conn_0 | False   | create table aly_test(id int, name varchar(10)) | success |    |
+      | test_user | 111111 | conn_0 | False   | insert into aly_test value(1,'a')               | success |    |
+      | test_user | 111111 | conn_0 | False   | update aly_test set name='b' where id=1         | success |    |
+      | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |    |
+      | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |    |
+      | test_user | 111111 | conn_0 | False   | show create table aly_test                      | success |    |

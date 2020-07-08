@@ -83,7 +83,6 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
-#    Then connect "dble-1" to insert "10000" of data for "sharding_2_t1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1               | success | schema1 |
@@ -120,7 +119,7 @@ Feature: sharding basic config test
     Then execute admin cmd "reload @@config_all"
 
 
-  Scenario: test the effectiveness of wildcard , reload success #8
+  Scenario: config with different count of shardingNode and partition , reload success #8
 
 #    some problem with this case, the count of shardingNode should be equal to partitionCount,
 #    but when the count of shardingNode is larger than partitionCount ,it reloads successfully
@@ -169,7 +168,7 @@ Feature: sharding basic config test
     please make sure table shardingnode size = function partition size
     """
 
-  Scenario:test the parameter of slow_log and flow_control
+  Scenario:test the parameter of slow_log and flow_control #9
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                    | expect         |
       | conn_0 | False   | show @@slow_query_log                                                                  | has{('0',)}    |
@@ -214,7 +213,7 @@ Feature: sharding basic config test
     flowControlStopThreshold=100
     """
 
-  Scenario: config with Multi_sharding tables, reload success
+  Scenario: config with Multi_sharding tables, reload success #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -232,7 +231,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all"
 
-  Scenario: config with no sqlMaxLimit, reload success
+  Scenario: config with no sqlMaxLimit, reload success #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <schema shardingNode="dn5" name="schema1">
@@ -243,5 +242,150 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all"
 
+  Scenario: config two schemas with same name, reload fail #12
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml" with duplicate name
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+            <globalTable shardingNode="dn1,dn2" name="test1" />
+            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test2" function="hash-four" shardingColumn="id" />
+    </schema>
+    <schema name="schema1" sqlMaxLimit="100">
+            <shardingTable shardingNode="dn3,dn4" name="test1" function="hash-two" shardingColumn="id" />
+            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test3" function="hash-four" shardingColumn="id" />
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    schema schema1 duplicated!
+    """
 
-    
+  Scenario: config two tables with same name, reload fail #13
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml" with duplicate name
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    table sharding_2_t1 duplicated!
+    """
+
+  Scenario: config two schemas with same name, reload fail #14
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml" with duplicate name
+    """
+     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    table sharding_2_t1 duplicated!
+    """
+
+  Scenario: config functions with same name, reload fail #15
+    Given add xml segment to node with attribute "{'tag':'root','prev':'shardingNode'}" in "sharding.xml" with duplicate name
+    """
+    <function class="Hash" name="hash-two">
+        <property name="partitionCount">2</property>
+        <property name="partitionLength">1</property>
+    </function>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    rule function hash-two duplicated!
+    """
+
+  Scenario: config functions with same name, reload fail #16
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="100" minCon="10" primary="true">
+        </dbInstance>
+        <dbInstance name="hosts1" password="111111" url="172.100.9.2:3306" user="test" maxCon="100" minCon="10" primary="false">
+        </dbInstance>
+        <dbInstance name="hosts1" password="111111" url="172.100.9.3:3306" user="test" maxCon="100" minCon="10" primary="false">
+        </dbInstance>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    dbGroup[ha_group2]'s child host name [hosts1]  duplicated!
+    """
+
+  Scenario: config with only one shardingNode in shardingTable, reload fail #17
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1" function="hash-two" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    invalid shardingNode config: dn1 for ShardingTableConfig test, please use SingleTable
+    """
+
+  Scenario: config with only one shardingNode in globalTable, reload fail #18
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn$1-4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+    invalid shardingNode config: dn1 for GlobalTableConfig test, please use SingleTable
+    """
+
+  Scenario: config wildcard should obey the following rule: shardingNode=dbgroup*database #19
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+
+    <shardingNode dbGroup="ha_group$1-2" database="db$1-2" name="dn$1-4" />
+    """
+    Then execute admin cmd "reload @@config_all"
+
+  Scenario: config wildcard should obey the following rule: shardingNode=dbgroup*database #19
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test_db" shardingNode="dn1,dn2,dn3,dn4" sqlMaxLimit="100" checkClass="CHECKSUM" cron="/1 * * * * ? *"/>
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                            | expect  | db      |
+      | conn_0 | False   | drop table if exists test_db                   | success | schema1 |
+      | conn_0 | False   | create table test_db(id bigint,time char(120)) | success | schema1 |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      GlobalCheckJob
+      """
