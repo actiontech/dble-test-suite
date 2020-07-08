@@ -219,3 +219,29 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     sequenceStartTime in cluster.cnf invalid format, you can use default value 2010-11-04 09:42:54
     property [ showBinlogStatusTimeout ] '60000.1' data type should be long
     """
+
+  Scenario: config bootstrap.cnf with unrecognized value, restart dble fail
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-Dtestcon=100
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: testcon
+    """
+
+
+    @skip
+  Scenario: config bootstrap.cnf with illegal homepath, restart dble fail
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /-DhomePath=./c -DhomePath=/opt/dble/conf/
+    """
+    Then restart dble in "dble-1" success
+
+    Then  execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                           | expect  | db      |
+      | conn_0 | False   | drop table if exists test                     | success | schema1 |
+      | conn_0 | False   | create table test(id int)                     | success | schema1 |
+      | conn_0 | False   | drop view if exists view_test                 | success | schema1 |
+      | conn_0 | True    | create view view_test01 as select * from test | success | schema1 |
