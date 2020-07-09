@@ -114,7 +114,7 @@ Feature: config all dble config files correct and restart dble
       | maxCostStatSize             | 100                             |
       | costSamplePercent           | 1                               |
       | charset                     | utf8mb4                         |
-      | maxPacketSize               | 4096                      |
+      | maxPacketSize               | 4096                            |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
@@ -265,7 +265,7 @@ Feature: config all dble config files correct and restart dble
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "root_test" passwd "111111"
 
-  Scenario: config db property, start dble success #3
+  Scenario: config db property, start dble success #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
@@ -287,7 +287,7 @@ Feature: config all dble config files correct and restart dble
     """
   Then execute admin cmd "reload @@config_all"
 
-  Scenario: config sharding property, start dble success #3
+  Scenario: config sharding property, start dble success #5
     Given add xml segment to node with attribute "{'tag':'schema'}" in "sharding.xml"
     """
       <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" sqlMaxLimit="100" checkClass="CHECKSUM" cron="0 0 0 * * ?"/>
@@ -302,3 +302,4 @@ Feature: config all dble config files correct and restart dble
       <singleTable name="tb_single" shardingNode="dn5" sqlMaxLimit="105"/>
     """
     Then execute admin cmd "reload @@config_all"
+
