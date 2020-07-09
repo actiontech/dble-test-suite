@@ -154,7 +154,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                  |success             | schema1 |
 
   @BLOCKER @restore_mysql_config
-  Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive#1
+  Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #3
   """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
    """
@@ -202,3 +202,54 @@ Feature: check collation/lower_case_table_names works right for dble
       | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |    |
       | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |    |
       | test_user | 111111 | conn_0 | False   | show create table aly_test                      | success |    |
+
+  @BLOCKER @restore_mysql_config
+  Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #4
+  """
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
+   """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+            <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+            <shardingTable name="tb_parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id">
+            <childTable name="Tb_Child1" joinColumn="child1_id" parentColumn="id" sqlMaxLimit="201">
+                <childTable name="Tb_Grandson1" joinColumn="grandson1_id" parentColumn="child1_id"/>
+                     <childTable name="Tb_Great_grandson1" joinColumn="great_grandson1_id" parentColumn="grandson1_id"/>
+                <childTable name="tb_grandson2" joinColumn="grandson2_id" parentColumn="child1_id2"/>
+            </childTable>
+            <childTable name="tb_child2" joinColumn="child2_id" parentColumn="id"/>
+            <childTable name="tb_child3" joinColumn="child3_id" parentColumn="id2"/>
+        </shardingTable>
+        </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                                       | expect  | db |
+      | test | 111111 | conn_0 | False   | use schema1                                                               | success |    |
+      | test | 111111 | conn_0 | False   | drop table if exists tb_child1                                            | success |    |
+      | test | 111111 | conn_0 | False   | create table tb_child1(child1_id int, name varchar(10))                   | success |    |
+      | test | 111111 | conn_0 | False   | insert into tb_child1 value(1,'a')                                        | success |    |
+      | test | 111111 | conn_0 | False   | update tb_child1 set name='b' where child1_id=1                           | success |    |
+      | test | 111111 | conn_0 | False   | select * from tb_child1                                                   | success |    |
+      | test | 111111 | conn_0 | False   | delete from tb_child1                                                     | success |    |
+      | test | 111111 | conn_0 | False   | show create table tb_child1                                               | success |    |
+
+      | test | 111111 | conn_0 | False   | drop table if exists tb_grandson1                                         | success |    |
+      | test | 111111 | conn_0 | False   | create table tb_grandson1 (grandson1_id int, name varchar(10))            | success |    |
+      | test | 111111 | conn_0 | False   | insert into tb_grandson1  value(1,'a')                                    | success |    |
+      | test | 111111 | conn_0 | False   | update tb_grandson1  set name='b' where grandson1_id=1                    | success |    |
+      | test | 111111 | conn_0 | False   | select * from tb_grandson1                                                | success |    |
+      | test | 111111 | conn_0 | False   | delete from tb_grandson1                                                  | success |    |
+      | test | 111111 | conn_0 | False   | show create table tb_grandson1                                            | success |    |
