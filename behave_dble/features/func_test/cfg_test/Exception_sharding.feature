@@ -273,7 +273,7 @@ Feature: sharding basic config test
     table sharding_2_t1 duplicated!
     """
 
-  Scenario: config two schemas with same name, reload fail #14
+  Scenario: config two dbgroups with same name, reload fail #14
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml" with duplicate name
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -290,7 +290,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    table sharding_2_t1 duplicated!
+    dbGroup name ha_group1 duplicated!
     """
 
   Scenario: config functions with same name, reload fail #15
