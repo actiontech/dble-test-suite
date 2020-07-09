@@ -64,6 +64,16 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
 
   Scenario:  config user property, login the system #7
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 0
+     """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 0
+     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
       <managerUser name="root_test" password="111111" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
