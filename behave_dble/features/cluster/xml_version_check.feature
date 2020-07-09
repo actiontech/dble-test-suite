@@ -14,8 +14,8 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       | dryrun |
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                                                                    |
-      | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the db.xml version is 9.9.9.9.There must be some incompatible config between two versions, please check it             |
-      | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the user.xml version is 9.9.9.0.There must be some incompatible config between two versions, please check it |
+      | Xml    | WARNING | The dble-config-version is [0-9].[0-9],but the db.xml version is 9.9.9.9.There must be some incompatible config between two versions, please check it             |
+      | Xml    | WARNING | The dble-config-version is [0-9].[0-9],but the user.xml version is 9.9.9.0.There must be some incompatible config between two versions, please check it |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       The dble-config-version is [0-9].[0-9],but the user.xml version is 9.9.9.0.There must be some incompatible config between two versions, please check it
@@ -61,8 +61,8 @@ Feature: test "check xml version warning message in dble.log and dryrun"
       | dryrun |
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                                                                    |
-      | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the db.xml version is 1.1.There must be some incompatible config between two versions, please check it             |
-      | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the user.xml version is 1.0.There must be some incompatible config between two versions, please check it |
+      | Xml    | WARNING | The dble-config-version is [0-9].[0-9],but the db.xml version is 1.1.There must be some incompatible config between two versions, please check it             |
+      | Xml    | WARNING | The dble-config-version is [0-9].[0-9],but the user.xml version is 1.0.There must be some incompatible config between two versions, please check it |
     Then stop dble in "dble-1"
     Given sleep "60" seconds
     Then Start dble in "dble-1"
@@ -86,8 +86,8 @@ Feature: test "check xml version warning message in dble.log and dryrun"
     Then execute admin cmd "reload @@config_all"
     Then check resultset "dryrun_rs" has lines with following column values
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                                                                    |
-      | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the db.xml version is 1.1.There must be some incompatible config between two versions, please check it             |
-      | Xml    | NOTICE | The dble-config-version is [0-9].[0-9],but the user.xml version is 1.0.There must be some incompatible config between two versions, please check it |
+      | Xml    | WARNING | The dble-config-version is [0-9].[0-9],but the db.xml version is 1.1.There must be some incompatible config between two versions, please check it             |
+      | Xml    | WARNING | The dble-config-version is [0-9].[0-9],but the user.xml version is 1.0.There must be some incompatible config between two versions, please check it |
     Given get config xml version from template config and named as "current_version"
     Given add current version from var "current_version" to rootnode in "user.xml"
     Given add current version from var "current_version" to rootnode in "db.xml"
