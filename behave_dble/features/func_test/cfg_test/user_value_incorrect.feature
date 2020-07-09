@@ -97,15 +97,13 @@ Feature:  config user config files incorrect and restart dble or reload configs
     Then execute sql in "dble-1" in "user" mode
       | user          | passwd | conn   | toClose | sql      | expect                                                       | db      |
       | test          | 11111  | conn_1 | False   | select 1 | Access denied for user 'test', because password is incorrect | schema1 |
+      | test          |        | conn_4 | False   | select 1 | Access denied for user 'test', because password is incorrect | schema1 |
       | root          | 111111 | conn_2 | False   | select 1 | Access denied for manager user 'root'                        | schema1 |
       | test          | 111111 | new_1  | False   | select 1 | Unknown database 'SCHEMA1'                                   | SCHEMA1 |
 
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql      | expect                        |
       | test | 111111 | conn_3 | False   | select 1 | Access denied for user 'test' |
-#    Then execute sql in "dble-2" in "user" mode
-#      | user          | passwd | conn   | toClose | sql      | expect                        |
-#      | sharding_test | 111111 | conn_4 | False   | select 1 | Access denied for user 'test' |
 
   Scenario: config db property, login the system #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -174,4 +172,14 @@ Feature:  config user config files incorrect and restart dble or reload configs
     Then execute admin cmd "reload @@config_all" get the following output
     """
       blacklist item(s) is not recognized: selectHavingAlwayTrueCheck_fake
+    """
+
+  Scenario:  config user property, login the system #13
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
+    """
+      <shardingUser name="sharding_test1" password="111111" schemas="schema2" maxCon="0"/>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+      User[name:sharding_test1]'s schema [schema2] is not exist
     """
