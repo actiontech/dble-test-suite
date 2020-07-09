@@ -4,7 +4,7 @@
 Feature: if childnodes value of system in bootstrap.cnf are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
-  @NORMAL
+  @NORMAL @test
   Scenario: config all system property, some values are illegal, start dble success #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -14,17 +14,17 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     # invalid data
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-      $a\-DmaxCon=-1
+      $a\-DmaxCon=-3
       $a\-DserverBacklog=-2000
       $a\-DuseOuterHa=1
-      $a\-Dautocommit=-1
+      $a\-Dautocommit=-3
       $a\-DuseCostTimeStat=2
       $a\-DmaxCostStatSize=-10
       $a\-DcostSamplePercent=-2
       $a\-DorderMemSize=-5
       $a\-DotherMemSize=-5
       $a\-DjoinMemSize=-5
-      $a\-DmappedFileSize=0
+      $a\-DmappedFileSize=-5
       $a\-DtransactionRotateSize=-10
       $a\-DxaRetryCount=-1
       $a\-DviewPersistenceConfBaseDir=///opt/dble/viewConf/
@@ -67,8 +67,8 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       $a\-DcomplexExecutor=-4
       $a\-DwriteToBackendExecutor=-4
       $a\-DfakeMySQLVersion=5.6.24.00
-      $a\-DmaxPacketSize=1000
-      $a\-DcheckTableConsistencyPeriod=1800.59
+      $a\-DmaxPacketSize=-1000
+      $a\-DcheckTableConsistencyPeriod=-1800
       $a\-DprocessorCheckPeriod=-1000
       $a\-DsqlExecuteTimeout=-20
       $a\-DtransactionLogBaseDir=///txlogs
@@ -93,59 +93,59 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
     Then restart dble in "dble-1" failed for
     """
-      Property [ autocommit ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
-      property [ backSocketNoDelay ] 'true' data type should be int
+      Property [ autocommit ] '-3' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+      property [ backSocketNoDelay ] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property [ backSocketSoRcvbuf ] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property [ backSocketSoSndbuf ] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
       Property [ backendProcessorExecutor ] '-4' in bootstrap.cnf is illegal, you may need use the default value 5 replaced
       Property [ backendProcessors ] '-3' in bootstrap.cnf is illegal, you may need use the default value 5 replaced
-      property [ bufferPoolChunkSize ] 'abc' data type should be short
-      Property [ bufferPoolPageNumber ] '-512' in bootstrap.cnf is illegal, you may need use the default value 409 replaced
+      property [ bufferPoolChunkSize ] '-32767' in bootstrap.cnf is illegal, you may need use the default value 4096 replaced
+      Property [ bufferPoolPageNumber ] '-2000' in bootstrap.cnf is illegal, you may need use the default value 2097152 replaced
       property [ bufferPoolPageSize ] 'abc' data type should be int
-      property [ bufferUsagePercent ] '80%' data type should be int
+      property [ bufferUsagePercent ] '120' in bootstrap.cnf is illegal, you may need use the default value 80 replaced
       Property [ charset ] 'utf-8' in bootstrap.cnf is illegal, use utf8mb4 replaced
-      property [ checkTableConsistency ] 'false' data type should be int
-      property [ checkTableConsistencyPeriod ] '1800.59' data type should be long
-      property [ clearBigSQLResultSetMapMs ] '600000.59' data type should be long
+      property [ checkTableConsistency ] '-10100101' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      property [ checkTableConsistencyPeriod ] '-1800' in bootstrap.cnf is illegal, you may need use the default value 1800000 replaced
+      property [ clearBigSQLResultSetMapMs ] '-600000' in bootstrap.cnf is illegal, you may need use the default value 600000 replaced
       Property [ complexExecutor ] '-4' in bootstrap.cnf is illegal, you may need use the default value 5 replaced
       Property [ costSamplePercent ] '-2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       property [ enableFlowControl ] '1' data type should be boolean
-      property [ enableSlowLog ] 'false' data type should be int
+      property [ enableSlowLog ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property [ flushSlowLogPeriod ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property [ flushSlowLogSize ] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      property [ frontSocketNoDelay ] 'true' data type should be int
+      property [ frontSocketNoDelay ] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       Property [ frontSocketSoRcvbuf ] '-1048576' in bootstrap.cnf is illegal, you may need use the default value 1048576 replaced
       Property [ frontSocketSoSndbuf ] '-4194304' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
-      property [ joinMemSize ] '4.5' data type should be int
-      property [ joinQueueSize ] '1024.59' data type should be int
-      property [ mappedFileSize ] 'abc' data type should be int
-      property [ maxCharsPerColumn ] '65535.59' data type should be int
-      Property [ maxCon ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      property [ joinMemSize ] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
+      property [ joinQueueSize ] '-1024' data type should be int
+      property [ mappedFileSize ] '-5' in bootstrap.cnf is illegal, you may need use the default value 67108864 replaced
+      property [ maxCharsPerColumn ] '-65534' in bootstrap.cnf is illegal, you may need use the default value 65535 replaced
+      Property [ maxCon ] '-3' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property [ maxCostStatSize ] '-10' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
-      property [ maxPacketSize ] '3.5' data type should be int
+      property [ maxPacketSize ] '-1000' in bootstrap.cnf is illegal, you may need use the default value 4194304 replaced
       Property [ maxResultSet ] '-524288' in bootstrap.cnf is illegal, you may need use the default value 524288 replaced
       Property [ maxRowSizeToFile ] '-10000' in bootstrap.cnf is illegal, you may need use the default value 10000 replaced
       Property [ mergeQueueSize ] '-1024' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
-      property [ nestLoopConnSize ] '4.5' data type should be int
-      property [ nestLoopRowsSize ] '2000.59' data type should be int
+      property [ nestLoopConnSize ] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
+      property [ nestLoopRowsSize ] '-2000' in bootstrap.cnf is illegal, you may need use the default value 2000 replaced
       Property [ orderByQueueSize ] '-1024' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
-      property [ orderMemSize ] '4.5' data type should be int
-      property [ otherMemSize ] '4.5' data type should be int
+      property [ orderMemSize ] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
+      property [ otherMemSize ] '-5' in bootstrap.cnf is illegal, you may need use the default value 4 replaced
       Property [ processorCheckPeriod ] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
-      property [ recordTxn ] 'false' data type should be int
-      property [ serverBacklog ] '2048.55' data type should be int
+      Property [ processorExecutor ] '-3' in bootstrap.cnf is illegal, you may need use the default value 5 replaced
+      property [ recordTxn ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property [ sqlExecuteTimeout ] '-20' in bootstrap.cnf is illegal, you may need use the default value 300 replaced
       Property [ sqlRecordCount ] '-10' in bootstrap.cnf is illegal, you may need use the default value 10 replaced
-      property [ sqlSlowTime ] '100.59' data type should be int
+      property [ sqlSlowTime ] '-100' in bootstrap.cnf is illegal, you may need use the default value 100 replaced
       Property [ txIsolation ] '30' in bootstrap.cnf is illegal, you may need use the default value 3 replaced
-      property [ useCompression ] 'true' data type should be int
-      property [ useCostTimeStat ] 'false' data type should be int
+      property [ useCompression ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      property [ useCostTimeStat ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       property [ useJoinStrategy ] '0' data type should be boolean
       property [ useOuterHa ] '1' data type should be boolean
-      property [ usePerformanceMode ] 'false' data type should be int
-      property [ useSqlStat ] 'false' data type should be int
-      property [ useThreadUsageStat ] 'false' data type should be int
-      property [ usingAIO ] 'false' data type should be int
+      property [ usePerformanceMode ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      property [ useSqlStat ] '2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
+      property [ useThreadUsageStat ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+      property [ usingAIO ] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property [ writeToBackendExecutor ] '-4' in bootstrap.cnf is illegal, you may need use the default value 5 replaced
       Property [ xaLogCleanPeriod ] '-1000' in bootstrap.cnf is illegal, you may need use the default value 1000 replaced
       Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
@@ -231,7 +231,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
 
 
-    @skip
+  @skip
   Scenario: config bootstrap.cnf with illegal homepath, restart dble fail
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
