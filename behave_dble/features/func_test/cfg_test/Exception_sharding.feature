@@ -389,3 +389,38 @@ Feature: sharding basic config test
       """
       GlobalCheckJob
       """
+
+  Scenario: config shardingtable with multi names, reload success #20
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <shardingTable name="`table1, ,table2`" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                           | expect  | db      |
+      | conn_0 | False   | drop table if exists table1                   | success | schema1 |
+      | conn_0 | False   | create table table1(id bigint,time char(120)) | success | schema1 |
+      | conn_0 | False   | drop table if exists table2                   | success | schema1 |
+      | conn_0 | False   | create table table2(id bigint,time char(120)) | success | schema1 |
+
+
+  Scenario: config sqlRequiredSharding as true, start dble success, execute sql without shardingColumn fail #21
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+          <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+          <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" sqlRequiredSharding="true"/>
+          <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                               | expect                                                 | db      |
+      | conn_0 | False   | drop table if exists sharding_2_t1                | success                                                | schema1 |
+      | conn_0 | False   | create table sharding_2_t1(id int,name char(120)) | success                                                | schema1 |
+      | conn_0 | False   | insert into sharding_2_t1 value(1,'a')            | success                                                | schema1 |
+      | conn_0 | False   | select * from sharding_2_t1 where id =1           | success                                                | schema1 |
+      | conn_0 | False   | select * from sharding_2_t1 where name ='a'       | route rule for table schema1.sharding_2_t1 is required | schema1 |
