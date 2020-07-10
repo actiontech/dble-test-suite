@@ -4,7 +4,7 @@
 Feature: if childnodes value of system in bootstrap.cnf are invalid, replace them with default values
   only check part of system childnodes, not all, list from https://github.com/actiontech/dble/issues/579
 
-  @NORMAL @test
+  @NORMAL
   Scenario: config all system property, some values are illegal, start dble success #1
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
@@ -230,18 +230,77 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: testcon
     """
 
-
-  @skip
-  Scenario: config bootstrap.cnf with illegal homepath, restart dble fail
+  @restore_global_setting
+  Scenario:config  MaxPacketSize in bootstrap.cnf, dble will get the lower value of MaxPacketSize and (max_allowed_packet-1024)
+  """
+    {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
+    """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    /-DhomePath=./c -DhomePath=/opt/dble/conf/
+    $a\-DmaxPacketSize=6291456
     """
     Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "sysparam_rs" has lines with following column values
+      | PARAM_NAME-0  | PARAM_VALUE-1 |
+      | maxPacketSize | 6291456       |
 
-    Then  execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                           | expect  | db      |
-      | conn_0 | False   | drop table if exists test                     | success | schema1 |
-      | conn_0 | False   | create table test(id int)                     | success | schema1 |
-      | conn_0 | False   | drop view if exists view_test                 | success | schema1 |
-      | conn_0 | True    | create view view_test01 as select * from test | success | schema1 |
+   #case2 max_packet_size < max_allowed_packet
+    Given stop dble in "dble-1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user1" maxCon="1000" minCon="10" primary="true">
+          </dbInstance>
+      </dbGroup>
+    """
+    Given execute sql in "mysql-master1"
+      | conn   | toClose | sql                                            | expect  |
+      | conn_0 | False   | set global general_log=on                      | success |
+      | conn_0 | False   | drop user if exists 'user1'@'%'                | success |
+      | conn_0 | False   | create user 'user1'@'%' identified by '111111' | success |
+      | conn_0 | False   | grant select on *.* to 'user1'@'%'             | success |
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-DmaxPacketSize=5000000
+    """
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "sysparam_rs" has lines with following column values
+      | PARAM_NAME-0  | PARAM_VALUE-1 |
+      | maxPacketSize | 5000000       |
+
+ #case 3  max_packet_size > max_allowed_packet
+    Given stop dble in "dble-1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user2" maxCon="1000" minCon="10" primary="true">
+          </dbInstance>
+      </dbGroup>
+    """
+    Given execute sql in "mysql-master1"
+      | conn   | toClose | sql                                            | expect  |
+      | conn_0 | False   | set global general_log=on                      | success |
+      | conn_0 | False   | drop user if exists 'user2'@'%'                | success |
+      | conn_0 | False   | create user 'user2'@'%' identified by '111111' | success |
+      | conn_0 | False   | grant select on *.* to 'user2'@'%'             | success |
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-DmaxPacketSize=8000000
+    """
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
+      | sql             |
+      | show @@sysparam |
+    Then check resultset "sysparam_rs" has lines with following column values
+      | PARAM_NAME-0  | PARAM_VALUE-1 |
+      | maxPacketSize | 6291456       |
