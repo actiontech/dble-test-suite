@@ -121,7 +121,7 @@ Feature: config all dble config files correct and restart dble
       | processorCheckPeriod        | 1 Seconds                       |
       | sqlExecuteTimeout           | 300 Seconds                     |
       | recordTxn                   | 1                               |
-      | transactionLogBaseDir       | ./txlogs                         |
+      | transactionLogBaseDir       | ./txlogs/                         |
       | transactionLogBaseName      | server-tx                       |
       | transactionRotateSize       | 16M                             |
       | xaRecoveryLogBaseDir        | ./xalogs/                         |
@@ -150,13 +150,13 @@ Feature: config all dble config files correct and restart dble
       | backSocketSoRcvbuf          | 4194304B                        |
       | backSocketSoSndbuf          | 1048576B                        |
       | backSocketNoDelay           | 1                               |
-      | viewPersistenceConfBaseDir  | ./viewConf             |
+      | viewPersistenceConfBaseDir  | ./viewConf/             |
       | viewPersistenceConfBaseName | viewJson                        |
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
       | enableSlowLog               | 0                               |
-      | slowLogBaseDir              | ./slowlogs             |
+      | slowLogBaseDir              | ./slowlogs/             |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
       | flushSlowLogSize            | 1000                            |
