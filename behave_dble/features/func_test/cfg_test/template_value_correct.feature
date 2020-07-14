@@ -24,12 +24,12 @@ Feature: config all dble config files correct and restart dble
       $a\-DmappedFileSize=67108864
       $a\-DtransactionRotateSize=16
       $a\-DxaRetryCount=0
-      $a\-DviewPersistenceConfBaseDir=/opt/dble/viewConf/
+      $a\-DviewPersistenceConfBaseDir=/viewConf
       $a\-DviewPersistenceConfBaseName=viewJson
       $a\-DjoinQueueSize=1024
       $a\-DmergeQueueSize=1024
       $a\-DorderByQueueSize=1024
-      $a\-DslowLogBaseDir=/opt/dble/slowlogs/
+      $a\-DslowLogBaseDir=/slowlogs
       $a\-DslowLogBaseName=slow-query
       $a\-DflushSlowLogPeriod=1
       $a\-DflushSlowLogSize=1000
@@ -71,8 +71,8 @@ Feature: config all dble config files correct and restart dble
       $a\-DtransactionRotateSize=16
       $a\-DxaSessionCheckPeriod=1000
       $a\-DxaLogCleanPeriod=1000
-      $a\-DxaRecoveryLogBaseDir=/tmlogs
-      $a\-DxaRecoveryLogBaseName=tmlog
+      $a\-DxaRecoveryLogBaseDir=/xalogs/
+      $a\-DxaRecoveryLogBaseName=xalog
       $a\-DnestLoopConnSize=4
       $a\-DnestLoopRowsSize=2000
       $a\-DbufferPoolChunkSize=4096
@@ -121,11 +121,11 @@ Feature: config all dble config files correct and restart dble
       | processorCheckPeriod        | 1 Seconds                       |
       | sqlExecuteTimeout           | 300 Seconds                     |
       | recordTxn                   | 1                               |
-      | transactionLogBaseDir       | /txlogs                         |
+      | transactionLogBaseDir       | ./txlogs                         |
       | transactionLogBaseName      | server-tx                       |
       | transactionRotateSize       | 16M                             |
-      | xaRecoveryLogBaseDir        | /tmlogs                         |
-      | xaRecoveryLogBaseName       | tmlog                           |
+      | xaRecoveryLogBaseDir        | ./xalogs/                         |
+      | xaRecoveryLogBaseName       | xalog                           |
       | xaSessionCheckPeriod        | 1000ms                          |
       | xaLogCleanPeriod            | 1000ms                          |
       | xaRetryCount                | 0                               |
@@ -150,13 +150,13 @@ Feature: config all dble config files correct and restart dble
       | backSocketSoRcvbuf          | 4194304B                        |
       | backSocketSoSndbuf          | 1048576B                        |
       | backSocketNoDelay           | 1                               |
-      | viewPersistenceConfBaseDir  | /opt/dble/viewConf/             |
+      | viewPersistenceConfBaseDir  | ./viewConf             |
       | viewPersistenceConfBaseName | viewJson                        |
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
       | enableSlowLog               | 0                               |
-      | slowLogBaseDir              | /opt/dble/slowlogs/             |
+      | slowLogBaseDir              | ./slowlogs             |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
       | flushSlowLogSize            | 1000                            |
