@@ -86,7 +86,8 @@ Feature: backend node disconnect,causing xa abnormal
       | conn_1 | false   | begin                                                   | success     | schema1 |
       | conn_1 | false   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success     | schema1 |
       | conn_1 | false   | commit                                                  | success     | schema1 |
-      | conn_1 | false   | select * from sharding_4_t1                             | length{(4)} | schema1 |
-      | conn_1 | true    | drop table if exists sharding_4_t1                      | success     | schema1 |
+      | conn_1 | True   | select * from sharding_4_t1                             | length{(4)} | schema1 |
+     #DDL is not allowed to be executed in xa transaction in 3.20.07, so we need use a new connect to drop table.
+      | new | true    | drop table if exists sharding_4_t1                      | success     | schema1 |
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
