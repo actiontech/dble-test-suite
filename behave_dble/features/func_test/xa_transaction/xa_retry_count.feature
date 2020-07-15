@@ -4,28 +4,26 @@
 # Created by yangxiaoliang at 2020/1/3
 
 #2.20.04.0#dble-8176
+  @skip
 Feature: change xaRetryCount value and check result
-
+  @skip
   Scenario: Setting xaRetryCount to an illegal value, dble report warning #1
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <property name="xaRetryCount">-1</property>
+    $a -DxaRetryCount=-1
     """
-    Then execute sql in "dble-1" in "admin" mode
-      | sql    | expect                                                                          |
-      | dryrun | hasStr{Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced} |
     Given Restart dble in "dble-1" success
     Then check "dble.log" in "dble-1" has the warnings
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
-      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in server.xml is illegal, use 0 replaced |
+      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, use 0 replaced |
 
   @btrace
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
-    Given add xml segment to node with attribute "{'tag':'system'}" in "server.xml"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    <property name="xaRetryCount">3</property>
+    $a -DxaRetryCount=3
     """
     Given Restart dble in "dble-1" success
 
@@ -73,11 +71,21 @@ Feature: change xaRetryCount value and check result
 
   @btrace @current
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
-    Given add xml segment to node with attribute "{'tag':'root'}" in "server.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <system>
-        <property name="dataNodeHeartbeatPeriod">2000 </property>
-    </system>
+      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+          </dbInstance>
+      </dbGroup>
+
+      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+          </dbInstance>
+      </dbGroup>
     """
     Given Restart dble in "dble-1" success
 #   delayBeforeXaCommit sleep time must long enough for stopping dble
@@ -107,7 +115,7 @@ Feature: change xaRetryCount value and check result
     before add xa
     """
     Given start mysql in host "mysql-master1"
-    #sleep 5s for waitting backgroud retry succeed,2s make sure heartbeat recover, and 3s wait xa commit, loop to try commit at per 1s
+    #sleep 5s for waiting background retry succeed,2s make sure heartbeat recover, and 3s wait xa commit, loop to try commit at per 1s
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                  | expect      | db      |

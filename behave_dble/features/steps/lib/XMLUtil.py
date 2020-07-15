@@ -86,6 +86,17 @@ def add_child_in_string(file, pos_kv_map, childNodeInString):
     childNode = get_xml_from_str(childNodeInString)
     return add_child_in_xml(file, pos_kv_map, childNode)
 
+def add_child_in_string_with_duplicate_name(file, pos_kv_map, childNodeInString):
+    """
+    add child to file or to file content in memory
+    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
+    :param childNodeInString: child node xml in string format
+    :param file_local: xml file name in local
+    :param file_content: xml content
+    :return: if file_local is not None, return none, elif file_content is not None, return xmlStr
+    """
+    childNode = get_xml_from_str(childNodeInString)
+    return add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode)
 
 def add_child_in_xml(file, pos_kv_map, childNode):
     """
@@ -139,12 +150,75 @@ def add_child_in_xml(file, pos_kv_map, childNode):
             firstLoop = False
 
     doctype = ""
-    if file.find('rule.xml') > -1:
-        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
-    elif file.find('schema.xml') > -1:
-        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
-    elif file.find('server.xml') > -1:
-        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
+    if file.find('db.xml') > -1:
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
+    elif file.find('sharding.xml') > -1:
+        doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
+    elif file.find('user.xml') > -1:
+        doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
+
+    xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
+    with open(file, 'wb') as f:
+        f.writelines(xmlstr)
+
+def add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode):
+    """
+    for each child to insert, insert position priority: same name node index > max(same tag index) > lastInsertTypeNodeMaxIdx
+    :param file:
+    :param pos_kv_map: the child node's position info, eg:{'tag':'root',"prev": 'dataNode'}, root is parent node tag, child's prev node tag is dataNode
+    :param childNode:
+    """
+    ET.register_namespace("dble", "http://dble.cloud/")
+    tree = ET.parse(file)
+
+    parentNodes = get_parent_nodes(tree, pos_kv_map)
+
+    prevTag = pos_kv_map.get("prev", None)
+
+    for parentNode in parentNodes:
+        idxByPrevNode = 0
+        if prevTag:
+            firstPrevNode = parentNode.find(prevTag)
+            firstPrevIdx = parentNode.index(firstPrevNode)
+            prevNodes = parentNode.findall(prevTag)
+            idxByPrevNode = firstPrevIdx + len(prevNodes)
+
+        k = 0
+        firstLoop = True
+        for child in childNode:
+            # delete the same name nodes,and get the first deleted node idx
+            firstDelIdx = -1  # assign the variable with default value -1 for duplicate name
+
+            # find same tag node count
+            sameTagChildMaxIdx = get_Insert_Idx(parentNode, childNode[0])
+
+            if firstDelIdx == -1 and sameTagChildMaxIdx == 0:  # there is no same tag
+                if firstLoop:
+                    if prevTag is None:  # for the first child to insert,if no prev node, insert index is 0
+                        idx = 0
+                    else:
+                        idx = idxByPrevNode
+                else:  # not first child, insert as last of parentNode
+                    idx = k
+            else:
+                if firstDelIdx == -1:  # there is no same name tag, insert as last of same tag
+                    idx = sameTagChildMaxIdx
+                else:  # there is same name tag, insert at the same name tag
+                    idx = firstDelIdx
+            # print "debug6: idx ", idx, "child,", child.get('name')
+            parentNode.insert(idx, child)
+
+            k = get_Insert_Idx(parentNode,
+                               child)  # lastInsertTypeNodeMaxIdx, prepare for next child which has no same tag
+            firstLoop = False
+
+    doctype = ""
+    if file.find('db.xml') > -1:
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
+    elif file.find('sharding.xml') > -1:
+        doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
+    elif file.find('user.xml') > -1:
+        doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
@@ -184,12 +258,12 @@ def delete_child_node(file, kv_child, kv_parent):
                 node.remove(child)
 
     doctype = ""
-    if file.find('rule.xml') > -1:
-        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
-    elif file.find('schema.xml') > -1:
-        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
-    elif file.find('server.xml') > -1:
-        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
+    if file.find('db.xml') > -1:
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
+    elif file.find('sharding.xml') > -1:
+        doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
+    elif file.find('user.xml') > -1:
+        doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
@@ -248,67 +322,49 @@ def change_root_node_properties(file, kv_map, is_delete=False):
         else:
             rootnode.set(key, kv_map.get(key))
     doctype = ""
-    if file.find('rule.xml') > -1:
-        doctype = '<!DOCTYPE dble:rule SYSTEM "rule.dtd">'
-    elif file.find('schema.xml') > -1:
-        doctype = '<!DOCTYPE dble:schema SYSTEM "schema.dtd">'
-    elif file.find('server.xml') > -1:
-        doctype = '<!DOCTYPE dble:server SYSTEM "server.dtd">'
+    if file.find('sharding.xml') > -1:
+        doctype = '<!DOCTYPE dble:sharding SYSTEM "sharding.dtd">'
+    elif file.find('db.xml') > -1:
+        doctype = '<!DOCTYPE dble:db SYSTEM "db.dtd">'
+    elif file.find('user.xml') > -1:
+        doctype = '<!DOCTYPE dble:user SYSTEM "user.dtd">'
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
         f.writelines(xmlstr)
 
-
+#This part is just for self-testing
 if __name__ == "__main__":
     import sys
 
     command = sys.argv[1]
-    if command == "rule":
+    if command == "db":
         seg = """
-        <tableRule name="date_rule">
-            <rule>
-                <columns>id</columns>
-                <algorithm>date_func</algorithm>
-            </rule>
-        </tableRule>
-        <function class="Date" name="date_func">
+        <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+            <heartbeat>select user()</heartbeat>
+            <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            </dbInstance>
+        </dbGroup>        
+        """
+        add_child_in_string('dble_conf/conf_template/db.xml', {"tag": "root", "kv_map": {}}, seg)
+    elif command == "user":
+        seg = """
+        <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+        """
+        fullpath = "../../../dble_conf/template_bk/user.xml"
+
+        add_child_in_string(fullpath, {'tag': 'root'}, seg)
+    elif command == "sharding":
+        seg = """
+        <function class="date_rule" name="date_func">
             <property name="dateFormat">yyyy-MM-dd</property>
             <property name="sEndDate">2018-01-31</property>
             <property name="sPartionDay">10</property>
         </function>
-        """
-        add_child_in_string('dble_conf/conf_template/rule.xml', {"tag": "root", "kv_map": {}}, seg)
-    elif command == "schema":
-        seg = """
-        <schema dataNode="dn2" name="schema1" sqlMaxLimit="100">
-            <table dataNode="dn2,dn4" name="test2" type="global" />
-        </schema>
-        <dataNode dataHost="ha_group1" database="db1" name="dn2" />
-        <dataNode dataHost="ha_group1" database="db2" name="dn4" />
-        <dataHost balance="1" maxCon="100" minCon="10" name="ha_group1" slaveThreshold="100" >
-            <heartbeat>select user()</heartbeat>
-            <writeHost host="hostM1" password="111111" url="172.100.9.5:3306" user="test" disabled="true"></writeHost>
-        </dataHost>
-        """
-
-        fullpath = "../../../dble_conf/template_bk/schema.xml"
-
-        add_child_in_string(fullpath, {'tag': 'root'}, seg)
-    elif command == "server":
-        seg = """
-      <firewall>
-          <whitehost>
-              <host host="10.186.23.68" user="test"/>
-              <host host="10.186.23.68" user="root"/>
-              <host host="172.100.9.253" user="root"/>
-              <host host="172.100.9.253" user="test"/>
-          </whitehost>
-      </firewall>
             """
-        add_child_in_string('../../../dble_conf/template_bk/server.xml', {"tag": "root", "prev": 'system'}, seg)
+        add_child_in_string('../../../dble_conf/template_bk/sharding.xml', {"tag": "root", "prev": 'system'}, seg)
     elif command == "delete":
-        file = "../../../dble_conf/template_bk/server.xml"
+        file = "../../../dble_conf/template_bk/sharidng.xml"
         kv_child = eval("{'tag':'root'}")
         kv_parent = eval("{'tag':'root'}")
         delete_child_node(file, kv_child, kv_parent)

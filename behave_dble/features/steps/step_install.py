@@ -202,11 +202,17 @@ def stop_dble_in_node(context, node):
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
     if dble_pid_exist:
+        #stop dble gracefully to generate .exec for code coverage
+        #stop_dble_cmd="{0}/dble/bin/dble stop".format(dble_install_path)
+        #rc1, sto1, ste1 = ssh_client.exec_command(stop_dble_cmd)
+        #assert_that(len(ste1) == 0, "stop dble fail for:{0}".format(ste1))
+
         cmd_guard = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $3}' | xargs kill -9"
         cmd_core = "ps -ef|grep dble|grep 'start'| grep -v grep | awk '{print $2}' | xargs kill -9"
         rc1, sto1, ste1 = ssh_client.exec_command(cmd_guard)
         rc2, sto2, ste2 = ssh_client.exec_command(cmd_core)
         assert_that(len(ste1)==0 and len(ste2)==0, "kill dble process fail for:{0},{1}".format(ste1,ste2))
+
 
     if dble_dir_exist:
         datetime=time.strftime("%Y-%m-%d-%H-%M-%S", time.localtime())
@@ -233,7 +239,8 @@ def check_dble_exist(ssh_client, dble_install_path):
 
 def restart_dbles(context, nodes):
     stop_dbles(context)
-
+    #sleep 4s to generate .exec for code coverage
+    #time.sleep(4)
     if len(nodes) > 1:
         config_zk_in_dble_nodes(context,"all zookeeper hosts")
         reset_zk_nodes(context)
@@ -245,6 +252,11 @@ def check_restart_dble_failed(context,hostname):
     node = get_node(hostname)
     restart_dble(context, node, False)
 
+@Then('start dble in "{hostname}" failed for')
+def check_restart_dble_failed(context,hostname):
+    node = get_node(hostname)
+    start_dble_in_node(context, node, False)
+    
 @Given('Restart dble in "{hostname}" success')
 @Then('Restart dble in "{hostname}" success')
 def step_impl(context, hostname):
@@ -287,8 +299,8 @@ def start_zk_service(context, node):
             time.sleep(5)
             start_zk_service(context, node)
         else:
-            LOGGER.info("dble started failed after 5 times try")
-            delattr(context, "retry_start_dble")
+            LOGGER.info("zk started failed after 5 times try")
+            delattr(context, "retry_start_zk")
     else:
         context.start_zk_service = True
         delattr(context, "retry_start_zk")
@@ -337,7 +349,8 @@ def config_zk_in_dble_nodes(context,hosts_form):
 
 def conf_zk_in_node(context,node,hosts_form):
     ssh_client = node.ssh_conn
-    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
+    cluster_conf = "{0}/dble/conf/cluster.cnf".format(node.install_dir)
+    bootstrap_conf = "{0}/dble/conf/bootstrap.cnf".format(node.install_dir)
     # zk_server_ip=context.cfg_zookeeper['ip']
     zk_server_port=context.cfg_zookeeper['port']
 
@@ -346,19 +359,26 @@ def conf_zk_in_node(context,node,hosts_form):
     zk_server_ip = context.cfg_zookeeper[zk_server_id]['ip']
     # LOGGER.info("zk_server_ip:{0}".format(zk_server_ip))
     if hosts_form == "local zookeeper host":
-        cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{3}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip, zk_server_port)
+        # update cluster.cnf:
+        cmd1 = "sed -i -e 's/clusterEnable=.*/clusterEnable=true/g' -e 's/clusterIP=.*/clusterIP={1}:{2}/g' -e 's/# rootPath=.*/rootPath=\/dble/g' {0}".format(cluster_conf, zk_server_ip, zk_server_port)
+        # update bootstrap.cnf:
+        cmd2 = "sed -i -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(myid, bootstrap_conf)
     else:
         zk_server_ip_1 = context.cfg_zookeeper['zookeeper-1']['ip']
         zk_server_ip_2 = context.cfg_zookeeper['zookeeper-2']['ip']
         zk_server_ip_3 = context.cfg_zookeeper['zookeeper-3']['ip']
-        cmd = "sed -i -e 's/cluster=.*/cluster=zk/g' -e 's/ipAddress=.*/ipAddress={2}:{5},{3}:{5},{4}:{5}/g' -e '/port=.*/d' -e 's/myid=.*/myid={0}/g' -e 's/serverID=.*/serverID=server_{0}/g' {1}".format(myid, conf_file, zk_server_ip_1,zk_server_ip_2,zk_server_ip_3,zk_server_port)
+        cmd1 = "sed -i -e 's/clusterEnable=.*/clusterEnable=true/g' -e 's/clusterIP=.*/clusterIP={1}:{4},{2}:{4},{3}:{4}/g' -e 's/# rootPath=.*/rootPath=\/dble/g' {0}".format(cluster_conf, zk_server_ip_1,zk_server_ip_2,zk_server_ip_3,zk_server_port)
+        cmd2 = "sed -i -e 's/instanceName=.*/instanceName={0}/g' -e 's/instanceId=.*/instanceId={0}/g' -e 's/serverId=.*/serverId=server_{0}/g' {1}".format(
+            myid, bootstrap_conf)
 
-    rc, sto, ste = ssh_client.exec_command(cmd)
-    assert_that(ste, is_(""), "expect std err empty, but was:{0}".format(ste))
+    rc1, sto1, ste1 = ssh_client.exec_command(cmd1)
+    rc2, sto2, ste2 = ssh_client.exec_command(cmd2)
+    assert_that(ste1, is_(""), "expect std err empty, but was:{0}".format(ste1))
+    assert_that(ste2, is_(""), "expect std err empty, but was:{0}".format(ste2))
 
 def disable_cluster_config_in_node(context, node):
-    conf_file = "{0}/dble/conf/myid.properties".format(node.install_dir)
-    cmd = "[ -f {0} ] && sed -i 's/cluster=.*/cluster=false/g' {0}".format(conf_file)
+    conf_file = "{0}/dble/conf/cluster.cnf".format(node.install_dir)
+    cmd = "[ -f {0} ] && sed -i 's/clusterEnable=.*/clusterEnable=false/g' {0}".format(conf_file)
 
     ssh_client = node.ssh_conn
     rc, sto, ste = ssh_client.exec_command(cmd)
@@ -407,14 +427,26 @@ def replace_config_in_node(context, node):
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remote_file = "{0}/dble/conf/{1}".format(node.install_dir, file)
         node.sftp_conn.sftp_put(local_file, remote_file)
-
+    #for code coverage start
+    sourcejarDir = "{0}/{1}".format(os.getcwd(), "assets")
+    local_jar="{0}/{1}".format(sourcejarDir,"jacocoagent.jar")
+    remote_jar="{0}/dble/lib/{1}".format(node.install_dir,"jacocoagent.jar")
+    node.sftp_conn.sftp_put(local_jar, remote_jar)
+    # for code coverage end
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
+    if not hasattr(context, "reset_zk_time"):
+        context.reset_zk_time = 0
+		
     node = get_node("dble-1")
     ssh_client = node.ssh_conn
     resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
-    ssh_client.exec_command(resetCmd)
-
+    rc, sto, ste=ssh_client.exec_command(resetCmd)
+    if context.reset_zk_time < 3:
+	    context.reset_zk_time = context.reset_zk_time + 1
+	    reset_zk_nodes(context)
+	
+    
 @Then ('Monitored folling nodes online')
 def step_impl(context):
     text = context.text.strip().encode('utf-8')
