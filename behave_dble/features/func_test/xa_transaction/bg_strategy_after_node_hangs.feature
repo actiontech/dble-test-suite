@@ -4,10 +4,9 @@
 # Created by yangxiaoliang at 2019/12/26
 
 #2.20.04.0#dble-8174
-  @skip
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace @skip
+  @btrace
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times , #1
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -63,6 +62,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
@@ -72,16 +72,6 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     before xa commit
     """
     Given stop mysql in host "mysql-master1"
-    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
-    Given destroy btrace threads list
-    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
-    """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /beforeAddXaToQueue/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
-    """
-    Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
-    Given sleep "5" seconds
-
      Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
     """
     before add xa
@@ -90,7 +80,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
-    Given execute oscmd in "dble-1" and "5" less than result
+    Given execute oscmd in "dble-1" and "4" less than result
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
@@ -142,8 +132,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
+    Given sleep "10" seconds
+    #wait background attempt failed
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
+    #warit Heartbeat successed
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect                     | db      |
       | conn_1 | false   | select * from sharding_4_t1            | length{(2)}                | schema1 |
