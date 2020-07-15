@@ -23,4 +23,4 @@
 -DprocessorExecutor=1
 
 #for code coverage
--javaagent:lib/jacocoagent.jar=output=file,append=true,destfile=/opt/dble_jacoco.exec
+#-javaagent:lib/jacocoagent.jar=output=file,append=true,destfile=/opt/dble_jacoco.exec
