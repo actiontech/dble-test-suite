@@ -362,7 +362,6 @@ def step_impl(context,time_param,curTime,mapFile,hostname):
     sed_cmd_str = "sed -i '$a {0}' {1}".format(text,targetFile)
     ssh = node.ssh_conn
     rc, sto, err = ssh.exec_command(sed_cmd_str)
-    print (("execute cmd: {0}\n\n\n".format(sed_cmd_str)))
     logger.debug("execute cmd: {0}\n".format(sed_cmd_str))
     context.logger.info("execute cmd: {0}".format(sed_cmd_str))
     assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
@@ -529,3 +528,19 @@ def step_impl(context, session_id, hostname):
     adminsql = "kill @@connection {0}".format(rs)
     result, error = manager_conn.query(adminsql)
     assert error is None, "execute adminsql {0} to kill dble front session, get error:{1}".format(adminsql, error)
+
+@Then('check path "{path}" in "{hostname}" should {exist_or_not}')
+def step_impl(context, path, hostname, exist_or_not):
+    ssh = get_ssh(hostname)
+    cmd = "find " + path
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    logger.debug("rc:{0}, stdout:{1}, stderr:{2}\n".format(rc, stdout,stderr))
+    assert (exist_or_not == "not exist" and stderr != "") or (exist_or_not == "exist" and stderr == "")
+
+@Given('I remove path "{path}" in "{hostname}" if exist')
+def step_impl(context, path, hostname):
+    ssh = get_ssh(hostname)
+    cmd = "rm -rf " + path
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    logging.debug("rc:{0}, stdout:{1}, stderr:{2}\n".format(rc, stdout, stderr))
+
