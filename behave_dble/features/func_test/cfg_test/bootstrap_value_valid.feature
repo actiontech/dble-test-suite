@@ -168,7 +168,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
       These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: maxCom
     """
-    
+
   Scenario: if bootstrap.cnf is not exist, check the log
     Given delete file "/opt/dble/conf/bootstrap.cnf" on "dble-1"
     Then restart dble in "dble-1" failed for
@@ -304,3 +304,51 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then check resultset "sysparam_rs" has lines with following column values
       | PARAM_NAME-0  | PARAM_VALUE-1 |
       | maxPacketSize | 6291456       |
+
+  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #1
+    Given I remove path "/opt/logs/view_logs" in "dble-1" if exist
+    Then check path "/opt/logs/view_logs" in "dble-1" should not exist
+    Given I remove path "/opt/logs/tx_logs" in "dble-1" if exist
+    Then check path "/opt/logs/tx_logs" in "dble-1" should not exist
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      /-DhomePath=./c -DhomePath=/opt/logs
+      $a\-DviewPersistenceConfBaseDir=/view_logs
+      $a\-DrecordTxn=1
+      $a\-DtransactionLogBaseDir=/tx_logs
+    """
+    Then restart dble in "dble-1" success
+    Then  execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1;                      | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20));     | success | schema1 |
+      | conn_0 | False   | drop view if exists view1 ;                              | success | schema1 |
+      | conn_0 | False   | create view view1 as select id from sharding_4_t1;       | success | schema1 |
+      | conn_0 | False   | begin;                                                   | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4); | success | schema1 |
+      | conn_0 | True    | commit;                                                  | success | schema1 |
+    Then check path "/opt/logs/view_logs" in "dble-1" should exist
+    Then check path "/opt/logs/tx_logs" in "dble-1" should exist
+
+  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #2
+    Given I remove path "/opt/dble/viewConf" in "dble-1" if exist
+    Then check path "/opt/dble/viewConf" in "dble-1" should not exist
+    Given I remove path "/opt/dble/txlogs" in "dble-1" if exist
+    Then check path "/opt/dble/txlogs" in "dble-1" should not exist
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+      /-DhomePath/d
+      $a\-DrecordTxn=1
+    """
+    Then restart dble in "dble-1" success
+    Then  execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1;                      | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20));     | success | schema1 |
+      | conn_0 | False   | drop view if exists view1 ;                              | success | schema1 |
+      | conn_0 | False   | create view view1 as select id from sharding_4_t1;       | success | schema1 |
+      | conn_0 | False   | begin;                                                   | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4); | success | schema1 |
+      | conn_0 | True    | commit;                                                  | success | schema1 |
+    Then check path "/opt/dble/viewConf" in "dble-1" should exist
+    Then check path "/opt/dble/txlogs" in "dble-1" should exist
