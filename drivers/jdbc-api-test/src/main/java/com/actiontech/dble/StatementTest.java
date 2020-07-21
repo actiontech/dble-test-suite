@@ -182,10 +182,12 @@ public class StatementTest extends InterfaceTest {
 			ResultSet mysql_rs = mysql_stmt.executeQuery(sql);
 			ResultSet dble_rs = dble_stmt.executeQuery(sql);
 
-			SQLWarning mysql_warn = mysql_stmt.getWarnings();
-			SQLWarning dble_warn = dble_stmt.getWarnings();
+			ResultSet mysqlRes = mysql_stmt.executeQuery("show warnings");
+			ResultSet dbleRes = dble_stmt.executeQuery("/*!dble:shardingnode=dn5 */show warnings");
 
-			if(mysql_warn.getSQLState()== dble_warn.getSQLState() && mysql_warn.getErrorCode()==dble_warn.getErrorCode()){
+			mysqlRes.next();
+			dbleRes.next();
+			if(mysqlRes.getString(1).equals(dbleRes.getString(1))){
 				System.out.println("pass! getWarnings()!");
 			}else{
 //				System.out.println("select 1/0 mysql get warn:");
