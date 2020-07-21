@@ -1,0 +1,1 @@
+jar -cvfm ../jdbc_api_test.jar ../../jdbc-api-test/src
