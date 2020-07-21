@@ -169,14 +169,14 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: maxCom
     """
 
-  Scenario: if bootstrap.cnf is not exist, check the log
+  Scenario: if bootstrap.cnf is not exist, check the log #3
     Given delete file "/opt/dble/conf/bootstrap.cnf" on "dble-1"
     Then restart dble in "dble-1" failed for
     """
         Configuration file not found: conf/bootstrap.cnf
     """
 
-  Scenario: if bootstrap.dynamic.cnf is not exist, check the log
+  Scenario: if bootstrap.dynamic.cnf is not exist, check the log #4
     Given delete file "/opt/dble/conf/bootstrap.dynamic.cnf" on "dble-1"
     Given Restart dble in "dble-1" success
     Then check following " " exist in dir "/opt/dble/conf/" in "dble-1"
@@ -185,7 +185,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       """
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
-  Scenario: if bootstrap.cnf is empty, check the log
+  Scenario: if bootstrap.cnf is empty, check the log #5
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
       1,$d
@@ -195,7 +195,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
         You must config instanceName in bootstrap.cnf and make sure it is an unique key for cluster
     """
 
-  Scenario: config cluster.cnf with illegal values, restart dble fail
+  Scenario: config cluster.cnf with illegal values, restart dble fail #6
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     /clusterEnable/c clusterEnable=1
@@ -220,7 +220,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     property [ showBinlogStatusTimeout ] '60000.1' data type should be long
     """
 
-  Scenario: config bootstrap.cnf with unrecognized value, restart dble fail
+  Scenario: config bootstrap.cnf with unrecognized value, restart dble fail #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-Dtestcon=100
@@ -231,7 +231,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
 
   @restore_global_setting
-  Scenario:config  MaxPacketSize in bootstrap.cnf, dble will get the lower value of MaxPacketSize and (max_allowed_packet-1024)
+  Scenario:config  MaxPacketSize in bootstrap.cnf, dble will get the lower value of MaxPacketSize and (max_allowed_packet-1024) #8
   """
     {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
     """
@@ -247,7 +247,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | PARAM_NAME-0  | PARAM_VALUE-1 |
       | maxPacketSize | 6291456       |
 
-   #case2 max_packet_size < max_allowed_packet
+    #case2 max_packet_size < max_allowed_packet
     Given stop dble in "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -276,7 +276,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | PARAM_NAME-0  | PARAM_VALUE-1 |
       | maxPacketSize | 5000000       |
 
- #case 3  max_packet_size > max_allowed_packet
+    #case 3  max_packet_size > max_allowed_packet
     Given stop dble in "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -305,7 +305,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | PARAM_NAME-0  | PARAM_VALUE-1 |
       | maxPacketSize | 6291456       |
 
-  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #1
+  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #9
     Given I remove path "/opt/logs/view_logs" in "dble-1" if exist
     Then check path "/opt/logs/view_logs" in "dble-1" should not exist
     Given I remove path "/opt/logs/tx_logs" in "dble-1" if exist
@@ -330,7 +330,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then check path "/opt/logs/view_logs" in "dble-1" should exist
     Then check path "/opt/logs/tx_logs" in "dble-1" should exist
 
-  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #2
+  Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #10
     Given I remove path "/opt/dble/viewConf" in "dble-1" if exist
     Then check path "/opt/dble/viewConf" in "dble-1" should not exist
     Given I remove path "/opt/dble/txlogs" in "dble-1" if exist
