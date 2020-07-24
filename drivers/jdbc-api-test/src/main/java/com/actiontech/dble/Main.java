@@ -6,7 +6,7 @@ package com.actiontech.dble;
 import java.sql.SQLException;
 
 public class Main {
-	public static boolean isDebug = true;
+	public static boolean isDebug = false;
 	public static boolean showDebug = false;
 
 	public Main() {
