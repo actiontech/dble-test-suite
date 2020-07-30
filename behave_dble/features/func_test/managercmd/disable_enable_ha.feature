@@ -45,15 +45,15 @@ Feature: test high-availability related commands
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4| ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W    |      0   | true        |
     | ha_group1  | hostM1   | 172.100.9.5   | 3306   | W    |      0   | false       |
-    Given update "bootstrap.cnf" from "dble-1"
+    #Given update "bootstrap.cnf" from "dble-1"
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1" disabled="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" disabled="true">
         </dbInstance>
-        <dbInstance name="slave1" url="172.100.9.2:3306" user="test" password="111111" maxCon="1000" minCon="10" readWeight="2" disabled="true">
+        <dbInstance name="slave1" url="172.100.9.2:3306" user="test" password="111111" maxCon="1000" minCon="10" disabled="true">
         </dbInstance>
      </dbGroup>
     """
