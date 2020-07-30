@@ -659,3 +659,8 @@ Feature: test dml sql which can penetrate to mysql
       #case: have global table
       | conn_0 | False   | update schema1.sharding_2_t1 a,schema2.global_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=1 and b.id=1;          | This `Complex Update Syntax` is not supported!         | schema1 |
       | conn_0 | False   | delete schema1.sharding_2_t1 from schema1.sharding_2_t1,schema2.global_t2 where schema1.sharding_2_t1.id=1             | This `Complex Delete Syntax` is not supported!         | schema1 |
+      #case: some issue
+      | conn_0 | False   | update schema2.sharding_2_t1 a,db1.single_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=2 and b.id=1;                                       | Table `db1`.`single_t2` doesn't exist          | schema1 |
+      | conn_0 | False   | update db1.sharding_2_t1 a,schema2.single_t2 b set a.age=b.age+1,b.name=a.name-1 where a.id=2 and b.id=1;                                       | Table `db1`.`sharding_2_t1` doesn't exist      | schema1 |
+      | conn_0 | False   | delete db1.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where schema1.sharding_2_t1.id=2 and schema2.single_t2.id =2;                 | Table `db1`.`single_t2` doesn't exist          | schema1 |
+      #| conn_0 | False   | delete schema2.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where db1.sharding_2_t1.id=2 and schema2.single_t2.id =2;         | Table `db1`.`single_t2` doesn't exist      | schema1 |
