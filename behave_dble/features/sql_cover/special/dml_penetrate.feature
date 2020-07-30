@@ -1,8 +1,9 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2020/7/27
+# Created by quexiuping at 2020/7/29
 Feature: test dml sql which can penetrate to mysql
-  @regression @skip_restart
+  @regression
   Scenario: check insert/replace into ... select syntax #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -68,8 +69,7 @@ Feature: test dml sql which can penetrate to mysql
          </privileges>
       </shardingUser>
     """
-#    Then execute admin cmd "reload @@config_all"
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       # insert/replace into sharding table
       | conn   | toClose | sql                                                                                                                               | expect                                                              | db      |
@@ -134,19 +134,19 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | insert into s_4_t1(id,name) select id,name from s_4_t2                                                                            | success                                                             | schema1 |
       | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(1,'14',None,None),(2,'24',None,None),(4,'34',None,None)}       | schema1 |
 
-#      | conn_0 | False   | replace into s_4_t1(id,name) select id,name from schema2.s_4_t3                                                                  | success                          | schema1 |
-#      | conn_0 | False   | select * from s_4_t1                                                                                                              | length{(6)}                                                         | schema1 |
-#
-#      | conn_0 | False   | delete from s_4_t1                                                                                                                | success                                                             | schema1 |
-#      | conn_0 | False   | insert into s_4_t1(id,name,gender) select s3.id,g2.name,g2.gender from schema2.s_4_t3 s3 join g_4_t2 g2 on s3.gender=g2.gender    | success                                                             | schema1 |
-#      | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(3,'33',None,3)}                                                | schema1 |
-#
-#      | conn_0 | False   | replace into s_4_t1(id,name,gender) select s3.id,g2.name,g2.gender from schema2.s_4_t3 s3 join g_4_t2 g2 on s3.gender=g2.gender   | success                                                             | schema1 |
-#      | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(3,'33',None,3)}                                                | schema1 |
-#
-#      | conn_0 | False   | delete from s_4_t1                                                                                                                | success                                                             | schema1 |
-#      | conn_0 | False   | insert into s_4_t1(id,name,gender) select s3.id,s2.name,s2.gender from schema2.s_4_t3 s3 join s_4_t2 s2 on s3.id=s2.id;           | success                                                             | schema1 |
-#      | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(4,'34',None,34),(2,'24',None,24),(1,'14',None,14)}             | schema1 |
+      | conn_0 | False   | replace into s_4_t1(id,name) select id,name from schema2.s_4_t3                                                                  | success                          | schema1 |
+      | conn_0 | False   | select * from s_4_t1                                                                                                              | length{(6)}                                                         | schema1 |
+
+      | conn_0 | False   | delete from s_4_t1                                                                                                                | success                                                             | schema1 |
+      | conn_0 | False   | insert into s_4_t1(id,name,gender) select s3.id,g2.name,g2.gender from schema2.s_4_t3 s3 join g_4_t2 g2 on s3.gender=g2.gender    | success                                                             | schema1 |
+      | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(3,'33',None,3)}                                                | schema1 |
+
+      | conn_0 | False   | replace into s_4_t1(id,name,gender) select s3.id,g2.name,g2.gender from schema2.s_4_t3 s3 join g_4_t2 g2 on s3.gender=g2.gender   | success                                                             | schema1 |
+      | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(3,'33',None,3)}                                                | schema1 |
+
+      | conn_0 | False   | delete from s_4_t1                                                                                                                | success                                                             | schema1 |
+      | conn_0 | False   | insert into s_4_t1(id,name,gender) select s3.id,s2.name,s2.gender from schema2.s_4_t3 s3 join s_4_t2 s2 on s3.id=s2.id;           | success                                                             | schema1 |
+      | conn_0 | False   | select * from s_4_t1                                                                                                              | has{(4,'34',None,34),(2,'24',None,24),(1,'14',None,14)}             | schema1 |
 
       | conn_0 | False   | delete from s_4_t1                            | success                                                             | schema1 |
       | conn_0 | False   | insert into s_4_t1(id,name) select s2.id,s2c1.name from s_4_t2  s2 join s_4_t2c1 s2c1 on s2c1.id=s2.id                            | success                                                             | schema1 |
@@ -154,7 +154,7 @@ Feature: test dml sql which can penetrate to mysql
 
       | conn_0 | False   | insert into s_4_t1(id,name) select s_4_t2.id,s_4_t2.name from s_4_t2 join nos_1_t3 on s_4_t2.name=nos_1_t3.name where s_4_t2.id=1 | success                                                             | schema1 |
 
-     # insert/replace into global table
+      # insert/replace into global table
       | conn_0 | False   | drop table if exists g_3_t1                                                                                                        | success                                                           | schema1 |
       | conn_0 | False   | create table g_3_t1(id int,name varchar(10),age int,gender int)                                                                    | success                                                           | schema1 |
       | conn_0 | False   | insert into g_3_t1 values(1,13,13,13),(2,23,23,23),(3,33,3,33)                                                                    | success                                                            | schema1 |
@@ -242,7 +242,7 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | insert nos_implicy(id,name,age) select n1.id,n1.name,s6.age from nos_1_t1 n1 join (select id,name,age from schema3.s_4_t6 where id=3) as s6                                                            | success                                                             | schema1 |
       | conn_0 | False   | select * from nos_implicy                                                                                                                                                                              | success                                                             | schema1 |
 
-    # insert/replace into table which the involved tables are all vertical sharding tables
+      # insert/replace into table which the involved tables are all vertical sharding tables
       | conn_0 | False   | drop table if exists tb_a                                                                                                                                                                              | success                                                             | schema4 |
       | conn_0 | False   | create table tb_a(id int,name varchar(10),age int(10))                                                                                                                                                 | success                                                             | schema4 |
       | conn_0 | False   | drop table if exists tb_b                                                                                                                                                                              | success                                                             | schema4 |
@@ -269,11 +269,11 @@ Feature: test dml sql which can penetrate to mysql
       | conn_0 | False   | select * from tb_a                                                                                                                                                                                     | length{(28)}                                                         | schema4 |
 
       | conn_0 | False   | insert into tb_a(id,name) select id,name from schema3.s_4_t6 where id=3                                                                                                                                | success                                                             | schema4 |
-
-      | conn_0 | False   | drop view if exists view_test                                                                                                                                                    | success                                                             | schema4 |
-      | conn_0 | False   | create view view_test as select id ,name from tb_b                                                                                                                                                     | success                                                             | schema4 |
-      | conn_0 | False   | replace into tb_a(id,name) select view_test.id,tb_c.name from view_test,tb_c                                                                                                                           | length{(7)}                                                         | schema4 |
-      | conn_0 | False   | select * from tb_a                                                                                                                                                                                     | length{(7)}                                                         | schema4 |
+      # not support view
+#      | conn_0 | False   | drop view if exists view_test                                                                                                                                                    | success                                                             | schema4 |
+#      | conn_0 | False   | create view view_test as select id ,name from tb_b                                                                                                                                                     | success                                                             | schema4 |
+#      | conn_0 | False   | replace into tb_a(id,name) select view_test.id,tb_c.name from view_test,tb_c                                                                                                                           | length{(21)}                                                         | schema4 |
+#      | conn_0 | False   | select * from tb_a                                                                                                                                                                                     | length{(21)}                                                         | schema4 |
 
   Scenario: check update/delete  from .... syntax and one table #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -317,8 +317,7 @@ Feature: test dml sql which can penetrate to mysql
           </privileges>
         </shardingUser>
     """
-    #  Then execute admin cmd "reload @@config_all"
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       # prepare sql
       | conn   | toClose | sql                                                                                 | expect                | db      |
@@ -531,8 +530,7 @@ Feature: test dml sql which can penetrate to mysql
           </privileges>
         </shardingUser>
     """
-    #  Then execute admin cmd "reload @@config_all"
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       # prepare sql
       | conn   | toClose | sql                                                                                 | expect                | db      |
