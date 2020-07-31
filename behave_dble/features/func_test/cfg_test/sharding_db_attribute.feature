@@ -84,7 +84,6 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | True     | show all tables                   | has{('test_table','GLOBAL TABLE')}   | schema1 |
 
   @BLOCKER
-    @skip
   Scenario: test "dbInstance" node attr "maxCon" #4
     Given delete the following xml segment
       |file        | parent          | child               |
@@ -100,11 +99,13 @@ Feature: test some import nodes attr in sharding.xml
       <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
       <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
     """
+    #set connectionTimeout=4000ms in case the 15 created connections commit after 5s.
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="15" minCon="3" primary="true">
+          <property name="connectionTimeout">4000</property>
           </dbInstance>
       </dbGroup>
     """
@@ -114,12 +115,11 @@ Feature: test some import nodes attr in sharding.xml
       | conn_0 | False    | drop table if exists test_table    | success | schema1 |
       | conn_0 | True     | create table test_table(id int)    | success | schema1 |
     Then create "15" conn while maxCon="15" finally close all conn
-    Then create "20" conn while maxCon="15" finally close all conn
+    Then create "16" conn while maxCon="15" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for data dbInstance\[ha_group1.hostM1\]
-    """
+    Connection is not available
+   """
   @NORMAL
-  @skip #for connection pool refactor,maxCon does not work now 2020.06.10
   Scenario: if "dbGroup" node attr "maxCon" less than or equal the count of related dbGroups, maxCon will be equal dbGroups; A DDL will take 1 more than we can see, the invisible one is used to take ddl metadata #5
     Given delete the following xml segment
       |file        | parent          | child                |
@@ -137,11 +137,13 @@ Feature: test some import nodes attr in sharding.xml
       <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
       <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
     """
+    #set connectionTimeout=4000ms in case the 15 created connections commit after 5s.
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
           <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="3" minCon="1" primary="true">
+          <property name="connectionTimeout">4000</property>
           </dbInstance>
       </dbGroup>
     """
@@ -161,7 +163,7 @@ Feature: test some import nodes attr in sharding.xml
     Then create "3" conn while maxCon="3" finally close all conn
     Then create "4" conn while maxCon="3" finally close all conn
     """
-    the max active Connections size can not be max than maxCon for dbInstance\[ha_group1.hostM1\]
+    Connection is not available
     """
 
    Scenario: Use the RocksDB database engine as a cache implementation  issue:1029  author: maofei #6
