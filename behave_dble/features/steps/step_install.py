@@ -395,6 +395,8 @@ def dble_cluster_to_single(context):
 def replace_config(context):
     for node in DbleMeta.dbles:
         replace_config_in_node(context,node)
+        # set dble log level to debug
+        set_dble_log_level(context, node, 'debug')
 
 @Given('replace config files in "{nodeName}" with command line config')
 def step_impl(context, nodeName):
@@ -427,12 +429,14 @@ def replace_config_in_node(context, node):
         local_file = "{0}/{1}".format(sourceCfgDir, file)
         remote_file = "{0}/dble/conf/{1}".format(node.install_dir, file)
         node.sftp_conn.sftp_put(local_file, remote_file)
+
     #for code coverage start
     # sourcejarDir = "{0}/{1}".format(os.getcwd(), "assets")
     # local_jar="{0}/{1}".format(sourcejarDir,"jacocoagent.jar")
     # remote_jar="{0}/dble/lib/{1}".format(node.install_dir,"jacocoagent.jar")
     # node.sftp_conn.sftp_put(local_jar, remote_jar)
     # for code coverage end
+
 @Given('reset dble registered nodes in zk')
 def reset_zk_nodes(context):
     if not hasattr(context, "reset_zk_time"):
