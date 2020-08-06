@@ -20,8 +20,8 @@
 测试dble中的字符集，使用show @@backend命令查看结果
 - scenario 1: dble的字符集配置与session字符集配置一致或者不一致时，session字符集优先级高于配置的字符集
 - scenario 2: 当客户端的字符集设为utfmb4或者utf8时，对于非ASCII分片列，dble应该路由到相同的数据节点
-#### behave_dble/features/func_test/cfg_test/dataNode_caseSensitive.feature
-datanode名大小不敏感，且不受mysql参数lower_case_table_names的影响
+#### behave_dble/features/func_test/cfg_test/shardingNode_caseSensitive.feature
+shardingNode名大小不敏感，且不受mysql参数lower_case_table_names的影响
 - scenario 1: 数据节点名，不受lower_case_table_names的配置值的影响，都需要保持一致
 #### behave_dble/features/func_test/cfg_test/lower_case_table_names.feature
 测试字符集及字符序
@@ -38,24 +38,24 @@ datanode名大小不敏感，且不受mysql参数lower_case_table_names的影响
 - scenario 4: 配置正确的Enum分片算法，执行reload @@config_all命令成功
 #### behave_dble/features/func_test/cfg_test/schema.feature
 配置文件schema.xml的基础测试
-- scenario 1: 配置er表，且有未用到的dataNode,reload成功
-- scenario 2: 只配置dataNode,dble启动失败，只有dataHost,dble启动成功
+- scenario 1: 配置er表，且有未用到的shardingNode,reload成功
+- scenario 2: 只配置shardingNode,dble启动失败，只有dbGroup,dble启动成功
 - scenario 3: 配置文件中含有非法的配置，如<test></test>,reload失败
-- scenario 4: dataNode用$配置，reload成功
+- scenario 4: shardingNode用$配置，reload成功
 - scenario 5: readHost/writeHost只配置host属性值，未配置其他属性值，reload失败
 - scenario 6: readHost放到writeHost外，reload失败
 - scenario 7: 配置未在rule.xml中配置的分片规格，reload失败
-- scenario 8: dataNode中配置的数据库未被创建且此dataNode未被任何表使用，dble做ddl时会报错"Unknown database"
-- scenario 9: dataNode中配置未数据库未被创建且此dataNode被table使用，dble做ddl时会报错"Unknown database"
-- scenario 10: 多个dataNode使用相同的dataHhost中的database,dble启动失败，dry等有报错信息
+- scenario 8: shardingNode中配置的数据库未被创建且此shardingNode未被任何表使用，dble做ddl时会报错"Unknown database"
+- scenario 9: shardingNode中配置未数据库未被创建且此shardingNode被table使用，dble做ddl时会报错"Unknown database"
+- scenario 10: 多个shardingNode使用相同的dataHhost中的database,dble启动失败，dry等有报错信息
 - scenario 11: dble支持schema名中含有特殊字符"-"
 #### behave_dble/features/func_test/cfg_test/schema_attribute.feature
 schema.xml文件中的属性测试
 - scenario 1: 针对所有表类型，配置needAddLimit=true，sqlMaxLimit配置有效
 - scenario 2: 针对所有表类型，配置needAddLimit=false，sqlMaxLimit配置有效
 - scenario 3: table名可配置多个，表名用','隔开
-- scenario 4: 测试dataHost中的maxCon属性
-- scenario 5: dataHost节点数小于等于相关的dataNode数量，最大连接数为：相关的dataNode+1
+- scenario 4: 测试dbGroup中的maxCon属性
+- scenario 5: dbGroup节点数小于等于相关的shardingNode数量，最大连接数为：相关的shardingNode+1
 - scenario 6: 列未设置成primarykey，则主键缓存无效；列设置成主键，则主键缓存有效
 - scenario 7: 设置了primarykey属性，主键缓存有效
 - scenario 8: 未设置primarykey属性，主键缓存无效
@@ -76,7 +76,7 @@ schema.xml文件中配置的读负载均衡测试
 - scenario 9: balance="2"，一主的weight=0，读操作不在writeHost上均衡，writeHost只接收写入
 #### behave_dble/features/func_test/cfg_test/schema_stable.feature
 schema.xml文件的稳定性测试
-- scenario 1: 删除非必须的配置（schema，dataNode，dataHost，user等），dble可以启动成功
+- scenario 1: 删除非必须的配置（schema，shardingNode，dbGroup，user等），dble可以启动成功
 - scenario 2: dble只配置一个后端mysql时，停止唯一的mysql,reload @@config_all失败，启动mysql后，reload @@config_all成功
 - scenario 3: mysql节点配置为disabled="true"，且没有readHost,reload失败
 - scenario 4: balance="0"时，且readHost未被使用，reload @@config_all时，dble依然会检查readHost是否可连接，若不能连接，则reload失败
@@ -115,26 +115,26 @@ dble中视图测试
 - scenario 3: 全局表和非分片表有相同的表名，两表的metadata互不影响
 - scenario 4: schema中未配置表，在默认节点创建一张表（ddl），执行reload @@metadata过程中查看表的metadata
 - scenario 5: 后端表metadata不一致或某些数据节点表不存在，检查metadata及查询
-- scenario 6: dataHost的某些writeHost(有readHost或者没有readHost)不可连接，检查metadata及查询
+- scenario 6: dbGroup的某些writeHost(有readHost或者没有readHost)不可连接，检查metadata及查询
 - scenario 7: 默认schema的表及分片表含有view在后端节点，检查metadata及查询
 - scenario 8: 检查metadata时应该忽略AUTO_INCREMENT的差异，reload @@metadata后dble.log中有相应的ddl日志
 - scenario 9: reload @@metadata中添加过滤条件（按schema或者table过滤）
 #### behave_dble/features/func_test/managercmd/create_database.feature
-测试create databsae @@datanode='dn1,dn2,...'命令
+测试create databsae @@shardingNode='dn1,dn2,...'命令
 - scenario 1: “create database @@...”命令为所有使用的节点创建后端数据库
 - scenario 2: “create database @@...”命令为部分使用的节点创建后端数据库
 - scenario 3: “create database @@...”命令支持dn$x-y格式
 #### behave_dble/features/func_test/managercmd/dryrun.feature
 - scenario 1: table元素中配置type="default"及type=非法值，dryrun报错
 #### behave_dble/features/func_test/managercmd/pause_resume.feature
-测试pause @@DataNode及resume命令
-- scenario 1: pause/resume测试：不带参数的pause；pause带timeout时间不在([0-9]+)内；pause带正确的timeout时间；pause带正确的timeout,queue；pause带正确的timeout,queue，wait_limit；pause不存在的dataNode
+测试pause @@shardingNode及resume命令
+- scenario 1: pause/resume测试：不带参数的pause；pause带timeout时间不在([0-9]+)内；pause带正确的timeout时间；pause带正确的timeout,queue；pause带正确的timeout,queue，wait_limit；pause不存在的shardingNode
 - scenario 2: 验证pause中wait_limit条件的正确性
 - scenario 3: 在事务执行过程中pause或者事务commit后pause
 #### behave_dble/features/func_test/managercmd/reload_config_about_metadata.feature
 reload @@config/reload @@config_all命令只加载需要加载的部分，而不是全部加载一遍
-- scenario 1: reload config时，无需reload所有metadata：如新增表,仅对新增表reload metadata；删除表+表的type属性发生变更;表的datanode发生变更;新增schema;删除schema;schema的默认datanode发生变更
-- scenario 2: reload config_all时，无需reload所有metadata：如新增表,仅对新增表reload metadata；删除表+表的type属性发生变更;表的物理节点发生变更;表的datasource发生变更;新增schema;删除schema;schema的默认datanode发生变更;schema的datanode对应的物理节点发生变更;schema对应的Datanode对应的DataSource发生变更
+- scenario 1: reload config时，无需reload所有metadata：如新增表,仅对新增表reload metadata；删除表+表的type属性发生变更;表的shardingNode发生变更;新增schema;删除schema;schema的默认shardingNode发生变更
+- scenario 2: reload config_all时，无需reload所有metadata：如新增表,仅对新增表reload metadata；删除表+表的type属性发生变更;表的物理节点发生变更;表的dbInstance发生变更;新增schema;删除schema;schema的默认shardingNode发生变更;schema的shardingNode对应的物理节点发生变更;schema对应的shardingNode对应的dbInstance发生变更
 #### behave_dble/features/func_test/managercmd/reload_config_all.feature
 reload @@config_all命令的基础测试
 - scenario 1: writeHost未变更，reload @@config_all不会重建后端连接池
@@ -147,10 +147,10 @@ show @@connection.sql命令测试
 - scenario 1: sql语句执行时间小于1ms时，show @@connection.sql能查询到此语句
 - scenario 2: sql语句执行时间大于1ms时，show @@connection.sql能查询到此语句
 - scenario 3: 多个事务，多个查询，show @@connection.sql能查询到此语句
-#### behave_dble/features/func_test/managercmd/show_datasource.feature
-show @@datasource命令测试
-- scenario 1: show @@datasource的ACTIVE列不能为负数
-- scenario 2: show @@datasource的ACTIVE列值正确
+#### behave_dble/features/func_test/managercmd/show_dbInstance.feature
+show @@dbInstance命令测试
+- scenario 1: show @@dbInstance的ACTIVE列不能为负数
+- scenario 2: show @@dbInstance的ACTIVE列值正确
 #### behave_dble/features/func_test/managercmd/show_processlist.feature
 show @@processlist命令测试
 - scenario 1: show @@processlist命令查看前后段连接的session
@@ -198,11 +198,11 @@ ddl锁测试实例
 date分区算法测试
 - scenario 1: date分区算法测试：  
 1.未配置sBeginDate,reload @@config_all失败  
-2.sBeginDate < sEndDate-nodes*sPartition+1，reload @@config_all提示信息"please make sure table datanode size = function partition size"  
+2.sBeginDate < sEndDate-nodes*sPartition+1，reload @@config_all提示信息"please make sure table shardingNode size = function partition size"  
 3.配置sBeginDate和默认节点，reload @@config_all成功后，允许插入null字段插入null值，路由到默认节点；非NULL字段中插入NULL值，则返回报错"Sharding column can't be null when the table in MySQL column is not null"  
 4.配置sEndDate且未配置默认节点，reload @@config_all后，插入的值小于sBeginDate配置的值，则返回报错"can't find any valid data node"  
-5.未配置sEndDate且配置defaultNode，reload @@config_all后，当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*dataNode),则返回报错信息"can't find any valid data node"  
-6.未配置sEndDate且未配置defaultNode:reload可以成功，当插入值小于sBeginDate时，返回报错信息"can't find any valid data node";当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*dataNode),则返回报错信息"can't find any valid data node"  
+5.未配置sEndDate且配置defaultNode，reload @@config_all后，当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*shardingNode),则返回报错信息"can't find any valid data node"  
+6.未配置sEndDate且未配置defaultNode:reload可以成功，当插入值小于sBeginDate时，返回报错信息"can't find any valid data node";当插入值大于sBeginDate且插入值>sum(sBeginDate +sPartionDay*shardingNode),则返回报错信息"can't find any valid data node"  
 7.分片表的使用限制测试：  
     分片表的分片列不能drop；  
     分片表的分片列值不允许被更新；  
@@ -324,7 +324,7 @@ dble中的报错信息测试
 - scenario 5: 当物理库未创建时，在xa事务中执行语句会报错”Unknown database 'db3'“
 #### behave_dble/features/sql_cover/special/hint.feature
 dble注释测试
-- scenario 1: 验证hint格式为：/*!dble:datanode=xxx*/
+- scenario 1: 验证hint格式为：/*!dble:shardingNode=xxx*/
 - scenario 2: 验证hint格式为：/*!dble:sql=xxx*/
 - scenario 3: 验证hint格式为：/*!dble:db_type=xxx*/且balance=1的情况
 - scenario 4: 验证hint格式为：/*!dble:db_type=xxx*/且balance=2的情况

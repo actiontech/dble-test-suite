@@ -1,9 +1,9 @@
 ===file:assets/sql/driver_test_client.sql,id:19,sql:explain select * from schema2.test2 where id=1;===
 dble: [(dn2)]
 mysql: [(1)]
-===file:assets/sql/driver_test_client.sql,id:20,sql:explain2 datanode=dn2 sql=select * from test_shard where id=1;===
+===file:assets/sql/driver_test_client.sql,id:20,sql:explain2 shardingNode=dn2 sql=select * from test_shard where id=1;===
 dble: [(1)]
-mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'explain2 datanode=dn2 sql=select * from test_shard where id=1' at line 1)]
+mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'explain2 shardingNode=dn2 sql=select * from test_shard where id=1' at line 1)]
 ===file:assets/sql/driver_test_client.sql,id:23,sql:/*40101%%%%%????&&&**djdjj*/;===
 dble: [(1064: error pos 33, line 1, column 5, token EOF)]
 mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1)]
