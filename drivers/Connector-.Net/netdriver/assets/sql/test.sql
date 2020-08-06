@@ -15,7 +15,7 @@ insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (1,1, 'a string','2012
 #insert into test_shard (id,R_REGIONKEY,R_NAME,t,b) values (3,3, 'a string','2012/12/31 11:30:45',0),(4,4, 'a string','2012/12/31 11:30:45',0),(null,null, null,null,null);
 select * from test_shard where R_NAME=_utf8'中'COLLATE utf8_danish_ci;
 explain SELECT select * from schema2.test2 where id=1;
-explain2 datanode=dn2 sql=select * from schema2.test2 where id=1;
+explain2 shardingNode=dn2 sql=select * from test2 where id=1;
 help
 select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));
 select schema1.test_shard.R_NAME from test_shard;

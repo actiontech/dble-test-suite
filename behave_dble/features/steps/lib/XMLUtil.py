@@ -34,7 +34,7 @@ def get_child_nodes(parentNode, childNode_info, file):
     """
     to get a node featured childNode_info, and parent node is parentNode from the file
     :param parentNode: target node's parent node
-    :param childNode_info: target node's feature, tag is a must feature, kv_map is optional feature, eg:{'tag':'dataHost','kv_map':{'name': 'ha_group1','balance':'0'}}
+    :param childNode_info: target node's feature, tag is a must feature, kv_map is optional feature, eg:{'tag':'dbGroup','kv_map':{'name': 'ha_group1','balance':'0'}}
     :param file: the xml file
     :return:
     """
@@ -77,7 +77,7 @@ def get_xml_from_str(str):
 def add_child_in_string(file, pos_kv_map, childNodeInString):
     """
     add child to file or to file content in memory
-    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
+    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dbGroup'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
     :param childNodeInString: child node xml in string format
     :param file_local: xml file name in local
     :param file_content: xml content
@@ -89,7 +89,7 @@ def add_child_in_string(file, pos_kv_map, childNodeInString):
 def add_child_in_string_with_duplicate_name(file, pos_kv_map, childNodeInString):
     """
     add child to file or to file content in memory
-    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dataHost'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
+    :param pos_kv_map: the pos info for node to add, including parent node info, prev node info, insertion position, etc. Example:{'tag':'schema','kv_map':{'name':'host1','k2':'v2'},'prev':'dbGroup'}, kv_map is feature of the parentNode if exists multiple, tag is the parent node tag, it is must, prev is node tag for the node to add
     :param childNodeInString: child node xml in string format
     :param file_local: xml file name in local
     :param file_content: xml content
@@ -102,7 +102,7 @@ def add_child_in_xml(file, pos_kv_map, childNode):
     """
     for each child to insert, insert position priority: same name node index > max(same tag index) > lastInsertTypeNodeMaxIdx
     :param file:
-    :param pos_kv_map: the child node's position info, eg:{'tag':'root',"prev": 'dataNode'}, root is parent node tag, child's prev node tag is dataNode
+    :param pos_kv_map: the child node's position info, eg:{'tag':'root',"prev": 'shardingNode'}, root is parent node tag, child's prev node tag is shardingNode
     :param childNode:
     """
     ET.register_namespace("dble", "http://dble.cloud/")
@@ -165,7 +165,7 @@ def add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode):
     """
     for each child to insert, insert position priority: same name node index > max(same tag index) > lastInsertTypeNodeMaxIdx
     :param file:
-    :param pos_kv_map: the child node's position info, eg:{'tag':'root',"prev": 'dataNode'}, root is parent node tag, child's prev node tag is dataNode
+    :param pos_kv_map: the child node's position info, eg:{'tag':'root',"prev": 'shardingNode'}, root is parent node tag, child's prev node tag is shardingNode
     :param childNode:
     """
     ET.register_namespace("dble", "http://dble.cloud/")

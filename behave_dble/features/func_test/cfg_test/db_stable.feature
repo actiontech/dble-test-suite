@@ -73,10 +73,6 @@ Feature: db config stable test
 
   @NORMAL
   Scenario: add instance in disabled state, execute select success with rwSplitMode not 0 #3
-#    Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM1'}}" in "sharding.xml"
-#    """
-#        <readHost host="hosts1" url="172.100.9.5:3306" user="test" password="111111"/>
-#    """
    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -117,10 +113,6 @@ Feature: db config stable test
     """
     Reload config failure
     """
-  #Given add xml segment to node with attribute "{'tag':'dataHost/writeHost','kv_map':{'host':'hostM2'}}" in "sharding.xml"
-#    """
-#        <readHost host="hosts1" url="172.100.9.2:3306" user="test" password="111111"/>
-#    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
