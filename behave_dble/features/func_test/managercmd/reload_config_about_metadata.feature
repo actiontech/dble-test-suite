@@ -52,7 +52,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn   | toClose | sql                                             | expect                     |
       | conn_0 | False   | check full @@metadata where schema='schema1'    | hasStr{test_shard_column}  |
       | conn_0 | True    | check full @@metadata where schema='schema1'    | hasNoStr{test1}            |
-    #表的datanode发生变更
+    #表的shardingNode发生变更
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
@@ -103,7 +103,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn   | toClose | sql                        | expect   | db  |
       | conn_0 | False   | drop table if exists test3 | success  | db1 |
       | conn_0 | True    | create table test3(id int) | success  | db1 |
-    #schema的默认datanode发生变更
+    #schema的默认shardingNode发生变更
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn2">
@@ -199,7 +199,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
     <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config_all"
-    #表的datasource发生变更
+    #表的dbInstance发生变更
     Then execute sql in "mysql-master3"
       | conn   | toClose | sql                          |
       | conn_0 | False   | drop database if exists db1  |
@@ -294,7 +294,7 @@ Feature: Do not reload all metadata when reload config/config_all if no need
       | conn_0 | False   | drop database if exists db3 | success  |     |
       | conn_0 | True    | create database db3         | success  |     |
       | conn_1 | True    | create table test3(id int)  | success  | db3 |
-    #schema 的默认datanode属性发生变更
+    #schema 的默认shardingNode属性发生变更
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">

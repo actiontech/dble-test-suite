@@ -310,7 +310,7 @@ Feature: test some import nodes attr in sharding.xml
   @skip # new case need refactor for connect pool refactor,2020/06/04
   Scenario:  when minCon > the number of db,if mysql restart, verify the minCon restore logic #9
 #  minConRecover logic, take this case as example:
-#  minCon_of_config=10, dataNodes in dataHost ha_group1 is 3,so at mysql first start up,already_created=num_dns+1=3+1=4
+#  minCon_of_config=10, shardingNodes in dbGroup ha_group1 is 3,so at mysql first start up,already_created=num_dns+1=3+1=4
 #  main logic: minConRecover_num_each_loop=floor((minCon_of_config-already_created)/3), end loop until this formula get result 0
 #  minConRecover_num_loop1:(10-4)/3 = 2, already_created=already_created + minConRecover_num_loop1=4+2=6
 #  minConRecover_num_loop2:(10-6)/3 = 1, already_created=already_created + minConRecover_num_loop2=6+1=7
