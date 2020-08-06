@@ -173,7 +173,7 @@ void case_mysql_change_user(MYSQL* conn){
         printf("    pass! after change user, the lock on the table before change user is released! \n");
 
         //case:restore read-write-split
-        strcpy(sql, "select 1 /*#dble:datanode=dn1*/");
+        strcpy(sql, "select 1 /*#dble:shardingNode=dn1*/");
 
         doQueryWithExpectInt(conn, sql, 1);
         printf("    pass! before change user the conn is in CM stat, after change user, the stat over\n");
