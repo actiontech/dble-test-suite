@@ -3,14 +3,14 @@
 # Created by yangxiaoliang at 2020/2/26
 
 # 2.19.11.0#dble-7860
-@skip #for unknown reason 2020.07.09,so skip first
 Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
   @btrace
   Scenario: check 'kill @@ddl_lock where schema=? and table=?' work normal #1
-    Given stop dble cluster and zk service
+    Given reset dble registered nodes in zk
     Given delete the following xml segment
       | file              | parent         | child              |
       | sharding.xml     | {'tag':'root'} | {'tag':'shardingNode'} |
+      | db.xml     | {'tag':'root'} | {'tag':'dbGroup'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema2" sqlMaxLimit="100" shardingNode="dn1">
@@ -37,9 +37,7 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
     <managerUser name="root" password="111111"  readOnly="false"/>
     <shardingUser name="test" password="111111" schemas="schema1,schema2" readOnly="false"/>
     """
-    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
-    Given reset dble registered nodes in zk
-    Then start dble in order
+    Then execute admin cmd "reload @@config_all"
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                     | expect                               |
@@ -74,12 +72,12 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
       | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
       | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |
       | conn_1 | true    | reload @@metadata                                   | success                             |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+    Given execute single sql in "dble-2" in "admin" mode and save resultset in "rs_A"
       | sql                       |
       | show @@backend.statistics |
     Then check resultset "rs_A" has lines with following column values
       | TOTAL-3 |
-      | 6       |
+      | 5      |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
