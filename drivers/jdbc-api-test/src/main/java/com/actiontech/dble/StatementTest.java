@@ -19,7 +19,7 @@ public class StatementTest extends InterfaceTest {
 	protected void start() throws SQLException {
 		itf_addBatch();
 		itf_cancel();
-		itf_warnings();
+		//itf_warnings();
 		itf_execute();
 		itf_autoincrement();
 		System.out.println("autoincrement() is passed");
