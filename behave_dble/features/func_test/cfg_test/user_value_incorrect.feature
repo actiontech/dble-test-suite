@@ -3,7 +3,7 @@
 # Created by lizizi at 2020/7/3
 Feature:  config user config files incorrect and restart dble or reload configs
 
-  Scenario:  config user property, restart config #1
+  Scenario:  config without managerUser, reload failed #1
     Given update file content "/opt/dble/conf/user.xml" in "dble-1" with sed cmds
     """
     /managerUser/d
@@ -13,7 +13,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     Reload config failure
     """
 
-  Scenario:  config user property, restart config #2
+  Scenario:  config empty password, reload failed #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
       <shardingUser name="sharding_test" password="" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="schema1" maxCon="0" blacklist="blacklist1"/>
@@ -23,7 +23,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       password of sharding_test is empty
     """
 
-  Scenario:  config user property, restart config #3
+  Scenario:  config without password property, reload failed #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
       <shardingUser name="sharding_test" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="schema1" maxCon="0" blacklist="blacklist1"/>
@@ -33,7 +33,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       Attribute "password" is required and must be specified for element type "shardingUser"
     """
 
-  Scenario:  config user property, restart config #4
+  Scenario:  usingDecrypt="true",config password with plaintext, reload failed #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
       <shardingUser name="sharding_test" password="111111" usingDecrypt="true" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="schema1" maxCon="0" blacklist="blacklist1"/>
@@ -43,7 +43,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       user sharding_test password need to decrypt ,but failed
     """
 
-  Scenario:  config user property, restart config #5
+  Scenario:  config empty schemas, reload failed #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
       <shardingUser name="sharding_test" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="" maxCon="0" blacklist="blacklist1"/>
@@ -53,7 +53,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       User [sharding_test:tenant1]'s schemas is empty
     """
 
-  Scenario:  config user property, restart config #6
+  Scenario:  config shardingUser without schemas property, reload failed #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
       <shardingUser name="sharding_test" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" maxCon="0" blacklist="blacklist1"/>
@@ -63,7 +63,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       Attribute "schemas" is required and must be specified for element type "shardingUser"
     """
 
-  Scenario:  config user property, login the system #7
+  Scenario:  config case sensitive, check privileges work fine #7
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
@@ -105,7 +105,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       | user | passwd | conn   | toClose | sql      | expect                        |
       | test | 111111 | conn_3 | False   | select 1 | Access denied for user 'test' |
 
-  Scenario: config db property, login the system #8
+  Scenario: config db with same url value for different dbInstances in one dbGroup, reload success #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -125,7 +125,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       | user | passwd | conn   | toClose | sql      | expect                    | db     |
       | test | 111111 | conn_5 | False   | select 1 | Unknown database 'hosts1' | hosts1 |
 
-  Scenario:  config user property, login the system #9
+  Scenario:  config two managerUsers with the same name, reload failed #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
     """
       <managerUser name="root_test1" password="111111" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
@@ -136,7 +136,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       User [name:root_test1] has already existed
     """
 
-  Scenario:  config user property, login the system #10
+  Scenario:  config two shardingUsers with the same name, reload failed #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
     """
       <shardingUser name="sharding_test1" password="111111" schemas="schema1" maxCon="0"/>
@@ -147,7 +147,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       User [sharding_test1] has already existed
     """
 
-  Scenario:  config user property, login the system #11
+  Scenario:  config two blacklists with the same name, reload failed #11
     Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
     """
       <blacklist name="blacklist1">
@@ -162,7 +162,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       blacklist[blacklist1]  has already existed
     """
 
-  Scenario:  config user property, login the system #12
+  Scenario:  config wrong blacklist property, reload failed #12
     Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
     """
       <blacklist name="blacklist1">
@@ -174,7 +174,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
       blacklist item(s) is not recognized: selectHavingAlwayTrueCheck_fake
     """
 
-  Scenario:  config user property, login the system #13
+  Scenario:  config schema which not exists in sharding.xml , reload failed #13
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml" with duplicate name
     """
       <shardingUser name="sharding_test1" password="111111" schemas="schema2" maxCon="0"/>
