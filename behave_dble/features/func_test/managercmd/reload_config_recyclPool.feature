@@ -5,7 +5,7 @@
 #2.19.11.0#dble-7853
 Feature: reload @@config_all and recycl pool
 
-  Scenario: modifiy datahost url and execute reload @@config_all #1
+  Scenario: modifiy dbGroup url and execute reload @@config_all #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1              | schema1 |
