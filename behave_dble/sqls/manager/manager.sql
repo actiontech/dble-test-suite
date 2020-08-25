@@ -22,13 +22,13 @@ show @@connection.count
 show @@connection.sql
 show @@cost_time
 show @@database
-show @@datanode
-show @@datanode where schema=schema1;
-show @@datanodes where schema=schema1 and table=sharding_4_t1;
-show @@datasource
-show @@datasource.cluster
-show @@datasource.synstatus
-show @@datasource.syndetail where name=172.100.9.5
+show @@shardingNode
+show @@shardingNode where schema=schema1;
+show @@shardingNode where schema=schema1 and table=sharding_4_t1;
+show @@dbInstacne
+show @@dbInstacne.cluster
+show @@dbInstacne.synstatus
+show @@dbInstacne.syndetail where name=172.100.9.5
 show @@directmemory=1
 show @@directmemory=2
 show @@heartbeat
