@@ -28,22 +28,6 @@ Feature: sharding basic config test
     Attribute "name" is required and must be specified for element type "shardingNode"
     """
 
-
-  Scenario: config without the names of shardingNode, reload fail #2
-    Given delete the following xml segment
-      | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-
-    Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
-    """
-        <shardingNode dbGroup="ha_group1" database="db1"/>
-        <shardingNode dbGroup="ha_group2" database="db1"/>
-    """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    Attribute "name" is required and must be specified for element type "shardingNode"
-    """
-
   Scenario: config two shardingNode with same name, reload fail #3
     Given delete the following xml segment
       | file         | parent         | child                  |
@@ -306,7 +290,7 @@ Feature: sharding basic config test
     rule function hash-two duplicated!
     """
 
-  Scenario: config functions with same name, reload fail #16
+  Scenario: config dbInstances with same name, reload fail #16
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
@@ -371,7 +355,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all"
 
-  Scenario: config wildcard should obey the following rule: shardingNode=dbgroup*database #19
+  Scenario: config wildcard should obey the following rule: shardingNode=dbgroup*database #20
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -390,7 +374,7 @@ Feature: sharding basic config test
       GlobalCheckJob
       """
 
-  Scenario: config shardingtable with multi names, reload success #20
+  Scenario: config shardingtable with multi names, reload success #21
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -407,7 +391,7 @@ Feature: sharding basic config test
       | conn_0 | False   | create table table2(id bigint,time char(120)) | success | schema1 |
 
 
-  Scenario: config sqlRequiredSharding as true, start dble success, execute sql without shardingColumn fail #21
+  Scenario: config sqlRequiredSharding as true, start dble success, execute sql without shardingColumn fail #22
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
