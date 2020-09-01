@@ -4,29 +4,47 @@
 # Created by yangxiaoliang at 2020/1/3
 
 #2.20.04.0#dble-8176
-  @skip
 Feature: change xaRetryCount value and check result
-  @skip
   Scenario: Setting xaRetryCount to an illegal value, dble report warning #1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DxaRetryCount=-1
     """
-    Given Restart dble in "dble-1" success
+   Then restart dble in "dble-1" failed for
+    """
+    Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    """
     Then check "dble.log" in "dble-1" has the warnings
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
-      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, use 0 replaced |
+      | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced |
 
   @btrace
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+          <property name="connectionTimeout">1000</property>
+          </dbInstance>
+      </dbGroup>
+
+      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <property name="heartbeatPeriodMillis">2000</property>
+          <property name="connectionTimeout">1000</property>
+          </dbInstance>
+      </dbGroup>
+    """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DxaRetryCount=3
     """
     Given Restart dble in "dble-1" success
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                      | schema1 |
@@ -50,14 +68,16 @@ Feature: change xaRetryCount value and check result
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given destroy sql threads list
-    Given sleep "10" seconds
+    #sleep 6s for 3 times retry connectionTimeout for 2 nodes
+    Given sleep "6" seconds
     Then get result of oscmd named "rs_A" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Then check result "rs_A" value is "3"
     Given start mysql in host "mysql-master1"
-    Given sleep "15" seconds
+    #sleep 3s for heartbeat recover
+    Given sleep "3" seconds
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                  | expect      | db      |
@@ -88,7 +108,7 @@ Feature: change xaRetryCount value and check result
       </dbGroup>
     """
     Given Restart dble in "dble-1" success
-#   delayBeforeXaCommit sleep time must long enough for stopping dble
+    #delayBeforeXaCommit sleep time must long enough for stopping dble
     Given update file content "./assets/BtraceXaDelay_backgroundRetry2.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
