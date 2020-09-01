@@ -46,7 +46,6 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
   @btrace
-  @skip #for connect pool refactor after base-testing in 2020.08.18, so need refactor this case later if time available.
   Scenario: xa start is abnormal: some nodes execute successfully and some nodes return errors. For the error nodes, dble need return a reasonable error message. #2
     Then execute sql in "mysql-master1"
       | sql                        | expect  |
@@ -87,7 +86,7 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | conn_1 | False   | set xa = on | success | schema1 |
       | conn_1 | False   | begin       | success | schema1 |
     Given prepare a thread execute sql "insert into schema1.sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)" with "conn_1"
-    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
     """
     before xa start
     """
