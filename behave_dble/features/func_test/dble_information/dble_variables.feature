@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_variables test
-
+@skip_restart
  Scenario:  dble_variables table #1
   #case desc dble_variables
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
@@ -111,7 +111,6 @@ Feature:  dble_variables test
       | maxCharsPerColumn           | 65535                           | The maximum number of characters allowed for per column when load data.The default value is 65535                                                           | true        |
       | maxRowSizeToFile            | 10000                           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 10000                                            | true        |
       | traceEndPoint               | null                            | The trace Jaeger server endPoint                                                                                                                            | true        |
-
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                   | expect                                                                                                                                         | db               |
       | conn_0 | False   | select * from dble_variables where variable_name = 'isOnline'         | has{('isOnline', 'true', 'When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error ', 'false')} | dble_information |
@@ -175,10 +174,11 @@ Feature:  dble_variables test
       | false       | 10      |
       | true        | 80      |
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
+   #case http://10.186.18.11/jira/browse/DBLE0REQ-485
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
 #      | conn   | toClose | sql                          | db               |
 #      | conn_0 | False   | select read_only from dble_variables where comment like  'the%'  order by variable_name desc limit 10 | dble_information |
-#    Then check resultset "dble_variables_5" has lines with following column values
+#    Then check resultset "dble_variables_7" has lines with following column values
 #      | variable_name-0             | variable_value-1                | comment-2                                                          | read_only-3 |
 
   #case update/delete
@@ -188,12 +188,35 @@ Feature:  dble_variables test
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' |
 
   #case change bootstrap.cnf and cluster.cnf
-#    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#
-#    """
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#
-#    """
-#    Then restart dble in "dble-1" success
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+     $a -DxaLogCleanPeriod=2000
+     $a -DuseJoinStrategy=true
+     $a -DfakeMySQLVersion=5.7.11
+    """
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+    """
+     $a showBinlogStatusTimeout=65000
+    """
+    Then restart dble in "dble-1" success
+       Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
+      | conn   | toClose | sql                                                                                                                                                                                   | db               |
+      | conn_1 | False   | select * from dble_variables where variable_name='xaLogCleanPeriod' or variable_name='useJoinStrategy' or variable_name='fakeMySQLVersion' or variable_name='showBinlogStatusTimeout' | dble_information |
+    Then check resultset "dble_variables_8" has lines with following column values
+      | variable_name-0         | variable_value-1 | comment-2                                                           | read_only-3 |
+      | xaLogCleanPeriod        | 2000ms           | The xa log clear period.The default value is 1000ms                 | true        |
+      | useJoinStrategy         | true             | Whether nest loop join is enabled.The default value is false        | true        |
+      | fakeMySQLVersion        | 5.7.11           | MySQL Version showed in Client                                      | true        |
+      | showBinlogStatusTimeout | 65000ms          | The time out from show @@binlog.status.The default value is 60000ms | true        |
+    Then check resultset "dble_variables_8" has not lines with following column values
+      | variable_name-0         | variable_value-1 | comment-2                                                           | read_only-3 |
+      | xaLogCleanPeriod        | 1000ms           | The xa log clear period.The default value is 1000ms                 | true        |
+      | useJoinStrategy         | false            | Whether nest loop join is enabled.The default value is false        | true        |
+      | fakeMySQLVersion        | None             | MySQL Version showed in Client                                      | true        |
+      | showBinlogStatusTimeout | 60000ms          | The time out from show @@binlog.status.The default value is 60000ms | true        |
+
+
+
+
+
+

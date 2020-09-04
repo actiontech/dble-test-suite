@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_thread_pool test
-
+@skip_restart
    Scenario:  dble_thread_pool table #1
   #case desc dble_thread_pool
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
@@ -39,7 +39,7 @@ Feature:  dble_thread_pool test
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_3"
       | conn   | toClose | sql                            | db                |
-      | conn_0 | False   | select * from dble_thread_pool | dble_information  |
+      | conn_1 | False   | select * from dble_thread_pool | dble_information  |
     Then check resultset "dble_thread_pool_3" has lines with following column values
       | name-0                  | size-1 |
       | Timer                   | 1      |
@@ -47,6 +47,10 @@ Feature:  dble_thread_pool test
       | backendBusinessExecutor | 12     |
       | complexQueryExecutor    | 12     |
       | writeToBackendExecutor  | 12     |
+
+
+
+
 
    #case select * from dble_status where xxx
 #    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_4"

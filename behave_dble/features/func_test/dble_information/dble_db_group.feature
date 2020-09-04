@@ -11,7 +11,13 @@ Feature:  dble_db_group test
       | conn_0 | False   | desc dble_db_group | dble_information |
     Then check resultset "dble_db_group_1" has lines with following column values
       | Field-0   | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
-
+| name              | varchar(64) | NO   | PRI  | None    |       |
+| heartbeat_stmt    | varchar(64) | NO   |      | None    |       |
+| heartbeat_timeout | int(11)     | YES  |      | None    |       |
+| heartbeat_retry   | int(11)     | YES  |      | None    |       |
+| rw_split_mode     | int(11)     | NO   |      | None    |       |
+| delay_threshold   | int(11)     | YES  |      | None    |       |
+| disable_ha        | varchar(5)  | YES  |      | None    |       |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_2"
       | conn   | toClose | sql                              | db               |
       | conn_0 | False   | select * from dble_db_group | dble_information |

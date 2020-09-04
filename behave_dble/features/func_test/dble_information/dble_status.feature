@@ -14,7 +14,6 @@ Feature:  dble_status test
       | variable_name  | varchar(24)  | NO     | PRI   | None      |         |
       | variable_value | varchar(20)  | NO     |       | None      |         |
       | comment        | varchar(200) | YES    |       | None      |         |
-
    #case select * from dble_status
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_2"
       | conn   | toClose | sql                       | db                |
@@ -32,7 +31,26 @@ Feature:  dble_status test
       | questions               | number of requests.                                                                              |
       | transactions            | the transaction number.                                                                          |
 
-#   #case select * from dble_status where xxx
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_2"
-#      | conn   | toClose | sql                       | db                |
-#      | conn_0 | False   |                           | dble_information  |
+     #case compare with result
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_3"
+      | conn   | toClose | sql                                                                                                 | db               |
+      | conn_0 | False   | select variable_value,CURRENT_TIME() from dble_status where variable_name='current_timestamp'       | dble_information |
+ #   Then check resultset "dble_status_3" has lines with following column values
+
+
+
+
+
+
+     #case change sharding.xml and reload compare with result
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_4"
+#      | conn   | toClose | sql                   | db               |
+#      | conn_0 | False   | select variable_value from version where variable_name='config_reload_timestamp' |dble_information  |
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_5"
+#      | conn   | toClose | sql                   | db               |
+#      | conn_0 | False   |select last_reload_end from dble_reload_status where INDEX=0        | dble_information |
+#    Then check resultsets "dble_status_4" and "dble_status_5" are same in following columns
+#      |column   | column_index |
+#      |version  | 0            |
+
+
