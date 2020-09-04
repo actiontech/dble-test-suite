@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_processor test
-
+@skip_restart
    Scenario:  dble_processor table #1
   #case desc dble_processor
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_processor_1"
@@ -24,11 +24,11 @@ Feature:  dble_processor test
     Then check resultset "dble_processor_2" has lines with following column values
       | name-0            | type-1  |
       | frontProcessor0   | session |
-      | backendProcessor0 | session |
-      | backendProcessor1 | session |
-      | backendProcessor2 | session |
-      | backendProcessor3 | session |
-      | backendProcessor4 | session |
-      | backendProcessor5 | session |
-      | backendProcessor6 | session |
-      | backendProcessor7 | session |
+      | backendProcessor0 | backend |
+      | backendProcessor1 | backend |
+      | backendProcessor2 | backend |
+      | backendProcessor3 | backend |
+      | backendProcessor4 | backend |
+      | backendProcessor5 | backend |
+      | backendProcessor6 | backend |
+      | backendProcessor7 | backend |
