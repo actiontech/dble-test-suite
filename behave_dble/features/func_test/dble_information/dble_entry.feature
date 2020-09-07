@@ -27,9 +27,9 @@ Feature:  dble_entry test
       | conn_0 | False   | select * from dble_entry | dble_information |
     Then check resultset "dble_entry_2" has lines with following column values
       | id-0 | type-1   | user_type-2  | username-3 | password_encrypt-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7 | readonly-8 | max_conn_count-9 | blacklist-10 |
-      | 1    | username | managerUser  | root       | 111111             | None            | None              | None        | false      | no limit         | None         |
-      | 2    | username | shardingUser | test       | 111111             | None            | None              | None        | false      | no limit         | None         |
-      | 3    | username | rwSplitUser  | rwSplit    | 111111             | None            | None              | None        | -          | 20               | None         |
+      | 1    | username | managerUser  | root       |                    | None            | None              | None        | false      | no limit         | None         |
+      | 2    | username | shardingUser | test       |                    | None            | None              | None        | false      | no limit         | None         |
+      | 3    | username | rwSplitUser  | rwSplit    |                    | None            | None              | None        | -          | 20               | None         |
   #case change user.xml and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -47,19 +47,19 @@ Feature:  dble_entry test
      <property name="selelctAllow">true</property>
      </blacklist>
     """
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
       | conn   | toClose | sql                      | db               |
       | conn_0 | False   | select * from dble_entry | dble_information |
     Then check resultset "dble_entry_3" has lines with following column values
       | id-0 | type-1    | user_type-2  | username-3 | password_encrypt-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7               | readonly-8 | max_conn_count-9 | blacklist-10 |
-      | 1    | username  | managerUser  | root       | 111111             | None            | None              | None                      | false      | 100              | None         |
-      | 2    | username  | managerUser  | root1      | 654321             | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit         | None         |
-      | 3    | username  | shardingUser | test       | 111111             | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit         | blacklist1   |
-      | 4    | username  | shardingUser | test1      | 123456             | None            | None              | None                      | false      | 150              | blacklist1   |
-      | 5    | conn_attr | shardingUser | test2      | 123456             | tenant          | tenant1           | None                      | false      | 120              | None         |
-      | 6    | username  | rwSplitUser  | rwSplit    | 111111             | None            | None              | None                      | -          | 20               | blacklist1   |
-      | 7    | username  | rwSplitUser  | rwSplit1   | 123456             | None            | None              | None                      | -          | no limit         | blacklist1   |
+      | 1    | username  | managerUser  | root       |              | None            | None              | None                      | false      | 100              | None         |
+      | 2    | username  | managerUser  | root1      |              | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit         | None         |
+      | 3    | username  | shardingUser | test       |              | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit         | blacklist1   |
+      | 4    | username  | shardingUser | test1      |              | None            | None              | None                      | false      | 150              | blacklist1   |
+      | 5    | conn_attr | shardingUser | test2      |              | tenant          | tenant1           | None                      | false      | 120              | None         |
+      | 6    | username  | rwSplitUser  | rwSplit    |              | None            | None              | None                      | -          | 20               | blacklist1   |
+      | 7    | username  | rwSplitUser  | rwSplit1   |              | None            | None              | None                      | -          | no limit         | blacklist1   |
 
    Scenario:  dble_entry_schema  table #2
   #case desc dble_entry_schema
@@ -113,6 +113,10 @@ Feature:  dble_entry test
       | 3    | schema2  |
       | 4    | schema2  |
       | 4    | schema3  |
+    Then check resultset "dble_entry_schema_2" has not lines with following column values
+      | id-0 |
+      | 1    |
+      | 5    |
   #case select
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                       | expect      | db               |
@@ -121,43 +125,7 @@ Feature:  dble_entry test
       | conn_0 | False   | select * from dble_entry where id <any (select id from dble_entry_schema) | length{(3)} | dble_information |
       | conn_0 | False   | select * from dble_entry where id =any (select id from dble_entry_schema) | length{(3)} | dble_information |
 
-   Scenario:  dble_entry_db_group  table #3
-  #case desc dble_entry_db_group
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_db_group_1"
-      | conn   | toClose | sql                      | db               |
-      | conn_0 | False   | desc dble_entry_db_group | dble_information |
-    Then check resultset "dble_entry_db_group_1" has lines with following column values
-      | Field-0   | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | id        | int(11)     | NO     | PRI   | None      |         |
-      | db_group  | varchar(64) | NO     |       | None      |         |
-
-  #case change user.xml and reload
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
-     <managerUser name="root1" password="654321" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false"/>
-
-     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" />
-     <shardingUser name="test1" password="123456" schemas="schema1" readOnly="false" blacklist="blacklist1" maxCon="150"/>
-
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
-     <rwSplitUser name="rwSplit1" password="123456" dbGroup="ha_group2" blacklist="blacklist1" />
-
-     <blacklist name="blacklist1">
-     <property name="selelctAllow">true</property>
-     </blacklist>
-    """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
-      | conn   | toClose | sql                               | db               |
-      | conn_0 | False   | select * from dble_entry_db_group | dble_information |
-    Then check resultset "dble_entry_3" has lines with following column values
-      | id-0 | db_group-1 |
-      | 5    | ha_group1  |
-      | 6    | ha_group2  |
-
-#@skip_restart
-   Scenario:  dble_entry_table_privilege  table #4
+   Scenario:  dble_entry_table_privilege  table #3
   #case desc dble_entry_table_privilege
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_1"
       | conn   | toClose | sql                             | db               |
@@ -172,11 +140,26 @@ Feature:  dble_entry test
       | select  | int(1)      | NO     |       | None      |         |
       | delete  | int(1)      | NO     |       | None      |         |
   #case change user.xml and reload
-  # case create new tables
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn1" name="schema2" sqlMaxLimit="100" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+     <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
+     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" />
+     <shardingUser name="test1" password="123456" schemas="schema2" readOnly="false" maxCon="150"/>
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | user  | passwd | conn   | toClose | sql         | expect   |
+      | test1 | 123456 | conn_2 | False   | use schema2 | success  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect  |
-      | conn_1 | False   | use schema1                 | success |
-      | conn_1 | False   | create table no_13 (id int) | success |
+      | conn_2 | False   | use schema2                 | success |
+      | conn_2 | False   | drop table if exists no_s3  | success |
+      | conn_2 | False   | create table no_s3 (id int) | success |
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
      <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
@@ -187,24 +170,53 @@ Feature:  dble_entry test
              </schema>
          </privileges>
      </shardingUser>
-     <shardingUser name="test1" password="123456" schemas="schema1" readOnly="false" maxCon="150">
+     <shardingUser name="test1" password="123456" schemas="schema1,schema2" readOnly="false" maxCon="150">
          <privileges check="true">
-             <schema name="schema1" dml="0111">
-                <table name="no_13" dml="0000"/>
+             <schema name="schema2" dml="0111">
+                <table name="no_s3" dml="0000"/>
              </schema>
          </privileges>
      </shardingUser>
 
      <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_2"
+   Then execute admin cmd "reload @@config"
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_2"
       | conn   | toClose | sql                                       | db               |
       | conn_0 | False   | select * from dble_entry_table_privilege  | dble_information |
-#    Then check resultset "dble_entry_table_privilege_2" has lines with following column values
+    Then check resultset "dble_entry_table_privilege_2" has lines with following column values
+      | id-0 | schema-1 | table-2       | insert-3 | update-4 | select-5 | delete-6 |
+      | 2    | schema1  | test          | 0        | 1        | 1        | 0        |
+      | 2    | schema1  | sharding_2_t1 | 0        | 1        | 1        | 0        |
+      | 2    | schema1  | sharding_4_t1 | 0        | 1        | 1        | 0        |
+      | 3    | schema2  | no_s3         | 0        | 0        | 0        | 0        |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+     <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
+
+     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" >
+          <privileges check="true">
+             <schema name="schema1" dml="0110">
+                <table name="sharding_2_t1" dml="0100"/>
+             </schema>
+         </privileges>
+     </shardingUser>
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
+    """
+   Then execute admin cmd "reload @@config"
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_3"
+      | conn   | toClose | sql                                       | db               |
+      | conn_0 | False   | select * from dble_entry_table_privilege  | dble_information |
+    Then check resultset "dble_entry_table_privilege_3" has lines with following column values
+      | id-0 | schema-1 | table-2       | insert-3 | update-4 | select-5 | delete-6 |
+      | 2    | schema1  | sharding_2_t1 | 0        | 1        | 0        | 0        |
+    Then check resultset "dble_entry_table_privilege_3" has not lines with following column values
+      | id-0 | schema-1 | table-2       | insert-3 | update-4 | select-5 | delete-6 |
+      | 2    | schema1  | sharding_2_t1 | 0        | 1        | 1        | 0        |
 
 
-   Scenario:  dble_rw_split_entry  table #5
+@skip
+   Scenario:  dble_rw_split_entry  table #4
   #case desc dble_rw_split_entry
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_1"
       | conn   | toClose | sql                      | db               |
@@ -219,11 +231,14 @@ Feature:  dble_entry test
       | select  | int(1)      | NO     |       | None      |         |
       | delete  | int(1)      | NO     |       | None      |         |
 
-@skip_restart
-   Scenario:  dble_blacklist  table #6
+
+
+
+
+   Scenario:  dble_blacklist  table #5
   #case desc dble_blacklist
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_1"
-      | conn   | toClose | sql             | db               |
+      | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_blacklist | dble_information |
     Then check resultset "dble_blacklist_1" has lines with following column values
       | Field-0         | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
@@ -264,9 +279,22 @@ Feature:  dble_entry test
 #    Given Restart dble in "dble-1" success
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_2"
-      | conn   | toClose | sql                          | db               |
-      | conn_0 | False   | select * from dble_blacklist | dble_information |
-#    Then check resultset "dble_blacklist_2" has lines with following column values
+      | conn   | toClose | sql                                                       | db               |
+      | conn_0 | False   | select * from dble_blacklist where user_configured='true' | dble_information |
+    Then check resultset "dble_blacklist_2" has lines with following column values
+      | name-0     | property_key-1              | property_value-2 | user_configured-3 |
+      | black1     | truncateAllow               | true             | true              |
+      | black1     | updateWhereAlayTrueCheck    | true             | true              |
+      | black1     | updateWhereNoneCheck        | false            | true              |
+      | black1     | useAllow                    | true             | true              |
+      | blacklist2 | caseConditionConstAllow     | true             | true              |
+      | blacklist2 | conditionAndAlwayFalseAllow | true             | true              |
+      | blacklist2 | objectCheck                 | true             | true              |
+      | blacklist2 | tableCheck                  | true             | true              |
+      | list3      | completeInsertValuesCheck   | true             | true              |
+      | list3      | metadataAllow               | true             | true              |
+      | list3      | selectHavingAlwayTrueCheck  | true             | true              |
+      | list3      | selelctAllow                | true             | true              |
 
 
 

@@ -56,30 +56,30 @@ Feature:  backend_connections test
       | conn_1 | False   | insert into test values (1),(2)                  | success |
       | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_3"
-      | conn   | toClose | sql                                                                               | db               |
-      | conn_0 | False   | select select user,sql,schema,xa_status,in_transaction from backend_connections | dble_information |
+      | conn   | toClose | sql                                                                        | db               |
+      | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections   | dble_information |
     Then check resultset "backend_connections_3" has lines with following column values
-| user-0| sql-1                                        | schema-2 | xa_status-3 | in_transaction-4 |
-|test| insert into test values (1),(2)            | db2    | 1         | true           |
-|test| INSERT INTO sharding_2_t1 VALUES (1),(3)  | db1    | 1         | true           |
-|test| INSERT INTO sharding_2_t1 VALUES (2),(4) | db1    | 1         | true           |
-|test| insert into test values (1),(2)            | db2    | 1         | true           |
+      | user-0 | sql-1                                    | schema-2 | xa_status-3 | in_transaction-4 |
+      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),(3) | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),(4) | db1      | 1           | true             |
+      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                              | expect  |
-      | conn_1 | False   | use schema1                                      | success |
-      | conn_1 | False   | commit                        | success |
+      | conn   | toClose | sql             | expect  |
+      | conn_1 | False   | use schema1     | success |
+      | conn_1 | False   | commit          | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_4"
-      | conn   | toClose | sql                                                                               | db               |
-      | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections | dble_information |
+      | conn   | toClose | sql                                                                       | db               |
+      | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections  | dble_information |
     Then check resultset "backend_connections_4" has not lines with following column values
-| user-0| sql-1                                        | schema-2 | xa_status-3 | in_transaction-4 |
-|test| insert into test values (1),(2)            | db2    | 1         | true           |
-|test| INSERT INTO sharding_2_t1 VALUES (1),(3)  | db1    | 1         | true           |
-|test| INSERT INTO sharding_2_t1 VALUES (2),(4) | db1    | 1         | true           |
-|test| insert into test values (1),(2)            | db2    | 1         | true           |
+      | user-0 | sql-1                                    | schema-2 | xa_status-3 | in_transaction-4 |
+      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),(3) | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),(4) | db1      | 1           | true             |
+      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
-      | conn_1 | False   | set autocommit=1               | success |
-      | conn_1 | False   | set xa=off      | success |
+      | conn_1 | False   | set autocommit=1   | success |
+      | conn_1 | False   | set xa=off         | success |
 
   #case change db.xml and reload
     Given delete the following xml segment

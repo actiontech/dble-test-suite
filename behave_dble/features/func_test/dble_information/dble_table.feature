@@ -43,7 +43,7 @@ Feature:  dble_table test
     """
     	<shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
     """
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_2"
       | conn   | toClose | sql                       | db               |
       | conn_0 | False   | select * from dble_table  | dble_information |
@@ -60,21 +60,24 @@ Feature:  dble_table test
       | test2         | schema3  | -1          | SINGLE   |
   #case create new tables
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                        | expect  |
-      | conn_1 | False   | use schema1                | success |
-      | conn_1 | False   | create table no_1 (id int) | success |
-      | conn_1 | False   | use schema2                | success |
-      | conn_1 | False   | create table no_2 (id int) | success |
-      | conn_1 | False   | use schema3                | success |
-      | conn_1 | False   | create table no_3 (id int) | success |
+      | conn   | toClose | sql                         | expect  |
+      | conn_1 | False   | use schema1                 | success |
+      | conn_1 | False   | drop table if exists no_s1  | success |
+      | conn_1 | False   | create table no_s1 (id int) | success |
+      | conn_1 | False   | use schema2                 | success |
+      | conn_1 | False   | drop table if exists no_s2  | success |
+      | conn_1 | False   | create table no_s2 (id int) | success |
+      | conn_1 | False   | use schema3                 | success |
+      | conn_1 | False   | drop table if exists no_s3  | success |
+      | conn_1 | False   | create table no_s3 (id int) | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_3"
-      | conn   | toClose | sql                                                                                                   | db               |
-      | conn_0 | False   | select * from dble_table where type ='NO_SHARDING' and name ='no_1' or name = 'no_2' or name = 'no_3' | dble_information |
+      | conn   | toClose | sql                                                                                                      | db               |
+      | conn_0 | False   | select * from dble_table where type ='NO_SHARDING' and name ='no_s1' or name = 'no_s2' or name = 'no_s3' | dble_information |
     Then check resultset "dble_table_3" has lines with following column values
-      | name-1 | schema-2 | max_limit-3 | type-4      |
-      | no_1   | schema1  | None        | NO_SHARDING |
-      | no_2   | schema2  | None        | NO_SHARDING |
-      | no_3   | schema3  | None        | NO_SHARDING |
+      | name-1 s| schema-2 | max_limit-3 | type-4      |
+      | no_s1   | schema1  | None        | NO_SHARDING |
+      | no_s2   | schema2  | None        | NO_SHARDING |
+      | no_s3   | schema3  | None        | NO_SHARDING |
 
 
    Scenario:  dble_global_table table #2
@@ -109,7 +112,7 @@ Feature:  dble_table test
     """
     	<shardingUser name="test" password="111111" schemas="schema1,schema2"/>
     """
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_global_table_3"
       | conn   | toClose | sql                             | db               |
       | conn_0 | False   | select * from dble_global_table | dble_information |
@@ -197,7 +200,7 @@ Feature:  dble_table test
       | None               | FIX               | false                   | fixed_nonuniform             |
       | None               | RULE              | false                   | fixed_uniform_string_rule    |
       | None               | FIXED             | false                   | fixed_nonuniform_string_rule |
-
+  #case select with dble_algorithm
 
    Scenario:  dble_table_sharding_node table #4
   #case desc dble_table_sharding_node
@@ -207,7 +210,7 @@ Feature:  dble_table test
     Then check resultset "dble_table_sharding_node_1" has lines with following column values
       | Field-0       | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
       | id            | varchar(64) | NO     | PRI   | None      |         |
-      | sharding_node | varchar(32) | NO     |       | None      |         |
+      | sharding_node | varchar(32) | NO     | PRI   | None      |         |
       | order         | int(11)     | NO     |       | None      |         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_sharding_node_2"
       | conn   | toClose | sql                                    | db               |
@@ -224,7 +227,7 @@ Feature:  dble_table test
       | C3   | dn2             | 1       |
       | C3   | dn3             | 2       |
       | C3   | dn4             | 3       |
-  #case select join
+  #case select join sharding_node
 
 
 

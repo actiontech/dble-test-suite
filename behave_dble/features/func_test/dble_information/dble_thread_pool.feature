@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_thread_pool test
-@skip_restart
+#@skip_restart
    Scenario:  dble_thread_pool table #1
   #case desc dble_thread_pool
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
