@@ -15,8 +15,17 @@ Feature:  dble_thread_usage test
       | last_quarter_min | varchar(5)  | NO     |       | None      |         |
       | last_minute      | varchar(5)  | NO     |       | None      |         |
       | last_five_minute | varchar(5)  | NO     |       | None      |         |
-
-
+  #case set useThreadUsageStat
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DuseThreadUsageStat=1
+    $a -DuseCostTimeStat=1
+    """
+    Given Restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_2"
+      | conn   | toClose | sql                              | db               |
+      | conn_1 | False   | select * from  dble_thread_usage | dble_information |
+ #   Then check resultset "dble_thread_usage_2" has lines with following column values
 
 
 

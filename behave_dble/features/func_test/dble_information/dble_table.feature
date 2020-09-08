@@ -253,7 +253,7 @@ Feature:  dble_table test
         </shardingTable>
     </schema>
     """
-    Then execute admin cmd "reload @@config_all"
+    Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_2"
       | conn   | toClose | sql                            | db               |
       | conn_0 | False   | select * from dble_child_table | dble_information |
