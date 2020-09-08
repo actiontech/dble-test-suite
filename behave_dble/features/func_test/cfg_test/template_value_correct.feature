@@ -118,7 +118,7 @@ Feature: config all dble config files correct and restart dble
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
-      | processorCheckPeriod        | 1 Seconds                       |
+      | processorCheckPeriod        | 1000ms                       |
       | sqlExecuteTimeout           | 300 Seconds                     |
       | recordTxn                   | 1                               |
       | transactionLogBaseDir       | ./txlogs/                         |
@@ -155,7 +155,7 @@ Feature: config all dble config files correct and restart dble
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
-      | enableSlowLog               | 0                               |
+      | enableSlowLog               | false                            |
       | slowLogBaseDir              | ./slowlogs/             |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
