@@ -104,4 +104,15 @@ Feature:  session_connections test
       | 127.0.0.1     | 8066          | test   | test11     | schema1  | show tables       | First_Node_Fetched_Result        | false              |             |
 
 
+   Scenario:  session_variables table #1
+  #case desc session_variables
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_1"
+      | conn   | toClose | sql              | db               |
+      | conn_0 | False   | desc session_variables | dble_information |
+    Then check resultset "session_variables_1" has lines with following column values
+      | Field-0       | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
 
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_2"
+      | conn   | toClose | sql                       | db               |
+      | conn_0 | False   | select * from session_variables | dble_information |
+    Then check resultset "session_variables_2" has lines with following column values
