@@ -124,4 +124,12 @@ Feature:  backend_connections test
       | ha_group2       | hostM2             | 172.100.9.6   | db3      |
       | ha_group2       | hostM2             | 172.100.9.6   | NULL     |
 
+   Scenario:  backend_variables table #2
+  #case desc backend_variables
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_1"
+      | conn   | toClose | sql                      | db               |
+      | conn_0 | False   | desc backend_variables | dble_information |
+    Then check resultset "backend_variables_1" has lines with following column values
+      | Field-0                   | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
 
+backend_connections_and_backend_variables
