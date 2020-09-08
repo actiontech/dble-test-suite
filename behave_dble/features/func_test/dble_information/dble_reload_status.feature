@@ -25,6 +25,20 @@ Feature:  dble_reload_status test
     Then check resultset "dble_reload_status_2" has lines with following column values
       | index-0 | cluster-1 | reload_type-2 | reload_status-3 | last_reload_start-4 | last_reload_end-5 | trigger_type-6 | end_type-7 |
       | 0       | None      |               | NOT_RELOADING   |                     |                   |                |            |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_3"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | show @@reload_status    | dble_information |
+    Then check resultsets "dble_reload_status_2" and "dble_reload_status_2" are same in following columns
+      | column             | column_index |
+      | index              | 0            |
+      | cluster            | 1            |
+      | reload_type        | 2            |
+      | reload_status      | 3            |
+      | last_reload_start  | 4            |
+      | last_reload_end    | 5            |
+      | trigger_type       | 6            |
+      | end_type           | 7            |
+
   #case change sharding.xml and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -46,11 +60,50 @@ Feature:  dble_reload_status test
     """
     	<shardingUser name="test" password="111111" schemas="schema1,schema2"/>
     """
-    Then execute admin cmd "reload @@config_all"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_3"
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_4"
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from  dble_reload_status | dble_information |
-    Then check resultset "dble_reload_status_3" has lines with following column values
+    Then check resultset "dble_reload_status_4" has lines with following column values
       | index-0 | cluster-1 | reload_type-2 | reload_status-3 | trigger_type-6 | end_type-7 |
       | 0       | None      | RELOAD_ALL    | NOT_RELOADING   | LOCAL_COMMAND  | RELOAD_END |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_5"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | show @@reload_status    | dble_information |
+    Then check resultsets "dble_reload_status_4" and "dble_reload_status_5" are same in following columns
+      | column             | column_index |
+      | index              | 0            |
+      | cluster            | 1            |
+      | reload_type        | 2            |
+      | reload_status      | 3            |
+      | last_reload_start  | 4            |
+      | last_reload_end    | 5            |
+      | trigger_type       | 6            |
+      | end_type           | 7            |
+    Then execute admin cmd "reload @@metadata"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_6"
+      | conn   | toClose | sql                               | db               |
+      | conn_0 | False   | select * from  dble_reload_status | dble_information |
+    Then check resultset "dble_reload_status_6" has lines with following column values
+      | index-0 | cluster-1 | reload_type-2  | reload_status-3 | trigger_type-6 | end_type-7 |
+      | 1       | None      | RELOAD_META    | NOT_RELOADING   | LOCAL_COMMAND  | RELOAD_END |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_7"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | show @@reload_status    | dble_information |
+    Then check resultsets "dble_reload_status_6" and "dble_reload_status_7" are same in following columns
+      | column             | column_index |
+      | index              | 0            |
+      | cluster            | 1            |
+      | reload_type        | 2            |
+      | reload_status      | 3            |
+      | last_reload_start  | 4            |
+      | last_reload_end    | 5            |
+      | trigger_type       | 6            |
+      | end_type           | 7            |
+
+
+
+
+
+
 
