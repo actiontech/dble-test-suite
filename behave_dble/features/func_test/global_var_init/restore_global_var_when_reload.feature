@@ -477,7 +477,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
     Given execute linux command in "dble-1" and save result in "backendIds"
     """
-    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host = 172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
     Given kill mysql conns in "mysql-master1" in "backendIds"
     Given sleep "2" seconds
