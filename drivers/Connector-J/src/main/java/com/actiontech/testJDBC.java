@@ -29,10 +29,10 @@ public class testJDBC {
         String logpath = System.getProperty("user.dir");
         
         if (args[0].equals("test")){
-            dbleURL = "jdbc:mysql://10.186.60.61:7131/schema1?characterEncoding=utf8";
-            dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/schema1?characterEncoding=utf8";
-            mysqlURL = "jdbc:mysql://10.186.60.61:7144/schema1?characterEncoding=utf8";
-            sqlfileClient = "D:\\branch\\dble\\drivers\\Connector-J\\assets\\sql\\driver_test_client.sql";
+            dbleURL = "jdbc:mysql://10.186.60.61:7131/schema1?characterEncoding=utf8&useAffectedRows=true";
+            dblemanagerURL = "jdbc:mysql://10.186.60.61:7171/schema1?characterEncoding=utf8&useAffectedRows=true";
+            mysqlURL = "jdbc:mysql://10.186.60.61:7144/schema1?characterEncoding=utf8&useAffectedRows=true";
+            sqlfileClient = "D:\\branch\\dble\\drivers\\Connector-J\\assets\\sql\\driver_test_client.sql&useAffectedRows=true";
             dblemanageruserName = "root";
             dblemanageruserPwd = "111111";
             dbleuserName = "test";
@@ -42,9 +42,9 @@ public class testJDBC {
         }else{
             System.out.println("run in online mode!");
             Config cfg = com.actiontech.yamlParser.getConfig(args[1]);
-            dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8";
-            dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8";
-            mysqlURL = "jdbc:mysql://" + cfg.mysql_server + ":" + cfg.mysql_port + "/" + cfg.db + "?characterEncoding=utf8";
+            dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8&useAffectedRows=true";
+            dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8&useAffectedRows=true";
+            mysqlURL = "jdbc:mysql://" + cfg.mysql_server + ":" + cfg.mysql_port + "/" + cfg.db + "?characterEncoding=utf8&useAffectedRows=true";
             sqlfileClient = cfg.sqlpath + File.separator + args[2];
             sqlfileManager = cfg.sqlpath + File.separator + args[3];
             dblemanageruserName = cfg.dbleM_user;
