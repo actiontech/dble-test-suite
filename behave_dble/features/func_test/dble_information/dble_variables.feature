@@ -69,7 +69,7 @@ Feature:  dble_variables test
       | idleTimeout                 | 600000 ms                       | The max allowed idle time of front connection. The connection will be closed if it is timed out after last read/write/heartbeat..The default value is 10min | true        |
       | checkTableConsistency       | 0                               | Whether the consistency tableStructure check is enabled.The default value is 0                                                                              | true        |
       | checkTableConsistencyPeriod | 1800000ms                       | The period of consistency tableStructure check .The default value is 1800000ms(means 30minutes=30*60*1000)                                                  | true        |
-      | processorCheckPeriod        | 1 Seconds                       | The period between the jobs for cleaning the closed or overtime connections. The default is 1 second                                                        | true        |
+      | processorCheckPeriod        | 1000ms                          | The period between the jobs for cleaning the closed or overtime connections. The default is 1000ms                                                          | true        |
       | sqlExecuteTimeout           | 300 Seconds                     | The max query executing time.If time out,the connection will be closed. The default is 300 seconds                                                          | true        |
       | recordTxn                   | 0                               | Whether the transaction be recorded as a file,The default value is 0                                                                                        | true        |
       | transactionLogBaseDir       | ./txlogs/                       | The directory of the transaction record file,The default value is ./txlogs/                                                                                 | true        |
@@ -92,14 +92,14 @@ Feature:  dble_variables test
       | mappedFileSize              | 67108864                        | The Memory linked file size,when complex query resultSet is too large the Memory will be turned to file temporary                                           | true        |
       | useSqlStat                  | 1                               | Whether the SQL statistics function is enable or not.The default value is 1                                                                                 | true        |
       | sqlRecordCount              | 10                              | The slow SQL statistics limit,if the slow SQL record is large than the size,the record will be clear.The default value is 10                                | true        |
-      | maxResultSet                | 524288B                         | The large resultSet SQL standard.The default value is 512*1024B                                                                                             | true        |
+      | maxResultSet                | 524288B                         | The large resultSet SQL standard.The default value is 524288B(means 512*1024)                                                                               | true        |
       | bufferUsagePercent          | 80%                             | Large result set cleanup trigger percentage.The default value is 80                                                                                         | true        |
       | clearBigSQLResultSetMapMs   | 600000ms                        | The period for clear the large resultSet SQL statistics.The default value is 6000000ms                                                                      | true        |
-      | frontSocketSoRcvbuf         | 1048576B                        | The buffer size of frontend receive socket.The default value is 1024*1024                                                                                   | true        |
-      | frontSocketSoSndbuf         | 4194304B                        | The buffer size of frontend send socket.The default value is 1024*1024*4                                                                                    | true        |
+      | frontSocketSoRcvbuf         | 1048576B                        | The buffer size of frontend receive socket.The default value is 1048576B(means 1024*1024)                                                                   | true        |
+      | frontSocketSoSndbuf         | 4194304B                        | The buffer size of frontend send socket.The default value is 4194304B(means 1024*1024*4)                                                                    | true        |
       | frontSocketNoDelay          | 1                               | The frontend nagle is disabled.The default value is 1                                                                                                       | true        |
-      | backSocketSoRcvbuf          | 4194304B                        | The buffer size of backend receive socket.The default value is 1024*1024*4                                                                                  | true        |
-      | backSocketSoSndbuf          | 1048576B                        | The buffer size of backend send socket.The default value is 1024*1024                                                                                       | true        |
+      | backSocketSoRcvbuf          | 4194304B                        | The buffer size of backend receive socket.The default value is 4194304B(means 1024*1024*4)                                                                  | true        |
+      | backSocketSoSndbuf          | 1048576B                        | The buffer size of backend send socket.The default value is 1048576B(means 1024*1024)                                                                       | true        |
       | backSocketNoDelay           | 1                               | The backend nagle is disabled.The default value is 1                                                                                                        | true        |
       | viewPersistenceConfBaseDir  | ./viewConf/                     | The directory of the view record file,The default value is ./viewConf/                                                                                      | true        |
       | viewPersistenceConfBaseName | viewJson                        | The name of the view record file.The default value is viewJson                                                                                              | true        |
@@ -111,21 +111,15 @@ Feature:  dble_variables test
       | maxCharsPerColumn           | 65535                           | The maximum number of characters allowed for per column when load data.The default value is 65535                                                           | true        |
       | maxRowSizeToFile            | 10000                           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 10000                                            | true        |
       | traceEndPoint               | null                            | The trace Jaeger server endPoint                                                                                                                            | true        |
-#      Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                   | expect                                                                                                                                         | db               |
-#      | conn_0 | False   | select * from dble_variables where variable_name = 'isOnline'         | has{('isOnline', 'true', 'When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error ', 'false')} | dble_information |
-#      | conn_0 | False   | select * from dble_variables where variable_name = 'flushSlowLogSize' | has{('flushSlowLogSize', '1000', 'The max size for flushing log to disk, the default is 1000 ', 'false')}                                      | dble_information |
-#      | conn_0 | False   | select * from dble_variables where variable_name = 'maxCon'           | has{('maxCon', '0', 'The number of max connections the server allowed ', 'true')}                                                              | dble_information |
-#      | conn_0 | False   | select * from dble_variables where variable_name = 'useCompression'   | has{('useCompression', '0', 'Whether the Compression is enable,The default number is 0 ', 'true')}                                             | dble_information |
-  #case select * from dble_variables where xxx
+  #case select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                               | expect       |
-      | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} |
-      | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(10)} |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(10)} |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(90)} |
-
+      | conn   | toClose | sql                                                               | expect       | db               |
+      | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
+      | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(10)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(10)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(90)} | dble_information |
+  #case select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
       | conn_0 | False   | select * from dble_variables order by concat(comment,variable_name) desc limit 5| dble_information |
@@ -136,7 +130,7 @@ Feature:  dble_variables test
       | enableFlowControl  | false            | Whether use flow control feature                                                                                                                        | false       |
       | capClientFoundRows | false            | Whether to turn on EOF_Packet to return found rows,The default value is false                                                                           | false       |
       | recordTxn          | 0                | Whether the transaction be recorded as a file,The default value is 0                                                                                    | true        |
-
+  #case select where like
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_4"
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
@@ -149,7 +143,7 @@ Feature:  dble_variables test
       | enableFlowControl         | false            | Whether use flow control feature                                              | false       |
       | enableAlert               | true             | enable or disable alert                                                       | false       |
       | capClientFoundRows        | false            | Whether to turn on EOF_Packet to return found rows,The default value is false | false       |
-
+  #case select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select read_only,variable_name from dble_variables | dble_information |
@@ -159,13 +153,7 @@ Feature:  dble_variables test
       | false       | isOnline                  |
       | true        | heap_memory_max           |
       | true        | direct_memory_max         |
-      | false       | enableFlowControl         |
-      | false       | flowControlStartThreshold |
-      | false       | flowControlStopThreshold  |
-      | false       | enableSlowLog             |
-      | false       | sqlSlowTime               |
-      | false       | flushSlowLogPeriod        |
-
+  #case select count(*)
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_6"
       | conn   | toClose | sql                                                              | db               |
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
@@ -174,20 +162,56 @@ Feature:  dble_variables test
       | false       | 10      |
       | true        | 80      |
 
-   #case http://10.186.18.11/jira/browse/DBLE0REQ-485
+
+  #case select field from dble_variables where XXX  http://10.186.18.11/jira/browse/DBLE0REQ-485
 #    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
-#      | conn   | toClose | sql                          | db               |
+#      | conn   | toClose | sql                                                                                                   | db               |
 #      | conn_0 | False   | select read_only from dble_variables where comment like  'the%'  order by variable_name desc limit 10 | dble_information |
 #    Then check resultset "dble_variables_7" has lines with following column values
 #      | variable_name-0             | variable_value-1                | comment-2                                                          | read_only-3 |
 
-  #case update/delete
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                          | expect                                   |
-      | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' |
-      | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' |
 
-  #case change bootstrap.cnf and cluster.cnf
+
+
+
+
+  #case select * from dble_variables where [sub-query]
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                              | expect               | db               |
+      | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{('./slowlogs/')} | dble_information |
+      | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{('xalog')}       | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(73)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(72)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
+  #case update/delete
+      | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
+      | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
+  #case select join
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
+      | conn   | toClose | sql                                                                                              | db               |
+      | conn_0 | False   | select * from dble_variables dv inner join dble_status ds on dv.variable_value=ds.variable_value | dble_information |
+    Then check resultset "dble_variables_8" has lines with following column values
+      | variable_name-0       | variable_value-1 | comment-2                                                                                                               | read_only-3 | variable_name-4 | variable_value-5 | comment-6               |
+      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | questions       | 0                | number of requests.     |
+      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | transactions    | 0                | the transaction number. |
+      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | questions       | 0                | number of requests.     |
+      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | transactions    | 0                | the transaction number. |
+      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | questions       | 0                | number of requests.     |
+      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | transactions    | 0                | the transaction number. |
+      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
+      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
+      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | questions       | 0                | number of requests.     |
+      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | transactions    | 0                | the transaction number. |
+      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | questions       | 0                | number of requests.     |
+      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | transactions    | 0                | the transaction number. |
+      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
+      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
+      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | questions       | 0                | number of requests.     |
+      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | transactions    | 0                | the transaction number. |
+      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | questions       | 0                | number of requests.     |
+      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | transactions    | 0                | the transaction number. |
+
+  #case change bootstrap/cluster.cnf then restart dble-1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
      $a -DxaLogCleanPeriod=2000
@@ -199,7 +223,7 @@ Feature:  dble_variables test
      $a showBinlogStatusTimeout=65000
     """
     Then restart dble in "dble-1" success
-       Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
       | conn   | toClose | sql                                                                                                                                                                                   | db               |
       | conn_1 | False   | select * from dble_variables where variable_name='xaLogCleanPeriod' or variable_name='useJoinStrategy' or variable_name='fakeMySQLVersion' or variable_name='showBinlogStatusTimeout' | dble_information |
     Then check resultset "dble_variables_8" has lines with following column values
@@ -214,9 +238,3 @@ Feature:  dble_variables test
       | useJoinStrategy         | false            | Whether nest loop join is enabled.The default value is false        | true        |
       | fakeMySQLVersion        | None             | MySQL Version showed in Client                                      | true        |
       | showBinlogStatusTimeout | 60000ms          | The time out from show @@binlog.status.The default value is 60000ms | true        |
-
-
-
-
-
-

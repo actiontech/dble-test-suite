@@ -132,4 +132,3 @@ Feature:  backend_connections test
     Then check resultset "backend_variables_1" has lines with following column values
       | Field-0                   | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
 
-backend_connections_and_backend_variables
