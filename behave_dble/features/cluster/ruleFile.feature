@@ -128,6 +128,9 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
     {"table":"enum_table","key":"id"}
     """
     #clearn all conf
+    Given delete file "/opt/dble/conf/enum.txt" on "dble-1"
+    Given delete file "/opt/dble/conf/enum.txt" on "dble-2"
+    Given delete file "/opt/dble/conf/enum.txt" on "dble-3"
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
       |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}  |
@@ -222,6 +225,9 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
+    Given delete file "/opt/dble/conf/partition.txt" on "dble-1"
+    Given delete file "/opt/dble/conf/partition.txt" on "dble-2"
+    Given delete file "/opt/dble/conf/partition.txt" on "dble-3"
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
       |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}  |
@@ -317,6 +323,9 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
+    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-1"
+    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-2"
+    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-3"
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
       |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
