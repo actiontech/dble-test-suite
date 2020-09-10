@@ -247,3 +247,15 @@ def step(context, compare, rtName, rs_name):
     result, error = manager_conn.query(adminsql)
     assert error is None, "execute adminsql {0}, get error:{1}".format(adminsql, error)
     setattr(context, rs_name, result)
+
+@When('replace new conf file "{ruleFile}" on "{nodeName}"')
+def step_impl(context, ruleFile, nodeName):
+    node = get_node(nodeName)
+    upload_ruleFile(context, ruleFile, node)
+
+def upload_ruleFile(context, ruleFile, node):
+    targetFile = "{0}/dble/conf/{1}".format(node.install_dir, ruleFile)
+    text = str(context.text)
+    cmd = "echo '{0}' > {1}".format(text, targetFile)
+    rc, sto, err = node.ssh_conn.exec_command(cmd)
+    assert_that(err, is_(''), "expect no err, but err is: {0}".format(err))
