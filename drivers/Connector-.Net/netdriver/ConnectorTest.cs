@@ -51,9 +51,9 @@ namespace netdriver
             }
             else {
                 cfg = GetConfig.GetYamlConfig(args[1]);
-                dbleconnStr = "server="+ cfg.dble_server + ";user=" + cfg.dble_user + ";database=" + cfg.db + ";port=" + cfg.dble_port + ";password=" + cfg.dble_password + ";Charset=utf8";
-                dblemanagerconnStr = "server=" + cfg.dbleM_server + ";user=" + cfg.dbleM_user + ";port=" + cfg.dbleM_port + ";password=" + cfg.dbleM_password + ";Charset=utf8";
-                mysqlconnStr = "server=" + cfg.mysql_server + ";user=" + cfg.mysql_user + ";database=" + cfg.db + ";port=" + cfg.mysql_port + ";password=" + cfg.mysql_password + ";Charset=utf8";
+                dbleconnStr = "server="+ cfg.dble_server + ";user=" + cfg.dble_user + ";database=" + cfg.db + ";port=" + cfg.dble_port + ";password=" + cfg.dble_password + ";Charset=utf8;UseAffectedRows=true";
+                dblemanagerconnStr = "server=" + cfg.dbleM_server + ";user=" + cfg.dbleM_user + ";port=" + cfg.dbleM_port + ";password=" + cfg.dbleM_password + ";Charset=utf8;UseAffectedRows=true";
+                mysqlconnStr = "server=" + cfg.mysql_server + ";user=" + cfg.mysql_user + ";database=" + cfg.db + ";port=" + cfg.mysql_port + ";password=" + cfg.mysql_password + ";Charset=utf8;UseAffectedRows=true";
                 //cfg.sqlpath = "sql_cover";
                 String Msqlpath = Path.Combine(cfg.sqlpath, args[2]);
                 String Csqlpath = Path.Combine(cfg.sqlpath, args[3]);
