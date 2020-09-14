@@ -9,9 +9,6 @@ cd ${DIR}/../../behave_dble/compose/docker-build-behave && bash resetReplication
 echo '=======           restart dble with sql_cover_sharding               ======='
 cd ${DIR}/../../behave_dble && behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
-echo '=======           modify  bufferPoolChunkSize=32767                  ======='
-ssh root@dble-1 "sed -i '\$a -DbufferPoolChunkSize=32767' /opt/dble/conf/bootstrap.cnf"
-
 echo '=======                       compile                                ======='
 cd ${DIR}/netdriver && csc -out:test.exe -r:MySql.Data.dll -r:YamlDotNet.dll *.cs
 
