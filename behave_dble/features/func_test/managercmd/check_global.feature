@@ -3,7 +3,6 @@
 # Created by quexiuping at 2020/9/14
 Feature: test " check @@global schema = '' [and table = '']"
 
-  @skip_restart
   Scenario: check @@global schema = '' [and table = ''] #1
 
   #case global table exists with not global check
@@ -11,8 +10,8 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose | sql                                                | expect                                                       |
       | conn_0 | False   | check @@global                                     | length{(0)}                                                  |
       | conn_0 | False   | check @@global schema='schema1'                    | length{(0)}                                                  |
-      | conn_0 | False   | check @@global schema='schema1' and table = 'test' | tables must exist and must be global table with global check |
       | conn_0 | False   | check @@global schema='schema2' and table = 'test' | schema must exists                                           |
+      | conn_0 | False   | check @@global schema='schema1' and table = 'test' | tables must exist and must be global table with global check |
       | conn_0 | true    | check @@global schema='schema1' and table = 't1'   | tables must exist and must be global table with global check |
 
   #case the more global table
@@ -20,22 +19,38 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
         <globalTable name="g1" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
-        <globalTable name="g2" shardingNode="dn1,dn3" />
+        <globalTable name="g2" shardingNode="dn1,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
+        <globalTable name="g3" shardingNode="dn1,dn2" cron="0 0 /5 * * ? *" checkClass="CHECKSUM" />
+        <globalTable name="g4" shardingNode="dn1,dn2" cron="0 0 0 /1  * ? *" checkClass="CHECKSUM" />
+        <globalTable name="g5" shardingNode="dn1,dn3" />
     </schema>
 
-    <schema shardingNode="dn1" name="schema2" >
-        <globalTable name="g3" shardingNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
+    <schema shardingNode="dn5" name="schema2" >
+        <globalTable name="g6" shardingNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
+        <globalTable name="g7" shardingNode="dn1,dn2" cron="0 /2 * * * ? " checkClass="COUNT" />
+        <globalTable name="g8" shardingNode="dn1,dn2" cron="0 0 /3  * * ? " checkClass="COUNT" />
+    </schema>
+
+    <schema shardingNode="dn5" name="schema3" >
+        <globalTable name="g9" shardingNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
+        <globalTable name="g10" shardingNode="dn1,dn2" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
     </schema>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
     """
     Then execute admin cmd "reload @@config"
-
-
-
-
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                              | expect           |
+      | conn_0 | False   | check @@global schema='schema1'  | length{(4)}      |
+      | conn_0 | False   | check @@global schema='schema2'  | length{(3)}      |
+      | conn_0 | true    | check @@global schema='schema3'  | length{(2)}      |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                              | expect           |
+      | conn_0 | False   | check @@global schema='schema1'  | length{(4)}      |
+      | conn_0 | False   | check @@global schema='schema2'  | length{(3)}      |
+      | conn_0 | true    | check @@global schema='schema3'  | length{(2)}      |
     
   #case change sharding.xml add global check and reload
     Given delete the following xml segment
@@ -69,6 +84,10 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 0, 0),)}                                |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g2'   | tables must exist and must be global table with global check   |
       | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 0, 0),)}                                |
+    Given execute linux command in "dble-1"
+    """
+    >/opt/dble/logs/dble.log
+    """
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -94,12 +113,12 @@ Feature: test " check @@global schema = '' [and table = '']"
    #case global table meta exists
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                           | expect  |
-      | conn_1 | false    | use schema1                                   | success |
-      | conn_1 | false    | create table g1(id int,name int)              | success |
-      | conn_1 | false    | use schema2                                   | success |
-      | conn_1 | True     | create table g3(id int,name int)              | success |
-    Given delete file "/opt/dble/logs/dble.log" on "dble-1"
-    Given Restart dble in "dble-1" success
+      | conn_1 | false    | create table schema1.g1(id int,name int)      | success |
+      | conn_1 | True     | create table schema2.g3(id int,name int)      | success |
+    Given execute linux command in "dble-1"
+    """
+    >/opt/dble/logs/dble.log
+    """
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -127,8 +146,10 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose  | sql                           | expect   |
       | conn_2 | False    | delete from db1.g1 where id=1 | success  |
       | conn_2 | true     | delete from db1.g3 where id=3 | success  |
-    Given delete file "/opt/dble/logs/dble.log" on "dble-1"
-    Given Restart dble in "dble-1" success
+    Given execute linux command in "dble-1"
+    """
+    >/opt/dble/logs/dble.log
+    """
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -156,8 +177,10 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose  | sql                           | expect   |
       | conn_2 | False    | drop table if exists db1.g1   | success  |
       | conn_2 | true     | drop table if exists db1.g3   | success  |
-    Given delete file "/opt/dble/logs/dble.log" on "dble-1"
-    Given Restart dble in "dble-1" success
+    Given execute linux command in "dble-1"
+    """
+    >/opt/dble/logs/dble.log
+    """
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -185,8 +208,10 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose  | sql                               | expect   |
       | conn_2 | False    | insert into db2.g1 values (5,5)   | success  |
       | conn_2 | true     | insert into db2.g3 values (6,6)   | success  |
-    Given delete file "/opt/dble/logs/dble.log" on "dble-1"
-    Given Restart dble in "dble-1" success
+    Given execute linux command in "dble-1"
+    """
+    >/opt/dble/logs/dble.log
+    """
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -210,6 +235,23 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
 
    #case the mysql down
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">10000</property>
+        </dbInstance>
+    </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+            <property name="connectionTimeout">10000</property>
+        </dbInstance>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-master1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -226,6 +268,11 @@ Feature: test " check @@global schema = '' [and table = '']"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 1, 2),)}     |
+      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
+    Given start mysql in host "mysql-master1"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                | expect                              |
+      | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 3, 0),)}     |
       | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
 
 
