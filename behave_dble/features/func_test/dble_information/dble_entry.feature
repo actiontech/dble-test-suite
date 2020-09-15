@@ -3,37 +3,41 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_entry test
-
+#@skip_restart
    Scenario:  dble_entry  table #1
   #case desc dble_entry
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_1"
       | conn   | toClose | sql             | db               |
       | conn_0 | False   | desc dble_entry | dble_information |
     Then check resultset "dble_entry_1" has lines with following column values
-      | Field-0          | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | id               | int(11)      | NO     | PRI   | None      |         |
-      | type             | varchar(9)   | NO     |       | None      |         |
-      | user_type        | varchar(12)  | NO     |       | None      |         |
-      | username         | varchar(64)  | NO     |       | None      |         |
-      | password_encrypt | varchar(200) | NO     |       | None      |         |
-      | conn_attr_key    | varchar(6)   | YES    |       | None      |         |
-      | conn_attr_value  | varchar(64)  | YES    |       | None      |         |
-      | white_ips        | varchar(200) | YES    |       | None      |         |
-      | readonly         | varchar(5)   | YES    |       | None      |         |
-      | max_conn_count   | varchar(64)  | NO     |       | None      |         |
-      | blacklist        | varchar(64)  | YES    |       | None      |         |
+      | Field-0            | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | id                 | int(11)      | NO     | PRI   | None      |         |
+      | type               | varchar(9)   | NO     |       | None      |         |
+      | user_type          | varchar(12)  | NO     |       | None      |         |
+      | username           | varchar(64)  | NO     |       | None      |         |
+      | password_encrypt   | varchar(200) | NO     |       | None      |         |
+#      | encrypt_configured | varchar(200) | NO     |       | None      |         |
+      | conn_attr_key      | varchar(6)   | YES    |       | None      |         |
+      | conn_attr_value    | varchar(64)  | YES    |       | None      |         |
+      | white_ips          | varchar(200) | YES    |       | None      |         |
+      | readonly           | varchar(5)   | YES    |       | None      |         |
+      | max_conn_count     | varchar(64)  | NO     |       | None      |         |
+      | blacklist          | varchar(64)  | YES    |       | None      |         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_2"
       | conn   | toClose | sql                      | db               |
       | conn_0 | False   | select * from dble_entry | dble_information |
     Then check resultset "dble_entry_2" has lines with following column values
-      | id-0 | type-1   | user_type-2  | username-3 | password_encrypt-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7 | readonly-8 | max_conn_count-9 | blacklist-10 |
-      | 1    | username | managerUser  | root       |                    | None            | None              | None        | false      | no limit         | None         |
-      | 2    | username | shardingUser | test       |                    | None            | None              | None        | false      | no limit         | None         |
-      | 3    | username | rwSplitUser  | rwSplit    |                    | None            | None              | None        | -          | 20               | None         |
+      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
+|    1 | username | managerUser  | root     |   | NULL          | NULL            | NULL      | false    | no limit       | NULL      |
+|    2 | username | shardingUser | test     |    | NULL          | NULL            | NULL      | false    | no limit       | NULL      |
+|    3 | username | rwSplitUser  | rwSplit  |     | NULL          | NULL            | NULL      | -        | 20             | NULL      |
   #case change user.xml and reload
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
-     <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
+     <managerUser name="root" password="CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g"   usingDecrypt="true" readOnly="false" maxCon="100"/>
      <managerUser name="root1" password="654321" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false"/>
 
      <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" />
@@ -52,7 +56,7 @@ Feature:  dble_entry test
       | conn   | toClose | sql                      | db               |
       | conn_0 | False   | select * from dble_entry | dble_information |
     Then check resultset "dble_entry_3" has lines with following column values
-      | id-0 | type-1    | user_type-2  | username-3 | password_encrypt-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7               | readonly-8 | max_conn_count-9 | blacklist-10 |
+      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
       | 1    | username  | managerUser  | root       |              | None            | None              | None                      | false      | 100              | None         |
       | 2    | username  | managerUser  | root1      |              | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit         | None         |
       | 3    | username  | shardingUser | test       |              | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit         | blacklist1   |
@@ -61,6 +65,43 @@ Feature:  dble_entry test
       | 6    | username  | rwSplitUser  | rwSplit    |              | None            | None              | None                      | -          | 20               | blacklist1   |
       | 7    | username  | rwSplitUser  | rwSplit1   |              | None            | None              | None                      | -          | no limit         | blacklist1   |
 
+#   #case select limit/order by/where like
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                         | expect                                                                         |
+      | conn_0 | False   | use dble_information                                        | success                                                                        |
+      | conn_0 | False   | select * from dble_entry order by username desc limit 3     | length{(3)}                                                     |
+      | conn_0 | False   | select * from dble_entry where username like '%test%'       | length{(3)}             |
+      | conn_0 | False   | select size from dble_entry                           | has{((1,), (1,), (8,), (8,), (8,))}                                            |
+  #case select max/min from
+      | conn_0 | False   | select max(username) from dble_entry                      | has{(('test2',),)}  |
+      | conn_0 | False   | select min(username) from dble_entry                      | has{(('root',),)}  |
+  #case where [sub-query]
+#      | conn_0 | False   | select size from dble_entry where name in (select name from dble_entry where active_count>1) | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
+  #case select field from
+#      | conn_0 | False   | select name from dble_entry where active_count > 0                         | has{('BusinessExecutor'),('complexQueryExecutor'),('writeToBackendExecutor')}                                    |
+  #case update/delete
+      | conn_0 | False   | delete from dble_entry where type='username'               | Access denied for table 'dble_entry'                                                                                                        |
+      | conn_0 | False   | update dble_entry set type='aa'  where type='username'     | Access denied for table 'dble_entry'                                                                                                        |
+      | conn_0 | False   | insert into dble_entry values ('a',1,2,3)                  | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list] |
+#case delete user
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+     <managerUser name="root" password="111111"  />
+     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" />
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" />
+
+    """
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
+      | conn   | toClose | sql                      | db               |
+      | conn_0 | False   | select * from dble_entry | dble_information |
+    Then check resultset "dble_entry_3" has lines with following column values
+      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
+
+@skip_restart
    Scenario:  dble_entry_schema  table #2
   #case desc dble_entry_schema
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_schema_1"
@@ -77,9 +118,6 @@ Feature:  dble_entry test
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
         <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="er_parent" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id">
-            <childTable name="er_child" joinColumn="id" parentColumn="id"/>
-        </shardingTable>
     </schema>
      <schema shardingNode="dn1" name="schema2" sqlMaxLimit="1000">
         <singleTable name="test1"  shardingNode="dn1" />
@@ -117,28 +155,78 @@ Feature:  dble_entry test
       | id-0 |
       | 1    |
       | 5    |
-  #case select
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                       | expect      | db               |
-      | conn_0 | False   | select * from dble_entry where id in (select id from dble_entry_schema)   | length{(3)} | dble_information |
-      | conn_0 | False   | select * from dble_entry where id >all (select id from dble_entry_schema) | length{(1)} | dble_information |
-      | conn_0 | False   | select * from dble_entry where id <any (select id from dble_entry_schema) | length{(3)} | dble_information |
-      | conn_0 | False   | select * from dble_entry where id =any (select id from dble_entry_schema) | length{(3)} | dble_information |
+   #case select limit/order by/where like
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                  | expect                                   |
+      | conn_0 | False   | use dble_information                                                 | success                                  |
+      | conn_0 | False   | select * from dble_entry_schema order by schema desc limit 2         | has{((2, 'schema3'), (4, 'schema3'))}    |
+      | conn_0 | False   | select * from dble_entry_schema where id like '%4%'                  | has{((4, 'schema2'), (4, 'schema3'))}    |
+  #case select max/min
+      | conn_0 | False   | select max(id) from dble_entry_schema                      | has{((4,),)}  |
+      | conn_0 | False   | select min(id) from dble_entry_schema                      | has{((2,),)}  |
+  #case update/delete
+      | conn_0 | False   | delete from dble_entry_schema where schema='schema1'                   | Access denied for table 'dble_entry_schema'                                                                                                        |
+      | conn_0 | False   | update dble_entry_schema set schema = 'a' where schema='schema1'       | Access denied for table 'dble_entry_schema'                                                                                                        |
+      | conn_0 | False   | insert into dble_table values (1,'1')                                  | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list]  |
+  #case select where [sub-query]
+      | conn_0 | False   | select id from dble_entry where id in (select id from dble_entry_schema)   | has{((2,), (3,), (4,))}                                                                               |
+      | conn_0 | False   | select id from dble_entry where id >all (select id from dble_entry_schema) | has{((5,),)}                                                                                          |
+      | conn_0 | False   | select id from dble_entry where id <any (select id from dble_entry_schema) | has{((1,), (2,), (3,))}                                                                               |
+      | conn_0 | False   | select id from dble_entry where id =any (select id from dble_entry_schema) | has{((2,), (3,), (4,))}                                                                               |
+      | conn_0 | False   | select * from dble_entry_schema where id in (select id from dble_entry)    | has{((2, 'schema2'), (2, 'schema1'), (2, 'schema3'), (3, 'schema2'), (4, 'schema2'), (4, 'schema3'))} |
+      | conn_0 | False   | select * from dble_entry_schema where id >all (select id from dble_entry)  | success                                                                                               |
+      | conn_0 | False   | select * from dble_entry_schema where id <any (select id from dble_entry)  | has{((2, 'schema2'), (2, 'schema1'), (2, 'schema3'), (3, 'schema2'), (4, 'schema2'), (4, 'schema3'))} |
+      | conn_0 | False   | select * from dble_entry_schema where id =any (select id from dble_entry)  | has{((2, 'schema2'), (2, 'schema1'), (2, 'schema3'), (3, 'schema2'), (4, 'schema2'), (4, 'schema3'))} |
+#      | conn_0 | False   | select type from dble_entry_schema where schema in (select schema from dble_entry_schema where id like '%c%') | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
 
+      #case delete some user.xml and sharding.xml and reload
+    Given delete the following xml segment
+      | file             | parent         | child                  |
+      | sharding.xml     | {'tag':'root'} | {'tag':'schema'}       |
+      | user.xml         | {'tag':'root'} | {'tag':'shardingUser'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema2" sqlMaxLimit="100" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+     <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
+     <shardingUser name="test" password="111111" schemas="schema2" readOnly="false" />
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" />
+    """
+    Then execute admin cmd "reload @@config_all"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_schema_3"
+      | conn   | toClose | sql                             | db               |
+      | conn_0 | False   | select * from dble_entry_schema | dble_information |
+    Then check resultset "dble_entry_schema_3" has lines with following column values
+      | id-0 | schema-1 |
+      | 2    | schema2  |
+   Then check resultset "dble_entry_schema_3" has not lines with following column values
+      | id-0 | schema-1 |
+      | 2    | schema1  |
+      | 2    | schema3  |
+      | 3    | schema2  |
+      | 4    | schema2  |
+      | 4    | schema3  |
+
+
+@skip_restart
    Scenario:  dble_entry_table_privilege  table #3
   #case desc dble_entry_table_privilege
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_1"
       | conn   | toClose | sql                             | db               |
       | conn_0 | False   | desc dble_entry_table_privilege | dble_information |
     Then check resultset "dble_entry_table_privilege_1" has lines with following column values
-      | Field-0 | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | id      | int(11)     | NO     | PRI   | None      |         |
-      | schema  | varchar(64) | NO     | PRI   | None      |         |
-      | table   | varchar(64) | NO     | PRI   | None      |         |
-      | insert  | int(1)      | NO     |       | None      |         |
-      | update  | int(1)      | NO     |       | None      |         |
-      | select  | int(1)      | NO     |       | None      |         |
-      | delete  | int(1)      | NO     |       | None      |         |
+      | Field-0        | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | id             | int(11)     | NO     | PRI   | None      |         |
+      | schema         | varchar(64) | NO     | PRI   | None      |         |
+      | table          | varchar(64) | NO     | PRI   | None      |         |
+#      | exist_metas    | varchar(64) | NO     | PRI   | None      |         |
+      | insert         | int(1)      | NO     |       | None      |         |
+      | update         | int(1)      | NO     |       | None      |         |
+      | select         | int(1)      | NO     |       | None      |         |
+      | delete         | int(1)      | NO     |       | None      |         |
+#      | is_effective   | varchar(64) | NO     | PRI   | None      |         |
   #case change user.xml and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -184,12 +272,13 @@ Feature:  dble_entry test
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_2"
       | conn   | toClose | sql                                       | db               |
       | conn_0 | False   | select * from dble_entry_table_privilege  | dble_information |
-    Then check resultset "dble_entry_table_privilege_2" has lines with following column values
-      | id-0 | schema-1 | table-2       | insert-3 | update-4 | select-5 | delete-6 |
-      | 2    | schema1  | test          | 0        | 1        | 1        | 0        |
-      | 2    | schema1  | sharding_2_t1 | 0        | 1        | 1        | 0        |
-      | 2    | schema1  | sharding_4_t1 | 0        | 1        | 1        | 0        |
-      | 3    | schema2  | no_s3         | 0        | 0        | 0        | 0        |
+#    Then check resultset "dble_entry_table_privilege_2" has lines with following column values
+#      | id-0 | schema-1 | table-2       | exist_metas-3 |insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
+#
+
+    Given delete the following xml segment
+      | file         | parent         | child                  |
+      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
      <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
@@ -207,12 +296,11 @@ Feature:  dble_entry test
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_3"
       | conn   | toClose | sql                                       | db               |
       | conn_0 | False   | select * from dble_entry_table_privilege  | dble_information |
-    Then check resultset "dble_entry_table_privilege_3" has lines with following column values
-      | id-0 | schema-1 | table-2       | insert-3 | update-4 | select-5 | delete-6 |
-      | 2    | schema1  | sharding_2_t1 | 0        | 1        | 0        | 0        |
-    Then check resultset "dble_entry_table_privilege_3" has not lines with following column values
-      | id-0 | schema-1 | table-2       | insert-3 | update-4 | select-5 | delete-6 |
-      | 2    | schema1  | sharding_2_t1 | 0        | 1        | 1        | 0        |
+#    Then check resultset "dble_entry_table_privilege_3" has lines with following column values
+#      | id-0 | schema-1 | table-2       | exist_metas-3 |insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
+#
+#    Then check resultset "dble_entry_table_privilege_3" has not lines with following column values
+#      | id-0 | schema-1 | table-2       | exist_metas-3 |insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
 
 
 @skip
