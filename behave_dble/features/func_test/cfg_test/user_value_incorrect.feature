@@ -62,8 +62,8 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
       Attribute "schemas" is required and must be specified for element type "shardingUser"
     """
-
-  Scenario:  config case sensitive, check privileges work fine #7
+    
+  Scenario:  config case sensitive, check privileges #7
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
      /lower_case_table_names/d
@@ -86,14 +86,27 @@ Feature:  config user config files incorrect and restart dble or reload configs
     Given add xml segment to node with attribute "{'tag':'shardingUser','kv_map':{'name':'sharding_test'}}" in "user.xml"
     """
       <privileges check="true">
-        <schema name="TESTDB" dml="0110">
+        <schema name="SCHEMA1" dml="0110">
+            <table name="tb01" dml="0000"/>
+            <table name="tb02" dml="1111"/>
+        </schema>
+      </privileges>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+    """
+      privileges's schema[SCHEMA1] was not found in the user [name:sharding_test,tenant:tenant1]'s schemas
+    """
+
+    Given add xml segment to node with attribute "{'tag':'shardingUser','kv_map':{'name':'sharding_test'}}" in "user.xml"
+    """
+      <privileges check="true">
+        <schema name="schema1" dml="0110">
             <table name="tb01" dml="0000"/>
             <table name="tb02" dml="1111"/>
         </schema>
       </privileges>
     """
     Then execute admin cmd "reload @@config_all"
-    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user          | passwd | conn   | toClose | sql      | expect                                                       | db      |
       | test          | 11111  | conn_1 | False   | select 1 | Access denied for user 'test', because password is incorrect | schema1 |
