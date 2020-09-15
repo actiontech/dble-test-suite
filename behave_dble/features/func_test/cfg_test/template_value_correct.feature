@@ -256,7 +256,7 @@ Feature: config all dble config files correct and restart dble
     Given add xml segment to node with attribute "{'tag':'shardingUser','kv_map':{'name':'sharding_test'}}" in "user.xml"
     """
       <privileges check="true">
-        <schema name="TESTDB" dml="0110">
+        <schema name="schema1" dml="0110">
             <table name="tb01" dml="0000"/>
             <table name="tb02" dml="1111"/>
         </schema>
