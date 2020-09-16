@@ -9,16 +9,16 @@ Feature:  dble_status test
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_1"
       | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_status    | dble_information |
-    Then check resultset "dble_status_1" has lines with following column values
+   Then check resultset "dble_status_1" has lines with following column values
       | Field-0        | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
       | variable_name  | varchar(24)  | NO     | PRI   | None      |         |
       | variable_value | varchar(20)  | NO     |       | None      |         |
       | comment        | varchar(200) | YES    |       | None      |         |
    #case select * from dble_status
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_2"
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_2"
       | conn   | toClose | sql                       | db                |
       | conn_0 | False   | select * from dble_status | dble_information  |
-    Then check resultset "dble_status_2" has lines with following column values
+   Then check resultset "dble_status_2" has lines with following column values
       | variable_name-0         | comment-2                                                                                                          |
       | uptime                  | length of time to start dble                                                                                       |
       | current_timestamp       | the current time of the dble system                                                                                |
@@ -33,18 +33,18 @@ Feature:  dble_status test
       | questions               | number of requests                                                                                                 |
       | transactions            | number of transactions                                                                                             |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_3"
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_3"
       | conn   | toClose | sql                                                                             | db               |
       | conn_0 | False   | select variable_value from dble_status where variable_name ='startup_timestamp' |dble_information  |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_4"
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_4"
       | conn   | toClose | sql                   | db               |
       | conn_0 | False   |show @@time.startup    | dble_information |
-    Then check resultsets "dble_status_3" and "dble_status_4" are same in following columns
+   Then check resultsets "dble_status_3" and "dble_status_4" are same in following columns
       |column          | column_index |
       |variable_value  | 0            |
 
    #case select limit/order by/where like
-      Then execute sql in "dble-1" in "admin" mode
+   Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                    | expect                                                                 |
       | conn_0 | False   | use dble_information                                                                   | success                                                                |
       | conn_0 | False   | select * from dble_status limit 5                                                      | length{(5)}                                                            |
@@ -66,7 +66,7 @@ Feature:  dble_status test
 @skip_restart
    Scenario:  check questions/transactions http://10.186.18.11/jira/browse/DBLE0REQ-67 #2
 
-    Then execute sql in "dble-1" in "user" mode
+   Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
       | conn_1 | False   | use schema1                                              |
 #      | conn_1 | False   | drop table if exists test                                |
@@ -78,18 +78,14 @@ Feature:  dble_status test
 #      | conn_1 | False   | insert into test values (1),(2),(3),(4)                  |
 #      | conn_1 | true   | insert into sharding_4_t1 values (1,1),(2,2),(3,3),(4,4) |
 ##      | conn_1 | False   | commit | schema1 |
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                         | expect                                |
-      | conn_0 | False   | use dble_information                                                                        | success                              |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '1',), ('transactions', '1',))}                           |
-
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                     | expect                                             |
+      | conn_0 | False   | use dble_information                                                                    | success                                            |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '1',), ('transactions', '1',))} |
   #case error sql
-    Given prepare a thread execute sql "drop table if exist test" with "conn_1"
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                      |
-#      | conn_1 | False   | drop table if exist test                                 |
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                         | expect                                |
+   Given prepare a thread execute sql "drop table if exist test" with "conn_1"
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect                                |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '2',), ('transactions', '2',))}                           |
 
 
