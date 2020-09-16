@@ -162,18 +162,32 @@ Feature:  dble_variables test
       | false       | 10      |
       | true        | 80      |
 
-
   #case select field from dble_variables where XXX  http://10.186.18.11/jira/browse/DBLE0REQ-485
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
-#      | conn   | toClose | sql                                                                                                   | db               |
-#      | conn_0 | False   | select read_only from dble_variables where comment like  'the%'  order by variable_name desc limit 10 | dble_information |
-#    Then check resultset "dble_variables_7" has lines with following column values
-#      | variable_name-0             | variable_value-1                | comment-2                                                          | read_only-3 |
-
-
-
-
-
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | False   | select read_only from dble_variables where comment like  'the%'  order by variable_name desc limit 10 | dble_information |
+    Then check resultset "dble_variables_7" has lines with following column values
+      | read_only-0 |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+      | true        |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
+      | conn   | toClose | sql                                                                                                                                   | db               |
+      | conn_0 | False   | select variable_name, variable_value,sum(variable_value) from dble_variables group by variable_name having sum(variable_value) >10000 | dble_information |
+    Then check resultset "dble_variables_8" has lines with following column values
+      | variable_name-0   | variable_value-1 | SUM(variable_value)-2   |
+      | direct_memory_max | 1073741824       | 1073741824.0            |
+      | heap_memory_max   | 1029177344       | 1029177344.0            |
+      | mappedFileSize    | 67108864         | 67108864.0              |
+      | maxCharsPerColumn | 65535            | 65535.0                 |
+      | maxPacketSize     | 4194304          | 4194304.0               |
 
   #case select * from dble_variables where [sub-query]
       Then execute sql in "dble-1" in "admin" mode
@@ -187,29 +201,29 @@ Feature:  dble_variables test
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
   #case select join
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
-      | conn   | toClose | sql                                                                                              | db               |
-      | conn_0 | False   | select * from dble_variables dv inner join dble_status ds on dv.variable_value=ds.variable_value | dble_information |
-    Then check resultset "dble_variables_8" has lines with following column values
-      | variable_name-0       | variable_value-1 | comment-2                                                                                                               | read_only-3 | variable_name-4 | variable_value-5 | comment-6               |
-      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | questions       | 0                | number of requests.     |
-      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | transactions    | 0                | the transaction number. |
-      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | questions       | 0                | number of requests.     |
-      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | transactions    | 0                | the transaction number. |
-      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | questions       | 0                | number of requests.     |
-      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | transactions    | 0                | the transaction number. |
-      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
-      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
-      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | questions       | 0                | number of requests.     |
-      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | transactions    | 0                | the transaction number. |
-      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | questions       | 0                | number of requests.     |
-      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | transactions    | 0                | the transaction number. |
-      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
-      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
-      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | questions       | 0                | number of requests.     |
-      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | transactions    | 0                | the transaction number. |
-      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | questions       | 0                | number of requests.     |
-      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | transactions    | 0                | the transaction number. |
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_9"
+#      | conn   | toClose | sql                                                                                                        | db               |
+#      | conn_0 | False   | select a.variable_name from dble_variables a inner join dble_status b on a.variable_value=b.variable_value | dble_information |
+#    Then check resultset "dble_variables_9" has lines with following column values
+#      | variable_name-0       | variable_value-1 | comment-2                                                                                                               | read_only-3 | variable_name-4 | variable_value-5 | comment-6               |
+#      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | questions       | 0                | number of requests.     |
+#      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | transactions    | 0                | the transaction number. |
+#      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | questions       | 0                | number of requests.     |
+#      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | transactions    | 0                | the transaction number. |
+#      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | questions       | 0                | number of requests.     |
+#      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | transactions    | 0                | the transaction number. |
+#      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
+#      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
+#      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | questions       | 0                | number of requests.     |
+#      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | transactions    | 0                | the transaction number. |
+#      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | questions       | 0                | number of requests.     |
+#      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | transactions    | 0                | the transaction number. |
+#      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
+#      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
+#      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | questions       | 0                | number of requests.     |
+#      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | transactions    | 0                | the transaction number. |
+#      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | questions       | 0                | number of requests.     |
+#      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | transactions    | 0                | the transaction number. |
 
   #case change bootstrap/cluster.cnf then restart dble-1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -223,16 +237,16 @@ Feature:  dble_variables test
      $a showBinlogStatusTimeout=65000
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_8"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_10"
       | conn   | toClose | sql                                                                                                                                                                                   | db               |
       | conn_1 | False   | select * from dble_variables where variable_name='xaLogCleanPeriod' or variable_name='useJoinStrategy' or variable_name='fakeMySQLVersion' or variable_name='showBinlogStatusTimeout' | dble_information |
-    Then check resultset "dble_variables_8" has lines with following column values
+    Then check resultset "dble_variables_10" has lines with following column values
       | variable_name-0         | variable_value-1 | comment-2                                                           | read_only-3 |
       | xaLogCleanPeriod        | 2000ms           | The xa log clear period.The default value is 1000ms                 | true        |
       | useJoinStrategy         | true             | Whether nest loop join is enabled.The default value is false        | true        |
       | fakeMySQLVersion        | 5.7.11           | MySQL Version showed in Client                                      | true        |
       | showBinlogStatusTimeout | 65000ms          | The time out from show @@binlog.status.The default value is 60000ms | true        |
-    Then check resultset "dble_variables_8" has not lines with following column values
+    Then check resultset "dble_variables_10" has not lines with following column values
       | variable_name-0         | variable_value-1 | comment-2                                                           | read_only-3 |
       | xaLogCleanPeriod        | 1000ms           | The xa log clear period.The default value is 1000ms                 | true        |
       | useJoinStrategy         | false            | Whether nest loop join is enabled.The default value is false        | true        |
