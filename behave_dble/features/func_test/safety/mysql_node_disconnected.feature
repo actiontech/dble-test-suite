@@ -3,7 +3,11 @@
 # Created by maofei at 2019/4/16
 Feature: #mysql node disconnected,check the change of dble
   # Enter feature description here
+  @restore_mysql_service
   Scenario: # only one mysql node and it was disconnected    #1
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
@@ -40,7 +44,11 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | drop table if exists test  | schema1 |
       | conn_0 | True    | create table test(id int)  | schema1 |
 
+  @restore_mysql_service
   Scenario: # some of the backend nodes was disconnected   #2
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
         <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
@@ -71,7 +79,11 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | False   | dryrun                | hasNoStr{shardingNode[dn3] has no available primary dbinstance,The table in this shardingNode has not checked} |
       | conn_0 | True    | reload @@config_all   | success                                                                                       |
 
+  @restore_mysql_service
   Scenario: # some of the backend nodes was disconnected in the course of a transaction    #3
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
     """
         <shardingTable name="test_table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
