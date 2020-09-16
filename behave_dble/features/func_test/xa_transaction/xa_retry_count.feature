@@ -19,8 +19,11 @@ Feature: change xaRetryCount value and check result
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
       | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced |
 
-  @btrace
+  @btrace @restore_mysql_service
   Scenario: Setting xaRetryCount to 3 , dble report 3 warnings, recovery node by manual, check data not lost #2
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -90,8 +93,11 @@ Feature: change xaRetryCount value and check result
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @current
+  @btrace @current @restore_mysql_service
   Scenario: mysql node failover during xa transaction retry commit stage and check data not lost #3
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >

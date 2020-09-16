@@ -58,9 +58,11 @@ Feature: reload @@config_all base test, not including all cases in testlink
       |SYS_VARIABLES        | 18           |
       |USER_VARIABLES       | 19           |
 
-  @BLOCKER
+  @BLOCKER @restore_mysql_service
   Scenario: reload @@config_all, eg:remove old dbInstance and add new, drop backend connection pool for old dbInstance, create new connection pool, backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s #2
-
+     """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
