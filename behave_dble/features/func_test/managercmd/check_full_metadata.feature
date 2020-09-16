@@ -275,8 +275,11 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test5  | success                          | schema1   |
       | conn_0 | True    | drop table if exists test2  | success                          | schema1   |
 
-  @NORMAL
+  @NORMAL @restore_mysql_service
   Scenario: Some of dbGroup's dbInstance(with or dbInstance ) cannot be connectted, check metadata and query #6
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
