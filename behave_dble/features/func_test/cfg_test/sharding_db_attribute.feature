@@ -304,7 +304,7 @@ Feature: test some import nodes attr in sharding.xml
     Then execute sql in "dble-1" in "admin" mode
       | sql            | expect      |
       | show @@backend | length{(7)} |
- @cur
+
   Scenario:  when minCon>the number of db, verify the minCon restore logic #9
    #  minConRecover logic: min(the value of minCon - the current idle conns in pool, the value of maxCon - total conns in pool) - the creating conns
    #  minConRecover_num ignore heartbeat conn, so the total conns need add extra heartbeat conn,that is 10+1=11
