@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  show databases/use dble_information/show tables [like]
-
+@skip_restart
  Scenario:  show databases/use dble_information/show tables [like] #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                    | expect                                                                 |
