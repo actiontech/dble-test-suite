@@ -201,8 +201,11 @@ Feature: test read load balance
       | sql                                                                                 | expect        |
       | select count(*) from mysql.general_log where argument like'select name%from test%'  | balance{5000} |
 
-  @NORMAL
+  @NORMAL @restore_mysql_service
   Scenario: dbGroup rwSplitMode="1" and read dbInstance default available, do balance bewteen read dbInstance even write dbInstance down #6
+     """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
+    """
      Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
@@ -245,8 +248,11 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(1000L,),} |
     Given start mysql in host "mysql-master2"
 
-  @NORMAL
+  @NORMAL @restore_mysql_service
   Scenario: dbGroup rwSplitMode="1" and read dbInstance default available, don't balance bewteen read dbInstance if write dbInstance  down #7
+     """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
+    """
     Given delete the following xml segment
       |file        | parent          | child               |
       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |

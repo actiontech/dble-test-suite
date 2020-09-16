@@ -4,10 +4,14 @@
 # Created by yangxiaoliang at 2019/12/26
 
 #2.20.04.0#dble-8172
-  @skip #skip temporarily, and find the cause later in 2020.9.8
+
 Feature: xa_transaction: kill node before transaction rollback
 
+  @restore_mysql_service
   Scenario: begin transaction and insert data , kill one node before transaction rollback #1
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                | expect                                                                                                                                                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                 | success                                                                                                                                                    | schema1 |
