@@ -54,8 +54,8 @@ Feature: reload @@config_all -fsr
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
     Then check resultset "rs_B" has not lines with following column values
-      | HOST-3      |
-      | 172.100.9.6 |
+      | HOST-3      |USED_FOR_HEARTBEAT-22|
+      | 172.100.9.6 |false                |
     Then check resultset "rs_C" has lines with following column values
       | HOST-3      |
       | 172.100.9.5 |

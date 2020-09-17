@@ -43,8 +43,8 @@ Feature: reload @@config_all -r
       | sql            |
       | show @@backend |
     Then check resultset "B" has not lines with following column values
-      | HOST-3      |
-      | 172.100.9.6 |
+      | HOST-3      |USED_FOR_HEARTBEAT-22|
+      | 172.100.9.6 |false                |
     Then check resultset "C" has lines with following column values
       | HOST-3      |
       | 172.100.9.5 |
@@ -88,7 +88,8 @@ Feature: reload @@config_all -r
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
       | sql            |
       | show @@backend |
-    Then check "E" only has "1" connection of "172.100.9.4"
+    #E has two connections, one is in used and the other is heartbeat
+    Then check "E" only has "2" connection of "172.100.9.4"
     Then check resultset "E" has lines with following column values
       | HOST-3      |
       | 172.100.9.4 |
@@ -103,5 +104,5 @@ Feature: reload @@config_all -r
       | sql            |
       | show @@backend |
     Then check resultset "F" has not lines with following column values
-      | HOST-3      |
-      | 172.100.9.4 |
+      | HOST-3      |USED_FOR_HEARTBEAT-22|
+      | 172.100.9.4 |false                |
