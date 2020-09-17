@@ -51,8 +51,8 @@ Feature: reload @@config_all -f
       | 3306   | 172.100.9.5 |
       | 3306   | 172.100.9.6 |
     Then check resultset "B" has not lines with following column values
-      | PORT-4 | HOST-3      |
-      | 3306   | 172.100.9.6 |
+      | PORT-4 | HOST-3      |USED_FOR_HEARTBEAT-22|
+      | 3306   | 172.100.9.6 |false                  |
 
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"

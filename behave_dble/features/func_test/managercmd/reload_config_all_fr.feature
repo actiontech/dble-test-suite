@@ -17,7 +17,7 @@ Feature: reload @@config_all -fr
     Given Restart dble in "dble-1" success
     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4'"
 
-    # 1 execute "reload @@config_all -rf" will rebuild backend conn
+    # 1 execute "reload @@config_all -rf" will rebuild backend conn, not used dbInstances will only reflect heartbeat connection
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql            |
       | show @@backend |
@@ -48,8 +48,8 @@ Feature: reload @@config_all -fr
       | BACKEND_ID | 1            |
       | MYSQLID    | 2            |
     Then check resultset "rs_B" has not lines with following column values
-      | HOST-3      |
-      | 172.100.9.6 |
+      | HOST-3      |USED_FOR_HEARTBEAT-22|
+      | 172.100.9.6 | false                 |
     Then check resultset "rs_C" has lines with following column values
       | HOST-3      |
       | 172.100.9.5 |
