@@ -10,7 +10,8 @@ Feature: #mysql node disconnected,check the change of dble
     """
     Given delete the following xml segment
       |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |sharding.xml|{'tag':'root'}   | {'tag':'shardingNode'}  |
+      |db.xml       |{'tag':'root'}   | {'tag':'dbGroup'}  |
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                |
       | conn_0 | False   | create database if not exists da1  |
@@ -23,11 +24,19 @@ Feature: #mysql node disconnected,check the change of dble
     <shardingNode dbGroup="ha_group1" database="da2" name="dn4" />
     <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+    """
     Then execute admin cmd "Reload @@config_all"
     Given stop mysql in host "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                 | expect                                                                                                                                |
-      | conn_0 | False   | dryrun              | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected}                                                          |
+      | conn   | toClose | sql                   | expect                                                                                                                                |
+      | conn_0 | False   | dryrun                | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected}                                                          |
       | conn_0 | True    | reload @@config_all | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly |
     Then restart dble in "dble-1" failed for
     """
