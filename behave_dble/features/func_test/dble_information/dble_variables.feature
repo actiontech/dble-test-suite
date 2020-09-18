@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_variables test
-@skip_restart
+
  Scenario:  dble_variables table #1
   #case desc dble_variables
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
@@ -201,29 +201,13 @@ Feature:  dble_variables test
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
   #case select join
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_9"
-#      | conn   | toClose | sql                                                                                                        | db               |
-#      | conn_0 | False   | select a.variable_name from dble_variables a inner join dble_status b on a.variable_value=b.variable_value | dble_information |
-#    Then check resultset "dble_variables_9" has lines with following column values
-#      | variable_name-0       | variable_value-1 | comment-2                                                                                                               | read_only-3 | variable_name-4 | variable_value-5 | comment-6               |
-#      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | questions       | 0                | number of requests.     |
-#      | maxCon                | 0                | The number of max connections the server allowed                                                                        | true        | transactions    | 0                | the transaction number. |
-#      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | questions       | 0                | number of requests.     |
-#      | useCompression        | 0                | Whether the Compression is enable,The default number is 0                                                               | true        | transactions    | 0                | the transaction number. |
-#      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | questions       | 0                | number of requests.     |
-#      | usingAIO              | 0                | Whether the AIO is enable, The default number is 0(use NIO instead)                                                     | true        | transactions    | 0                | the transaction number. |
-#      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
-#      | useThreadUsageStat    | 0                | Whether the thread usage statistics function is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
-#      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | questions       | 0                | number of requests.     |
-#      | usePerformanceMode    | 0                | Whether use the performance mode is enabled.The default value is 0                                                      | true        | transactions    | 0                | the transaction number. |
-#      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | questions       | 0                | number of requests.     |
-#      | useCostTimeStat       | 0                | Whether the cost time of query can be track by Btrace.The default value is 0                                            | true        | transactions    | 0                | the transaction number. |
-#      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | questions       | 0                | number of requests.     |
-#      | checkTableConsistency | 0                | Whether the consistency tableStructure check is enabled.The default value is 0                                          | true        | transactions    | 0                | the transaction number. |
-#      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | questions       | 0                | number of requests.     |
-#      | recordTxn             | 0                | Whether the transaction be recorded as a file,The default value is 0                                                    | true        | transactions    | 0                | the transaction number. |
-#      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | questions       | 0                | number of requests.     |
-#      | xaRetryCount          | 0                | Indicates the number of background retries if the xa failed to commit/rollback.The default value is 0, retry infinitely | true        | transactions    | 0                | the transaction number. |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_9"
+      | conn   | toClose | sql                                                                                                                                          | db               |
+      | conn_0 | False   | select a.variable_name from dble_variables a inner join dble_status b on a.variable_value=b.variable_value where a.variable_value=1029177344 | dble_information |
+    Then check resultset "dble_variables_9" has lines with following column values
+      | variable_name-0    |
+      | heap_memory_max    |
+      | heap_memory_max    |
 
   #case change bootstrap/cluster.cnf then restart dble-1
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
