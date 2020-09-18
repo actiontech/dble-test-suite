@@ -3,7 +3,6 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_processor test
-@skip_restart
    Scenario:  dble_processor table #1
   #case desc dble_processor
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_processor_1"
@@ -39,7 +38,7 @@ Feature:  dble_processor test
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_processor_3"
       | conn   | toClose | sql                                  | db               |
-      | conn_0 | true    | select name,type from dble_processor | dble_information |
+      | conn_1 | false   | select name,type from dble_processor | dble_information |
     Then check resultset "dble_processor_3" has lines with following column values
       | name-0            | type-1  |
       | frontProcessor0   | session |
@@ -57,24 +56,24 @@ Feature:  dble_processor test
    #case select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect                                                                     |
-      | conn_2 | False   | use dble_information                                              | success                                                                    |
-      | conn_2 | False   | select name,type from dble_processor limit 1                      | has{(('frontProcessor0', 'session'),)}                                     |
-      | conn_2 | False   | select name,type from dble_processor order by name desc limit 2   | has{(('frontProcessor0', 'session'), ('backendProcessor3', 'backend'))}    |
-      | conn_2 | False   | select * from dble_processor where name like '%or%'               | length{(5)}                                                                |
+      | conn_1 | False   | use dble_information                                              | success                                                                    |
+      | conn_1 | False   | select name,type from dble_processor limit 1                      | has{(('frontProcessor0', 'session'),)}                                     |
+      | conn_1 | False   | select name,type from dble_processor order by name desc limit 2   | has{(('frontProcessor0', 'session'), ('backendProcessor3', 'backend'))}    |
+      | conn_1 | False   | select * from dble_processor where name like '%or%'               | length{(5)}                                                                |
   #case select max/min from
-      | conn_2 | False   | select max(name) from dble_processor                      | has{(('frontProcessor0',),)}           |
-      | conn_2 | False   | select min(name) from dble_processor                      | has{(('backendProcessor0',),)}         |
+      | conn_1 | False   | select max(name) from dble_processor                      | has{(('frontProcessor0',),)}           |
+      | conn_1 | False   | select min(name) from dble_processor                      | has{(('backendProcessor0',),)}         |
   #case where [sub-query]
-#      | conn_0 | False   | select name from dble_processor where type in (select type from dble_processor where conn_count>1) | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
+      | conn_1 | False   | select name from dble_processor where type in (select type from dble_processor where conn_count>0) | length{(5)}    |
    #case select field from
-#      | conn_2 | False   | select name from dble_processor where conn_net_out > 1         | has{('BusinessExecutor'),('complexQueryExecutor'),('writeToBackendExecutor')}                                    |
+      | conn_1 | False   | select name from dble_processor where conn_net_out > 0         | length{(5)}  |
   #case update/delete
-      | conn_2 | False   | delete from dble_processor where name = 'frontProcessor0'            | Access denied for table 'dble_processor'                                                                                                        |
-      | conn_2 | False   | update dble_processor set name = '2' where name = 'frontProcessor0'  | Access denied for table 'dble_processor'                                                                                                        |
-      | conn_2 | False   | insert into dble_processor values ('1','2', 3, 4.5)                  | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list]  |
+      | conn_1 | False   | delete from dble_processor where name = 'frontProcessor0'            | Access denied for table 'dble_processor'  |
+      | conn_1 | False   | update dble_processor set name = '2' where name = 'frontProcessor0'  | Access denied for table 'dble_processor'  |
+      | conn_1 | False   | insert into dble_processor values ('1','2', 3, 4.5)                  | Access denied for table 'dble_processor'  |
 
 
-#@skip_restart
+@skip_restart
      Scenario:  processlist  table #2
   #case desc processlist
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "processlist_1"

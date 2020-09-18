@@ -3,7 +3,6 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_thread_pool test
-
    Scenario:  dble_thread_pool table #1
   #case desc dble_thread_pool
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
@@ -39,13 +38,13 @@ Feature:  dble_thread_pool test
       | conn_0 | False   | select max(size) from dble_thread_pool                      | has{((8,),)}  |
       | conn_0 | False   | select min(size) from dble_thread_pool                      | has{((1,),)}  |
   #case where [sub-query]
-#      | conn_0 | False   | select size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>1) | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
+      | conn_0 | False   | select size from dble_thread_pool where name in (select name from dble_thread_pool where active_count>0)  | has{((1,), (8,), (8,))}                      |
   #case select field from
-#      | conn_0 | False   | select name from dble_thread_pool where active_count > 0                         | has{('BusinessExecutor'),('complexQueryExecutor'),('writeToBackendExecutor')}                                    |
+      | conn_0 | False   | select name from dble_thread_pool where active_count > 0    | has{(('BusinessExecutor',), ('complexQueryExecutor',), ('writeToBackendExecutor',))} |
   #case update/delete
-      | conn_0 | False   | delete from dble_thread_pool where size=1                   | Access denied for table 'dble_thread_pool'                                                                                                        |
-      | conn_0 | False   | update dble_thread_pool set size=2 where name='Timer'       | Access denied for table 'dble_thread_pool'                                                                                                        |
-      | conn_0 | False   | insert into dble_thread_pool values ('a',1,2,3)             | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list] |
+      | conn_0 | False   | delete from dble_thread_pool where size=1                   | Access denied for table 'dble_thread_pool'  |
+      | conn_0 | False   | update dble_thread_pool set size=2 where name='Timer'       | Access denied for table 'dble_thread_pool'  |
+      | conn_0 | False   | insert into dble_thread_pool values ('a',1,2,3)             | Access denied for table 'dble_thread_pool'  |
 
   #case change bootstrap.cnf
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -73,9 +72,6 @@ Feature:  dble_thread_pool test
       | complexQueryExecutor    | 8      |
       | writeToBackendExecutor  | 8      |
 
-
-
-  @skip_restart
    Scenario:  dble_thread_usage  table #1
   #case desc dble_thread_usage
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_1"
@@ -193,13 +189,13 @@ Feature:  dble_thread_pool test
       | conn_2 | False   | select max(thread_name) from dble_thread_usage                      | has{(('writeToBackendExecutor3',),)}           |
       | conn_2 | False   | select min(thread_name) from dble_thread_usage                      | has{(('$_NIO_REACTOR_BACKEND-0',),)}           |
   #case where [sub-query]
-#      | conn_0 | False   | select thread_name from dble_thread_usage where last_minute in (select last_minute from dble_thread_usage where last_five_minute<10%) | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
+      | conn_2 | False   | select thread_name from dble_thread_usage where last_minute in (select last_minute from dble_thread_usage where last_five_minute < '10%') | length{(15)}     |
    #case select field from
-#      | conn_2 | False   | select last_quarter_min from dble_thread_usage where thread_name = 'BusinessExecutor0'          | has{('BusinessExecutor'),('complexQueryExecutor'),('writeToBackendExecutor')}                                    |
+      | conn_2 | False   | select last_quarter_min from dble_thread_usage where thread_name = 'BusinessExecutor0'       | has{(('0%',),)}                              |
   #case update/delete
-      | conn_2 | False   | delete from dble_thread_usage where thread_name = 'BusinessExecutor0'                        | Access denied for table 'dble_thread_usage'                                                                                                        |
-      | conn_2 | False   | update dble_thread_usage set thread_name = '2' where thread_name = 'BusinessExecutor0'       | Access denied for table 'dble_thread_usage'                                                                                                        |
-      | conn_2 | False   | insert into dble_thread_usage values ('_NIO_REACTOR_FRONT-0','1%', '1%', '1%')               | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list]  |
+      | conn_2 | False   | delete from dble_thread_usage where thread_name = 'BusinessExecutor0'                        | Access denied for table 'dble_thread_usage'  |
+      | conn_2 | False   | update dble_thread_usage set thread_name = '2' where thread_name = 'BusinessExecutor0'       | Access denied for table 'dble_thread_usage'  |
+      | conn_2 | False   | insert into dble_thread_usage values ('_NIO_REACTOR_FRONT-0','1%', '1%', '1%')               | Access denied for table 'dble_thread_usage'  |
 
 
 

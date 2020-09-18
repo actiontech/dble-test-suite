@@ -26,10 +26,10 @@ Feature:  version table test
 
    #case dml
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                    | expect                                                                                                                                            | db               |
-      | conn_0 | False   | select version from Version                                            | length{(1)}                                                                                                                                       | dble_information |
-      | conn_0 | False   | update version set version='1' where version = (select * from version) | update syntax error, not support sub-query                                                                                                        | dble_information |
-      | conn_0 | False   | delete from Version where version = (select * from version)            | delete syntax error, not support sub-query                                                                                                        | dble_information |
-      | conn_0 | False   | insert into version values ('1')                                       | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list] | dble_information |
+      | conn   | toClose | sql                                                                    | expect                                           | db               |
+      | conn_0 | False   | select version from Version                                            | length{(1)}                                      | dble_information |
+      | conn_0 | False   | update version set version='1' where version = (select * from version) | update syntax error, not support sub-query       | dble_information |
+      | conn_0 | False   | delete from Version where version = (select * from version)            | delete syntax error, not support sub-query       | dble_information |
+      | conn_0 | False   | insert into version values ('1')                                       | Access denied for table 'version'                | dble_information |
 
 
