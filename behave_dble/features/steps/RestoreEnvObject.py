@@ -24,6 +24,29 @@ class RestoreEnvObject(object):
         # if "aft_reset_replication" in self._scenario.tags:
         #     utils.reset_repl()
         #
+        if "restore_view" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'restore_view'")
+            if params_dic:
+                paras = params_dic["restore_view"]
+            else:
+                paras = {}
+
+            for host_name, mysql_vars in paras.items():
+                if host_name.find('dble')!=-1:
+                    mode="user"
+                else:
+                    mode = "mysql"
+                for k, v in mysql_vars.items():
+                    list_value = filter(lambda x: x, v.split(","))
+                    view_value=""
+                    for value in list_value:
+                        view_value=view_value + "{0}.{1},".format(k, value)
+                    query = "drop view if exists " + view_value
+
+                sql = query[:-1]#delete the last ','
+                # logger.debug("the sql is: {0}".format(sql))
+                execute_sql_in_host(host_name, {"sql": sql}, mode)
+
         if "restore_mysql_service" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_mysql_service'")
 
@@ -36,11 +59,9 @@ class RestoreEnvObject(object):
             for host_name, mysql_vars in paras.items():
                 logger.debug("the value of host_name is: {0}".format(host_name))
                 for k, v in mysql_vars.items():
-                    logger.debug("the value of v is: {0}".format(v))
                     if v:
                         mysql = ObjectFactory.create_mysql_object(host_name)
                         mysql.start()
-
 
         if "restore_global_setting" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_global_setting'")
@@ -59,6 +80,7 @@ class RestoreEnvObject(object):
 
                 sql = query[:-1]#delete the last ','
                 execute_sql_in_host(mysql, {"sql": sql})
+
         if "restore_mysql_config" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_mysql_config'")
 

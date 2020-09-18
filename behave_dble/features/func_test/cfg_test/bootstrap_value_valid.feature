@@ -305,7 +305,11 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       | PARAM_NAME-0  | PARAM_VALUE-1 |
       | maxPacketSize | 6291456       |
 
+  @restore_view
   Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #9
+     """
+    {'restore_view':{'dble-1':{'schema1':'view1'}}}
+    """
     Given I remove path "/opt/logs/view_logs" in "dble-1" if exist
     Then check path "/opt/logs/view_logs" in "dble-1" should not exist
     Given I remove path "/opt/logs/tx_logs" in "dble-1" if exist
@@ -330,7 +334,11 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then check path "/opt/logs/view_logs" in "dble-1" should exist
     Then check path "/opt/logs/tx_logs" in "dble-1" should exist
 
+  @restore_view
   Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #10
+     """
+    {'restore_view':{'dble-1':{'schema1':'view1'}}}
+    """
     Given I remove path "/opt/dble/viewConf" in "dble-1" if exist
     Then check path "/opt/dble/viewConf" in "dble-1" should not exist
     Given I remove path "/opt/dble/txlogs" in "dble-1" if exist
