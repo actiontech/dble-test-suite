@@ -5,7 +5,6 @@
 # modified by wjl1619 at 2020/04/21
 
 #2.20.04.0#dble-8177
-  @skip #skip temporarily, and find the cause later in 2020.9.8
 Feature: backend node disconnect,causing xa abnormal
 
   @btrace
