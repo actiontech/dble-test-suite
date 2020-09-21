@@ -4,7 +4,6 @@
 # Created by yangxiaoliang at 2020/1/4
 
 #2.20.04.0#dble-8178
-  @skip #skip temporarily, and find the cause later in 2020.9.8
 Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and some nodes prepare/start failed.
   For xa prepared successfully nodes, need to rollback after dble restart
   For xa start failed nodes, dble need return a reasonable error message
