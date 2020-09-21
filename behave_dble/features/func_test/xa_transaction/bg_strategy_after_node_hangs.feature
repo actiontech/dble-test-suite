@@ -4,7 +4,6 @@
 # Created by yangxiaoliang at 2019/12/26
 
 #2.20.04.0#dble-8174
-@skip #skip temporarily for scenario 2 is failed 
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
   @btrace @restore_mysql_service
