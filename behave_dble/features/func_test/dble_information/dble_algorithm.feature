@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_algorithm test
-@skip_restart
+
    Scenario:  dble_algorithm  table #1
   #case desc dble_algorithm
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_1"
@@ -307,9 +307,9 @@ Feature:  dble_algorithm test
       | conn_0 | False   | select count(*) from dble_algorithm group by name           | has{((6,), (5,), (4,), (4,), (3,), (4,), (3,), (4,), (3,), (3,), (3,), (3,), (3,), (2,), (3,))}  |
   #case select field and where [sub-query]
       | conn_0 | False   | select name,key from dble_algorithm where is_file in (select is_file from dble_algorithm where value ='enum-integer.txt')     | has{(('enum_integer_rule','mapFile',))}     |
-#      | conn_0 | False   | select name,key from dble_algorithm where is_file >all (select is_file from dble_algorithm where value ='enum-integer.txt')   | has{(('enum_integer_rule','mapFile',))}     |
-#      | conn_0 | False   | select name,key from dble_algorithm where is_file <any (select is_file from dble_algorithm where value ='enum-integer.txt')   | has{(('enum_integer_rule','mapFile',))}     |
-#      | conn_0 | False   | select name,key from dble_algorithm where is_file = (select is_file from dble_algorithm where value ='enum-integer.txt')      | has{(('enum_integer_rule','mapFile',))}     |
+      | conn_0 | False   | select name,key from dble_algorithm where is_file >all (select is_file from dble_algorithm where value ='enum-integer.txt')   | length{(0)}                                 |
+      | conn_0 | False   | select name,key from dble_algorithm where is_file <any (select is_file from dble_algorithm where value ='enum-integer.txt')   | length{(52)}                                |
+      | conn_0 | False   | select name,key from dble_algorithm where is_file = (select is_file from dble_algorithm where value ='enum-integer.txt')      | has{(('enum_integer_rule','mapFile',))}     |
       | conn_0 | False   | select name,key from dble_algorithm where is_file = any (select is_file from dble_algorithm where value ='enum-integer.txt')  | has{(('enum_integer_rule','mapFile',))}     |
   #case join
       | conn_0 | False   | select id,sharding_column,algorithm_name from dble_sharding_table where algorithm_name in  (select name from dble_algorithm where is_file ='true')  | has{(('C5','ID','enum_integer_rule',))}     |

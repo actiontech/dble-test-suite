@@ -94,7 +94,6 @@ Feature:  dble_schema test
       | schema3 | None            | -1              |
 
 
-
  Scenario:  dble_sharding_node table #2
   #case desc dble_sharding_node
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_node_1"

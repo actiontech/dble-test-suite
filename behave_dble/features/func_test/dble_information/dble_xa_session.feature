@@ -4,8 +4,11 @@
 
 Feature:  dble_xa_session test
 @skip_restart
-@btrace
+@btrace @restore_mysql_service
    Scenario:  dble_xa_session  table #1
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
   #case desc dble_xa_session
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_xa_session_1"
       | conn   | toClose | sql                  | db               |

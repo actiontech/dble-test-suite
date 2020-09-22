@@ -131,6 +131,8 @@ Feature:  session_connections test
       | conn_1 | False   | use schema1                            | success |
       | conn_1 | False   | drop table if exists sharding_2_t1     | success |
 
+
+  @skip_restart
    Scenario:  session_variables table #2
   #case desc session_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_1"
