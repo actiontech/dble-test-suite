@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
 
+@skip
 Feature:  session_connections test
 @skip_restart
    Scenario:  session_connections table #1

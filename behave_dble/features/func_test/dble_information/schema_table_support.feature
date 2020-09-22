@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
-
+@skip
 Feature:  show databases/use dble_information/show tables [like]
 @skip_restart
  Scenario:  show databases/use dble_information/show tables [like] #1
@@ -59,7 +59,7 @@ Feature:  show databases/use dble_information/show tables [like]
 #      | demotest2                    |
 
 
-
+@skip_restart
    Scenario:  table select join #2
     Given delete the following xml segment
       | file         | parent         | child                    |
@@ -142,4 +142,5 @@ Feature:  show databases/use dble_information/show tables [like]
 | C4   | er_child1 | schema1 |      1000 | CHILD |
 | C4   | er_child1 | schema1 |      1000 | CHILD |
 
-
+@skip_restart
+   Scenario:  show tables in 8066 #2

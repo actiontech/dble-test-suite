@@ -72,6 +72,7 @@ Feature:  dble_processor test
       | conn_1 | False   | update dble_processor set name = '2' where name = 'frontProcessor0'  | Access denied for table 'dble_processor'  |
       | conn_1 | False   | insert into dble_processor values ('1','2', 3, 4.5)                  | Access denied for table 'dble_processor'  |
 
+@skip
 
 @skip_restart
      Scenario:  processlist  table #2

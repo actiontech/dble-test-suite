@@ -3,7 +3,6 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_status test
-
    Scenario:  dble_status table #1
   #case desc dble_status
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_1"
@@ -63,6 +62,7 @@ Feature:  dble_status test
       | conn_0 | False   | update dble_status set comment='number of requests' where variable_value='0'           | Access denied for table 'dble_status'   |
       | conn_0 | False   | insert into dble_status values ('a','b','c')                                           | Access denied for table 'dble_status'   |
 
+@skip
 
  Scenario:  check questions/transactions http://10.186.18.11/jira/browse/DBLE0REQ-67 #2
    Then execute sql in "dble-1" in "user" mode
