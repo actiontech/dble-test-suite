@@ -123,6 +123,11 @@ Feature:  backend_connections test
       | ha_group2       | hostM2             | 172.100.9.6   | db2      |
       | ha_group2       | hostM2             | 172.100.9.6   | db3      |
       | ha_group2       | hostM2             | 172.100.9.6   | NULL     |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                              | expect  |
+      | conn_1 | False   | drop table if exists test                        | success |
+      | conn_1 | False   | drop table if exists sharding_2_t1               | success |
+
 
    Scenario:  backend_variables table #2
   #case desc backend_variables

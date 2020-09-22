@@ -3,8 +3,6 @@
 # update by quexiuping at 2020/9/2
 
 Feature:  dble_ddl_lock test
-@skip_restart
-  @btrace
    Scenario:  dble_ddl_lock  table #1
   #case desc dble_ddl_lock
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_ddl_lock_1"
@@ -29,8 +27,8 @@ Feature:  dble_ddl_lock test
       | conn_2 | False   | use schema1               |
     Given prepare a thread execute sql "drop table if exists sharding_2_t1" with "conn_2"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_ddl_lock_2"
-      | conn   | toClose | sql                          | db               |
-      | conn_0 | False   | select * from  dble_ddl_lock | dble_information |
+      | conn   | toClose | sql                         | db               |
+      | conn_0 | False   | select * from dble_ddl_lock | dble_information |
     Then check resultset "dble_ddl_lock_2" has lines with following column values
       | schema-0 | table-1       | sql-2                              |
       | schema1  | sharding_2_t1 | drop table if exists sharding_2_t1 |
@@ -43,5 +41,17 @@ Feature:  dble_ddl_lock test
       | table      | 1            |
       | sql        | 2            |
 
+  #case update/delete
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect                                      |
+      | conn_0 | False   | delete from dble_ddl_lock where sql='drop table if exists sharding_2_t1'              | Access denied for table 'dble_ddl_lock'     |
+      | conn_0 | False   | update dble_ddl_lock set sql = 'a' where sql='drop table if exists sharding_2_t1'     | Access denied for table 'dble_ddl_lock'     |
+      | conn_0 | False   | insert into dble_ddl_lock values (1,'1',1,1,1)                                        | Access denied for table 'dble_ddl_lock'     |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                     | db      |
+      | conn_1 | False   | rollback                                                | schema1 |
+      | conn_1 | False   | set autocommit=1                                        | schema1 |
+      | conn_1 | False   | set xa=off                                              | schema1 |
+      | conn_1 | False   | drop table if exists sharding_2_t1                      | schema1 |
 
 

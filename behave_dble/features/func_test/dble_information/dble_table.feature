@@ -136,6 +136,14 @@ Feature:  dble_table test
       | no_s1         | schema1  | 100         | NO_SHARDING |
       | no_s2         | schema2  | 1000        | NO_SHARDING |
       | no_s3         | schema3  | -1          | NO_SHARDING |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect  |
+      | conn_1 | False   | use schema1                 | success |
+      | conn_1 | False   | drop table if exists no_s1  | success |
+      | conn_1 | False   | use schema2                 | success |
+      | conn_1 | False   | drop table if exists no_s2  | success |
+      | conn_1 | False   | use schema3                 | success |
+      | conn_1 | False   | drop table if exists no_s3  | success |
 
    Scenario:  dble_global_table table #2
   #case desc dble_global_table
