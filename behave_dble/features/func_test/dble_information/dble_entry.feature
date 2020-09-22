@@ -214,7 +214,7 @@ Feature:  dble_entry test
       | 4    | schema2  |
       | 4    | schema3  |
 
-
+@skip
 @skip_restart
    Scenario:  dble_entry_table_privilege  table #3
   #case desc dble_entry_table_privilege
@@ -586,7 +586,7 @@ Feature:  dble_entry test
       | conn_0 | False   | select username from dble_rw_split_entry where blacklist in (select name from dble_blacklist where user_configured = 'true')      | has{(('rwSplit2',), ('rwSplit',))}       |
       | conn_0 | False   | select username from dble_rw_split_entry where blacklist >all (select name from dble_blacklist where user_configured = 'true')    | length{(0)}                              |
       | conn_0 | False   | select username from dble_rw_split_entry where blacklist <any (select name from dble_blacklist where user_configured = 'true')    | has{(('rwSplit2',))}                     |
-      | conn_0 | False   | select username from dble_rw_split_entry where blacklist =any (select name from dble_blacklist where user_configured = 'true')    | has{(('rwSplit2',), ('rwSplit',))}
+      | conn_0 | False   | select username from dble_rw_split_entry where blacklist =any (select name from dble_blacklist where user_configured = 'true')    | has{(('rwSplit2',), ('rwSplit',))}       |
 
 
    Scenario:  dble_blacklist  table #5

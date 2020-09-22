@@ -3,6 +3,8 @@
 # update by quexiuping at 2020/9/2
 
 Feature:  dble_xa_session test
+
+  @skip
 @skip_restart
 @btrace @restore_mysql_service
    Scenario:  dble_xa_session  table #1

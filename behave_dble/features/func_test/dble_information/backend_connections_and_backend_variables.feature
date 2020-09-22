@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
-
+@skip
 Feature:  backend_connections test
 @skip_restart
    Scenario:  backend_connections table #1
@@ -144,7 +144,7 @@ Feature:  backend_connections test
       | conn_0 | False   | select table from backend_connections where schema <any (select schema from backend_connections)              | length{(5)}                                                           |
       | conn_0 | False   | select table from backend_connections where schema =any (select schema from backend_connections)              | length{(6)}                                                           |
 
-
+@skip
 @skip_restart
    Scenario:  backend_variables table #2
   #case desc backend_variables
