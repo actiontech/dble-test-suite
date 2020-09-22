@@ -77,6 +77,9 @@ Feature:  session_connections test
 #      | 127.0.0.1     | 8066          | test   | NULL     | schema1  | create table test1 (id int)       | Finished           | false              |         |
 #      | 127.0.0.1     | 9066          | root   | NULL     |          | select * from session_connections | Manager connection | Manager connection |         |
     Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect  | db     |
+      | conn_1 | False   | drop table if exists test1  | success | schema1|
+    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  |
       | conn_1 | False   | use schema1                            | success |
       | conn_1 | False   | drop table if exists sharding_2_t1     | success |
@@ -123,7 +126,10 @@ Feature:  session_connections test
 #      | conn_0 | False   | delete from dble_thread_pool where size=1                   | Access denied for table 'dble_thread_pool'                                                                                                        |
 #      | conn_0 | False   | update dble_thread_pool set size=2 where name='Timer'       | Access denied for table 'dble_thread_pool'                                                                                                        |
 #      | conn_0 | False   | insert into dble_thread_pool values ('a',1,2,3)             | update syntax error, not support insert with syntax :[LOW_PRIORITY \| DELAYED \| HIGH_PRIORITY] [IGNORE][ON DUPLICATE KEY UPDATE assignment_list] |
-
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                    | expect  |
+      | conn_1 | False   | use schema1                            | success |
+      | conn_1 | False   | drop table if exists sharding_2_t1     | success |
 
    Scenario:  session_variables table #2
   #case desc session_variables

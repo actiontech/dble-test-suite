@@ -3,7 +3,6 @@
 # update by quexiuping at 2020/9/2
 
 Feature:  dble_reload_status test
-@skip_restart
    Scenario:  dble_reload_status  table #1
   #case desc dble_reload_status
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_1"
@@ -28,7 +27,7 @@ Feature:  dble_reload_status test
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_3"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | show @@reload_status    | dble_information |
-    Then check resultsets "dble_reload_status_2" and "dble_reload_status_2" are same in following columns
+    Then check resultsets "dble_reload_status_2" and "dble_reload_status_3" are same in following columns
       | column             | column_index |
       | index              | 0            |
       | cluster            | 1            |
@@ -100,6 +99,12 @@ Feature:  dble_reload_status test
       | last_reload_end    | 5            |
       | trigger_type       | 6            |
       | end_type           | 7            |
+  #case update/delete
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                        | expect                                           |
+      | conn_0 | False   | delete from dble_reload_status where reload_type='RELOAD_META'                             | Access denied for table 'dble_reload_status'     |
+      | conn_0 | False   | update dble_reload_status set reload_type = 'a' where reload_type='RELOAD_META'            | Access denied for table 'dble_reload_status'     |
+      | conn_0 | False   | insert into dble_reload_status values (1,'1',1,1,1)                                        | Access denied for table 'dble_reload_status'     |
 
 
 

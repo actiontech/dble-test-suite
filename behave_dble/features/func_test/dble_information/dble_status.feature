@@ -157,3 +157,6 @@ Feature:  dble_status test
    Then check resultset "dble_status_5" has lines with following column values
       | Questions-0 | Transactions-1 |
       | 19          | 17             |
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      |
+      | conn_1 | False   | drop table if exists test                                |
