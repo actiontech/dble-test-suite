@@ -3,22 +3,22 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_db_group test
-#@skip_restart
+
    Scenario:  dble_db_group table #1
   #case desc dble_db_group
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_1"
-#      | conn   | toClose | sql                     | db               |
-#      | conn_0 | False   | desc dble_db_group | dble_information |
-#    Then check resultset "dble_db_group_1" has lines with following column values
-#      | Field-0   | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
-#| name              | varchar(64) | NO   | PRI  | None    |       |
-#| heartbeat_stmt    | varchar(64) | NO   |      | None    |       |
-#| heartbeat_timeout | int(11)     | YES  |      | 0       |       |
-#| heartbeat_retry   | int(11)     | YES  |      | 1       |       |
-#| rw_split_mode     | int(11)     | NO   |      | None    |       |
-#| delay_threshold   | int(11)     | YES  |      | -1      |       |
-#| disable_ha        | varchar(5)  | YES  |      | false   |       |
-#| active            | varchar(5)  | YES  |      | false   |       |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | desc dble_db_group | dble_information |
+    Then check resultset "dble_db_group_1" has lines with following column values
+      | Field-0           | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | name              | varchar(64) | NO     | PRI   | None      |         |
+      | heartbeat_stmt    | varchar(64) | NO     |       | None      |         |
+      | heartbeat_timeout | int(11)     | YES    |       | 0         |         |
+      | heartbeat_retry   | int(11)     | YES    |       | 1         |         |
+      | rw_split_mode     | int(11)     | NO     |       | None      |         |
+      | delay_threshold   | int(11)     | YES    |       | -1        |         |
+      | disable_ha        | varchar(5)  | YES    |       | false     |         |
+      | active            | varchar(5)  | YES    |       | false     |         |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_2"
       | conn   | toClose | sql                         | db               |
       | conn_0 | False   | select * from dble_db_group | dble_information |
@@ -89,14 +89,10 @@ Feature:  dble_db_group test
       | conn_0 | False   | select * from dble_db_group where name < any (select db_group from dble_db_instance)                      | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'), ('ha_2', 'select user()', 0, 1, 2, 100, 'false', 'true'))}     |
       | conn_0 | False   | select * from dble_db_group where name = any (select db_group from dble_db_instance)                      | length{(3)}                                                                                                                       |
   #case select field
-#      | conn_0 | False   | select a.*,b.* from dble_db_group a inner join dble_db_instance b on a.name=b.db_group where a.heartbeat_retry = 0     |         |
-#      | conn_0 | False   | select * from dble_db_group where name in (select sharding_node from dble_db_instance where name ='schema1')       |         |
-#      | conn_0 | False   | select name,heartbeat_stmt from dble_db_group where rw_split_mode > 0                                             |         |
+      | conn_0 | False   | select a.name,a.heartbeat_stmt,b.db_group from dble_db_group a inner join dble_db_instance b on a.name=b.db_group where a.heartbeat_retry = 0     | has{(('ha_1', 'show slave status', 'ha_1',))}                           |
+      | conn_0 | False   | select * from dble_db_group where name in (select db_group from dble_db_instance where name ='hostM1')                                            | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'))}     |
+      | conn_0 | False   | select name,heartbeat_stmt from dble_db_group where rw_split_mode > 0                                                                             | has{(('ha_1', 'show slave status',),('ha_2', 'select user()',))}        |
 
-
-
-
-@skip_restart
 
    Scenario:  dble_db_instance table #2
   #case desc dble_db_instance
@@ -126,7 +122,7 @@ Feature:  dble_db_group test
       | max_conn_count                    | int(11)      | NO     |       | None      |         |
       | read_weight                       | int(11)      | YES    |       | 0         |         |
       | id                                | varchar(64)  | YES    |       | None      |         |
-#      | connection_timeout                | int(11)      | YES    |       | 30000     |         |
+      | connection_timeout                | int(11)      | YES    |       | 30000     |         |
       | connection_heartbeat_timeout      | int(11)      | YES    |       | 20        |         |
       | test_on_create                    | varchar(64)  | YES    |       | false     |         |
       | test_on_borrow                    | varchar(64)  | YES    |       | false     |         |
@@ -259,10 +255,10 @@ Feature:  dble_db_group test
       | conn_0 | False   | select name,db_group from dble_db_instance where read_weight >1                | has{(('s1', 'ha_group1',), ('s2', 'ha_group1',))}         |
       | conn_0 | False   | select name,db_group from dble_db_instance where test_on_create like '%fa%'    | has{(('s2', 'ha_group1',), ('M2', 'ha_group2',))}         |
   #case select where [sub-query]
-      | conn_0 | False   | select user from dble_db_instance where name in (select name from dble_db_instance where disabled ='false')        | has{(('test',), ('test',), ('test',))}                                                              |
-#      | conn_0 | False   | select user from dble_db_instance where name >all (select name from dble_db_instance where disabled ='false')     |           |
-#      | conn_0 | False   | select user from dble_db_instance where name < any (select name from dble_db_instance where disabled ='false')    |           |
-      | conn_0 | False   | select user from dble_db_instance where name = any (select name from dble_db_instance where disabled ='false')     |has{(('test',), ('test',), ('test',))}                                                                                                                    |
+      | conn_0 | False   | select user from dble_db_instance where name in (select name from dble_db_instance where disabled ='false')        | has{(('test',), ('test',), ('test',))}          |
+      | conn_0 | False   | select user from dble_db_instance where name >all (select name from dble_db_instance where disabled ='false')     | has{(('test',))}                                 |
+      | conn_0 | False   | select user from dble_db_instance where name < any (select name from dble_db_instance where disabled ='false')    | has{(('test',), ('test',))}                      |
+      | conn_0 | False   | select user from dble_db_instance where name = any (select name from dble_db_instance where disabled ='false')     |has{(('test',), ('test',), ('test',))}           |
   #case select field
       | conn_0 | False   | select `primary` from dble_db_instance where name ='s1'      | has{(('false',),)}        |
 

@@ -52,30 +52,94 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | show tables               | dble_information |
     Then check resultset "tables_1" has lines with following column values
       | Tables_in_dble_information-0 |
-      | backend_connections          |
-      | dble_algorithm               |
-      | dble_child_table             |
-      | dble_db_group                |
-      | dble_db_instance             |
-      | dble_ddl_lock                |
-      | dble_entry                   |
-      | dble_entry_db_group          |
-      | dble_entry_schema            |
-      | dble_entry_table_privilege   |
-      | dble_global_table            |
-      | dble_processor               |
-      | dble_reload_status           |
-      | dble_schema                  |
-      | dble_sharding_node           |
-      | dble_sharding_table          |
-      | dble_status                  |
-      | dble_table                   |
-      | dble_table_sharding_node     |
-      | dble_thread_pool             |
-      | dble_thread_usage            |
-      | dble_variables               |
-      | dble_xa_session              |
+
 #    Then check resultset "tables_1" has not lines with following column values
 #      | Tables_in_dble_information-0 |
 #      | demotest1                    |
 #      | demotest2                    |
+
+
+
+   Scenario:  table select join #2
+    Given delete the following xml segment
+      | file         | parent         | child                    |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}         |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <globalTable name="test1" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn3,dn2,dn4" function="date_default_rule" shardingColumn="id"/>
+        <shardingTable name="er_parent" shardingNode="dn1,dn2,dn3,dn4" function="date_default_rule" shardingColumn="code" incrementColumn="id">
+            <childTable name="er_child1" sqlMaxLimit="1000" joinColumn="code1" parentColumn="code" incrementColumn="id1"/>
+            <childTable name="er_child2" joinColumn="code2" parentColumn="code" incrementColumn="id2"/>
+        </shardingTable>
+        <shardingTable name="parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="name" incrementColumn="code">
+            <childTable name="child" joinColumn="code" parentColumn="name" incrementColumn="id"/>
+        </shardingTable>
+    </schema>
+     <schema shardingNode="dn2" name="schema2" sqlMaxLimit="1000">
+        <singleTable name="s1"  shardingNode="dn1" />
+        <globalTable name="test2" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
+        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform" shardingColumn="code"/>
+        <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="fixed_nonuniform" shardingColumn="fix"/>
+        <shardingTable name="sharding_4_t4" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform_string_rule" shardingColumn="rule"/>
+        <shardingTable name="sharding_4_t5" shardingNode="dn1,dn2,dn3,dn4" function="fixed_nonuniform_string_rule" shardingColumn="fixed"/>
+     </schema>
+    <schema shardingNode="dn3" name="schema3">
+        <singleTable name="s2"  shardingNode="dn2" />
+        <globalTable name="test3" shardingNode="dn1,dn2" cron="/10 * * * * ?" checkClass="COUNT" />
+        <globalTable name="test4" shardingNode="dn1,dn2,dn3" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
+        <globalTable name="test5" shardingNode="dn1,dn3" />
+    </schema>
+
+     <function name="fixed_uniform" class="Hash">
+        <property name="partitionCount">4</property>
+        <property name="partitionLength">256</property>
+     </function>
+     <function name="fixed_nonuniform" class="Hash">
+        <property name="partitionCount">2,1</property>
+        <property name="partitionLength">256,512</property>
+     </function>
+     <function name="fixed_uniform_string_rule" class="StringHash">
+        <property name="partitionCount">4</property>
+        <property name="partitionLength">256</property>
+        <property name="hashSlice">0:2</property>
+     </function>
+     <function name="fixed_nonuniform_string_rule" class="StringHash">
+        <property name="partitionCount">2,1</property>
+        <property name="partitionLength">256,512</property>
+        <property name="hashSlice">0:2</property>
+     </function>
+     <function name="date_default_rule" class="Date">
+        <property name="dateFormat">yyyy-MM-dd</property>
+        <property name="sBeginDate">2016-12-01</property>
+        <property name="sEndDate">2017-01-9</property>
+        <property name="sPartionDay">10</property>
+        <property name="defaultNode">0</property>
+     </function>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    	<shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
+    """
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                            | db               |
+      | conn_0 | False   | select * from dble_table,dble_child_table where dble_table.id ='C4' | dble_information |
+    Then check resultset "1" has lines with following column values
+| id-0   | name-1      | schema-2  | max_limit-3 | type-4  | id-5   | parent_id-6 | increment_column-7 | join_column-8 | paren_column-9 |
+| C4   | er_child1 | schema1 |      1000 | CHILD | C4   | C3        | ID1              | CODE1       | CODE         |
+| C4   | er_child1 | schema1 |      1000 | CHILD | C5   | C3        | ID2              | CODE2       | CODE         |
+| C4   | er_child1 | schema1 |      1000 | CHILD | C7   | C6        | ID               | CODE        | NAME         |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
+       | conn   | toClose | sql                            | db               |
+       | conn_0 | False   | select a.* from dble_table a,dble_child_table b where a.id = 'C4' and b.parent_id = 'C3'; | dble_information |
+    Then check resultset "2" has lines with following column values
+| id-0   | name-1      | schema-2  | max_limit-3 | type-4  |
+| C4   | er_child1 | schema1 |      1000 | CHILD |
+| C4   | er_child1 | schema1 |      1000 | CHILD |
+
+

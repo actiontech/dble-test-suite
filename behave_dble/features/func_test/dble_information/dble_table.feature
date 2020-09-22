@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_table test
-#@skip_restart
+
    Scenario:  dble_table  table #1
   #case desc dble_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_1"
@@ -88,17 +88,24 @@ Feature:  dble_table test
       | conn_0 | False   | select max(max_limit) from dble_table                      | has{((1000,),)}  |
       | conn_0 | False   | select min(max_limit) from dble_table                      | has{((-1,),)}    |
   #case select field and where [sub-query]
-      | conn_0 | False   | select type from dble_table where schema in (select schema from dble_table where max_limit=90)       | success  |
-#      | conn_0 | False   | select type from dble_table where schema >all (select schema from dble_table where id like '%c%')    | success  |
-#      | conn_0 | False   | select type from dble_table where schema < any (select schema from dble_table where id like '%c%')   | success  |
-#      | conn_0 | False   | select type from dble_table where schema = (select schema from dble_table where id like '%c%')       | success  |
-      | conn_0 | False   | select type from dble_table where schema = any (select schema from dble_table where id like '%c%')   | success  |
+      | conn_0 | False   | select type from dble_table where schema in (select schema from dble_table where max_limit=90)       | length{(6)}                       |
+      | conn_0 | False   | select type from dble_table where schema >all (select schema from dble_table where id like '%c%')    | length{(0)}                       |
+      | conn_0 | False   | select type from dble_table where schema < any (select schema from dble_table where id like '%c%')   | length{(10)}                      |
+      | conn_0 | False   | select type from dble_table where schema = (select schema from dble_table where id like '%c%')       | Subquery returns more than 1 row  |
+      | conn_0 | False   | select type from dble_table where schema = any (select schema from dble_table where id like '%c%')   | length{(16)}                      |
   #case update/delete
       | conn_0 | False   | delete from dble_table where schema='schema1'                   | Access denied for table 'dble_table'  |
       | conn_0 | False   | update dble_table set schema = 'a' where schema='schema1'       | Access denied for table 'dble_table'  |
       | conn_0 | False   | insert into dble_table values ('a','1',2,'3')                   | Access denied for table 'dble_table'  |
-
-#  #case delete some schema
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect  |
+      | conn_1 | False   | use schema1                 | success |
+      | conn_1 | False   | drop table if exists no_s1  | success |
+      | conn_1 | False   | use schema2                 | success |
+      | conn_1 | False   | drop table if exists no_s2  | success |
+      | conn_1 | False   | use schema3                 | success |
+      | conn_1 | False   | drop table if exists no_s3  | success |
+  #case delete some schema
     Given delete the following xml segment
       | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
@@ -136,14 +143,6 @@ Feature:  dble_table test
       | no_s1         | schema1  | 100         | NO_SHARDING |
       | no_s2         | schema2  | 1000        | NO_SHARDING |
       | no_s3         | schema3  | -1          | NO_SHARDING |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect  |
-      | conn_1 | False   | use schema1                 | success |
-      | conn_1 | False   | drop table if exists no_s1  | success |
-      | conn_1 | False   | use schema2                 | success |
-      | conn_1 | False   | drop table if exists no_s2  | success |
-      | conn_1 | False   | use schema3                 | success |
-      | conn_1 | False   | drop table if exists no_s3  | success |
 
    Scenario:  dble_global_table table #2
   #case desc dble_global_table
@@ -441,8 +440,6 @@ Feature:  dble_table test
       | C5   | dn3             | 2       |
       | C5   | dn4             | 3       |
 
-
-  @skip_restart
    Scenario:  dble_child_table table #5
   #case desc dble_child_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_1"
@@ -493,11 +490,11 @@ Feature:  dble_table test
       | conn_0 | False   | select max(paren_column) from dble_child_table                | has{(('NAME',),)}    |
       | conn_0 | False   | select min(paren_column) from dble_child_table                | has{(('CODE',),)}    |
   #case select field and where [sub-query]
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column in (select paren_column from dble_child_table where increment_column ='ID')   | has{(('C5','C4',))}     |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column >all (select paren_column from dble_child_table where increment_column ='ID') | has{(('C5',), ('C4',))}     |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column <any (select paren_column from dble_child_table where increment_column ='ID') | has{(('C5',), ('C4',))}     |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = (select paren_column from dble_child_table where increment_column ='ID') | has{(('C5',), ('C4',))}     |
-      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = any (select paren_column from dble_child_table where increment_column ='ID') | has{(('C5','C4',))}     |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column in (select paren_column from dble_child_table where increment_column ='ID')    | has{(('C5','C4',))}                   |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column >all (select paren_column from dble_child_table where increment_column ='ID')  | length{(0)}                           |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column <any (select paren_column from dble_child_table where increment_column ='ID')  | has{(('C2','C1',), ('C3','C1',))}     |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = (select paren_column from dble_child_table where increment_column ='ID')     | has{(('C5','C4',))}                   |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = any (select paren_column from dble_child_table where increment_column ='ID') | has{(('C5','C4',))}                   |
 
   #case update/delete
       | conn_0 | False   | delete from dble_child_table where id='c1'                 | Access denied for table 'dble_child_table'   |
@@ -521,87 +518,3 @@ Feature:  dble_table test
       | C2   | C1          | ID1                | CODE1         | CODE           |
       | C3   | C1          | ID2                | CODE2         | CODE           |
       | C5   | C4          | ID                 | CODE          | NAME           |
-
-#@skip_restart
-   Scenario:  table select join #6
-    Given delete the following xml segment
-      | file         | parent         | child                    |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}         |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <globalTable name="test1" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn3,dn2,dn4" function="date_default_rule" shardingColumn="id"/>
-        <shardingTable name="er_parent" shardingNode="dn1,dn2,dn3,dn4" function="date_default_rule" shardingColumn="code" incrementColumn="id">
-            <childTable name="er_child1" sqlMaxLimit="1000" joinColumn="code1" parentColumn="code" incrementColumn="id1"/>
-            <childTable name="er_child2" joinColumn="code2" parentColumn="code" incrementColumn="id2"/>
-        </shardingTable>
-        <shardingTable name="parent" shardingNode="dn1,dn2" function="hash-two" shardingColumn="name" incrementColumn="code">
-            <childTable name="child" joinColumn="code" parentColumn="name" incrementColumn="id"/>
-        </shardingTable>
-    </schema>
-     <schema shardingNode="dn2" name="schema2" sqlMaxLimit="1000">
-        <singleTable name="s1"  shardingNode="dn1" />
-        <globalTable name="test2" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
-        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform" shardingColumn="code"/>
-        <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="fixed_nonuniform" shardingColumn="fix"/>
-        <shardingTable name="sharding_4_t4" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform_string_rule" shardingColumn="rule"/>
-        <shardingTable name="sharding_4_t5" shardingNode="dn1,dn2,dn3,dn4" function="fixed_nonuniform_string_rule" shardingColumn="fixed"/>
-     </schema>
-    <schema shardingNode="dn3" name="schema3">
-        <singleTable name="s2"  shardingNode="dn2" />
-        <globalTable name="test3" shardingNode="dn1,dn2" cron="/10 * * * * ?" checkClass="COUNT" />
-        <globalTable name="test4" shardingNode="dn1,dn2,dn3" cron="0 /5 * * * ? *" checkClass="CHECKSUM" />
-        <globalTable name="test5" shardingNode="dn1,dn3" />
-    </schema>
-
-     <function name="fixed_uniform" class="Hash">
-        <property name="partitionCount">4</property>
-        <property name="partitionLength">256</property>
-     </function>
-     <function name="fixed_nonuniform" class="Hash">
-        <property name="partitionCount">2,1</property>
-        <property name="partitionLength">256,512</property>
-     </function>
-     <function name="fixed_uniform_string_rule" class="StringHash">
-        <property name="partitionCount">4</property>
-        <property name="partitionLength">256</property>
-        <property name="hashSlice">0:2</property>
-     </function>
-     <function name="fixed_nonuniform_string_rule" class="StringHash">
-        <property name="partitionCount">2,1</property>
-        <property name="partitionLength">256,512</property>
-        <property name="hashSlice">0:2</property>
-     </function>
-     <function name="date_default_rule" class="Date">
-        <property name="dateFormat">yyyy-MM-dd</property>
-        <property name="sBeginDate">2016-12-01</property>
-        <property name="sEndDate">2017-01-9</property>
-        <property name="sPartionDay">10</property>
-        <property name="defaultNode">0</property>
-     </function>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    	<shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
-    """
-    Then execute admin cmd "reload @@config"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
-      | conn   | toClose | sql                            | db               |
-      | conn_0 | False   | select * from dble_table,dble_child_table where dble_table.id ='C4' | dble_information |
-    Then check resultset "1" has lines with following column values
-| id-0   | name-1      | schema-2  | max_limit-3 | type-4  | id-5   | parent_id-6 | increment_column-7 | join_column-8 | paren_column-9 |
-| C4   | er_child1 | schema1 |      1000 | CHILD | C4   | C3        | ID1              | CODE1       | CODE         |
-| C4   | er_child1 | schema1 |      1000 | CHILD | C5   | C3        | ID2              | CODE2       | CODE         |
-| C4   | er_child1 | schema1 |      1000 | CHILD | C7   | C6        | ID               | CODE        | NAME         |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
-       | conn   | toClose | sql                            | db               |
-       | conn_0 | False   | select a.* from dble_table a,dble_child_table b where a.id = 'C4' and b.parent_id = 'C3'; | dble_information |
-    Then check resultset "2" has lines with following column values
-| id-0   | name-1      | schema-2  | max_limit-3 | type-4  |
-| C4   | er_child1 | schema1 |      1000 | CHILD |
-| C4   | er_child1 | schema1 |      1000 | CHILD |
-
