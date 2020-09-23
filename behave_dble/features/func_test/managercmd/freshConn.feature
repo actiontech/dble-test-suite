@@ -1,10 +1,9 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2020/9/10
-Feature: #Enter feature name here
-  # Enter feature description here
+Feature:#test fresh backend connection pool
 
-  Scenario: # Enter scenario name here
+  Scenario: #Use check session transaction ISOLATION level for any changes to confirm whether the connection pool has been refreshed
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                      | expect                  | db  |
       | conn_0 | True   | set global transaction ISOLATION level REPEATABLE READ             | success    | db1 |
