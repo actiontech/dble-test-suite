@@ -88,6 +88,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     >/opt/dble/logs/dble.log
     """
+     #sleep 11 or more seconds because check the log
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
@@ -274,6 +275,9 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 3, 0),)}     |
       | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
-
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                  | expect  |
+      | conn_1 | false    | drop table if exists schema1.g1      | success |
+      | conn_1 | True     | drop table if exists schema2.g3      | success |
 
 
