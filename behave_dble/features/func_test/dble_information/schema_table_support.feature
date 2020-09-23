@@ -1,9 +1,9 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
-@skip
+
 Feature:  show databases/use dble_information/show tables [like]
-@skip_restart
+#@skip_restart
  Scenario:  show databases/use dble_information/show tables [like] #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                    | expect                                                                 |
@@ -58,7 +58,7 @@ Feature:  show databases/use dble_information/show tables [like]
 #      | demotest1                    |
 #      | demotest2                    |
 
-
+#@skip
 @skip_restart
    Scenario:  table select join #2
     Given delete the following xml segment
@@ -129,18 +129,41 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn   | toClose | sql                            | db               |
       | conn_0 | False   | select * from dble_table,dble_child_table where dble_table.id ='C4' | dble_information |
     Then check resultset "1" has lines with following column values
-| id-0   | name-1      | schema-2  | max_limit-3 | type-4  | id-5   | parent_id-6 | increment_column-7 | join_column-8 | paren_column-9 |
-| C4   | er_child1 | schema1 |      1000 | CHILD | C4   | C3        | ID1              | CODE1       | CODE         |
-| C4   | er_child1 | schema1 |      1000 | CHILD | C5   | C3        | ID2              | CODE2       | CODE         |
-| C4   | er_child1 | schema1 |      1000 | CHILD | C7   | C6        | ID               | CODE        | NAME         |
+      | id-0 | name-1    | schema-2 | max_limit-3 | type-4 | id-5 | parent_id-6 | increment_column-7 | join_column-8 | paren_column-9 |
+      | C4   | er_child1 | schema1  | 1000        | CHILD  | C4   | C3          | ID1                | CODE1         | CODE           |
+      | C4   | er_child1 | schema1  | 1000        | CHILD  | C5   | C3          | ID2                | CODE2         | CODE           |
+      | C4   | er_child1 | schema1  | 1000        | CHILD  | C7   | C6          | ID                 | CODE          | NAME           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
        | conn   | toClose | sql                            | db               |
-       | conn_0 | False   | select a.* from dble_table a,dble_child_table b where a.id = 'C4' and b.parent_id = 'C3'; | dble_information |
+       | conn_0 | False   | select a.* from dble_table a,dble_child_table b where a.id = 'C4' and b.parent_id = 'C3' | dble_information |
     Then check resultset "2" has lines with following column values
-| id-0   | name-1      | schema-2  | max_limit-3 | type-4  |
-| C4   | er_child1 | schema1 |      1000 | CHILD |
-| C4   | er_child1 | schema1 |      1000 | CHILD |
+      | id-0 | name-1    | schema-2 | max_limit-3 | type-4 |
+      | C4   | er_child1 | schema1  | 1000        | CHILD  |
+      | C4   | er_child1 | schema1  | 1000        | CHILD  |
 
-@skip_restart
-   Scenario:  show tables in 8066 #2
+
+   Scenario:  show tables in 8066 #3 http://10.186.18.11/jira/browse/DBLE0REQ-511
+      Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                 | expect             |
+      | conn_0 | False   | use schema1         | success            |
+      | conn_0 | False   | show tables         | length{(0)}        |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose  | sql                         | expect         |
+      | conn_1 | False    | use db1                     | success        |
+      | conn_1 | False    | drop table if exists test   | success        |
+      | conn_1 | False    | create table test (id int)  | success        |
+      Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                            | expect                         |
+      | conn_0 | False   | show tables                    | length{(0)}                    |
+      | conn_0 | False   | create table test (id int)     | Table 'test' already exists    |
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                            | expect                         |
+      | conn_2 | False   | reload @@metadata              | success                        |
+      Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                            | expect                         |
+      | conn_0 | False   | show tables                    | has{('test')}                  |
+      | conn_0 | False   | drop table if exists test      | success                        |
+
+
+
