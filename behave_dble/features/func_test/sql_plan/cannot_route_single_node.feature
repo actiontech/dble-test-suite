@@ -24,7 +24,7 @@ Feature: following complex queries are not able to send one shardingnode
     <shardingTable name="sharding_two_node2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
     """
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
@@ -35,7 +35,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                             |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where a.id =1 or b.id=1|
     Then check resultset "rs_A" has lines with following column values
-      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                             |
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                             |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` ORDER BY `a`.`c_flag` ASC  |
       | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` ORDER BY `a`.`c_flag` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                          |
@@ -51,13 +51,13 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                                                            |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b on a.c_flag=b.c_flag where (a.id =1 and b.id=1) or (a.id =513 and b.id=513)|
     Then check resultset "rs_B" has lines with following column values
-      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                                                                      |
-      | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 513) ORDER BY `a`.`c_flag` ASC  |
-      | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 513) ORDER BY `a`.`c_flag` ASC  |
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                      |
+      | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 513) ORDER BY `a`.`c_flag` ASC  |
+      | dn2_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 513) ORDER BY `a`.`c_flag` ASC  |
       | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                   |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                              |
-      | dn1_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` where  ( `b`.`id` = 1 OR `b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
-      | dn2_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` where  ( `b`.`id` = 1 OR `b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
+      | dn1_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` where (`b`.`id` = 1) OR (`b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
+      | dn2_1             | BASE SQL        | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b` where (`b`.`id` = 1) OR (`b`.`id` = 513) ORDER BY `b`.`c_flag` ASC |
       | merge_and_order_2 | MERGE_AND_ORDER | dn1_1; dn2_1                                                                                                                                   |
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                                                              |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                                               |
@@ -67,8 +67,8 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                                                                |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where (a.id = b.id and a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )|
     Then check resultset "rs_C" has lines with following column values
-      | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                         |
-      | dn1_0           | BASE SQL      | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where  ( `a`.`id` = 1 OR `a`.`id` = 2) |
+      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                         |
+      | dn1_0           | BASE SQL      | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where (`a`.`id` = 1) OR (`a`.`id` = 2) |
       | merge_1         | MERGE         | dn1_0                                                                                                             |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                           |
       | dn1_1           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal` from  `sharding_two_node2` `b`                                       |
@@ -83,7 +83,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                     |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where a.c_flag=b.c_flag and a.id =2 |
     Then check resultset "rs_D" has lines with following column values
-      | DATA_NODE-0       | TYPE-1          | SQL/REF-2                                                                                                               |
+      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                               |
       | dn1_0             | BASE SQL        | select `a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` where `a`.`id` = 2 ORDER BY `a`.`c_flag` ASC |
       | merge_1           | MERGE           | dn1_0                                                                                                                   |
       | shuffle_field_1   | SHUFFLE_FIELD   | merge_1                                                                                                                 |
@@ -97,16 +97,16 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                                                                                            |
       | conn_0 | False   | explain select b.*,a.* from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 or (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 ))) |
     Then check resultset "rs_E" has lines with following column values
-      | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                       |
-      | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` = 1 OR `a`.`id` = 2 OR `a`.`c_decimal` in (1)) AND  (  ( `a`.`id` = 1 AND `b`.`id` = 1) OR  ( `a`.`c_flag` = `b`.`c_flag` AND `a`.`id` = 2) OR `a`.`c_decimal` in (1))) |
-      | dn2_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` = 1 OR `a`.`id` = 2 OR `a`.`c_decimal` in (1)) AND  (  ( `a`.`id` = 1 AND `b`.`id` = 1) OR  ( `a`.`c_flag` = `b`.`c_flag` AND `a`.`id` = 2) OR `a`.`c_decimal` in (1))) |
+      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                                                                                                                                                                                                                                                       |
+      | dn1_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((`a`.`id` = 1) OR (`a`.`id` = 2) OR (`a`.`c_decimal` in (1))) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (`a`.`c_decimal` in (1))) |
+      | dn2_0           | BASE SQL      | select `b`.`id`,`b`.`c_flag`,`b`.`c_decimal`,`a`.`id`,`a`.`c_flag`,`a`.`c_decimal` from  `sharding_two_node` `a` join  `sharding_two_node2` `b` on `a`.`id` = `b`.`id` where ((`a`.`id` = 1) OR (`a`.`id` = 2) OR (`a`.`c_decimal` in (1))) AND (((`a`.`id` = 1) AND (`b`.`id` = 1)) OR ((`a`.`c_flag` = `b`.`c_flag`) AND (`a`.`id` = 2)) OR (`a`.`c_decimal` in (1))) |
       | merge_1         | MERGE         | dn1_0; dn2_0                                                                                                                                                                                                                                                                                                                                                    |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                                                                                                                                                                                                                         |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_F"
       | conn   | toClose | sql                                                                                                         |
       | conn_0 | False   | explain select * from sharding_two_node where c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
     Then check resultset "rs_F" has lines with following column values
-      | DATA_NODE-0        | TYPE-1                | SQL/REF-2                                                                                                                                                                                           |
+      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                                                                                                                                                                           |
       | dn1_0              | BASE SQL              | select `sharding_two_node2`.`c_flag` as `autoalias_scalar` from  `sharding_two_node2` where `sharding_two_node2`.`id` = 1 LIMIT 2                                                                   |
       | merge_1            | MERGE                 | dn1_0                                                                                                                                                                                               |
       | limit_1            | LIMIT                 | merge_1                                                                                                                                                                                             |
@@ -120,7 +120,7 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                        |
       | conn_0 | False   | explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 |
     Then check resultset "rs_G" has lines with following column values
-      | DATA_NODE-0     | TYPE-1        | SQL/REF-2                                                                                                                                                     |
+      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                                                                                                                                     |
       | dn1_0           | BASE SQL      | select `sharding_two_node`.`id`,`sharding_two_node`.`c_flag`,`sharding_two_node`.`c_decimal` from  `sharding_two_node` where `sharding_two_node`.`id` = 1     |
       | merge_1         | MERGE         | dn1_0                                                                                                                                                         |
       | shuffle_field_1 | SHUFFLE_FIELD | merge_1                                                                                                                                                       |
@@ -131,3 +131,20 @@ Feature: following complex queries are not able to send one shardingnode
       | union_all_1     | UNION_ALL     | shuffle_field_1; shuffle_field_3                                                                                                                              |
       | distinct_1      | DISTINCT      | union_all_1                                                                                                                                                   |
       | shuffle_field_2 | SHUFFLE_FIELD | distinct_1                                                                                                                                                    |
+
+    #add case https://github.com/actiontech/dble/issues/1714
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_H"
+      | conn   | toClose | sql                                                                                                                                                               |
+      | conn_0 | False   | explain select * from ( select a.id aid,b.id bid,3 mark from sharding_two_node2 a left join sharding_two_node b on a.id= b.id where a.id >3) t where t.mark IN(3) |
+    Then check resultset "rs_H" has lines with following column values
+      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                                                               |
+      | dn1_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where (`a`.`id` > 3) AND (3 in (3)) |
+      | dn2_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where (`a`.`id` > 3) AND (3 in (3)) |
+      | merge_1                    | MERGE                    | dn1_0; dn2_0                                                                                                                                                            |
+      | shuffle_field_1            | SHUFFLE_FIELD            | merge_1                                                                                                                                                                 |
+      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_1                                                                                                                                                         |
+      | shuffle_field_2            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                                                              |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                  | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
+      | conn_0 | False   | drop table if exists sharding_two_node                               | success | schema1 |

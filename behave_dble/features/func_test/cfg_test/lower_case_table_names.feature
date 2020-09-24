@@ -75,13 +75,13 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                |success | schema1 |
       | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
       | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
-      | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | schema1 |
-      | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
-      | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
-      | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)    | success | schema1 |
-      | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)    | success | schema1 |
-      | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)    | success | schema1 |
-      | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'            | success | schema1 |
+      | conn_1 | False   | select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | schema1 |
+      | conn_1 | False   | select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
+      | conn_1 | False   | select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
+      | conn_1 | False   | select s.id from DbTest.Test_Table s union (select Id from test)    | success | schema1 |
+      | conn_1 | True    | select s.id from DbTest.Test_Table S union (select id from Test)    | success | schema1 |
+      | conn_1 | True    | select s.id from DbTest.Test_Table S union (select id from test)    | success | schema1 |
+      | conn_1 | True    | select s.id from DbTest.`Test_Table` s where s.name='aa'            | success | schema1 |
       | conn_2 | False   | drop table if exists uos_page_ret_inst                             | success | DbTest  |
       | conn_2 | False   | drop table if exists uos_tache_def                                 | success | DbTest  |
       | conn_2 | False   | create table uos_page_ret_inst(`RET_INST_ID` bigint (20),`TACHE_CODE` varchar (180),`TEST` varchar (300))                                | success     | DbTest |
@@ -96,6 +96,20 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_2 | False   | insert into uos_page_ret_inst values('10','AAAA',NULL) ,('36','BBBB',NULL)                                                                | success     | DbTest |
       | conn_2 | False   | insert into uos_tache_def values('1557471076988','BBBB','2019-05-10 14:51:17',NULL), ('1557471086419','aaaa','2019-05-10 14:51:26',NULL)  | success     | DbTest |
       | conn_2 | True    | select INST.TACHE_CODE,def.TACHE_CODE from uos_page_ret_inst INST JOIN uos_tache_def def ON def.TACHE_CODE=INST.TACHE_CODE                | length{(1)} | DbTest |
+#case https://github.com/actiontech/dble/issues/1749
+      | conn_3 | False   | drop table if exists test_table           | success | DBTEST  |
+      | conn_3 | False   | create table test_table(id int)           | success | DBTEST  |
+      | conn_3 | False   | insert into test_table values (1),(2)     | success | DBTEST  |
+      | conn_3 | True    | select count(*) from Test_Table           | success | DBTEST  |
+      | conn_4 | False   | use DBTEST                                | success | DBTEST  |
+      | conn_4 | False   | drop table if exists test_table           | success | DBTEST  |
+      | conn_4 | False   | drop table if exists uos_page_ret_inst    | success | DBTEST  |
+      | conn_4 | False   | drop table if exists uos_tache_def        | success | DBTEST  |
+      | conn_4 | False   | use schema1                               | success | schema1 |
+      | conn_4 | True    | drop table if exists Test                 | success | schema1 |
+
+
+
 
   @BLOCKER @current
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2
