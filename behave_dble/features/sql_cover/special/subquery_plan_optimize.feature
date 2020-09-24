@@ -51,7 +51,13 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       |query | expect_result_count |
       |explain select * from table_a a, table_b b on a.id =b.id | 4 |
       |explain select * from table_a a, table_b B on a.id =b.id | 4 |
-      |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 7 |
+      |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x | 7 |
+  #add case https://github.com/actiontech/dble/issues/1714
+      |explain select * from ( select a.id aid,b.id bid,3 mark from table_a a left join table_b b on a.id= b.id where a.id >3) t where t.mark IN(3) | 6 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                           | expect    | db      |
+      | conn_0 | False    | drop table if exists table_a                  | success   | schema1 |
+      | conn_0 | False    | drop table if exists table_b                  | success   | schema1 |
 
   @regression
   Scenario: check Global tables subquery execute plan optimized #2
@@ -71,6 +77,10 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         |query | expect_result_count |
         |explain select * from table_a a, table_b b on a.id =b.id | 1 |
         |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x; | 1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                            | expect    | db      |
+      | conn_0 | False    | drop table if exists table_a                   | success   | schema1 |
+      | conn_0 | False    | drop table if exists table_b                   | success   | schema1 |
 
   Scenario: the optimization of merge #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
@@ -188,3 +198,13 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
         | expect_result_line     | DATA_NODE-0        | TYPE-1            |
         | expect_result_line:5   | merge_and_order_1  | MERGE_AND_ORDER   |
         | expect_result_line:10  | merge_1            | MERGE             |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                        | expect    | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1         | success   | schema1 |
+      | conn_0 | False   | drop table if exists sharding_2_t1         | success   | schema1 |
+      | conn_0 | False   | drop table if exists sharding_3_t1         | success   | schema1 |
+      | conn_0 | False   | drop table if exists tb_parent             | success   | schema1 |
+      | conn_0 | False   | drop table if exists tb_child1             | success   | schema1 |
+      | conn_0 | False   | drop table if exists schema2.global_4_t1   | success   | schema1 |
+      | conn_0 | False   | drop table if exists schema2.global_4_t2   | success   | schema1 |
+      | conn_0 | False   | drop table if exists schema2.sharding_4_t2 | success   | schema1 |
