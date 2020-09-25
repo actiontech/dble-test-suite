@@ -52,8 +52,6 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       |explain select * from table_a a, table_b b on a.id =b.id | 4 |
       |explain select * from table_a a, table_b B on a.id =b.id | 4 |
       |explain select count(*) from ( select a.id from table_a a join table_b b on a.id =b.id) x | 7 |
-  #add case https://github.com/actiontech/dble/issues/1714
-      |explain select * from ( select a.id aid,b.id bid,3 mark from table_a a left join table_b b on a.id= b.id where a.id >3) t where t.mark IN(3) | 6 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                           | expect    | db      |
       | conn_0 | False    | drop table if exists table_a                  | success   | schema1 |
