@@ -15,6 +15,6 @@ Feature: xa transaction test
       | conn_0 | True    | commit                                                                                             | success  | schema1 |
       | conn_1 | False   | set xa=1                                                                                           | success  | schema1 |
       | conn_1 | False   | begin                                                                                              | success  | schema1 |
-      | conn_1 | False   | explain select 1 from sharding_4_t1 a,sharding_4_t1 b where a.id in(1,2) and b.id in(1,2) limit 1; | success  | schema1 |
-      | conn_1 | False   | select 1 from sharding_4_t1 a,sharding_4_t1 b where a.id in(1,2) and b.id in(1,2) limit 1;         | success  | schema1 |
+      | conn_1 | False   | explain select 1 from sharding_4_t1 a,sharding_4_t1 b where a.id in(1,2) and b.id in(1,2) limit 1  | success  | schema1 |
+      | conn_1 | False   | select 1 from sharding_4_t1 a,sharding_4_t1 b where a.id in(1,2) and b.id in(1,2) limit 1          | success  | schema1 |
       | conn_1 | True    | commit                                                                                             | success  | schema1 |
