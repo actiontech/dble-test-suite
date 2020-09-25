@@ -60,9 +60,9 @@ if __name__ == "__main__":
     #large_column_test(4*1024*1024, conn, sqlContext)
     #large_column_test(65574, conn, sqlContext)
     #large_column_test(65575, conn, sqlContext)
-    # large_column_test(65535, conn, sqlContext)
-    # large_column_test(65536, conn, sqlContext)
+    #large_column_test(65535, conn, sqlContext)
+    #large_column_test(65536, conn, sqlContext)
 
-    # large_packet_test(16*1024*1024, conn, sqlContext)
+    #large_packet_test(16*1024*1024, conn, sqlContext)
     large_packet_test(512*1024, conn, sqlContext2)
     conn.close()
