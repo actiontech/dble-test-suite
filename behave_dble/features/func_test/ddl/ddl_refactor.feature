@@ -5,6 +5,7 @@ Feature: test ddl refactor
   check log when ddl execute failed
   check log when ddl execute successfully
   check warning log when the time of hang>60s
+  can‘t support ddl in xa transaction
 
   Scenario: check log when ddl execute failed       #1
     Then execute sql in "dble-1" in "user" mode
@@ -75,4 +76,28 @@ Feature: test ddl refactor
     Then execute sql in "dble-1" in "user" mode
       | sql                                | expect   | db      |
       | drop table if exists sharding_4_t1 | success  | schema1 |
+
+
+   Scenario:  can‘t support ddl in xa transaction  #4
+#case  https://github.com/actiontech/dble/issues/1760
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                          | expect                                               | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1           | success                                              | schema1 |
+      | conn_0 | False   | set autocommit=0                             | success                                              | schema1 |
+      | conn_0 | False   | set xa=on                                    | success                                              | schema1 |
+      | conn_0 | False   | show full tables                             | success                                              | schema1 |
+      | conn_0 | False   | create table sharding_4_t1 (id int,code int) | DDL is not allowed to be executed in xa transaction. | schema1 |
+      | conn_0 | False   | rollback                                     | success                                              | schema1 |
+      | conn_0 | False   | set autocommit=1                             | success                                              | schema1 |
+      | conn_0 | False   | set xa=off                                   | success                                              | schema1 |
+      | conn_0 | False   | drop table if exists sharding_4_t1           | success                                              | schema1 |
+
+
 
