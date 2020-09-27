@@ -214,7 +214,7 @@ Feature:  dble_entry test
       | 4    | schema2  |
       | 4    | schema3  |
 
-@skip
+
 @skip_restart
    Scenario:  dble_entry_table_privilege  table #3
   #case desc dble_entry_table_privilege
@@ -324,13 +324,9 @@ Feature:  dble_entry test
 
      <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                                                                                 |
-      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: the dml privilege for the shema [schema1] configuration under the user [test] is not standard    |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-     the dml privilege for the shema \[schema1\] configuration under the user \[test\] is not standard
-    """
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                  | expect                                                                                                                                                 |
+      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct   |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -353,12 +349,8 @@ Feature:  dble_entry test
      <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                         |
-      | conn_0 | False   | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-      schema\[schema2\] was not found in the user \[name:test\]
-    """
+      | conn   | toClose | sql                  | expect                                                                                                                                                                       |
+      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User \[test1\]'s schema \[schema2\]'s table \[no_s3\]'s privilege's dml is not correct  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -387,10 +379,10 @@ Feature:  dble_entry test
     """
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                                                                                                           |
-      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: the dml privilege for the table [no_s3] configuration under the shema [schema2] under the user [test1] is not standard     |
+      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: the dml privilege for the table [no_s3] configuration under the schema [schema2] under the user [test1] is not standard     |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
      """
-      the dml privilege for the table \[no_s3\] configuration under the shema \[schema2\] under the user \[test1\] is not standard
+      the dml privilege for the table \[no_s3\] configuration under the schema \[schema2\] under the user \[test1\] is not standard
      """
     Given execute linux command in "dble-1"
     """
