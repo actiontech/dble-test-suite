@@ -78,7 +78,6 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
       <managerUser name="root_test" password="111111" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
       <shardingUser name="sharding_test" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="schema1" maxCon="0" blacklist="blacklist1"/>
-      <rwSplitUser name="rwSplit" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" dbGroup="ha_group1" tenant="tenant1" maxCon="20" blacklist="blacklist1"/>
       <blacklist name="blacklist1">
         <property name="variantCheck">true</property>
       </blacklist>
@@ -161,7 +160,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
 
   Scenario:  config two blacklists with the same name, reload failed #11
-    Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
+    Given add xml segment to node with attribute "{'tag':'root', 'prev':'shardingUser'}" in "user.xml" with duplicate name
     """
       <blacklist name="blacklist1">
         <property name="selectHavingAlwayTrueCheck">true</property>
@@ -176,7 +175,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
 
   Scenario:  config wrong blacklist property, reload failed #12
-    Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
+    Given add xml segment to node with attribute "{'tag':'root', 'prev':'shardingUser'}" in "user.xml" with duplicate name
     """
       <blacklist name="blacklist1">
         <property name="selectHavingAlwayTrueCheck_fake">true</property>
