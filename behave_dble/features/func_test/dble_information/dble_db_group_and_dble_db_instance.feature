@@ -46,7 +46,7 @@ Feature:  dble_db_group test
 
     <dbGroup rwSplitMode="0" name="ha_3" delayThreshold="1000" >
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -57,10 +57,6 @@ Feature:  dble_db_group test
     <shardingNode dbGroup="ha_1" database="db2" name="dn3" />
     <shardingNode dbGroup="ha_2" database="db2" name="dn4" />
     <shardingNode dbGroup="ha_1" database="db3" name="dn5" />
-    """
-      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_1" maxCon="20"/>
     """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_3"

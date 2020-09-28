@@ -1,7 +1,8 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
-@skip
+
+
 Feature:  backend_connections test
 @skip_restart
    Scenario:  backend_connections table #1
@@ -74,8 +75,8 @@ Feature:  backend_connections test
     Then check resultset "backend_connections_4" has not lines with following column values
       | user-0 | sql-1                                    | schema-2 | xa_status-3 | in_transaction-4 |
       | test   | insert into test values (1),(2)          | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1),(3) | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2),(4) | db1      | 1           | true             |
+      | test   | insert into sharding_2_t1 values (1),(3) | db1      | 1           | true             |
+      | test   | insert into sharding_2_t1 values (2),(4) | db1      | 1           | true             |
       | test   | insert into test values (1),(2)          | db2      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
       | conn_1 | False   | set autocommit=1   | success |
@@ -144,7 +145,6 @@ Feature:  backend_connections test
       | conn_0 | False   | select table from backend_connections where schema <any (select schema from backend_connections)              | length{(5)}                                                           |
       | conn_0 | False   | select table from backend_connections where schema =any (select schema from backend_connections)              | length{(6)}                                                           |
 
-@skip
 @skip_restart
    Scenario:  backend_variables table #2
   #case desc backend_variables

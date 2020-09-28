@@ -24,6 +24,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | use dble_information                   | success                                                                |
       #case  show tables [like]  correct or erroneous spelling
       | conn_0 | False   | show table                             | Unsupported statement                                                  |
+      | conn_0 | False   | show full tables                       | Unsupported statement                                                  |
       | conn_0 | False   | show tables                            | has{('Tables_in_dble_information')}                                    |
       | conn_0 | False   | show tables like '%s%'                 | has{('Tables_in_dble_information (%s%)')}                              |
       | conn_0 | False   | show tables like 'version'             | has{('Tables_in_dble_information (version)')}                          |

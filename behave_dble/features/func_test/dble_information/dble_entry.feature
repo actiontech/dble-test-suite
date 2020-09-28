@@ -30,7 +30,6 @@ Feature:  dble_entry test
       | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
       | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
       | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
-      | 3    | username | rwSplitUser  | rwSplit    | false                | None            | None              | None        | -          | 20                | None         |
   #case change user.xml and reload
     Given delete the following xml segment
       | file     | parent         | child                  |
@@ -46,12 +45,25 @@ Feature:  dble_entry test
      <shardingUser name="test1" password="123456" schemas="schema1" readOnly="false" blacklist="blacklist1" maxCon="150"/>
      <shardingUser name="test2" password="123456" schemas="schema1" maxCon="120" tenant="tenant1"/>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" blacklist="blacklist1" maxCon="20"/>
-     <rwSplitUser name="rwSplit1" password="123456" dbGroup="dbGroup1" blacklist="blacklist1" />
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group3" blacklist="blacklist1" maxCon="20"/>
+     <rwSplitUser name="rwSplit1" password="123456" dbGroup="ha_group4" blacklist="blacklist1" />
 
      <blacklist name="blacklist1">
      <property name="selelctAllow">true</property>
      </blacklist>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM4" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
@@ -95,8 +107,6 @@ Feature:  dble_entry test
     """
      <managerUser name="root" password="111111"  />
      <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" />
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" />
-
     """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_4"
@@ -106,7 +116,6 @@ Feature:  dble_entry test
       | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
       | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
       | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
-      | 3    | username | rwSplitUser  | rwSplit    | false                | None            | None              | None        | -          | no limit          | None         |
 
 
    Scenario:  dble_entry_schema  table #2
@@ -131,7 +140,6 @@ Feature:  dble_entry test
      </schema>
     <schema shardingNode="dn4" name="schema3">
     </schema>
-
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -141,10 +149,18 @@ Feature:  dble_entry test
      <shardingUser name="test1" password="123456" schemas="schema2" readOnly="false" blacklist="blacklist1" maxCon="150"/>
      <shardingUser name="test2" password="123456" schemas="schema2,schema3" maxCon="120" tenant="tenant1"/>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" blacklist="blacklist1" maxCon="20"/>
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group3" blacklist="blacklist1" maxCon="20"/>
      <blacklist name="blacklist1">
      <property name="selelctAllow">true</property>
      </blacklist>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_schema_2"
@@ -197,7 +213,7 @@ Feature:  dble_entry test
     """
      <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
      <shardingUser name="test" password="111111" schemas="schema2" readOnly="false" />
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" />
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_schema_3"
@@ -241,7 +257,15 @@ Feature:  dble_entry test
      <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
      <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" />
      <shardingUser name="test1" password="123456" schemas="schema2" readOnly="false" maxCon="150"/>
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group3" blacklist="blacklist1" maxCon="20"/>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
@@ -270,7 +294,7 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group3" blacklist="blacklist1" maxCon="20"/>
     """
    Then execute admin cmd "reload @@config"
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_2"
@@ -322,7 +346,6 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                                                 |
@@ -346,7 +369,6 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                         |
@@ -376,7 +398,6 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
      Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                                                                    |
@@ -416,7 +437,6 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
     Given execute linux command in "dble-1"
     """
@@ -456,7 +476,6 @@ Feature:  dble_entry test
         </privileges>
      </shardingUser>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -527,18 +546,15 @@ Feature:  dble_entry test
       | max_conn_count     | varchar(64)  | NO     |       | None      |         |
       | blacklist          | varchar(64)  | YES    |       | None      |         |
       | db_group           | varchar(64)  | NO     |       | None      |         |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_2"
-      | conn   | toClose | sql                               | db                 |
-      | conn_0 | False   | select * from dble_rw_split_entry | dble_information |
-    Then check resultset "dble_rw_split_entry_2" has lines with following column values
-      | id-0 | type-1   | username-2 | encrypt_configured-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7 | max_conn_count-8 | blacklist-9 | db_group-10 |
-      | 3    | username | rwSplit    | false                | None            | None              | None        | 20               | None        | ha_group1   |
-  #case change user.xml and reload
+ #case change user.xml and reload
     Given delete the following xml segment
-      | file     | parent         | child                  |
-      | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
-      | user.xml | {'tag':'root'} | {'tag':'managerUser'}  |
-      | user.xml | {'tag':'root'} | {'tag':'rwSplitUser'}  |
+      | file         | parent         | child                  |
+      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
+      | user.xml     | {'tag':'root'} | {'tag':'managerUser'}  |
+      | user.xml     | {'tag':'root'} | {'tag':'rwSplitUser'}  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
+      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
+
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
      <managerUser name="root" password="111111" readOnly="false" maxCon="100"/>
@@ -546,7 +562,7 @@ Feature:  dble_entry test
 
      <rwSplitUser name="rwSplit" password="epeqIkJ7KyzpFqC67+fPdAzLIzYTIlu6OTgFrdmS6+WgxLJr9aSOt+szbhReYSZvoY8PW2x8Gh77pAsFnfbPmQ==" usingDecrypt="true" dbGroup="ha_group1" blacklist="list" maxCon="20"/>
      <rwSplitUser name="rwSplit1" password="123456" dbGroup="ha_group2" blacklist="blacklist1" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1"/>
-     <rwSplitUser name="rwSplit2" password="123456" dbGroup="ha_group1" blacklist="black" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" tenant="ten1"/>
+     <rwSplitUser name="rwSplit2" password="123456" dbGroup="ha_group3" blacklist="black" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" tenant="ten1"/>
 
      <blacklist name="list">
         <property name="updateWhereAlayTrueCheck">true</property>
@@ -558,6 +574,26 @@ Feature:  dble_entry test
         <property name="metadataAllow">true</property>
      </blacklist>
     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+    </schema>
+
+    <shardingNode dbGroup="ha_group4" database="db1" name="dn1" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM4" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
+    """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_3"
       | conn   | toClose | sql                               | db                 |
@@ -566,12 +602,12 @@ Feature:  dble_entry test
       | id-0 | type-1    | username-2 | encrypt_configured-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7               | max_conn_count-8 | blacklist-9 | db_group-10 |
       | 3    | username  | rwSplit    | true                 | None            | None              | None                      | 20               | list        | ha_group1   |
       | 4    | username  | rwSplit1   | false                | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | no limit         | None        | ha_group2   |
-      | 5    | conn_attr | rwSplit2   | false                | tenant          | ten1              | 0:0:0:0:0:0:0:1,127.0.0.1 | no limit         | black       | ha_group1   |
+      | 5    | conn_attr | rwSplit2   | false                | tenant          | ten1              | 0:0:0:0:0:0:0:1,127.0.0.1 | no limit         | black       | ha_group3   |
    #case select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect                                                        |
       | conn_0 | False   | select type,username from dble_rw_split_entry order by id desc limit 2     | has{(('conn_attr', 'rwSplit2'), ('username', 'rwSplit1'))}    |
-      | conn_0 | False   | select id,db_group,type from dble_rw_split_entry where type like '%conn%'  | has{((5,'ha_group1','conn_attr',))}                           |
+      | conn_0 | False   | select id,db_group,type from dble_rw_split_entry where type like '%conn%'  | has{((5,'ha_group3','conn_attr',))}                           |
   #case select max/min
       | conn_0 | False   | select max(id) from dble_rw_split_entry                      | has{((5,),)}  |
       | conn_0 | False   | select min(id) from dble_rw_split_entry                      | has{((3,),)}  |
@@ -606,7 +642,7 @@ Feature:  dble_entry test
      <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="black1" />
      <shardingUser name="test1" password="123456" schemas="schema1" readOnly="false" blacklist="blacklist2" maxCon="150"/>
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="list3" maxCon="20"/>
+     <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group3" blacklist="list3" maxCon="20"/>
 
      <blacklist name="black1">
         <property name="updateWhereAlayTrueCheck">true</property>
@@ -626,6 +662,14 @@ Feature:  dble_entry test
         <property name="selectHavingAlwayTrueCheck">true</property>
         <property name="selelctAllow">true</property>
      </blacklist>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+    </dbGroup>
     """
      Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_2"
