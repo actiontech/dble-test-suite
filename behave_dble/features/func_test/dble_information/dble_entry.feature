@@ -215,7 +215,6 @@ Feature:  dble_entry test
       | 4    | schema3  |
 
 
-@skip_restart
    Scenario:  dble_entry_table_privilege  table #3
   #case desc dble_entry_table_privilege
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_1"
@@ -301,6 +300,7 @@ Feature:  dble_entry test
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
+ # case the dml less more 4
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
      <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
@@ -349,11 +349,12 @@ Feature:  dble_entry test
      <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                                                                       |
-      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User \[test1\]'s schema \[schema2\]'s table \[no_s3\]'s privilege's dml is not correct  |
+      | conn   | toClose | sql                  | expect                                                                                                                         |
+      | conn_0 | False   | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
+ # case the dml not 0or1
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
      <managerUser name="root" password="111111"  readOnly="false" maxCon="100"/>
@@ -378,11 +379,11 @@ Feature:  dble_entry test
      <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" blacklist="blacklist1" maxCon="20"/>
     """
      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                                                                                                           |
-      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: the dml privilege for the table [no_s3] configuration under the schema [schema2] under the user [test1] is not standard     |
+      | conn   | toClose | sql                  | expect                                                                                                                                                                    |
+      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct     |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
      """
-      the dml privilege for the table \[no_s3\] configuration under the schema \[schema2\] under the user \[test1\] is not standard
+      dml is not correct
      """
     Given execute linux command in "dble-1"
     """
@@ -391,7 +392,7 @@ Feature:  dble_entry test
     Given sleep "10" seconds
     Then get result of oscmd named "rs_1" in "dble-1"
     """
-    cat /opt/dble/logs/wrapper.log | grep 'the dml privilege for the table \[no_s3\] configuration under the shema \[schema2\] under the user \[test1\] is not standard' |wc -l
+    cat /opt/dble/logs/wrapper.log | grep 'dml is not correct' |wc -l
     """
     Then check result "rs_1" value is "1"
     Given delete the following xml segment

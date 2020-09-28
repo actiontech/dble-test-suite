@@ -4,8 +4,7 @@
 
 Feature:  dble_xa_session test
 
-  @skip
-@skip_restart
+#@skip_restart
 @btrace @restore_mysql_service
    Scenario:  dble_xa_session  table #1
     """
@@ -50,21 +49,10 @@ Feature:  dble_xa_session test
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_xa_session_2"
       | conn   | toClose | sql                           | db               |
       | conn_2 | False   | select * from dble_xa_session | dble_information |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_xa_session_3"
-      | conn   | toClose | sql                           | db               |
-      | conn_2 | False   | show @@session.xa             | dble_information |
     Then check resultset "dble_xa_session_2" has lines with following column values
       | xa_state-2           | sharding_node-3 |
+      | XA COMMIT FAIL STAGE | dn3             |
       | XA COMMIT FAIL STAGE | dn1             |
-      | XA COMMIT FAIL STAGE | dn1             |
-    Then check resultset "dble_xa_session_3" has lines with following column values
-      |  XA_STATE-2           | SHARDING_NODES-3 |
-      |  XA COMMIT FAIL STAGE | dn3 dn1          |
-    Then check resultsets "dble_xa_session_2" and "dble_xa_session_3" are same in following columns
-      | column     | column_index |
-      | front_id   | 0            |
-      | xa_id      | 1            |
-      | xa_state   | 2            |
     Given start mysql in host "mysql-master1"
 
   #case update/delete
@@ -75,6 +63,6 @@ Feature:  dble_xa_session test
       | conn_0 | False   | insert into dble_xa_session values (1,'1',1,1,1)                                        | Access denied for table 'dble_xa_session'     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | db      |
-      | conn_1 | False   | set autocommit=1                                        | schema1 |
-      | conn_1 | False   | set xa=off                                              | schema1 |
-      | conn_1 | False   | drop table if exists sharding_4_t1                      | schema1 |
+      | conn_3 | False   | set autocommit=1                                        | schema1 |
+      | conn_3 | False   | set xa=off                                              | schema1 |
+      | conn_3 | False   | drop table if exists sharding_4_t1                      | schema1 |
