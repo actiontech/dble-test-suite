@@ -190,7 +190,6 @@ Feature: config all dble config files correct and restart dble
     """
       <managerUser name="root_test" password="111111" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
       <shardingUser name="sharding_test" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="schema1" maxCon="0" blacklist="blacklist1"/>
-      <rwSplitUser name="rwSplit" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" dbGroup="ha_group1" tenant="tenant1" maxCon="20" blacklist="blacklist1"/>
       <blacklist name="blacklist1">
         <property name="selectHavingAlwayTrueCheck">true</property>
         <property name="selectWhereAlwayTrueCheck">true</property>
