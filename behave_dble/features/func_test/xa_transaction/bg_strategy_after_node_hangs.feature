@@ -44,9 +44,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given destroy btrace threads list
     Given destroy sql threads list
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
@@ -97,9 +99,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
@@ -155,9 +159,11 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | True    | delete from sharding_4_t1 where id = 4 | Lock wait timeout exceeded | schema1 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | false   | select * from sharding_4_t1 | length{(2)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | false   | select * from sharding_4_t1         | length{(2)} | schema1 |
+      | conn_1 | false   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
@@ -203,7 +209,9 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
@@ -254,6 +262,8 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
