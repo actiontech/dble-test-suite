@@ -3,7 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  show databases/use dble_information/show tables [like]
-#@skip_restart
+@skip_restart
  Scenario:  show databases/use dble_information/show tables [like] #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                    | expect                                                                 |
@@ -52,7 +52,35 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | show tables               | dble_information |
     Then check resultset "tables_1" has lines with following column values
       | Tables_in_dble_information-0 |
-
+| backend_connections        |
+| backend_variables          |
+| dble_algorithm             |
+| dble_blacklist             |
+| dble_child_table           |
+| dble_db_group              |
+| dble_db_instance           |
+| dble_ddl_lock              |
+| dble_entry                 |
+| dble_entry_db_group        |
+| dble_entry_schema          |
+| dble_entry_table_privilege |
+| dble_global_table          |
+| dble_processor             |
+| dble_reload_status         |
+| dble_rw_split_entry        |
+| dble_schema                |
+| dble_sharding_node         |
+| dble_sharding_table        |
+| dble_status                |
+| dble_table                 |
+| dble_table_sharding_node   |
+| dble_thread_pool           |
+| dble_thread_usage          |
+| dble_variables             |
+| dble_xa_session            |
+| processlist                |
+| session_connections        |
+| session_variables          |
 #    Then check resultset "tables_1" has not lines with following column values
 #      | Tables_in_dble_information-0 |
 #      | demotest1                    |
@@ -66,8 +94,10 @@ Feature:  show databases/use dble_information/show tables [like]
     """
     Unsupported show:show VARINT
     """
-#@skip
-@skip_restart
+
+
+
+#@skip_restart
    Scenario:  table select join #2
     Given delete the following xml segment
       | file         | parent         | child                    |

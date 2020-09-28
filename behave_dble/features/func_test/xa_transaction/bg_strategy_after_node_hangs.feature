@@ -215,7 +215,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_mysql_service
+  @btrace @restore_mysql_service @skip_restart
   Scenario: mysql node hangs causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #5
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
