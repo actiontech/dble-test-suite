@@ -195,4 +195,18 @@ int main(int argc, char *argv[]) {
                   show databases;\
                   set @a='test';";
     case_mysql_real_connect(sqls5);
+
+    char sqls6[] = "drop table if exists schema2.sharding_3_t1;\
+                   create table schema2.sharding_3_t1(id int,name varchar(30));\
+                   set @A=1;select @A ;set @b=@A+1;select @b;\
+                   set @c=6;select @C ;set @d=@c-2+@a;select @d;\
+                   set @E=@b*@d;set @F=@c/@b;select @e,@f;\
+                   insert into schema2.sharding_3_t1 values(1,@a);\
+                   insert into schema2.sharding_3_t1 values(2,@b);\
+                   insert into schema2.sharding_3_t1 values(3,@c);\
+                   insert into schema2.sharding_3_t1 values(4,@d);\
+                   insert into schema2.sharding_3_t1 values(5,@e);\
+                   insert into schema2.sharding_3_t1 values(6,@f);\
+                   select * from schema2.sharding_3_t1 order by id;";
+    case_mysql_real_connect(sqls6);
 }
