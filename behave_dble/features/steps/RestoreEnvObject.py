@@ -9,8 +9,12 @@ from lib import utils
 
 from steps.lib.ObjectFactory import ObjectFactory
 from steps.mysql_steps import execute_sql_in_host
+# from steps.lib.utils import get_ssh
+from lib.utils import get_sftp, get_ssh,get_node
 
 import re
+
+from hamcrest import *
 
 logger = logging.getLogger('environment.after_scenario')
 class RestoreEnvObject(object):
@@ -24,6 +28,24 @@ class RestoreEnvObject(object):
         # if "aft_reset_replication" in self._scenario.tags:
         #     utils.reset_repl()
         #
+        if "restore_network" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'restore_network'")
+            logger.debug("params_dic is: {0}".format(params_dic))
+            if params_dic:
+                paras = params_dic["restore_network"].split(",")
+                # paras = paras.split(",")
+            else:
+                paras = ""
+
+
+            logger.debug("try to restore_network: {0}".format(paras))
+            for host_name in paras:
+                logger.debug("the value of host_name is: {0}".format(host_name))
+                cmd = "iptables -F"
+                ssh = get_ssh(host_name)
+                rc, stdout, stderr = ssh.exec_command(cmd)
+                assert_that(len(stderr) == 0, "restore network with command:{1}, got err:{0}".format(stderr, cmd))
+
         if "restore_view" in self._scenario.tags:
             params_dic = self.get_tag_params("{'restore_view'")
             if params_dic:
