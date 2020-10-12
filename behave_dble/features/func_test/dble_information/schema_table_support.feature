@@ -10,7 +10,7 @@ Feature:  show databases/use dble_information/show tables [like]
       #case  operation with not use dble_information  http://10.186.18.11/jira/browse/DBLE0REQ-489
       | conn_0 | False   | show tables                            | No database selected                                                   |
       | conn_0 | False   | desc version                           | No database selected                                                   |
-      | conn_0 | False   | select * from version                  | No database selected                                                   |
+      | conn_0 | False   | select * from version                  | get error call manager command Schema name or Table name is null!      |
       #case show databases correct or erroneous spelling   https://github.com/actiontech/dble/issues/1961
       | conn_0 | False   | show database                          | Unsupported statement                                                  |
       | conn_0 | False   | show databasesl                        | Unsupported statement                                                  |
@@ -91,7 +91,7 @@ Feature:  show databases/use dble_information/show tables [like]
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
        | conn_0 | False   | show VARINT  | Unsupported statement |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     Unsupported show:show VARINT
     """

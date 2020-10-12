@@ -153,4 +153,7 @@ Feature:  backend_connections test
       | conn_0 | False   | desc backend_variables | dble_information |
     Then check resultset "backend_variables_1" has lines with following column values
       | Field-0                   | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
-
+| backend_conn_id | int(11)     | NO   |      | None    |       |
+| variable_name   | varchar(12) | NO   |      | None    |       |
+| variable_value  | varchar(12) | NO   |      | None    |       |
+| variable_type   | varchar(3)  | NO   |      | None    |       |
