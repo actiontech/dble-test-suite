@@ -89,12 +89,17 @@ Feature:  show databases/use dble_information/show tables [like]
  #case The query needs to be printed in the log，when management commands not supported by druid   https://github.com/actiontech/dble/issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
-       | conn_0 | False   | show VARINT  | Unsupported statement |
+       | conn_0 | true    | show VARINT  | Unsupported statement |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     Unsupported show:show VARINT
     """
 
+#  #case
+#    Then execute sql in "dble-1" in "admin" mode
+#       | conn   | toClose | sql                        | expect  |
+#       | conn_0 | False   | use dbLE_information       | success |
+#       | conn_0 | False   | select * from dble_Schema  | success |
 
 
 #@skip_restart

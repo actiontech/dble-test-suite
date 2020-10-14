@@ -128,9 +128,9 @@ Feature:  backend_connections test
       | conn_1 | False   | drop table if exists sharding_2_t1               | success |
    #case select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                        | expect                                                  |
+      | conn   | toClose | sql                                                                                 | expect                                                  |
       | conn_0 | False   | select user,db_group_name from backend_connections order by schema desc limit 2     | has{(('schema1', 'true'), ('schema1', 'false'))}        |
-      | conn_0 | False   | select user,db_group_name from backend_connections where schema like '%2%'                           | has{((3,'schema2','no_s1','false',0,1,1,1,'false'))}    |
+      | conn_0 | False   | select user,db_group_name from backend_connections where schema like '%2%'          | has{((3,'schema2','no_s1','false',0,1,1,1,'false'))}    |
   #case select max/min
       | conn_0 | False   | select max(db_group_name) from backend_connections                      | has{((3,),)}  |
       | conn_0 | False   | select min(db_group_name) from backend_connections                      | has{((2,),)}  |

@@ -72,7 +72,6 @@ Feature:  dble_processor test
       | conn_1 | False   | update dble_processor set name = '2' where name = 'frontProcessor0'  | Access denied for table 'dble_processor'  |
       | conn_1 | False   | insert into dble_processor values ('1','2', 3, 4.5)                  | Access denied for table 'dble_processor'  |
 
-@skip
 
 @skip_restart
      Scenario:  processlist  table #2
@@ -171,13 +170,10 @@ Feature:  dble_processor test
       | state          | 7            |
       | info           | 8            |
 
-
-
-
    #case select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                               | expect                                                                     |
-      | conn_1 | False   | use dble_information                                              | success                                                                    |
+      | conn   | toClose | sql                                                            | expect                                                                     |
+      | conn_1 | False   | use dble_information                                           | success                                                                    |
       | conn_1 | False   | select name,type from processlist limit 1                      | has{(('frontProcessor0', 'session'),)}                                     |
       | conn_1 | False   | select name,type from processlist order by name desc limit 2   | has{(('frontProcessor0', 'session'), ('backendProcessor3', 'backend'))}    |
       | conn_1 | False   | select * from processlist where name like '%or%'               | length{(5)}                                                                |
@@ -185,9 +181,9 @@ Feature:  dble_processor test
       | conn_1 | False   | select max(name) from processlist                      | has{(('frontProcessor0',),)}           |
       | conn_1 | False   | select min(name) from processlist                      | has{(('backendProcessor0',),)}         |
   #case where [sub-query]
-      | conn_1 | False   | select shardingNode,user from processlist where type in (select type from dble_processor where conn_count>0) | length{(5)}    |
+      | conn_1 | False   | select sharding_node,user from processlist where type in (select type from dble_processor where conn_count>0) | length{(5)}    |
    #case select field from
-      | conn_1 | False   | select user,shardingNode from processlist where time > 0         | length{(5)}  |
+      | conn_1 | False   | select user,sharding_node from processlist where time > 0         | length{(5)}  |
   #case update/delete
       | conn_1 | False   | delete from processlist where front_id = 3                  | Access denied for table 'processlist'  |
       | conn_1 | False   | update processlist set mysql_id = 1 where mysql_id is null  | Access denied for table 'processlist'  |
