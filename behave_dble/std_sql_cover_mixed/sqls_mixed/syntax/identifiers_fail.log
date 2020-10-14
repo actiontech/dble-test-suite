@@ -142,9 +142,6 @@ dble err:(1064, "You have an error in your SQL syntax; check the manual that cor
 dble:[None]
 mysql:[()]
 dble err:(1064, 'error pos 36, line 1, column 32, token BEGIN')
-===file:sqls_mixed/syntax/identifiers.sql, id:138, sql:[EXECUTE stmt]===
-dble:[[(', @c, ',), (', @c, ',), (', @c, ',)]]
-mysql:[[(1L,), (2L,), (3L,)]]
 ===file:sqls_mixed/syntax/identifiers.sql, id:151, sql:[create table .drop(`order` int, `add` int)]===
 dble:[None]
 mysql:[()]
