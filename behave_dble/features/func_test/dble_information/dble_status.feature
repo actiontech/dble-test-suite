@@ -160,4 +160,4 @@ Feature:  dble_status test
       | 19          | 15             |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
-      | conn_1 | False   | drop table if exists test                                |
+      | conn_1 | true    | drop table if exists test                                |
