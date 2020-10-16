@@ -4,8 +4,8 @@
 
 
 Feature:  backend_connections test
-@skip_restart
-   Scenario:  backend_connections table #1
+
+    Scenario:  backend_connections table #1
   #case desc backend_connections
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_1"
       | conn   | toClose | sql                      | db               |
@@ -29,20 +29,13 @@ Feature:  backend_connections test
       | conn_net_in               | int(11)       | NO     |       | None      |         |
       | conn_net_out              | int(11)       | NO     |       | None      |         |
       | conn_estab_time           | int(11)       | NO     |       | None      |         |
-      | borrowed_from_pool        | int(11)       | NO     |       | None      |         |
+      | borrowed_from_pool        | varchar(5)    | NO     |       | None      |         |
       | conn_recv_buffer          | int(11)       | NO     |       | None      |         |
       | conn_send_task_queue      | int(11)       | NO     |       | None      |         |
       | used_for_heartbeat        | varchar(5)    | NO     |       | None      |         |
       | conn_closing              | varchar(5)    | NO     |       | None      |         |
       | xa_status                 | varchar(64)   | NO     |       | None      |         |
       | in_transaction            | varchar(5)    | NO     |       | None      |         |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_2"
-#      | conn   | toClose | sql                       | db               |
-#      | conn_0 | False   | select * from backend_connections | dble_information |
-#    Then check resultset "backend_connections_2" has lines with following column values
-#| db_group_name-1 | db_instance_name-2 | remote_addr-3 | remote_port-4   | processor_id-7    | user-8 | schema-9 | session_conn_id-10 | sql-11  | sql_execute_time-12 | mark_as_expired_timestamp-13 | borrowed_from_pool-17 | conn_recv_buffer-18 | conn_send_task_queue-19 | used_for_heartbeat-20 | conn_closing-21 | xa_status-22 | in_transaction-23 |
-#| ha_group2       | hostM2             | 172.100.9.6   | 3306            | backendProcessor0 | test   | NULL     |            None    | None    |              470924 |                            0 |                  true |                4096 |                       0 | false                 | false           | 0            | false          |
-
 
   # case 8066 set xa=on http://10.186.18.11/jira/browse/DBLE0REQ-508
     Then execute sql in "dble-1" in "user" mode
@@ -56,29 +49,26 @@ Feature:  backend_connections test
       | conn_1 | False   | set xa=on                                        | success |
       | conn_1 | False   | insert into test values (1),(2)                  | success |
       | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_3"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_2"
       | conn   | toClose | sql                                                                        | db               |
       | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections   | dble_information |
-    Then check resultset "backend_connections_3" has lines with following column values
-      | user-0 | sql-1                                    | schema-2 | xa_status-3 | in_transaction-4 |
-      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1),(3) | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2),(4) | db1      | 1           | true             |
-      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
+    Then check resultset "backend_connections_2" has lines with following column values
+      | user-0 | sql-1                                         | schema-2 | xa_status-3 | in_transaction-4 |
+      | test   | insert into test values (1),(2)               | db2      | 1           | true             |
+      | test   | insert into test values (1),(2)               | db2      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql             | expect  |
       | conn_1 | False   | use schema1     | success |
       | conn_1 | False   | commit          | success |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_4"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_3"
       | conn   | toClose | sql                                                                       | db               |
       | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections  | dble_information |
-    Then check resultset "backend_connections_4" has not lines with following column values
-      | user-0 | sql-1                                    | schema-2 | xa_status-3 | in_transaction-4 |
-      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
-      | test   | insert into sharding_2_t1 values (1),(3) | db1      | 1           | true             |
-      | test   | insert into sharding_2_t1 values (2),(4) | db1      | 1           | true             |
-      | test   | insert into test values (1),(2)          | db2      | 1           | true             |
+    Then check resultset "backend_connections_3" has not lines with following column values
+      | user-0 | sql-1                                          | schema-2 | xa_status-3 | in_transaction-4 |
+      | test   | insert into test values (1),(2)                | db2      | 1           | true             |
+      | test   | insert into test values (1),(2)                | db2      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                | expect  |
       | conn_1 | False   | set autocommit=1   | success |
       | conn_1 | False   | set xa=off         | success |
   #case change db.xml and reload
@@ -109,20 +99,20 @@ Feature:  backend_connections test
     </dbGroup>
     """
     Then execute admin cmd "reload @@config"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_5"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_4"
       | conn   | toClose | sql                                                                               | db               |
       | conn_0 | False   | select db_group_name,db_instance_name,remote_addr,schema from backend_connections | dble_information |
-    Then check resultset "backend_connections_5" has lines with following column values
-      | db_group_name-0 | db_instance_name-1 | remote_addr-2 | schema-3 |
-      | ha_group1       | hostM1             | 172.100.9.5   | db1      |
-      | ha_group1       | hostM1             | 172.100.9.5   | db2      |
-      | ha_group1       | hostM1             | 172.100.9.5   | NULL     |
-      | ha_group1       | hostS1             | 172.100.9.2   | NULL     |
-    Then check resultset "backend_connections_5" has not lines with following column values
-      | db_group_name-0 | db_instance_name-1 | remote_addr-2 | schema-3 |
-      | ha_group2       | hostM2             | 172.100.9.6   | db2      |
-      | ha_group2       | hostM2             | 172.100.9.6   | db3      |
-      | ha_group2       | hostM2             | 172.100.9.6   | NULL     |
+    Then check resultset "backend_connections_4" has lines with following column values
+      | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
+      | ha_group1       | hostM1             | 172.100.9.5   |
+      | ha_group1       | hostM1             | 172.100.9.5   |
+      | ha_group1       | hostM1             | 172.100.9.5   |
+      | ha_group1       | hostS1             | 172.100.9.2   |
+    Then check resultset "backend_connections_4" has not lines with following column values
+      | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
+      | ha_group2       | hostM2             | 172.100.9.6   |
+      | ha_group2       | hostM2             | 172.100.9.6   |
+      | ha_group2       | hostM2             | 172.100.9.6   |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
       | conn_1 | False   | drop table if exists test                        | success |
@@ -130,30 +120,37 @@ Feature:  backend_connections test
    #case select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                 | expect                                                  |
-      | conn_0 | False   | select user,db_group_name from backend_connections order by schema desc limit 2     | has{(('schema1', 'true'), ('schema1', 'false'))}        |
-      | conn_0 | False   | select user,db_group_name from backend_connections where schema like '%2%'          | has{((3,'schema2','no_s1','false',0,1,1,1,'false'))}    |
+      | conn_0 | False   | select user,db_group_name from backend_connections order by schema desc limit 2     | has{(('test', 'ha_group1'), ('test', 'ha_group1'))}     |
+      | conn_0 | False   | select user,db_group_name from backend_connections where schema like '%2%'          | has{(('test', 'ha_group1'),)}                           |
   #case select max/min
-      | conn_0 | False   | select max(db_group_name) from backend_connections                      | has{((3,),)}  |
-      | conn_0 | False   | select min(db_group_name) from backend_connections                      | has{((2,),)}  |
+      | conn_0 | False   | select max(db_group_name) from backend_connections                      | has{(('ha_group1',),)}  |
+      | conn_0 | False   | select min(db_group_name) from backend_connections                      | has{(('ha_group1',),)}  |
   #case update/delete
       | conn_0 | False   | delete from backend_connections where user='test'                         | Access denied for table 'backend_connections'     |
       | conn_0 | False   | update backend_connections set user = 'a' where user ='test'              | Access denied for table 'backend_connections'     |
       | conn_0 | False   | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
-  #case select where [sub-query]
-      | conn_0 | False   | select table from backend_connections where schema in (select schema from backend_connections where id =2 )   | has{(('test',), ('no_s1',), ('test',), ('no_s3',), ('no_s2',))}       |
-      | conn_0 | False   | select table from backend_connections where schema >all (select schema from backend_connections)              | length{(0)}                                                           |
-      | conn_0 | False   | select table from backend_connections where schema <any (select schema from backend_connections)              | length{(5)}                                                           |
-      | conn_0 | False   | select table from backend_connections where schema =any (select schema from backend_connections)              | length{(6)}                                                           |
 
 @skip_restart
    Scenario:  backend_variables table #2
   #case desc backend_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_1"
       | conn   | toClose | sql                      | db               |
-      | conn_0 | False   | desc backend_variables | dble_information |
+      | conn_0 | False   | desc backend_variables   | dble_information |
     Then check resultset "backend_variables_1" has lines with following column values
-      | Field-0                   | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
-| backend_conn_id | int(11)     | NO   |      | None    |       |
-| variable_name   | varchar(12) | NO   |      | None    |       |
-| variable_value  | varchar(12) | NO   |      | None    |       |
-| variable_type   | varchar(3)  | NO   |      | None    |       |
+      | Field-0         | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | backend_conn_id | int(11)     | NO     |       | None      |         |
+      | variable_name   | varchar(12) | NO     |       | None      |         |
+      | variable_value  | varchar(12) | NO     |       | None      |         |
+      | variable_type   | varchar(3)  | NO     |       | None      |         |
+  #case select * from backend_variables
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_2"
+      | conn   | toClose | sql                             | db               |
+      | conn_0 | true    | select * from backend_variables | dble_information |
+    Then check resultset "backend_variables_2" has lines with following column values
+      | variable_name-1          | variable_value-2   | variable_type-3 |
+      | autocommit               | true               | sys             |
+      | character_set_client     | utf8mb4            | sys             |
+      | collation_connection     | utf8mb4_general_ci | sys             |
+      | character_set_results    | utf8mb4            | sys             |
+      | character_set_connection | utf8mb4_general_ci | sys             |
+      | transaction_isolation    | repeatable-read    | sys             |
