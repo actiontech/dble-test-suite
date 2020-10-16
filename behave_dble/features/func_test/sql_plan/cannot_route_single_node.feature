@@ -61,8 +61,7 @@ Feature: following complex queries are not able to send one shardingnode
       | merge_and_order_2 | MERGE_AND_ORDER | dn1_1; dn2_1                                                                                                                                   |
       | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                                                              |
       | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                                               |
-      | where_filter_1    | WHERE_FILTER    | join_1                                                                                                                                         |
-      | shuffle_field_2   | SHUFFLE_FIELD   | where_filter_1                                                                                                                                 |
+      | shuffle_field_2   | SHUFFLE_FIELD   | join_1                                                                                                                                 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_C"
       | conn   | toClose | sql                                                                                                                                                |
       | conn_0 | False   | explain select * from sharding_two_node a join sharding_two_node2 b where (a.id = b.id and a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 )|
