@@ -96,11 +96,12 @@ Feature:  show databases/use dble_information/show tables [like]
     Unsupported show:show VARINT
     """
 
-#  #case
-#    Then execute sql in "dble-1" in "admin" mode
-#       | conn   | toClose | sql                        | expect  |
-#       | conn_0 | False   | use dbLE_information       | success |
-#       | conn_0 | False   | select * from dble_Schema  | success |
+   #case http://10.186.18.11/jira/browse/DBLE0REQ-576
+    Then execute sql in "dble-1" in "admin" mode
+       | conn   | toClose | sql                        | expect  |
+       | conn_0 | False   | use dble_information       | success |
+       | conn_0 | False   | select * from dble_Schema  | success |
+       | conn_0 | False   | select ID from dble_Table  | success |
 
 
 #@skip_restart

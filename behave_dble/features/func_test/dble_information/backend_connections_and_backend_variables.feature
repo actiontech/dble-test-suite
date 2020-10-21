@@ -154,3 +154,24 @@ Feature:  backend_connections test
       | character_set_results    | utf8mb4            | sys             |
       | character_set_connection | utf8mb4_general_ci | sys             |
       | transaction_isolation    | repeatable-read    | sys             |
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DtxIsolation=2
+    $a -Dautocommit=0
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                    | expect  |
+      | conn_1 | False   | use schema1                            | success |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_3"
+      | conn   | toClose | sql                                                                                                        | db               |
+      | conn_0 | true    | select * from backend_variables where variable_name='autocommit' or variable_name='transaction_isolation'  | dble_information |
+      Then check resultset "backend_variables_3" has lines with following column values
+      | variable_name-1       | variable_value-2 | variable_type-3 |
+      | autocommit            | false            | sys             |
+      | transaction_isolation | read-committed   | sys             |
+
+
+
+
+
