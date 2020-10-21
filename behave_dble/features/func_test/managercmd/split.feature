@@ -47,12 +47,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then execute sql in "dble-1" in "admin" mode
       | sql                                               | expect                                                   |
       | split /opt/schema1_with_only_data.sql /opt   |success                                                   |
-#      | split /opt/schema1_with_only_data.sql /opt   | has{('schema1-global_sequence', 'current stmt[INSERT INTO `global_sequence` VALUES (1,'1',1),(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5)] error,because:can't find meta of table and the table has no create statement.'),}                                                   |
-#      | split /opt/schema1_with_only_data.sql /opt    | has{('schema1-global_sequence', 'current stmt\[INSERT INTO `global_sequence` VALUES (1,'1',1),(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5)\] error,because:can't find \
-#       meta of table and the table has no create statement.'),('schema1-sharding_2_t1','current stmt\[INSERT \
-#      INTO `sharding_2_t1` VALUES (1,'1',1),(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5)\] error,because:can't find meta of table and the table has no create statement.'),('schema1-sharding_4_t1'),'current \
-#      stmt\[INSERT INTO `sharding_4_t1` VALUES (1,'1',1),(2,'2',2),(3,'3',3),(4,'4',4),(5,'5',5)\] error,because:can't find meta of table and the table has no create statement.')}  |
-#    #check the split out files exist
+    #check the split out files exist
     Then check path "/opt/schema1_with_only_data.sql-dn1-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_only_data.sql-dn2-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_only_data.sql-dn3-*.dump" in "dble-1" should exist
@@ -110,7 +105,6 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                          | expect                                                                                                       |
       | split /opt/schema1_with_only_data.sql /opt             | success                                                                                               |
-#      | split /opt/schema1_with_only_data.sql /opt -sschema1  | has{('schema1-global_sequence','For table using global sequence, dble has set increment column values for you',)}   |
     #check the split out files exist
     Then check path "/opt/schema1_with_only_data.sql-dn1-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_only_data.sql-dn2-*.dump" in "dble-1" should exist
@@ -188,11 +182,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/noschema_only_table_data.sql-dn1-*.dump /opt/noschema_only_table_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/noschema_only_table_data.sql-dn1.dump && \
-      mv /opt/noschema_only_table_data.sql-dn3-*.dump /opt/noschema_only_table_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/noschema_only_table_data.sql-dn3.dump && \
-      mv /opt/noschema_only_table_data.sql-dn5-*.dump /opt/noschema_only_table_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/noschema_only_table_data.sql-dn5.dump && \
-      mv /opt/noschema_only_table_data.sql-dn2-*.dump /opt/noschema_only_table_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/noschema_only_table_data.sql-dn2.dump && \
-      mv /opt/noschema_only_table_data.sql-dn4-*.dump /opt/noschema_only_table_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/noschema_only_table_data.sql-dn4.dump
+      mv /opt/noschema_only_table_data.sql-dn1-*.dump /opt/noschema_only_table_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb1< /opt/noschema_only_table_data.sql-dn1.dump && \
+      mv /opt/noschema_only_table_data.sql-dn3-*.dump /opt/noschema_only_table_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb2 < /opt/noschema_only_table_data.sql-dn3.dump && \
+      mv /opt/noschema_only_table_data.sql-dn5-*.dump /opt/noschema_only_table_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb3< /opt/noschema_only_table_data.sql-dn5.dump && \
+      mv /opt/noschema_only_table_data.sql-dn2-*.dump /opt/noschema_only_table_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb1< /opt/noschema_only_table_data.sql-dn2.dump && \
+      mv /opt/noschema_only_table_data.sql-dn4-*.dump /opt/noschema_only_table_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb2< /opt/noschema_only_table_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -208,7 +202,6 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | False    | /*#dble:shardingNode=dn2*/select * from sharding_4_t1                    | has{(1,'1',1),(5,'5',5)}                  | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn3*/select * from sharding_4_t1                    | has{(2,'2',2)}                              | schema1     |
       | conn_0 | False    | /*#dble:shardingNode=dn4*/select * from sharding_4_t1                    | has{(3,'3',3)}                              | schema1     |
-      | conn_0 | False    | select * from nosharding                                                     | length{(5)}                                 | schema1     |
       | conn_0 | True     | select * from global_sequence                                               | length{(5)}                                 | schema1     |
     Given execute oscmd in "dble-1"
      """
@@ -354,7 +347,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     """
 
 
-  @CRITICAL @ww @skip_restart
+  @CRITICAL
   Scenario: dump file have two schemas #4
     Given upload file "./assets/all_schemas_with_data.sql" to "dble-1" success
     #1.split with '-s' parameter and the schema does not exist in dble config, split return error
@@ -469,37 +462,35 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
   Scenario: test with '--ignore' parameter #5
     Given upload file "./assets/schema1_with_only_data.sql" to "dble-1" success
     #1.split with no '--ignore' parameter, split success and the insert statement will not contains the keyword 'ignore'
-#    Then execute sql in "dble-1" in "admin" mode
-#      | sql                                                                             | expect                                                   |
-#      | split /opt/schema1_with_only_data.sql /opt                                  | success     |
-#    #check the split out files exist
-#    Then check path "/opt/schema1_with_only_data.sql-dn1-*.dump" in "dble-1" should exist
-#    Then check path "/opt/schema1_with_only_data.sql-dn2-*.dump" in "dble-1" should exist
-#    Then check path "/opt/schema1_with_only_data.sql-dn3-*.dump" in "dble-1" should exist
-#    Then check path "/opt/schema1_with_only_data.sql-dn4-*.dump" in "dble-1" should exist
-#    Then check path "/opt/schema1_with_only_data.sql-dn5-*.dump" in "dble-1" should exist
-
-
-#    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn1-*.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn2-*.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn3-*.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn4-*.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn5-*.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                             | expect                                                   |
+      | split /opt/schema1_with_only_data.sql /opt                                  | success     |
+    #check the split out files exist
+    Then check path "/opt/schema1_with_only_data.sql-dn1-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_only_data.sql-dn2-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_only_data.sql-dn3-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_only_data.sql-dn4-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_only_data.sql-dn5-*.dump" in "dble-1" should exist
+    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn1-*.dump" in host "dble-1"
+     """
+     INSERT IGNORE
+     """
+    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn2-*.dump" in host "dble-1"
+     """
+     INSERT IGNORE
+     """
+    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn3-*.dump" in host "dble-1"
+     """
+     INSERT IGNORE
+     """
+    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn4-*.dump" in host "dble-1"
+     """
+     INSERT IGNORE
+     """
+    Then check following text exist "N" in file "/opt/schema1_with_only_data.sql-dn5-*.dump" in host "dble-1"
+     """
+     INSERT IGNORE
+     """
 
     #2.split with '--ignore' parameter, split success and the insert statement contains the keyword 'ignore'
     Given execute oscmd in "dble-1"
@@ -528,28 +519,6 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_only_data.sql-dn3-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_only_data.sql-dn4-*.dump" in "dble-1" should exist
     Then check path "/opt/schema1_with_only_data.sql-dn5-*.dump" in "dble-1" should exist
-
-#    Then check following text exist "Y" in file "/opt/schema1_with_only_data.sql-dn1.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "Y" in file "/opt/schema1_with_only_data.sql-dn2.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "Y" in file "/opt/schema1_with_only_data.sql-dn3.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "Y" in file "/opt/schema1_with_only_data.sql-dn4.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-#    Then check following text exist "Y" in file "/opt/schema1_with_only_data.sql-dn5.dump" in host "dble-1"
-#     """
-#     ignore
-#     """
-
     Given execute oscmd in "dble-1"
      """
       mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
@@ -575,6 +544,7 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
      """
       rm -rf /opt/schema1_with_only_data.sql*.dump
     """
+
 
   @NORMAL
   Scenario: test with '-l' parameter #6
@@ -634,5 +604,48 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       rm -rf /opt/schema1_with_data.sql*.dump
     """
 
+
   @NORMAL
-  Scenario: split file with large data(10000w) #6
+  Scenario: insert value contains special character ';'(this case comes from DBLE0REQ-574)  #6
+    Given upload file "./assets/schema1_with_data_special.sql" to "dble-1" success
+    Given execute oscmd in "dble-1"
+     """
+      rm -rf /opt/schema1_with_data_special.sql-dn*.dump
+    """
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                   | expect                                                   |
+      | split /opt/schema1_with_data_special.sql /opt                       | success      |
+    #check the split out files exist
+    Then check path "/opt/schema1_with_data_special.sql-dn1-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_data_special.sql-dn2-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_data_special.sql-dn3-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_data_special.sql-dn4-*.dump" in "dble-1" should exist
+    Then check path "/opt/schema1_with_data_special.sql-dn5-*.dump" in "dble-1" should exist
+    Given execute oscmd in "dble-1"
+     """
+      mv /opt/schema1_with_data_special.sql-dn1-*.dump /opt/schema1_with_data_special.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn1.dump && \
+      mv /opt/schema1_with_data_special.sql-dn3-*.dump /opt/schema1_with_data_special.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn3.dump && \
+      mv /opt/schema1_with_data_special.sql-dn5-*.dump /opt/schema1_with_data_special.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn5.dump && \
+      mv /opt/schema1_with_data_special.sql-dn2-*.dump /opt/schema1_with_data_special.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn2.dump && \
+      mv /opt/schema1_with_data_special.sql-dn4-*.dump /opt/schema1_with_data_special.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn4.dump
+     """
+    Then execute admin cmd "reload @@metadata"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                   | expect                                                         | db      |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn3*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn4*/select * from test          | has{(1,'1!',1),(2,'@2',2),(3,'#3*',3),(4,'$4&',4),(5,'%5^',5)} | schema1 |
+      | conn_0 | False   | select * from sharding_1_t1                           | has{(1,'1;',1),(2,'2;',2),(3,'3;',3),(4,'4;',4),(5,'5;',5)}    | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from sharding_2_t1 | has{(2,',2',2),(4,';4',4)}                                     | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from sharding_2_t1 | has{(1,'a,1',1),(3,'a3',3),(5,'5,6',5)}                        | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn1*/select * from sharding_4_t1 | has{(4,'$4&',4)}                                               | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn2*/select * from sharding_4_t1 | has{(1,'1!',1),(5,'%5^',5)}                                    | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn3*/select * from sharding_4_t1 | has{(2,'@2',2)}                                                | schema1 |
+      | conn_0 | False   | /*#dble:shardingNode=dn4*/select * from sharding_4_t1 | has{(3,'#3*',3)}                                               | schema1 |
+      | conn_0 | False   | select * from nosharding                              | has{(1,';1',1),(2,';2',2),(3,';3',3),(4,';4',4),(5,';5',5)}    | schema1 |
+      | conn_0 | True    | select * from global_sequence                         | length{(5)}                                                    | schema1 |
+    Given execute oscmd in "dble-1"
+     """
+      rm -rf /opt/schema1_with_data_special.sql-dn*.dump
+    """
