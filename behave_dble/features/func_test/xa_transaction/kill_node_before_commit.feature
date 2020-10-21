@@ -5,8 +5,11 @@
 
 #2.20.04.0#dble-8170
 Feature: xa_transaction: kill node before transaction commit
-
+  @restore_mysql_service
   Scenario: begin transaction and insert data , kill one node before transaction commit #1
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                      | expect      | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                                                                       | success     | schema1 |

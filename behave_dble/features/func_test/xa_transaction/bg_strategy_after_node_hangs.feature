@@ -6,8 +6,11 @@
 #2.20.04.0#dble-8174
 Feature: retry policy after xa transaction commit failed for mysql service stopped
 
-  @btrace
+  @btrace @restore_mysql_service
   Scenario: mysql node hangs causing xa transaction fail to commit,restart mysql node before the front end attempts to commit 5 times , #1
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -41,14 +44,19 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given destroy btrace threads list
     Given destroy sql threads list
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
+  @btrace @restore_mysql_service
   Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts#2
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -91,14 +99,19 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     cat /opt/dble/logs/dble.log |grep "time in background" |wc -l
     """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(4)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
+  @btrace @restore_mysql_service
   Scenario:mysql node hangs causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' #3
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -146,14 +159,19 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | True    | delete from sharding_4_t1 where id = 4 | Lock wait timeout exceeded | schema1 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                         | expect      | db      |
-      | conn_1 | false   | select * from sharding_4_t1 | length{(2)} | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | false   | select * from sharding_4_t1         | length{(2)} | schema1 |
+      | conn_1 | false   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
+  @btrace @restore_mysql_service
   Scenario: mysql node hangs causing xa transaction fail to commit, restart dble causing xa commit again #4
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -191,12 +209,17 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace
+  @btrace @restore_mysql_service
   Scenario: mysql node hangs causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #5
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -239,6 +262,8 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn_1 | False   | delete from sharding_4_t1 where id = 1 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 2 | success     | schema1 |
       | conn_1 | False   | delete from sharding_4_t1 where id = 3 | success     | schema1 |
-      | conn_1 | True    | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1 where id = 4 | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1     | success     | schema1 |
+
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
