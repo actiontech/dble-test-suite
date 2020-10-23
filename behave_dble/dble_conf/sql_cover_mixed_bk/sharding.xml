@@ -20,6 +20,7 @@
         <shardingTable name="sharding_4_t3" shardingNode="dn1,dn2,dn3,dn4" function="fixed_uniform_string_rule" shardingColumn="id"/>
         <globalTable name="global_4_t1" shardingNode="dn1,dn2,dn3,dn4" />
         <globalTable name="global_4_t2" shardingNode="dn1,dn2,dn3,dn4" />
+        <singleTable name="sharding_1_t3" shardingNode="dn1" />
     </schema>
 
     <schema name="schema3" >
@@ -59,7 +60,7 @@
 	<function name="fixed_uniform_string_rule" class="StringHash">
 		<property name="partitionCount">4</property>
 		<property name="partitionLength">256</property>
-		<property name="hashSlice">0:2</property>
+		<property name="hashSlice">0:15</property>
 	</function>
 	<function name="fixed_nonuniform_string_rule" class="StringHash">
 		<property name="partitionCount">2,1</property>
