@@ -341,7 +341,7 @@ Feature:  dble_algorithm test
     """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_2"
       | conn   | toClose | sql                          | db               |
-      | conn_0 | False   | select * from dble_algorithm | dble_information |
+      | conn_0 | true    | select * from dble_algorithm | dble_information |
     Then check resultset "dble_algorithm_2" has lines with following column values
       | name-0               | key-1           | value-2                                              | is_file-3 |
       | hash-two             | class           | com.actiontech.dble.route.function.PartitionByLong   | false     |

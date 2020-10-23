@@ -83,7 +83,7 @@ Feature:  dble_entry test
   #case update/delete
       | conn_0 | False   | delete from dble_entry where type='username'               | Access denied for table 'dble_entry'     |
       | conn_0 | False   | update dble_entry set type='aa'  where type='username'     | Access denied for table 'dble_entry'     |
-      | conn_0 | False   | insert into dble_entry values ('a',1,2,3)                  | Access denied for table 'dble_entry'     |
+      | conn_0 | False    | insert into dble_entry values ('a',1,2,3)                  | Access denied for table 'dble_entry'     |
 
  #case delete user
     Given delete the following xml segment
@@ -214,7 +214,7 @@ Feature:  dble_entry test
       | 4    | schema2  |
       | 4    | schema3  |
 
-
+#@skip_restart
    Scenario:  dble_entry_table_privilege  table #3
   #case desc dble_entry_table_privilege
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_1"
@@ -277,11 +277,8 @@ Feature:  dble_entry test
       | conn   | toClose | sql                                       | db               |
       | conn_0 | False   | select * from dble_entry_table_privilege  | dble_information |
     Then check resultset "dble_entry_table_privilege_2" has lines with following column values
-      | id-0 | schema-1 | table-2       | exist_metas-3 | insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
-      | 2    | schema1  | test          | false         | 0        | 1        | 1        | 0        | false          |
-      | 2    | schema1  | sharding_2_t1 | false         | 0        | 1        | 1        | 0        | false          |
-      | 2    | schema1  | sharding_4_t1 | false         | 0        | 1        | 1        | 0        | false          |
-      | 3    | schema2  | no_s3         | true          | 0        | 0        | 0        | 0        | true           |
+      | schema-1 | table-2       | exist_metas-3 | insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
+      | schema2  | no_s3         | true          | 0        | 0        | 0        | 0        | true           |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect  |
       | conn_2 | False   | drop table if exists no_s3  | success |
@@ -290,11 +287,8 @@ Feature:  dble_entry test
       | conn   | toClose | sql                                       | db               |
       | conn_0 | False   | select * from dble_entry_table_privilege  | dble_information |
     Then check resultset "dble_entry_table_privilege_3" has lines with following column values
-      | id-0 | schema-1 | table-2       | exist_metas-3 | insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
-      | 2    | schema1  | test          | false         | 0        | 1        | 1        | 0        | false          |
-      | 2    | schema1  | sharding_2_t1 | false         | 0        | 1        | 1        | 0        | false          |
-      | 2    | schema1  | sharding_4_t1 | false         | 0        | 1        | 1        | 0        | false          |
-      | 3    | schema2  | no_s3         | false         | 0        | 0        | 0        | 0        | false          |
+      | schema-1 | table-2       | exist_metas-3 | insert-4 | update-5 | select-6 | delete-7 | is_effective-8 |
+      | schema2  | no_s3         | false         | 0        | 0        | 0        | 0        | false          |
 
  #case dml standard http://10.186.18.11/jira/browse/DBLE0REQ-515 and http://10.186.18.11/jira/browse/DBLE0REQ-512
     Given delete the following xml segment

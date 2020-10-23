@@ -4,7 +4,8 @@
 
 Feature:  dble_table test
 
-   Scenario:  dble_table  table #1
+
+  Scenario:  dble_table  table #1
   #case desc dble_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_1"
       | conn   | toClose | sql             | db               |
@@ -92,7 +93,7 @@ Feature:  dble_table test
       | conn_0 | False   | select type from dble_table where schema >all (select schema from dble_table where id like '%c%')    | length{(0)}                       |
       | conn_0 | False   | select type from dble_table where schema < any (select schema from dble_table where id like '%c%')   | length{(10)}                      |
       | conn_0 | False   | select type from dble_table where schema = (select schema from dble_table where id like '%c%')       | Subquery returns more than 1 row  |
-      | conn_0 | False   | select type from dble_table where schema = any (select schema from dble_table where id like '%c%')   | length{(16)}                      |
+      | conn_0 | False   | select type from dble_table where schema = any (select schema from dble_table where id like '%schema2%')   | length{(0)}                      |
   #case update/delete
       | conn_0 | False   | delete from dble_table where schema='schema1'                   | Access denied for table 'dble_table'  |
       | conn_0 | False   | update dble_table set schema = 'a' where schema='schema1'       | Access denied for table 'dble_table'  |
@@ -104,7 +105,7 @@ Feature:  dble_table test
       | conn_1 | False   | use schema2                 | success |
       | conn_1 | False   | drop table if exists no_s2  | success |
       | conn_1 | False   | use schema3                 | success |
-      | conn_1 | False   | drop table if exists no_s3  | success |
+      | conn_1 | true    | drop table if exists no_s3  | success |
   #case delete some schema
     Given delete the following xml segment
       | file         | parent         | child                  |

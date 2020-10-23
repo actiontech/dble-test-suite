@@ -91,14 +91,13 @@ Feature:  dble_db_group test
   #case select field
       | conn_0 | False   | select a.name,a.heartbeat_stmt,b.db_group from dble_db_group a inner join dble_db_instance b on a.name=b.db_group where a.heartbeat_retry = 0     | has{(('ha_1', 'show slave status', 'ha_1',))}                           |
       | conn_0 | False   | select * from dble_db_group where name in (select db_group from dble_db_instance where name ='hostM1')                                            | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'))}     |
-      | conn_0 | False   | select name,heartbeat_stmt from dble_db_group where rw_split_mode > 0                                                                             | has{(('ha_1', 'show slave status',),('ha_2', 'select user()',))}        |
+      | conn_0 | true    | select name,heartbeat_stmt from dble_db_group where rw_split_mode > 0                                                                             | has{(('ha_1', 'show slave status',),('ha_2', 'select user()',))}        |
 
-
-   Scenario:  dble_db_instance table #2
+  Scenario:  dble_db_instance table #2
   #case desc dble_db_instance
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_1"
       | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | desc dble_db_instance | dble_information |
+      | conn_0 | False   | desc dble_db_instance   | dble_information |
     Then check resultset "dble_db_instance_1" has lines with following column values
       | Field-0                           | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
       | name                              | varchar(64)  | NO     | PRI   | None      |         |
@@ -124,10 +123,10 @@ Feature:  dble_db_group test
       | id                                | varchar(64)  | YES    |       | None      |         |
       | connection_timeout                | int(11)      | YES    |       | 30000     |         |
       | connection_heartbeat_timeout      | int(11)      | YES    |       | 20        |         |
-      | test_on_create                    | varchar(64)  | YES    |       | false     |         |
-      | test_on_borrow                    | varchar(64)  | YES    |       | false     |         |
-      | test_on_return                    | varchar(64)  | YES    |       | false     |         |
-      | test_while_idle                   | varchar(64)  | YES    |       | false     |         |
+      | test_on_create                    | varchar(5)   | YES    |       | false     |         |
+      | test_on_borrow                    | varchar(5)   | YES    |       | false     |         |
+      | test_on_return                    | varchar(5)   | YES    |       | false     |         |
+      | test_while_idle                   | varchar(5)   | YES    |       | false     |         |
       | time_between_eviction_runs_millis | int(11)      | YES    |       | 30000     |         |
       | evictor_shutdown_timeout_millis   | int(11)      | YES    |       | 10000     |         |
       | idle_timeout                      | int(11)      | YES    |       | 600000    |         |

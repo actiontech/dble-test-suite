@@ -4,7 +4,6 @@
 
 Feature:  dble_xa_session test
 
-#@skip_restart
 @btrace @restore_mysql_service
    Scenario:  dble_xa_session  table #1
     """
