@@ -46,12 +46,12 @@ Feature:  dble_ddl_lock test
       | conn   | toClose | sql                                                                                   | expect                                      |
       | conn_0 | False   | delete from dble_ddl_lock where sql='drop table if exists sharding_2_t1'              | Access denied for table 'dble_ddl_lock'     |
       | conn_0 | False   | update dble_ddl_lock set sql = 'a' where sql='drop table if exists sharding_2_t1'     | Access denied for table 'dble_ddl_lock'     |
-      | conn_0 | False   | insert into dble_ddl_lock values (1,'1',1,1,1)                                        | Access denied for table 'dble_ddl_lock'     |
+      | conn_0 | true    | insert into dble_ddl_lock values (1,'1',1,1,1)                                        | Access denied for table 'dble_ddl_lock'     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | db      |
       | conn_1 | False   | rollback                                                | schema1 |
       | conn_1 | False   | set autocommit=1                                        | schema1 |
       | conn_1 | False   | set xa=off                                              | schema1 |
-      | conn_1 | False   | drop table if exists sharding_2_t1                      | schema1 |
+      | conn_1 | true    | drop table if exists sharding_2_t1                      | schema1 |
 
 
