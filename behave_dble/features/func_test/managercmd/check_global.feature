@@ -3,8 +3,11 @@
 # Created by quexiuping at 2020/9/14
 Feature: test " check @@global schema = '' [and table = '']"
 
+  @restore_mysql_service
   Scenario: check @@global schema = '' [and table = ''] #1
-
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
   #case global table exists with not global check
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                                                       |
@@ -46,11 +49,6 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn_0 | False   | check @@global schema='schema1'  | length{(4)}      |
       | conn_0 | False   | check @@global schema='schema2'  | length{(3)}      |
       | conn_0 | true    | check @@global schema='schema3'  | length{(2)}      |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                              | expect           |
-      | conn_0 | False   | check @@global schema='schema1'  | length{(4)}      |
-      | conn_0 | False   | check @@global schema='schema2'  | length{(3)}      |
-      | conn_0 | true    | check @@global schema='schema3'  | length{(2)}      |
     
   #case change sharding.xml add global check and reload
     Given delete the following xml segment
@@ -64,7 +62,7 @@ Feature: test " check @@global schema = '' [and table = '']"
     </schema>
 
     <schema shardingNode="dn1" name="schema2" >
-        <globalTable name="g3" shardingNode="dn1,dn2" cron="/10 * * * * ? " checkClass="COUNT" />
+        <globalTable name="g3" shardingNode="dn1,dn2,dn3,dn4" cron="/10 * * * * ? " checkClass="COUNT" />
     </schema>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -74,11 +72,9 @@ Feature: test " check @@global schema = '' [and table = '']"
     Then execute admin cmd "reload @@config"
   #case global table meta not exists
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                            | expect  |
-      | conn_1 | false    | use schema1                                    | success |
-      | conn_1 | false    | drop table if exists g1                        | success |
-      | conn_1 | false    | use schema2                                    | success |
-      | conn_1 | true     | drop table if exists g3                        | success |
+      | conn   | toClose  | sql                                                    | expect  |
+      | conn_1 | false    | drop table if exists schema1.g1                        | success |
+      | conn_1 | true     | drop table if exists schema2.g3                        | success |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                                                         |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 0, 0),)}                                |
@@ -90,27 +86,16 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
      #sleep 11 or more seconds because check the log
     Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global check start .........g1
+    Global check start .........g1
+    Global check start .........g3
+    Global check skip because of Meta
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global check skip because of Meta
+    Global check start .........g2
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global check start .........g3
-    """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global check skip because of Meta
-    """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global check start .........g2
-    """
-
    #case global table meta exists
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                           | expect  |
@@ -121,17 +106,14 @@ Feature: test " check @@global schema = '' [and table = '']"
     >/opt/dble/logs/dble.log
     """
     Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check success for table :schema1-g1
+    Global Consistency Check success for table :schema1-g1
+    Global Consistency Check success for table :schema2-g3
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check success for table :schema2-g3
-    """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global check skip because of Meta
+    Global check skip because of Meta
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
@@ -152,22 +134,17 @@ Feature: test " check @@global schema = '' [and table = '']"
     >/opt/dble/logs/dble.log
     """
     Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema2-g3
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check fail for table :schema2-g3
+    Global Consistency Check success for table :schema1-g1
+    Global Consistency Check success for table :schema2-g3
     """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check success for table :schema1-g1
-    """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check success for table :schema2-g3
-    """
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 2, 0),)}     |
@@ -183,22 +160,17 @@ Feature: test " check @@global schema = '' [and table = '']"
     >/opt/dble/logs/dble.log
     """
     Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema2-g3
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check fail for table :schema2-g3
+    Global Consistency Check success for table :schema1-g1
+    Global Consistency Check success for table :schema2-g3
     """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check success for table :schema1-g1
-    """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check success for table :schema2-g3
-    """
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 2, 0),)}     |
@@ -214,28 +186,22 @@ Feature: test " check @@global schema = '' [and table = '']"
     >/opt/dble/logs/dble.log
     """
     Given sleep "11" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema2-g3
     """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       Global Consistency Check fail for table :schema2-g3
-    """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check success for table :schema1-g1
-    """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check success for table :schema2-g3
+    Global Consistency Check success for table :schema1-g1
+    Global Consistency Check success for table :schema2-g3
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 3, 0),)}     |
-      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
+      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 2, 1),)}     |
 
-   #case the mysql down
+   #case the mysql server is down
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -254,27 +220,22 @@ Feature: test " check @@global schema = '' [and table = '']"
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-master1"
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    Given sleep "11" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-       error node is : null-null
-    """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check fail for table :schema1-g1
-    """
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
-    """
-       Global Consistency Check fail for table :schema2-g3
+    error node is : null-null
+    Global Consistency Check fail for table :schema1-g1
+    Global Consistency Check fail for table :schema2-g3
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 1, 2),)}     |
-      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
+      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 2),)}     |
     Given start mysql in host "mysql-master1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 3, 0),)}     |
-      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 1),)}     |
+      | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 2, 1),)}     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                  | expect  |
       | conn_1 | false    | drop table if exists schema1.g1      | success |

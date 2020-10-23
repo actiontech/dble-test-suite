@@ -147,4 +147,4 @@ Feature: following complex queries are not able to send one shardingnode
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding_two_node                               | success | schema1 |
+      | conn_0 | true    | drop table if exists sharding_two_node                               | success | schema1 |
