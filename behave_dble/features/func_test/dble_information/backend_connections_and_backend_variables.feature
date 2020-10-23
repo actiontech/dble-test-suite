@@ -83,7 +83,7 @@ Feature:  backend_connections test
       | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
       Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn3" />
         <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id" />
     </schema>
@@ -168,7 +168,6 @@ Feature:  backend_connections test
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="4" minCon="3" primary="true">
-          <property name="connectionTimeout">1000</property>
         </dbInstance>
     </dbGroup>
     """
