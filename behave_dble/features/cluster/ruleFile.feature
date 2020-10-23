@@ -4,7 +4,7 @@
 # Created by mayingle at 2020/09/08
 
 Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
-cd
+
   Scenario: Enum sharding with ruleFile way which is different from mapFile #1
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
