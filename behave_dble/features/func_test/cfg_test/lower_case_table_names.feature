@@ -58,6 +58,8 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_0 | False   | create table TEst_Table(id int,name char(10))                 | success             | DbTest |
       | conn_0 | False   | insert into test_table(id) value(1)                           | success             | DbTest |
       | conn_0 | False   | insert into Test_Table(id) value(1)                           | success             | DbTest |
+     #case https://github.com/actiontech/dble/issues/1749
+      | conn_0 | False   | select count(*) from Test_Table                               | success             | DBTEST  |
       | conn_0 | False   | select test_table.id from Test_Table                          | success             | DbTest |
       | conn_0 | False   | select Test_Table.id from test_table                          | success             | DbTest |
       | conn_0 | False   | select Test_Table.id from test_table                          | success             | DbTest |
@@ -96,17 +98,10 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_2 | False   | insert into uos_page_ret_inst values('10','AAAA',NULL) ,('36','BBBB',NULL)                                                                | success     | DbTest |
       | conn_2 | False   | insert into uos_tache_def values('1557471076988','BBBB','2019-05-10 14:51:17',NULL), ('1557471086419','aaaa','2019-05-10 14:51:26',NULL)  | success     | DbTest |
       | conn_2 | True    | select INST.TACHE_CODE,def.TACHE_CODE from uos_page_ret_inst INST JOIN uos_tache_def def ON def.TACHE_CODE=INST.TACHE_CODE                | length{(1)} | DbTest |
-#case https://github.com/actiontech/dble/issues/1749
       | conn_3 | False   | drop table if exists test_table           | success | DBTEST  |
-      | conn_3 | False   | create table test_table(id int)           | success | DBTEST  |
-      | conn_3 | False   | insert into test_table values (1),(2)     | success | DBTEST  |
-      | conn_3 | True    | select count(*) from Test_Table           | success | DBTEST  |
-      | conn_4 | False   | use DBTEST                                | success | DBTEST  |
-      | conn_4 | False   | drop table if exists test_table           | success | DBTEST  |
-      | conn_4 | False   | drop table if exists uos_page_ret_inst    | success | DBTEST  |
-      | conn_4 | False   | drop table if exists uos_tache_def        | success | DBTEST  |
-      | conn_4 | False   | use schema1                               | success | schema1 |
-      | conn_4 | True    | drop table if exists Test                 | success | schema1 |
+      | conn_3 | False   | drop table if exists uos_page_ret_inst    | success | DBTEST  |
+      | conn_3 | False   | drop table if exists uos_tache_def        | success | DBTEST  |
+      | conn_3 | True    | drop table if exists Test                 | success | schema1 |
 
 
 
@@ -266,4 +261,4 @@ Feature: check collation/lower_case_table_names works right for dble
       | test | 111111 | conn_0 | False   | update tb_grandson1  set name='b' where grandson1_id=1                    | success |    |
       | test | 111111 | conn_0 | False   | select * from tb_grandson1                                                | success |    |
       | test | 111111 | conn_0 | False   | delete from tb_grandson1                                                  | success |    |
-      | test | 111111 | conn_0 | False   | show create table tb_grandson1                                            | success |    |
+      | test | 111111 | conn_0 | true    | show create table tb_grandson1                                            | success |    |
