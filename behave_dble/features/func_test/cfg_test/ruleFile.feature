@@ -4,8 +4,8 @@
 # Created by mayingle at 2020/09/09
 
 Feature: adding ruleFile way which is different from mapFile (single dble Mode)
-#  @skip_restart
-  Scenario: Enum sharding with ruleFile way
+
+  Scenario: Enum sharding with ruleFile way #1
     #test: Enum sharding with ruleFile way
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -96,7 +96,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
 
 
-  Scenario: Numberrange sharding with ruleFile way (single dble Mode)
+  Scenario: Numberrange sharding with ruleFile way (single dble Mode) #2
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -175,7 +175,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
 
 
 
-  Scenario: PatternRange sharding with ruleFile way (single dble Mode)
+  Scenario: PatternRange sharding with ruleFile way (single dble Mode) #3
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -248,8 +248,3 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
     Given delete file "/opt/dble/conf/patternrange.txt" on "dble-1"
-    Given delete the following xml segment
-      |file            | parent                                        | child                                  |
-      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
-      |sharding.xml    | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'patternrange_table'}}    |
-    Then execute admin cmd "reload @@config_all"
