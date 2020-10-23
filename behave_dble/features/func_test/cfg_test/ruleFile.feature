@@ -88,12 +88,6 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     """
     #clearn all conf
     Given delete file "/opt/dble/conf/enum.txt" on "dble-1"
-    Given delete the following xml segment
-      |file        | parent                                        | child                                  |
-      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}  |
-      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'enum_table'}}    |
-    Then execute admin cmd "reload @@config_all"
-
 
 
   Scenario: Numberrange sharding with ruleFile way (single dble Mode) #2
@@ -167,12 +161,6 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
     Given delete file "/opt/dble/conf/partition.txt" on "dble-1"
-    Given delete the following xml segment
-      |file        | parent                                        | child                                  |
-      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}  |
-      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}   | {'tag':'shardingTable','kv_map':{'name':'numberrange_table'}}    |
-    Then execute admin cmd "reload @@config_all"
-
 
 
   Scenario: PatternRange sharding with ruleFile way (single dble Mode) #3
