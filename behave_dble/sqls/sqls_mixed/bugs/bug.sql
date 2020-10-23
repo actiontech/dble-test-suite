@@ -133,7 +133,6 @@ select `A`.* FROM (select sharding_4_t1.id,schema2.sharding_4_t2.name from schem
 drop table if exists sharding_4_t1
 create table sharding_4_t1(id int,c int,name varchar(20))
 insert into sharding_4_t1 values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
-update sharding_4_t1 set name ='test' wher id=1
 delete from sharding_4_t1 wher id=2
 select * from sharding_4_t1 wher id=3
 select * from sharding_4_t1 where id=3 orde by id
@@ -293,3 +292,82 @@ SELECT t2.pre,t2.ck, COUNT(*) AS count FROM sharding_4_t1 t1 INNER JOIN sharding
 drop table if exists global_4_t1
 drop table if exists sharding_4_t1
 drop table if exists sharding_4_t2
+#github issues:1650
+drop table if exists sharding_2_t1
+drop table if exists sharding_3_t1
+create table sharding_2_t1(id int(4), B float(8,2))
+insert into sharding_2_t1 values(1,234.25),(2,67.29),(3,1.25),(12,1),(1,234.25)
+create table sharding_3_t1(id int(4), B int(4))
+insert into sharding_3_t1 values (10, 1),(11, 2),(10,2)
+select * from sharding_2_t1 a left join sharding_3_t1 c on a.id=c.id and a.id=@id_a
+drop table if exists sharding_2_t1
+drop table if exists sharding_3_t1
+#github issues:1762
+drop table if exists sharding_4_t1
+create table sharding_4_t1(id int, code int)
+set autocommit=0
+insert into sharding_4_t1 values (5,5),(6,6),(7,7),(8,8)
+select count(*) from sharding_4_t1 order by id
+commit
+select count(*) from sharding_4_t1 order by id
+drop table if exists sharding_4_t1
+#github issues:1705
+drop table if exists sharding_2_t1
+drop table if exists sharding_3_t1
+drop table if exists sharding_4_t1
+create table sharding_2_t1(pk_id int,remark int,audit_status int,`status` int)
+create table sharding_3_t1(fk_store_comp_id int)
+create table sharding_4_t1(fk_store_comp_id int,audit_status int)
+SELECT count(0) FROM( SELECT c.pk_id, c.remark FROM sharding_2_t1 c LEFT JOIN sharding_3_t1 s ON c.pk_id = s.fk_store_comp_id INNER JOIN sharding_4_t1 ca ON ca.fk_store_comp_id = c.pk_id WHERE c.`status` = 1 AND ( c.audit_status = 2 OR ca.audit_status = 2) ) t
+drop table if exists sharding_2_t1
+drop table if exists sharding_3_t1
+drop table if exists sharding_4_t1
+#github issues:1716
+drop table if exists sharding_2_t1
+drop table if exists sharding_3_t1
+create table sharding_2_t1(id int,code int )
+create table sharding_3_t1(id int,code int )
+select * from (select a.id aid,b.id bid,a.id xid,3 mark from sharding_2_t1 a left join sharding_3_t1 b on a.id= b.id) t
+drop table if exists sharding_2_t1
+drop table if exists sharding_3_t1
+#github issues:1725
+drop table if exists schema2.global_4_t2
+create table schema2.global_4_t2 (`id` int(11) DEFAULT NULL)
+set autocommit=0
+delete from schema2.global_4_t2
+commit
+set autocommit=1
+select * from schema2.global_4_t2
+select * from schema2.global_4_t2
+select * from schema2.global_4_t2
+select * from schema2.global_4_t2
+select * from schema2.global_4_t2
+insert into schema2.global_4_t2 values (1)
+drop table if exists schema2.global_4_t2
+#github issues:2030
+drop table if exists sharding_4_t1
+create table sharding_4_t1(col1 varchar(15),col2 varchar(15),col3 varchar(15), col4 varchar(15),col5 varchar(15),col6 varchar(15),col7 varchar(15),col8 varchar(15))
+SELECT ttt.EACHDAY statTime, CONCAT(if(SUBSTRING( eachDay, 7, 2 ) > 9, SUBSTRING( eachDay, 7, 2 ),SUBSTRING( eachDay, 8, 1 )),'d') xValue, IFNULL( ddd.col6, 0 ) dataValue, IFNULL( ddd.col7, 0 ) dataValueLy, ':orgNo' orgNo, ddd.col4 statCalibre FROM (SELECT REPLACE(A.DATE,'-','') eachDay FROM ( SELECT CURDATE() - INTERVAL(A.A+(10*B.A)+(100*C.A)-1) DAY AS DATE FROM (SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS A CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS B CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS C ) A WHERE A.DATE BETWEEN DATE_SUB(DATE_FORMAT(':statTime','%y%m%d'),INTERVAL 12 day) AND DATE_FORMAT(':statTime','%y%m%d') ORDER BY eachDay ) ttt LEFT JOIN ( SELECT s4t.col1, round(sum(case when col2 = 'JYGK41101030000000627' then col6 else 0 end)/sum(case when col2 = 'JYGK41101030000000628' then col6 else 0 end) * 100,2) col6, round(sum(case when col2 = 'JYGK41101030000000627' then col7 else 0 end)/sum(case when col2 = 'JYGK41101030000000628' then col7 else 0 end) * 100,2) col7, ':col3' orgNo, s4t.col4 FROM sharding_4_t1 s4t WHERE col3 = ':col3' and col4 = ':statCalibre' AND col1 in (SELECT REPLACE(A.DATE,'-','') eachDay FROM ( SELECT CURDATE() - INTERVAL(A.A+(10*B.A)+(100*C.A)-1) DAY AS DATE FROM (SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS A CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS B CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS C ) A WHERE A.DATE BETWEEN DATE_SUB(DATE_FORMAT(':statTime','%y%m%d'),INTERVAL 12 day) AND DATE_FORMAT(':statTime','%y%m%d') ORDER BY eachDay) AND col5 = 'IND_08_XSHGL' GROUP BY col1 ORDER BY col1 ) ddd ON ttt.EACHDAY = ddd.col1 ORDER BY ttt.EACHDAY
+SELECT ttt.EACHDAY statTime, CONCAT(if(SUBSTRING( eachDay, 7, 2 ) > 9, SUBSTRING( eachDay, 7, 2 ),SUBSTRING( eachDay, 8, 1 )),'d') xValue, IFNULL( ddd.col6, 0 ) dataValue, IFNULL( ddd.col7, 0 ) dataValueLy, ':col3' col3, 'JYGK41101030000000472' idxNo, ddd.col4 statCalibre FROM (SELECT REPLACE(A.DATE,'-','') eachDay FROM ( SELECT CURDATE() - INTERVAL(A.A+(10*B.A)+(100*C.A)-1) DAY AS DATE FROM (SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS A CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS B CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS C ) A WHERE A.DATE BETWEEN DATE_SUB(DATE_FORMAT(':statTime','%y%m%d'),INTERVAL 12 day) AND DATE_FORMAT(':statTime','%y%m%d') ORDER BY eachDay ) ttt LEFT JOIN ( SELECT cidm.col1, round(sum(case when col8 = '01' then col6 else 0 end)/sum(col6) * 100,2) col6, round(sum(case when col8 = '01' then col7 else 0 end)/sum(col7) * 100,2) col7, ':col3' col3, cidm.col4 FROM sharding_4_t1 cidm WHERE col3 = ':col3' and col4 = ':statCalibre' AND col1 in (SELECT REPLACE(A.DATE,'-','') eachDay FROM ( SELECT CURDATE() - INTERVAL(A.A+(10*B.A)+(100*C.A)-1) DAY AS DATE FROM (SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) AS A CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS B CROSS JOIN(SELECT 0 AS A UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 ) AS C ) A WHERE A.DATE BETWEEN DATE_SUB(DATE_FORMAT(':statTime','%y%m%d'),INTERVAL 12 day) AND DATE_FORMAT(':statTime','%y%m%d') ORDER BY eachDay) AND col5 = 'IND_08_GSFSTQJK' AND col2 = 'JYGK41101030000000344' GROUP BY col2, col1 ORDER BY col1 ) ddd ON ttt.EACHDAY = ddd.col1 ORDER BY ttt.EACHDAY
+drop table if exists sharding_4_t1
+#github issue:2021/2022/2055
+#drop table if exists schema2.sharding_4_t3
+#drop table if exists schema2.sharding_1_t3
+#CREATE TABLE schema2.sharding_4_t3 ( `cl_id` int(10) NOT NULL DEFAULT '0', `org_no` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `org_name` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `stat_calibre` varchar(8) COLLATE utf8mb4_bin DEFAULT NULL, `busi_code` varchar(8) COLLATE utf8mb4_bin DEFAULT NULL, `major_no` varchar(8) COLLATE utf8mb4_bin DEFAULT NULL, `theme_no` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL, `theme_name` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `idx_no` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL, `idx_name` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `tg_no` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL, `dim1` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim2` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim3` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim4` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim5` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim6` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim7` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `dim8` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `data_value` decimal(20,6) DEFAULT NULL, `data_value_sum` decimal(20,6) DEFAULT NULL, `data_value_ly` decimal(20,6) DEFAULT NULL, `data_value_sum_ly` decimal(20,6) DEFAULT NULL, `data_value_lc` decimal(20,6) DEFAULT NULL, `data_value_sum_lc` decimal(20,6) DEFAULT NULL,   `period_value` decimal(20,6) DEFAULT NULL,   `chain_value` decimal(20,6) DEFAULT NULL,   `sum_period_value` decimal(20,6) DEFAULT NULL,   `sum_chain_value` decimal(20,6) DEFAULT NULL,   `period_change` decimal(20,6) DEFAULT NULL,   `chain_change` decimal(20,6) DEFAULT NULL,   `sum_period_change` decimal(20,6) DEFAULT NULL, `sum_chain_change` decimal(20,6) DEFAULT NULL, `ext_value01` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `ext_value02` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `ext_value03` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `ext_value04` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `ext_value05` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL,   `oper_no` varchar(32) COLLATE utf8mb4_bin DEFAULT NULL, `oper_time` datetime DEFAULT NULL, `create_time` datetime DEFAULT NULL, `remark` varchar(128) COLLATE utf8mb4_bin DEFAULT NULL, `id` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL, `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency', KEY `me_idx_org_no` (`org_no`), KEY `me_timeindex` (`id`), KEY `me_idx_magor_no` (`major_no`), KEY `me_idx_theme_no` (`theme_no`), KEY `me_idx_idx_no` (`idx_no`), KEY `me_idx_stat_calibre` (`stat_calibre`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+#CREATE TABLE schema2.sharding_1_t3 ( `code` varchar(18) COLLATE utf8mb4_bin DEFAULT NULL, `dict_type_id` varchar(24) COLLATE utf8mb4_bin DEFAULT NULL, `name` varchar(64) COLLATE utf8mb4_bin DEFAULT NULL, `_dble_op_time` bigint(20) DEFAULT NULL COMMENT 'field for checking consistency', `TREE_LEVEL` int(11) DEFAULT NULL, `id` int(11) DEFAULT NULL, `charge_emp_code` varchar(18) COLLATE utf8mb4_bin DEFAULT NULL, `cons_sort_code` varchar(18) COLLATE utf8mb4_bin DEFAULT NULL, `DESCRIPTION` varchar(16) COLLATE utf8mb4_bin DEFAULT NULL, `month_code` varchar(18) COLLATE utf8mb4_bin DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_bin
+#SELECT SUM(CASE t.name WHEN "测试" THEN t.dataValue END) "wsgw", SUM(CASE t.name WHEN "支" THEN t.dataValue END) "zfb", SUM(CASE t.name WHEN "信" THEN t.dataValue END) "wx", SUM(CASE t.name WHEN "宝" THEN t.dataValue END) "deb", SUM(CASE t.name WHEN "线" THEN t.dataValue END) "rx", SUM(CASE t.name WHEN "办" THEN t.dataValue END) "bdczqlb", SUM(CASE t.name WHEN "一" THEN t.dataValue END) "ywtb", SUM(CASE t.name WHEN "站" THEN t.dataValue END) "wz" , SUM(CASE t.name WHEN "道" THEN t.dataValue END) "xxqd" , SUM(CASE t.name WHEN "其他" THEN t.dataValue END) "qt" , "况" AS 'lb', s.DESCRIPTION "dw" FROM ( SELECT "国" AS name, ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 ='05' UNION ALL SELECT "支" AS "name", ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 = "04" UNION ALL SELECT "信" AS "name", ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 ='03' UNION ALL SELECT "宝" AS "name", ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 = "01" ) t LEFT JOIN schema2.sharding_1_t3  s ON s.`CODE` = '41101'
+#SELECT SUM(CASE t.name WHEN "测试" THEN t.dataValue END) "wsgw", SUM(CASE t.name WHEN "宝" THEN t.dataValue END) "zfb", SUM(CASE t.name WHEN "测试1" THEN t.dataValue END) "wx", SUM(CASE t.name WHEN "测试" THEN t.dataValue END) "deb", SUM(CASE t.name WHEN "测试2" THEN t.dataValue END) "rx", SUM(CASE t.name WHEN "测试4" THEN t.dataValue END) "bdczqlb", SUM(CASE t.name WHEN "测试3" THEN t.dataValue END) "ywtb", SUM(CASE t.name WHEN "测试5" THEN t.dataValue END) "wz" , SUM(CASE t.name WHEN "测试" THEN t.dataValue END) "xxqd" , SUM(CASE t.name WHEN "其他" THEN t.dataValue END) "qt" , "测试" AS 'lb', s.DESCRIPTION "dw" FROM ( SELECT "网上" AS name, ROUND(IFNULL(SUM(`DATA_VALUE`),0)) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 ='05' UNION ALL SELECT "支" AS name, ROUND(IFNULL(SUM(`DATA_VALUE`),0)) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 = "04" UNION ALL SELECT "测试34" AS name, ROUND(IFNULL(SUM(`DATA_VALUE`),0)) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 ='03' UNION ALL SELECT "电" AS name, ROUND(IFNULL(SUM(`DATA_VALUE`),0)) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 = "01") t LEFT JOIN schema2.sharding_1_t3  s ON s.`CODE` = '41101'
+#SELECT SUM(CASE t.name WHEN "测试" THEN t.dataValue else 0 end ) "wsgw","test" AS 'lb'  FROM ( SELECT "网" AS name,ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 ='05' UNION ALL SELECT "支之" AS "name",ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = 'JYGK41101040000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE = '01' AND dim1 =  "04" UNION ALL SELECT "test23" AS "name",ROUND(IFNULL(SUM(`DATA_VALUE`),0),0) dataValue FROM schema2.sharding_4_t3 cidm WHERE cidm.ORG_NO = '41101' AND cidm.IDX_NO = '10000000001' AND cidm.id >= '20200802' AND cidm.id <= '20200803' AND cidm.STAT_CALIBRE  = '01' AND dim1 ='03' ) t
+#drop table if exists schema2.sharding_4_t3
+#drop table if exists schema2.sharding_1_t3
+#github issues:1913
+drop table if exists sharding_2_t1
+drop table if exists sharding_2_t2
+CREATE TABLE sharding_2_t1 (id int(11),APPLY_TIME DATE,CREAT_TIME DATETIME)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+CREATE TABLE sharding_2_t2 (id int(11),APPLY_TIME DATE)ENGINE=InnoDB DEFAULT CHARSET=utf8mb4
+INSERT INTO sharding_2_t1  (id,APPLY_TIME,CREAT_TIME) VALUES (1,'2020-07-08','2020-07-01 21:34:50')
+INSERT INTO sharding_2_t2  (id,APPLY_TIME) VALUES (1,'2020-07-08')
+SELECT tb.id,tb.APPLY_TIME,tb.CREAT_TIME,CURDATE(),DATEDIFF(tb.APPLY_TIME, CURDATE()) T1,DATEDIFF(tb.APPLY_TIME, NOW()) T2,DATEDIFF('2020-07-08', '2020-07-02') T3,DATEDIFF(tb.CREAT_TIME, CURDATE()) T4 FROM sharding_2_t1 tb INNER JOIN sharding_2_t2 tb1 ON tb.APPLY_TIME=tb1.APPLY_TIME WHERE tb1.APPLY_TIME='2020-07-08'
+SELECT tb.id,tb.APPLY_TIME,tb.CREAT_TIME,CURDATE(),DATEDIFF(tb.APPLY_TIME, CURDATE()) T1,DATEDIFF(tb.APPLY_TIME, NOW()) T2,DATEDIFF('2020-07-08', '2020-07-02') T3,DATEDIFF(tb.CREAT_TIME, CURDATE()) T4 FROM sharding_2_t1 tb WHERE tb.id=1
+drop table if exists sharding_2_t1
+drop table if exists sharding_2_t2

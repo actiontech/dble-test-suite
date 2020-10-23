@@ -55,7 +55,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                           | expect    | db      |
       | conn_0 | False    | drop table if exists table_a                  | success   | schema1 |
-      | conn_0 | False    | drop table if exists table_b                  | success   | schema1 |
+      | conn_0 | True     | drop table if exists table_b                  | success   | schema1 |
 
   @regression
   Scenario: check Global tables subquery execute plan optimized #2
@@ -78,7 +78,7 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                            | expect    | db      |
       | conn_0 | False    | drop table if exists table_a                   | success   | schema1 |
-      | conn_0 | False    | drop table if exists table_b                   | success   | schema1 |
+      | conn_0 | True     | drop table if exists table_b                   | success   | schema1 |
 
   Scenario: the optimization of merge #3
     Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
@@ -205,4 +205,4 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
       | conn_0 | False   | drop table if exists tb_child1             | success   | schema1 |
       | conn_0 | False   | drop table if exists schema2.global_4_t1   | success   | schema1 |
       | conn_0 | False   | drop table if exists schema2.global_4_t2   | success   | schema1 |
-      | conn_0 | False   | drop table if exists schema2.sharding_4_t2 | success   | schema1 |
+      | conn_0 | True    | drop table if exists schema2.sharding_4_t2 | success   | schema1 |
