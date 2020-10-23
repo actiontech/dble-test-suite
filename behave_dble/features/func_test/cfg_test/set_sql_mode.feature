@@ -7,7 +7,7 @@
   @restore_mysql_config
   Scenario:  when insert sharding table without column name under the premise that sql_mode is ANSI#1
    """
-   {'restore_mysql_config':{'mysql-master1':{'sql_mode':'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES'},'mysql-master2':{'sql_mode':'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES'},'mysql-slave1':{'sql_mode':'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES'},'mysql-slave2':{'sql_mode':'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES'}}}
+   {'restore_mysql_config':{'mysql-master1':{'sql_mode':'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES'},'mysql-master2':{'sql_mode':'NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES'}}}
    """
 #case https://github.com/actiontech/dble/issues/828
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
@@ -15,14 +15,6 @@
      s/sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES/sql_mode=REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI/
      """
     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
-     """
-     s/sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES/sql_mode=REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI/
-     """
-    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
-     """
-     s/sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES/sql_mode=REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI/
-     """
-    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
      """
      s/sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES/sql_mode=REAL_AS_FLOAT,PIPES_AS_CONCAT,ANSI_QUOTES,IGNORE_SPACE,ONLY_FULL_GROUP_BY,ANSI/
      """
@@ -34,5 +26,5 @@
       | conn_1 | False   | drop table if exists sharding_4_t1                       | success      | schema1 |
       | conn_1 | False   | create table sharding_4_t1(id int, code int)             | success      | schema1 |
       | conn_1 | False   | insert into sharding_4_t1 values (5,5)                   | success      | schema1 |
-      | conn_1 | False   | drop table if exists sharding_4_t1                       | success      | schema1 |
+      | conn_1 | true    | drop table if exists sharding_4_t1                       | success      | schema1 |
 
