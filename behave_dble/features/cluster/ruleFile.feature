@@ -4,8 +4,8 @@
 # Created by mayingle at 2020/09/08
 
 Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
-
-  Scenario: Enum sharding with ruleFile way which is different from mapFile #1
+  @skip_restart
+  Scenario: Enum sharding with ruleFile way which is different from mapFile
     #test: type:integer not default node
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -62,7 +62,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
       | conn_0 | True     | insert into enum_table values ('aaa') | Please check if the format satisfied | schema1 |
 
     # check zk that the result is right
-    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "enum.txt" on dble-1
+
 
 
     #test: type:string default node
@@ -127,14 +127,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
     """
     {"table":"enum_table","key":"id"}
     """
-
-    # check zk that the result is right
-    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "enum.txt" on dble-1
-
     #clearn all conf
-    Given delete file "/opt/dble/conf/enum.txt" on "dble-1"
-    Given delete file "/opt/dble/conf/enum.txt" on "dble-2"
-    Given delete file "/opt/dble/conf/enum.txt" on "dble-3"
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
       |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}  |
@@ -145,7 +138,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
 
 
 
-  Scenario: Numberrange sharding with ruleFile way (ZK cluster mode) #2
+  Scenario: Numberrange sharding with ruleFile way (ZK cluster mode)
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -201,10 +194,6 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
     """
     {"table":"numberrange_table","key":"id"}
     """
-     # check zk that the result is right
-    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "partition.txt" on dble-1
-
-
     #test: not defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -230,16 +219,9 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
       | conn_0 | True     | insert into numberrange_table values(-1)   | can't find any valid shardingNode | schema1 |
       | conn_0 | True     | insert into numberrange_table values(-2)   | can't find any valid shardingNode | schema1 |
 
-       #test: data types in sharding_key
+    #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
-
-    # check zk that the result is right
-    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "partition.txt" on dble-1
-
     #clearn all conf
-    Given delete file "/opt/dble/conf/partition.txt" on "dble-1"
-    Given delete file "/opt/dble/conf/partition.txt" on "dble-2"
-    Given delete file "/opt/dble/conf/partition.txt" on "dble-3"
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
       |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}  |
@@ -249,7 +231,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
 
 
 
-  Scenario: PatternRange sharding with ruleFile way (ZK cluster mode) #3
+  Scenario: PatternRange sharding with ruleFile way (ZK cluster mode)
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -301,16 +283,11 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
       | conn_0 | False    | insert into patternrange_table values(1000)  | dest_node:mysql-master1 | schema1 |
       | conn_0 | True     | insert into patternrange_table values(1001)  | dest_node:mysql-master1 | schema1 |
 
-        #test: use of limit in sharding_key
+    #test: use of limit in sharding_key
     Then Test the use of limit by the sharding column
     """
     {"table":"patternrange_table","key":"id"}
     """
-
-    # check zk that the result is right
-    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "patternrange.txt" on dble-1
-
-
     #test: not defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -339,14 +316,7 @@ Feature: adding ruleFile way which is different from mapFile (ZK cluster mode)
 
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
-
-    # check zk that the result is right
-    Then get "/dble/cluster-1/conf/sharding" on zkCli.sh for "patternrange.txt" on dble-1
-
     #clearn all conf
-    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-1"
-    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-2"
-    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-3"
     Given delete the following xml segment
       |file        | parent                                        | child                                  |
       |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |

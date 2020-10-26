@@ -4,8 +4,8 @@
 # Created by mayingle at 2020/09/09
 
 Feature: adding ruleFile way which is different from mapFile (single dble Mode)
-
-  Scenario: Enum sharding with ruleFile way #1
+#  @skip_restart
+  Scenario: Enum sharding with ruleFile way
     #test: Enum sharding with ruleFile way
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -87,10 +87,15 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     {"table":"enum_table","key":"id"}
     """
     #clearn all conf
-    Given delete file "/opt/dble/conf/enum.txt" on "dble-1"
+    Given delete the following xml segment
+      |file        | parent                                        | child                                  |
+      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'enum_func'}}  |
+      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'enum_table'}}    |
+    Then execute admin cmd "reload @@config_all"
 
 
-  Scenario: Numberrange sharding with ruleFile way (single dble Mode) #2
+
+  Scenario: Numberrange sharding with ruleFile way (single dble Mode)
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -160,15 +165,20 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
-    Given delete file "/opt/dble/conf/partition.txt" on "dble-1"
+    Given delete the following xml segment
+      |file        | parent                                        | child                                  |
+      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'numberrange_func'}}  |
+      |sharding.xml  | {'tag':'schema','kv_map':{'name':'schema1'}}   | {'tag':'shardingTable','kv_map':{'name':'numberrange_table'}}    |
+    Then execute admin cmd "reload @@config_all"
 
 
-  Scenario: PatternRange sharding with ruleFile way (single dble Mode) #3
+
+  Scenario: PatternRange sharding with ruleFile way (single dble Mode)
     #test: set defaultNode
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="PatternRange" name="patternrange_func">
-            <property name="ruleFile">patternrange.txt</property>
+            <property name="ruleFile">partition.txt</property>
             <property name="patternValue">1000</property>
             <property name="defaultNode">3</property>
         </function>
@@ -177,7 +187,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     """
         <shardingTable name="patternrange_table" shardingNode="dn1,dn2,dn3,dn4" function="patternrange_func" shardingColumn="id"/>
     """
-    When Add some data in "patternrange.txt"
+    When Add some data in "partition.txt"
     """
     0-255=0
     256-500=1
@@ -210,7 +220,7 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
         <function class="PatternRange" name="patternrange_func">
-            <property name="ruleFile">patternrange.txt</property>
+            <property name="ruleFile">partition.txt</property>
             <property name="patternValue">1000</property>
         </function>
     """
@@ -235,4 +245,8 @@ Feature: adding ruleFile way which is different from mapFile (single dble Mode)
     #test: data types in sharding_key
     Then Test the data types supported by the sharding column in "range.sql"
     #clearn all conf
-    Given delete file "/opt/dble/conf/patternrange.txt" on "dble-1"
+    Given delete the following xml segment
+      |file            | parent                                        | child                                  |
+      |sharding.xml    | {'tag':'root'}                                | {'tag':'function','kv_map':{'name':'patternrange_func'}}  |
+      |sharding.xml    | {'tag':'schema','kv_map':{'name':'schema1'}}  | {'tag':'shardingTable','kv_map':{'name':'patternrange_table'}}    |
+    Then execute admin cmd "reload @@config_all"
