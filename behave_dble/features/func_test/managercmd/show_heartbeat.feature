@@ -64,7 +64,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
        iptables -A INPUT -s 172.100.9.1 -j DROP
        iptables -A OUTPUT -d 172.100.9.1 -j DROP
       """
-    Given sleep "10" seconds
+    Given sleep "30" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "16"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -76,8 +76,8 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
     """
     iptables -F
     """
-    Given sleep "6" seconds
- # because heartbeatPeriodMillis is set to 5 seconds,so wait 6 seconds to check slave RS_CODE is "ok"
+    Given sleep "30" seconds
+ #  wait 30 seconds to check slave RS_CODE is "ok"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "17"
       | conn   | toClose | sql               |
       | conn_0 | true    | show @@heartbeat  |
@@ -183,7 +183,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
        iptables -A OUTPUT -d 172.100.9.1 -j DROP
       """
     Given sleep "30" seconds
- # because heartbeatPeriodMillis is set to 10 seconds,so wait 30 seconds to check master RS_CODE is "time_out"
+ # wait 30 seconds to check master RS_CODE is "time_out"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "43"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -196,7 +196,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
     """
     iptables -F
     """
-    Given sleep "15" seconds
+    Given sleep "30" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "45"
       | conn   | toClose | sql               |
       | conn_0 | true    | show @@heartbeat  |
