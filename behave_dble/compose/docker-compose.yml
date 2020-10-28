@@ -16,7 +16,6 @@ services:
             - /opt/dble-1:/init_assets
             - /opt/share:/share
         ports:
-            - "7121:9066"
             - "7131:8066"
             - "7141:3306"
             - "7151:22"
@@ -37,7 +36,6 @@ services:
             - /opt/dble-2:/init_assets
             - /opt/share:/share
         ports:
-            - "7122:9066"
             - "7132:8066"
             - "7142:3306"
             - "7152:22"
@@ -58,7 +56,6 @@ services:
             - /opt/dble-3:/init_assets
             - /opt/share:/share
         ports:
-            - "7123:9066"
             - "7133:8066"
             - "7143:3306"
             - "7153:22"
