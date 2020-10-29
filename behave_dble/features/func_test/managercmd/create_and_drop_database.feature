@@ -175,7 +175,6 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | dryrun              |
     Then check resultset "B3" has lines with following column values
       | TYPE-0 | LEVEL-1 | DETAIL-2                                                         |
-      | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM2.da11] |
       | Meta   | WARNING | Can't get connection for Meta check in shardingNode[hostM1.da11] |
     Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "mysql-master1"
