@@ -389,3 +389,15 @@ Feature: Optimize Query Plan which can be sent to one shardingNode in fact   fro
       | merge_2         | MERGE         | dn1_0                                                                                                                                   |
       | join_1          | JOIN          | shuffle_field_1; merge_2                                                                                                                |
       | shuffle_field_2 | SHUFFLE_FIELD | join_1                                                                                                                                  |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                    | expect  | db      |
+      | conn_0 | False   | drop table if exists aly_test                                                          | success | schema1 |
+      | conn_0 | False   | drop table if exists aly_order                                                         | success | schema1 |
+      | conn_0 | False   | drop table if exists a_manager                                                         | success | schema1 |
+      | conn_0 | False   | drop table if exists a_three                                                           | success | schema1 |
+      | conn_0 | False   | drop table if exists test_global                                                       | success | schema1 |
+      | conn_0 | False   | drop table if exists test_global_1                                                     | success | schema1 |
+      | conn_0 | False   | drop table if exists sharding_two_node                                                 | success | schema1 |
+      | conn_0 | true    | drop table if exists sharding_two_node2                                                | success | schema1 |
+      | conn_1 | true    | drop table if exists tb_test                                                           | success | schema2 |
+     
