@@ -24,7 +24,7 @@ Feature: following complex queries are not able to send one shardingnode
     <shardingTable name="sharding_two_node2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
     </schema>
     """
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
