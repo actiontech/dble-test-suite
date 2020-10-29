@@ -210,7 +210,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | test_user | 111111 | conn_0 | False   | update aly_test set name='b' where id=1         | success |    |
       | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |    |
       | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |    |
-      | test_user | 111111 | conn_0 | False   | show create table aly_test                      | success |    |
+      | test_user | 111111 | conn_0 | true    | show create table aly_test                      | success |    |
 
   @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #4
@@ -254,7 +254,6 @@ Feature: check collation/lower_case_table_names works right for dble
       | test | 111111 | conn_0 | False   | select * from tb_child1                                                   | success |    |
       | test | 111111 | conn_0 | False   | delete from tb_child1                                                     | success |    |
       | test | 111111 | conn_0 | False   | show create table tb_child1                                               | success |    |
-
       | test | 111111 | conn_0 | False   | drop table if exists tb_grandson1                                         | success |    |
       | test | 111111 | conn_0 | False   | create table tb_grandson1 (grandson1_id int, name varchar(10))            | success |    |
       | test | 111111 | conn_0 | False   | insert into tb_grandson1  value(1,'a')                                    | success |    |
