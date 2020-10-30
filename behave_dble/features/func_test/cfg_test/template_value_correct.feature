@@ -118,7 +118,7 @@ Feature: config all dble config files correct and restart dble
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
-      | processorCheckPeriod        | 1 Seconds                       |
+      | processorCheckPeriod        | 1000ms                       |
       | sqlExecuteTimeout           | 300 Seconds                     |
       | recordTxn                   | 1                               |
       | transactionLogBaseDir       | ./txlogs/                         |
@@ -155,7 +155,7 @@ Feature: config all dble config files correct and restart dble
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
-      | enableSlowLog               | 0                               |
+      | enableSlowLog               | false                            |
       | slowLogBaseDir              | ./slowlogs/             |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
@@ -190,7 +190,6 @@ Feature: config all dble config files correct and restart dble
     """
       <managerUser name="root_test" password="111111" usingDecrypt="false" whiteIPs="172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" maxCon="0"/>
       <shardingUser name="sharding_test" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false" tenant="tenant1" schemas="schema1" maxCon="0" blacklist="blacklist1"/>
-      <rwSplitUser name="rwSplit" password="111111" usingDecrypt="false" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" dbGroup="ha_group1" tenant="tenant1" maxCon="20" blacklist="blacklist1"/>
       <blacklist name="blacklist1">
         <property name="selectHavingAlwayTrueCheck">true</property>
         <property name="selectWhereAlwayTrueCheck">true</property>
@@ -256,7 +255,7 @@ Feature: config all dble config files correct and restart dble
     Given add xml segment to node with attribute "{'tag':'shardingUser','kv_map':{'name':'sharding_test'}}" in "user.xml"
     """
       <privileges check="true">
-        <schema name="TESTDB" dml="0110">
+        <schema name="schema1" dml="0110">
             <table name="tb01" dml="0000"/>
             <table name="tb02" dml="1111"/>
         </schema>

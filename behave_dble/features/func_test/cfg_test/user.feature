@@ -78,7 +78,6 @@ Feature: test config in user.xml
     """
        <managerUser name="root" password="111111"/>
        <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
-       <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_group1" maxCon="20"/>
        <blacklist name="blacklist1">
             <property name="conditionDoubleConstAllow">false</property>
             <property name="conditionAndAlwayFalseAllow">false</property>
