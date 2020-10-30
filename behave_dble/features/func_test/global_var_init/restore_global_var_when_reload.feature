@@ -56,10 +56,10 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | drop table if exists sharding_4_t1 | schema1 |
     Then check general log in host "mysql-master1" has not "set global autocommit=1"
 
-  @restore_mysql_config
+  @restore_mysql_config @restore_mysql_service
   Scenario:select global vars to a certain writeHost fail at dble start, when heatbeat recover, try select global vars again and set global vars if nessessary #3
     """
-    {'restore_mysql_config':{'mysql-master1':{'autocommit':1,'transaction_isolation':'REPEATABLE-READ','general_log':0}}}
+    {'restore_mysql_config':{'mysql-master1':{'autocommit':1,'transaction_isolation':'REPEATABLE-READ','general_log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given stop mysql in host "mysql-master1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -449,7 +449,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute admin cmd "dbGroup @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
+  @restore_mysql_service
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
     Given stop mysql in host "mysql-master1"
 #    default heartbeatPeriodMillis is 10, 11 makes sure heartbeat failed for mysql-master1
     Given sleep "11" seconds
@@ -477,7 +481,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     # find backend conns of query "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" used in dble.log
     Given execute linux command in "dble-1" and save result in "backendIds"
     """
-    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host=172.100.9.5"| grep -o "mysqlId=[0-9]*"|grep -o "[0-9]*" |sort| uniq
+    tail -n +{context:log_linenu} {node:install_dir}/dble/logs/dble.log | grep -i "select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation" |grep "host = 172.100.9.5"| grep -o "mysqlId = [0-9]*"|grep -o "[0-9]*" |sort| uniq
     """
     Given kill mysql conns in "mysql-master1" in "backendIds"
     Given sleep "2" seconds

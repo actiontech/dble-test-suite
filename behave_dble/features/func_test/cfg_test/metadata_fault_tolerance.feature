@@ -44,7 +44,7 @@ Feature: fault tolerance detection
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                 | expect                                                                                                                                                                   | db      |
-      | conn_0 | True    | log @@file=dble.log | hasStr{sql=show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
+      | conn_0 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/

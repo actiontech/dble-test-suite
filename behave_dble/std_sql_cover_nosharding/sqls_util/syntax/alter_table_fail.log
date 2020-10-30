@@ -22,10 +22,6 @@ dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
 dble:[None]
 mysql:[()]
 dble err:(1064, 'TODO pos 33, line 1, column 26, token IDENTIFIER COLLATE')
-===file:sqls_util/syntax/alter_table.sql, id:15, sql:[ALTER TABLE test1 COMMENT = 'string';]===
-dble:[None]
-mysql:[()]
-dble err:(1064, "The DDL is not supported, sql:ALTER TABLE test1\n\tCOMMENT = 'string'")
 ===file:sqls_util/syntax/alter_table.sql, id:16, sql:[ALTER TABLE test1 COMPRESSION = 'ZLIB';]===
 dble:[None]
 mysql:[()]
