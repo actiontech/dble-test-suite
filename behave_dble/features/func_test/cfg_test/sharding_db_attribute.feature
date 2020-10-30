@@ -337,7 +337,7 @@ Feature: test some import nodes attr in sharding.xml
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql             | expect      |
-      | show @@backend where host='172.100.9.5'  | length{(11)} |
+     | show @@backend where host='172.100.9.5'  | length{(11)} |
       #the not used dbInstance will only have one heartbeat connection
       | show @@backend  | length{(12)} |
 
