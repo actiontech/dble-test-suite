@@ -24,14 +24,14 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@disable name='ha_group2'"
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                         | expect                        | db       |
-      | conn_0 | true     | select * from sharding_4_t1 |  [ha_group2.hostM2] is disabled|  schema1 |
+      | conn   | toClose  | sql                         | expect                          | db       |
+      | conn_0 | true     | select * from sharding_4_t1 |  [ha_group2.hostM2] is disabled | schema1  |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect              | db        |
-      | conn_0 | true     | insert into sharding_4_t1 values(1),(2)    | error totally whack |  schema1  |
+      | conn_0 | true     | insert into sharding_4_t1 values(1),(2)    | error totally whack | schema1   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "show_be_rs"
       | sql            |
       | show @@backend |
@@ -116,3 +116,7 @@ Feature: test high-availability related commands
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5 | DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | W      |      0   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | R      |      0   | true        |
+
+
+
+
