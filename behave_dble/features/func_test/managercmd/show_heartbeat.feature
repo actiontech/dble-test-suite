@@ -18,7 +18,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
         <heartbeat  errorRetryCount="0" timeout="5">show slave status</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
         <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" >
-           <property name="heartbeatPeriodMillis">5000</property>
+           <property name="heartbeatPeriodMillis">15000</property>
         </dbInstance>
     </dbGroup>
 
@@ -47,10 +47,10 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
     Then check resultset "12" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10                                                              |
       | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 5000      | false  | None                                                                       |
-      | hostS1 | 172.100.9.2 | 3306   | error     | 0       | idle     | 5000      | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed) |
+      | hostS1 | 172.100.9.2 | 3306   | error     | 0       | idle     | 5000      | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed  |
     Given start mysql in host "mysql-slave1"
-#because heartbeat timeout is set to 5 seconds,so wait 6 seconds to check slave RS_CODE is "ok"
-    Given sleep "6" seconds
+#because heartbeat timeout is set to 15 seconds,so wait 6 seconds to check slave RS_CODE is "ok"
+    Given sleep "16" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "13"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
@@ -114,7 +114,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
     Then check resultset "21" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
       | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 10000      | false  | None             |
-      | hostS1 | 172.100.9.2 | 3306   | error     | 3       | idle     | 10000      | false  | connection Error |
+      | hostS1 | 172.100.9.2 | 3306   | error     | 2       | idle     | 10000      | false  | connection Error |
     Given start mysql in host "mysql-slave1"
     Given sleep "11" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "22"
@@ -143,7 +143,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
     Then check resultset "31" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10                                                              |
       | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | idle     | 10000     | false  | None                                                                       |
-      | hostS1 | 172.100.9.2 | 3306   | error     | 0       | idle     | 10000     | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed) |
+      | hostS1 | 172.100.9.2 | 3306   | error     | 0       | idle     | 10000     | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed  |
       | hostS2 | 172.100.9.3 | 3306   | ok        | 0       | idle     | 10000     | false  | None                                                                       |
     Given start mysql in host "mysql-slave1"
     Given sleep "11" seconds
@@ -163,7 +163,7 @@ Feature: #test show @@heartbeat http://10.186.18.11/jira/browse/DBLE0REQ-167
       | conn_0 | false   | show @@heartbeat  |
     Then check resultset "41" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10                                                              |
-      | hostM1 | 172.100.9.5 | 3306   | error     | 0       | idle     | 10000     | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed) |
+      | hostM1 | 172.100.9.5 | 3306   | error     | 0       | idle     | 10000     | false  | heartbeat conn for sql[show slave status] is closed, due to stream closed  |
       | hostS1 | 172.100.9.2 | 3306   | ok        | 0       | idle     | 10000     | false  | None                                                                       |
       | hostS2 | 172.100.9.3 | 3306   | ok        | 0       | idle     | 10000     | false  | None                                                                       |
     Given start mysql in host "mysql-master1"
