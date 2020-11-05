@@ -3,7 +3,6 @@
 # Created by quexiuping at 2020/9/24
   Feature: change mysql's sql_mode
 
-@skip  #  todo    Assertion Failed: expect no err, but outcomes '(5316, 'Create TABLE OK, but generate metedata failed. The reason may be that the current druid parser can not recognize part of the sql or the user for backend mysql does not have permission to execute the heartbeat sql.')'
   @restore_mysql_config
   Scenario:  when insert sharding table without column name under the premise that sql_mode is ANSI#1
    """
