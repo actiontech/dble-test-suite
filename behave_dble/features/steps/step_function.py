@@ -544,3 +544,11 @@ def step_impl(context, path, hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     logging.debug("rc:{0}, stdout:{1}, stderr:{2}\n".format(rc, stdout, stderr))
 
+@Given('upload file "{filename}" to "{hostname}" success')
+def step_impl(context, filename, hostname):
+    node = get_node(hostname)
+    local_file = filename
+    only_filename=local_file.split("/")[-1]
+    logger.debug("filename is ".format(only_filename))
+    remote_file = "{0}/{1}".format(node.install_dir,only_filename)
+    node.sftp_conn.sftp_put(local_file, remote_file)
