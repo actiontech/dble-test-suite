@@ -11,11 +11,11 @@ Feature: # dryrun test
     """
     Then execute sql in "dble-1" in "admin" mode
       | sql          | expect                                                                  |
-      | dryrun       |  hasNoStr{Table[test] attribute type sharding in schema.xml is illegal} |
+      | dryrun       | hasNoStr{Table[test] attribute type sharding in schema.xml is illegal}  |
     Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
     """
        <table dataNode="dn1,dn2,dn3,dn4" type="defau" name="test" rule="hash-four" />
     """
     Then execute sql in "dble-1" in "admin" mode
       | sql          | expect                                                                               |
-      | dryrun       |  hasStr{attribute type value 'defau' in schema.xml is illegal, use default replaced} |
+      | dryrun       | hasStr{attribute type value 'defau' in schema.xml is illegal, use default replaced}  |
