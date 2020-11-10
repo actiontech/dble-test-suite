@@ -133,6 +133,7 @@ select `A`.* FROM (select sharding_4_t1.id,schema2.sharding_4_t2.name from schem
 drop table if exists sharding_4_t1
 create table sharding_4_t1(id int,c int,name varchar(20))
 insert into sharding_4_t1 values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
+update sharding_4_t1 set name ='test' wher id=1
 delete from sharding_4_t1 wher id=2
 select * from sharding_4_t1 wher id=3
 select * from sharding_4_t1 where id=3 orde by id
