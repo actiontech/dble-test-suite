@@ -58,6 +58,8 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_0 | False   | create table TEst_Table(id int,name char(10))                 | success             | DbTest |
       | conn_0 | False   | insert into test_table(id) value(1)                           | success             | DbTest |
       | conn_0 | False   | insert into Test_Table(id) value(1)                           | success             | DbTest |
+     #case https://github.com/actiontech/dble/issues/1749
+      | conn_0 | False   | select count(*) from Test_Table                               | success             | DBTEST  |
       | conn_0 | False   | select test_table.id from Test_Table                          | success             | DbTest |
       | conn_0 | False   | select Test_Table.id from test_table                          | success             | DbTest |
       | conn_0 | False   | select Test_Table.id from test_table                          | success             | DbTest |
@@ -75,13 +77,13 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                |success | schema1 |
       | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
       | conn_1 | False   | select avg(T1.id),t1.id from DbTest.Test_Table t1,test T2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(T1.id)>(select sum(T1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
-      | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | schema1 |
-      | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
-      | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
-      | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)    | success | schema1 |
-      | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)    | success | schema1 |
-      | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)    | success | schema1 |
-      | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'            | success | schema1 |
+      | conn_1 | False   | select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success | schema1 |
+      | conn_1 | False   | select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
+      | conn_1 | False   | select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |success | schema1 |
+      | conn_1 | False   | select s.id from DbTest.Test_Table s union (select Id from test)    | success | schema1 |
+      | conn_1 | True    | select s.id from DbTest.Test_Table S union (select id from Test)    | success | schema1 |
+      | conn_1 | True    | select s.id from DbTest.Test_Table S union (select id from test)    | success | schema1 |
+      | conn_1 | True    | select s.id from DbTest.`Test_Table` s where s.name='aa'            | success | schema1 |
       | conn_2 | False   | drop table if exists uos_page_ret_inst                             | success | DbTest  |
       | conn_2 | False   | drop table if exists uos_tache_def                                 | success | DbTest  |
       | conn_2 | False   | create table uos_page_ret_inst(`RET_INST_ID` bigint (20),`TACHE_CODE` varchar (180),`TEST` varchar (300))                                | success     | DbTest |
@@ -96,6 +98,13 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_2 | False   | insert into uos_page_ret_inst values('10','AAAA',NULL) ,('36','BBBB',NULL)                                                                | success     | DbTest |
       | conn_2 | False   | insert into uos_tache_def values('1557471076988','BBBB','2019-05-10 14:51:17',NULL), ('1557471086419','aaaa','2019-05-10 14:51:26',NULL)  | success     | DbTest |
       | conn_2 | True    | select INST.TACHE_CODE,def.TACHE_CODE from uos_page_ret_inst INST JOIN uos_tache_def def ON def.TACHE_CODE=INST.TACHE_CODE                | length{(1)} | DbTest |
+      | conn_3 | False   | drop table if exists test_table           | success | DBTEST  |
+      | conn_3 | False   | drop table if exists uos_page_ret_inst    | success | DBTEST  |
+      | conn_3 | False   | drop table if exists uos_tache_def        | success | DBTEST  |
+      | conn_3 | True    | drop table if exists Test                 | success | schema1 |
+
+
+
 
   @BLOCKER @current
   Scenario: set backend mysql lower_case_table_names=0, dble will deal with queries case insensitive  #2
@@ -201,7 +210,7 @@ Feature: check collation/lower_case_table_names works right for dble
       | test_user | 111111 | conn_0 | False   | update aly_test set name='b' where id=1         | success |    |
       | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |    |
       | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |    |
-      | test_user | 111111 | conn_0 | False   | show create table aly_test                      | success |    |
+      | test_user | 111111 | conn_0 | true    | show create table aly_test                      | success |    |
 
   @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #4
@@ -245,11 +254,10 @@ Feature: check collation/lower_case_table_names works right for dble
       | test | 111111 | conn_0 | False   | select * from tb_child1                                                   | success |    |
       | test | 111111 | conn_0 | False   | delete from tb_child1                                                     | success |    |
       | test | 111111 | conn_0 | False   | show create table tb_child1                                               | success |    |
-
       | test | 111111 | conn_0 | False   | drop table if exists tb_grandson1                                         | success |    |
       | test | 111111 | conn_0 | False   | create table tb_grandson1 (grandson1_id int, name varchar(10))            | success |    |
       | test | 111111 | conn_0 | False   | insert into tb_grandson1  value(1,'a')                                    | success |    |
       | test | 111111 | conn_0 | False   | update tb_grandson1  set name='b' where grandson1_id=1                    | success |    |
       | test | 111111 | conn_0 | False   | select * from tb_grandson1                                                | success |    |
       | test | 111111 | conn_0 | False   | delete from tb_grandson1                                                  | success |    |
-      | test | 111111 | conn_0 | False   | show create table tb_grandson1                                            | success |    |
+      | test | 111111 | conn_0 | true    | show create table tb_grandson1                                            | success |    |
