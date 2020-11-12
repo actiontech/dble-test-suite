@@ -137,13 +137,13 @@ Feature: following complex queries are not able to send one shardingnode
       | conn   | toClose | sql                                                                                                                                                               |
       | conn_0 | False   | explain select * from ( select a.id aid,b.id bid,3 mark from sharding_two_node2 a left join sharding_two_node b on a.id= b.id where a.id >3) t where t.mark IN(3) |
     Then check resultset "rs_H" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                                                               |
-      | dn1_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where (`a`.`id` > 3) AND (3 in (3)) |
-      | dn2_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where (`a`.`id` > 3) AND (3 in (3)) |
-      | merge_1                    | MERGE                    | dn1_0; dn2_0                                                                                                                                                            |
-      | shuffle_field_1            | SHUFFLE_FIELD            | merge_1                                                                                                                                                                 |
-      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_1                                                                                                                                                         |
-      | shuffle_field_2            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                                                              |
+      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                                                                                                                                                |
+      | dn1_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where  ( `a`.`id` > 3 AND 3 in (3))  |
+      | dn2_0                      | BASE SQL                 | select `a`.`id` as `aid`,`b`.`id` as `bid` from  `sharding_two_node2` `a` left join  `sharding_two_node` `b` on `a`.`id` = `b`.`id` where  ( `a`.`id` > 3 AND 3 in (3))  |
+      | merge_1                    | MERGE                    | dn1_0; dn2_0                                                                                                                                                             |
+      | shuffle_field_1            | SHUFFLE_FIELD            | merge_1                                                                                                                                                                  |
+      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_1                                                                                                                                                          |
+      | shuffle_field_2            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                                                               |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                  | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_two_node2                              | success | schema1 |
