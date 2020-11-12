@@ -189,10 +189,10 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | 0.0    | test |
 
 #case no cerate schema but in sql is used this schema then do not occur npe http://10.186.18.11/jira/browse/DBLE0REQ-627
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose   | sql                                        | expect    | charset |
-      | conn_0 | false     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join (select * from mimc_be.cl_idx_data_monitor UNION ALL select * from mimc_be.cl_idx_data_monitor ) as B   | schema mimc_be doesn't exist! | utf8mb4 |
-      | conn_0 | false     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join mimc_be.cl_idx_data_monitor   |  Table `mimc_be`.`cl_idx_data_monitor` doesn't exist | utf8mb4 |
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose   | sql                                        | expect    | charset |
+#      | conn_0 | false     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join (select * from mimc_be.cl_idx_data_monitor UNION ALL select * from mimc_be.cl_idx_data_monitor ) as B   | schema mimc_be doesn't exist! | utf8mb4 |
+#      | conn_0 | false     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join mimc_be.cl_idx_data_monitor   |  Table `mimc_be`.`cl_idx_data_monitor` doesn't exist | utf8mb4 |
 
 #case no use schema then do not occur npe http://10.186.18.11/jira/browse/DBLE0REQ-638 and http://10.186.18.11/jira/browse/DBLE0REQ-685
     Then execute sql in "dble-1" in "user" mode
