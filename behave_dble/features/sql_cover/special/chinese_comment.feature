@@ -23,7 +23,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | True     | drop table test_table           | success       | schema1 |
 
 
-@restore_mysql_config
+  @restore_mysql_config
   Scenario: check support utf8mb4: case from issue http://10.186.18.11/jira/browse/DBLE0REQ-582 #2
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
@@ -188,10 +188,19 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | wsgw-0 | lb-1 |
       | 0.0    | test |
 
-#case no use schema then do not occur npe http://10.186.18.11/jira/browse/DBLE0REQ-638
+#case no cerate schema but in sql is used this schema then do not occur npe http://10.186.18.11/jira/browse/DBLE0REQ-627
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose   | sql                                        | expect    | charset |
+      | conn_0 | false     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join (select * from mimc_be.cl_idx_data_monitor UNION ALL select * from mimc_be.cl_idx_data_monitor ) as B   | schema mimc_be doesn't exist! | utf8mb4 |
+      | conn_0 | false     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join mimc_be.cl_idx_data_monitor   |  Table `mimc_be`.`cl_idx_data_monitor` doesn't exist | utf8mb4 |
+
+#case no use schema then do not occur npe http://10.186.18.11/jira/browse/DBLE0REQ-638 and http://10.186.18.11/jira/browse/DBLE0REQ-685
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect    | charset |
+#      | conn_1 | true     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join (select * from mimc_be.cl_idx_data_monitor UNION ALL select * from mimc_be.cl_idx_data_monitor ) as B   |   | utf8mb4 |
+#      | conn_1 | true     | select * from (SELECT '新装增容' dim1 FROM DUAL ) as A inner join mimc_be.cl_idx_data_monitor   |   | utf8mb4 |
       | conn_1 | true     | SELECT d.NAME AS NAME, d.CODE AS CODE, IFNULL(c.减容容量, 0) AS 减容容量 , IFNULL(c.同期减容容量, 0) AS 同期减容容量 , IFNULL(c.同比减容容量, 0) AS 同比减容容量 FROM ( SELECT org_no , IFNULL(SUM(ifnull(c.jrrl, 0)), 0) AS 减容容量 , IFNULL(SUM(ifnull(c.tqjrrl, 0)), 0) AS 同期减容容量 , IFNULL((SUM(ifnull(c.jrrl, 0)) - SUM(ifnull(c.tqjrrl, 0))) / SUM(ifnull(c.tqjrrl, 0)) * 100, 0) AS 同比减容容量 FROM ( SELECT org_no, tj AS jrrl, tq AS tqjrrl FROM ( SELECT a.org_no, a.idx_no, SUM(a.data_value) AS tj , SUM(a.data_value_ly) AS tq FROM cl_idx_data_monitor a WHERE a.EXT_VALUE05 LIKE '202009%' AND a.theme_no = 'IND_02_FBSBZ' AND org_no LIKE '41406%' AND a.stat_calibre = '03' AND a.idx_no = 'JYGK41101020000000015' GROUP BY a.org_no, a.idx_no ) b ) c GROUP BY c.org_no ) c RIGHT JOIN ( SELECT * FROM sys_dict_entry WHERE CODE LIKE '41406%' AND LENGTH(CODE) = '7' AND NAME NOT LIKE '%自备电厂%' ) d ON c.org_no = d.CODE ORDER BY d.CODE = '4140601' DESC, d.CODE   | No database selected | utf8mb4 |
+
 #case clear table meta
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect       | db      | charset |
