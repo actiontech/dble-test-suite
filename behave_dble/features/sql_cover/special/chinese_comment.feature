@@ -24,7 +24,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 
 
 @restore_mysql_config
-  Scenario: check support utf8mb4: case from tenglong  issue http://10.186.18.11/jira/browse/DBLE0REQ-582 #2
+  Scenario: check support utf8mb4: case from issue http://10.186.18.11/jira/browse/DBLE0REQ-582 #2
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
    """
