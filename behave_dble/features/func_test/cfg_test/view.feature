@@ -30,8 +30,6 @@ Feature: #view test except sql cover
        | conn_0 | False    | select * from view_test   | success   | schema1 |
        | conn_0 | True     | drop view view_test       | success   | schema1 |
 
-<<<<<<< HEAD
-=======
 
   Scenario: # for vertical node view: create view in mysql, then after execute reload @@metadata command the view is available in dble #2
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -107,4 +105,3 @@ Feature: #view test except sql cover
        # none-vertical-node-table can drop in dble
        | conn_0 | True     | drop table nosharding                                                         | success                                                           | schema1 |
        | conn_0 | True     | drop table sharding_1_t1                                                      | success                                                           | schema1 |
->>>>>>> e2b3f2ca... modify view case
