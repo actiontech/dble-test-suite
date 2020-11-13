@@ -67,4 +67,6 @@ Feature: two logical databases: declare the database of all tables when querying
       | conn   | toClose | sql                                                      | expect          | db      |
       | conn_0 | False   | drop table if exists o_dept                              | success         | schema1 |
       | conn_0 | False   | drop table if exists p_sys_user                          | success         | schema1 |
-      | conn_0 | true    | drop table if exists o_org                               | success         | schema1 |
+      | conn_0 | False   | drop table if exists o_org                               | success         | schema1 |
+      | conn_0 | true    | drop table if exists sharding_2_t1                       | success         | schema1 |
+      | conn_0 | true    | drop table if exists sharding_2_t2                       | success         | schema2 |
