@@ -140,4 +140,5 @@ Feature: test slow query log related manager command
 #case drop table
      Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                        | expect  | db      |
+      | conn_1 | true    | commit                                     | success | schema1 |
       | conn_0 | true    | drop table if exists a_test                | success | schema1 |
