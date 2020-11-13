@@ -45,15 +45,16 @@ Feature: two logical databases: declare the database of all tables when querying
       | conn_0 | False   | CREATE TABLE `o_dept` ( `DEPT_NO` varchar(16) NOT NULL,`ORG_NO` varchar(16) NOT NULL, `NAME` varchar(256) DEFAULT NULL, PRIMARY KEY (`DEPT_NO`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4                                                                                                                                                    | success                         | schema1 |
       | conn_0 | False   | CREATE TABLE `o_org` ( `ORG_NO` varchar(16) NOT NULL,`ORG_NAME` varchar(256) DEFAULT NULL,`P_ORG_NO` varchar(16) DEFAULT NULL, PRIMARY KEY (`ORG_NO`) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4                                                                                                                                              | success                         | schema1 |
       | conn_0 | False   | CREATE TABLE `p_sys_user` ( `SYS_USER_NAME` varchar(30) NOT NULL, `DEPT_NO` varchar(16) DEFAULT NULL, `ORG_NO` varchar(16) NOT NULL, `USER_NAME` varchar(64) DEFAULT NULL, `PWD` varchar(256) NOT NULL, `CUR_STATUS_CODE` varchar(8) DEFAULT NULL, `ADMIN_FLAG` decimal(3,0) DEFAULT NULL ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4          | success                         | schema1 |
-      | conn_0 | False   | insert into o_dept values ('a','b','c'),('null','test','and'),('m','1=a','23')                                      | success         | schema1 |
-      | conn_0 | False   | insert into o_org values ('a','b','c'),('suoyin','0-1','rr'),('ff','1=a','rfs')                                     | success         | schema1 |
-      | conn_0 | False   | insert into p_sys_user values ('a','a','a','a','a','a',12),('fds','aew','er','er','ere','ere',16)                   | success         | schema1 |
+      | conn_0 | False   | insert into o_dept values ('12','m1','32'),('32','m2','3241'),('42','m3','e43'),('n3','m4','e43')                                                   | success         | schema1 |
+      | conn_0 | False   | insert into o_org values ('n1','ew','wew'),('n2','0-1','rr'),('n3','1=a','rfs'),('42','m3','e43')                                                   | success         | schema1 |
+      | conn_0 | False   | insert into p_sys_user values ('ew','m1','n1','qwe','ew','a',2),('a2','m4','n2','er','ere','ere',1),('a2','m3','43','er','ere','ere',1)             | success         | schema1 |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "1"
       | conn   | toClose | sql                          |
       | conn_0 | False   | SELECT a.sys_user_name AS sysUserName, d.org_no AS orgNo, d.org_name AS orgName, c.dept_no AS deptNo, c. NAME AS deptName, a.user_name AS userName, a.cur_status_code AS curStatusCode, a.admin_flag AS adminFlag FROM p_sys_user a LEFT JOIN o_dept c ON a.dept_no = c.dept_no,  o_org d WHERE a.org_no = d.org_no AND a.org_no IN (SELECT org_no FROM o_org) AND ( a.cur_status_code IS NULL OR a.cur_status_code <> '03' )      |
     Then check resultset "1" has lines with following column values
       | sysUserName-0 | orgNo-1 | orgName-2 | deptNo-3 | deptName-4 | userName-5 | curStatusCode-6 | adminFlag-7 |
-      | a             | a       | b         | a        | c          | a          | a               | 12          |
+      | ew            | n1      | ew        | None     | None       | qwe        | a               |           2 |
+      | a2            | n2      | 0-1       | None     | None       | er         | ere             |           1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "2"
       | conn   | toClose | sql                          |
