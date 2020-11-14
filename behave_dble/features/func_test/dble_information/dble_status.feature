@@ -3,6 +3,7 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  dble_status test
+
    Scenario:  dble_status table #1
   #case desc dble_status
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_1"
@@ -62,7 +63,7 @@ Feature:  dble_status test
       | conn_0 | False   | update dble_status set comment='number of requests' where variable_value='0'           | Access denied for table 'dble_status'   |
       | conn_0 | False   | insert into dble_status values ('a','b','c')                                           | Access denied for table 'dble_status'   |
 
-@skip
+
 
  Scenario:  check questions/transactions http://10.186.18.11/jira/browse/DBLE0REQ-67 #2
    Then execute sql in "dble-1" in "user" mode
@@ -94,69 +95,69 @@ Feature:  dble_status test
       | conn   | toClose | sql                                                                                       | expect                                                  |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '7',), ('transactions', '7',))}      |
   #case xa
-#   Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                      |
-#      | conn_1 | False   | set autocommit=0                                         |
-#      | conn_1 | False   | set xa=on                                                |
-#   Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                       | expect                                                  |
-#      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '9',), ('transactions', '9',))}      |
-#   Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                      |
-#      | conn_1 | False   | insert into test values (2,2),(3,3)                      |
-#      | conn_1 | False   | insert into test values (4,4),(5,5)                      |
-#   Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                       | expect                                                  |
-#      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '11',), ('transactions', '10',))}    |
-#   Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                      |
-#      | conn_1 | False   | commit                                                   |
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      |
+      | conn_1 | False   | set autocommit=0                                         |
+      | conn_1 | False   | set xa=on                                                |
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '12',), ('transactions', '11',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '9',), ('transactions', '7',))}      |
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      |
+      | conn_1 | False   | insert into test values (2,2),(3,3)                      |
+      | conn_1 | False   | insert into test values (4,4),(5,5)                      |
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect                                                  |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '11',), ('transactions', '7',))}    |
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                      |
+      | conn_1 | False   | commit                                                   |
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect                                                  |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '12',), ('transactions', '8',))}    |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
       | conn_1 | False   | insert into test values (6,6),(7,7)                      |
       | conn_1 | False   | delete from test where code>5                            |
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '14',), ('transactions', '12',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '14',), ('transactions', '9',))}    |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
       | conn_1 | False   | rollback                                                 |
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '15',), ('transactions', '13',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '15',), ('transactions', '10',))}    |
   #case reload
    Then execute admin cmd "reload @@config"
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '15',), ('transactions', '13',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '15',), ('transactions', '10',))}    |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
       | conn_1 | False   | set autocommit=1                                         |
       | conn_1 | False   | set xa=off                                               |
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '17',), ('transactions', '15',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '17',), ('transactions', '13',))}    |
   #case eixt
    Given prepare a thread execute sql "exit" with "conn_1"
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '18',), ('transactions', '16',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '18',), ('transactions', '14',))}    |
   #case different seesion
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
       | conn_2 | False   | use schema1                                              |
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '19',), ('transactions', '17',))}    |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '19',), ('transactions', '15',))}    |
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_5"
       | conn   | toClose | sql              | db                |
       | conn_0 | False   | show @@questions | dble_information  |
    Then check resultset "dble_status_5" has lines with following column values
       | Questions-0 | Transactions-1 |
-      | 19          | 17             |
+      | 19          | 15             |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
       | conn_1 | False   | drop table if exists test                                |
