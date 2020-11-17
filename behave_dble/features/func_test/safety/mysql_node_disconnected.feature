@@ -37,7 +37,7 @@ Feature: #mysql node disconnected,check the change of dble
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                   | expect                                                                                                                                |
       | conn_0 | False   | dryrun                | hasStr{Get Vars from backend failed,Maybe all backend MySQL can't connected}                                                          |
-      | conn_0 | True    | reload @@config_all | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly |
+      | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
     Then restart dble in "dble-1" failed for
     """
     Can't get variables from data node
