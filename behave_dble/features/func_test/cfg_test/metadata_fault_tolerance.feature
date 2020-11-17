@@ -43,8 +43,8 @@ Feature: fault tolerance detection
       | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                 | expect                                                                                                                                                                   | db      |
-      | conn_0 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;} | schema1 |
+      | conn   | toClose | sql                 | expect                                                                                                                                                                 |
+      | conn_1 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;}   |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -105,9 +105,9 @@ Feature: fault tolerance detection
       | schema1  | test6   | 0                          | 0                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql               | expect  | db      |
-      | conn_0 | True    | show @@version    | success | schema1 |
-      | conn_0 | True    | reload @@metadata | success | schema1 |
+      | conn   | toClose | sql               | expect  |
+      | conn_1 | True    | show @@version    | success |
+      | conn_1 | True    | reload @@metadata | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_c"
       | sql                                          |
       | check full @@metadata where schema='schema1' |
@@ -235,9 +235,9 @@ Feature: fault tolerance detection
       | schema1  | test6   | 0                          | 0                      |
       | schema1  | test1   | 1                          | 1                      |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql               | expect  | db      |
-      | conn_0 | True    | show @@version    | success | schema1 |
-      | conn_0 | True    | reload @@metadata | success | schema1 |
+      | conn   | toClose | sql               | expect  |
+      | conn_1 | True    | show @@version    | success |
+      | conn_1 | True    | reload @@metadata | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "metadata_rs_d"
       | sql                                          |
       | check full @@metadata where schema='schema1' |
@@ -353,9 +353,9 @@ Feature: fault tolerance detection
       | schema1  | test6   | 1                          | 1                      |
       | schema1  | test1   | 0                          | 0                      |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql               | expect  | db      |
-      | conn_0 | True    | show @@version    | success | schema1 |
-      | conn_0 | True    | reload @@metadata | success | schema1 |
+      | conn   | toClose | sql               | expect  |
+      | conn_1 | True    | show @@version    | success |
+      | conn_1 | True    | reload @@metadata | success |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                        | expect  | db      |
       | conn_0 | False   | drop table if exists test1 | success | schema1 |
@@ -446,9 +446,9 @@ Feature: fault tolerance detection
       | conn_0 | False   | desc test1 | hasStr{name} | db1 |
       | conn_0 | True    | desc test1 | hasStr{name} | db2 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql               | expect  | db      |
-      | conn_0 | False   | show @@version    | success | schema1 |
-      | conn_0 | True    | reload @@metadata | success | schema1 |
+      | conn   | toClose | sql               | expect  |
+      | conn_1 | False   | show @@version    | success |
+      | conn_1 | True    | reload @@metadata | success |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                        | expect  | db      |
       | conn_0 | False   | drop table if exists test1 | success | schema1 |
