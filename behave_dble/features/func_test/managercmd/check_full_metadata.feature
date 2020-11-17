@@ -202,14 +202,14 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | insert into test2 values(1,1,1) | success  | schema1   |
       | conn_0 | True    | alter table test2 drop name     | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                           | expect            | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test4`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasNoStr{`test2`} | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasStr{`test2`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasNoStr{`test4`} | schema1 |
-      | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}  | schema1 |
-      | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}     | schema1 |
-      | conn_0 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}    | schema1 |
+      | conn   | toClose | sql                                                           | expect            |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test4`}   |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasNoStr{`test2`} |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasStr{`test2`}   |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasNoStr{`test4`} |
+      | conn_1 | False   | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}  |
+      | conn_1 | False   | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}     |
+      | conn_1 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}    |
     Then execute sql in "dble-1" in "user" mode
       | sql                        | expect                       | db      |
       | alter table test4 drop age | check that column/key exists | schema1 |
@@ -224,9 +224,9 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | insert into test2 values(1,1)    | success  | schema1   |
       | conn_0 | True    | alter table test2 add name char  | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                           | expect            | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test4`}   | schema1 |
-      | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}    | schema1 |
+      | conn   | toClose | sql                                                           | expect            |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test4`}   |
+      | conn_1 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}    |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                            | expect                           | db        |
       | conn_0 | False   | alter table test4 drop name                    | Table 'db1.test4' doesn't exist  | schema1   |
@@ -244,14 +244,14 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | insert into test2 values(1,1,1) | success  | schema1   |
       | conn_0 | True    | alter table test2 drop name     | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                           | expect            | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test5`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasNoStr{`test2`} | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasStr{`test2`}   | schema1 |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasNoStr{`test5`} | schema1 |
-      | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}  | schema1 |
-      | conn_0 | False   | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}     | schema1 |
-      | conn_0 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}    | schema1 |
+      | conn   | toClose | sql                                                           | expect            |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test5`}   |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasNoStr{`test2`} |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasStr{`test2`}   |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =1       | hasNoStr{`test5`} |
+      | conn_1 | False   | check full @@metadata where schema='schema1' and table='test2'| hasNoStr{`name`}  |
+      | conn_1 | False   | check full @@metadata where schema='schema1' and table='test2'| hasStr{`age`}     |
+      | conn_1 | True    | check full @@metadata where schema='schema1' and table='test6'| hasNoStr{`id`}    |
     Then execute sql in "dble-1" in "user" mode
       | sql                          | expect                        | db        |
       | alter table test5 drop age   | check that column/key exists  | schema1   |
@@ -266,9 +266,9 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | insert into test2 values(1,1)    | success  | schema1   |
       | conn_0 | True    | alter table test2 add name char  | success  | schema1   |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                           | expect          | db      |
-      | conn_0 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test5`} | schema1 |
-      | conn_0 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}  | schema1 |
+      | conn   | toClose | sql                                                           | expect          |
+      | conn_1 | False   | check full @@metadata where consistent_in_sharding_nodes =0       | hasStr{`test5`} |
+      | conn_1 | True    | check full @@metadata where schema='schema1' and table='test2'| hasStr{`name`}  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect                           | db        |
       | conn_0 | False   | alter table test5 drop name | Table 'db1.test5' doesn't exist  | schema1   |
@@ -462,8 +462,8 @@ Feature: test "check full @@metadata...'"
       CREATE TABLE `mytest_auto_test1`
       """
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                     | expect                          | db     |
-      | check full @@metadata where consistent_in_sharding_nodes =0 | hasNoStr{`mytest_auto_test1`}   | schema1 |
+      | sql                                                         | expect                          |
+      | check full @@metadata where consistent_in_sharding_nodes =0 | hasNoStr{`mytest_auto_test1`}   |
 
   Scenario: add filter for reload @@metadata #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
