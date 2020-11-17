@@ -168,8 +168,8 @@ Feature: sharding basic config test
       | conn_0 | True    | drop database if exists da2 |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
-      | sql            | expect  | db     |
-      | show @@version | success | schema1 |
+      | sql            | expect  |
+      | show @@version | success |
     Then execute sql in "dble-1" in "user" mode
       | sql                                                      | expect            | db      |
       | create table if not exists test(id int,name varchar(20)) | Unknown database  | schema1 |
