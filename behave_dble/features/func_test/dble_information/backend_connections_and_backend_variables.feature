@@ -4,7 +4,7 @@
 
 
 Feature:  backend_connections test
-@skip_restart
+
    Scenario:  backend_connections table #1
   #case desc backend_connections
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_1"
@@ -29,20 +29,17 @@ Feature:  backend_connections test
       | conn_net_in               | int(11)       | NO     |       | None      |         |
       | conn_net_out              | int(11)       | NO     |       | None      |         |
       | conn_estab_time           | int(11)       | NO     |       | None      |         |
-      | borrowed_from_pool        | int(11)       | NO     |       | None      |         |
+      | borrowed_from_pool        | varchar(5)    | NO     |       | None      |         |
       | conn_recv_buffer          | int(11)       | NO     |       | None      |         |
       | conn_send_task_queue      | int(11)       | NO     |       | None      |         |
       | used_for_heartbeat        | varchar(5)    | NO     |       | None      |         |
       | conn_closing              | varchar(5)    | NO     |       | None      |         |
       | xa_status                 | varchar(64)   | NO     |       | None      |         |
       | in_transaction            | varchar(5)    | NO     |       | None      |         |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_2"
-#      | conn   | toClose | sql                       | db               |
-#      | conn_0 | False   | select * from backend_connections | dble_information |
-#    Then check resultset "backend_connections_2" has lines with following column values
-#| db_group_name-1 | db_instance_name-2 | remote_addr-3 | remote_port-4   | processor_id-7    | user-8 | schema-9 | session_conn_id-10 | sql-11  | sql_execute_time-12 | mark_as_expired_timestamp-13 | borrowed_from_pool-17 | conn_recv_buffer-18 | conn_send_task_queue-19 | used_for_heartbeat-20 | conn_closing-21 | xa_status-22 | in_transaction-23 |
-#| ha_group2       | hostM2             | 172.100.9.6   | 3306            | backendProcessor0 | test   | NULL     |            None    | None    |              470924 |                            0 |                  true |                4096 |                       0 | false                 | false           | 0            | false          |
-
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                  | expect       | db               |
+      | conn_0 | False   | desc backend_connections             | length{(24)} | dble_information |
+      | conn_0 | False   | select * from backend_connections    | success      | dble_information |
 
   # case 8066 set xa=on http://10.186.18.11/jira/browse/DBLE0REQ-508
     Then execute sql in "dble-1" in "user" mode
@@ -90,23 +87,19 @@ Feature:  backend_connections test
       | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
       Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn3" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id" />
+    <schema shardingNode="dn2" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_2_t1" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id" />
     </schema>
 
-    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-    <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
-    <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
     """
       Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1">
-        </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" readWeight="2">
-        </dbInstance>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" readWeight="2"/>
     </dbGroup>
     """
     Then execute admin cmd "reload @@config"
@@ -115,43 +108,44 @@ Feature:  backend_connections test
       | conn_0 | False   | select db_group_name,db_instance_name,remote_addr,schema from backend_connections | dble_information |
     Then check resultset "backend_connections_4" has lines with following column values
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
-      | ha_group1       | hostM1             | 172.100.9.5   |
-      | ha_group1       | hostM1             | 172.100.9.5   |
-      | ha_group1       | hostM1             | 172.100.9.5   |
-      | ha_group1       | hostS1             | 172.100.9.2   |
+      | ha_group2       | hostM2             | 172.100.9.6   |
+      | ha_group2       | hostS1             | 172.100.9.2   |
     Then check resultset "backend_connections_4" has not lines with following column values
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
-      | ha_group2       | hostM2             | 172.100.9.6   |
-      | ha_group2       | hostM2             | 172.100.9.6   |
-      | ha_group2       | hostM2             | 172.100.9.6   |
+      | ha_group1       | hostM1             | 172.100.9.5   |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
       | conn_1 | False   | drop table if exists test                        | success |
       | conn_1 | true    | drop table if exists sharding_2_t1               | success |
-   #case select limit/order by/where like
+   #case select limit/order by
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                 | expect                                                  |
-      | conn_0 | False   | select user,db_group_name from backend_connections order by schema desc limit 2     | has{(('test', 'ha_group1'), ('test', 'ha_group1'))}     |
-      | conn_0 | False   | select user,db_group_name from backend_connections where schema like '%2%'          | has{(('test', 'ha_group1'),)}                           |
+      | conn_0 | False   | select user,db_group_name from backend_connections order by schema desc limit 2     | has{(('test', 'ha_group2'), ('test', 'ha_group2'))}     |
   #case select max/min
-      | conn_0 | False   | select max(db_group_name) from backend_connections                      | has{(('ha_group1',),)}  |
-      | conn_0 | False   | select min(db_group_name) from backend_connections                      | has{(('ha_group1',),)}  |
+      | conn_0 | False   | select max(db_group_name) from backend_connections                      | has{(('ha_group2',),)}  |
+      | conn_0 | False   | select min(db_group_name) from backend_connections                      | has{(('ha_group2',),)}  |
   #case update/delete
       | conn_0 | False   | delete from backend_connections where user='test'                         | Access denied for table 'backend_connections'     |
       | conn_0 | False   | update backend_connections set user = 'a' where user ='test'              | Access denied for table 'backend_connections'     |
       | conn_0 | true    | insert into backend_connections values (1,'1',1,1,1)                      | Access denied for table 'backend_connections'     |
 
-    Scenario:  backend_variables table #2
+
+
+     Scenario:  backend_variables table #2
   #case desc backend_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_1"
       | conn   | toClose | sql                      | db               |
-      | conn_0 | False   | desc backend_variables | dble_information |
+      | conn_0 | False   | desc backend_variables   | dble_information |
     Then check resultset "backend_variables_1" has lines with following column values
       | Field-0         | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
       | backend_conn_id | int(11)     | NO     |       | None      |         |
       | variable_name   | varchar(12) | NO     |       | None      |         |
       | variable_value  | varchar(12) | NO     |       | None      |         |
       | variable_type   | varchar(3)  | NO     |       | None      |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                | expect       | db               |
+      | conn_0 | False   | desc backend_variables             | length{(4)}  | dble_information |
   #case select * from backend_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_2"
       | conn   | toClose | sql                             | db               |
@@ -211,7 +205,7 @@ Feature:  backend_connections test
       | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |
  #case select
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_3"
-      | conn   | toClose | sql                                                                                                                                                                 | db               |
+      | conn   | toClose | sql                                                                                                                                                                | db               |
       | conn_0 | False   | select * from backend_variables where backend_conn_id in (select backend_conn_id from backend_connections where sql='INSERT INTO sharding_2_t1 VALUES (2),  (4)')   | dble_information |
     Then check resultset "backend_variables_3" has lines with following column values
       | variable_name-1          | variable_value-2   | variable_type-3 |
@@ -244,8 +238,6 @@ Feature:  backend_connections test
       | conn   | toClose | sql                                                                                                                | expect          |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                         | length{(2)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='false'                        | length{(2)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'   | length{(3)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-uncommitted'  | length{(1)}     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
       | conn_1 | False   | commit                                           | success |
@@ -272,8 +264,6 @@ Feature:  backend_connections test
       | conn_0 | False   | use dble_information                                                                                                     | success         |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                               | length{(3)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='false'                              | length{(1)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'         | length{(3)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-uncommitted'        | length{(1)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='utf8mb4'                  | length{(2)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='utf8mb4_general_ci'       | length{(2)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='utf8mb4'                 | length{(2)}     |
@@ -313,8 +303,6 @@ Feature:  backend_connections test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                      | expect          |
       | conn_0 | False   | use dble_information                                                                                                     | success         |
-      | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                               | length{(1)}     |
-      | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='false'                              | length{(3)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='repeatable-read'         | length{(0)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='transaction_isolation' and variable_value='read-committed'          | length{(4)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_client' and variable_value='utf8mb4'                  | length{(0)}     |
@@ -326,7 +314,7 @@ Feature:  backend_connections test
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='latin1'                  | length{(4)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='latin1_swedish_ci'    | length{(4)}     |
 
-  #case update/delete
+  #case cannot support dml
       | conn_0 | False   | delete from backend_variables where variable_name='autocommit'                         | Access denied for table 'backend_variables'     |
       | conn_0 | False   | update backend_variables set variable_name='' where variable_name='autocommit'         | Access denied for table 'backend_variables'     |
       | conn_0 | true    | insert into backend_variables values (1,'1','1','1')                                   | Access denied for table 'backend_variables'     |

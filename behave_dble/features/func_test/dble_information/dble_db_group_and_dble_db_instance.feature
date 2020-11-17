@@ -19,6 +19,9 @@ Feature:  dble_db_group test
       | delay_threshold   | int(11)     | YES    |       | -1        |         |
       | disable_ha        | varchar(5)  | YES    |       | false     |         |
       | active            | varchar(5)  | YES    |       | false     |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                            | expect       | db               |
+      | conn_0 | False   | desc dble_db_group             | length{(8)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_2"
       | conn   | toClose | sql                         | db               |
       | conn_0 | False   | select * from dble_db_group | dble_information |
@@ -28,8 +31,8 @@ Feature:  dble_db_group test
       | ha_group2 | select user()    | 0                   | 1                 | 0               | 100               | false        | true     |
   #case change db.xml and reload
     Given delete the following xml segment
-      | file           | parent         | child                  |
-      | db.xml         | {'tag':'root'} | {'tag':'dbGroup'}      |
+      | file           | parent         | child                       |
+      | db.xml         | {'tag':'root'} | {'tag':'dbGroup'}           |
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="1" name="ha_1" disableHA="true" >
@@ -45,7 +48,7 @@ Feature:  dble_db_group test
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_3" delayThreshold="1000" >
-        <heartbeat>show slave status</heartbeat>
+        <heartbeat>select @@read_only</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.1:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
@@ -58,40 +61,38 @@ Feature:  dble_db_group test
     <shardingNode dbGroup="ha_2" database="db2" name="dn4" />
     <shardingNode dbGroup="ha_1" database="db3" name="dn5" />
     """
-      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <rwSplitUser name="rwSplit" password="111111" dbGroup="ha_1" maxCon="20"/>
-    """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_3"
       | conn   | toClose | sql                         | db               |
       | conn_0 | False   | select * from dble_db_group | dble_information |
     Then check resultset "dble_db_group_3" has lines with following column values
-      | name-0 | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
-      | ha_1   | show slave status | 100                 | 0                 | 1               | -1                | true         | true     |
-      | ha_2   | select user()     | 0                   | 1                 | 2               | 100               | false        | true     |
-      | ha_3   | show slave status | 0                   | 1                 | 0               | 1000              | false        | true     |
+      | name-0 | heartbeat_stmt-1   | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
+      | ha_1   | show slave status  | 100                 | 0                 | 1               | -1                | true         | true     |
+      | ha_2   | select user()      | 0                   | 1                 | 2               | 100               | false        | true     |
+      | ha_3   | select @@read_only | 0                   | 1                 | 0               | 1000              | false        | true     |
 
   #case select limit/order by
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect                                                                                                                           |
       | conn_0 | False   | select * from dble_db_group limit 1                          | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'),)}                                                                 |
-      | conn_0 | False   | select * from dble_db_group order by name desc limit 2       | has{(('ha_3', 'show slave status', 0, 1, 0, 1000, 'false', 'true'), ('ha_2', 'select user()', 0, 1, 2, 100, 'false', 'true'))}        |
+      | conn_0 | False   | select * from dble_db_group order by name desc limit 2       | has{(('ha_3', 'select @@read_only', 0, 1, 0, 1000, 'false', 'true'), ('ha_2', 'select user()', 0, 1, 2, 100, 'false', 'true'))}        |
   #case select max/min
       | conn_0 | False   | select max(delay_threshold) from dble_db_group         | has{((1000,),)}      |
       | conn_0 | False   | select min(delay_threshold) from dble_db_group         | has{((-1,),)}       |
   #case select where like
-      | conn_0 | False   | select * from dble_db_group where heartbeat_stmt ='show slave status'      | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'),('ha_3', 'show slave status', 0, 1, 0, 1000, 'false', 'true'))}         |
+      | conn_0 | False   | select * from dble_db_group where heartbeat_stmt ='show slave status'      | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'),)}         |
       | conn_0 | False   | select * from dble_db_group where name like '%ha%'                         | length{(3)}                                                                                                                               |
   #case select where [sub-query]
-      | conn_0 | False   | select * from dble_db_group where name in (select db_group from dble_db_instance) and rw_split_mode=0     | has{(('ha_3', 'show slave status', 0, 1, 0, 1000, 'false', 'true'))}                                                              |
+      | conn_0 | False   | select * from dble_db_group where name in (select db_group from dble_db_instance) and rw_split_mode=0     | has{(('ha_3', 'select @@read_only', 0, 1, 0, 1000, 'false', 'true'))}                                                              |
       | conn_0 | False   | select * from dble_db_group where name >all (select db_group from dble_db_instance)                       | length{(0)}                                                                                                                       |
       | conn_0 | False   | select * from dble_db_group where name < any (select db_group from dble_db_instance)                      | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'), ('ha_2', 'select user()', 0, 1, 2, 100, 'false', 'true'))}     |
       | conn_0 | False   | select * from dble_db_group where name = any (select db_group from dble_db_instance)                      | length{(3)}                                                                                                                       |
-  #case select field
+ #case select field
       | conn_0 | False   | select a.name,a.heartbeat_stmt,b.db_group from dble_db_group a inner join dble_db_instance b on a.name=b.db_group where a.heartbeat_retry = 0     | has{(('ha_1', 'show slave status', 'ha_1',))}                           |
       | conn_0 | False   | select * from dble_db_group where name in (select db_group from dble_db_instance where name ='hostM1')                                            | has{(('ha_1', 'show slave status', 100, 0, 1, -1, 'true', 'true'))}     |
       | conn_0 | true    | select name,heartbeat_stmt from dble_db_group where rw_split_mode > 0                                                                             | has{(('ha_1', 'show slave status',),('ha_2', 'select user()',))}        |
+
+
 
   Scenario:  dble_db_instance table #2
   #case desc dble_db_instance
@@ -131,6 +132,9 @@ Feature:  dble_db_group test
       | evictor_shutdown_timeout_millis   | int(11)      | YES    |       | 10000     |         |
       | idle_timeout                      | int(11)      | YES    |       | 600000    |         |
       | heartbeat_period_millis           | int(11)      | YES    |       | 10000     |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                               | expect        | db               |
+      | conn_0 | False   | desc dble_db_instance             | length{(31)}  | dble_information |
   #case change db.xml and reload
     Given delete the following xml segment
       | file           | parent         | child                  |
@@ -259,7 +263,7 @@ Feature:  dble_db_group test
       | conn_0 | False   | select user from dble_db_instance where name < any (select name from dble_db_instance where disabled ='false')    | has{(('test',), ('test',))}                      |
       | conn_0 | False   | select user from dble_db_instance where name = any (select name from dble_db_instance where disabled ='false')     |has{(('test',), ('test',), ('test',))}           |
   #case select field
-      | conn_0 | False   | select `primary` from dble_db_instance where name ='s1'      | has{(('false',),)}        |
+      | conn_0 | true    | select `primary` from dble_db_instance where name ='s1'      | has{(('false',),)}        |
 
   #case change mysql username
     Then execute sql in "mysql-master1"
@@ -287,7 +291,7 @@ Feature:  dble_db_group test
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_8"
       | conn   | toClose | sql                                             | db               |
-      | conn_0 | False   | select name,db_group,user from dble_db_instance | dble_information |
+      | conn_0 | true    | select name,db_group,user from dble_db_instance | dble_information |
     Then check resultset "dble_db_instance_8" has lines with following column values
       | name-0 | db_group-1 | user-2 |
       | M2     | ha_group2  | test   |

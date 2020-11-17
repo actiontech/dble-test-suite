@@ -80,7 +80,7 @@ Feature:  dble_entry test
       | conn_0 | False   | select username from dble_entry where blacklist in (select blacklist from dble_entry where type = 'username') | has{(('test',), ('test1',),('rwSplit',),('rwSplit1',))}     |
   #case select field from
       | conn_0 | False   | select type from dble_entry where conn_attr_key is not null     | has{(('conn_attr',))}        |
-  #case update/delete
+  #case cannot support dml
       | conn_0 | False   | delete from dble_entry where type='username'               | Access denied for table 'dble_entry'     |
       | conn_0 | False   | update dble_entry set type='aa'  where type='username'     | Access denied for table 'dble_entry'     |
       | conn_0 | False    | insert into dble_entry values ('a',1,2,3)                  | Access denied for table 'dble_entry'     |
@@ -639,16 +639,16 @@ Feature:  dble_entry test
       | list3      | metadataAllow               | true             | true              |
       | list3      | selectHavingAlwayTrueCheck  | true             | true              |
       | list3      | selelctAllow                | true             | true              |
-   #case select limit/order by/where like
+   #case support select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect                                                                                                        |
       | conn_0 | False   | select name,property_key from dble_blacklist order by property_key desc limit 2     | has{(('black1', 'wrapAllow'), ('blacklist2', 'wrapAllow'))}                                          |
       | conn_0 | False   | select name,property_key from dble_blacklist where property_key like '%truncate%'   | has{(('black1','truncateAllow',),('blacklist2','truncateAllow',),('list3','truncateAllow',))}        |
-  #case select max/min
+  #case support select max/min
       | conn_0 | False   | select max(property_key) from dble_blacklist                      | has{(('wrapAllow',),)}        |
       | conn_0 | False   | select min(property_key) from dble_blacklist                      | has{(('alterTableAllow',),)}  |
       | conn_0 | False   | select count(name),name from dble_blacklist group by name         | has{((59,'black1',),(59,'blacklist2',),(59,'list3',))}  |
-  #case update/delete
+  #case cannot support dml
       | conn_0 | False   | delete from dble_blacklist where property_value='true'                         | Access denied for table 'dble_blacklist'     |
       | conn_0 | False   | update dble_blacklist set property_value = 'a' where property_value='true'     | Access denied for table 'dble_blacklist'     |
       | conn_0 | False   | insert into dble_blacklist values (1,'1',1,1)                                  | Access denied for table 'dble_blacklist'     |

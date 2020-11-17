@@ -15,7 +15,10 @@ Feature:  dble_algorithm test
       | key     | varchar(64) | NO     | PRI   | None      |         |
       | value   | text        | NO     |       | None      |         |
       | is_file | varchar(5)  | NO     |       | None      |         |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_2"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                             | expect       | db               |
+      | conn_0 | False   | desc dble_algorithm             | length{(4)}  | dble_information |
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_2"
       | conn   | toClose | sql                          | db               |
       | conn_0 | False   | select * from dble_algorithm | dble_information |
     Then check resultset "dble_algorithm_2" has lines with following column values
@@ -313,37 +316,46 @@ Feature:  dble_algorithm test
       | conn_0 | False   | select name,key from dble_algorithm where is_file = any (select is_file from dble_algorithm where value ='enum-integer.txt')  | has{(('enum_integer_rule','mapFile',))}     |
   #case join
       | conn_0 | False   | select id,sharding_column,algorithm_name from dble_sharding_table where algorithm_name in  (select name from dble_algorithm where is_file ='true')  | has{(('C5','ID','enum_integer_rule',))}     |
-  # case update/delete
+  # case cannot support dml
       | conn_0 | False   | delete from dble_algorithm where name='date_rule'               | Access denied for table 'dble_algorithm'   |
       | conn_0 | False   | update dble_algorithm set name = 'a' where name='date_rule'     | Access denied for table 'dble_algorithm'   |
       | conn_0 | False   | insert into dble_algorithm values ('a','1','a','1')             | Access denied for table 'dble_algorithm'   |
 
-#  case change sharding.xml add some schema/function  and reload
+#  case change sharding.xml remove some schema or function,then reload config to check
     Given delete the following xml segment
       | file         | parent         | child            |
       | sharding.xml | {'tag':'root'} | {'tag':'schema'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <singleTable name="sharding_1_t1" shardingNode="dn5" />
-        <singleTable name="sharding_1_t2" shardingNode="dn5" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="new-two" shardingColumn="id" />
     </schema>
 
-    <function name="hash-two" class="Hash">
+    <function name="new-two" class="Hash">
         <property name="partitionCount">2</property>
-        <property name="partitionLength">1</property>
+        <property name="partitionLength">10</property>
     </function>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
     	<shardingUser name="test" password="111111" schemas="schema1"/>
     """
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_2"
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_4"
       | conn   | toClose | sql                          | db               |
       | conn_0 | true    | select * from dble_algorithm | dble_information |
-    Then check resultset "dble_algorithm_2" has lines with following column values
-      | name-0               | key-1           | value-2                                              | is_file-3 |
-      | hash-two             | class           | com.actiontech.dble.route.function.PartitionByLong   | false     |
-      | hash-two             | partitionCount  | 2                                                    | false     |
-      | hash-two             | partitionLength | 1                                                    | false     |
+    Then check resultset "dble_algorithm_4" has lines with following column values
+      | name-0              | key-1           | value-2                                              | is_file-3 |
+      | new-two             | class           | com.actiontech.dble.route.function.PartitionByLong   | false     |
+      | new-two             | partitionCount  | 2                                                    | false     |
+      | new-two             | partitionLength | 10                                                   | false     |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_5"
+      | conn   | toClose | sql                                                           | db               |
+      | conn_0 | true    | show @@algorithm where schema=schema1 and table=sharding_2_t1 | dble_information |
+    Then check resultset "dble_algorithm_5" has lines with following column values
+      | KEY-0           | VALUE-1                                            |
+      | TYPE            | SHARDING TABLE                                     |
+      | COLUMN          | ID                                                 |
+      | CLASS           | com.actiontech.dble.route.function.PartitionByLong |
+      | partitionCount  | 2                                                  |
+      | partitionLength | 10                                                 |
