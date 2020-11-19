@@ -4,6 +4,7 @@ cfg_sys:
   ssh_user: root
   ssh_password: sshpass
   default_db: schema1
+  default_manager_db: dble_information
   sql_source: assets/sql
 cfg_dble:
   install_dir: /opt
