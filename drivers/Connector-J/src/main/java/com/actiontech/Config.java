@@ -21,6 +21,7 @@ public class Config {
     public String mysql_password;
 
     public String db;
+    public String managerDb;
     public String sqlpath;
 
 }
