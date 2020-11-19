@@ -2,8 +2,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2019/5/7
 Feature: #view test except sql cover
-
+  @restore_view
   Scenario: # start dble when the view related table does not exist in configuration  from issue:1100 #1
+     """
+    {'restore_view':{'dble-1':{'schema1':'view_test'}}}
+    """
      Then  execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                                           | expect  | db      |
        | conn_0 | False    | drop table if exists test                     | success | schema1 |
