@@ -4,11 +4,8 @@
  */
 package com.actiontech;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.mysql.jdbc.MySQLConnection;
-
-import java.sql.*;
 import java.io.*;
+import java.sql.*;
 import java.util.*;
 
 
@@ -43,7 +40,7 @@ public class testJDBC {
             System.out.println("run in online mode!");
             Config cfg = com.actiontech.yamlParser.getConfig(args[1]);
             dbleURL = "jdbc:mysql://" + cfg.dble_server + ":" + cfg.dble_port + "/" + cfg.db + "?characterEncoding=utf8&useAffectedRows=true";
-            dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.db + "?characterEncoding=utf8&useAffectedRows=true";
+            dblemanagerURL = "jdbc:mysql://" + cfg.dbleM_server + ":" + cfg.dbleM_port + "/" + cfg.managerDb + "?characterEncoding=utf8&useAffectedRows=true";
             mysqlURL = "jdbc:mysql://" + cfg.mysql_server + ":" + cfg.mysql_port + "/" + cfg.db + "?characterEncoding=utf8&useAffectedRows=true";
             sqlfileClient = cfg.sqlpath + File.separator + args[2];
             sqlfileManager = cfg.sqlpath + File.separator + args[3];
