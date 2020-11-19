@@ -346,8 +346,11 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test_two      | success | schema1 |
       | conn_0 | True    | drop table if exists test_no_shard | success | schema1 |
 
-  @regression
+  @regression @restore_view
   Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #7
+     """
+    {'restore_view':{'mysql-master1':{'db1':'view_test,view_test1'}}}
+    """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">

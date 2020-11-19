@@ -369,13 +369,16 @@ Feature: verify hint sql
     """
     dn5{show index from test_global/*test*/}
     """
-
-  Scenario: sql from GUI CLient test    author:maofei #8
-    #from issue: 1032
+  @restore_view
+  Scenario: sql from GUI CLient test,from issue: 1032 author:maofei #8
+     """
+    {'restore_view':{'dble-1':{'schema1':'view_tt'}}}
+    """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                    | expect  | db      |
       | conn_0 | False   | drop table if exists test1                                                                             | success | schema1 |
       | conn_0 | False   | create table test1(id int not null, name varchar(40), depart varchar(40),role varchar(30),code int(4)) | success | schema1 |
+      | conn_0 | False   | drop view if exists view_tt                                                                                | success | schema1 |
       | conn_0 | False   | create view view_tt as select name,depart,role from test1                                              | success | schema1 |
       | conn_0 | True    | /* ApplicationName=DBeaver 5.2.4 - Main */drop view view_tt                                            | success | schema1 |
     #from issue: 842
