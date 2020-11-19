@@ -96,22 +96,22 @@ Feature: show the ddl statement being executed in different scenario
     get into delayAfterDdlExecuted
     """
     Then execute sql in "dble-1" in "admin" mode
-      | sql        | expect                            | db      |
-      | show @@ddl | hasStr{create table test(id int)} | schema1 |
-      | show @@ddl | hasStr{create table test(id int)} | schema2 |
+      | sql        | expect                            |
+      | show @@ddl | hasStr{create table test(id int)} |
+      | show @@ddl | hasStr{create table test(id int)} |
     Then execute sql in "dble-2" in "admin" mode
-      | sql        | expect                            | db      |
-      | show @@ddl | hasStr{create table test(id int)} | schema1 |
-      | show @@ddl | hasStr{create table test(id int)} | schema2 |
+      | sql        | expect                            |
+      | show @@ddl | hasStr{create table test(id int)} |
+      | show @@ddl | hasStr{create table test(id int)} |
     Given destroy sql threads list
     Then execute sql in "dble-1" in "admin" mode
-      | sql        | expect      | db      |
-      | show @@ddl | length{(0)} | schema1 |
-      | show @@ddl | length{(0)} | schema2 |
+      | sql        | expect      |
+      | show @@ddl | length{(0)} |
+      | show @@ddl | length{(0)} |
     Then execute sql in "dble-2" in "admin" mode
-      | sql        | expect      | db      |
-      | show @@ddl | length{(0)} | schema1 |
-      | show @@ddl | length{(0)} | schema2 |
+      | sql        | expect      |
+      | show @@ddl | length{(0)} |
+      | show @@ddl | length{(0)} |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy sql threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
@@ -148,22 +148,22 @@ Feature: show the ddl statement being executed in different scenario
     get into delayAfterDdlExecuted
     """
     Then execute sql in "dble-1" in "admin" mode
-      | sql        | expect                             | db      |
-      | show @@ddl | hasStr{drop table if exists test1} | schema1 |
-      | show @@ddl | hasStr{drop table if exists test2} | schema1 |
+      | sql        | expect                             |
+      | show @@ddl | hasStr{drop table if exists test1} |
+      | show @@ddl | hasStr{drop table if exists test2} |
     Then execute sql in "dble-2" in "admin" mode
-      | sql        | expect                             | db      |
-      | show @@ddl | hasStr{drop table if exists test1} | schema1 |
-      | show @@ddl | hasStr{drop table if exists test2} | schema1 |
+      | sql        | expect                             |
+      | show @@ddl | hasStr{drop table if exists test1} |
+      | show @@ddl | hasStr{drop table if exists test2} |
     Given destroy sql threads list
     Then execute sql in "dble-1" in "admin" mode
-      | sql        | expect      | db      |
-      | show @@ddl | length{(0)} | schema1 |
-      | show @@ddl | length{(0)} | schema1 |
+      | sql        | expect      |
+      | show @@ddl | length{(0)} |
+      | show @@ddl | length{(0)} |
     Then execute sql in "dble-2" in "admin" mode
-      | sql        | expect      | db      |
-      | show @@ddl | length{(0)} | schema1 |
-      | show @@ddl | length{(0)} | schema1 |
+      | sql        | expect      |
+      | show @@ddl | length{(0)} |
+      | show @@ddl | length{(0)} |
     Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
     Given destroy sql threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
