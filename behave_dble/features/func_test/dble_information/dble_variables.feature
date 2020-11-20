@@ -15,6 +15,10 @@ Feature:  dble_variables test
       | variable_value | varchar(255) | NO     |       | None      |         |
       | comment        | varchar(255) | NO     |       | None      |         |
       | read_only      | varchar(7)   | NO     |       | None      |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                             | expect            | db               |
+      | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(90)}      | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -111,7 +115,7 @@ Feature:  dble_variables test
       | maxCharsPerColumn           | 65535                           | The maximum number of characters allowed for per column when load data.The default value is 65535                                                           | true        |
       | maxRowSizeToFile            | 10000                           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 10000                                            | true        |
       | traceEndPoint               | null                            | The trace Jaeger server endPoint                                                                                                                            | true        |
-  #case select limit /order by/ where like
+  #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
@@ -119,7 +123,7 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(10)} | dble_information |
       | conn_0 | False   | select read_only from dble_variables                              | length{(90)} | dble_information |
-  #case select order by concat()
+  #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
       | conn_0 | False   | select * from dble_variables order by concat(comment,variable_name) desc limit 5| dble_information |
@@ -130,7 +134,7 @@ Feature:  dble_variables test
       | enableFlowControl  | false            | Whether use flow control feature                                                                                                                        | false       |
       | capClientFoundRows | false            | Whether to turn on EOF_Packet to return found rows,The default value is false                                                                           | false       |
       | recordTxn          | 0                | Whether the transaction be recorded as a file,The default value is 0                                                                                    | true        |
-  #case select where like
+  #case supported select where like
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_4"
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
@@ -143,7 +147,7 @@ Feature:  dble_variables test
       | enableFlowControl         | false            | Whether use flow control feature                                              | false       |
       | enableAlert               | true             | enable or disable alert                                                       | false       |
       | capClientFoundRows        | false            | Whether to turn on EOF_Packet to return found rows,The default value is false | false       |
-  #case select field from dble_variables
+  #case supported select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
       | conn_0 | False   | select read_only,variable_name from dble_variables | dble_information |
@@ -153,7 +157,7 @@ Feature:  dble_variables test
       | false       | isOnline                  |
       | true        | heap_memory_max           |
       | true        | direct_memory_max         |
-  #case select count(*)
+  #case supported select count(*)
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_6"
       | conn   | toClose | sql                                                              | db               |
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
@@ -162,7 +166,7 @@ Feature:  dble_variables test
       | false       | 10      |
       | true        | 80      |
 
-  #case select field from dble_variables where XXX  http://10.186.18.11/jira/browse/DBLE0REQ-485
+  #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
       | conn   | toClose | sql                                                                                                   | db               |
       | conn_0 | False   | select read_only from dble_variables where comment like  'the%'  order by variable_name desc limit 10 | dble_information |
@@ -189,7 +193,7 @@ Feature:  dble_variables test
       | maxCharsPerColumn | 65535            | 65535.0                 |
       | maxPacketSize     | 4194304          | 4194304.0               |
 
-  #case select * from dble_variables where [sub-query]
+  #case supported select * from dble_variables where [sub-query]
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{('./slowlogs/')} | dble_information |
@@ -197,13 +201,13 @@ Feature:  dble_variables test
       | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(73)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(72)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
-  #case update/delete
+  #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
       | conn_0 | False   | update dble_variables set comment='sqlSlowTime1' where variable_value='true' | Access denied for table 'dble_variables' | dble_information |
   #case select join
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_9"
       | conn   | toClose | sql                                                                                                                                          | db               |
-      | conn_0 | False   | select a.variable_name from dble_variables a inner join dble_status b on a.variable_value=b.variable_value where a.variable_value=1029177344 | dble_information |
+      | conn_0 | True    | select a.variable_name from dble_variables a inner join dble_status b on a.variable_value=b.variable_value where a.variable_value=1029177344 | dble_information |
     Then check resultset "dble_variables_9" has lines with following column values
       | variable_name-0    |
       | heap_memory_max    |
@@ -223,7 +227,7 @@ Feature:  dble_variables test
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_10"
       | conn   | toClose | sql                                                                                                                                                                                   | db               |
-      | conn_1 | False   | select * from dble_variables where variable_name='xaLogCleanPeriod' or variable_name='useJoinStrategy' or variable_name='fakeMySQLVersion' or variable_name='showBinlogStatusTimeout' | dble_information |
+      | conn_1 | True    | select * from dble_variables where variable_name='xaLogCleanPeriod' or variable_name='useJoinStrategy' or variable_name='fakeMySQLVersion' or variable_name='showBinlogStatusTimeout' | dble_information |
     Then check resultset "dble_variables_10" has lines with following column values
       | variable_name-0         | variable_value-1 | comment-2                                                           | read_only-3 |
       | xaLogCleanPeriod        | 2000ms           | The xa log clear period.The default value is 1000ms                 | true        |

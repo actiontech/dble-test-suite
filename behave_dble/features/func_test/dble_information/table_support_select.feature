@@ -3,41 +3,47 @@
 # update by quexiuping at 2020/8/26
 
 Feature:  show databases/use dble_information/show tables [like]
-@skip_restart
+
  Scenario:  show databases/use dble_information/show tables [like] #1
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                    | expect                                                                 |
-      #case  operation with not use dble_information  http://10.186.18.11/jira/browse/DBLE0REQ-489
+#case  begin query not use schema
       | conn_0 | False   | show tables                            | No database selected                                                   |
+      | conn_0 | False   | show tables like 'dble%'               | No database selected                                                   |
       | conn_0 | False   | desc version                           | No database selected                                                   |
       | conn_0 | False   | select * from version                  | get error call manager command Schema name or Table name is null!      |
-      #case show databases correct or erroneous spelling   https://github.com/actiontech/dble/issues/1961
+#case  begin query with error shcema or not exists schema
+      | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
+      | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
+      | conn_0 | False   | select * from schema1.version          | get error call manager command schema schema1 doesn't exist!           |
+#case show databases correct or erroneous spelling
       | conn_0 | False   | show database                          | Unsupported statement                                                  |
       | conn_0 | False   | show databasesl                        | Unsupported statement                                                  |
       | conn_0 | False   | show databases                         | has{('dble_information')}                                              |
-      #case operation with dble_information  http://10.186.18.11/jira/browse/DBLE0REQ-480
+#case query with  correct schema
       | conn_0 | False   | desc dble_information.version          | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
       | conn_0 | False   | describe dble_information.version      | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
       | conn_0 | False   | select * from dble_information.version | has{('version')}                                                       |
-      #case use dble_information correct or erroneous spelling http://10.186.18.11/jira/browse/DBLE0REQ-450
+#case use dble_information correct or erroneous spelling
       | conn_0 | False   | use dble_informatio                    | Unknown database 'dble_informatio'                                     |
       | conn_0 | False   | use dble_information                   | success                                                                |
-      #case  show tables [like]  correct or erroneous spelling
+#case  show tables [like]  correct or erroneous spelling
       | conn_0 | False   | show table                             | Unsupported statement                                                  |
       | conn_0 | False   | show full tables                       | Unsupported statement                                                  |
       | conn_0 | False   | show columns from version              | Unsupported statement                                                  |
       | conn_0 | False   | show tables                            | has{('Tables_in_dble_information')}                                    |
       | conn_0 | False   | show tables like '%s%'                 | has{('Tables_in_dble_information (%s%)')}                              |
       | conn_0 | False   | show tables like 'version'             | has{('Tables_in_dble_information (version)')}                          |
-      #case desc/describe
+#case desc/describe
       | conn_0 | False   | desc version                           | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
       | conn_0 | False   | describe version                       | has{('version', 'varchar(64)', 'NO', 'PRI', None, '')}                 |
-      #case correct or erroneous spelling
+#case correct or erroneous spelling
       | conn_0 | False   | descc version                          | Unsupported statement                                                  |
       | conn_0 | False   | desc versio                            | Table `dble_information`.`versio` doesn't exist                        |
       | conn_0 | False   | select * froom version                 | Unsupported statement                                                  |
       | conn_0 | False   | select * from versio                   | get error call manager command table versio doesn't exist!             |
-      #case create database/table or alter table
+#case Unsupported create database/table or alter table
       | conn_0 | False   | create database test                                       | The sql did not match create\|drop database @@shardingNode ='dn......' |
       | conn_0 | False   | create table test (id int)                                 | The sql did not match create\|drop database @@shardingNode ='dn......' |
       | conn_0 | False   | drop database dble_information                             | The sql did not match create\|drop database @@shardingNode ='dn......' |
@@ -45,10 +51,14 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | alter table version add id int                             | Unsupported statement                                                  |
       | conn_0 | False   | alter table dble_status drop variable_value                | Unsupported statement                                                  |
       | conn_0 | False   | alter table dble_schema modify sql_max_limit varchar       | Unsupported statement                                                  |
-      | conn_0 | False   | alter table dble_schema change name sql_max_limit varchar; | Unsupported statement                                                  |
-      | conn_0 | False   | alter table dble_schema modify name NOT NULL DEFAULT 100;  | Unsupported statement                                                  |
-      | conn_0 | False   | alter table dble_sharding_node rename to test;             | Unsupported statement                                                  |
-   #case show all tables and delete demo table
+      | conn_0 | False   | alter table dble_schema change name sql_max_limit varchar  | Unsupported statement                                                  |
+      | conn_0 | False   | alter table dble_schema modify name NOT NULL DEFAULT 100   | Unsupported statement                                                  |
+      | conn_0 | False   | alter table dble_sharding_node rename to test              | Unsupported statement                                                  |
+#case supported lower_case_table_names DBLE0REQ-576
+       | conn_0 | False   | use dble_information       | success |
+       | conn_0 | False   | select * from dble_Schema  | success |
+       | conn_0 | False   | select ID from dble_Table  | success |
+#case show all tables and delete demo table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "tables_1"
       | conn   | toClose | sql                       | db               |
       | conn_0 | False   | show tables               | dble_information |
@@ -87,7 +97,9 @@ Feature:  show databases/use dble_information/show tables [like]
       | Tables_in_dble_information-0 |
       | demotest1                    |
       | demotest2                    |
-
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                  | expect       | db               |
+      | conn_0 | False   | show tables                          | length{(30)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid   https://github.com/actiontech/dble/issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
@@ -97,15 +109,7 @@ Feature:  show databases/use dble_information/show tables [like]
     Unsupported show:show VARINT
     """
 
-   #case http://10.186.18.11/jira/browse/DBLE0REQ-576
-    Then execute sql in "dble-1" in "admin" mode
-       | conn   | toClose | sql                        | expect  |
-       | conn_0 | False   | use dble_information       | success |
-       | conn_0 | False   | select * from dble_Schema  | success |
-       | conn_0 | False   | select ID from dble_Table  | success |
-
-
-  Scenario:  table select join #2
+  Scenario:  table select supported #2  todo:add some special case
     Given delete the following xml segment
       | file         | parent         | child                    |
       | sharding.xml | {'tag':'root'} | {'tag':'schema'}         |
