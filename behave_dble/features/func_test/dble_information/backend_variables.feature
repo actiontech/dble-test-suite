@@ -5,15 +5,15 @@
 
 Feature:  backend_variables test
 
-  Scenario:  backend_variables table #1
+   Scenario:  backend_variables table #1
   #case desc backend_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_1"
       | conn   | toClose | sql                      | db               |
       | conn_0 | False   | desc backend_variables   | dble_information |
     Then check resultset "backend_variables_1" has lines with following column values
       | Field-0         | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | backend_conn_id | int(11)     | NO     |       | None      |         |
-      | variable_name   | varchar(12) | NO     |       | None      |         |
+      | backend_conn_id | int(11)     | NO     | PRI   | None      |         |
+      | variable_name   | varchar(12) | NO     | PRI   | None      |         |
       | variable_value  | varchar(12) | NO     |       | None      |         |
       | variable_type   | varchar(3)  | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
@@ -69,13 +69,12 @@ Feature:  backend_variables test
 
    #case set sharding table to change autocommit and change transaction_isolation
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                              | expect  |
-      | conn_1 | False   | use schema1                                      | success |
-      | conn_1 | False   | drop table if exists sharding_2_t1               | success |
-      | conn_1 | False   | create table sharding_2_t1 (id int)              | success |
-      | conn_1 | False   | set autocommit=0                                 | success |
-      | conn_1 | False   | set xa=on                                        | success |
-      | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_2_t1               | success | schema1 |
+      | conn_1 | False   | create table sharding_2_t1 (id int)              | success | schema1 |
+      | conn_1 | False   | set autocommit=0                                 | success | schema1 |
+      | conn_1 | False   | set xa=on                                        | success | schema1 |
+      | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success | schema1 |
  #case supoorted select
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_3"
       | conn   | toClose | sql                                                                                                                                                                | db               |
@@ -116,7 +115,7 @@ Feature:  backend_variables test
       | conn_1 | False   | commit                                           | success |
       | conn_1 | False   | set autocommit=1                                 | success |
       | conn_1 | False   | set xa=off                                       | success |
-      | conn_1 | true    | drop table if exists sharding_2_t1               | success |
+      | conn_1 | False   | drop table if exists sharding_2_t1               | success |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                | expect          |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                         | length{(4)}     |
@@ -126,7 +125,6 @@ Feature:  backend_variables test
  #case set vertical table to change autocommit transaction_isolation character
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
-      | conn_1 | False   | use schema1                                      | success |
       | conn_1 | False   | drop table if exists test                        | success |
       | conn_1 | False   | create table test (id int)                       | success |
       | conn_1 | False   | set autocommit=0                                 | success |
@@ -161,10 +159,7 @@ Feature:  backend_variables test
       | conn_0 | true    | select * from backend_variables where variable_name='character_set_connection' and variable_value='latin1_swedish_ci'    | length{(1)}     |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
-      | conn_1 | False   | commit                                           | success |
-      | conn_1 | False   | set autocommit=1                                 | success |
-      | conn_1 | False   | set xa=off                                       | success |
-      | conn_1 | true    | drop table if exists test                        | success |
+      | conn_1 | True    | commit                                           | success |
  #case change bootstrap.cnf to check
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -186,11 +181,24 @@ Feature:  backend_variables test
       | conn_0 | False   | select * from backend_variables where variable_name='collation_connection' and variable_value='latin1_swedish_ci'        | length{(4)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_results' and variable_value='latin1'                  | length{(4)}     |
       | conn_0 | False   | select * from backend_variables where variable_name='character_set_connection' and variable_value='latin1_swedish_ci'    | length{(4)}     |
-
+#case check variable_type='user'
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                             | expect  | db      |
+      | conn_1 | False   | begin                                           | success | schema1 |
+      | conn_1 | False   | set @a=1                                        | success | schema1 |
+      | conn_1 | False   | insert into test values (1),(2),(3),(4)         | success | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                  | expect          |
+      | conn_0 | False   | select * from backend_variables where variable_type='user'           | length{(1)}     |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                             | expect  | db      |
+      | conn_1 | True    | drop table if exists test                       | success | schema1 |
   #case  unsupported dml
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                    | expect                                          |
       | conn_0 | False   | delete from backend_variables where variable_name='autocommit'                         | Access denied for table 'backend_variables'     |
       | conn_0 | False   | update backend_variables set variable_name='' where variable_name='autocommit'         | Access denied for table 'backend_variables'     |
-      | conn_0 | true    | insert into backend_variables values (1,'1','1','1')                                   | Access denied for table 'backend_variables'     |
+      | conn_0 | True    | insert into backend_variables values (1,'1','1','1')                                   | Access denied for table 'backend_variables'     |
 
 
 
