@@ -7,35 +7,31 @@ Feature:  dble_entry test
   @skip_restart
    Scenario:  dble_entry  table #1
   #case desc dble_entry
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_1"
-      | conn   | toClose | sql             | db               |
-      | conn_0 | False   | desc dble_entry | dble_information |
-    Then check resultset "dble_entry_1" has lines with following column values
-      | Field-0            | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | id                 | int(11)      | NO     | PRI   | None      |         |
-      | type               | varchar(9)   | NO     |       | None      |         |
-      | user_type          | varchar(12)  | NO     |       | None      |         |
-      | username           | varchar(64)  | NO     |       | None      |         |
-      | password_encrypt   | varchar(200) | NO     |       | None      |         |
-      | encrypt_configured | varchar(5)   | NO     |       | None      |         |
-      | conn_attr_key      | varchar(6)   | YES    |       | None      |         |
-      | conn_attr_value    | varchar(64)  | YES    |       | None      |         |
-      | white_ips          | varchar(200) | YES    |       | None      |         |
-      | readonly           | varchar(5)   | YES    |       | None      |         |
-      | max_conn_count     | varchar(64)  | NO     |       | None      |         |
-      | blacklist          | varchar(64)  | YES    |       | None      |         |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                         | expect       | db               |
-      | conn_0 | False   | desc dble_entry             | length{(12)} | dble_information |
-      | conn_0 | False   | select * from dble_entry    | length{(2)}  | dble_information |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_2"
-      | conn   | toClose | sql                      | db               |
-      | conn_0 | False   | select * from dble_entry | dble_information |
-    Then check resultset "dble_entry_2" has lines with following column values
-      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
-      | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
-      | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
-#case change whiteIPs values,whiteIPs supported use "%"
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_1"
+#      | conn   | toClose | sql             | db               |
+#      | conn_0 | False   | desc dble_entry | dble_information |
+#    Then check resultset "dble_entry_1" has lines with following column values
+#      | Field-0            | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
+#      | id                 | int(11)      | NO     | PRI   | None      |         |
+#      | type               | varchar(9)   | NO     |       | None      |         |
+#      | user_type          | varchar(12)  | NO     |       | None      |         |
+#      | username           | varchar(64)  | NO     |       | None      |         |
+#      | password_encrypt   | varchar(200) | NO     |       | None      |         |
+#      | encrypt_configured | varchar(5)   | NO     |       | None      |         |
+#      | conn_attr_key      | varchar(6)   | YES    |       | None      |         |
+#      | conn_attr_value    | varchar(64)  | YES    |       | None      |         |
+#      | white_ips          | varchar(200) | YES    |       | None      |         |
+#      | readonly           | varchar(5)   | YES    |       | None      |         |
+#      | max_conn_count     | varchar(64)  | NO     |       | None      |         |
+#      | blacklist          | varchar(64)  | YES    |       | None      |         |
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_2"
+#      | conn   | toClose | sql                      | db               |
+#      | conn_0 | False   | select * from dble_entry | dble_information |
+#    Then check resultset "dble_entry_2" has lines with following column values
+#      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
+#      | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
+#      | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
+#case change whiteIPs values,whiteIPs supported use "%" ipv4/ipv6
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
      """
      <dbGroup rwSplitMode="0" name="dbGroup3" delayThreshold="100" >
@@ -46,41 +42,68 @@ Feature:  dble_entry test
      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
      """
-     <managerUser name="root" password="111111" whiteIPs="172.100.9.%,10.186.62.13" />
-     <managerUser name="root1" password="654321" whiteIPs="%.%.%.%" />
-     <managerUser name="root2" password="123456" whiteIPs="10.186.%.%" />
+     <managerUser name="root" password="111111" whiteIPs="172.100.9.%"/>
+     <managerUser name="root1" password="123456" whiteIPs="%.%.%.1" />
+     <managerUser name="root2" password="123456" whiteIPs="%.100.%.2"/>
+     <managerUser name="root3" password="123456" whiteIPs="%.%.%.%,%:%:%:%:%:%:%:%" />
+     <managerUser name="root5" password="123456" whiteIPs="::1"/>
 
-     <shardingUser name="test" password="111111" schemas="schema1" whiteIPs="172.%.%.%,10.186.60.65,10.186.62.13" />
-     <shardingUser name="test1" password="123456" schemas="schema1" whiteIPs="%.%.%.%" />
+     <shardingUser name="test" password="111111" schemas="schema1" whiteIPs="172.%.%.%" />
+     <shardingUser name="test1" password="123456" schemas="schema1" whiteIPs="%.%.%.1" />
+     <shardingUser name="test2" password="123456" schemas="schema1" whiteIPs="172.%.%.1" />
+     <shardingUser name="test3" password="123456" schemas="schema1" whiteIPs="%.%.%.%,%:%:%:%:%:%:%:%" />
+     <shardingUser name="test5" password="123456" schemas="schema1" whiteIPs="::1" />
 
-     <rwSplitUser name="rwS" password="123456" dbGroup="ha_group3" whiteIPs="%.%.%.%"  />
-     <rwSplitUser name="rwS1" password="123456" dbGroup="ha_group3" whiteIPs="%.%.%.1,%.100.%.%"  />
+     <rwSplitUser name="rwS" password="123456" dbGroup="dbGroup3" whiteIPs="172.%.9.%"/>
+     <rwSplitUser name="rwS1" password="123456" dbGroup="dbGroup3" whiteIPs="%.%.%.1"/>
+     <rwSplitUser name="rwS2" password="123456" dbGroup="dbGroup3" whiteIPs="%.%.9.5"/>
+     <rwSplitUser name="rwS3" password="123456" dbGroup="dbGroup3" whiteIPs="%.%.%.%,%:%:%:%:%:%:%:%"/>
+     <rwSplitUser name="rwS5" password="123456" dbGroup="dbGroup3" whiteIPs="::1"/>
      """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
-      | conn   | toClose | sql                              | db               |
-      | conn_0 | False   | select white_ips from dble_entry | dble_information |
+      | conn   | toClose | sql                                       | db               |
+      | conn_0 | False   | select username,white_ips from dble_entry | dble_information |
     Then check resultset "dble_entry_3" has lines with following column values
-      | white_ips-0                                       |
-      | 172.100.9.%,172.100.9.1,0:0:0:0:0:0:0:1,127.0.0.1 |
-      | 172.100.9.%,10.186.60.65                          |
-      | 172.100.9.%                                       |
-    Then get result of oscmd named "1" in "dble-1"
-    """
-    mysql -utest -p111111 -h127.0.0.1 -P8066
-    mysql -utest -p111111 -h127.0.0.1 -P8066
-    mysql -uroot -p111111 -h172.100.9.3 -P9066
+      | username-0 | white_ips-1                                       |
+      | root       | 172.100.9.%,0:0:0:0:0:0:0:1,127.0.0.1             |
+      | root1      | %.%.%.1,0:0:0:0:0:0:0:1,127.0.0.1                 |
+      | root2      | 0:0:0:0:0:0:0:1,%.100.%.2,127.0.0.1               |
+      | root3      | %:%:%:%:%:%:%:%,0:0:0:0:0:0:0:1,%.%.%.%,127.0.0.1 |
+      | root5      | ::1,0:0:0:0:0:0:0:1,127.0.0.1                     |
+      | test       | 172.%.%.%                                         |
+      | test1      | %.%.%.1                                           |
+      | test2      | 172.%.%.1                                         |
+      | test3      | %:%:%:%:%:%:%:%,%.%.%.%                           |
+      | test5      | ::1                                               |
+      | rwS        | 172.%.9.%                                         |
+      | rwS1       | %.%.%.1                                           |
+      | rwS2       | %.%.9.5                                           |
+      | rwS3       | %:%:%:%:%:%:%:%,%.%.%.%                           |
+      | rwS5       | ::1                                               |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                         | expect       | db               |
+      | conn_0 | False   | desc dble_entry             | length{(12)} | dble_information |
+      | conn_0 | False   | select * from dble_entry    | length{(15)}  | dble_information |
 
-    """
-    Then check result "1" value is "Access denied for user 'test' with host '127.0.0.1'"
+
+
+    Given execute oscmd in "dble-1"
+     """
+     mysql -utest -p111111 -h127.0.0.1 -P8066
+     """
 
 
 
 
 
 
-
-
+#    Then execute sql in "dble-1" in "admin" mode
+#      | user  | passwd | conn    | toClose | sql                    | expect               |db                |
+#      | root  | 111111 | conn_0  | True    | show tables            | length{(30)}         | dble_information |
+#    Then execute sql in "dble-1" in "user" mode
+#      | user  | passwd | conn    | toClose | sql                    | expect               |db                |
+#      | test  | 111111 | conn_0  | True    | show tables            | Access denied for user 'test' with host '127.0.0.1'         | schema1          |
 
 
 #  #case change user.xml and reload
