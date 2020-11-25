@@ -4,6 +4,7 @@
 
 Feature:  dble_entry test
 
+  @skip_restart
    Scenario:  dble_entry  table #1
   #case desc dble_entry
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_1"
@@ -23,6 +24,10 @@ Feature:  dble_entry test
       | readonly           | varchar(5)   | YES    |       | None      |         |
       | max_conn_count     | varchar(64)  | NO     |       | None      |         |
       | blacklist          | varchar(64)  | YES    |       | None      |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                         | expect       | db               |
+      | conn_0 | False   | desc dble_entry             | length{(12)} | dble_information |
+      | conn_0 | False   | select * from dble_entry    | length{(2)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_2"
       | conn   | toClose | sql                      | db               |
       | conn_0 | False   | select * from dble_entry | dble_information |
@@ -30,84 +35,127 @@ Feature:  dble_entry test
       | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
       | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
       | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
-      | 3    | username | rwSplitUser  | rwSplit    | false                | None            | None              | None        | -          | 20                | None         |
-  #case change user.xml and reload
-    Given delete the following xml segment
-      | file     | parent         | child                  |
-      | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
-      | user.xml | {'tag':'root'} | {'tag':'managerUser'}  |
-      | user.xml | {'tag':'root'} | {'tag':'rwSplitUser'}  |
+#case change whiteIPs values,whiteIPs supported use "%"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+     """
+     <dbGroup rwSplitMode="0" name="dbGroup3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+     </dbGroup>
+     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-     <managerUser name="root" password="CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g==" usingDecrypt="true" readOnly="false" maxCon="100"/>
-     <managerUser name="root1" password="654321" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false"/>
+     """
+     <managerUser name="root" password="111111" whiteIPs="172.100.9.%,10.186.62.13" />
+     <managerUser name="root1" password="654321" whiteIPs="%.%.%.%" />
+     <managerUser name="root2" password="123456" whiteIPs="10.186.%.%" />
 
-     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" />
-     <shardingUser name="test1" password="123456" schemas="schema1" readOnly="false" blacklist="blacklist1" maxCon="150"/>
-     <shardingUser name="test2" password="123456" schemas="schema1" maxCon="120" tenant="tenant1"/>
+     <shardingUser name="test" password="111111" schemas="schema1" whiteIPs="172.%.%.%,10.186.60.65,10.186.62.13" />
+     <shardingUser name="test1" password="123456" schemas="schema1" whiteIPs="%.%.%.%" />
 
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" blacklist="blacklist1" maxCon="20"/>
-     <rwSplitUser name="rwSplit1" password="123456" dbGroup="dbGroup1" blacklist="blacklist1" />
-
-     <blacklist name="blacklist1">
-     <property name="selelctAllow">true</property>
-     </blacklist>
-    """
+     <rwSplitUser name="rwS" password="123456" dbGroup="ha_group3" whiteIPs="%.%.%.%"  />
+     <rwSplitUser name="rwS1" password="123456" dbGroup="ha_group3" whiteIPs="%.%.%.1,%.100.%.%"  />
+     """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
-      | conn   | toClose | sql                      | db               |
-      | conn_0 | False   | select * from dble_entry | dble_information |
+      | conn   | toClose | sql                              | db               |
+      | conn_0 | False   | select white_ips from dble_entry | dble_information |
     Then check resultset "dble_entry_3" has lines with following column values
-      | id-0 | type-1    | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8               | readonly-9 | max_conn_count-10 | blacklist-11 |
-      | 1    | username  | managerUser  | root       | true                 | None            | None              | None                      | false      | 100               | None         |
-      | 2    | username  | managerUser  | root1      | false                | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit          | None         |
-      | 3    | username  | shardingUser | test       | false                | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit          | blacklist1   |
-      | 4    | username  | shardingUser | test1      | false                | None            | None              | None                      | false      | 150               | blacklist1   |
-      | 5    | conn_attr | shardingUser | test2      | false                | tenant          | tenant1           | None                      | false      | 120               | None         |
-      | 6    | username  | rwSplitUser  | rwSplit    | false                | None            | None              | None                      | -          | 20                | blacklist1   |
-      | 7    | username  | rwSplitUser  | rwSplit1   | false                | None            | None              | None                      | -          | no limit          | blacklist1   |
-
-   #case select limit/order by/where like
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                         | expect                                        |
-      | conn_0 | False   | use dble_information                                        | success                                       |
-      | conn_0 | False   | select * from dble_entry order by username desc limit 3     | length{(3)}                                   |
-      | conn_0 | False   | select * from dble_entry where username like '%test%'       | length{(3)}                                   |
-  #case select max/min from
-      | conn_0 | False   | select max(username) from dble_entry                      | has{(('test2',),)}  |
-      | conn_0 | False   | select min(username) from dble_entry                      | has{(('root',),)}   |
-  #case where [sub-query]
-      | conn_0 | False   | select username from dble_entry where blacklist in (select blacklist from dble_entry where type = 'username') | has{(('test',), ('test1',),('rwSplit',),('rwSplit1',))}     |
-  #case select field from
-      | conn_0 | False   | select type from dble_entry where conn_attr_key is not null     | has{(('conn_attr',))}        |
-  #case cannot support dml
-      | conn_0 | False   | delete from dble_entry where type='username'               | Access denied for table 'dble_entry'     |
-      | conn_0 | False   | update dble_entry set type='aa'  where type='username'     | Access denied for table 'dble_entry'     |
-      | conn_0 | False    | insert into dble_entry values ('a',1,2,3)                  | Access denied for table 'dble_entry'     |
-
- #case delete user
-    Given delete the following xml segment
-      | file         | parent         | child                  |
-      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
-      | user.xml     | {'tag':'root'} | {'tag':'managerUser'}  |
-      | user.xml     | {'tag':'root'} | {'tag':'rwSplitUser'}  |
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      | white_ips-0                                       |
+      | 172.100.9.%,172.100.9.1,0:0:0:0:0:0:0:1,127.0.0.1 |
+      | 172.100.9.%,10.186.60.65                          |
+      | 172.100.9.%                                       |
+    Then get result of oscmd named "1" in "dble-1"
     """
-     <managerUser name="root" password="111111"  />
-     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" />
-     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" />
+    mysql -utest -p111111 -h127.0.0.1 -P8066
+    mysql -utest -p111111 -h127.0.0.1 -P8066
+    mysql -uroot -p111111 -h172.100.9.3 -P9066
 
     """
-    Then execute admin cmd "reload @@config"
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_4"
-      | conn   | toClose | sql                      | db               |
-      | conn_0 | False   | select * from dble_entry | dble_information |
-    Then check resultset "dble_entry_4" has lines with following column values
-      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
-      | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
-      | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
-      | 3    | username | rwSplitUser  | rwSplit    | false                | None            | None              | None        | -          | no limit          | None         |
+    Then check result "1" value is "Access denied for user 'test' with host '127.0.0.1'"
 
+
+
+
+
+
+
+
+
+
+#  #case change user.xml and reload
+#    Given delete the following xml segment
+#      | file     | parent         | child                  |
+#      | user.xml | {'tag':'root'} | {'tag':'shardingUser'} |
+#      | user.xml | {'tag':'root'} | {'tag':'managerUser'}  |
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+#    """
+#     <managerUser name="root" password="CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g==" usingDecrypt="true" readOnly="false" maxCon="100"/>
+#     <managerUser name="root1" password="654321" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" readOnly="false"/>
+#
+#     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1" whiteIPs="127.0.0.1,0:0:0:0:0:0:0:1" />
+#     <shardingUser name="test1" password="123456" schemas="schema1" readOnly="false" blacklist="blacklist1" maxCon="150"/>
+#     <shardingUser name="test2" password="123456" schemas="schema1" maxCon="120" tenant="tenant1"/>
+#
+#     <rwSplitUser name="rwSplit" password="111111" dbGroup="dbGroup1" blacklist="blacklist1" maxCon="20"/>
+#     <rwSplitUser name="rwSplit1" password="123456" dbGroup="dbGroup1" blacklist="blacklist1" />
+#
+#     <blacklist name="blacklist1">
+#     <property name="selelctAllow">true</property>
+#     </blacklist>
+#    """
+#    Then execute admin cmd "reload @@config"
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_3"
+#      | conn   | toClose | sql                      | db               |
+#      | conn_0 | False   | select * from dble_entry | dble_information |
+#    Then check resultset "dble_entry_3" has lines with following column values
+#      | id-0 | type-1    | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8               | readonly-9 | max_conn_count-10 | blacklist-11 |
+#      | 1    | username  | managerUser  | root       | true                 | None            | None              | None                      | false      | 100               | None         |
+#      | 2    | username  | managerUser  | root1      | false                | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit          | None         |
+#      | 3    | username  | shardingUser | test       | false                | None            | None              | 0:0:0:0:0:0:0:1,127.0.0.1 | false      | no limit          | blacklist1   |
+#      | 4    | username  | shardingUser | test1      | false                | None            | None              | None                      | false      | 150               | blacklist1   |
+#      | 5    | conn_attr | shardingUser | test2      | false                | tenant          | tenant1           | None                      | false      | 120               | None         |
+#      | 6    | username  | rwSplitUser  | rwSplit    | false                | None            | None              | None                      | -          | 20                | blacklist1   |
+#      | 7    | username  | rwSplitUser  | rwSplit1   | false                | None            | None              | None                      | -          | no limit          | blacklist1   |
+#
+#   #case select limit/order by/where like
+#      Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                         | expect                                        |
+#      | conn_0 | False   | use dble_information                                        | success                                       |
+#      | conn_0 | False   | select * from dble_entry order by username desc limit 3     | length{(3)}                                   |
+#      | conn_0 | False   | select * from dble_entry where username like '%test%'       | length{(3)}                                   |
+#  #case select max/min from
+#      | conn_0 | False   | select max(username) from dble_entry                      | has{(('test2',),)}  |
+#      | conn_0 | False   | select min(username) from dble_entry                      | has{(('root',),)}   |
+#  #case where [sub-query]
+#      | conn_0 | False   | select username from dble_entry where blacklist in (select blacklist from dble_entry where type = 'username') | has{(('test',), ('test1',),('rwSplit',),('rwSplit1',))}     |
+#  #case select field from
+#      | conn_0 | False   | select type from dble_entry where conn_attr_key is not null     | has{(('conn_attr',))}        |
+#  #case cannot support dml
+#      | conn_0 | False   | delete from dble_entry where type='username'               | Access denied for table 'dble_entry'     |
+#      | conn_0 | False   | update dble_entry set type='aa'  where type='username'     | Access denied for table 'dble_entry'     |
+#      | conn_0 | False    | insert into dble_entry values ('a',1,2,3)                  | Access denied for table 'dble_entry'     |
+#
+# #case delete user
+#    Given delete the following xml segment
+#      | file         | parent         | child                  |
+#      | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
+#      | user.xml     | {'tag':'root'} | {'tag':'managerUser'}  |
+#    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+#    """
+#     <managerUser name="root" password="111111"  />
+#     <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" />
+#
+#    """
+#    Then execute admin cmd "reload @@config"
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_4"
+#      | conn   | toClose | sql                      | db               |
+#      | conn_0 | False   | select * from dble_entry | dble_information |
+#    Then check resultset "dble_entry_4" has lines with following column values
+#      | id-0 | type-1   | user_type-2  | username-3 | encrypt_configured-5 | conn_attr_key-6 | conn_attr_value-7 | white_ips-8 | readonly-9 | max_conn_count-10 | blacklist-11 |
+#      | 1    | username | managerUser  | root       | false                | None            | None              | None        | false      | no limit          | None         |
+#      | 2    | username | shardingUser | test       | false                | None            | None              | None        | false      | no limit          | None         |
+#
 
    Scenario:  dble_entry_schema  table #2
   #case desc dble_entry_schema
