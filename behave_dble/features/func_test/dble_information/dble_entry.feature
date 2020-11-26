@@ -87,17 +87,6 @@ Feature:  dble_entry test
       | conn_0 | False   | select * from dble_entry    | length{(15)}  | dble_information |
 
 
-
-    Given execute oscmd in "dble-1"
-     """
-     mysql -utest -p111111 -h127.0.0.1 -P8066
-     """
-
-
-
-
-
-
 #    Then execute sql in "dble-1" in "admin" mode
 #      | user  | passwd | conn    | toClose | sql                    | expect               |db                |
 #      | root  | 111111 | conn_0  | True    | show tables            | length{(30)}         | dble_information |
