@@ -5,6 +5,8 @@
 * [下载地址](https://github.com/btraceio/btrace/releases)  
 * [使用教程](https://json-liu.gitbooks.io/btrace/content/)  
 
+注意：使用BTrace v.1.3.11.1
+
 ### 2.简易使用：
 #### 脚本讲解：  
 1. 在类加上`@BTrace(unsafe = true)`注解  
