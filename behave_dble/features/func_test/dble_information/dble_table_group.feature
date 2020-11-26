@@ -167,12 +167,8 @@ Feature:  dble_table test
     Global check start .........global3
     Global check start .........global4
     """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-    """
-    Global check start .........global5
-    """
 
-    @skip_restart
+  @skip_restart
    Scenario:  dble_sharding_table table #3
   #case desc dble_sharding_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_table_1"
@@ -254,7 +250,7 @@ Feature:  dble_table test
       | conn   | toClose | sql                                  | expect        | db               |
       | conn_0 | True    | select * from dble_sharding_table    | length{(11)}  | dble_information |
 
- @skip_restart
+  @skip_restart
    Scenario:  dble_table_sharding_node table #4
   #case desc dble_table_sharding_node
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_sharding_node_1"
@@ -330,7 +326,7 @@ Feature:  dble_table test
       | dn3             | BASE SQL | INSERT INTO er_parent VALUES (2, '顺序2') |
       | dn4             | BASE SQL | INSERT INTO er_parent VALUES (3, '顺序3') |
 
-@skip_restart
+  @skip_restart
    Scenario:  dble_child_table table #5
   #case desc dble_child_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_1"
@@ -376,233 +372,148 @@ Feature:  dble_table test
       | C14  | C12         | None               | CODE2         | CODE           |
       | C16  | C15         | ID                 | CODE          | FIX            |
 
-
    Scenario:  supported select and unsupported dml
+#case count filed values
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose  | sql                                 | expect         | db               |
-      | conn_0 | False    | select * from dble_child_table      | length{(1)}    | dble_information |
-      | conn_0 | False    | select * from dble_child_table      | length{(1)}    | dble_information |
-      | conn_0 | False    | select * from dble_child_table      | length{(1)}    | dble_information |
-      | conn_0 | False    | select * from dble_child_table      | length{(1)}    | dble_information |
+      | conn   | toClose  | sql                                         | expect          |
+      | conn_0 | False    | use dble_information                        | success         |
+      | conn_0 | False    | select * from dble_table                    | length{(25)}    |
+      | conn_0 | False    | select * from dble_global_table             | length{(5)}     |
+      | conn_0 | False    | select * from dble_sharding_table           | length{(11)}    |
+      | conn_0 | False    | select * from dble_table_sharding_node      | length{(72)}    |
+      | conn_0 | False    | select * from dble_child_table              | length{(4)}     |
+#case unsupported update/delete/insert
+      | conn_0 | False   | delete from dble_table where schema='schema1'              | Access denied for table 'dble_table'                     |
+      | conn_0 | False   | update dble_table set schema = 'a' where schema='schema1'  | Access denied for table 'dble_table'                     |
+      | conn_0 | False   | insert into dble_table values ('a','1',2,'3')              | Access denied for table 'dble_table'                     |
+      | conn_0 | False   | delete from dble_global_table where id='c1'                | Access denied for table 'dble_global_table'              |
+      | conn_0 | False   | update dble_global_table set id = 'a' where id='c1'        | Access denied for table 'dble_global_table'              |
+      | conn_0 | False   | insert into dble_global_table values ('a','1','2','3')     | Access denied for table 'dble_global_table'              |
+      | conn_0 | False   | delete from dble_sharding_table where id='c1'              | Access denied for table 'dble_sharding_table'            |
+      | conn_0 | False   | update dble_sharding_table set id = 'a' where id='c1'      | Access denied for table 'dble_sharding_table'            |
+      | conn_0 | False   | insert into dble_sharding_table values ('a','1','2','3')   | Access denied for table 'dble_sharding_table'            |
+      | conn_0 | False   | delete from dble_table_sharding_node where id='c1'         | Access denied for table 'dble_table_sharding_node'       |
+      | conn_0 | False   | update dble_table_sharding_node set id = 'a' where id='c1' | Access denied for table 'dble_table_sharding_node'       |
+      | conn_0 | False   | insert into dble_table_sharding_node values ('a','1')      | Access denied for table 'dble_table_sharding_node'       |
+      | conn_0 | False   | delete from dble_child_table where id='c1'                 | Access denied for table 'dble_child_table'               |
+      | conn_0 | False   | update dble_child_table set id = 'a' where id='c1'         | Access denied for table 'dble_child_table'               |
+      | conn_0 | False   | insert into dble_child_table values ('a','1','a','1')      | Access denied for table 'dble_child_table'               |
+#case supported select limit /order by/where like
+      | conn_0 | False   | select * from dble_table limit 1                           | has{(('C1', 'sharding_2', 'schema1', 100, 'SHARDING'),)} |
+      | conn_0 | False   | select * from dble_table order by id desc limit 1          | has{(('M4', 'vertical', 'schema4', -1, 'NO_SHARDING'),)} |
+      | conn_0 | False   | select * from dble_table where name like "ver%"            | has{(('M4', 'vertical', 'schema4', -1, 'NO_SHARDING'),)} |
+#case supported select max/min
+      | conn_0 | False   | select max(algorithm_name) from dble_sharding_table        | has{(('hash-two',),)}             |
+      | conn_0 | False   | select min(algorithm_name) from dble_sharding_table        | has{(('date_default_rule',),)}    |
+      | conn_0 | False   | select max(order) from dble_table_sharding_node            | has{((3,),)}                      |
+      | conn_0 | False   | select min(order) from dble_table_sharding_node            | has{((0,),)}                      |
+      | conn_0 | False   | select max(paren_column) from dble_child_table             | has{(('ID',),)}                   |
+      | conn_0 | False   | select min(paren_column) from dble_child_table             | has{(('CODE',),)}                 |
+      | conn_0 | False   | select max(check_class) from dble_global_table             | has{(('COUNT',),)}                |
+      | conn_0 | False   | select min(check_class) from dble_global_table             | has{(('CHECKSUM',),)}             |
+#case supported select field and where [sub-query]
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column in (select paren_column from dble_child_table where increment_column ='ID')    | has{(('C16','C15',))}                     |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column >all (select paren_column from dble_child_table where increment_column ='ID')  | has{(('C4','C3',))}                       |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column <any (select paren_column from dble_child_table where increment_column ='ID')  | has{(('C13','C12',), ('C14','C12',))}     |
+      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = (select paren_column from dble_child_table where increment_column ='ID')     | has{(('C16','C15',))}                     |
+      | conn_0 | True    | select id,parent_id from dble_child_table where paren_column = any (select paren_column from dble_child_table where increment_column ='ID') | has{(('C16','C15',))}                     |
+#case supported select join
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "com1"
+      | conn   | toClose | sql                                         | db               |
+      | conn_0 | False   | select * from dble_table where abs(id)="C1" | dble_information |
+     Then check resultset "com1" has lines with following column values
+      | id-0 | name-1                                | schema-2 | max_limit-3 | type-4      |
+      | C1   | sharding_2                            | schema1  | 100         | SHARDING    |
+      | C2   | sharding_4                            | schema1  | 100         | SHARDING    |
+      | C3   | er_parent                             | schema1  | 100         | SHARDING    |
+      | C4   | er_child                              | schema1  | 90          | CHILD       |
+      | C5   | global1                               | schema1  | 100         | GLOBAL      |
+      | C6   | sharding_3                            | schema2  | 1000        | SHARDING    |
+      | C7   | global2                               | schema2  | 1000        | GLOBAL      |
+      | C8   | sing1                                 | schema2  | 1000        | SINGLE      |
+      | C9   | sharding_incrementColumn              | schema3  | 100         | SHARDING    |
+      | C10  | sharding_sqlRequiredSharding          | schema3  | 100         | SHARDING    |
+      | C11  | global3                               | schema3  | 100         | GLOBAL      |
+      | C12  | sharding_fixed_uniform                | schema4  | -1          | SHARDING    |
+      | C13  | er_child1                             | schema4  | -1          | CHILD       |
+      | C14  | er_child2                             | schema4  | -1          | CHILD       |
+      | C15  | sharding_fixed_nonuniform             | schema4  | -1          | SHARDING    |
+      | C16  | er_child3                             | schema4  | -1          | CHILD       |
+      | C17  | sharding_fixed_uniform_string_rule    | schema4  | -1          | SHARDING    |
+      | C18  | sharding_fixed_nonuniform_string_rule | schema4  | -1          | SHARDING    |
+      | C19  | sharding_date_default_rule            | schema4  | -1          | SHARDING    |
+      | C20  | global4                               | schema4  | -1          | GLOBAL      |
+      | C21  | global5                               | schema4  | -1          | GLOBAL      |
+      | M1   | no_s1                                 | schema1  | 100         | NO_SHARDING |
+      | M2   | no_s2                                 | schema2  | 1000        | NO_SHARDING |
+      | M3   | no_s3                                 | schema3  | 100         | NO_SHARDING |
+      | M4   | vertical                              | schema4  | -1          | NO_SHARDING |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "com2"
+      | conn   | toClose | sql                                                                                  | db               |
+      | conn_0 | False   | select * from dble_table a left join dble_schema b on a.name =b.name order by a.name | dble_information |
+     Then check resultset "com2" has lines with following column values
+      | id-0 | name-1                                | schema-2 | max_limit-3 | type-4      | name-5 | sharding_node-6 | sql_max_limit-7 |
+      | C4   | er_child                              | schema1  | 90          | CHILD       | None   | None            | None            |
+      | C13  | er_child1                             | schema4  | -1          | CHILD       | None   | None            | None            |
+      | C14  | er_child2                             | schema4  | -1          | CHILD       | None   | None            | None            |
+      | C16  | er_child3                             | schema4  | -1          | CHILD       | None   | None            | None            |
+      | C3   | er_parent                             | schema1  | 100         | SHARDING    | None   | None            | None            |
+      | C5   | global1                               | schema1  | 100         | GLOBAL      | None   | None            | None            |
+      | C7   | global2                               | schema2  | 1000        | GLOBAL      | None   | None            | None            |
+      | C11  | global3                               | schema3  | 100         | GLOBAL      | None   | None            | None            |
+      | C20  | global4                               | schema4  | -1          | GLOBAL      | None   | None            | None            |
+      | C21  | global5                               | schema4  | -1          | GLOBAL      | None   | None            | None            |
+      | M1   | no_s1                                 | schema1  | 100         | NO_SHARDING | None   | None            | None            |
+      | M2   | no_s2                                 | schema2  | 1000        | NO_SHARDING | None   | None            | None            |
+      | M3   | no_s3                                 | schema3  | 100         | NO_SHARDING | None   | None            | None            |
+      | C1   | sharding_2                            | schema1  | 100         | SHARDING    | None   | None            | None            |
+      | C6   | sharding_3                            | schema2  | 1000        | SHARDING    | None   | None            | None            |
+      | C2   | sharding_4                            | schema1  | 100         | SHARDING    | None   | None            | None            |
+      | C19  | sharding_date_default_rule            | schema4  | -1          | SHARDING    | None   | None            | None            |
+      | C15  | sharding_fixed_nonuniform             | schema4  | -1          | SHARDING    | None   | None            | None            |
+      | C18  | sharding_fixed_nonuniform_string_rule | schema4  | -1          | SHARDING    | None   | None            | None            |
+      | C12  | sharding_fixed_uniform                | schema4  | -1          | SHARDING    | None   | None            | None            |
+      | C17  | sharding_fixed_uniform_string_rule    | schema4  | -1          | SHARDING    | None   | None            | None            |
+      | C9   | sharding_incrementColumn              | schema3  | 100         | SHARDING    | None   | None            | None            |
+      | C10  | sharding_sqlRequiredSharding          | schema3  | 100         | SHARDING    | None   | None            | None            |
+      | C8   | sing1                                 | schema2  | 1000        | SINGLE      | None   | None            | None            |
+      | M4   | vertical                              | schema4  | -1          | NO_SHARDING | None   | None            | None            |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "com3"
+      | conn   | toClose | sql                                                                                                                     | db               |
+      | conn_0 | False   | select * from dble_child_table a right join dble_sharding_table b on a.paren_column = b.sharding_column order by a.id   | dble_information |
+     Then check resultset "com3" has lines with following column values
+      | id-0 | parent_id-1 | increment_column-2 | join_column-3 | paren_column-4 | id-5 | increment_column-6 | sharding_column-7 | sql_required_sharding-8 | algorithm_name-9             |
+      | None | None        | None               | None          | None           | C19  | None               | DATE              | false                   | date_default_rule            |
+      | None | None        | None               | None          | None           | C18  | None               | FIXED             | false                   | fixed_nonuniform_string_rule |
+      | None | None        | None               | None          | None           | C17  | None               | RULE              | false                   | fixed_uniform_string_rule    |
+      | None | None        | None               | None          | None           | C10  | None               | THREE             | true                    | hash-three                   |
+      | None | None        | None               | None          | None           | C9   | ID                 | TWO               | false                   | hash-two                     |
+      | C13  | C12         | ID1                | CODE1         | CODE           | C12  | None               | CODE              | false                   | fixed_uniform                |
+      | C14  | C12         | None               | CODE2         | CODE           | C12  | None               | CODE              | false                   | fixed_uniform                |
+      | C16  | C15         | ID                 | CODE          | FIX            | C15  | None               | FIX               | false                   | fixed_nonuniform             |
+      | C4   | C3          | None               | ID            | ID             | C1   | None               | ID                | false                   | hash-two                     |
+      | C4   | C3          | None               | ID            | ID             | C2   | None               | ID                | false                   | hash-four                    |
+      | C4   | C3          | None               | ID            | ID             | C3   | None               | ID                | false                   | hash-four                    |
+      | C4   | C3          | None               | ID            | ID             | C6   | None               | ID                | false                   | hash-three                   |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "com4"
+      | conn   | toClose | sql                                                                                                                     | db               |
+      | conn_0 | True    | select * from dble_child_table a inner join dble_sharding_table b on a.paren_column = b.sharding_column order by a.id   | dble_information |
+     Then check resultset "com4" has lines with following column values
+      | id-0 | parent_id-1 | increment_column-2 | join_column-3 | paren_column-4 | id-5 | increment_column-6 | sharding_column-7 | sql_required_sharding-8 | algorithm_name-9 |
+      | C13  | C12         | ID1                | CODE1         | CODE           | C12  | None               | CODE              | false                   | fixed_uniform    |
+      | C14  | C12         | None               | CODE2         | CODE           | C12  | None               | CODE              | false                   | fixed_uniform    |
+      | C16  | C15         | ID                 | CODE          | FIX            | C15  | None               | FIX               | false                   | fixed_nonuniform |
+      | C4   | C3          | None               | ID            | ID             | C1   | None               | ID                | false                   | hash-two         |
+      | C4   | C3          | None               | ID            | ID             | C2   | None               | ID                | false                   | hash-four        |
+      | C4   | C3          | None               | ID            | ID             | C3   | None               | ID                | false                   | hash-four        |
+      | C4   | C3          | None               | ID            | ID             | C6   | None               | ID                | false                   | hash-three       |
 
-
-
-
-#   #case select limit/order by/where like
-#      Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                    | expect                                           |
-#      | conn_0 | False   | use dble_information                                                   | success                                          |
-#      | conn_0 | False   | select * from dble_child_table limit 1                                 | has{(('C2', 'C1', 'ID1', 'CODE1', 'CODE'),)}     |
-#      | conn_0 | False   | select * from dble_child_table order by paren_column desc limit 1      | has{(('C5', 'C4', 'ID', 'CODE', 'NAME'),)}       |
-#      | conn_0 | False   | select * from dble_child_table where paren_column like '%o%'           | length{(2)}                                      |
-#  #case select max/min
-#      | conn_0 | False   | select max(paren_column) from dble_child_table                | has{(('NAME',),)}    |
-#      | conn_0 | False   | select min(paren_column) from dble_child_table                | has{(('CODE',),)}    |
-#  #case select field and where [sub-query]
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column in (select paren_column from dble_child_table where increment_column ='ID')    | has{(('C5','C4',))}                   |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column >all (select paren_column from dble_child_table where increment_column ='ID')  | length{(0)}                           |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column <any (select paren_column from dble_child_table where increment_column ='ID')  | has{(('C2','C1',), ('C3','C1',))}     |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = (select paren_column from dble_child_table where increment_column ='ID')     | has{(('C5','C4',))}                   |
-#      | conn_0 | False   | select id,parent_id from dble_child_table where paren_column = any (select paren_column from dble_child_table where increment_column ='ID') | has{(('C5','C4',))}                   |
-#
-#  #case update/delete
-#      | conn_0 | False   | delete from dble_child_table where id='c1'                 | Access denied for table 'dble_child_table'   |
-#      | conn_0 | False   | update dble_child_table set id = 'a' where id='c1'         | Access denied for table 'dble_child_table'   |
-#      | conn_0 | False   | insert into dble_child_table values ('a','1','a','1')      | Access denied for table 'dble_child_table'   |
-#
-#  #case change sharding.xml delete some schema and reload
-#    Given delete the following xml segment
-#      | file         | parent         | child              |
-#      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-#    """
-#    <schema shardingNode="dn5" name="schema1" />
-#    """
-#    Then execute admin cmd "reload @@config"
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_child_table_3"
-#      | conn   | toClose | sql                            | db               |
-#      | conn_0 | False   | select * from dble_child_table | dble_information |
-#     Then check resultset "dble_child_table_3" has not lines with following column values
-#      | id-0 | parent_id-1 | increment_column-2 | join_column-3 | paren_column-4 |
-#      | C2   | C1          | ID1                | CODE1         | CODE           |
-#      | C3   | C1          | ID2                | CODE2         | CODE           |
-#      | C5   | C4          | ID                 | CODE          | NAME           |
-#
-
-
-     ##   #case select limit/order by/where like
-#      Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                         | expect                                                                                       |
-#      | conn_0 | False   | select * from dble_table limit 1                            | has{(('C1', 'sharding_2_t1', 'schema1', 100,'SHARDING'),)}                                   |
-#      | conn_0 | False   | select * from dble_table order by type desc limit 2         | has{(('C8', 'test1', 'schema2', 1000, 'SINGLE'), ('C9', 'test2', 'schema3', -1, 'SINGLE'))}  |
-#      | conn_0 | False   | select * from dble_table where name like '%no%'             | length{(3)}                                                                                  |
-#  #case select max/min
-#      | conn_0 | False   | select max(max_limit) from dble_table                      | has{((1000,),)}  |
-#      | conn_0 | False   | select min(max_limit) from dble_table                      | has{((-1,),)}    |
-#  #case select field and where [sub-query]
-#      | conn_0 | False   | select type from dble_table where schema in (select schema from dble_table where max_limit=90)       | length{(6)}                       |
-#      | conn_0 | False   | select type from dble_table where schema >all (select schema from dble_table where id like '%c%')    | length{(0)}                       |
-#      | conn_0 | False   | select type from dble_table where schema < any (select schema from dble_table where id like '%c%')   | length{(10)}                      |
-#      | conn_0 | False   | select type from dble_table where schema = (select schema from dble_table where id like '%c%')       | Subquery returns more than 1 row  |
-#      | conn_0 | False   | select type from dble_table where schema = any (select schema from dble_table where id like '%schema2%')   | length{(0)}                      |
-#  #case update/delete
-#      | conn_0 | False   | delete from dble_table where schema='schema1'                   | Access denied for table 'dble_table'  |
-#      | conn_0 | False   | update dble_table set schema = 'a' where schema='schema1'       | Access denied for table 'dble_table'  |
-#      | conn_0 | False   | insert into dble_table values ('a','1',2,'3')                   | Access denied for table 'dble_table'  |
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                         | expect  |
-#      | conn_1 | False   | use schema1                 | success |
-#      | conn_1 | False   | drop table if exists no_s1  | success |
-#      | conn_1 | False   | use schema2                 | success |
-#      | conn_1 | False   | drop table if exists no_s2  | success |
-#      | conn_1 | False   | use schema3                 | success |
-#      | conn_1 | true    | drop table if exists no_s3  | success |
-#  #case delete some schema
-#    Given delete the following xml segment
-#      | file         | parent         | child                  |
-#      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-#      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-#    """
-#    <schema shardingNode="dn1" name="schema1">
-#        <globalTable name="test" shardingNode="dn1,dn2" />
-#    </schema>
-#    <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
-#    <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-#    """
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-#    """
-#    	<shardingUser name="test" password="111111" schemas="schema1"/>
-#    """
-#    Then execute admin cmd "reload @@config"
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_4"
-#      | conn   | toClose | sql                       | db               |
-#      | conn_0 | False   | select * from dble_table  | dble_information |
-#    Then check resultset "dble_table_4" has lines with following column values
-#      | name-1        | schema-2 | max_limit-3 | type-4   |
-#      | test          | schema1  | -1          | GLOBAL   |
-#    Then check resultset "dble_table_4" has not lines with following column values
-#      | name-1        | schema-2 | max_limit-3 | type-4      |
-#      | sharding_2_t1 | schema1  | 100         | SHARDING    |
-#      | sharding_4_t1 | schema1  | 100         | SHARDING    |
-#      | er_parent     | schema1  | 100         | SHARDING    |
-#      | er_child      | schema1  | 100         | CHILD       |
-#      | test          | schema1  | 100         | GLOBAL      |
-#      | sharding_4_t2 | schema2  | 1000        | SHARDING    |
-#      | global_4_t1   | schema2  | 1000        | GLOBAL      |
-#      | test1         | schema2  | 1000        | SINGLE      |
-#      | test2         | schema3  | -1          | SINGLE      |
-#      | no_s1         | schema1  | 100         | NO_SHARDING |
-#      | no_s2         | schema2  | 1000        | NO_SHARDING |
-#      | no_s3         | schema3  | -1          | NO_SHARDING |
-    #case select limit/order by/where like
-#      Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                | expect                                                      |
-#      | conn_0 | False   | use dble_information                                               | success                                                     |
-#      | conn_0 | False   | select * from dble_global_table limit 1                            | has{(('C1', 'true', 'CHECKSUM', '/5 * * * * ? *'),)}        |
-#      | conn_0 | False   | select * from dble_global_table order by id desc limit 1           | has{(('C4', 'false', 'CHECKSUM', '0 0 0 * * ?'),)}          |
-#      | conn_0 | False   | select * from dble_global_table where id like '%c%'                | length{(4)}                                                 |
-#  #case select max/min
-#      | conn_0 | False   | select max(check_class) from dble_global_table                     | has{(('COUNT',),)}       |
-#      | conn_0 | False   | select min(check_class) from dble_global_table                     | has{(('CHECKSUM',),)}    |
-#  #case update/delete
-#      | conn_0 | False   | delete from dble_global_table where id='c1'                   | Access denied for table 'dble_global_table' |
-#      | conn_0 | False   | update dble_global_table set id = 'a' where id='c1'           | Access denied for table 'dble_global_table' |
-#      | conn_0 | False   | insert into dble_global_table values ('a','1','2','3')        | Access denied for table 'dble_global_table' |
-  #    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                             | expect  | db      |
-#      | conn_1 | True    | drop table if exists schema1.no_s1 (id int)     | success | schema1 |
-#      | conn_1 | True    | drop table if exists schema2.no_s2 (id int)     | success | schema2 |
-#      | conn_1 | True    | drop table if exists schema3.no_s3 (id int)     | success | schema3 |
-#      | conn_1 | True    | drop table if exists schema4.vertical (id int)  | success | schema4 |
-  #   #case select limit/order by/where like
-#      Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                            | expect                                                                        |
-#      | conn_0 | False   | use dble_information                                                           | success                                                                       |
-#      | conn_0 | False   | select * from dble_sharding_table limit 1                                      | has{(('C1', None, 'ID', 'false', 'hash-two'),)}                               |
-#      | conn_0 | False   | select * from dble_sharding_table order by id desc limit 1                     | has{(('C9', None, 'FIXED', 'false', 'fixed_nonuniform_string_rule'),)}        |
-#      | conn_0 | False   | select * from dble_sharding_table where algorithm_name like '%fixed%'          | length{(4)}                                                                   |
-#  #case select max/min
-#      | conn_0 | False   | select max(algorithm_name) from dble_sharding_table                | has{(('hash-two',),)}             |
-#      | conn_0 | False   | select min(algorithm_name) from dble_sharding_table                | has{(('date_default_rule',),)}    |
-#  #case update/delete
-#      | conn_0 | False   | delete from dble_sharding_table where id='c1'                   | Access denied for table 'dble_sharding_table'   |
-#      | conn_0 | False   | update dble_sharding_table set id = 'a' where id='c1'           | Access denied for table 'dble_sharding_table'   |
-#      | conn_0 | False   | insert into dble_sharding_table values ('a','1','2','3')        | Access denied for table 'dble_sharding_table'   |
-#
-#  #case change sharding.xml delete some schema/function and reload
-#    Given delete the following xml segment
-#      | file         | parent         | child              |
-#      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
-#      | sharding.xml | {'tag':'root'} | {'tag':'function'} |
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-#    """
-#    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-#        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-#    </schema>
-#    """
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-#    """
-#    	<shardingUser name="test" password="111111" schemas="schema1"/>
-#    """
-#    Then execute admin cmd "reload @@config"
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_table_3"
-#      | conn   | toClose | sql                               | db               |
-#      | conn_0 | False   | select * from dble_sharding_table | dble_information |
-#    Then check resultset "dble_sharding_table_3" has not lines with following column values
-#      |id-0 | increment_column-1 | sharding_column-2 | sql_required_sharding-3 | algorithm_name-4             |
-#      |C1   | None               | ID                | false                   | hash-two                     |
-#      |C2   | ID                 | TWO               | false                   | hash-two                     |
-#      |C3   | None               | THREE             | true                    | hash-three                   |
-#      |C4   | None               | FOUR              | false                   | hash-four                    |
-#      |C5   | None               | DATE              | false                   | date_default_rule            |
-#      |C6   | None               | CODE              | false                   | fixed_uniform                |
-#      |C7   | None               | FIX               | false                   | fixed_nonuniform             |
-#      |C8   | None               | RULE              | false                   | fixed_uniform_string_rule    |
-#      |C9   | None               | FIXED             | false                   | fixed_nonuniform_string_rule |
-     #case select limit/order by/where like
-#      Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                            | expect                                                                        |
-#      | conn_0 | False   | use dble_information                                                           | success                                          |
-#      | conn_0 | False   | select * from dble_table_sharding_node limit 1                                 | has{(('C1', 'dn1', 0),)}                         |
-#      | conn_0 | False   | select * from dble_table_sharding_node order by id desc limit 2                | has{(('C5', 'dn1', 0), ('C5', 'dn2', 1),)}       |
-#      | conn_0 | False   | select * from dble_table_sharding_node where sharding_node like '%n4%'         | length{(3)}                                      |
-#  #case select max/min
-#      | conn_0 | False   | select max(order) from dble_table_sharding_node                | has{((3,),)}    |
-#      | conn_0 | False   | select min(order) from dble_table_sharding_node                | has{((0,),)}    |
-#  #case select field and where [sub-query]
-#      | conn_0 | False   | select id from dble_table_sharding_node where sharding_node in (select sharding_node from dble_table_sharding_node where order > 2) | has{(('C2',), ('C4',), ('C5',))}     |
-#  #case update/delete
-#      | conn_0 | False   | delete from dble_table_sharding_node where id='c1'             | Access denied for table 'dble_table_sharding_node'   |
-#      | conn_0 | False   | update dble_table_sharding_node set id = 'a' where id='c1'     | Access denied for table 'dble_table_sharding_node'   |
-#      | conn_0 | False   | insert into dble_table_sharding_node values ('a','1')          | Access denied for table 'dble_table_sharding_node'   |
-#
-#  #case change sharding.xml delete some schema and reload
-#    Given delete the following xml segment
-#      | file         | parent         | child              |
-#      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
-#    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-#    """
-#    <schema shardingNode="dn5" name="schema1" />
-#    """
-#    Then execute admin cmd "reload @@config"
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_sharding_node_4"
-#      | conn   | toClose | sql                                    | db               |
-#      | conn_0 | False   | select * from dble_table_sharding_node | dble_information |
-#    Then check resultset "dble_table_sharding_node_4" has not lines with following column values
-#      | id-0 | sharding_node-1 | order-2 |
-#      | C1   | dn1             | 0       |
-#      | C1   | dn2             | 1       |
-#      | C2   | dn3             | 0       |
-#      | C2   | dn4             | 1       |
-#      | C3   | dn1             | 0       |
-#      | C3   | dn3             | 1       |
-#      | C3   | dn5             | 2       |
-#      | C4   | dn1             | 0       |
-#      | C4   | dn3             | 1       |
-#      | C4   | dn2             | 2       |
-#      | C4   | dn4             | 3       |
-#      | C5   | dn1             | 0       |
-#      | C5   | dn2             | 1       |
-#      | C5   | dn3             | 2       |
-#      | C5   | dn4             | 3       |
+   #case clear table
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                     | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4         | success | schema1 |
+      | conn_1 | False   | drop table if exists er_parent          | success | schema1 |
+      | conn_1 | True    | drop table if exists schema1.no_s1      | success | schema1 |
+      | conn_1 | True    | drop table if exists schema2.no_s2      | success | schema2 |
+      | conn_1 | True    | drop table if exists schema3.no_s3      | success | schema3 |
+      | conn_1 | True    | drop table if exists schema4.vertical   | success | schema4 |

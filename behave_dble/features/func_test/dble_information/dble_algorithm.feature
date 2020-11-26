@@ -5,7 +5,7 @@
 Feature:  dble_algorithm test
 
    Scenario:  dble_algorithm  table #1
-  #case desc dble_algorithm
+#case desc dble_algorithm
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_1"
       | conn   | toClose | sql                 | db               |
       | conn_0 | False   | desc dble_algorithm | dble_information |
@@ -299,32 +299,31 @@ Feature:  dble_algorithm test
       | date_default_rule            | dateFormat      | yyyy-MM-dd                                                   | false     |
       | date_default_rule            | sPartionDay     | 10                                                           | false     |
       | date_default_rule            | sEndDate        | 2020-11-11                                                   | false     |
-   #case select limit/order by/where like
+#case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                         | expect                                                                                           |
       | conn_0 | False   | select * from dble_algorithm limit 1                        | has{(('hash-two', 'class', 'com.actiontech.dble.route.function.PartitionByLong', 'false'),)}     |
       | conn_0 | False   | select * from dble_algorithm order by key desc limit 1      | has{(('enum_integer_rule', 'type', '0', 'false'),)}                                              |
       | conn_0 | False   | select * from dble_algorithm where name like '%da%'         | length{(11)}                                                                                     |
-  #case select max/min
+#case supported select max/min
       | conn_0 | False   | select min(value) from dble_algorithm                       | has{(('0',),)}       |
       | conn_0 | False   | select count(*) from dble_algorithm group by name           | has{((6,), (5,), (4,), (4,), (3,), (4,), (3,), (4,), (3,), (3,), (3,), (3,), (3,), (2,), (3,))}  |
-  #case select field and where [sub-query]
+#case supported select field and where [sub-query]
       | conn_0 | False   | select name,key from dble_algorithm where is_file in (select is_file from dble_algorithm where value ='enum-integer.txt')     | has{(('enum_integer_rule','mapFile',))}     |
       | conn_0 | False   | select name,key from dble_algorithm where is_file >all (select is_file from dble_algorithm where value ='enum-integer.txt')   | length{(0)}                                 |
       | conn_0 | False   | select name,key from dble_algorithm where is_file <any (select is_file from dble_algorithm where value ='enum-integer.txt')   | length{(52)}                                |
       | conn_0 | False   | select name,key from dble_algorithm where is_file = (select is_file from dble_algorithm where value ='enum-integer.txt')      | has{(('enum_integer_rule','mapFile',))}     |
       | conn_0 | False   | select name,key from dble_algorithm where is_file = any (select is_file from dble_algorithm where value ='enum-integer.txt')  | has{(('enum_integer_rule','mapFile',))}     |
-  #case join
       | conn_0 | False   | select id,sharding_column,algorithm_name from dble_sharding_table where algorithm_name in  (select name from dble_algorithm where is_file ='true')  | has{(('C5','ID','enum_integer_rule',))}     |
-  # case cannot support dml
+#case insupported dml
       | conn_0 | False   | delete from dble_algorithm where name='date_rule'               | Access denied for table 'dble_algorithm'   |
       | conn_0 | False   | update dble_algorithm set name = 'a' where name='date_rule'     | Access denied for table 'dble_algorithm'   |
-      | conn_0 | False   | insert into dble_algorithm values ('a','1','a','1')             | Access denied for table 'dble_algorithm'   |
+      | conn_0 | True    | insert into dble_algorithm values ('a','1','a','1')             | Access denied for table 'dble_algorithm'   |
 
-#  case change sharding.xml remove some schema or function,then reload config to check
+#case change sharding.xml remove some schema or function,then reload config to check
     Given delete the following xml segment
-      | file         | parent         | child            |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'} |
+      | file         | parent         | child              |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
@@ -351,7 +350,7 @@ Feature:  dble_algorithm test
       | new-two             | partitionLength | 10                                                   | false     |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_algorithm_5"
       | conn   | toClose | sql                                                           | db               |
-      | conn_0 | true    | show @@algorithm where schema=schema1 and table=sharding_2_t1 | dble_information |
+      | conn_0 | True    | show @@algorithm where schema=schema1 and table=sharding_2_t1 | dble_information |
     Then check resultset "dble_algorithm_5" has lines with following column values
       | KEY-0           | VALUE-1                                            |
       | TYPE            | SHARDING TABLE                                     |

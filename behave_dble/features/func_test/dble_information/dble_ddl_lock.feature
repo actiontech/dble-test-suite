@@ -16,11 +16,18 @@ Feature:  dble_ddl_lock test
       | sql     | varchar(500) | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                            | expect       | db               |
-      | conn_0 | true    | desc dble_ddl_lock             | length{(3)}  | dble_information |
+      | conn_0 | False   | desc dble_ddl_lock             | length{(3)}  | dble_information |
+#case unsupported update/delete/insert
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect                                      |
+      | conn_0 | False   | delete from dble_ddl_lock where sql='drop table if exists sharding_2_t1'              | Access denied for table 'dble_ddl_lock'     |
+      | conn_0 | False   | update dble_ddl_lock set sql = 'a' where sql='drop table if exists sharding_2_t1'     | Access denied for table 'dble_ddl_lock'     |
+      | conn_0 | true    | insert into dble_ddl_lock values (1,'1',1,1,1)                                        | Access denied for table 'dble_ddl_lock'     |
+
   #case show ddl
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-     $a -DidleTimeout=20000
+     $a -DidleTimeout=10000
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -42,22 +49,15 @@ Feature:  dble_ddl_lock test
       | schema1  | sharding_2_t1 | drop table if exists sharding_2_t1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_ddl_lock_3"
       | conn   | toClose | sql           | db               |
-      | conn_0 | False   | show @@ddl    | dble_information |
+      | conn_0 | True    | show @@ddl    | dble_information |
     Then check resultsets "dble_ddl_lock_2" and "dble_ddl_lock_3" are same in following columns
       | column     | column_index |
       | schema     | 0            |
       | table      | 1            |
       | sql        | 2            |
-    Given sleep "20" seconds
-  #case cannot support dml
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect                                      |
-      | conn_0 | False   | delete from dble_ddl_lock where sql='drop table if exists sharding_2_t1'              | Access denied for table 'dble_ddl_lock'     |
-      | conn_0 | False   | update dble_ddl_lock set sql = 'a' where sql='drop table if exists sharding_2_t1'     | Access denied for table 'dble_ddl_lock'     |
-      | conn_0 | true    | insert into dble_ddl_lock values (1,'1',1,1,1)                                        | Access denied for table 'dble_ddl_lock'     |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                     | db      |
-      | conn_1 | true    | commit                                                  | schema1 |
+      | conn   | toClose | sql      | db      |
+      | conn_1 | true    | commit   | schema1 |
     Given destroy sql threads list
 
 

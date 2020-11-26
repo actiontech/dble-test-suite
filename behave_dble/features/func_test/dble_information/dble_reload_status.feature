@@ -18,6 +18,10 @@ Feature:  dble_reload_status test
       | last_reload_end   | varchar(19) | NO     |       | None      |         |
       | trigger_type      | varchar(20) | NO     |       | None      |         |
       | end_type          | varchar(20) | NO     |       | None      |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                 | expect            | db               |
+      | conn_0 | False   | desc dble_reload_status             | length{(8)}       | dble_information |
+      | conn_0 | False   | select * from dble_reload_status    | length{(1)}       | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_2"
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from  dble_reload_status | dble_information |
@@ -99,12 +103,43 @@ Feature:  dble_reload_status test
       | last_reload_end    | 5            |
       | trigger_type       | 6            |
       | end_type           | 7            |
-  #case update/delete
+#case check reload_type has /manager_insert/manager_update/mamager_delete
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                                                      | expect   | db                 |
+      | conn_0 | False    | insert into DBLE_db_group set name='ha_group9',heartbeat_stmt='select 1',rw_split_mode=1 | success  | dble_information   |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_8"
+      | conn   | toClose | sql                               | db               |
+      | conn_0 | False   | select * from  dble_reload_status | dble_information |
+    Then check resultset "dble_reload_status_8" has lines with following column values
+      | cluster-1 | reload_type-2     | reload_status-3 | trigger_type-6 | end_type-7 |
+      | None      | MANAGER_INSERT    | NOT_RELOADING   | LOCAL_COMMAND  | RELOAD_END |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                              | expect   | db                 |
+      | conn_0 | False    | update dble_db_group set heartbeat_retry=11 where active='true'  | success  | dble_information   |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_9"
+      | conn   | toClose | sql                               | db               |
+      | conn_0 | False   | select * from  dble_reload_status | dble_information |
+    Then check resultset "dble_reload_status_9" has lines with following column values
+      | cluster-1 | reload_type-2     | reload_status-3 | trigger_type-6 | end_type-7 |
+      | None      | MANAGER_UPDATE    | NOT_RELOADING   | LOCAL_COMMAND  | RELOAD_END |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                 | expect   | db                 |
+      | conn_0 | False    | delete from  DBLE_db_group where name='ha_group9'   | success  | dble_information   |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_10"
+      | conn   | toClose | sql                               | db               |
+      | conn_0 | False   | select * from  dble_reload_status | dble_information |
+    Then check resultset "dble_reload_status_10" has lines with following column values
+      | cluster-1 | reload_type-2     | reload_status-3 | trigger_type-6 | end_type-7 |
+      | None      | MANAGER_DELETE    | NOT_RELOADING   | LOCAL_COMMAND  | RELOAD_END |
+
+#case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                                           |
       | conn_0 | False   | delete from dble_reload_status where reload_type='RELOAD_META'                             | Access denied for table 'dble_reload_status'     |
       | conn_0 | False   | update dble_reload_status set reload_type = 'a' where reload_type='RELOAD_META'            | Access denied for table 'dble_reload_status'     |
-      | conn_0 | False   | insert into dble_reload_status values (1,'1',1,1,1)                                        | Access denied for table 'dble_reload_status'     |
+      | conn_0 | True    | insert into dble_reload_status values (1,'1',1,1,1)                                        | Access denied for table 'dble_reload_status'     |
 
 
 

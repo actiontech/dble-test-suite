@@ -184,8 +184,8 @@ Feature:  show databases/use dble_information/show tables [like]
       | C4   | er_child1 | schema1  | 1000        | CHILD  | C7   | C6          | ID                 | CODE          | NAME           |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
-       | conn   | toClose | sql                                                                                      | db               |
-       | conn_0 | False   | select a.* from dble_table a,dble_child_table b where a.id = 'C4' and b.parent_id = 'C3' | dble_information |
+      | conn   | toClose | sql                                                                                      | db               |
+      | conn_0 | False   | select a.* from dble_table a,dble_child_table b where a.id = 'C4' and b.parent_id = 'C3' | dble_information |
     Then check resultset "2" has lines with following column values
       | id-0 | name-1    | schema-2 | max_limit-3 | type-4 |
       | C4   | er_child1 | schema1  | 1000        | CHILD  |

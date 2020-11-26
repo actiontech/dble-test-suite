@@ -59,16 +59,6 @@ Feature:  dble_thread_usage table test
       | writeToBackendExecutor5  |
       | writeToBackendExecutor6  |
       | writeToBackendExecutor7  |
-#compare with show @@thread_used
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_3"
-      | conn   | toClose | sql                       |
-      | conn_1 | true    | show @@thread_used        |
-    Then check resultsets "dble_thread_usage_2" and "dble_thread_usage_3" are same in following columns
-      | column            | column_index |
-      | thread_name       | 0            |
-      | last_quarter_min  | 1            |
-      | last_minute       | 2            |
-      | last_five_minute  | 3            |
   #case change bootstrap.cnf to check result
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -115,17 +105,17 @@ Feature:  dble_thread_usage table test
 
    #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                 | expect                                                                                                            |
-      | conn_0 | False   | select * from dble_thread_usage limit 1                             | has{(('$_NIO_REACTOR_BACKEND-0', '0%', '0%', '0%'),)}                                                             |
-      | conn_0 | False   | select * from dble_thread_usage order by thread_name desc limit 2   | has{(('writeToBackendExecutor3','0%', '0%', '0%'), ('writeToBackendExecutor2','0%', '0%', '0%'))}                 |
-      | conn_0 | False   | select * from dble_thread_usage where thread_name like '%FRONT%'    | has{(('$_NIO_REACTOR_FRONT-0','0%', '0%', '0%'),)}                                                                |
+      | conn   | toClose | sql                                                                           | expect                                                                          |
+      | conn_0 | False   | select thread_name from dble_thread_usage limit 1                             | has{(('$_NIO_REACTOR_BACKEND-0', ),)}                                 |
+      | conn_0 | False   | select thread_name from dble_thread_usage order by thread_name desc limit 2   | success      |
+      | conn_0 | False   | select thread_name from dble_thread_usage where thread_name like '%FRONT%'    | has{(('$_NIO_REACTOR_FRONT-0',),)}                                    |
   #case supported select max/min from
       | conn_0 | False   | select max(thread_name) from dble_thread_usage                      | has{(('writeToBackendExecutor3',),)}           |
       | conn_0 | False   | select min(thread_name) from dble_thread_usage                      | has{(('$_NIO_REACTOR_BACKEND-0',),)}           |
   #case supported where [sub-query]
-      | conn_0 | False   | select thread_name from dble_thread_usage where last_minute in (select last_minute from dble_thread_usage where last_five_minute < '10%') | length{(15)}     |
+      | conn_0 | False   | select thread_name from dble_thread_usage where last_minute in (select last_minute from dble_thread_usage where last_five_minute < '10%') | success     |
   #case supported select field from
-      | conn_0 | False   | select last_quarter_min from dble_thread_usage where thread_name = 'BusinessExecutor0'       | has{(('0%',),)}                              |
+      | conn_0 | False   | select last_quarter_min from dble_thread_usage where thread_name = 'BusinessExecutor0'       | success      |
   #case unsupported update/delete/insert
       | conn_0 | False   | delete from dble_thread_usage where thread_name = 'BusinessExecutor0'                        | Access denied for table 'dble_thread_usage'  |
       | conn_0 | False   | update dble_thread_usage set thread_name = '2' where thread_name = 'BusinessExecutor0'       | Access denied for table 'dble_thread_usage'  |

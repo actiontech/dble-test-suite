@@ -11,8 +11,8 @@ Feature:  session_variables test
       | conn_0 | False   | desc session_variables | dble_information |
     Then check resultset "session_variables_1" has lines with following column values
       | Field-0         | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | session_conn_id | int(11)     | NO     |       | None      |         |
-      | variable_name   | varchar(12) | NO     |       | None      |         |
+      | session_conn_id | int(11)     | NO     | PRI   | None      |         |
+      | variable_name   | varchar(12) | NO     | PRI   | None      |         |
       | variable_value  | varchar(12) | NO     |       | None      |         |
       | variable_type   | varchar(3)  | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode

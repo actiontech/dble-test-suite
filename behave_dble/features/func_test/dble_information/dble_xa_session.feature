@@ -19,6 +19,9 @@ Feature:  dble_xa_session test
       | xa_id         | varchar(20) | NO     |       | None      |         |
       | xa_state      | varchar(20) | NO     |       | None      |         |
       | sharding_node | varchar(64) | NO     | PRI   | None      |         |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                         | expect       | db               |
+      | conn_0 | True    | desc dble_xa_session        | length{(4)}  | dble_information |
   #case set brace
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
@@ -47,21 +50,21 @@ Feature:  dble_xa_session test
     Given destroy btrace threads list
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_xa_session_2"
       | conn   | toClose | sql                           | db               |
-      | conn_2 | False   | select * from dble_xa_session | dble_information |
+      | conn_2 | True    | select * from dble_xa_session | dble_information |
     Then check resultset "dble_xa_session_2" has lines with following column values
       | xa_state-2           | sharding_node-3 |
       | XA COMMIT FAIL STAGE | dn3             |
       | XA COMMIT FAIL STAGE | dn1             |
     Given start mysql in host "mysql-master1"
 
-  #case update/delete
+#case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                     | expect                                        |
-      | conn_0 | False   | delete from dble_xa_session where xa_state='XA COMMIT FAIL STAGE'                       | Access denied for table 'dble_xa_session'     |
-      | conn_0 | False   | update dble_xa_session set xa_state = 'a' where xa_state='XA COMMIT FAIL STAGE'         | Access denied for table 'dble_xa_session'     |
-      | conn_0 | False   | insert into dble_xa_session values (1,'1',1,1,1)                                        | Access denied for table 'dble_xa_session'     |
+      | conn   | toClose | sql                                                                                     | expect                                        | db               |
+      | conn_0 | False   | delete from dble_xa_session where xa_state='XA COMMIT FAIL STAGE'                       | Access denied for table 'dble_xa_session'     | dble_information |
+      | conn_0 | False   | update dble_xa_session set xa_state = 'a' where xa_state='XA COMMIT FAIL STAGE'         | Access denied for table 'dble_xa_session'     | dble_information |
+      | conn_0 | True    | insert into dble_xa_session values (1,'1',1,1,1)                                        | Access denied for table 'dble_xa_session'     | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | db      |
       | conn_3 | False   | set autocommit=1                                        | schema1 |
       | conn_3 | False   | set xa=off                                              | schema1 |
-      | conn_3 | False   | drop table if exists sharding_4_t1                      | schema1 |
+      | conn_3 | True    | drop table if exists sharding_4_t1                      | schema1 |
