@@ -190,7 +190,9 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.services.manager.response.ha.DbGroupHaDisable#execute||开始执行dbGroup @@disable name=''...命令|
 |com.actiontech.dble.services.manager.response.ha.DbGroupHaEnable#execute||开始执行dbGroup @@enable name=''...命令|
 |com.actiontech.dble.services.manager.response.ha.DbGroupHaSwitch#execute||开始执行dbGroup @@switch name='' master=''命令|
-
+|com.actiontech.dble.cluster.ClusterLogic#syncUserXmlToLocal||user.xml文件落盘|
+|com.actiontech.dble.cluster.ClusterLogic#syncDbXmlToLocal||db.xml文件落盘|
+|com.actiontech.dble.cluster.ClusterLogic#syncShardingXmlToLocal||sharding.xml文件落盘|
 
 ### 小版本改动：
 * 版本号
