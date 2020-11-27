@@ -12,9 +12,9 @@ Feature:  processlist test
     Then check resultset "processlist_1" has lines with following column values
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | front_id      | int(11)       | NO     | PRI   | None      |         |
-      | sharding_node | varchar(12)   | NO     | PRI   | None      |         |
+      | sharding_node | varchar(12)   | NO     |       | None      |         |
       | db_instance   | varchar(12)   | NO     |       | None      |         |
-      | mysql_id      | int(11)       | NO     |       | None      |         |
+      | mysql_id      | int(11)       | NO     | PRI   | None      |         |
       | user          | varchar(12)   | NO     |       | None      |         |
       | front_host    | varchar(16)   | NO     |       | None      |         |
       | mysql_db      | varchar(16)   | NO     |       | None      |         |
