@@ -14,7 +14,7 @@ Feature:Date sharding function
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: java.lang.RuntimeException: sBeginDate can not be null
+    java.lang.RuntimeException: sBeginDate can not be null
     """
 
     #test: sBegin < sEndDate-nodes*sPartition+1
