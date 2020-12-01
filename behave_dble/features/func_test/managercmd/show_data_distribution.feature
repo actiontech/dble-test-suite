@@ -3,9 +3,9 @@
 # Created by quexiuping at 2020/11/30
 
 Feature: test manager command :show @@data_distribution where table ='schema.table'
-  1.
+  1.sing /nosharding /vertical table not supported
+  2.global /sharding table supported
 
-@skip_restart
   Scenario: check manager cmd: "show @@data_distribution where table ='schema.table'" #1
     Then execute sql in "dble-1" in "admin" mode
 #case 1 :the schema doesn't exists or table doesn't exists, the result will be reported "doesn't exist"
@@ -216,7 +216,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect                                                |
       | conn_0 | false   | show @@data_distribution where table ='schema2.sharding_4_t3' | has{(('dn1', 128), ('dn3', 256), ('dn5', 512))}       |
-#case 2.4.1  backend mysql drop table,the result will be reture "occur Exception"
+#case 2.5.1  backend mysql drop table,the result will be reture "occur Exception"
     Given record current dble log line number in "log_linenu"
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                                          | expect       | db  |
