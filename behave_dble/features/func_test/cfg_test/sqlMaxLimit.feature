@@ -113,15 +113,19 @@ Feature: test sqlMaxLimit for all types of table
       | conn_0 | False   | select * from tb_child1                                                                | length{(3)}                     | schema1 |
       | conn_0 | False   | select * from tb_grandson1                                                             | length{(2)}                    | schema1 |
       | conn_0 | False   | select * from tb_grandson2                                                             | length{(4)}                    | schema1 |
-      | conn_0 | False   | select * from tb_grandson2                                                             | length{(4)}                    | schema1 |
+      | conn_0 | False   | select * from tb_grandson2 limit 2                                                    | length{(2)}                    | schema1 |
       | conn_0 | False   | select * from global_4_t1                                                              | length{(6)}                    | schema1 |
+      | conn_0 | False   | select * from global_4_t1 limit 3                                                    | length{(3)}                    | schema1 |
 
       | conn_0 | False   | select * from schema2.sharding_4_t2                                                   | length{(8)}                    | schema1 |
       | conn_0 | False   | select * from schema2.sharding_4_t3                                                   | length{(3)}                    | schema1 |
       | conn_0 | False   | select * from schema2.global_4_t1                                                     | length{(5)}                     | schema1 |
       | conn_0 | False   | select * from schema2.global_4_t2                                                      | length{(4)}                     | schema1 |
+      | conn_0 | False   | select * from schema2.global_4_t2 limit 6                                             | length{(6)}                     | schema1 |
+
       | conn_0 | False   | select * from schema3.nosharding3_1                                                   | length{(3)}                     | schema1 |
       | conn_0 | False   | select * from schema3.nosharding3_2                                                   | length{(3)}                     | schema1 |
+
       | conn_0 | False   | drop table if exists nosharding_1                                                       | success                         | schema1 |
       | conn_0 | False   | drop table if exists sharding_1_t1                                                       | success                         | schema1 |
       | conn_0 | False   | drop table if exists sharding_2_t1                                                       | success                         | schema1 |
