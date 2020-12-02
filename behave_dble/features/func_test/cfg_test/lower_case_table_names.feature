@@ -1,4 +1,4 @@
-# Copyright (C) 2016-2020 ActionTech.
+# Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2018/10/15
 # Modified by wujinling at 2019/09/17
@@ -173,16 +173,16 @@ Feature: check collation/lower_case_table_names works right for dble
         | test | 111111 | conn_1 | False   | create table test(Id int)                                                     | success               | schema1 |
         | test | 111111 | conn_1 | False   | insert into test(id) value(2)                                                 | success              | schema1 |
         | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join Test t2 on t1.id=t2.Id |Test doesn't exist | schema1 |
-        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |error totally whack     | schema1 |
+        | test | 111111 | conn_1 | False   | select t1.id from DbTest.Test_Table T1 left join test t2 on t1.id=t2.Id |column id not found     | schema1 |
         | test | 111111 | conn_1 | False   | select T1.id from DbTest.Test_Table T1 left join test t2 on T1.id=t2.id |success              | schema1 |
         | test | 111111 | conn_1 | False   | select distinct(t1.id) from DbTest.Test_Table t1 limit 2                  |success              | schema1 |
         | test | 111111 | conn_1 | False   | select DISTINCT(T1.id) from DbTest.Test_Table t1 limit 2                  |Unknown column      | schema1 |
         | test | 111111 | conn_1 | False   | select avg(t1.id),t1.id from DbTest.Test_Table t1,test t2 where t1.id=t2.id and t1.id = 1 group by t1.id having avg(t1.id)>(select sum(t1.id)/count(t1.id) from DbTest.Test_Table t1) |success | schema1 |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table s,test t where s.id = t.Id or s.Id <s.id  or s.id >t.Id |success               | schema1 |
         | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,Test t where s.id = t.id or s.id <s.id  or s.id >t.id |Test doesn't exist  | schema1 |
-        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |error totally whack | schema1 |
+        | test | 111111 | conn_1 | False   |select s.id from  DbTest.Test_Table S,test t where s.id = t.id or s.id <s.id  or s.id >t.id |column id not found | schema1 |
         | test | 111111 | conn_1 | False   |select s.id from DbTest.Test_Table s union (select Id from test)          |success               | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | schema1 |
-        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
+        | test | 111111 | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |column id not found | schema1 |
         | test | 111111 | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                   |success               | schema1 |
 
