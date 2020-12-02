@@ -216,7 +216,6 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
   @skip_restart
   Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #2
 
-# case 1 function :case when  from github issue/2143
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
       | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
@@ -225,6 +224,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | create table sharding_3_t1 (id decimal(10,0) NOT NULL,id2 bigint(20) NOT NULL,name varchar(250) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8  | success                        | schema1 | utf8mb4 |
       | conn_0 | False   | insert into sharding_2_t2 values (1,1,'测试1')                                                                                                 | success                        | schema1 | utf8mb4 |
       | conn_0 | False   | insert into sharding_3_t1 values (1,1,'测试1')                                                                                                 | success                        | schema1 | utf8mb4 |
+## case 1 function :"case when"
       | conn_0 | False   | select (case a.id when 1 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('好',))}                 | schema1 | utf8mb4 |
       | conn_0 | False   | insert into sharding_2_t2 values (2,2,'测试2')                                                                                                 | success                        | schema1 | utf8mb4 |
       | conn_0 | False   | insert into sharding_3_t1 values (2,2,'测试2')                                                                                                 | success                        | schema1 | utf8mb4 |
@@ -233,10 +233,65 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select (case a.id when 2 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id                             | has{(('坏',),('好',),('好',))}  | schema1 | utf8mb4 |
       | conn_0 | False   | select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id                             | has{(('坏',),('坏',),('坏',))}  | schema1 | utf8mb4 |
       | conn_0 | True    | select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('坏',),('坏',))}          | schema1 | utf8mb4 |
-# case 2 function : concat/cast
-      | conn_0 | False   | select concat(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                            | has{(('测试1测试1',),('测试2测试2',),('测试2测试3',))}  | schema1 | utf8mb4 |
-      | conn_0 | False   | select cast(b.name as char) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                             | has{(('测试1',),('测试2',),('测试3',))}               | schema1 | utf8mb4 |
+## case 2 function : Type Conversion in Expression Evaluation
+      #case "concat" / "cast"
+      | conn_0 | False   | select concat(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{(('测试1测试1',),('测试2测试2',),('测试2测试3',))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select concat(a.name,'中国') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1中国',),('测试2中国',),('测试2中国',))}        | schema1 | utf8mb4 |
+      | conn_0 | False   | select cast(b.name as char) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1',),('测试2',),('测试3',))}                  | schema1 | utf8mb4 |
+      | conn_0 | False   | select cast(b.name as UNSIGNED) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where b.name=(select cast(b.name as char))    |  Correlated Sub Queries is not supported               | schema1 | utf8mb4 |
+      #case "+"
+      | conn_0 | False   | select a.id + b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((1,),(2,),(2,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name + '中国' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      #case "> " / "<"
+      | conn_0 | False   | select a.id > b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((1,),(1,),(1,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name < b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((0,),(0,),(1,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name < '中国' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.name > '测试'    | has{(('测试1',),('测试2',),('测试2',))}      | schema1 | utf8mb4 |
+      | conn_0 | True    | select a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.name < '测试'    | length{(0)}                                | schema1 | utf8mb4 |
+## case 3 function : Operator
+      #case "DIV"  / "%" / "MOD"  issue:DBLE0REQ-733
+      #| conn_0 | False   | select a.id DIV b.name,a.name % b.name,a.name MOD b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           |     | schema1 | utf8mb4 |
+
+      #case "*" / "/"    issue:DBLE0REQ-734
+      | conn_0 | False   | select '爱可生' * a.id,a.id2 / '中国' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                          | has{((0.0, None), (0.0, None), (0.0, None))}     | schema1 | utf8mb4 |
+      #| conn_0 | False   | select a.id * '爱可生',a.id2 / '中国' from sharding_2_t2 a inner join sharding_3_t1 b on (a.id * '爱可生')=(b.id * '爱可生')  |      | schema1 | utf8mb4 |
+
+      #case "IS"   issue:DBLE0REQ-735
+      #| conn_0 | False   | select a.name is null,b.name is not unknown from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       |     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name is null,b.name is not null from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((0, 1), (0, 1), (0, 1))}     | schema1 | utf8mb4 |
+      #case "LIKE" / " not like"
+      | conn_0 | False   | select a.name like "测试",b.name not like "测试1" from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                               | has{((0, 0), (0, 1), (0, 1))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name like "测试",b.name not like "测试1" from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.name  like "测试"      | length{(0)}                       | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name like "测试",b.name not like "测试1" from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.name not like "测试"   | has{((0, 0), (0, 1), (0, 1))}     | schema1 | utf8mb4 |
+
+      #case "REGEXP" / " not REGEXP"  issue:DBLE0REQ-737
+      #| conn_0 | False   | select a.name REGEXP "测试",b.name not REGEXP "测试1" from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                               | has{((0, 0), (0, 1), (0, 1))}     | schema1 | utf8mb4 |
+
+      #case "not" unsupported
+      | conn_0 | False   | select a.name not b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | sql syntax error, no terminated. DOT     | schema1 | utf8mb4 |
+
+      # case "BETWEEN AND" / " not BETWEEN AND"  issue:DBLE0REQ-738
+      #| conn_0 | False   | select a.name between '测试' and '测试3' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((1,),(1,))}  | schema1 | utf8mb4 |
+      #| conn_0 | False   | select b.name not between '测试' and '测试3' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{((0,),(0,))}  | schema1 | utf8mb4 |
+
+      #case "AND" / "&&"  / "xor"  /"or"  /"||"
+      | conn_0 | False   | select a.name and b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name && b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name xor b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name or b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      #case ":= "  issue:DBLE0REQ-740
+      #| conn_0 | False   | select @var1 := a.name ,@爱可生 := b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+
+      #case "GREATEST "
+      | conn_0 | False   | select GREATEST(a.name,b.name,'测试3') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                             | has{(('测试3',),('测试3',),('测试3',))}      | schema1 | utf8mb4 |
+      | conn_0 | False   | select GREATEST(a.id,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.id < GREATEST(a.id,b.name)   | length{(0)}                                | schema1 | utf8mb4 |
 
 
-      | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
-      | conn_0 | True    | drop table if exists sharding_3_t1                                                                                                            | success                        | schema1 | utf8mb4 |
+
+
+
+
+
+
+#      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
+#      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
