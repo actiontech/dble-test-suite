@@ -209,3 +209,34 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False    | drop table if exists cl_idx_data_monitor   | success      | schema1 | utf8mb4 |
       | conn_0 | False    | drop table if exists sys_dict_entry        | success      | schema1 | utf8mb4 |
       | conn_0 | true     | drop table if exists rl_station_relation   | success      | schema1 | utf8mb4 |
+
+
+
+
+  @skip_restart
+  Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #2
+
+# case 1 function :case when  from github issue/2143
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
+      | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | drop table if exists sharding_3_t1                                                                                                            | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | create table sharding_2_t2 (id decimal(10,0) NOT NULL,id2 bigint(20) NOT NULL,name varchar(250) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8  | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | create table sharding_3_t1 (id decimal(10,0) NOT NULL,id2 bigint(20) NOT NULL,name varchar(250) NOT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8  | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_2_t2 values (1,1,'测试1')                                                                                                 | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_3_t1 values (1,1,'测试1')                                                                                                 | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | select (case a.id when 1 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('好',))}                 | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_2_t2 values (2,2,'测试2')                                                                                                 | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_3_t1 values (2,2,'测试2')                                                                                                 | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | select (case a.id when 1 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('好',),('坏',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_3_t1 values (2,3,'测试3')                                                                                                 | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | select (case a.id when 2 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id                             | has{(('坏',),('好',),('好',))}  | schema1 | utf8mb4 |
+      | conn_0 | False   | select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id                             | has{(('坏',),('坏',),('坏',))}  | schema1 | utf8mb4 |
+      | conn_0 | True    | select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('坏',),('坏',))}          | schema1 | utf8mb4 |
+# case 2 function : concat/cast
+      | conn_0 | False   | select concat(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                            | has{(('测试1测试1',),('测试2测试2',),('测试2测试3',))}  | schema1 | utf8mb4 |
+      | conn_0 | False   | select cast(b.name as char) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                             | has{(('测试1',),('测试2',),('测试3',))}               | schema1 | utf8mb4 |
+
+
+      | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
+      | conn_0 | True    | drop table if exists sharding_3_t1                                                                                                            | success                        | schema1 | utf8mb4 |
