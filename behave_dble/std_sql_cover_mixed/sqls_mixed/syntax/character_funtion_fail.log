@@ -1,0 +1,12 @@
+===file:sqls_mixed/syntax/character_funtion.sql, id:15, sql:[select (case a.id when 1 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2]===
+dble:[[('\xe5??',), ('\xe5\xa5\xbd',)]]
+mysql:[[('\xe5\x9d\x8f',), ('\xe5\xa5\xbd',)]]
+===file:sqls_mixed/syntax/character_funtion.sql, id:17, sql:[select (case a.id when 2 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id]===
+dble:[[('\xe5??',), ('\xe5\xa5\xbd',), ('\xe5\xa5\xbd',)]]
+mysql:[[('\xe5\x9d\x8f',), ('\xe5\xa5\xbd',), ('\xe5\xa5\xbd',)]]
+===file:sqls_mixed/syntax/character_funtion.sql, id:18, sql:[select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id]===
+dble:[[('\xe5??',), ('\xe5??',), ('\xe5??',)]]
+mysql:[[('\xe5\x9d\x8f',), ('\xe5\x9d\x8f',), ('\xe5\x9d\x8f',)]]
+===file:sqls_mixed/syntax/character_funtion.sql, id:19, sql:[select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2]===
+dble:[[('\xe5??',), ('\xe5??',)]]
+mysql:[[('\xe5\x9d\x8f',), ('\xe5\x9d\x8f',)]]
