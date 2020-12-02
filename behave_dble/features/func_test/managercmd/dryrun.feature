@@ -1,21 +1,17 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-# Created by maofei at 2019/4/10
-@skip
+# Created by maofei at 2019/4/10 update by quexiuping at 2020/12/02
+
 Feature: # dryrun test
 
-  Scenario: #type value "default" in schema.xml  from issue:1109  #1
-    Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
-    """
-       <table dataNode="dn1,dn2,dn3,dn4" type="default" name="test" rule="hash-four" />
-    """
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect                                                                  |
-      | dryrun       | hasNoStr{Table[test] attribute type sharding in schema.xml is illegal}  |
-    Given add xml segment to node with attribute "{'tag':'schema'}" in "schema.xml"
-    """
-       <table dataNode="dn1,dn2,dn3,dn4" type="defau" name="test" rule="hash-four" />
-    """
-    Then execute sql in "dble-1" in "admin" mode
-      | sql          | expect                                                                               |
-      | dryrun       | hasStr{attribute type value 'defau' in schema.xml is illegal, use default replaced}  |
+  Scenario: # from DBLE0REQ-721  #1
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+      | sql         |
+      | dryrun      |
+    Then check resultset "A" has lines with following column values
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                                                  |
+      | Meta    | WARNING | Table schema1.test don't exists in shardingNode[dn1,dn2,dn3,dn4]          |
+      | Meta    | WARNING | Table schema1.sharding_2_t1 don't exists in shardingNode[dn1,dn2]         |
+      | Meta    | WARNING | Table schema1.sharding_4_t1 don't exists in shardingNode[dn1,dn2,dn3,dn4] |
+      | Xml     | NOTICE  | There is No RWSplit User                                                  |
+      | Cluster | NOTICE  | Dble is in single mod                                                     |
