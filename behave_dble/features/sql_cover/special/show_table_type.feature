@@ -15,8 +15,7 @@ Feature: table type check
       | conn_0 | True     | drop table test                         | success                      | schema1 |
 
 
- @skip_restart
-   Scenario:  Directly fetch the table in dble metadata when in 8066 show tables  #2 http://10.186.18.11/jira/browse/DBLE0REQ-511
+    Scenario:  Directly fetch the table in dble metadata when in 8066 show tables  #2 from:DBLE0REQ-511
       Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                             | expect             |
       | conn_0 | False   | use schema1                     | success            |
