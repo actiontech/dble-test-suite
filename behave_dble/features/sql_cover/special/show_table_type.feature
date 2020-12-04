@@ -87,7 +87,7 @@ Feature: table type check
       | conn   | toClose | sql                                    | expect                                                       |
       | conn_0 | False   | use schema2                            | success                                                      |
       | conn_0 | False   | show tables                            | hasNoStr{('global_4_t1')}                                    |
-      | conn_0 | False   | create table global_4_t1 (id int)      | Table 'schema2.global_4_t1' or table meta already exists     |
+      | conn_0 | true    | create table global_4_t1 (id int)      | Table 'schema2.global_4_t1' or table meta already exists     |
       Then execute sql in "mysql-master1"
       | conn   | toClose  | sql                                  | expect         |
-      | conn_1 | False    | drop table if exists global_4_t1     | success        |
+      | conn_1 | true     | drop table if exists global_4_t1     | success        |

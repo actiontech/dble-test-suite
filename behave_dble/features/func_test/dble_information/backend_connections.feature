@@ -5,6 +5,8 @@
 
 Feature:  backend_connections test
 
+
+
    Scenario:  backend_connections table #1
   #case desc backend_connections
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_1"
@@ -40,45 +42,94 @@ Feature:  backend_connections test
       | conn   | toClose | sql                                  | expect       | db               |
       | conn_0 | False   | desc backend_connections             | length{(24)} | dble_information |
       | conn_0 | False   | select * from backend_connections    | success      | dble_information |
-
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_1 | False   | drop table if exists test                        | success | schema1 |
+      | conn_1 | False   | create table test (id int)                       | success | schema1 |
+      | conn_1 | False   | drop table if exists sharding_2_t1               | success | schema1 |
+      | conn_1 | False   | create table sharding_2_t1 (id int)              | success | schema1 |
+      | conn_1 | False   | begin                                            | success | schema1 |
+   #case 1:one table use four conn
+      | conn_1 | False   | insert into test values (1),(2)                  | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_2"
+      | conn   | toClose | sql                                                                                      | db               |
+      | conn_0 | False   | select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections   | dble_information |
+    Then check resultset "backend_connections_2" has lines with following column values
+      | user-0 | sql-1                           | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+      | test   | insert into test values (1),(2) | ha_group2       | db2      | 0           | true             |
+      | test   | insert into test values (1),(2) | ha_group1       | db2      | 0           | true             |
+      | test   | insert into test values (1),(2) | ha_group1       | db1      | 0           | true             |
+      | test   | insert into test values (1),(2) | ha_group2       | db1      | 0           | true             |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                              | expect  | db      |
+     #case 2:one table use two conn
+      | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_3"
+      | conn   | toClose | sql                                                                                      | db               |
+      | conn_0 | False   | select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections   | dble_information |
+    Then check resultset "backend_connections_3" has lines with following column values
+      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 0           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 0           | true             |
   # case 8066 query xa =on DBLE0REQ-508
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                              | expect  |
-      | conn_1 | False   | use schema1                                      | success |
-      | conn_1 | False   | drop table if exists test                        | success |
-      | conn_1 | False   | create table test (id int)                       | success |
-      | conn_1 | False   | drop table if exists sharding_2_t1               | success |
-      | conn_1 | False   | create table sharding_2_t1 (id int)              | success |
-      | conn_1 | False   | set autocommit=0                                 | success |
-      | conn_1 | False   | set xa=on                                        | success |
-      | conn_1 | False   | insert into test values (1),(2)                  | success |
-      | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_2"
-      | conn   | toClose | sql                                                                        | db               |
-      | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections   | dble_information |
-    Then check resultset "backend_connections_2" has lines with following column values
-      | user-0 | sql-1                                         | schema-2 | xa_status-3 | in_transaction-4 |
-      | test   | insert into test values (1),(2)               | db2      | 1           | true             |
-      | test   | insert into test values (1),(2)               | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3)    | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4)    | db1      | 1           | true             |
-
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_1 | False   | commit                                           | success | schema1 |
+      | conn_1 | False   | drop table if exists sharding_4_t1               | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int)              | success | schema1 |
+      | conn_1 | False   | set autocommit=0                                 | success | schema1 |
+      | conn_1 | False   | set xa=on                                        | success | schema1 |
+      | conn_1 | False   | insert into test values (1),(2)                  | success | schema1 |
+      | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success | schema1 |
+    #case 3 :two table use four conn,the "sql" will be show lasted sql
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_4"
+      | conn   | toClose | sql                                                                                      | db               |
+      | conn_0 | False   | select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections   | dble_information |
+    Then check resultset "backend_connections_4" has lines with following column values
+      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+      | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
+      | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 1           | true             |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_1 | False   | insert into sharding_4_t1 values (1),(2),(3),(4) | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_5"
+      | conn   | toClose | sql                                                                                      | db               |
+      | conn_0 | False   | select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections   | dble_information |
+    Then check resultset "backend_connections_5" has lines with following column values
+      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+      | test   | INSERT INTO sharding_4_t1 VALUES (3)       | ha_group2       | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_4_t1 VALUES (2)       | ha_group1       | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_4_t1 VALUES (1)       | ha_group2       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_4_t1 VALUES (4)       | ha_group1       | db1      | 1           | true             |
+    Then check resultset "backend_connections_5" has not lines with following column values
+      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+      | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
+      | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql             | expect  |
       | conn_1 | False   | commit          | success |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_3"
-      | conn   | toClose | sql                                                                       | db               |
-      | conn_0 | False   | select user,sql,schema,xa_status,in_transaction from backend_connections  | dble_information |
-    Then check resultset "backend_connections_3" has not lines with following column values
-      | user-0 | sql-1                                         | schema-2 | xa_status-3 | in_transaction-4 |
-      | test   | insert into test values (1),(2)               | db2      | 1           | true             |
-      | test   | insert into test values (1),(2)               | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3)    | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4)    | db1      | 1           | true             |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_6"
+      | conn   | toClose | sql                                                                                      | db               |
+      | conn_0 | true    | select user,sql,db_group_name,schema,xa_status,in_transaction from backend_connections   | dble_information |
+    Then check resultset "backend_connections_6" has not lines with following column values
+      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+      | test   | INSERT INTO sharding_4_t1 VALUES (3)       | ha_group2       | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_4_t1 VALUES (2)       | ha_group1       | db2      | 1           | true             |
+      | test   | INSERT INTO sharding_4_t1 VALUES (1)       | ha_group2       | db1      | 1           | true             |
+      | test   | INSERT INTO sharding_4_t1 VALUES (4)       | ha_group1       | db1      | 1           | true             |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                | expect  |
-      | conn_1 | False   | set autocommit=1   | success |
-      | conn_1 | False   | set xa=off         | success |
+      | conn   | toClose | sql                | expect  | db      |
+      | conn_1 | False   | set autocommit=1   | success | schema1 |
+      | conn_1 | False   | set xa=off         | success | schema1 |
+      | conn_1 | False   | drop table if exists test                        | success | schema1 |
+      | conn_1 | False   | drop table if exists sharding_4_t1               | success | schema1 |
+      | conn_1 | True    | drop table if exists sharding_2_t1               | success | schema1 |
+
+
   #case change db.xml and reload
     Given delete the following xml segment
       | file         | parent         | child                  |
@@ -114,10 +165,6 @@ Feature:  backend_connections test
       | db_group_name-0 | db_instance_name-1 | remote_addr-2 |
       | ha_group1       | hostM1             | 172.100.9.5   |
 
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                              | expect  |
-      | conn_1 | False   | drop table if exists test                        | success |
-      | conn_1 | True    | drop table if exists sharding_2_t1               | success |
    #case supported select limit/order by
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                 | expect                                                  |

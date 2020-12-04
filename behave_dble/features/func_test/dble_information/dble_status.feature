@@ -155,7 +155,7 @@ Feature:  dble_status test
   #case query in different seesion,questions and transactions add 1
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   |
-      | conn_2 | False   | use schema1           |
+      | conn_2 | True    | use schema1           |
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '18',), ('transactions', '15',))}    |

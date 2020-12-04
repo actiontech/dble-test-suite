@@ -249,7 +249,7 @@ Feature:  dble_entry test
       | conn_0 | False   | select username from dble_rw_split_entry where blacklist in (select name from dble_blacklist where user_configured = 'true')      | has{(('rwS4',), ('rwS1',), ('rwS2',))}          |
       | conn_0 | False   | select username from dble_rw_split_entry where blacklist >all (select name from dble_blacklist where user_configured = 'true')    | length{(0)}                                     |
       | conn_0 | False   | select username from dble_rw_split_entry where blacklist <any (select name from dble_blacklist where user_configured = 'true')    | has{(('rwS1',), ('rwS4',))}                     |
-      | conn_0 | False   | select username from dble_rw_split_entry where blacklist =any (select name from dble_blacklist where user_configured = 'true')    | has{(('rwS4',), ('rwS1',), ('rwS2',))}          |
+      | conn_0 | true    | select username from dble_rw_split_entry where blacklist =any (select name from dble_blacklist where user_configured = 'true')    | has{(('rwS4',), ('rwS1',), ('rwS2',))}          |
 
   @skip_restart
    Scenario:  dble_blacklist  table #4
@@ -379,7 +379,7 @@ Feature:  dble_entry test
       | schema2  | no_s3         | true          | 0        | 0        | 0        | 0        | true           |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect  |
-      | conn_2 | False   | drop table if exists no_s3  | success |
+      | conn_2 | true    | drop table if exists no_s3  | success |
    Then execute admin cmd "reload @@config"
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_3"
       | conn   | toClose | sql                                       | db               |
