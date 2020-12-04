@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2020 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by maofei at 2020/9/23
+
 Feature: test addition, deletion and modification of dble_information on the management side
   @skip_restart
   Scenario: test the langreage of insert in dble manager        #1
