@@ -226,6 +226,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 #######
       #  example: select "function" from tal_a inner join tab_b
       #  example: select * from tal_a inner join tab_b on where "function"
+      #  example: select * from tal_a inner join tab_b on "function"
 ########
 ## case 0 function :"case when"
       | conn_0 | False   | select (case a.id when 1 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('好',))}                 | schema1 | utf8mb4 |
@@ -238,19 +239,29 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select (case a.id when 3 then '好' else '坏' end) b from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                            | has{(('坏',),('坏',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select (case a.id when 3 then '好' else '坏' end) from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2                              | has{(('坏',),('坏',))}          | schema1 | utf8mb4 |
       | conn_0 | False   | select (case 1 when a.name>c.name then '好' else '坏' end) from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id                      | has{(('坏',),('坏',),('坏',))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where a.name in (case a.id when 2 then '测试2' else '测试1' end)     | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on a.name = b.name.id2 where a.name in (case a.id when 2 then '测试2' else '测试1' end)     | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
-
-
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where a.name in (case 1 when a.name<c.name then '测试2' else '测试1' end)     | has{(('测试1',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where a.name not in (case 1 when a.name<c.name then '测试2' else '测试1' end)     | has{(('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where a.name > (case 1 when a.name<c.name then '测试2' else '测试1' end)      | has{(('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where a.name < (case 1 when a.name<c.name then '测试2' else '测试1' end)      | length{(0)}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) > (case c.name when a.name>c.name then '测试2' else '测试1' end)    | has{(('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) < > (case c.name when a.name>c.name then '测试2' else '测试1' end)  | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 c on  (case a.name when a.name<c.name then '测试2' else '测试1' end) != (case c.name when a.name>c.name then '测试2' else '测试1' end)   | has{(('测试1',),('测试2',),('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a , sharding_3_t1 c where  (case a.name when a.name<c.name then '测试2' else '测试1' end) = (case c.name when a.name>c.name then '测试2' else '测试1' end)          | has{(('测试1',),('测试2',))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select * from sharding_2_t2 a , sharding_3_t1 c where exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | Correlated Sub Queries is not supported          | schema1 | utf8mb4 |
+      | conn_0 | true    | select * from sharding_2_t2 a inner join sharding_3_t1 c on a.id = c.id2 where  exists ( select (case a.name when a.name<c.name then '测试2' else '测试1' end) )      | Correlated Sub Queries is not supported          | schema1 | utf8mb4 |
 ## case 1 function : Type Conversion in Expression Evaluation
       #case "concat" / "cast"
       | conn_0 | False   | select concat(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | has{(('测试1测试1',),('测试2测试2',),('测试2测试3',))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select concat(a.name,'中国') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1中国',),('测试2中国',),('测试2中国',))}        | schema1 | utf8mb4 |
       | conn_0 | False   | select cast(b.name as char) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | has{(('测试1',),('测试2',),('测试3',))}                  | schema1 | utf8mb4 |
       | conn_0 | False   | select cast(b.name as UNSIGNED) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where b.name=(select cast(b.name as char))    |  Correlated Sub Queries is not supported               | schema1 | utf8mb4 |
+      | conn_0 | False   | select b.name from sharding_2_t2 a inner join sharding_3_t1 b on concat(a.name,b.name)=concat(a.name,b.name)    |  length{(6)}              | schema1 | utf8mb4 |
       #case "+"
       | conn_0 | False   | select a.id + b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((1,),(2,),(2,))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name + '中国' from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,),(0,),(0,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.name in (a.name + '中国')         | has{(('测试1',),('测试2',),('测试2',))}     | schema1 | utf8mb4 |
       #case "> " / "<"
       | conn_0 | False   | select a.id > b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((1,),(1,),(1,))}     | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name < b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((0,),(0,),(1,))}     | schema1 | utf8mb4 |
@@ -345,28 +356,28 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       #case "INSTR"
       | conn_0 | False   | select INSTR('测试1',a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((1,), (0,), (0,))}                              | schema1 | utf8mb4 |
       #case "LCASE"  /  "LOWER" / "UCASE"  /   "UNHEX"   /   "UPPER"
-      | conn_0 | False   | select LCASE(a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试2',))}               | schema1 | utf8mb4 |
-      | conn_0 | False   | select LOWER(b.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试3',))}               | schema1 | utf8mb4 |
-      | conn_0 | False   | select UCASE(b.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试3',))}               | schema1 | utf8mb4 |
-      | conn_0 | False   | select UNHEX(b.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{((None,), (None,), (None,))}                      | schema1 | utf8mb4 |
-      | conn_0 | False   | select UPPER(b.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试3',))}               | schema1 | utf8mb4 |
+      | conn_0 | False   | select LCASE(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试2',))}               | schema1 | utf8mb4 |
+      | conn_0 | False   | select LOWER(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试3',))}               | schema1 | utf8mb4 |
+      | conn_0 | False   | select UCASE(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试3',))}               | schema1 | utf8mb4 |
+      | conn_0 | False   | select UNHEX(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{((None,), (None,), (None,))}                      | schema1 | utf8mb4 |
+      | conn_0 | False   | select UPPER(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                | has{(('测试1',), ('测试2',), ('测试3',))}               | schema1 | utf8mb4 |
       #case "LEFT"
-      | conn_0 | False   | select LEFT(a.name,1)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id               | has{(('测',), ('测',), ('测',))}                      | schema1 | utf8mb4 |
+      | conn_0 | False   | select LEFT(a.name,1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id               | has{(('测',), ('测',), ('测',))}                      | schema1 | utf8mb4 |
       #case "length"
-      | conn_0 | False   | select length(a.name*b.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((1,), (1,), (1,))}                              | schema1 | utf8mb4 |
+      | conn_0 | False   | select length(a.name*b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((1,), (1,), (1,))}                              | schema1 | utf8mb4 |
       #case "REPEAT"
       | conn_0 | False   | select REPEAT(a.name,1024)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id             | length{(3)}                               | schema1 | utf8mb4 |
-      | conn_0 | False   | select @aa = repeat(a.name,1024)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((None,), (None,), (None,))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select @bb = concat(@aa, @aa, a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((None,), (None,), (None,))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select @cc = concat(@bb, a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((None,), (None,), (None,))}          | schema1 | utf8mb4 |
-      | conn_0 | False   | select concat(repeat(a.name,1024))  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | length{(3)}                               | schema1 | utf8mb4 |
+      | conn_0 | False   | select @aa = repeat(a.name,1024) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((None,), (None,), (None,))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select @bb = concat(@aa, @aa, a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((None,), (None,), (None,))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select @cc = concat(@bb, a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((None,), (None,), (None,))}          | schema1 | utf8mb4 |
+      | conn_0 | False   | select concat(repeat(a.name,1024)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     | length{(3)}                               | schema1 | utf8mb4 |
       #case "LOCATE"
-      | conn_0 | False   | select LOCATE(a.name,b.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id             | has{((1,), (1,), (0,))}              | schema1 | utf8mb4 |
-      | conn_0 | False   | select LOCATE(a.name,b.name,2)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((0,), (0,), (0,))}              | schema1 | utf8mb4 |
+      | conn_0 | False   | select LOCATE(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id             | has{((1,), (1,), (0,))}              | schema1 | utf8mb4 |
+      | conn_0 | False   | select LOCATE(a.name,b.name,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | has{((0,), (0,), (0,))}              | schema1 | utf8mb4 |
       #case "LPAD"
-      | conn_0 | False   | select LPAD(a.name,5,'爱')  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{(('爱爱测试1',), ('爱爱测试2',), ('爱爱测试2',))}                | schema1 | utf8mb4 |
+      | conn_0 | False   | select LPAD(a.name,5,'爱') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{(('爱爱测试1',), ('爱爱测试2',), ('爱爱测试2',))}                | schema1 | utf8mb4 |
       #case "MAKE_SET"
-      | conn_0 | False   | select MAKE_SET( 1\|4,a.name,a.id2,b.id)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1,1',), ('测试2,2',), ('测试2,2',))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select MAKE_SET( 1\|4,a.name,a.id2,b.id) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1,1',), ('测试2,2',), ('测试2,2',))}     | schema1 | utf8mb4 |
       #case "MID"     issue:DBLE0REQ-753
       #| conn_0 | False   | select MID(a.name,1,2)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         |     | schema1 | utf8mb4 |
       #case "OCT"  issue:DBLE0REQ-754
@@ -409,14 +420,16 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       #case "@"   DBLE0REQ-765
       | conn_0 | False   | select @s = cast('爱可生' as BINARY )               | success      | schema1 | utf8mb4 |
       #| conn_0 | False   | select @s, HEX(@s), HEX(WEIGHT_STRING(@s)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 |   | schema1 | utf8mb4 |
-      | conn_0 | True    | select @s, HEX(@s), HEX(WEIGHT_STRING(@s)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.id=2         | success      | schema1 | utf8mb4 |
+      | conn_0 | False   | select @s, HEX(@s), HEX(WEIGHT_STRING(@s)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id where a.id=2         | success      | schema1 | utf8mb4 |
+      #case "EXISTS"   /  "not exists"
+      | conn_0 | False   | select a.name from sharding_2_t2 a where exists (select b.name from sharding_3_t1 b)                  | has{(('测试1',), ('测试2',))}       | schema1 | utf8mb4 |
+      | conn_0 | False   | select a.name from sharding_2_t2 a where not exists (select b.name from sharding_3_t1 b)              | length{(0)}                        | schema1 | utf8mb4 |
 
 ##case 5 function : Mathematical Functions ,no need
 ##case 6 function : Date and Time Functions ,no need
 
 ####case unsupported funtion  "not"
       | conn_0 | False   | select a.name not b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | sql syntax error, no terminated. DOT     | schema1 | utf8mb4 |
-
-
-#      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
-#      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
+#case drop table
+      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
+      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
