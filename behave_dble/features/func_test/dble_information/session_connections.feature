@@ -58,13 +58,14 @@ Feature:  session_connections test
     Then execute sql in "dble-1" in "user" mode
       | user          | passwd | conn   | toClose | sql         | expect   |
       | test1:tenant1 | 111111 | conn_2 | False   | use schema2 | success  |
+      | test1:tenant1 | 111111 | conn_2 | False   | show tables | success  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_3"
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select remote_port,user,tenant,schema,sql,sql_stage,entry_id from session_connections             | dble_information |
     Then check resultset "session_connections_3" has lines with following column values
       | remote_port-0 | user-1 | tenant-2 | schema-3         | sql-4                                                                                 | sql_stage-5        | entry_id-6 |
       | 9066          | root   | NULL     | dble_information | select remote_port,user,tenant,schema,sql,sql_stage,entry_id from session_connections | Manager connection | 1          |
-      | 8066          | test1  | tenant1  | schema2          | use schema2                                                                           | Finished           | 3          |
+      | 8066          | test1  | tenant1  | schema2          | show tables                                                                           | Finished           | 3          |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect  | db     |
       | conn_1 | False   | drop table if exists test1  | success | schema1|
@@ -88,7 +89,7 @@ Feature:  session_connections test
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_5" has lines with following column values
       | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-17 | entry_id-18 |
-      | 8066          | test   | NULL     | schema1  | set xa=on | Finished     | true              | 2           |
+      | 8066          | test   | NULL     | schema1  | set xa=on | Parse_SQL    | true              | 2           |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
       | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |

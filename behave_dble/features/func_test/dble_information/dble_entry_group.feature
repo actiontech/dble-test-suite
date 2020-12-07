@@ -303,7 +303,7 @@ Feature:  dble_entry test
       | conn_0 | True    | insert into dble_blacklist values (1,'1',1,1)                                  | Access denied for table 'dble_blacklis       |
 
 
-    Scenario:  dble_entry_table_privilege  table #5
+     Scenario:  dble_entry_table_privilege  table #5
   #case desc dble_entry_table_privilege
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_entry_table_privilege_1"
       | conn   | toClose | sql                             | db               |
@@ -414,9 +414,11 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
     """
-   Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                                                 |
-      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct   |
+  #case DBLE0REQ-773
+#   Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                  | expect                                                                                                                                                 |
+#      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [/user.xml] occurred  parse errors, The detailed results are as follows . \n\ncom.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct   |
+     # | conn_0 | False   | dryrun               | [/user.xml] occurred  parse errors, The detailed results are as follows . \\n\\ncom.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -438,7 +440,7 @@ Feature:  dble_entry test
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                         |
-      | conn_0 | False   | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
+      | conn_0 | True    | reload @@config      | Reload config failure.The reason is SelfCheck### privileges's schema[schema2] was not found in the user [name:test]'s schemas  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -465,23 +467,24 @@ Feature:  dble_entry test
      </shardingUser>
 
     """
-     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                  | expect                                                                                                                                                                    |
-      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct     |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-     """
-      dml is not correct
-     """
-    Given execute linux command in "dble-1"
-    """
-    /opt/dble/bin/dble restart
-    """
-    Given sleep "10" seconds
-    Then get result of oscmd named "rs_1" in "dble-1"
-    """
-    cat /opt/dble/logs/wrapper.log | grep 'dml is not correct' |wc -l
-    """
-    Then check result "rs_1" value is "1"
+    #case DBLE0REQ-773
+#     Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                  | expect                                                                                                                                                                    |
+#      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct     |
+#    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#     """
+#      dml is not correct
+#     """
+#    Given execute linux command in "dble-1"
+#    """
+#    /opt/dble/bin/dble restart
+#    """
+#    Given sleep "10" seconds
+#    Then get result of oscmd named "rs_1" in "dble-1"
+#    """
+#    cat /opt/dble/logs/wrapper.log | grep 'dml is not correct' |wc -l
+#    """
+#    Then check result "rs_1" value is "1"
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
