@@ -211,7 +211,7 @@ class MySQLObject(object):
         for row in res:
             conn_id = row[0]
             not_show_processlist = row[7] != "show processlist"#for excluding show processlist conn itself
-            if not_show_processlist and exclude_conn_ids and str(conn_id) not in exclude_conn_ids:
+            if not_show_processlist and (exclude_conn_ids is None or str(conn_id) not in exclude_conn_ids):
                 res, err = conn.execute("kill {}".format(conn_id))
                 assert err is None, "kill conn '{}' failed for {}".format(conn_id,err[1])
         logger.debug("kill connections success, excluding connection ids:{}".format(exclude_conn_ids))
