@@ -37,7 +37,7 @@ def step_impl(context, host_name, result_var=None):
     assert len(ste) == 0, "execute linux cmd {} failed for {}".format(linux_cmd, ste)
 
     if result_var:
-        sto_list = sto.split("\n")
+        sto_list = sto.splitlines()
         setattr(context, result_var, sto_list)
 
 @Given('merge resultset of "{var1}" and "{var2}" into "{new_var}"')
