@@ -126,8 +126,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | sql                                | expect                      | db      |
       | drop table if exists sharding_4_t1 | DROP command denied to user | schema1 |
     Then check general log in host "mysql-master1" has "SET SESSION TRANSACTION ISOLATION LEVEL REPEATABLE READ" occured "==2" times
-#    ddl for sharding table, use autocommit=0,and so, no need to set autocommit=1
-    Then check general log in host "mysql-master1" has not "SET autocommit=1"
+    Then check general log in host "mysql-master1" has "SET autocommit=1" occured "==2" times
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
