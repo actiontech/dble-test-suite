@@ -1,14 +1,14 @@
 ===file:sqls_util/syntax/sys_function_util.sql, id:5, sql:[INSERT INTO test1 VALUES(1),(2),(3);]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (1),\n\t(2),\n\t(3)')
+dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (1),\n\t(2),\n\t(3)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:7, sql:[SELECT i, RAND(3) FROM test1]===
 dble:[[]]
 mysql:[[(1L, 0.9057697559760601), (2L, 0.37307905813034536), (3L, 0.14808605345719125)]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:11, sql:[insert into test1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
+dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:13, sql:[SELECT a, JSON_EXTRACT(a, "$.id"), b FROM test1 WHERE JSON_EXTRACT(a, "$.id") > 1 ORDER BY JSON_EXTRACT(a, "$.name")]===
 dble:[()]
 mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
@@ -23,7 +23,7 @@ dble err:(1064, 'not supported kind expression:SubGtGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:26, sql:[insert into test1 values ('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Betty"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
+dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Betty"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:27, sql:[SELECT c, c->"$.id", g FROM test1 WHERE JSON_EXTRACT(c, "$.id") > 1 ORDER BY c->"$.name"]===
 dble:[None]
 mysql:[(('{"id": "3", "name": "Barney"}', '"3"', 3L), ('{"id": "4", "name": "Betty"}', '"4"', 3L), ('{"id": "2", "name": "Wilma"}', '"2"', 2L))]
@@ -43,7 +43,7 @@ dble err:(1064, 'not supported kind expression:SubGtGt')
 ===file:sqls_util/syntax/sys_function_util.sql, id:37, sql:[INSERT INTO test1 VALUES ("[3,10,5,17,44]", 33), ("[3,10,5,17,[22,44,66]]", 0)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, "bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES ('[3,10,5,17,44]', 33),\n\t('[3,10,5,17,[22,44,66]]', 0)")
+dble err:(1064, "bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES ('[3,10,5,17,44]', 33),\n\t('[3,10,5,17,[22,44,66]]', 0)")
 ===file:sqls_util/syntax/sys_function_util.sql, id:38, sql:[SELECT a->"$[4]" FROM test1]===
 dble:[None]
 mysql:[(('44',), ('[22, 44, 66]',))]
@@ -64,7 +64,7 @@ mysql:[[(None,), ('44',)]]
 ===file:sqls_util/syntax/sys_function_util.sql, id:48, sql:[insert into test1 values('{"id": "3", "name": "Barney"}' ,3),('{"id": "4", "name": "Bearney"}' ,3), ('{"id": "2", "name": "Wilma"}',2)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Bearney"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
+dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1\nVALUES (\'{"id": "3", "name": "Barney"}\', 3),\n\t(\'{"id": "4", "name": "Bearney"}\', 3),\n\t(\'{"id": "2", "name": "Wilma"}\', 2)')
 ===file:sqls_util/syntax/sys_function_util.sql, id:49, sql:[select a, max(b) from test1 group by(b)]===
 dble:[[]]
 mysql:[[('{"id": "2", "name": "Wilma"}', 2L), ('{"id": "3", "name": "Barney"}', 3L)]]
@@ -74,4 +74,4 @@ mysql:[[('{"id": "2", "name": "Wilma"}', 2L), ('{"id": "3", "name": "Barney"}', 
 ===file:sqls_util/syntax/sys_function_util.sql, id:56, sql:[INSERT INTO test1 (a,b,c) VALUES (1,2,3),(4,5,6) ON DUPLICATE KEY UPDATE c=VALUES(a)+VALUES(b)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1 (a, b, c)\nVALUES (1, 2, 3),\n\t(4, 5, 6)\nON DUPLICATE KEY UPDATE c = VALUES(a) + VALUES(b)')
+dble err:(1064, 'bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1 (a, b, c)\nVALUES (1, 2, 3),\n\t(4, 5, 6)\nON DUPLICATE KEY UPDATE c = VALUES(a) + VALUES(b)')
