@@ -43,5 +43,5 @@ Feature: check mysql is stop,but set xxx route to the first alive shardingNode t
     Given start mysql in host "mysql-master1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                    | expect  | db      |
-      | conn_0 | False   | set sql_select_limit=3 | success | schema1 |
-      | conn_1 | False   | set sql_select_limit=3 | success | schema2 |
+      | conn_0 | true   | set sql_select_limit=3 | success | schema1 |
+      | conn_1 | true   | set sql_select_limit=3 | success | schema2 |
