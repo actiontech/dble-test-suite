@@ -30,6 +30,9 @@ RUN tar xvf apache-maven-3.6.0-bin.tar.gz -C /usr/local/ && \
     mv /usr/local/apache-maven-3.6.0 /usr/local/apache-maven && \
     echo "export MAVEN_HOME=/usr/local/apache-maven">>/etc/bashrc
 
+# chmod on ntpdate for SUID privilege
+RUN chmod u+s /usr/sbin/ntpdate
+
 #config $PATH with jdk and mvn
 RUN echo "export PATH=/opt/jdk/bin:/usr/local/apache-maven/bin:$PATH">>/etc/bashrc
 
