@@ -414,11 +414,10 @@ Feature:  dble_entry test
          </privileges>
      </shardingUser>
     """
-  #case DBLE0REQ-773
-#   Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                  | expect                                                                                                                                                 |
-#      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [/user.xml] occurred  parse errors, The detailed results are as follows . \n\ncom.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct   |
-     # | conn_0 | False   | dryrun               | [/user.xml] occurred  parse errors, The detailed results are as follows . \\n\\ncom.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct  |
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                  | expect                                                                                                                                                 |
+      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [user.xml] occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct  |
+      | conn_0 | False   | dryrun               | [user.xml] occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -465,26 +464,18 @@ Feature:  dble_entry test
              </schema>
          </privileges>
      </shardingUser>
-
     """
-    #case DBLE0REQ-773
-#     Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                  | expect                                                                                                                                                                    |
-#      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct     |
-#    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#     """
-#      dml is not correct
-#     """
-#    Given execute linux command in "dble-1"
-#    """
-#    /opt/dble/bin/dble restart
-#    """
-#    Given sleep "10" seconds
-#    Then get result of oscmd named "rs_1" in "dble-1"
-#    """
-#    cat /opt/dble/logs/wrapper.log | grep 'dml is not correct' |wc -l
-#    """
-#    Then check result "rs_1" value is "1"
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                  | expect                                                                                                                                                                    |
+      | conn_0 | true    | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [user.xml] occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: User [test1]'s schema [schema2]'s table [no_s3]'s privilege's dml is not correct  |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+     """
+      dml is not correct
+     """
+    Given execute linux command in "dble-1"
+    """
+    /opt/dble/bin/dble restart
+    """
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
