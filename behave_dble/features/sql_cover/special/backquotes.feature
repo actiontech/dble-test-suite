@@ -24,6 +24,8 @@ Feature: verify table name or schema name enclosed by backquotes can work fine
       | explain select * from schema1.`sharding_4_t1` where id=2    | 1  |
       | explain select * from `schema1`.sharding_4_t1 where id=2    | 1  |
       | explain select * from `schema1`.`sharding_4_t1` where id=2  | 1  |
+
+
   Scenario: execute with hint when explain table name enclosed by backquotes,explain right when column alias enclosed by backquotes #2
     #from github issue #1375
     Then execute sql in "dble-1" in "user" mode
@@ -40,3 +42,20 @@ Feature: verify table name or schema name enclosed by backquotes can work fine
       | conn_0 | False    |   select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having `sid` > 1         | hasStr{(2,)}   | schema1 |
       | conn_0 | False    |   select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1           | length{(1)}    | schema1 |
       | conn_0 | True     |   select `a`.`id_0` as sid from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1             | length{(1)}    | schema1 |
+
+
+   Scenario: For global table, dble will remove backquotes of table name while routing to shardingNode #3
+    #from github issue #1428
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+        <globalTable name="test-1" shardingNode="dn1,dn2,dn3,dn4" />
+      </schema>
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                            | expect  | db      |
+      | conn_0 | False   | drop table if exists `test-1`                  | success | schema1 |
+      | conn_0 | False   | create table `test-1`(id int)                  | success | schema1 |
+      | conn_0 | False   | insert into `test-1`(id) values(1),(2),(3),(4) | success | schema1 |
+      | conn_0 | True    | drop table if exists `test-1`                  | success | schema1 |
