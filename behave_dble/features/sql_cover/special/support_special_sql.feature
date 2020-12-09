@@ -41,3 +41,18 @@
       | conn   | toClose | sql                                       | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_2_t1        | success | schema1 |
       | conn_0 | true    | drop table if exists sharding_2_t2        | success | schema1 |
+
+
+   Scenario: join query with ambiguous columns success but expect not case from github:1330 #2
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                         | expect                                 | db      |
+      | conn_0 | False   | drop table if exists sharding_2_t1                                          | success                                | schema1 |
+      | conn_0 | False   | drop table if exists sharding_3_t1                                          | success                                | schema1 |
+      | conn_0 | False   | create table sharding_2_t1(id int, name char(20), age int)                  | success                                | schema1 |
+      | conn_0 | False   | create table sharding_3_t1(id int)                                          | success                                | schema1 |
+      | conn_0 | False   | insert into sharding_2_t1 values(1,null,1),(2,'',2),(3,'a',3)               | success                                | schema1 |
+      | conn_0 | False   | insert into sharding_3_t1 values(1),(5),(3)                                 | success                                | schema1 |
+      | conn_0 | False   | select id, name from sharding_2_t1 a, sharding_3_t1 b where a.id > b.id     | Column 'id' in field list is ambiguous | schema1 |
+      | conn_0 | False   | select b.id, a.name from sharding_2_t1 a, sharding_3_t1 b where a.id > b.id | success                                | schema1 |
+      | conn_0 | False   | drop table if exists sharding_2_t1                                          | success                                | schema1 |
+      | conn_0 | true    | drop table if exists sharding_3_t1                                          | success                                | schema1 |

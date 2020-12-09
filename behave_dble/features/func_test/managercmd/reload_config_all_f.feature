@@ -5,6 +5,7 @@
 #2.19.11.0#dble-7848
 Feature: reload @@config_all -f
 
+
   Scenario: execute manager cmd "reload @@config_all -f" after add or change shardingNode/dbGroup #1
     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
       """
@@ -54,7 +55,6 @@ Feature: reload @@config_all -f
       | PORT-4 | HOST-3      |USED_FOR_HEARTBEAT-22|
       | 3306   | 172.100.9.6 |false                  |
 
-
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
@@ -93,3 +93,26 @@ Feature: reload @@config_all -f
     Then execute sql in "dble-1" in "user" mode
       | sql                                      | expect      | db      |
       | select * from sharding_4_t1 where id = 2 | length{(0)} | schema1 |
+#case from github issue:1526
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+       <heartbeat>show slave status()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+        <dbInstance name="slave1" url="172.100.9.2:3306" user="test" password="111111" maxCon="1000" minCon="10" >
+        </dbInstance>
+     </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                               | expect  |
+      | dbGroup @@disable name='ha_group2'                | success |
+      | reload @@config_all -f                            | success |
+      | dbGroup @@switch name='ha_group2' master='slave1' | success |
+      | dbGroup @@enable name='ha_group2'                 | success |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                             | expect  | db      |
+      | conn_0 | False   | insert into sharding_4_t1 values(1),(2),(3),(4) | success | schema1 |
+      | conn_0 | true    | drop table if exists sharding_4_t1              | success | schema1 |
+
