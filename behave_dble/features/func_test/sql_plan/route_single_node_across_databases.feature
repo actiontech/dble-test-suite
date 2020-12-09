@@ -5,6 +5,7 @@
 #2.19.11.0#dble-7875
 Feature: two logical databases: declare the database of all tables when querying or declare the database of partial tables when querying
 
+
   Scenario: create two logical databases by configuration, declare the database of all tables when querying or declare the database of partial tables when querying #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -14,10 +15,12 @@ Feature: two logical databases: declare the database of all tables when querying
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
         <singleTable name="o_dept" shardingNode="dn1" />
         <singleTable name="p_sys_user" shardingNode="dn1" />
         <globalTable name="o_org" shardingNode="dn1,dn2" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
     </schema>
     <schema name="schema2" sqlMaxLimit="100">
         <shardingTable name="sharding_2_t2" shardingNode="dn1,dn2" function="two-long" shardingColumn="id"/>
@@ -38,7 +41,7 @@ Feature: two logical databases: declare the database of all tables when querying
       | conn_0 | True    | explain select * from schema1.sharding_2_t1 a join schema2.sharding_2_t2 b on a.id = b.id where a.id =1 and b.id=1 | hasStr{('dn1', 'BASE SQL', 'select * from sharding_2_t1 a join sharding_2_t2 b on a.id = b.id where a.id =1 and b.id=1')} |         |
       | conn_0 | True    | explain select * from schema1.sharding_2_t1 a join sharding_2_t2 b on a.id = b.id where a.id =1 and b.id=1         | hasStr{('dn1', 'BASE SQL', 'select * from sharding_2_t1 a join sharding_2_t2 b on a.id = b.id where a.id =1 and b.id=1')} | schema2 |
       | conn_0 | True    | explain select * from sharding_2_t1 a join schema2.sharding_2_t2 b on a.id = b.id where a.id =1 and b.id=1         | hasStr{('dn1', 'BASE SQL', 'select * from sharding_2_t1 a join sharding_2_t2 b on a.id = b.id where a.id =1 and b.id=1')} | schema1 |
-#case  check result is corrected https://github.com/actiontech/dble/issues/2042\
+#case  check result is corrected https://github.com/actiontech/dble/issues/2042
       | conn_0 | False   | drop table if exists o_dept                              | success         | schema1 |
       | conn_0 | False   | drop table if exists p_sys_user                          | success         | schema1 |
       | conn_0 | False   | drop table if exists o_org                               | success         | schema1 |
@@ -55,7 +58,6 @@ Feature: two logical databases: declare the database of all tables when querying
       | sysUserName-0 | orgNo-1 | orgName-2 | deptNo-3 | deptName-4 | userName-5 | curStatusCode-6 | adminFlag-7 |
       | ew            | n1      | ew        | None     | None       | qwe        | a               |           2 |
       | a2            | n2      | 0-1       | None     | None       | er         | ere             |           1 |
-
     Given execute single sql in "dble-1" in "user" mode and save resultset in "2"
       | conn   | toClose | sql                          |
       | conn_0 | False   | explain  SELECT a.sys_user_name AS sysUserName, d.org_no AS orgNo, d.org_name AS orgName, c.dept_no AS deptNo, c. NAME AS deptName, a.user_name AS userName, a.cur_status_code AS curStatusCode, a.admin_flag AS adminFlag FROM p_sys_user a LEFT JOIN o_dept c ON a.dept_no = c.dept_no,  o_org d WHERE a.org_no = d.org_no AND a.org_no IN (SELECT org_no FROM o_org) AND ( a.cur_status_code IS NULL OR a.cur_status_code <> '03' )       |
@@ -70,3 +72,23 @@ Feature: two logical databases: declare the database of all tables when querying
       | conn_0 | False   | drop table if exists o_org                               | success         | schema1 |
       | conn_0 | true    | drop table if exists sharding_2_t1                       | success         | schema1 |
       | conn_0 | true    | drop table if exists sharding_2_t2                       | success         | schema2 |
+#case supported  join sql contains 'using()' clause github issue:1505
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                         | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                          | success | schema1 |
+      | conn_0 | False   | drop table if exists sharding_4_t2                                                          | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int, c char(5))                                               | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t2(id int, c char(5))                                               | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,'a'),(1,'b'),(null,'c'),(2,'d'),(3,'c'),(4,'d'),(4,null) | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t2 values(1,'a'),(1,'b'),(null,null),(2,'b'),(3,'c'),(4,'e')         | success | schema1 |
+  Given execute single sql in "dble-1" in "user" mode and save resultset in "3"
+      | conn   | toClose | sql                                                                                   |
+      | conn_0 | False   | explain select * from sharding_4_t1 a join sharding_4_t2 b using(id) where a.id=1     |
+    Then check resultset "3" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                 |
+      | dn2             | BASE SQL   | select * from sharding_4_t1 a join sharding_4_t2 b using(id) where a.id=1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                         | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                          | success | schema1 |
+      | conn_0 | true    | drop table if exists sharding_4_t2                                                          | success | schema1 |
+
