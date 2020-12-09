@@ -189,7 +189,7 @@ Feature:  dble_table test
     """
      <schema shardingNode="dn4" name="schema3" sqlMaxLimit="100">
         <globalTable name="global3" shardingNode="dn1,dn2,dn3,dn4" cron="/5 * * * * ? *" checkClass="CHECKSUM" />
-        <shardingTable name="sharding_incrementColumn" shardingNode="dn4,dn4" function="hash-two" shardingColumn="two" incrementColumn="id"/>
+        <shardingTable name="sharding_incrementColumn" shardingNode="dn4,dn2" function="hash-two" shardingColumn="two" incrementColumn="id"/>
         <shardingTable name="sharding_sqlRequiredSharding" shardingNode="dn3,dn1,dn2" function="hash-three" shardingColumn="three" sqlRequiredSharding="true"/>
     </schema>
 
@@ -264,7 +264,7 @@ Feature:  dble_table test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                         | expect         | db               |
       | conn_0 | False    | desc dble_table_sharding_node               | length{(3)}    | dble_information |
-      | conn_0 | False    | select * from dble_table_sharding_node      | length{(60)}   | dble_information |
+      | conn_0 | False    | select * from dble_table_sharding_node      | length{(61)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_sharding_node_2"
       | conn   | toClose | sql                                                                                | db               |
       | conn_0 | False   | select * from dble_table_sharding_node where id in ('C10','C13','C15','C17','C18') | dble_information |
@@ -380,7 +380,7 @@ Feature:  dble_table test
       | conn_0 | False    | select * from dble_table                    | length{(25)}    |
       | conn_0 | False    | select * from dble_global_table             | length{(5)}     |
       | conn_0 | False    | select * from dble_sharding_table           | length{(11)}    |
-      | conn_0 | False    | select * from dble_table_sharding_node      | length{(72)}    |
+      | conn_0 | False    | select * from dble_table_sharding_node      | length{(73)}    |
       | conn_0 | False    | select * from dble_child_table              | length{(4)}     |
 #case unsupported update/delete/insert
       | conn_0 | False   | delete from dble_table where schema='schema1'              | Access denied for table 'dble_table'                     |
