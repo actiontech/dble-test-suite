@@ -22,4 +22,4 @@ mysql:[[(10L,), (11L,), (12L,)]]
 ===file:sqls_util/syntax/set_server_var_util.sql, id:21, sql:[insert into test1 (data) values ('aaa')]===
 dble:[None]
 mysql:[()]
-dble err:(1064, "bad insert sql, sharding column/joinKey:ID not provided,INSERT INTO test1 (data)\nVALUES ('aaa')")
+dble err:(1064, "bad insert sql, shardingColumn/joinColumn:ID not provided,INSERT INTO test1 (data)\nVALUES ('aaa')")
