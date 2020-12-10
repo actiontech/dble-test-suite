@@ -19,22 +19,7 @@ Feature:  dble_processor test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_processor             | length{(5)}       | dble_information |
-      | conn_0 | False   | select * from dble_processor    | length{(9)}       | dble_information |
-  #case select * from dble_processor
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_processor_2"
-      | conn   | toClose | sql                          | db               |
-      | conn_0 | True    | select * from dble_processor | dble_information |
-    Then check resultset "dble_processor_2" has lines with following column values
-      | name-0            | type-1  |
-      | frontProcessor0   | session |
-      | backendProcessor0 | backend |
-      | backendProcessor1 | backend |
-      | backendProcessor2 | backend |
-      | backendProcessor3 | backend |
-      | backendProcessor4 | backend |
-      | backendProcessor5 | backend |
-      | backendProcessor6 | backend |
-      | backendProcessor7 | backend |
+      | conn_0 | true    | select * from dble_processor    | success           | dble_information |
   #case change bootstrap.cnf to check result
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """

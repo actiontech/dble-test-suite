@@ -17,7 +17,7 @@ Feature:  dble_thread_pool test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                               | expect            | db               |
       | conn_0 | False   | desc dble_thread_pool             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_thread_pool    | length{(5)}       | dble_information |
+      | conn_0 | False   | select * from dble_thread_pool    | success           | dble_information |
    #case select * from dble_thread_pool
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_2"
       | conn   | toClose | sql                            | db                |
@@ -34,7 +34,7 @@ Feature:  dble_thread_pool test
       | conn   | toClose | sql                                                         | expect                                                                         |
       | conn_0 | False   | use dble_information                                        | success                                                                        |
       | conn_0 | False   | select * from dble_thread_pool limit 1                      | has{(('Timer', 1, 0, 0),)}                                                     |
-      | conn_0 | False   | select * from dble_thread_pool order by name desc limit 2   | has{(('writeToBackendExecutor', 8, 8, 0), ('Timer', 1, 0, 0))}                 |
+      | conn_0 | False   | select * from dble_thread_pool order by name desc limit 2   | length{(2)}                                                                    |
       | conn_0 | False   | select * from dble_thread_pool where name like '%Business%' | has{(('BusinessExecutor', 1, 1, 0), ('backendBusinessExecutor', 8, 0, 0))}     |
       | conn_0 | False   | select size from dble_thread_pool                           | has{((1,), (1,), (8,), (8,), (8,))}                                            |
   #case supported select max/min from table

@@ -17,7 +17,7 @@ Feature:  dble_schema test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                          | expect        | db               |
       | conn_0 | False   | desc dble_schema             | length{(3)}   | dble_information |
-      | conn_0 | False   | select * from dble_schema    | length{(1)}   | dble_information |
+      | conn_0 | False   | select * from dble_schema    | success       | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_schema_2"
       | conn   | toClose | sql                       | db               |
       | conn_0 | False   | select * from dble_schema | dble_information |
