@@ -381,6 +381,7 @@ Feature:  show databases/use dble_information/show tables [like]
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect  | db      |
+      | conn_1 | False   | drop table if exists schema1.no_s1                | success | schema1 |
       | conn_1 | False   | drop table if exists schema2.no_s2                | success | schema1 |
       | conn_1 | False   | drop table if exists schema3.no_s3                | success | schema1 |
       | conn_1 | False   | drop table if exists schema5.vertical             | success | schema1 |
