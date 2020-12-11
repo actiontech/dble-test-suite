@@ -5,6 +5,7 @@
 
 Feature:#test fresh backend connection pool
 
+  @skip
   Scenario: #Use check session transaction ISOLATION level for any changes to confirm whether the connection pool has been refreshed
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                      | expect                  | db  |
@@ -122,20 +123,25 @@ Feature:#test fresh backend connection pool
       | conn   | toClose | sql                              | expect                        | db      |
       | conn_1 | True    | SELECT @@session.tx_isolation | has{('REPEATABLE-READ',),} | schema1 |
 
-  @btrace @cur
+  @btrace
   Scenario: #execute fresh command during executing reload command, fresh command will return error #2
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /-Dprocessors=1/c -Dprocessors=2
+    /-DprocessorExecutor=1/c -DprocessorExecutor=2
+    """
+    Given restart dble in "dble-1" success
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /reloadWithoutCluster/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
-    #将结果存在变量中，然后获取结果
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                       |
-      | root | 111111 | conn_0 | True    | reload @@config_all |
+      | user | passwd | conn   | toClose  | sql                                     |db                    |
+      | root | 111111 | conn_0 | True    | reload @@config_all                    | dble_information   |
     Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
     """
     get reload lock
@@ -145,12 +151,11 @@ Feature:#test fresh backend connection pool
       | conn_1 | True    | fresh conn where dbGroup ='ha_group1'            | may be other mutex events that cause interrupt, try again later                 |
     Given stop btrace script "BtraceFreshConnLock.java" in "dble-1"
     Given destroy btrace threads list
-    #sleep 10s for waiting btrace end and fresh command return ok
+    #sleep 10s for waiting btrace end and fresh command return success
     Given sleep "10" seconds
-    #检查fresh 返回ok
-    Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    XXXX
+    ERROR
     """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect           |
@@ -162,13 +167,13 @@ Feature:#test fresh backend connection pool
   Scenario: #fresh connection multi-times at the same time, other fresh command will return error #3
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+#    Given delete file "/tmp/dble_query.log" on "dble-1"
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /freshConnGetRealodLocekAfter/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
-    #将结果存在变量中，然后获取结果
     Then execute admin cmd  in "dble-1" at background
       | user | passwd | conn   | toClose | sql                                       |
       | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1' |
@@ -181,94 +186,119 @@ Feature:#test fresh backend connection pool
       | conn_1 | True    | fresh conn where dbGroup ='ha_group1'            | may be other mutex events that cause interrupt, try again later                 |
     Given stop btrace script "BtraceFreshConnLock.java" in "dble-1"
     Given destroy btrace threads list
-    #sleep 10s for waiting btrace end and the first fresh command return ok
+    #sleep 10s for waiting btrace end and the first fresh command return success
     Given sleep "10" seconds
-    #检查fresh 返回ok
-    Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    XXXX
+    ERROR
     """
-    #after the first fresh command return ok, then execute other fresh command will return ok
+    #after the first fresh command return ok, then execute other fresh command will execute success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect           |
       | conn_2 | True    | fresh conn where dbGroup ='ha_group1'            | success          |
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+#    Given delete file "/tmp/dble_query.log" on "dble-1"
 
   @btrace
   Scenario: #execute sql during executing fresh command, sql will hang #4
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+#    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#    """
+#    /-Dprocessors=1/c -Dprocessors=2
+#    /-DprocessorExecutor=1/c -DprocessorExecutor=2
+#    """
+#    Given restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                             | expect      | db      |
+      | conn_0 | false    | drop table if exists sharding_4_t1                          | success | schema1 |
+      | conn_0 | false    | create table sharding_4_t1(id int)                          | success | schema1 |
+      | conn_0 | True     | insert into sharding_4_t1 values(101),(102),(103),(104)  | success | schema1 |
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /stopConnGetFrenshLocekAfter/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
-    #将结果存在变量中，然后获取结果
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                       |
-      | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1' |
+      | user | passwd | conn   | toClose | sql                                         |db                     |
+      | root | 111111 | conn_1 | False    | fresh conn where dbGroup ='ha_group1' | dble_information    |
     Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
     """
     stopConnGetFrenshLocekAfter
     """
-    #执行sql 语句hang住
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                     | expect      | db      |
-      | conn_1 | True    | drop table if exists sharding_4_t1 | hang | schema1 |
+    #execute sql will hang until fresh return success
+    Then execute "user" cmd  in "dble-1" at background
+      | conn   | toClose | sql                                    | db      |
+      | conn_2 | False   | select * from sharding_4_t1         | schema1 |
     Given stop btrace script "BtraceFreshConnLock.java" in "dble-1"
     Given destroy btrace threads list
     #sleep 10s for waiting btrace end and the first fresh command return ok
-    Given sleep "10" seconds
-    #hang完之后sql返回ok
-    Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
+    Given sleep "2" seconds
+    #block by issue: http://10.186.18.11/jira/browse/DBLE0REQ-793
+    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
-    XXXX
+    102
+    """
+    Given sleep "5" seconds
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    """
+    102
     """
     #after the first fresh command return ok, then execute other fresh command will return ok
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                     | expect      | db      |
-      | conn_2 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+      | conn_3 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
 
-  @btrace
+  @btrace @cur
   Scenario: #execute fresh command during executing sql, fresh command will hang #5
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                              | expect      | db      |
+      | conn_0 | false    | drop table if exists sharding_4_t1                          | success | schema1 |
+      | conn_0 | false    | create table sharding_4_t1(id int)                          | success | schema1 |
+      | conn_0 | True     | insert into sharding_4_t1 values(101),(102),(103),(104)  | success | schema1 |
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
     /getConnGetFrenshLocekAfter/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
-    #将结果存在变量中，然后获取结果
-    Given execute sqls in "dble-1" at background
-      | conn   | toClose | sql                                                    | db      |
-      | conn_0 | False   | create table if not exists sharding_4_t1(id int) | schema1 |
-    Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
+    Then execute "user" cmd  in "dble-1" at background
+      | conn   | toClose | sql                                    | db      |
+      | conn_1 | True    | select * from sharding_4_t1         | schema1 |
+    #block by issue: http://10.186.18.11/jira/browse/DBLE0REQ-793
+    Then check btrace "BtraceFreshConnLock.java" output in "dble-1" with "1" times
     """
     freshConnGetRealodLocekAfter
     """
-    #hang完之后fresh返回ok
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                   | expect                                                                                  |
-      | conn_1 | True    | fresh conn where dbGroup ='ha_group1'            | hang                                                         |
-
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                | db                 |
+      | conn_2 | True    | fresh conn where dbGroup ='ha_group1'         | dble_information |
     Given stop btrace script "BtraceFreshConnLock.java" in "dble-1"
     Given destroy btrace threads list
-    #sleep 10s for waiting btrace end and the first fresh command return ok
-    Given sleep "10" seconds
-    #检查sql 返回ok
-    Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
+    #sleep 40s for waiting btrace end and the first fresh command return ok
+    Given sleep "40" seconds
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
-    XXXX
+    id
+    101
+    102
+    103
+    104
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    ERROR
     """
     #after the sql return ok, then execute other fresh command will return ok
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect           |
-      | conn_2 | True    | fresh conn where dbGroup ='ha_group1'            | success          |
+      | conn_3 | True    | fresh conn where dbGroup ='ha_group1'            | success          |
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
 
