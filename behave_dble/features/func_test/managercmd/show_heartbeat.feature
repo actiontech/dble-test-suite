@@ -3,10 +3,13 @@
 # Created by quexiuping at 2020/10/27
 Feature: #test show @@heartbeat DBLE0REQ-167
 
-@restore_mysql_service
+
+@restore_mysql_service @restore_network
   Scenario: use show @@heartbeat in 9066 to check rs_code #1
     """
     {'restore_mysql_service':{'mysql-slave1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
+    {'restore_network':'mysql-master2'}
+    {'restore_network':'mysql-slave1'}
     """
 # set rwSplitMode=0 ,one slave disabled="true"
     Given delete the following xml segment
@@ -120,7 +123,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "21"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
-#check slave is "error" and RETRY is equal errorRetryCount=2 http://10.186.18.11/jira/browse/DBLE0REQ-633
+#check slave is "error" and RETRY is equal errorRetryCount=2 DBLE0REQ-633
     Then check resultset "21" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | STATUS-5 | TIMEOUT-6  | STOP-9 | RS_MESSAGE-10    |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | idle     | 10000      | false  | None             |
@@ -210,11 +213,12 @@ Feature: #test show @@heartbeat DBLE0REQ-167
     iptables -F
     """
     Given sleep "20" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "45"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "44"
       | conn   | toClose | sql               |
       | conn_0 | true    | show @@heartbeat  |
-    Then check resultset "45" has lines with following column values
+    Then check resultset "44" has lines with following column values
       | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
       | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 10000     | false  | None          |
       | hostS1 | 172.100.9.2 | 3306   | ok        | 0       | 10000     | false  | None          |
       | hostS2 | 172.100.9.3 | 3306   | ok        | 0       | 10000     | false  | None          |
+    Then execute admin cmd "reload @@config"
