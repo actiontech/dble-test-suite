@@ -180,26 +180,26 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect  | db      |
       | conn_0 | False   | select * from sharding_4_t1        | success | schema1 |
-#      | conn_0 | False   | drop table if exists sharding_4_t1 | success | schema1 |
+      | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
 
 # for DBLE0REQ-726
-#  Scenario: check kill connection processlist_id #2
-#    Given execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                             | expect  | db      |
-#      | conn_3 | False   | drop table if exists sharding_4_t1                              | success | schema1 |
-#      | conn_3 | False   | create table sharding_4_t1(id int,name varchar(20))             | success | schema1 |
-#      | conn_3 | False   | begin                                                           | success | schema1 |
-#      | conn_3 | False   | insert into sharding_4_t1 values(1,'1'),(2,'2'),(3,'3'),(4,'4') | success | schema1 |
-#
-#    Then get index:"0" column value of "select front_id from dble_information.processlist where user='test'" named as "client_front_id"
-#    Then execute the sql in "dble-1" in "user" mode by parameter from resultset "client_front_id"
-#      | conn   | toClose | sql      | expect  |
-#      | conn_4 | True    | kill {0} | success |
-#
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_2"
-#      | conn   | toClose | sql                | expect | db |
-#      | conn_5 | True    | select sharding_node, user, mysql_db from processlist | hasnot{(('dn1', 'test', 'db1',),('dn2', 'test', 'db1',),('dn3', 'test', 'db2',),('dn4', 'test', 'db2',),)} | dble_information |
-#
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                       | expect                     | db      |
-#      | conn_3 | True    | delete from sharding_4_t1 | MySQL server has gone away | schema1 |
+  Scenario: check kill connection processlist_id #2
+    Given execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                             | expect  | db      |
+      | conn_3 | False   | drop table if exists sharding_4_t1                              | success | schema1 |
+      | conn_3 | False   | create table sharding_4_t1(id int,name varchar(20))             | success | schema1 |
+      | conn_3 | False   | begin                                                           | success | schema1 |
+      | conn_3 | False   | insert into sharding_4_t1 values(1,'1'),(2,'2'),(3,'3'),(4,'4') | success | schema1 |
+
+    Then get index:"0" column value of "select front_id from dble_information.processlist where user='test'" named as "client_front_id"
+    Then execute the sql in "dble-1" in "user" mode by parameter from resultset "client_front_id"
+      | conn   | toClose | sql      | expect  |
+      | conn_4 | True    | kill {0} | success |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_2"
+      | conn   | toClose | sql                | expect | db |
+      | conn_5 | True    | select sharding_node, user, mysql_db from processlist | hasnot{(('dn1', 'test', 'db1',),('dn2', 'test', 'db1',),('dn3', 'test', 'db2',),('dn4', 'test', 'db2',),)} | dble_information |
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                       | expect                     | db      |
+      | conn_3 | True    | delete from sharding_4_t1 | MySQL server has gone away | schema1 |
