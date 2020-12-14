@@ -791,7 +791,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
 
-  Scenario: restore mysql binlog and clear table  #4
+  Scenario: restore mysql binlog and clear table  #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
