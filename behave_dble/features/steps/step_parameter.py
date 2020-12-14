@@ -14,8 +14,9 @@ logger = logging.getLogger('steps.step_parameter')
 @Given('execute the sql in "{host_name}" in "{mode_name}" mode by parameter from resultset "{rs_name}" and save resultset in "{result_key}"')
 @Then('execute the sql in "{host_name}" in "{mode_name}" mode by parameter from resultset "{rs_name}" and save resultset in "{result_key}"')
 def step_impl(context, host_name, mode_name,rs_name, result_key=None):
-    rs = getattr(context, rs_name)
-    param_value = rs
+    param_value = getattr(context, rs_name)
+    assert param_value, "expect parameter not found in {0}".format(rs_name)
+
     context.logger.debug("the parameter value is {0} ".format(param_value))
 
     info_dict = context.table[0].as_dict()
