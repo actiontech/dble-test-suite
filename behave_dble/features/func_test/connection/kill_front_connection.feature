@@ -1,24 +1,23 @@
-# Created by admin at 2020/12/7
-Feature: test kill query connection
+# Created by wangjuan at 2020/12/7
+Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 # for DBLE0REQ-12
-@btrace
-Scenario: check kill query connection front id #1
-# case 1: kill current connection
-# case 1.1: kill current connection
+  @btrace
+  Scenario: check kill query processlist_id #1
+# case 1: kill query current processlist_id
+# case 1.1: kill query processlist_id and does not have an executing sql
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1 | success | schema1 |
-    Given prepare a thread execute sql "create table sharding_4_t1(id int)" with "conn_0"
-    Then get index:"0" column value of "show @@session" named as "front_id_1"
+    Then get index:"0" column value of "select session_conn_id from dble_information.session_connections where sql_stage <> 'Manager connection' limit 1" named as "front_id_1"
     Then execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect                 |
       | conn_0 | False   | kill query {0} | Query was interrupted. |
-    Given destroy sql threads list
 
-# case 1.2: kill xa connection, xa commit success
+# case 1.2: kill query xa processlist_id, xa commit success
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                 | expect  | db      |
+      | conn_0 | False   | create table sharding_4_t1(id int)                  | success | schema1 |
       | conn_0 | False   | select * from sharding_4_t1                         | success | schema1 |
       | conn_0 | False   | set autocommit=0                                    | success | schema1 |
       | conn_0 | False   | set xa=on                                           | success | schema1 |
@@ -36,17 +35,10 @@ Scenario: check kill query connection front id #1
       | conn_0 | False   | set autocommit=1 | success | schema1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "connection_1"
-      | conn   | toClose | sql                         | db      |
-      | conn_0 | False   | select * from sharding_4_t1 | schema1 |
+      | conn   | toClose | sql                         | expect                    | db      |
+      | conn_0 | False   | select * from sharding_4_t1 | has{((1,), (2,), (3,), (4,))} | schema1 |
 
-    Then check resultset "connection_1" has lines with following column values
-      | id-0 |
-      | 1    |
-      | 2    |
-      | 3    |
-      | 4    |
-
-# case 1.3: kill connection multiple times
+# case 1.3: kill query processlist_id multiple times
     Then execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect                 |
       | conn_0 | False   | kill query {0} | Query was interrupted. |
@@ -55,14 +47,14 @@ Scenario: check kill query connection front id #1
       | conn_0 | False   | kill query {0} | Query was interrupted. |
       | conn_0 | False   | kill query {0} | Query was interrupted. |
 
-# case 2: kill nonexistent connection
+# case 2: kill query nonexistent processlist_id
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql             | expect                     |
       | conn_0 | False   | kill query -1   | Unknown connection id:-1   |
       | conn_0 | False   | kill query 8888 | Unknown connection id:8888 |
       | conn_0 | False   | kill query abc  | Invalid connection id:abc  |
 
-# case 3: kill other user's connection
+# case 3: kill query other user's processlist_id
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
     	<shardingUser name="test01" password="111111" schemas="schema1"/>
@@ -82,8 +74,8 @@ Scenario: check kill query connection front id #1
       |user.xml    | {'tag':'root'}         | {'tag':'shardingUser','kv_map':{'name':'test01'}} |
     Then execute admin cmd "reload @@config"
 
-# case 4: kill other connection for the same user
-# case 4.1: the connection does not have an executing sql
+# case 4: kill query other processlist_id for the same user
+# case 4.1: the processlist_id does not have an executing sql
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
@@ -92,8 +84,8 @@ Scenario: check kill query connection front id #1
       | conn   | toClose | sql                         | expect  | db      |
       | conn_0 | False   | select * from sharding_4_t1 | success | schema1 |
 
-# case 4.2: the connection has an executing sql
-# case 4.2.1:
+# case 4.2: kill query the processlist_id has an executing sql
+# case 4.2.1: at setBackendResponseTime stage and in the transaction
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql   | expect  | db      |
       | conn_0 | False   | begin | success | schema1 |
@@ -109,11 +101,10 @@ Scenario: check kill query connection front id #1
     """
     end get into setPreExecuteEnd
     """
-
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-
+    Given sleep "5" seconds
     Then check sql thread output in "err"
     """
     Query was interrupted.
@@ -129,7 +120,7 @@ Scenario: check kill query connection front id #1
       | conn_0 | False   | rollback                    | success                                     | schema1 |
       | conn_0 | False   | select * from sharding_4_t1 | success                                     | schema1 |
 
-# case 4.2.2:
+# case 4.2.2: at setBackendResponseTime stage and not in the transaction
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -145,7 +136,7 @@ Scenario: check kill query connection front id #1
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | False   | kill query {0} | success |
-
+    Given sleep "5" seconds
     Then check sql thread output in "err"
     """
     was closed ,reason is [Query was interrupted.]
@@ -159,7 +150,7 @@ Scenario: check kill query connection front id #1
       | conn   | toClose | sql                         | expect  | db      |
       | conn_0 | False    | select * from sharding_4_t1 | success | schema1 |
 
-# case 4.2.3:
+# case 4.2.3: at endRoute stage
     Given update file content "./assets/BtraceSessionStage.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
@@ -175,7 +166,7 @@ Scenario: check kill query connection front id #1
     Given execute the sql in "dble-1" in "user" mode by parameter from resultset "front_id_1"
       | conn   | toClose | sql            | expect  |
       | conn_2 | True   | kill query {0} | success |
-
+    Given sleep "5" seconds
     Then check sql thread output in "err"
     """
     Query was interrupted.
@@ -189,36 +180,26 @@ Scenario: check kill query connection front id #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect  | db      |
       | conn_0 | False   | select * from sharding_4_t1        | success | schema1 |
-      | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding_4_t1 | success | schema1 |
 
 # for DBLE0REQ-726
-  Scenario: check kill front id from dble client #2
-    Given execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                             | expect  | db      |
-      | conn_3 | False   | drop table if exists sharding_4_t1                              | success | schema1 |
-      | conn_3 | False   | create table sharding_4_t1(id int,name varchar(20))             | success | schema1 |
-      | conn_3 | False   | begin                                                           | success | schema1 |
-      | conn_3 | False   | insert into sharding_4_t1 values(1,'1'),(2,'2'),(3,'3'),(4,'4') | success | schema1 |
-
-    Given execute linux command in "dble-1" and save result in "client_front_id"
-    """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@processlist" | awk '{print $1, $4}' | grep test | awk 'NR==1 {print $1}'
-    """
-    Then execute the sql in "dble-1" in "user" mode by parameter from resultset "client_front_id"
-      | conn   | toClose | sql      | expect  |
-      | conn_4 | True    | kill {0} | success |
-
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_2"
-      | conn   | toClose | sql                |
-      | conn_5 | True    | show @@processlist |
-
-    Then check resultset "connection_2" has not lines with following column values
-      | shardingNode-1 | User-3 | db-5 |
-      | dn1            | test   | db1  |
-      | dn2            | test   | db1  |
-      | dn3            | test   | db2  |
-      | dn4            | test   | db2  |
-
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                       | expect                     | db      |
-      | conn_3 | True    | delete from sharding_4_t1 | MySQL server has gone away | schema1 |
+#  Scenario: check kill connection processlist_id #2
+#    Given execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                                                             | expect  | db      |
+#      | conn_3 | False   | drop table if exists sharding_4_t1                              | success | schema1 |
+#      | conn_3 | False   | create table sharding_4_t1(id int,name varchar(20))             | success | schema1 |
+#      | conn_3 | False   | begin                                                           | success | schema1 |
+#      | conn_3 | False   | insert into sharding_4_t1 values(1,'1'),(2,'2'),(3,'3'),(4,'4') | success | schema1 |
+#
+#    Then get index:"0" column value of "select front_id from dble_information.processlist where user='test'" named as "client_front_id"
+#    Then execute the sql in "dble-1" in "user" mode by parameter from resultset "client_front_id"
+#      | conn   | toClose | sql      | expect  |
+#      | conn_4 | True    | kill {0} | success |
+#
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_2"
+#      | conn   | toClose | sql                | expect | db |
+#      | conn_5 | True    | select sharding_node, user, mysql_db from processlist | hasnot{(('dn1', 'test', 'db1',),('dn2', 'test', 'db1',),('dn3', 'test', 'db2',),('dn4', 'test', 'db2',),)} | dble_information |
+#
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                       | expect                     | db      |
+#      | conn_3 | True    | delete from sharding_4_t1 | MySQL server has gone away | schema1 |
