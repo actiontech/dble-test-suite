@@ -1,6 +1,10 @@
 From centos:centos7
 MAINTAINER Hongjie Zhao <zhaohongjie@actionsky.com>
 
+#set CST timezone
+RUN echo "Asia/shanghai" > /etc/timezone
+RUN ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+
 RUN yum install -y yum-utils wget gcc g++ git vi net-tools libaio hwloc python-devel mysql-devel openssh-server openssh-clients sshpass libmysqlclient-dev ntp vim less iproute
 
 #install jdk
