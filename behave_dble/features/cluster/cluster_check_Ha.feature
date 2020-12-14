@@ -90,6 +90,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
+    Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | False   | drop table if exists vertical1                               | success | schema2 |
@@ -118,6 +120,17 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 |
       | conn_0 | False   | create table sing2 (id int)                                  | success | schema1 |
       | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
+    # case make sure data is correct on mysql
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql             | expect             | db  |
+      | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
+    Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql             | expect             | db  |
+      | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
+     Then execute sql in "mysql-slave2"
+      | conn   | toClose | sql             | expect             | db  |
+      | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
+
 
 
   @skip_restart
@@ -297,7 +310,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | show tables                           | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
       | conn_32 | False   | insert into vertical1 values (1)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostM2] is disabled. | schema2 |
       | conn_32 | true    | select * from  vertical1              | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
-
+    #case change master to slave1 on mysql group
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh
@@ -364,7 +377,16 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | W/R        | 4            |
       | DISABLED   | 10           |
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
-    Given sleep "5" seconds
+    Then execute sql in "mysql-slave2"
+      | conn   | toClose | sql                                          | expect   |
+      | conn_0 | true    | show master status                           | success  |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql                                          | expect   |
+      | conn_0 | true    | show slave status                            | success  |
+    Then execute sql in "mysql-slave2"
+      | conn   | toClose | sql                                          | expect   |
+      | conn_0 | true    | show slave status                            | success  |
+
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
       <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
@@ -407,9 +429,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then check resultset "Res_4" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
       | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
+      | ha_group2  | hostS1 | 172.100.9.2 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_5"
       | sql               |
       | show @@dbinstance |
@@ -461,6 +483,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | show tables                           | success     | schema2 |
       | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)} | schema2 |
+
+    
 
   @skip_restart
   Scenario: when ClusterEnable=true && useOuterHa=true && needSyncHa=true ,check "dbinstance"  #2
@@ -562,7 +586,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | NAME       | 1            |
       | W/R        | 4            |
       | DISABLED   | 10           |
-    #case if route hostM2 ,write will be wrong
+    #case if route hostS1 dbInstance  ,result will be wrong
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
@@ -617,7 +641,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | show tables                           | success                                                                                  | schema2 |
       | conn_32 | False   | insert into vertical1 values (1)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
-
+    #case change master to mater2 on mysql group
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ResetMaster.sh
@@ -683,9 +707,16 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | NAME       | 1            |
       | W/R        | 4            |
       | DISABLED   | 10           |
-
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
-    Given sleep "5" seconds
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql                                          | expect   |
+      | conn_0 | true    | show master status                           | success  |
+    Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql                                          | expect   |
+      | conn_0 | true    | show slave status                            | success  |
+    Then execute sql in "mysql-slave2"
+      | conn   | toClose | sql                                          | expect   |
+      | conn_0 | true    | show slave status                            | success  |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
       <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
@@ -725,8 +756,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
       | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
-
-    #case query dml sql will be success,becaues rwSplitMode="1" route group2 data select values is 0,
+    #case query dml sql will be success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
       | conn_1 | False   | insert into global1 values (1) | success     | schema1 |
@@ -760,6 +790,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
+
+  Scenario: restore mysql binlog and clear table  #4
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
@@ -776,22 +808,22 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
       | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
 
-
-
-    Scenario: restore mysql binlog and clear table
     Given execute linux command in "mysql-master1"
      """
      sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' /etc/my.cnf
+     /usr/local/mysql/support-files/mysql.server restart
      """
     Given execute linux command in "mysql-slave1"
      """
      sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' /etc/my.cnf
+     /usr/local/mysql/support-files/mysql.server restart
      """
     Given execute linux command in "mysql-slave2"
      """
      sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' /etc/my.cnf
+     /usr/local/mysql/support-files/mysql.server restart
      """
-    Given execute linux command in "behave"
-      """
-      bash compose/docker-build-behave/resetReplication.sh
-      """
+#    Given execute linux command in "behave"
+#      """
+#      bash ./compose/docker-build-behave/resetReplication.sh
+#      """
