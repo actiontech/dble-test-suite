@@ -4,6 +4,7 @@
 # @Time    : 2020/4/10 PM5:25
 # @Author  : irene-coming
 import logging
+import os
 import re
 from behave import *
 
@@ -18,8 +19,10 @@ def step_impl(context, host_name, result_var=None):
     linux_cmd = context.text
     assert linux_cmd, "expect linux command not null,but it is"
 
-    node = get_node(host_name)
-
+    if host_name == "behave":
+        node = None
+    else:
+        node = get_node(host_name)
     # replace all vars in linux_cmd with corresponding node attribute value, node attr var in {} mode
     node_vars = re.findall(r'\{node:(.*?)\}', linux_cmd, re.I)
     logger.debug("debug node attr vars: {}".format(node_vars))
@@ -32,10 +35,12 @@ def step_impl(context, host_name, result_var=None):
     for var in context_vars:
         linux_cmd = linux_cmd.replace("{context:" + var + "}", getattr(context, var))
 
-    rc, sto, ste = node.ssh_conn.exec_command(linux_cmd)
-
-    assert len(ste) == 0, "execute linux cmd {} failed for {}".format(linux_cmd, ste)
-
+    if node:
+        rc, sto, ste = node.ssh_conn.exec_command(linux_cmd)
+        assert len(ste) == 0, "execute linux cmd {} failed for {}".format(linux_cmd, ste)
+    else:
+        status = os.system(linux_cmd)
+        assert status == 0, "cmd {} failed".format(linux_cmd)
     if result_var:
         sto_list = sto.splitlines()
         setattr(context, result_var, sto_list)
