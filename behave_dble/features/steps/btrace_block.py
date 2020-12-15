@@ -144,4 +144,4 @@ def step_impl(context,result):
         output = getattr(context,"sql_thread_result")
     elif result.lower() == "err":
         output = getattr(context,"sql_thread_err")
-    assert str(output).find(context.text.strip()),"not found '{0}' in sql '{1}'".format(context.text,result)
+    assert str(output).find(context.text.strip()) > -1,"not found '{0}' in sql '{1}'".format(context.text,result)
