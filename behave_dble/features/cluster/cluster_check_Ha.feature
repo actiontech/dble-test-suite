@@ -11,21 +11,37 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
 
 
   @skip_restart
-  Scenario: prepare  #0
-    Given execute linux command in "mysql-master1"
+  Scenario: prepare and when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"  #1
+    Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/resetReplication.sh
+      """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
      """
-     sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' -e '/\[mysqld\]/a log-bin=mysql-bin \nbinlog_format=row \nrelay-log=mysql-relay-bin' /etc/my.cnf &&\
-     /usr/local/mysql/support-files/mysql.server restart
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
      """
-    Given execute linux command in "mysql-slave1"
+    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
      """
-     sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' -e '/\[mysqld\]/a log-bin=mysql-bin \nbinlog_format=row \nrelay-log=mysql-relay-bin' /etc/my.cnf &&\
-     /usr/local/mysql/support-files/mysql.server restart
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
      """
-    Given execute linux command in "mysql-slave2"
+    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
      """
-     sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' -e '/\[mysqld\]/a log-bin=mysql-bin \nbinlog_format=row \nrelay-log=mysql-relay-bin' /etc/my.cnf &&\
-     /usr/local/mysql/support-files/mysql.server restart
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
      """
     Given reset dble registered nodes in zk
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -87,11 +103,10 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       s/needSyncHa=false/needSyncHa=true/
       s/clusterEnable=false/clusterEnable=true/
       """
-    Given Restart dble in "dble-1" success
-    Given Restart dble in "dble-2" success
-    Given Restart dble in "dble-3" success
-    Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
-    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
+    Then start dble in order
+
+#    Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
+#    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | False   | drop table if exists vertical1                               | success | schema2 |
@@ -130,12 +145,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
      Then execute sql in "mysql-slave2"
       | conn   | toClose | sql             | expect             | db  |
       | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
-
-
-
-  @skip_restart
-  Scenario: when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup" #1
-
+     #case  when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
       | sql               |
       | show @@dbinstance |
@@ -808,20 +818,23 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
       | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
 
-    Given execute linux command in "mysql-master1"
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
      """
-     sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' /etc/my.cnf
-     /usr/local/mysql/support-files/mysql.server restart
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
      """
-    Given execute linux command in "mysql-slave1"
+    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
      """
-     sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' /etc/my.cnf
-     /usr/local/mysql/support-files/mysql.server restart
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
      """
-    Given execute linux command in "mysql-slave2"
+    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
      """
-     sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' /etc/my.cnf
-     /usr/local/mysql/support-files/mysql.server restart
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
      """
 #    Given execute linux command in "behave"
 #      """
