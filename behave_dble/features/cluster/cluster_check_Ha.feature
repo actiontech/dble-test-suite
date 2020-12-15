@@ -103,7 +103,10 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       s/needSyncHa=false/needSyncHa=true/
       s/clusterEnable=false/clusterEnable=true/
       """
-    Then start dble in order
+#    Then start dble in order
+    Then Restart dble in "dble-1" success
+    Then Restart dble in "dble-2" success
+    Then Restart dble in "dble-3" success
 
 #    Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
 #    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
