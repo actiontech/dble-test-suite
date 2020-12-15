@@ -9,7 +9,8 @@ ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"create user if not exists 'repl'@'%' identified by '111111';\""
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"grant replication slave on *.* to 'repl'@'%' identified by '111111';\""
 ssh root@${mysql_install[0]}  "/usr/local/mysql/support-files/mysql.server restart"
-sleep 30s
+
+sleep 60s
 
 echo "reset slave "
 ssh root@${mysql_install[1]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
