@@ -12,38 +12,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
 
   @skip_restart
   Scenario: prepare and when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"  #1
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/resetReplication.sh
-      """
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     /server-id/a log-bin=mysql-bin
-     /server-id/a binlog_format=row
-     /server-id/a relay-log=mysql-relay-bin
-     """
-    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     /server-id/a log-bin=mysql-bin
-     /server-id/a binlog_format=row
-     /server-id/a relay-log=mysql-relay-bin
-     """
-    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     /server-id/a log-bin=mysql-bin
-     /server-id/a binlog_format=row
-     /server-id/a relay-log=mysql-relay-bin
-     """
-    Given reset dble registered nodes in zk
+
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
@@ -76,6 +45,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
+    Then execute admin cmd "reload @@config"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       $a -DuseOuterHa=true
@@ -108,8 +78,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then Restart dble in "dble-2" success
     Then Restart dble in "dble-3" success
 
-#    Then execute admin cmd "drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
-#    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | False   | drop table if exists vertical1                               | success | schema2 |
@@ -139,6 +107,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_0 | False   | create table sing2 (id int)                                  | success | schema1 |
       | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
     # case make sure data is correct on mysql
+    Given sleep "10" seconds
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql             | expect             | db  |
       | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
@@ -654,44 +623,51 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | show tables                           | success                                                                                  | schema2 |
       | conn_32 | False   | insert into vertical1 values (1)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
-    #case change master to mater2 on mysql group
+    #case change master to slave2 on mysql group
+    Given update file content "./compose/docker-build-behave/ChangeMaster.sh" in "behave" with sed cmds
+       """
+       /mysql_install=/d
+       /echo ${base_dir}/a mysql_install=("dble-3" "mysql-master2" "dble-2")
+       s/172.100.9.2/172.100.9.3/g
+       """
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ResetMaster.sh
+      bash ./compose/docker-build-behave/ChangeMaster.sh
       """
-    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
+
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_1"
       | sql               |
@@ -699,9 +675,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then check resultset "Res_1" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
       | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | true        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false       |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | 0           | 0            | false       |
     Given execute single sql in "dble-2" in "admin" mode and save resultset in "Res_2"
       | sql               |
       | show @@dbinstance |
@@ -721,32 +697,32 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | W/R        | 4            |
       | DISABLED   | 10           |
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
-    Then execute sql in "mysql-master2"
+    Then execute sql in "mysql-slave2"
       | conn   | toClose | sql                                          | expect   |
       | conn_0 | true    | show master status                           | success  |
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                          | expect   |
       | conn_0 | true    | show slave status                            | success  |
-    Then execute sql in "mysql-slave2"
+    Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                          | expect   |
       | conn_0 | true    | show slave status                            | success  |
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+      <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
-      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+      <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
     Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
@@ -766,9 +742,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then check resultset "Res_5" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | SIZE-7 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10  |
       | ha_group1  | hostM1 | 172.100.9.5 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
       | ha_group2  | hostS1 | 172.100.9.2 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
-      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | R     | 0        | 1000   | 0           | 0            | false        |
+      | ha_group2  | hostS2 | 172.100.9.3 | 3306   | W     | 0        | 1000   | 0           | 0            | false        |
     #case query dml sql will be success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
@@ -820,26 +796,13 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
       | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
       | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
-
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     """
-    Given restart mysql in "mysql-slave1" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     """
-    Given restart mysql in "mysql-slave2" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     """
-#    Given execute linux command in "behave"
-#      """
-#      bash ./compose/docker-build-behave/resetReplication.sh
-#      """
+    Given update file content "./compose/docker-build-behave/ChangeMaster.sh" in "behave" with sed cmds
+       """
+       /mysql_install=/d
+       /echo ${base_dir}/a mysql_install=("dble-2" "mysql-master2" "dble-3")
+       s/172.100.9.3/172.100.9.2/g
+       """
+    Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/resetReplication.sh
+      """
