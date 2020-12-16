@@ -393,7 +393,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn   | toClose | sql               | db               |
       | conn_2 | True    | reload @@config   | dble_information |
     Given sleep "10" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-2"
       """
       Other instance is reloading, please try again later.
       """
@@ -407,7 +407,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    Given delete file "/tmp/dble_admin_query.log" on "dble-2"
+    Given delete file "/tmp/dble_query.log" on "dble-2"
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
       <shardingTable name="sharding4" shardingNode="dn2,dn1,dn3" function="hash-three" shardingColumn="id"/>
