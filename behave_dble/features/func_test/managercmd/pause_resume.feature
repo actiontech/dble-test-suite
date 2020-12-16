@@ -133,7 +133,7 @@ Feature: test "pause/resume" manager cmd
     Then execute sql in "dble-1" in "admin" mode
       | sql    | expect  |
       | resume | success |
-    Then check log "/tmp/dble_query.log" output in "dble-1"
+    Then check log "/tmp/dble_admin_query.log" output in "dble-1"
     """
     Pause resume when recycle connection, pause revert
     """
