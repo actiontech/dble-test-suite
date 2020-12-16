@@ -135,15 +135,19 @@ def step_impl(context, host_name, result_key, mode_name=None):
     # print("the {0} is {1}\n\n\n\n".format(key, getattr(context, result_key)))
 
 @Then('execute admin cmd  in "{host}" at background')
-def step_impl(context, host):
+@Then('execute "{mode_name}" cmd  in "{host}" at background')
+def step_impl(context, host, mode_name="admin"):
     node = get_node(host)
 
     context.logger.debug("btrace is running, start query!!!")
     time.sleep(5)
     for row in context.table:
-        query_meta = QueryMeta(row.as_dict(), "admin", node)
+        if mode_name=="admin":
+            query_meta = QueryMeta(row.as_dict(), "admin", node)
+        else:
+            query_meta = QueryMeta(row.as_dict(), "user", node)
 
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -e\"{}\" >/tmp/dble_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port, query_meta.sql)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e\"{}\" >/tmp/dble_{}_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port,query_meta.db, query_meta.sql,mode_name)
         rc, sto, ste = node.ssh_conn.exec_command(cmd)
         assert len(ste) == 0, "impossible err occur"
 
