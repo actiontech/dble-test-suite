@@ -44,6 +44,7 @@ Feature:#test fresh backend connection pool
   Scenario: #execute fresh command during executing reload command, fresh command will return error #2
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-Dprocessors=1/c -Dprocessors=2
