@@ -101,8 +101,8 @@ Feature:#test fresh backend connection pool
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                       |
-      | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1'     |
+      | user | passwd | conn   | toClose | sql                                       | db               |
+      | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1'     | dble_information |
     # need research
     Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
     """
