@@ -127,8 +127,8 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | begin                                                   | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,1),(2,1),(3,1),(4,1) | success | schema1 |
     Then execute admin cmd  in "dble-1" at background
-      | sql                                                                            |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 |
+      | sql                                                                            | db               |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | dble_information |
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql    | expect  |
