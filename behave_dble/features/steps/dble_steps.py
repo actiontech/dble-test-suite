@@ -147,7 +147,7 @@ def step_impl(context, host, mode_name="admin"):
         else:
             query_meta = QueryMeta(row.as_dict(), "user", node)
 
-        cmd = u"nohup mysql -u{} -p{} -P{} -c -e\"{}\" >/tmp/dble_{}_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port, query_meta.sql,mode_name)
+        cmd = u"nohup mysql -u{} -p{} -P{} -c -D{} -e\"{}\" >/tmp/dble_{}_query.log 2>&1 &".format(query_meta.user, query_meta.passwd, query_meta.port, query_meta.db, query_meta.sql,mode_name)
         rc, sto, ste = node.ssh_conn.exec_command(cmd)
         assert len(ste) == 0, "impossible err occur"
 
