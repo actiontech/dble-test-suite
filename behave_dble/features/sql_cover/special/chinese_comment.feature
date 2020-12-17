@@ -212,9 +212,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 
 
 
-
-  @skip_restart
-  Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #2
+  Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
       | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
