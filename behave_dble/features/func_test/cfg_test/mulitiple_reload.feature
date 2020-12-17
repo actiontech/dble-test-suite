@@ -322,8 +322,8 @@ Feature: multiple reload
     """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | sql               |
-      | reload @@metadata |
+      | sql               | db               |
+      | reload @@metadata | dble_information |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
     get into getSpecialNodeTablesHandlerFinished
