@@ -15,15 +15,14 @@ from lib.utils import get_node, get_ssh
 LOGGER = logging.getLogger('steps.check_zk_meta')
 
 @Then('get {path} on zkCli.sh for {info} on dble-1')
-@Then('get {path} on zkCli.sh for {info} on "{host_name}"')
-def get_zk_meta_on_zkCli_sh(context, path, info,host_name="dble-1"):
+def get_zk_meta_on_zkCli_sh(context, path, info):
     # zk_method : zk cmd means : ls ,get, rmr, set, config ... etc...you can run help on zkCli.sh for more info
     # /dble/cluster-1/conf/sharding
     # info is function name such as:enum_func
     # hostname is dble-1 ,dble-2,dble-3
     cmd = "cd {0}/bin && ./zkCli.sh get {1}|grep '{2}'".format(context.cfg_zookeeper['home'], path, info)
     # node = str(hostname)
-    cmd_ssh = get_ssh(host_name)
+    cmd_ssh = get_ssh("dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
     func_name = []
     assert_that(sto, not_(empty()), "sto is not empty and it is : {0}".format(sto))
