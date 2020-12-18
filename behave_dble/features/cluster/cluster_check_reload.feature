@@ -4,7 +4,7 @@
 
 
 Feature: because 3.20.07 version change, the cluster function changes ,from doc: https://github.com/actiontech/dble-docs-cn/blob/master/2.Function/2.08_cluster.md
-  # reload   db.xml  user.xml  sharding.xml
+  # reload   db.xml  user.xml  sharding.xml sequence_db_conf.properties
   ######case points:
   #  1.sequenceHandlerType=1, change config success
   #  2.sequenceHandlerType=2, change config success
@@ -191,6 +191,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | dn2             | BASE SQL   | INSERT INTO sharding2 VALUES (13, 11, 11) |
 
 
+    
   @skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=2 and change xml success then reload on admin mode   #2
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
@@ -343,6 +344,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                          |
       | dn1             | BASE SQL   | SELECT * FROM sharding3 LIMIT 71   |
       | dn2             | BASE SQL   | SELECT * FROM sharding3 LIMIT 71   |
+
 
 
   @skip_restart
@@ -676,8 +678,15 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute admin cmd  in "dble-2" at background
       | conn   | toClose | sql               | db               |
       | conn_2 | True    | reload @@config   | dble_information |
+    Then execute admin cmd  in "dble-3" at background
+      | conn   | toClose | sql               | db               |
+      | conn_3 | True    | reload @@config   | dble_information |
     Given sleep "5" seconds
     Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-2"
+      """
+      Other instance is reloading, please try again later.
+      """
+    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-3"
       """
       Other instance is reloading, please try again later.
       """
@@ -754,6 +763,12 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | dn2             | BASE SQL   | INSERT INTO sharding5 VALUES (12, 12, 12)   |
       | dn1             | BASE SQL   | INSERT INTO sharding5 VALUES (13, 13, 13)   |
       | dn4             | BASE SQL   | INSERT INTO sharding5 VALUES (14, 14, 14)   |
+     #case check on zookeeper
+    Then get result of oscmd named "C" in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock" | wc -l
+      """
+    Then check result "C" value is "0"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                          | expect  | db      |
       | conn_1 | true    | drop table if exists sharding2               | success | schema2 |
