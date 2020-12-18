@@ -383,4 +383,15 @@ public final class BtraceClusterDelay {
         BTraceUtils.print("get into delayBeforeNoAlert");
         BTraceUtils.print(" get into the alert time");
     }
+ @OnMethod(
+	    clazz = "com.actiontech.dble.route.RouteResultsetNode",
+            method = "setRunOnSlave"
+    )
+    public static void sleepWhenClearIfSessionClosed(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into clearIfSessionClosed,start sleep ");
+        BTraceUtils.print(" __________________________ ");
+        Thread.sleep(60000L);
+        BTraceUtils.print("sleep end ");
+        BTraceUtils.print(" __________________________ ");
+    }
 }

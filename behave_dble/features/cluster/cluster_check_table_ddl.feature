@@ -15,9 +15,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
 #      """
 #    Then check result "A" value is "1"
 
-  @skip_restart
-  Scenario: shardingtable query ddl,check on dble-1,dble-2.dble-3  #1
-    Given reset dble registered nodes in zk
+  Scenario: basis shardingtable query ddl,check on dble-1,dble-2.dble-3  #1
+#    Given reset dble registered nodes in zk
     #case desc table on user mode
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                  | expect  | db      |
@@ -159,62 +158,48 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     #case check lock on zookeeper
     Then get result of oscmd named "A" in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1 " |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" |wc -l
       """
     Then check result "A" value is "0"
 
 
-  @skip
-#  _restart  @btrace
+  @skip_restart  @btrace
   Scenario: use btrace add lock on meta  #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                         | expect  | db      |
       | conn_1 | False   | drop table if exists test                   | success | schema1 |
       | conn_1 | False   | create table test (id int, name char(5))    | success | schema1 |
-    Given update file content "./assets/BtraceAddMetaLock.java" in "behave" with sed cmds
-    """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /sleepWhenAddMetaLockDuring/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(60000L)/;/\}/!ba}
-    """
-    Given prepare a thread run btrace script "BtraceAddMetaLock.java" in "dble-1"
-    Given sleep "10" seconds
-    Given prepare a thread execute sql "drop table if exists test" with "conn_0"
-    Then check btrace "BtraceDelayAfterDdl.java" output in "dble-1"
-    """
-    get into delayAfterDdlExecuted
-    """
-    Then execute sql in "dble-2" in "admin" mode
-      | conn   | toClose | sql                                                 | expect                              |
-      | conn_2 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
-      | conn_2 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
-      | conn_2 | true    | show @@ddl                                          | hasNoStr{drop table if exists test} |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                 | expect                              |
-      | conn_1 | false   | show @@ddl                                          | hasStr{drop table if exists test}   |
-      | conn_1 | false   | kill @@ddl_lock where schema=schema1 and table=test | success                             |
-      | conn_1 | false   | show @@ddl                                          | hasNoStr{drop table if exists test} |
-      | conn_1 | true    | reload @@metadata                                   | success                             |
-    Given execute single sql in "dble-2" in "admin" mode and save resultset in "rs_A"
-      | sql                       |
-      | show @@backend.statistics |
-    Then check resultset "rs_A" has lines with following column values
-      | TOTAL-3 |
-      | 5      |
-    Given stop btrace script "BtraceDelayAfterDdl.java" in "dble-1"
+    Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
+      """
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(60000L)/;/\}/!ba}
+      """
+    Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
+    Given sleep "1" seconds
+    Given execute sqls in "dble-1" at background
+      | conn   | toClose | sql                                      | db      |
+      | conn_1 | true    | alter table test add age int             | schema1 |
+    Given sleep "5" seconds
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.test" |wc -l
+      """
+    Then check result "A" value is "1"
+
+
+    Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
-    Given destroy sql threads list
+#    Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
+#    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
 
 
 
 
-
-
-    #case let ddl query error
-
+  @skip
+#  _restart
+  Scenario: case let ddl query error #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect                      | db      |
       | conn_1 | true    | alter table sharding_4_t1 add age int    | Duplicate column name 'age' | schema1 |
