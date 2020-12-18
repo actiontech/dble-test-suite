@@ -191,7 +191,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | dn2             | BASE SQL   | INSERT INTO sharding2 VALUES (13, 11, 11) |
 
 
-    
+
   @skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=2 and change xml success then reload on admin mode   #2
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
