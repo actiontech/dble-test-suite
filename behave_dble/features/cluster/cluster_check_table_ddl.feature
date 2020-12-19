@@ -181,7 +181,10 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                     | db      |
       | conn_1 | true    | alter table sharding_4_t1 add age int   | schema1 |
-    Given sleep "5" seconds
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+    """
+    get into clearIfSessionClosed,start sleep
+    """
     #case check lock on zookeeper values is 1
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -200,7 +203,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_3 | true     | create table test1 (id int)                   | success                                                                                                                                                                | schema1 |
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     #case check lock on zookeeper values is 0
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -328,7 +331,10 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                     | db      |
       | conn_1 | true    | alter table sharding_4_t1 drop age      | schema1 |
-    Given sleep "3" seconds
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+    """
+    get into clearIfSessionClosed,start sleep
+    """
     #case check lock on zookeeper values is 1
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -440,8 +446,11 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                     | db      |
       | conn_1 | true    | alter table sharding_4_t1 drop age      | schema1 |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+    """
+    get into clearIfSessionClosed,start sleep
+    """
     #case check lock on zookeeper values is 1
-    Given sleep "2" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
@@ -512,6 +521,10 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given execute sqls in "dble-2" at background
       | conn   | toClose | sql                                     | db      |
       | conn_2 | true    | alter table sharding_4_t1 drop age      | schema1 |
+    Then check btrace "BtraceClusterDelay.java" output in "dble-2"
+    """
+    get into clearIfSessionClosed,start sleep
+    """
     Then Restart dble in "dble-1" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
