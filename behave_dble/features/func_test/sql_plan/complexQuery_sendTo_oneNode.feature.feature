@@ -347,13 +347,12 @@ Feature: following complex queries are able to send one datanode
       | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node a join sharding_two_node2 b where a.id =b.id and (a.c_decimal=1 and (( a.id =1 and b.id=1) or ( a.c_flag=b.c_flag and a.id =2 ))) |
 
- # issue:DBLE0REQ-732
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_28"
-#      | conn   | toClose | sql                                                                                                                   |
-#      | conn_0 | False   | explain select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
-#    Then check resultset "rs_28" has lines with following column values
-#      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
-#      | dn1             | BASE SQL      | select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_28"
+      | conn   | toClose | sql                                                                                                                   |
+      | conn_0 | False   | explain select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
+    Then check resultset "rs_28" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
+      | dn1             | BASE SQL      | select * from sharding_two_node where id =1 and c_flag = (select c_flag from sharding_two_node2 where id =1 ) |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_29"
       | conn   | toClose | sql                                                                                                                     |
