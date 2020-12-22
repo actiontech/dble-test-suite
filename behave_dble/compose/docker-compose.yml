@@ -154,3 +154,81 @@ services:
               ipv4_address: 172.100.9.8
         dns: 114.114.114.114
         working_dir: /init_assets
+
+    mysql-master3:
+        image: dble/dble_test_mysql8:latest
+        container_name: mysql-master3
+        hostname: mysql-master3
+        privileged: true
+        stdin_open: true
+        command: ["mysql","9"]
+        tty: true
+        volumes:
+        - /opt/mysql-master3:/init_assets
+        - /opt/share:/share
+        ports:
+        - "7241:3306"
+        - "7251:22"
+        networks:
+            default:
+                ipv4_address: 172.100.9.9
+        dns: 114.114.114.114
+        working_dir: /opt
+    mysql-master4:
+        image: dble/dble_test_mysql8:latest
+        container_name: mysql-master4
+        hostname: mysql-master4
+        privileged: true
+        stdin_open: true
+        command: ["mysql","10"]
+        tty: true
+        volumes:
+        - /opt/mysql-master4:/init_assets
+        - /opt/share:/share
+        ports:
+        - "7242:3306"
+        - "7252:22"
+        networks:
+            default:
+                ipv4_address: 172.100.9.10
+        dns: 114.114.114.114
+        working_dir: /opt
+    mysql-slave1:
+        image: dble/dble_test_mysql8:latest
+        container_name: mysql-slave1
+        hostname: mysql-slave1
+        privileged: true
+        stdin_open: true
+        command: ["mysql","11"]
+        tty: true
+        volumes:
+        - /opt/mysql-slave1:/init_assets
+        - /opt/share:/share
+        ports:
+        - "7243:3306"
+        - "7253:22"
+        networks:
+            default:
+                ipv4_address: 172.100.9.11
+        dns: 114.114.114.114
+        working_dir: /opt
+
+    mysql-slave2:
+        image: dble/dble_test_mysql8:latest
+        container_name: mysql-slave2
+        hostname: mysql-slave2
+        privileged: true
+        stdin_open: true
+        command: ["mysql","12"]
+        tty: true
+        volumes:
+        - /opt/mysql-slave2:/init_assets
+        - /opt/share:/share
+        ports:
+        - "7244:3306"
+        - "7254:22"
+        networks:
+            default:
+                ipv4_address: 172.100.9.12
+        dns: 114.114.114.114
+        working_dir: /opt
