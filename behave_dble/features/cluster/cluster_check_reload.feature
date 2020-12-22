@@ -382,7 +382,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
       <shardingTable name="sharding4" shardingNode="dn2,dn1" function="hash-three" shardingColumn="id"/>
       """
-    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : ID > table shardingNode size : 2, please make sure table shardingnode size = function partition size
       """
@@ -475,7 +475,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
       maxCon="108"
       """
-    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: \[db.xml\] occurred  parse errors, The detailed errors are as follows . java.lang.NumberFormatException: For input string: "1.2"
       """
@@ -565,7 +565,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
-    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       Reload config failure
       schema \[schema4\] is not exist!
@@ -682,11 +682,11 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn   | toClose | sql               | db               |
       | conn_3 | True    | reload @@config   | dble_information |
     Given sleep "5" seconds
-    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       Other instance is reloading, please try again later.
       """
-    Then check following text exist "Y" in file "/tmp/dble_query.log" in host "dble-3"
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
       """
       Other instance is reloading, please try again later.
       """
@@ -715,7 +715,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case dble-1 reload success
-    Then check following text exist "N" in file "/tmp/dble_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       ERROR
       """
