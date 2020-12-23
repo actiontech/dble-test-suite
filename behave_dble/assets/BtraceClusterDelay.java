@@ -383,4 +383,15 @@ public final class BtraceClusterDelay {
         BTraceUtils.print("get into delayBeforeNoAlert");
         BTraceUtils.print(" get into the alert time");
     }
+@OnMethod(
+            clazz = "com.actiontech.dble.singleton.PauseShardingNodeManager",
+            method = "tryResume"
+    )
+    public static void tryResume(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into tryResume,start sleep ");
+        BTraceUtils.print(" __________________________ ");
+        Thread.sleep(30000L);
+        BTraceUtils.print("sleep end ");
+        BTraceUtils.print(" __________________________ ");
+    }
 }
