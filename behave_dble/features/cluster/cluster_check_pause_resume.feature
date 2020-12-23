@@ -9,7 +9,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
   #  1. pause @@shardingNode
   #  2. resume
   #  3. create xa ,check pause_node.lock
-  #  4. create xa ,check pause_node.lock but pause or resume timeout
+  #  4. create xa ,check pause_node.lock,during pause or resume restart one dble
+  #  5. create xa ,check pause_node.lock but pause or resume timeout
 
 
   @skip_restart
@@ -148,7 +149,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_2 | false    | insert into sharding_4_t1 values (4,'4')        | success   | schema1  |
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                                                                                | db                 |
-      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 20,queue=10,wait_limit=1            | dble_information   |
+      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 30,queue=10,wait_limit=1            | dble_information   |
     #case check lock on zookeeper
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -164,8 +165,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql        | expect    | db       |
       | conn_2 | True     | commit     | success   | schema1  |
-    Given sleep "15" seconds
-    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       ERROR
       There are some node in cluster can
@@ -174,12 +174,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                       | expect                                                     | db       |
       | conn_1 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
-    Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                       | expect                                                     | db       |
-      | conn_2 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
-    Then execute sql in "dble-3" in "user" mode
-      | conn   | toClose  | sql                                       | expect                                                     | db       |
-      | conn_3 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose | sql     | expect                     |
       | conn_11 | false   | resume  | success                    |
@@ -201,7 +195,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
 
-  @skip_restart
   Scenario: create xa ,check pause_node.lock but pause or resume timeout #5
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                             | expect    | db       |
@@ -240,7 +233,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_2 | True     | select * from sharding_4_t1               | success   | schema1  |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
-      | conn_3 | True     | select * from sharding_4_t1               | length{(6)}   | schema1  |
+      | conn_3 | True     | select * from sharding_4_t1               | length{(7)}   | schema1  |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
     Given stop dble cluster and zk service
@@ -299,6 +292,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java.log" on "dble-1"
+    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose | sql     | expect                     |
       | conn_11 | false   | resume  | success                    |
@@ -317,8 +311,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_2 | True     | select * from sharding_4_t1               | success   | schema1  |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
-      | conn_3 | True     | select * from sharding_4_t1               | length{(7)}   | schema1  |
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+      | conn_3 | false    | select * from sharding_4_t1               | length{(7)}   | schema1  |
+      | conn_3 | True     | drop table if exists sharding_4_t1        | success       | schema1  |
+
 
 
 
