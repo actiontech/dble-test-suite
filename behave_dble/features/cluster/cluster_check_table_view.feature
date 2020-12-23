@@ -7,7 +7,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
   # view
   ######case points:
   #  1.create view，alter view，drop view could success on shardingtable
-  #  2.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbinstance"
+  #  2.during alter view use btrace on shardingtable,to check has lock
+  #  3.during alter view use btrace on shardingtable,one dble stop
 
 
   @btrace
@@ -208,7 +209,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_1 | true    | drop table if exists sharding_4_t1    | success     | schema1 |
 
   @skip_restart @btrace
-  Scenario: during alter view use btrace on shardingtable,to check has lock   #3
+  Scenario: during alter view use btrace on shardingtable,one dble stop  #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect    | db      |
       | conn_1 | false   | drop table if exists sharding_4_t1                        | success   | schema1 |
