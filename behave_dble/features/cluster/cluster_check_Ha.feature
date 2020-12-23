@@ -774,22 +774,22 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
   Scenario: restore mysql binlog and clear table  #3
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                          | expect  | db      |
-      | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
-      | conn_0 | False   | drop table if exists no_sharding2                            | success | schema3 |
-      | conn_0 | true    | drop table if exists sharding21                              | success | schema3 |
-      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists global3                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding3                               | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
-      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
-      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
-      | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
-      | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                                                          | expect  | db      |
+#      | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
+#      | conn_0 | False   | drop table if exists no_sharding2                            | success | schema3 |
+#      | conn_0 | true    | drop table if exists sharding21                              | success | schema3 |
+#      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
+#      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
+#      | conn_0 | False   | drop table if exists global3                                 | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding3                               | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
+#      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
+#      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
+#      | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
+#      | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
-     """
+      bash ./compose/docker-build-behave/resetReplication.sh
+      """
