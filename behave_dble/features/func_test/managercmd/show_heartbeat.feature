@@ -73,7 +73,7 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       iptables -A INPUT -s 172.100.9.1 -j DROP
       iptables -A OUTPUT -d 172.100.9.1 -j DROP
       """
-    Given sleep "20" seconds
+    Given sleep "30" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "16"
       | conn   | toClose | sql               |
       | conn_0 | false   | show @@heartbeat  |
