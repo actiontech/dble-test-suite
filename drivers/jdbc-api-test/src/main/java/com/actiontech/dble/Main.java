@@ -75,6 +75,9 @@ public class Main {
 			DriverManagerTest dmt = new DriverManagerTest(mysqlProp, testProp);
 			dmt.start_test();
 
+			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp);
+			capClientFoundRowsTest.start_test();
+
 			System.out.println("Congratulations, all interfaces passed!");
 //			CoffeesFrame qf = new CoffeesFrame(mysqlProp, dbleProp);
 //		    qf.pack();
