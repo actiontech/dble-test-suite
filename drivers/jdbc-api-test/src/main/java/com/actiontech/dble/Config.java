@@ -128,7 +128,7 @@ public class Config {
 
 	public static String getdbleAdminCmd(String dble_cmd) {
 		String cmd = "mysql -u" + Config.TEST_ADMIN + " -p"
-				+ Config.TEST_ADMIN_PASSWD + " -h127.0.0.1 -P" + Config.TEST_PORT + " -e \""+dble_cmd + "\"";
+				+ Config.TEST_ADMIN_PASSWD + " -h127.0.0.1 -P" + Config.TEST_ADMIN_PORT + " -e \""+dble_cmd + "\"";
 
 		return cmd;
 	}
