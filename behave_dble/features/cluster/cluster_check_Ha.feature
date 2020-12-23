@@ -295,7 +295,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     #case change master to slave1 on mysql group
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
       """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
@@ -466,7 +466,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)} | schema2 |
 
-    
+
 
   @skip_restart
   Scenario: when ClusterEnable=true && useOuterHa=true && needSyncHa=true ,check "dbinstance"  #2
@@ -624,16 +624,10 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | insert into vertical1 values (1)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
     #case change master to slave2 on mysql group
-    Given update file content "./compose/docker-build-behave/ChangeMaster.sh" in "behave" with sed cmds
-       """
-       /mysql_install=/d
-       /echo ${base_dir}/a mysql_install=("dble-3" "mysql-master2" "dble-2")
-       s/172.100.9.2/172.100.9.3/g
-       """
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh
-      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
+     """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
@@ -779,29 +773,22 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
-
   Scenario: restore mysql binlog and clear table  #3
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                          | expect  | db      |
-      | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
-      | conn_0 | False   | drop table if exists no_sharding2                            | success | schema3 |
-      | conn_0 | true    | drop table if exists sharding21                              | success | schema3 |
-      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists global3                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding3                               | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
-      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
-      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
-      | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
-      | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
-    Given update file content "./compose/docker-build-behave/ChangeMaster.sh" in "behave" with sed cmds
-       """
-       /mysql_install=/d
-       /echo ${base_dir}/a mysql_install=("dble-2" "mysql-master2" "dble-3")
-       s/172.100.9.3/172.100.9.2/g
-       """
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                                                          | expect  | db      |
+#      | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
+#      | conn_0 | False   | drop table if exists no_sharding2                            | success | schema3 |
+#      | conn_0 | true    | drop table if exists sharding21                              | success | schema3 |
+#      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
+#      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
+#      | conn_0 | False   | drop table if exists global3                                 | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding3                               | success | schema1 |
+#      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
+#      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
+#      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
+#      | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
+#      | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/resetReplication.sh
