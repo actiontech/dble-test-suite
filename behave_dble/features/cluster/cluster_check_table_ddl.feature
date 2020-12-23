@@ -176,7 +176,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
-    Given sleep "2" seconds
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                     | db      |
@@ -326,7 +325,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
-    Given sleep "2" seconds
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                     | db      |
@@ -441,7 +439,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
       /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
-    Given sleep "2" seconds
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                     | db      |
@@ -466,6 +463,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn   | toClose  | sql                                           | expect                                                                                                                                                                                            | db      |
       | conn_3 | False    | alter table sharding_4_t1 add age2 int        | java.sql.SQLNonTransientException: java.sql.SQLNonTransientException: SCHEMA[schema1], TABLE[sharding_4_t1] is doing DDL,sql:alter table sharding_4_t1 add age2 int                               | schema1 |
       | conn_3 | true     | alter table sharding_4_t1 drop age2           | java.sql.SQLNonTransientException: java.lang.Exception: The metaLock about `schema1.sharding_4_t1` is exists. It means other instance is doing DDL.,sql:alter table sharding_4_t1 drop age2       | schema1 |
+    #case wait 30s ,to check  metaLock is not
     Given sleep "30" seconds
     #case check lock on zookeeper values is 0
     Then get result of oscmd named "A" in "dble-2"
@@ -510,7 +508,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
-    #case start dble-1,do query ,logs has waiting for ddl
+    #case dble-2 doing ddl,start dble-1,do query ,dble-1 will waiting for dble-2 ddl finished,dble-1 logs has "waiting for ddl finished"
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -521,6 +519,12 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given execute sqls in "dble-2" at background
       | conn   | toClose | sql                                     | db      |
       | conn_2 | true    | alter table sharding_4_t1 drop age      | schema1 |
+    #case check lock on zookeeper values is 1
+    Then get result of oscmd named "A" in "dble-2"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/ddl_lock | grep "schema1.sharding_4_t1" | wc -l
+      """
+    Then check result "A" value is "1"
     Then check btrace "BtraceClusterDelay.java" output in "dble-2"
     """
     get into clearIfSessionClosed,start sleep
