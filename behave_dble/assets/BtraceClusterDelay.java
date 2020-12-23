@@ -375,25 +375,23 @@ public final class BtraceClusterDelay {
         BTraceUtils.print(" for order __________________________ ");
         Thread.sleep(30000L);
     }
-
  @OnMethod(
             clazz = " com.actiontech.dble.alarm.NoAlert",
             method = "alert"
     )
     public static void delayBeforeNoAlert(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.println("get into delayBeforeNoAlert");
-        BTraceUtils.println(" get into the alert time");
+        BTraceUtils.print("get into delayBeforeNoAlert");
+        BTraceUtils.print(" get into the alert time");
     }
-
  @OnMethod(
-	        clazz = "com.actiontech.dble.route.RouteResultsetNode",
+	    clazz = "com.actiontech.dble.route.RouteResultsetNode",
             method = "setRunOnSlave"
     )
     public static void sleepWhenClearIfSessionClosed(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.println("get into clearIfSessionClosed,start sleep ");
-        BTraceUtils.println(" __________________________ ");
+        BTraceUtils.print("get into clearIfSessionClosed,start sleep ");
+        BTraceUtils.print(" __________________________ ");
         Thread.sleep(60000L);
-        BTraceUtils.println("sleep end ");
-        BTraceUtils.println(" __________________________ ");
+        BTraceUtils.print("sleep end ");
+        BTraceUtils.print(" __________________________ ");
     }
 }
