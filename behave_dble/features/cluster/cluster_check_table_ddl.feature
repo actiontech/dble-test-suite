@@ -434,7 +434,7 @@ Feature: test "ddl" in zk cluster
 
 
 
-  @skip_restart   @btrace
+  @btrace
   Scenario: case let ddl query error,to check metadata and lock   #5
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect                      | db      |
