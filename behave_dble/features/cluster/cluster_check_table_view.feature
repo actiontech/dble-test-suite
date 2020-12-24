@@ -3,17 +3,15 @@
 # Created by quexiuping at 2020/12/11
 
 
-Feature: because 3.20.07 version change, the cluster function changes ,from doc: https://github.com/actiontech/dble-docs-cn/blob/master/2.Function/2.08_cluster.md
-  # view
+Feature: zookeeper to check view
   ######case points:
   #  1.create view，alter view，drop view could success on shardingtable
   #  2.during alter view use btrace on shardingtable,to check has lock
   #  3.during alter view use btrace on shardingtable,one dble stop
 
 
-  @btrace
+  @skip_restart @btrace
   Scenario: create view，alter view，drop view could success on shardingtable  #1
-    Given reset dble registered nodes in zk
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect    | db      |
       | conn_1 | false   | drop table if exists sharding_4_t1               | success   | schema1 |
@@ -21,7 +19,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
@@ -39,9 +37,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                                     | expect                                                                                  | db      |
       | conn_3 | true    | create view view_test as select * from sharding_4_t1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
+    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
-    Given sleep "20" seconds
     #case check lock on zookeeper values is 0
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -136,7 +134,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @btrace
+   @skip_restart @btrace
   Scenario: during alter view use btrace on shardingtable,to check has lock   #2
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect    | db      |
@@ -147,7 +145,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
     Then execute "user" cmd  in "dble-2" at background
@@ -165,9 +163,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                                                 | expect                                                                                  | db      |
       | conn_3 | true    | alter view view_view as select * from sharding_4_t1 where id =1     | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
+    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
-    Given sleep "20" seconds
     #case check lock on zookeeper values is 0
     Then get result of oscmd named "A" in "dble-2"
       """
@@ -208,7 +206,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_1 | false   | drop view view_view                   | success     | schema1 |
       | conn_1 | true    | drop table if exists sharding_4_t1    | success     | schema1 |
 
-  @skip_restart @btrace
+   @btrace
   Scenario: during alter view use btrace on shardingtable,one dble stop  #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect    | db      |
@@ -219,7 +217,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayAfterGetLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-3"
     Then execute "user" cmd  in "dble-3" at background
@@ -232,15 +230,15 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
     Then check result "A" value is "1"
     Then stop dble in "dble-1"
-    Given sleep "5" seconds
+    Given sleep "2" seconds
     Then Start dble in "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for view finished
     """
+    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
-    Given sleep "20" seconds
     #case check lock on zookeeper values is 0
     Then get result of oscmd named "A" in "dble-3"
       """
