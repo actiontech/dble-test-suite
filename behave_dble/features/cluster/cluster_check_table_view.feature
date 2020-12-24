@@ -3,11 +3,11 @@
 # Created by quexiuping at 2020/12/11
 
 
-Feature: zookeeper to check view
+Feature: on zookeeper to test "view" operate
   ######case points:
   #  1.create view，alter view，drop view could success on shardingtable
   #  2.during alter view use btrace on shardingtable,to check has lock
-  #  3.during alter view use btrace on shardingtable,one dble stop
+  #  3.during alter view use btrace on shardingtable,one dble stop or one dble add
 
 
   @skip_restart @btrace
@@ -37,6 +37,7 @@ Feature: zookeeper to check view
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                                     | expect                                                                                  | db      |
       | conn_3 | true    | create view view_test as select * from sharding_4_t1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
+    #sleep 10s, because btrace sleep 10s
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
@@ -163,6 +164,7 @@ Feature: zookeeper to check view
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                                                                 | expect                                                                                  | db      |
       | conn_3 | true    | alter view view_view as select * from sharding_4_t1 where id =1     | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
+    #sleep 10s, because btrace sleep 10s
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -230,12 +232,14 @@ Feature: zookeeper to check view
       """
     Then check result "A" value is "1"
     Then stop dble in "dble-1"
+    #sleep 2s, to check dble-1 has stop
     Given sleep "2" seconds
     Then Start dble in "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for view finished
     """
+    #sleep 10s, because btrace sleep 10s
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
