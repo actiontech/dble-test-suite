@@ -3,8 +3,8 @@
 # Created by quexiuping at 2020/12/11
 
 
-Feature: because 3.20.07 version change, the cluster function changes ,from doc: https://github.com/actiontech/dble-docs-cn/blob/master/2.Function/2.08_cluster.md
-  # reload   db.xml  user.xml  sharding.xml sequence_db_conf.properties
+Feature: test "reload @@config" in zk cluster
+  #  db.xml  user.xml  sharding.xml sequence_db_conf.properties
   ######case points:
   #  1.sequenceHandlerType=1, change config success
   #  2.sequenceHandlerType=2, change config success
@@ -14,6 +14,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
 
   @skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=1 and change xml success then reload on admin mode   #1
+    Given stop dble cluster and zk service
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
       $a sequenceHandlerType=1
@@ -26,9 +27,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
       $a sequenceHandlerType=1
       """
-    Given Restart dble in "dble-1" success
-    Given Restart dble in "dble-2" success
-    Given Restart dble in "dble-3" success
+    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
+    Given reset dble registered nodes in zk
+    Then start dble in order
     Then check following text exist "Y" in file "/opt/dble/conf/cluster.cnf" in host "dble-1"
       """
       sequenceHandlerType=1
@@ -387,7 +388,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : ID > table shardingNode size : 2, please make sure table shardingnode size = function partition size
       """
     #case check on zookeeper
-    Given sleep "3" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding4" | wc -l
@@ -427,7 +427,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       <shardingTable name="sharding4" shardingNode="dn2,dn1,dn3" function="hash-three" shardingColumn="id"/>
       """
     #case check on zookeeper
-    Given sleep "3" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding4" | wc -l
@@ -480,7 +479,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: \[db.xml\] occurred  parse errors, The detailed errors are as follows . java.lang.NumberFormatException: For input string: "1.2"
       """
     #case check on zookeeper
-    Given sleep "3" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "10086" | wc -l
@@ -525,7 +523,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       maxCon="10086"
       """
     #case check on zookeeper
-    Given sleep "3" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "108" | wc -l
@@ -571,7 +568,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       schema \[schema4\] is not exist!
       """
     #case check on zookeeper
-    Given sleep "3" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep "schema1,schema2,schema3" | wc -l
@@ -634,7 +630,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | dn2             | BASE SQL   | INSERT INTO sharding4 VALUES (12, 12, 12)   |
       | dn1             | BASE SQL   | INSERT INTO sharding4 VALUES (13, 13, 13)   |
     #case check on zookeeper
-    Given sleep "3" seconds
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep "schema1,schema2,schema3" | wc -l
@@ -665,7 +660,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /delayBeforeDeleteReloadLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayBeforeDeleteReloadLock/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(25000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
@@ -681,7 +676,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute admin cmd  in "dble-3" at background
       | conn   | toClose | sql               | db               |
       | conn_3 | True    | reload @@config   | dble_information |
-    Given sleep "5" seconds
+    Given sleep "3" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       Other instance is reloading, please try again later.
@@ -711,7 +706,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then check result "A" value is "1"
     Then check result "B" value is "0"
     Then check result "C" value is "1"
-    Given sleep "15" seconds
+    Given sleep "22" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case dble-1 reload success
