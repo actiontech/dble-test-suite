@@ -3,9 +3,9 @@
 # Created by maofei at 2020/9/10
 #modified by wujinling at 2020/12/09
 
-Feature:#test fresh backend connection pool
+Feature: test fresh backend connection pool
   @CRITICAL
-  Scenario: #Use check session transaction ISOLATION level for any changes to confirm whether the connection pool has been refreshed #1
+  Scenario: Use check session transaction ISOLATION level for any changes to confirm whether the connection pool has been refreshed #1
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                      | expect                  | db  |
       | conn_0 | True   | set global transaction ISOLATION level READ UNCOMMITTED             | success    | db1 |
@@ -41,10 +41,9 @@ Feature:#test fresh backend connection pool
       | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
 
   @CRITICAL @btrace
-  Scenario: #execute fresh command during executing reload command, fresh command will return error #2
+  Scenario: execute fresh command during executing reload command, fresh command will return error #2
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
-    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-Dprocessors=1/c -Dprocessors=2
@@ -88,10 +87,16 @@ Feature:#test fresh backend connection pool
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
 
-  @CRITICAL @btrace @skip
-  Scenario: #fresh connection multi-times at the same time, other fresh command will return error #3
+  @CRITICAL @btrace
+  Scenario: fresh connection multi-times at the same time, other fresh command will return error #3
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /-Dprocessors=1/c -Dprocessors=2
+    /-DprocessorExecutor=1/c -DprocessorExecutor=2
+    """
+    Given restart dble in "dble-1" success
     Given execute sql in "mysql-master1"
       | conn   | toClose | sql                                                                 | expect      | db  |
       | conn_0 | True    | set global transaction ISOLATION level READ UNCOMMITTED             | success     | db1 |
@@ -102,9 +107,8 @@ Feature:#test fresh backend connection pool
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
-      | user | passwd | conn   | toClose | sql                                       | db               |
-      | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1'     | dble_information |
-    # need research
+      | user | passwd | conn   | toClose | sql                                       |db                    |
+      | root | 111111 | conn_0 | True    | fresh conn where dbGroup ='ha_group1' | dble_information   |
     Then check btrace "BtraceFreshConnLock.java" output in "dble-1"
     """
     freshConnGetRealodLocekAfter
@@ -132,7 +136,7 @@ Feature:#test fresh backend connection pool
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
 
   @CRITICAL @btrace
-  Scenario: #execute sql during executing fresh command, sql will hang #4
+  Scenario: execute sql during executing fresh command, sql will hang #4
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -196,7 +200,7 @@ Feature:#test fresh backend connection pool
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
 
   @CRITICAL @btrace
-  Scenario: #execute fresh command during executing sql, fresh command will hang #5
+  Scenario: execute fresh command during executing sql, fresh command will hang #5
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
@@ -256,20 +260,3 @@ Feature:#test fresh backend connection pool
       | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation    |  has{('REPEATABLE-READ',),}    | schema1  |
     Given delete file "/opt/dble/BtraceFreshConnLock.java" on "dble-1"
     Given delete file "/opt/dble/BtraceFreshConnLock.java.log" on "dble-1"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
