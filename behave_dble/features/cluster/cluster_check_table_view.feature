@@ -3,7 +3,7 @@
 # Created by quexiuping at 2020/12/11
 
 
-Feature: on zookeeper to test "view" operate
+Feature: test view in zk cluster
   ######case points:
   #  1.create view，alter view，drop view could success on shardingtable
   #  2.during alter view use btrace on shardingtable,to check has lock
