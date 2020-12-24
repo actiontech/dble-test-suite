@@ -17,7 +17,7 @@ global btrace_threads
 btrace_threads = []
 
 def check_btrace_running(sshClient, btraceScript):
-    cmd = "ps -ef |grep -v -w grep| grep -F -c {0}".format(btraceScript)
+    cmd = "ps -ef |grep btrace|grep -v -w grep| grep -F -c {0}".format(btraceScript)
     rc, sto, ste = sshClient.exec_command(cmd)
     return int(sto)==2
     #sto==2, because btrace ps will show like:
