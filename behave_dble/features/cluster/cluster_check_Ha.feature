@@ -12,7 +12,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
 
   @skip_restart
   Scenario: prepare and when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"  #1
-
+    Given stop dble cluster and zk service
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
@@ -45,7 +45,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
-    Then execute admin cmd "reload @@config"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       $a -DuseOuterHa=true
@@ -73,11 +72,9 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       s/needSyncHa=false/needSyncHa=true/
       s/clusterEnable=false/clusterEnable=true/
       """
-#    Then start dble in order
-    Then Restart dble in "dble-1" success
-    Then Restart dble in "dble-2" success
-    Then Restart dble in "dble-3" success
-
+    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
+    Given reset dble registered nodes in zk
+    Then start dble in order
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | False   | drop table if exists vertical1                               | success | schema2 |
