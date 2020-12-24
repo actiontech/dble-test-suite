@@ -3,8 +3,7 @@
 # Created by quexiuping at 2020/12/11
 
 
-Feature: because 3.20.07 version change, the cluster function changes ,from doc: https://github.com/actiontech/dble-docs-cn/blob/master/2.Function/2.08_cluster.md
-  # pause
+Feature: test "pause/resume" in zk cluster
   ######case points:
   #  1. pause @@shardingNode
   #  2. resume
@@ -140,8 +139,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
 
-
-@skip_restart
+  @skip_restart
   Scenario: create xa ,check pause_node.lock,during pause or resume restart one dble #4
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                             | expect    | db       |
@@ -157,7 +155,8 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       """
     Then check result "A" value is "1"
     Then stop dble in "dble-3"
-    Given sleep "5" seconds
+    #to check dble-3 had stop
+    Given sleep "2" seconds
     Then Start dble in "dble-3"
     Then execute sql in "dble-3" in "admin" mode
       | conn    | toClose | sql                                                                      | expect                               |
@@ -258,10 +257,11 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose | sql                                                                     | expect                  |
       | conn_11 | true    | pause @@shardingNode = 'dn1,dn2' and timeout = 5,queue=10,wait_limit=1  | success                 |
+    #sleep 20s,because idleTimeout=10s,timeout more than 10s
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /tryResume/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+      /tryResume/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute "admin" cmd  in "dble-1" at background
@@ -273,6 +273,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
       """
     Then check result "A" value is "1"
+    #sleep 10s,because idleTimeout=10000
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
@@ -288,6 +289,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect                                                     | db       |
       | conn_3 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
+    Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceDelayAfterDdl.java" on "dble-1"
@@ -295,7 +297,6 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose | sql     | expect                     |
-      | conn_11 | false   | resume  | success                    |
       | conn_11 | true    | resume  | No shardingNode paused     |
     #case check lock on zookeeper
     Then get result of oscmd named "A" in "dble-1"
