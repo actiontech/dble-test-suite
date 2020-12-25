@@ -3,8 +3,7 @@
 # Created by quexiuping at 2020/12/11
 
 
-Feature: because 3.20.07 version change, the cluster function changes ,from doc: https://github.com/actiontech/dble-docs-cn/blob/master/2.Function/2.08_cluster.md
-  # Ha
+Feature: test "ha" in zk cluster
   ######case points:
   #  1.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbgroup"
   #  2.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbinstance"
@@ -104,7 +103,7 @@ Feature: because 3.20.07 version change, the cluster function changes ,from doc:
       | conn_0 | False   | create table sing2 (id int)                                  | success | schema1 |
       | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
     # case make sure data is correct on mysql
-    Given sleep "10" seconds
+    Given sleep "2" seconds
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql             | expect             | db  |
       | conn_0 | True    | show tables     | has{('sing2')}     | db1 |
