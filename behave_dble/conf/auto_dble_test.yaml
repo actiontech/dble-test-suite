@@ -53,17 +53,7 @@ cfg_dble:
       manager_password: 111111
       manager_port: 9066
   packet_name: actiontech-dble.tar.gz
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.02.1/
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.02.0/
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.06.0/
-#    ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.07.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.09.1/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.10.1/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.18.12.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.01.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.03.0/
-#  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.09.1/
-  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/3.20.10.99/
+  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/9.9.9.9/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   group1:
@@ -101,6 +91,36 @@ cfg_mysql:
       ip: 172.100.9.1
       port: 3306
       hostname: mysql-master3
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
+  group4:
+    master1:
+      ip: 172.100.9.9
+      port: 3306
+      hostname: mysql8-master1
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
+  group5:
+    master1:
+      ip: 172.100.9.10
+      port: 3306
+      hostname: mysql8-master2
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
+    slave1:
+      ip: 172.100.9.11
+      port: 3306
+      hostname: mysql8-slave1
+      user: test
+      password: 111111
+      install_path: /usr/local/mysql
+    slave2:
+      ip: 172.100.9.12
+      port: 3306
+      hostname: mysql8-slave2
       user: test
       password: 111111
       install_path: /usr/local/mysql
