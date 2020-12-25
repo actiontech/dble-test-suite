@@ -2,7 +2,7 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 #clean mysqld before testing, including: drop none-sys databases, reset replication relation, prepare uproxy wanted database and table for delay checking
-mysql_install=("mysql" "mysql-master1" "mysql-master2" "mysql-master3" "mysql-master4" "dble-1" "dble-2" "dble-3" "mysql-slave1" "mysql-slave2")
+mysql_install=("mysql" "mysql-master1" "mysql-master2" "mysql8-master1" "mysql8-master2" "dble-1" "dble-2" "dble-3" "mysql8-slave1" "mysql8-slave2")
 
 #mysql_install=("centos7-1" "mysql" "mysql-master" "mysql-slave1" "mysql-slave2" "centos6-1")
 count=${#mysql_install[@]}
@@ -30,7 +30,7 @@ echo "reset replication for mysql5.7"
 sh ./ChangeMaster.sh mysql-master2 dble-2 dble-3
 
 echo "reset replication for mysql8.0"
-sh ./ChangeMaster.sh mysql-master4 mysql-slave1 mysql-slave2
+sh ./ChangeMaster.sh mysql8-master2 mysql8-slave1 mysql8-slave2
 
 echo "create database in compare mysql"
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database schema1;create database schema2;create database schema3;\" "
