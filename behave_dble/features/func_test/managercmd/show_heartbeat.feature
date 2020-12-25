@@ -68,36 +68,36 @@ Feature: #test show @@heartbeat DBLE0REQ-167
       | hostS1 | 172.100.9.2 | 3306   | ok        | 0       | idle     | 5000      | false  | None           |
       | hostS2 | 172.100.9.3 | 3306   | init      | 0       | idle     | 5000      | true   | None           |
 #case one slave set iptables to check slave RS_CODE is "time_out"
-#    Given execute oscmd in "mysql-slave1"
-#      """
-#      iptables -A INPUT -s 172.100.9.1 -j DROP
-#      iptables -A OUTPUT -d 172.100.9.1 -j DROP
-#      """
-#    Given sleep "30" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "16"
-#      | conn   | toClose | sql               |
-#      | conn_0 | false   | show @@heartbeat  |
-#    Then check resultset "16" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None          |
-#      | hostS1 | 172.100.9.2 | 3306   | time_out  | 0       | 5000      | false  | None          |
-#      | hostS2 | 172.100.9.3 | 3306   | init      | 0       | 5000      | true   | None          |
-#
-#    Given execute oscmd in "mysql-slave1"
-#    """
-#    iptables -F
-#    """
-#    Given sleep "20" seconds
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "17"
-#      | conn   | toClose | sql               |
-#      | conn_0 | true    | show @@heartbeat  |
-#    Then check resultset "17" has lines with following column values
-#      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10  |
-#      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None           |
-#      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None           |
-#      | hostS1 | 172.100.9.2 | 3306   | ok        | 0       | 5000      | false  | None           |
-#      | hostS2 | 172.100.9.3 | 3306   | init      | 0       | 5000      | true   | None           |
+    Given execute oscmd in "mysql-slave1"
+      """
+      iptables -A INPUT -s 172.100.9.1 -j DROP
+      iptables -A OUTPUT -d 172.100.9.1 -j DROP
+      """
+    Given sleep "30" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "16"
+      | conn   | toClose | sql               |
+      | conn_0 | false   | show @@heartbeat  |
+    Then check resultset "16" has lines with following column values
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10 |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None          |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None          |
+      | hostS1 | 172.100.9.2 | 3306   | time_out  | 0       | 5000      | false  | None          |
+      | hostS2 | 172.100.9.3 | 3306   | init      | 0       | 5000      | true   | None          |
+
+    Given execute oscmd in "mysql-slave1"
+    """
+    iptables -F
+    """
+    Given sleep "20" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "17"
+      | conn   | toClose | sql               |
+      | conn_0 | true    | show @@heartbeat  |
+    Then check resultset "17" has lines with following column values
+      | NAME-0 | HOST-1      | PORT-2 | RS_CODE-3 | RETRY-4 | TIMEOUT-6 | STOP-9 | RS_MESSAGE-10  |
+      | hostM1 | 172.100.9.5 | 3306   | ok        | 0       | 0         | false  | None           |
+      | hostM2 | 172.100.9.6 | 3306   | ok        | 0       | 5000      | false  | None           |
+      | hostS1 | 172.100.9.2 | 3306   | ok        | 0       | 5000      | false  | None           |
+      | hostS2 | 172.100.9.3 | 3306   | init      | 0       | 5000      | true   | None           |
 
 # change heartbeat errorRetryCount and timeout to set connection retry and check slave RS_CODE is "ok"
     Given delete the following xml segment
@@ -196,8 +196,8 @@ Feature: #test show @@heartbeat DBLE0REQ-167
 #case set master iptables to check master RS_CODE is "time_out"
     Given execute oscmd in "mysql-master2"
       """
-       iptables -A INPUT -s 172.100.9.1 -j DROP
-       iptables -A OUTPUT -d 172.100.9.1 -j DROP
+      iptables -A INPUT -s 172.100.9.1 -j DROP
+      iptables -A OUTPUT -d 172.100.9.1 -j DROP
       """
     Given sleep "20" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "43"
