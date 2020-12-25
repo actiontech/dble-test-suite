@@ -9,13 +9,13 @@ sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql
 sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-master1:/root/.ssh/authorized_keys
 sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-master2:/root/.ssh/authorized_keys
 sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@driver-test:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-master3:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-master4:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-slave1:/root/.ssh/authorized_keys
-sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql-slave2:/root/.ssh/authorized_keys
+sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql8-master1:/root/.ssh/authorized_keys
+sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql8-master2:/root/.ssh/authorized_keys
+sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql8-slave1:/root/.ssh/authorized_keys
+sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@mysql8-slave2:/root/.ssh/authorized_keys
 
 #init mysql passwd
-mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3" "mysql-master3" "mysql-master4" "mysql-slave1" "mysql-slave2")
+mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3" "mysql8-master1" "mysql8-master2" "mysql8-slave1" "mysql8-slave2")
 count=${#mysql_install[@]}
 for((i=0; i<count; i=i+1)); do
     ssh root@${mysql_install[$i]}  "bash /usr/local/bin/mysql_init.sh"
