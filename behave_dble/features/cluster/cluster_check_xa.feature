@@ -20,7 +20,7 @@ Feature: on zookeeper to check "xa"
       """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given prepare a thread execute sql "commit" with "conn_1"
-#    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
+#    Then check btrace "BtraceXaDelay.java" output in "dble-1"
 #      """
 #      before xa commit
 #      """
