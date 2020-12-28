@@ -2,7 +2,7 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 #clean mysqld before testing, including: drop none-sys databases, reset replication relation, prepare uproxy wanted database and table for delay checking
-mysql_install=("mysql" "mysql-master1" "mysql-master2" "dble-1" "dble-2" "dble-3")
+mysql_install=("mysql" "mysql-master1" "mysql-master2" "mysql8-master1" "mysql8-master2" "dble-1" "dble-2" "dble-3" "mysql8-slave1" "mysql8-slave2")
 
 #mysql_install=("centos7-1" "mysql" "mysql-master" "mysql-slave1" "mysql-slave2" "centos6-1")
 count=${#mysql_install[@]}
@@ -18,7 +18,7 @@ for((i=0; i<count; i=i+1)); do
 done
 
 #clear xa id in mysql-master
-for((i=1; i<3; i=i+1)); do
+for((i=1; i<5; i=i+1)); do
 	echo "clear xa in ${mysql_install[$i]}"
 	xid=(`ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e 'xa recover'|grep -v data|awk '{print $4}'"`)
 	for ((j=0;j<${#xid[@]};j++));do
@@ -26,29 +26,17 @@ for((i=1; i<3; i=i+1)); do
     done
 done
 
-echo "reset master mysql-master2"
-ssh root@${mysql_install[2]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master;stop slave;reset slave all;\" "
-ssh root@${mysql_install[2]}  "sed -i -e '/log-bin=/d' -e '/binlog_format=/d' -e '/relay-log=/d' -e '/\[mysqld\]/a log-bin=mysql-bin \nbinlog_format=row \nrelay-log=mysql-relay-bin' /etc/my.cnf"
-ssh root@${mysql_install[2]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"create user if not exists 'repl'@'%' identified by '111111'\""
-ssh root@${mysql_install[2]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"grant replication slave on *.* to 'repl'@'%'\""
-ssh root@${mysql_install[2]}  "/usr/local/mysql/support-files/mysql.server restart"
+echo "reset replication for mysql5.7"
+sh ./ChangeMaster.sh mysql-master2 dble-2 dble-3
 
-sleep 60s
-
-#i=4 stands for mysql slave in dble-2, i=5 stands for mysql slave in dble-3
-for((i=4; i<6; i=i+1)); do
-	echo "reset slave ${mysql_install[$i]}"
-	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"stop slave; reset slave all;\" "
-	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"reset master; set global gtid_purged='';\" "
-    ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -e \"change master to master_host='172.100.9.6', master_user='repl', master_password='111111', master_auto_position=1\""
-	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -P3306 -e \"start slave;\" "
-done
+echo "reset replication for mysql8.0"
+sh ./ChangeMaster.sh mysql8-master2 mysql8-slave1 mysql8-slave2
 
 echo "create database in compare mysql"
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database schema1;create database schema2;create database schema3;\" "
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database testdb\" "
 
-for((i=0; i<4; i=i+1)); do
+for((i=0; i<6; i=i+1)); do
     echo "add some users and database in ${mysql_install[$i]}"
     ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"drop user if exists 'test'@'%';create user 'test'@'%' identified by '111111'\" "
 	ssh root@${mysql_install[$i]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"grant all on *.* to 'test'@'%' with grant option\" "
