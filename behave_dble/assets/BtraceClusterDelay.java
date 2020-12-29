@@ -1,10 +1,7 @@
 package com.actiontech.dble.btrace.script;
 
 import com.sun.btrace.BTraceUtils;
-import com.sun.btrace.annotations.BTrace;
-import com.sun.btrace.annotations.OnMethod;
-import com.sun.btrace.annotations.ProbeClassName;
-import com.sun.btrace.annotations.ProbeMethodName;
+import com.sun.btrace.annotations.*;
 
 
 @BTrace(unsafe = true)
@@ -409,7 +406,8 @@ public final class BtraceClusterDelay {
 
     @OnMethod(
         clazz = "com.actiontech.dble.server.NonBlockingSession",
-        method = "checkBackupStatus"
+        method = "checkBackupStatus",
+        location = @Location(value=Kind.RETURN)
     )
     public static void checkBackupStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into NonBlockingSession,start sleep ");
