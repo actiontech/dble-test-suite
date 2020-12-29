@@ -106,7 +106,7 @@ Feature: test group by
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
-  @NORMAL
+  @NORMAL @skip # skip for mysql8.0 replication env
   Scenario: Scenario: the version of all backend mysql nodes are 8.0.* #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -302,8 +302,8 @@ Feature: test group by
       | conn_0 | False     | drop table if exists sharding_4_t1                                                                                                 | success                                         | schema1 |
       | conn_0 | False     | create table sharding_4_t1(id int, name varchar(50))                                                                             |  success                                        | schema1 |
       | conn_0 | False     | insert into sharding_4_t1 values(1,'d'),(2,'c'),(13,'b'),(24,'a'),(5,'z'),(9,'w'),(10,'r'),(6,'l')                        | success                                          | schema1  |
-      | conn_0 | False     | /*!dble:sql=select id from sharding_4_t1 where id=1*/select name from sharding_4_t1 group by name                         | has{(('c',),('r',),('l',))}                    | schema1  |
-      | conn_0 | False     | /*!dble:sql=select id from sharding_4_t1 where id=2*/select name from sharding_4_t1 group by name                         | has{(('b',),('d',),('w',),(z,))}               | schema1  |
+      | conn_0 | False     | /*!dble:sql=select id from sharding_4_t1 where id=1*/select name from sharding_4_t1 group by name                         | has{(('b',),('d',),('w',),('z',))}            | schema1  |
+      | conn_0 | False     | /*!dble:sql=select id from sharding_4_t1 where id=2*/select name from sharding_4_t1 group by name                         | has{(('c',),('r',),('l',))}                   | schema1  |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_D"
       | conn   | toClose | sql                                                                  |
       | conn_0 | False   | explain select name from no_sharding group by name            |
@@ -321,4 +321,4 @@ Feature: test group by
       | conn_0 | True    | explain /*!dble:sql=select id from sharding_4_t1 where id=1*/select name from sharding_4_t1 group by name|
     Then check resultset "rs_F" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
-      | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
+      | dn2 | BASE SQL | select name from sharding_4_t1 group by name |
