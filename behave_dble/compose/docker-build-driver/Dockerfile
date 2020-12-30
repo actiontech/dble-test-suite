@@ -1,6 +1,6 @@
 From ubuntu:18.04
 RUN apt-get update
-RUN apt-get -y install curl wget vim build-essential libboost1.65-dev gdb git cmake libmysqlclient-dev libyaml-cpp-dev openssh-server
+RUN apt-get -y install curl wget vim build-essential libboost1.65-dev gdb git cmake libmysqlclient-dev libyaml-cpp-dev openssh-server iptables
 RUN wget -P /opt https://dev.mysql.com/get/Downloads/Connector-C++/mysql-connector-c++-1.1.11.tar.gz
 RUN tar zxvf /opt/mysql-connector-c++-1.1.11.tar.gz -C /opt/
 RUN sed -i -e '/list(APPEND SYS_LIBRARIES "mysql_sys")/d' /opt/mysql-connector-c++-1.1.11/FindMySQL.cmake
