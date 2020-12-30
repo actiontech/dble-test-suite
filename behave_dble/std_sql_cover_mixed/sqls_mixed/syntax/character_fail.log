@@ -1,7 +1,3 @@
-===file:sqls_mixed/syntax/character.sql, id:15, sql:[select CONCAT(_ucs2 X'0041', _ucs2 X'0042')]===
-dble:[None]
-mysql:[(('AB',),)]
-dble err:(1064, 'syntax error, expect RPAREN, actual IDENTIFIER pos 21, line 1, column 20, token IDENTIFIER X')
 ===file:sqls_mixed/syntax/character.sql, id:33, sql:[SELECT HEX('à\n'), HEX(_latin1'à\n')]===
 dble:[[('C33F0A', 'C33F0A')]]
 mysql:[[('C3A00A', 'C3A00A')]]
@@ -20,36 +16,36 @@ mysql:[[('hello?',)]]
 ===file:sqls_mixed/syntax/character.sql, id:50, sql:[alter table sharding_4_t1 change c c national character varying(20)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'syntax error, expect SET, actual IDENTIFIER pos 63, line 1, column 56, token IDENTIFIER varying')
+dble err:(1064, 'syntax error, expect SET, actual IDENTIFIER pos 63, line 1, column 57, token IDENTIFIER varying')
 ===file:sqls_mixed/syntax/character.sql, id:63, sql:[insert into sharding_4_t1 values(3,'你')]===
 dble:[()]
 mysql:[None]
 mysql err:(1406, "Data too long for column 'c' at row 1")
 ===file:sqls_mixed/syntax/character.sql, id:65, sql:[select * from sharding_4_t1;]===
-dble:[[(3L, '??')]]
+dble:[[(3, '??')]]
 mysql:[[]]
 ===file:sqls_mixed/syntax/character.sql, id:69, sql:[select * from sharding_4_t1;]===
-dble:[[(3L, '\xe6\xb5\xa3?'), (4L, '\xe6\x88\x91')]]
-mysql:[[(4L, '\xe6\x88\x91')]]
+dble:[[(3, '\xe6\xb5\xa3?'), (4, '\xe6\x88\x91')]]
+mysql:[[(4, '\xe6\x88\x91')]]
 ===file:sqls_mixed/syntax/character.sql, id:70, sql:[select * from sharding_4_t1]===
-dble:[[(3L, '\xe6\xb5\xa3?'), (4L, '\xe6\x88\x91')]]
-mysql:[[(4L, '\xe6\x88\x91')]]
+dble:[[(3, '\xe6\xb5\xa3?'), (4, '\xe6\x88\x91')]]
+mysql:[[(4, '\xe6\x88\x91')]]
 ===file:sqls_mixed/syntax/character.sql, id:72, sql:[insert into sharding_4_t1 values(5,"他")]===
 dble:[()]
 mysql:[None]
 mysql err:(1406, "Data too long for column 'c' at row 1")
 ===file:sqls_mixed/syntax/character.sql, id:73, sql:[select * from sharding_4_t1 ;]===
-dble:[[(3L, '\xe4\xbd?'), (4L, '\xce\xd2'), (5L, '\xe4\xbb?')]]
-mysql:[[(4L, '\xce\xd2')]]
+dble:[[(3, '\xe4\xbd?'), (4, '\xce\xd2'), (5, '\xe4\xbb?')]]
+mysql:[[(4, '\xce\xd2')]]
 ===file:sqls_mixed/syntax/character.sql, id:76, sql:[select * from sharding_4_t1;]===
-dble:[[(3L, '\xe4\xbd?'), (4L, '\xce\xd2'), (5L, '\xe4\xbb?'), (6L, '??')]]
-mysql:[[(4L, '\xce\xd2'), (6L, '?')]]
+dble:[[(3, '\xe4\xbd?'), (4, '\xce\xd2'), (5, '\xe4\xbb?'), (6, '??')]]
+mysql:[[(4, '\xce\xd2'), (6, '?')]]
 ===file:sqls_mixed/syntax/character.sql, id:79, sql:[select * from sharding_4_t1;]===
-dble:[[(3L, '\xe6\xb5\xa3?'), (4L, '\xe6\x88\x91'), (5L, '\xe6\xb5\xa0?'), (6L, '??'), (7L, '\xe5\xae\x83')]]
-mysql:[[(4L, '\xe6\x88\x91'), (6L, '?'), (7L, '\xe5\xae\x83')]]
+dble:[[(3, '\xe6\xb5\xa3?'), (4, '\xe6\x88\x91'), (5, '\xe6\xb5\xa0?'), (6, '??'), (7, '\xe5\xae\x83')]]
+mysql:[[(4, '\xe6\x88\x91'), (6, '?'), (7, '\xe5\xae\x83')]]
 ===file:sqls_mixed/syntax/character.sql, id:82, sql:[select * from sharding_4_t1;]===
-dble:[[(3L, '??'), (4L, '?'), (5L, '??'), (6L, '??'), (7L, '?'), (8L, '???a')]]
-mysql:[[(4L, '?'), (6L, '?'), (7L, '?'), (8L, '???a')]]
+dble:[[(3, '??'), (4, '?'), (5, '??'), (6, '??'), (7, '?'), (8, '???a')]]
+mysql:[[(4, '?'), (6, '?'), (7, '?'), (8, '???a')]]
 ===file:sqls_mixed/syntax/character.sql, id:85, sql:[select * from sharding_4_t1;]===
-dble:[[(3L, '\xe4\xbd?'), (4L, '\xce\xd2'), (5L, '\xe4\xbb?'), (6L, '??'), (7L, '\xcb\xfc'), (8L, '???a'), (9L, '??a')]]
-mysql:[[(4L, '\xce\xd2'), (6L, '?'), (7L, '\xcb\xfc'), (8L, '???a'), (9L, '??')]]
+dble:[[(3, '\xe4\xbd?'), (4, '\xce\xd2'), (5, '\xe4\xbb?'), (6, '??'), (7, '\xcb\xfc'), (8, '???a'), (9, '??a')]]
+mysql:[[(4, '\xce\xd2'), (6, '?'), (7, '\xcb\xfc'), (8, '???a'), (9, '??')]]

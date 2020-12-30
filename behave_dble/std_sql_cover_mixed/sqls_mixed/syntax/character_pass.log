@@ -1,0 +1,116 @@
+===file:sqls_mixed/syntax/character.sql, id:4, sql:[drop table if EXISTS  sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:5, sql:[CREATE TABLE sharding_4_t1 ( id CHAR(1) CHARACTER SET latin1, c2 CHAR(1) CHARACTER SET ascii)]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:6, sql:[INSERT INTO sharding_4_t1 VALUES (1,'b')]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:7, sql:[SELECT CONCAT(id,c2) FROM sharding_4_t1]===
+dble:[[('1b',)]]
+===file:sqls_mixed/syntax/character.sql, id:9, sql:[drop table if EXISTS  sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:10, sql:[SET NAMES ascii]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:11, sql:[CREATE TABLE sharding_4_t1 (id INT, b VARCHAR(10) CHARACTER SET latin1)]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:12, sql:[INSERT INTO sharding_4_t1 VALUES (1,'b')]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:13, sql:[SELECT CONCAT(FORMAT(id, 4), b) FROM sharding_4_t1]===
+dble:[[('1.0000b',)]]
+===file:sqls_mixed/syntax/character.sql, id:15, sql:[select CONCAT(_ucs2 X'0041', _ucs2 X'0042')]===
+dble:[[('AB',)]]
+===file:sqls_mixed/syntax/character.sql, id:17, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:18, sql:[create table sharding_4_t1(id INT ,c varchar(50) character set latin1) default charset=utf8]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:20, sql:[insert into sharding_4_t1 values(1,'汤姆')]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:21, sql:[SELECT * FROM sharding_4_t1 WHERE c='汤姆']===
+dble:[[(1, '\xe6\xb1\xa4\xe5\xa7\x86')]]
+===file:sqls_mixed/syntax/character.sql, id:23, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:24, sql:[CREATE TABLE `sharding_4_t1` (id INT ,`c` char(50) CHARACTER SET gbk DEFAULT NULL) ENGINE=InnoDB DEFAULT CHARSET=utf8]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:28, sql:[SELECT _utf8'abc' COLLATE utf8_danish_ci]===
+dble:[[('abc',)]]
+===file:sqls_mixed/syntax/character.sql, id:29, sql:[select _ascii'asdf' collate ascii_general_ci]===
+dble:[[('asdf',)]]
+===file:sqls_mixed/syntax/character.sql, id:30, sql:[select _utf8'你']===
+dble:[[('?',)]]
+===file:sqls_mixed/syntax/character.sql, id:32, sql:[SET NAMES sjis]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:35, sql:[set names gbk]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:38, sql:[SELECT n'你hello']===
+dble:[[('\xc4\xe3hello',)]]
+===file:sqls_mixed/syntax/character.sql, id:41, sql:[set names default]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:42, sql:[select '好']===
+dble:[[('\xe5\xa5\xbd',)]]
+===file:sqls_mixed/syntax/character.sql, id:43, sql:[SELECT n'hello']===
+dble:[[('hello',)]]
+===file:sqls_mixed/syntax/character.sql, id:46, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:47, sql:[create table sharding_4_t1(id int,c nchar(10))]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:48, sql:[insert into sharding_4_t1 values(1,'你好')]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:49, sql:[select * from sharding_4_t1]===
+dble:[[(1, '\xe4\xbd\xa0\xe5\xa5\xbd')]]
+===file:sqls_mixed/syntax/character.sql, id:51, sql:[insert into sharding_4_t1 values(2,'你好2')]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:52, sql:[select * from sharding_4_t1]===
+dble:[[(1, '\xe4\xbd\xa0\xe5\xa5\xbd'), (2, '\xe4\xbd\xa0\xe5\xa5\xbd2')]]
+===file:sqls_mixed/syntax/character.sql, id:54, sql:[drop table if EXISTS  sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:55, sql:[create table sharding_4_t1(id INT,c char(50))]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:57, sql:[set names 'gbk']===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:60, sql:[select * from sharding_4_t1;]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:61, sql:[select * from sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:62, sql:[alter table sharding_4_t1 modify c varchar(50) character set utf8]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:66, sql:[set names 'utf8']===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:68, sql:[insert into sharding_4_t1 values(4,"我")]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:74, sql:[set character set 'gb2312']===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:75, sql:[insert into sharding_4_t1 values(6,"她")]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:78, sql:[insert into sharding_4_t1 values(7,"它")]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:80, sql:[set character set 'ascii']===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:81, sql:[insert into sharding_4_t1 values(8,"它a")]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:84, sql:[insert into sharding_4_t1 values(9,"他a")]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:86, sql:[truncate sharding_4_t1]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:87, sql:[set names utf8]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:88, sql:[insert into sharding_4_t1 values(1,"它");]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:89, sql:[select * FROM sharding_4_t1]===
+dble:[[(1, '\xe5\xae\x83')]]
+===file:sqls_mixed/syntax/character.sql, id:91, sql:[insert into sharding_4_t1 values(2,"她");]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:92, sql:[select * FROM sharding_4_t1]===
+dble:[[(1, '?'), (2, '???')]]
+===file:sqls_mixed/syntax/character.sql, id:93, sql:[set @@character_set_results=NULL ;]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:94, sql:[insert into sharding_4_t1 values(3,"你");]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:95, sql:[select * FROM sharding_4_t1]===
+dble:[[(1, '\xe5\xae\x83'), (2, '???'), (3, '???')]]
+===file:sqls_mixed/syntax/character.sql, id:97, sql:[insert into sharding_4_t1 values(4,"我");]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:98, sql:[select * FROM sharding_4_t1]===
+dble:[[(1, '\xe5\xae\x83'), (2, '???'), (3, '???'), (4, '\xe6\x88\x91')]]
+===file:sqls_mixed/syntax/character.sql, id:99, sql:[drop table sharding_4_t1;]===
+dble:[[]]
+===file:sqls_mixed/syntax/character.sql, id:103, sql:[drop table if exists sharding_4_t1]===
+dble:[[]]
