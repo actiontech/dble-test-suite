@@ -1,10 +1,7 @@
 package com.actiontech.dble.btrace.script;
 
 import com.sun.btrace.BTraceUtils;
-import com.sun.btrace.annotations.BTrace;
-import com.sun.btrace.annotations.OnMethod;
-import com.sun.btrace.annotations.ProbeClassName;
-import com.sun.btrace.annotations.ProbeMethodName;
+import com.sun.btrace.annotations.*;
 
 
 @BTrace(unsafe = true)
@@ -37,14 +34,15 @@ public final class BtraceClusterDelay {
     }
 
     @OnMethod(
-            clazz = "com.actiontech.dble.manager.response.ShowBinlogStatus",
+            clazz = "com.actiontech.dble.services.manager.response.ShowBinlogStatus",
             method = "getQueryResult"
     )
-    public static void showBinlogStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.print("get into showBinlogStatus ");
-        BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(10L);
-
+    public static void ShowBinlogStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.println("get into ShowBinlogStatus,start sleep ");
+        BTraceUtils.println(" __________________________ ");
+        Thread.sleep(60000L);
+        BTraceUtils.println("sleep end ");
+        BTraceUtils.println(" __________________________ ");
     }
 
     @OnMethod(
@@ -402,6 +400,19 @@ public final class BtraceClusterDelay {
         BTraceUtils.println("get into tryResume,start sleep ");
         BTraceUtils.println(" __________________________ ");
         Thread.sleep(30000L);
+        BTraceUtils.println("sleep end ");
+        BTraceUtils.println(" __________________________ ");
+    }
+
+    @OnMethod(
+        clazz = "com.actiontech.dble.server.NonBlockingSession",
+        method = "checkBackupStatus",
+        location = @Location(value=Kind.RETURN)
+    )
+    public static void checkBackupStatus(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.println("get into NonBlockingSession,start sleep ");
+        BTraceUtils.println(" __________________________ ");
+        Thread.sleep(60000L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
