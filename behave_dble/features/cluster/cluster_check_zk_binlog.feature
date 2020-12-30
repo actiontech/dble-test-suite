@@ -104,7 +104,7 @@ Feature: test "binlog" in zk cluster
 
 
   @skip_restart
-  Scenario: during "xa",happen bad block,check "showBinlogStatusTimeout"   #2
+  Scenario: during "transaction",happen bad block,check "showBinlogStatusTimeout"   #2
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect  | db      |
       | conn_11 | False   | begin                              | success | schema1 |
@@ -366,7 +366,7 @@ Feature: test "binlog" in zk cluster
 
 
   @skip_restart  @btrace
-  Scenario: during "xa" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #4
+  Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #4
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql                     | expect  |
       | conn_2  | False    | show databases         | success |
@@ -647,7 +647,7 @@ Feature: test "binlog" in zk cluster
 
 
   @skip_restart  @btrace
-  Scenario: during "xa" ,the commit would "hang" #6
+  Scenario: during "transaction" ,the commit would "hang" #6
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                    | expect  | db      |
       | conn_21 | False   | begin                                  | success | schema1 |
@@ -712,7 +712,7 @@ Feature: test "binlog" in zk cluster
 
 
   @skip_restart  @btrace
-  Scenario: during "xa" ,the admin cmd of "show @@binlog.status" be blocked,and set not timeout  #7
+  Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set not timeout  #7
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql                     | expect  |
       | conn_2  | False    | show databases         | success |
