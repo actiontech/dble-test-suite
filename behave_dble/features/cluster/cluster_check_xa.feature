@@ -2,6 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/23
 
+
 Feature: on zookeeper to check "xa"
 
   @btrace
@@ -20,10 +21,10 @@ Feature: on zookeeper to check "xa"
       """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given prepare a thread execute sql "commit" with "conn_1"
-#    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
-#      """
-#      before xa commit
-#      """
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "1" times
+      """
+      before xa commit
+      """
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1 | grep "xalog" | wc -l
