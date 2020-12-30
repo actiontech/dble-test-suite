@@ -1,3 +1,6 @@
+/* Copyright (C) 2016-2020 ActionTech.
+ * License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+ */
 package com.actiontech.dble;
 
 import java.sql.*;
@@ -76,6 +79,10 @@ public class CapClientFoundRowsTest extends InterfaceTest {
         Connection trueConn = getDbleClientConnection(true);
         executeSpecialSql(trueConn, 0);
 
+        if (dbleTestConn != null) {
+            dbleTestConn.close();
+        }
+
         System.out.println("end :" + this.getClass() + " -> testUseAffectedRowsFalse()");
     }
 
@@ -89,7 +96,6 @@ public class CapClientFoundRowsTest extends InterfaceTest {
         System.out.println("start :" + this.getClass() + " -> enableCapClientFoundRows()");
 
         Statement statement = null;
-        ResultSet resultSet = null;
 
         try {
             dbleTestConn.setCatalog(dbleProp.dbName);
@@ -98,6 +104,7 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             statement.addBatch("create table sharding_4_t1(id int, name varchar(10), age int, primary key (id))");
             statement.addBatch("INSERT INTO sharding_4_t1(id, name, age) VALUES(1, 'name1', 20) ON DUPLICATE KEY UPDATE name='name1', age=20");
             statement.addBatch("INSERT INTO sharding_4_t1(id, name, age) VALUES(1, 'name1', 20) ON DUPLICATE KEY UPDATE name='name1', age=20");
+            statement.addBatch("drop table if exists sharding_4_t1");
             int[] resultAry = statement.executeBatch();
 
             for (int i = 0; i < resultAry.length; i++){
@@ -117,9 +124,6 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             System.out.println(e.getMessage());
             e.printStackTrace(System.err);
         }finally {
-            if(resultSet != null) {
-                resultSet.close();
-            }
             if(statement != null) {
                 statement.close();
             }
@@ -148,7 +152,7 @@ public class CapClientFoundRowsTest extends InterfaceTest {
      */
     private Connection getDbleClientConnection(boolean useAffectedRows) throws SQLException{
         String urlString = "jdbc:mysql://" + dbleProp.serverName + ":" + dbleProp.portNumber + "";
-        String fullUrlString = urlString + "??useSSL=false&allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false&useAffectedRows=" + useAffectedRows;
+        String fullUrlString = urlString + "?useSSL=false&allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false&useAffectedRows=" + useAffectedRows;
         Main.print_debug(fullUrlString + ",user " + dbleProp.userName + ", password " + dbleProp.password);
 
         Connection dbleTestConn = DriverManager.getConnection(fullUrlString, dbleProp.userName, dbleProp.password);
