@@ -7,6 +7,7 @@ import logging
 import os
 import re
 from behave import *
+from hamcrest import *
 
 from steps.lib.utils import get_node
 
@@ -15,7 +16,8 @@ logger = logging.getLogger('steps.server_steps')
 
 @Given('execute linux command in "{host_name}"')
 @Given('execute linux command in "{host_name}" and save result in "{result_var}"')
-def step_impl(context, host_name, result_var=None):
+@Given('execute linux command in "{host_name}" and contains exception "{exception_var}"')
+def step_impl(context, host_name, result_var=None, exception_var=None):
     linux_cmd = context.text
     assert linux_cmd, "expect linux command not null,but it is"
 
@@ -37,7 +39,10 @@ def step_impl(context, host_name, result_var=None):
 
     if node:
         rc, sto, ste = node.ssh_conn.exec_command(linux_cmd)
-        assert len(ste) == 0, "execute linux cmd {} failed for {}".format(linux_cmd, ste)
+        if exception_var:
+            assert contains_string(str(ste)), "expect execute linux cmd {} failed for {}, real err: {}".format(linux_cmd, exception_var, ste)
+        else:
+            assert len(ste) == 0, "execute linux cmd {} failed for {}".format(linux_cmd, ste)
     else:
         status = os.system(linux_cmd)
         assert status == 0, "cmd {} failed".format(linux_cmd)
