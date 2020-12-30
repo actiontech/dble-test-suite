@@ -5,6 +5,7 @@
 
 Feature: check txIsolation supports tx_/transaction_ variables
 
+  @restore_mysql_service
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -99,7 +100,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     heartbeat to [[]172.100.9.11:3306[]] setOK
     """
 
-
+  @restore_mysql_service
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -195,6 +196,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
 
 
+  @restore_mysql_service
   Scenario: writeHost and readHost mysql >= 8.0 #3
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -296,6 +298,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
 
 
+  @restore_mysql_service
   Scenario: writeHost and readHost mysql < 8.0 #4
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
