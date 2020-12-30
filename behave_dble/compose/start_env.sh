@@ -6,6 +6,9 @@ cd /opt/behave/dble-test-suite/behave_dble/compose/
 docker network create --gateway 172.100.9.253 --subnet 172.100.9.0/24 dble_test
 docker-compose -f docker-compose.yml up -d --force
 docker exec driver-test sh -c "/etc/init.d/ssh start"
+docker cp docker-build-behave/init_test_env.sh behave:/docker-build/
+docker cp docker-build-behave/ChangeMaster.sh behave:/docker-build/
+docker cp docker-build-behave/resetReplication.sh behave:/docker-build/
 docker exec -it behave bash "/docker-build/init_test_env.sh"
 
 /bin/bash
