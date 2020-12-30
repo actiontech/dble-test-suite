@@ -1,7 +1,7 @@
 ===file:sqls_mixed/syntax/identifiers.sql, id:15, sql:[create table "tb2" (col INT)]===
 dble:[None]
 mysql:[()]
-dble err:(-1, 'error totally whack')
+dble err:(5316, 'Create TABLE OK, but generate metedata failed. The reason may be that the current druid parser can not recognize part of the sql or the user for backend mysql does not have permission to execute the heartbeat sql.')
 ===file:sqls_mixed/syntax/identifiers.sql, id:32, sql:[drop view if exists abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklm]===
 dble:[()]
 mysql:[None]
@@ -17,7 +17,7 @@ mysql err:(1059, "Identifier name 'abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrs
 ===file:sqls_mixed/syntax/identifiers.sql, id:46, sql:[select id from .sharding_4_t1]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'ERROR. pos 16, line 1, column 16, token DOT')
+dble err:(1064, 'ERROR. pos 16, line 1, column 16, token .')
 ===file:sqls_mixed/syntax/identifiers.sql, id:52, sql:[create table BIT_AND (i int)]===
 dble:[None]
 mysql:[()]
@@ -30,14 +30,10 @@ dble err:(1064, "You have an error in your SQL syntax; check the manual that cor
 dble:[None]
 mysql:[()]
 dble err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'BIT_XOR (i int)' at line 1")
-===file:sqls_mixed/syntax/identifiers.sql, id:57, sql:[drop table if EXISTS CAST]===
-dble:[None]
-mysql:[()]
-dble err:(1064, 'error pos 25, line 1, column 21, token CAST')
 ===file:sqls_mixed/syntax/identifiers.sql, id:58, sql:[create table CAST (i int)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error pos 17, line 1, column 13, token CAST')
+dble err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'CAST (i int)' at line 1")
 ===file:sqls_mixed/syntax/identifiers.sql, id:60, sql:[create table CURDATE (i int)]===
 dble:[None]
 mysql:[()]
@@ -130,10 +126,6 @@ dble err:(1064, "You have an error in your SQL syntax; check the manual that cor
 dble:[None]
 mysql:[()]
 dble err:(1064, "You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'VAR_SAMP (i int)' at line 1")
-===file:sqls_mixed/syntax/identifiers.sql, id:128, sql:[CREATE TABLE `interval` (begin INT, end INT)]===
-dble:[None]
-mysql:[()]
-dble err:(1064, 'error pos 30, line 1, column 26, token BEGIN')
 ===file:sqls_mixed/syntax/identifiers.sql, id:129, sql:[drop table if exists schema1.interval]===
 dble:[None]
 mysql:[()]
@@ -141,11 +133,11 @@ dble err:(1064, "You have an error in your SQL syntax; check the manual that cor
 ===file:sqls_mixed/syntax/identifiers.sql, id:130, sql:[CREATE TABLE schema1.interval (begin INT, end INT)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error pos 36, line 1, column 32, token BEGIN')
+dble err:(1050, "Table 'schema1.interval' or table meta already exists")
 ===file:sqls_mixed/syntax/identifiers.sql, id:151, sql:[create table .drop(`order` int, `add` int)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error pos 14, line 1, column 13, token DOT')
+dble err:(1064, 'illegal name, pos 14, line 1, column 14, token .')
 ===file:sqls_mixed/syntax/identifiers.sql, id:152, sql:[insert into `drop`(`order`, `add`) values(1,1)]===
 dble:[None]
 mysql:[()]
@@ -153,28 +145,28 @@ dble err:(1146, "Table 'db3.drop' doesn't exist")
 ===file:sqls_mixed/syntax/identifiers.sql, id:153, sql:[insert into .drop(drop.order, drop.add) values(1,1)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error pos 13, line 1, column 12, token DOT')
+dble err:(1064, 'illegal name, pos 13, line 1, column 13, token .')
 ===file:sqls_mixed/syntax/identifiers.sql, id:154, sql:[insert into .drop(.drop.order, .drop.add) values(1,1)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error pos 13, line 1, column 12, token DOT')
+dble err:(1064, 'illegal name, pos 13, line 1, column 13, token .')
 ===file:sqls_mixed/syntax/identifiers.sql, id:155, sql:[insert into .drop(schema1.drop.order, schema1.drop.add) values(1,1)]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'error pos 13, line 1, column 12, token DOT')
+dble err:(1064, 'illegal name, pos 13, line 1, column 13, token .')
 ===file:sqls_mixed/syntax/identifiers.sql, id:156, sql:[select `order` from .drop]===
 dble:[None]
-mysql:[((1L,), (1L,), (1L,), (1L,))]
-dble err:(1064, 'ERROR. pos 21, line 1, column 21, token DOT')
+mysql:[((1,), (1,), (1,), (1,))]
+dble err:(1064, 'ERROR. pos 21, line 1, column 21, token .')
 ===file:sqls_mixed/syntax/identifiers.sql, id:157, sql:[select drop.order from .drop order by `add`]===
 dble:[None]
-mysql:[((1L,), (1L,), (1L,), (1L,))]
+mysql:[((1,), (1,), (1,), (1,))]
 dble err:(1064, 'ERROR. pos 11, line 1, column 7, token DROP')
 ===file:sqls_mixed/syntax/identifiers.sql, id:158, sql:[select drop.order from .drop order by drop.add]===
 dble:[None]
-mysql:[((1L,), (1L,), (1L,), (1L,))]
+mysql:[((1,), (1,), (1,), (1,))]
 dble err:(1064, 'ERROR. pos 11, line 1, column 7, token DROP')
 ===file:sqls_mixed/syntax/identifiers.sql, id:159, sql:[select drop.order from .drop order by .drop.add]===
 dble:[None]
-mysql:[((1L,), (1L,), (1L,), (1L,))]
+mysql:[((1,), (1,), (1,), (1,))]
 dble err:(1064, 'ERROR. pos 11, line 1, column 7, token DROP')
