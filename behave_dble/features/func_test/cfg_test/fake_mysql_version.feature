@@ -16,8 +16,6 @@ Feature: test fakeMySQLVersion support mysql8.0
 
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
       | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -29,12 +27,6 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-    </schema>
-
     <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
     <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
@@ -108,8 +100,6 @@ Feature: test fakeMySQLVersion support mysql8.0
 
     Given delete the following xml segment
       | file         | parent         | child                  |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
-      | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
       | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -121,12 +111,6 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
-        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
-        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
-    </schema>
-
     <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
     <shardingNode dbGroup="ha_group1" database="db2" name="dn2" />
     <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
