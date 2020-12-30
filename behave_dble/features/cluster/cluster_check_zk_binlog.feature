@@ -423,7 +423,7 @@ Feature: test "binlog" in zk cluster
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
       """
     Then check result "A" value is "1"
-    #wait 10s,because btrace sleep 10s,create timeout showBinlogStatusTimeout=5000
+    #wait 15s,because btrace sleep 15s,create timeout showBinlogStatusTimeout=5000
     Given sleep "15" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
