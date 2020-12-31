@@ -1,5 +1,7 @@
 #!/bin/bash
 #run this script for the first time init environment
+base_dir=$( dirname ${BASH_SOURCE[0]} )
+echo ${base_dir}
 
 #ssh with no pwd
 sshpass -psshpass scp -o "StrictHostKeyChecking no" ~/.ssh/id_rsa.pub root@dble-1:/root/.ssh/authorized_keys
@@ -21,4 +23,4 @@ for((i=0; i<count; i=i+1)); do
     ssh root@${mysql_install[$i]}  "bash /usr/local/bin/mysql_init.sh"
 done
 
-bash /init_assets/dble-test-suite/behave_dble/compose/docker-build-behave/resetReplication.sh
+bash ${base_dir}/resetReplication.sh
