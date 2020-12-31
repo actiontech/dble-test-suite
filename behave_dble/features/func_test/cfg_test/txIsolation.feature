@@ -7,6 +7,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
   @restore_mysql_service
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
+  """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql8-slave1':{'start_mysql':1}}}
+  """
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -102,6 +105,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
   @restore_mysql_service
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
+  """
+    {'restore_mysql_service':{'mysql8-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
+  """
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -198,6 +204,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
   @restore_mysql_service
   Scenario: writeHost and readHost mysql >= 8.0 #3
+  """
+    {'restore_mysql_service':{'mysql8-master2':{'start_mysql':1}, 'mysql8-slave1':{'start_mysql':1}}}
+  """
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -300,6 +309,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
   @restore_mysql_service
   Scenario: writeHost and readHost mysql < 8.0 #4
+  """
+    {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}, 'mysql-slave1':{'start_mysql':1}}}
+  """
 # check isolation、autocommit
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
