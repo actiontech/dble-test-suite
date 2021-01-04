@@ -1,0 +1,145 @@
+version: '2'
+networks:
+  default:
+    external:
+       name: dble_test
+services:
+    dble-1:
+        image: docker-registry:5000/actiontech/dble_test_inner
+        container_name: dble-1
+        hostname: dble-1
+        privileged: true
+        stdin_open: true
+        tty: true
+        command: ["/opt/dble_init.sh","1"]
+        volumes:
+            - /opt/auto_build:/init_assets
+        ports:
+            - "7131:8066"
+            - "7141:3306"
+            - "7151:22"
+        networks:
+            default:
+              ipv4_address: 172.100.9.1
+        dns: 114.114.114.114
+        working_dir: /opt
+    dble-2:
+        image: docker-registry:5000/actiontech/dble_test_inner
+        container_name: dble-2
+        hostname: dble-2
+        privileged: true
+        stdin_open: true
+        tty: true
+        command: ["/opt/dble_init.sh","2"]
+        volumes:
+            - /opt/auto_build:/init_assets
+        ports:
+            - "7132:8066"
+            - "7142:3306"
+            - "7152:22"
+        networks:
+            default:
+              ipv4_address: 172.100.9.2
+        dns: 114.114.114.114
+        working_dir: /opt
+    dble-3:
+        image: docker-registry:5000/actiontech/dble_test_inner
+        container_name: dble-3
+        hostname: dble-3
+        privileged: true
+        stdin_open: true
+        tty: true
+        command: ["/opt/dble_init.sh","3"]
+        volumes:
+            - /opt/auto_build:/init_assets
+        ports:
+            - "7133:8066"
+            - "7143:3306"
+            - "7153:22"
+        networks:
+            default:
+              ipv4_address: 172.100.9.3
+        dns: 114.114.114.114
+        working_dir: /opt
+    mysql:
+        image: docker-registry:5000/actiontech/dble_test_inner
+        container_name: mysql
+        hostname: mysql
+        privileged: true
+        stdin_open: true
+        tty: true
+        command: ["/opt/mysql_init.sh","4"]
+        volumes:
+            - /opt/auto_build:/init_assets
+        ports:
+            - "7144:3306"
+            - "7154:22"
+        networks:
+            default:
+              ipv4_address: 172.100.9.4
+        dns: 114.114.114.114
+        working_dir: /opt
+    mysql-master1:
+        image: docker-registry:5000/actiontech/dble_test_inner
+        container_name: mysql-master1
+        hostname: mysql-master1
+        privileged: true
+        stdin_open: true
+        command: ["/opt/mysql_init.sh","5"]
+        tty: true
+        volumes:
+            - /opt/auto_build:/init_assets
+        ports:
+            - "7145:3306"
+            - "7155:22"
+        networks:
+            default:
+              ipv4_address: 172.100.9.5
+        dns: 114.114.114.114
+        working_dir: /opt
+    mysql-master2:
+        image: docker-registry:5000/actiontech/dble_test_inner
+        container_name: mysql-master2
+        hostname: mysql-master2
+        privileged: true
+        stdin_open: true
+        command: ["/opt/mysql_init.sh","6"]
+        tty: true
+        volumes:
+            - /opt/auto_build:/init_assets
+        ports:
+            - "7146:3306"
+            - "7156:22"
+        networks:
+            default:
+              ipv4_address: 172.100.9.6
+        dns: 114.114.114.114
+        working_dir: /opt
+    driver-test:
+        image: docker-registry:5000/actiontech/dble_test_driver
+        container_name: driver-test
+        hostname: driver-test
+        privileged: true
+        stdin_open: true
+        tty: true
+        volumes:
+            - /opt/auto_build:/init_assets
+        networks:
+            default:
+              ipv4_address: 172.100.9.7
+        dns: 114.114.114.114
+        working_dir: /opt
+    behave:
+        image: test_behave:latest
+        container_name: behave
+        hostname: behave
+        privileged: true
+        stdin_open: true
+        tty: true
+        volumes:
+            - /opt/auto_build:/init_assets
+        networks:
+            default:
+              ipv4_address: 172.100.9.8
+        dns: 114.114.114.114
+        working_dir: /opt
