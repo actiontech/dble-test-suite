@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # @Time    : 2019/6/25 AM10:56
 # @Author  : zhaohongjie@actionsky.com
-# Copyright (C) 2016-2020 ActionTech.
+# Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 
 from threading import Thread, Condition
