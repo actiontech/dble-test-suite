@@ -1,0 +1,36 @@
+==============install btrace=============================
+
+install reference: https://github.com/btraceio/btrace/tree/v1.3.8.3-1
+
+1.First of all, you should have the following applications installed:
+  JDK (preferrably JDK8)
+  Git
+  Gradle
+
+2.Download the latest btrace version from the url:
+  https://github.com/btraceio/btrace/releases
+
+3.Decompress the download file:
+   mkdir -p /opt/btrace
+   cd  /opt/btrace
+   tar -xzvf btrace-bin-1.3.11.tgz.tar.gz
+
+4.Modify permissions of the directory btrace:
+  chmod 755 -R btrace
+
+5.Add environment variables to file /etc/profile:
+  echo 'export BTRACE_HOME=/opt/btrace' >>/etc/profile
+  echo 'export PATH=$PATH:$BTRACE_HOME/bin' >>/etc/profile
+  source /etc/profile
+
+6.Verify whether the installation is successful or not:
+  btrace --version
+
+7.Start btrace as below:
+  btrace 4742 /opt/BtraceClusterDelay.java
+
+
+  
+  
+
+
