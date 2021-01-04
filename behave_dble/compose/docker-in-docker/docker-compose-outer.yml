@@ -1,0 +1,78 @@
+version: '2'
+networks:
+    default:
+        external:
+            name: dble_test
+services:
+    ci-dble-autotest-master:
+        image: docker-registry:5000/actiontech/dble_test_outter
+        container_name: dble-autotest-master
+        hostname: dble-autotest-master
+        privileged: true
+        stdin_open: true
+        tty: true
+        volumes:
+          - "/data/docker/volume/dble-autotest-agent/v1:/var/lib/docker"
+          - "/opt/auto_build:/opt/auto_build"
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        ports:
+          - "7131:7131"
+          - "7132:7132"
+          - "7133:7133"
+          - "7141:7141"
+          - "7142:7142"
+          - "7143:7143"
+          - "7144:7144"
+          - "7145:7145"
+          - "7146:7146"
+          - "7151:7151"
+          - "7152:7152"
+          - "7153:7153"
+          - "7154:7154"
+          - "7155:7155"
+          - "7156:7156"
+        labels:
+            - "creator:zhaohongjie"
+        extra_hosts:
+          - "docker-registry:10.186.18.20"
+          - "gocd-server:10.186.18.19"
+        working_dir: "/opt"
+        networks: 
+            default:
+              ipv4_address: 172.100.9.80
+    ci-dble-autotest-branch:
+        image: docker-registry:5000/actiontech/dble_test_outter
+        container_name: dble-autotest-branch
+        hostname: dble-autotest-branch
+        privileged: true
+        stdin_open: true
+        tty: true
+        volumes:
+          - "/data/docker/volume/dble-autotest-agent/v2:/var/lib/docker"
+          - "/data/docker/dble_branch:/opt/auto_build"
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        ports:
+          - "8131:7131"
+          - "8132:7132"
+          - "8133:7133"
+          - "8141:7141"
+          - "8142:7142"
+          - "8143:7143"
+          - "8144:7144"
+          - "8145:7145"
+          - "8146:7146"
+          - "8151:7151"
+          - "8152:7152"
+          - "8153:7153"
+          - "8154:7154"
+          - "8155:7155"
+          - "8156:7156"
+        labels:
+            - "creator:zhaohongjie"
+        extra_hosts:
+          - "docker-registry:10.186.18.20"
+          - "gocd-server:10.186.18.19"
+        working_dir: "/opt"
+        networks: 
+            default:
+              ipv4_address: 172.100.9.90
