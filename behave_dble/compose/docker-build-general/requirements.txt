@@ -1,0 +1,3 @@
+six==1.14.0
+coloredlogs==14.0
+rsa==4.0
