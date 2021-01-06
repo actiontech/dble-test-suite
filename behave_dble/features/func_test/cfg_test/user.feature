@@ -281,5 +281,47 @@ Feature: test config in user.xml
       | conn_0  | False    | select sleep(61)                              | reason is [sql timeout]| schema1 |
       | conn_0  | True     | select sleep(70),id from test_table           | reason is [sql timeout]| schema1 |
 
-
+  @NORMAL
+  Scenario: test rwSplitUsers in user.xml #12
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
+    </dbGroup>
+    """
+    #1 more than one rwSplitUsers can use the same dbGroup
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="0"/>
+    <rwSplitUser name="rwS2" password="111111" dbGroup="ha_group3" maxCon="0"/>
+    <rwSplitUser name="rwS3" password="111111" dbGroup="ha_group3" maxCon="0"/>
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+    |user |passwd | conn    | toClose  | sql                                               | expect                 |db  |
+    | rwS1|111111| conn_0  | False    | drop table if exists test_table                 | success                | db1|
+    | rwS1|111111| conn_0  | False    | create table test_table(id int,name char(20)) | success                | db1 |
+    | rwS1|111111| conn_0  | False    | insert into test_table values(1,11),(2,22)    | success                | db1 |
+    | rwS1|111111| conn_0  | True     | select * from test_table                         | length{2}                | db1 |
+    | rwS2|111111| conn_1  | False    | delete from test_table where id=1               | success                | db1 |
+    | rwS2|111111| conn_1  | True     | select * from test_table                         | length{1}                | db1 |
+    | rwS3|111111| conn_2  | False    | select * from test_table                         | length{1}               | db1 |
+    | rwS3|111111| conn_2  | False    | insert into test_table values(1,11),(3,33)     | success                | db1 |
+    | rwS3|111111| conn_2  | False    | select * from test_table                         | length{3}                | db1 |
+    | rwS3|111111| conn_2  | True     | drop table if exists test_table                 | success                 | db1 |
+    #2 rwSplitUser and shardingUser not allow use the same dbGroup
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group1" maxCon="0"/>
+    """
+    Then execute admin cmd "reload @@config" get the following output
+    """
+    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit.
+    """
 
