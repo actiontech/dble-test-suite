@@ -40,7 +40,7 @@ def step_impl(context, host_name, result_var=None, exception_var=None):
     if node:
         rc, sto, ste = node.ssh_conn.exec_command(linux_cmd)
         if exception_var:
-            assert contains_string(str(ste)), "expect execute linux cmd {} failed for {}, real err: {}".format(linux_cmd, exception_var, ste)
+            assert_that(str(ste), contains_string(str(exception_var)), "expect execute linux cmd {} failed for {}, real err: {}".format(linux_cmd, exception_var, ste))
         else:
             assert len(ste) == 0, "execute linux cmd {} failed for {}".format(linux_cmd, ste)
     else:
