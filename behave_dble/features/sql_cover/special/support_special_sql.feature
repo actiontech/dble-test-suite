@@ -56,3 +56,46 @@
       | conn_0 | False   | select b.id, a.name from sharding_2_t1 a, sharding_3_t1 b where a.id > b.id | success                                | schema1 |
       | conn_0 | False   | drop table if exists sharding_2_t1                                          | success                                | schema1 |
       | conn_0 | true    | drop table if exists sharding_3_t1                                          | success                                | schema1 |
+
+
+   Scenario: 'select ...having' then there's the 'or' condition from github:2073/2158 #3
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                        | expect      | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                         | success     | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,c varchar(20))                                           | success     | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values (1,'bb')                                                  | success     | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values (1,'cc')                                                  | success     | schema1 |
+      | conn_0 | False   | select id,c from sharding_4_t1 group by c having id<=1 or c = 'bb'                         | length{(2)} | schema1 |
+      | conn_0 | False   | explain select id,c from sharding_4_t1 group by c having id<=1 or c = 'bb'                 | success     | schema1 |
+      | conn_0 | true    | drop table if exists sharding_4_t1                                                         | success     | schema1 |
+      | conn_0 | False   | drop table if exists sharding_2_t1                                                         | success     | schema1 |
+      | conn_0 | False   | create table sharding_2_t1(id int,normal_col_1 varchar(30),normal_col_2 varchar(30))       | success     | schema1 |
+      | conn_0 | False   | insert into sharding_2_t1 values (12,'1','0')                                              | success     | schema1 |
+      | conn_0 | False   | insert into sharding_2_t1 values (12,'0','1')                                              | success     | schema1 |
+      | conn_0 | False   | select * from sharding_2_t1 where id = '12' and (normal_col_1 = '0' or normal_col_2 = '1') | length{(1)} | schema1 |
+      | conn_0 | true    | drop table if exists sharding_2_t1                                                         | success     | schema1 |
+
+   Scenario: hextype the format is 0x or x' ' from github:2073 #4
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+       """
+       <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+          <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="jumpHash" shardingColumn="b" />
+       </schema>
+
+       <function name="jumpHash" class="jumpStringHash">
+          <property name="partitionCount">4</property>
+       </function>
+       """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                        | expect                                        | db      | charset |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                         | success                                       | schema1 | utf8mb4 |
+      | conn_0 | False   | create table sharding_4_t1(id int,b varchar(250),c varchar(250))engine=innodb charset=utf8 | success                                       | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_4_t1 values (11,'0x74657374696e67',0x74657374696e67)                  | success                                       | schema1 | utf8mb4 |
+      | conn_0 | False   | insert into sharding_4_t1 values (12,0x74657374696e67,0x74657374696e67)                    | success                                       | schema1 | utf8mb4 |
+      | conn_0 | False   | select * from sharding_4_t1 where b='0x74657374696e67'                                     | has{((11, u'0x74657374696e67', u'testing'),)} | schema1 | utf8mb4 |
+      | conn_0 | False   | select * from sharding_4_t1 where b=0x74657374696e67                                       | has{((12, u'testing', u'testing'),)}          | schema1 | utf8mb4 |
+      | conn_0 | true    | drop table if exists sharding_4_t1                                                         | success                                       | schema1 | utf8mb4 |
+
+
+
