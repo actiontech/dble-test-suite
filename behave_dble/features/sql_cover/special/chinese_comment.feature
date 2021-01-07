@@ -422,6 +422,10 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       #case "EXISTS"   /  "not exists"
       | conn_0 | False   | select a.name from sharding_2_t2 a where exists (select b.name from sharding_3_t1 b)                  | has{(('测试1',), ('测试2',))}       | schema1 | utf8mb4 |
       | conn_0 | False   | select a.name from sharding_2_t2 a where not exists (select b.name from sharding_3_t1 b)              | length{(0)}                        | schema1 | utf8mb4 |
+      #case "MINUS"  github:2026
+      | conn_0 | False   | select id from sharding_2_t2 where id=1 minus select id from sharding_2_t2 where id=2           | You have an error in your SQL syntax;MINUS                       | schema1 | utf8mb4 |
+
+
 
 ##case 5 function : Mathematical Functions ,no need
 ##case 6 function : Date and Time Functions ,no need
