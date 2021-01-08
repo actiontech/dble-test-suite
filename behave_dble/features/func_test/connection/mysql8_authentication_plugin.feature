@@ -11,11 +11,6 @@ Feature: check mysql 8.0 authentication plugin
   """
     {'restore_mysql_service':{'mysql8-master1':{'start_mysql':1}}}
   """
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a\-DfakeMySQLVersion=8.0.21
-    """
-    Then restart dble in "dble-1" success
 
 # create use test1 use mysql 8.0 default authentication plugin
     Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
@@ -53,6 +48,10 @@ Feature: check mysql 8.0 authentication plugin
     <shardingNode dbGroup="ha_group1" database="db3" name="dn3" />
     <shardingNode dbGroup="ha_group1" database="db4" name="dn4" />
     <shardingNode dbGroup="ha_group1" database="db5" name="dn5" />
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-DfakeMySQLVersion=8.0.21
     """
     Then restart dble in "dble-1" success
 
@@ -126,9 +125,6 @@ Feature: check mysql 8.0 authentication plugin
     | conn_1 | False   | create table test(id int) | success | schema1 |
     | conn_1 | True    | drop table if exists test | success | schema1 |
 
-    Given delete the following xml segment
-      | file         | parent         | child                  |
-      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
