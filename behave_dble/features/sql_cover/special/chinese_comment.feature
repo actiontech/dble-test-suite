@@ -211,8 +211,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | true     | drop table if exists rl_station_relation   | success      | schema1 | utf8mb4 |
 
 
-
-  Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
+   Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
       | conn_0 | False   | drop table if exists sharding_2_t2                                                                                                            | success                        | schema1 | utf8mb4 |
@@ -324,10 +323,10 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select ASCII(b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id       | has{((27979,),(27979,),(27979,))}            | schema1 | utf8mb4 |
       | conn_0 | False   | select BIT_LENGTH(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((24,),(24,),(24,))}                     | schema1 | utf8mb4 |
       | conn_0 | False   | select CHAR(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((u'\x00',), (u'\x00',), (u'\x00',))}    | schema1 | utf8mb4 |
-      #| conn_0 | False   | select HEX(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id               |     | schema1 | utf8mb4 |
-      #| conn_0 | False   | select CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   |                 | schema1 | utf8mb4 |
+      | conn_0 | False   | select HEX(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id               | has{((u'E6B58BE8AF9531',), (u'E6B58BE8AF9532',), (u'E6B58BE8AF9532',))}    | schema1 | utf8mb4 |
+      | conn_0 | False   | select CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'64938857152353585',), (u'64938857152353586',), (u'64938857152353586',))}                  | schema1 | utf8mb4 |
       | conn_0 | False   | select HEX(CHAR(a.name)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((u'00',), (u'00',), (u'00',))}                  | schema1 | utf8mb4 |
-      | conn_0 | False   | select HEX(a.name),CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'00', u'0'), (u'00', u'0'), (u'00', u'0'))}                 | schema1 | utf8mb4 |
+      | conn_0 | False   | select HEX(a.name),CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'E6B58BE8AF9531', u'64938857152353585'), (u'E6B58BE8AF9532', u'64938857152353586'), (u'E6B58BE8AF9532', u'64938857152353586'))}                 | schema1 | utf8mb4 |
       | conn_0 | False   | select CHAR_LENGTH(a.name),CHARACTER_LENGTH('爱可生社区') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((3, 5), (3, 5), (3, 5))}           | schema1 | utf8mb4 |
       | conn_0 | False   | select 'a.name' '爱可生社区'  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                               | has{(('a.name爱可生社区',), ('a.name爱可生社区',), ('a.name爱可生社区',))}           | schema1 | utf8mb4 |
       #case "BIN"   / "CHARSET"   issue:DBLE0REQ-746/DBLE0REQ-748
@@ -386,8 +385,8 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select ORD(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((15119755,), (15119755,), (15119755,))}     | schema1 | utf8mb4 |
       #case "POSITION"
       | conn_0 | False   | select POSITION('测试' in a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((1,), (1,), (1,))}     | schema1 | utf8mb4 |
-      #case "QUOTE" issue:DBLE0REQ-756
-      #| conn_0 | False   | select QUOTE(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((1,), (1,), (1,))}     | schema1 | utf8mb4 |
+      #case "QUOTE"
+      | conn_0 | False   | select QUOTE(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{((u"'\u6d4b\u8bd51'",), (u"'\u6d4b\u8bd52'",), (u"'\u6d4b\u8bd52'",))}      | schema1 | utf8mb4 |
       #case "REPLACE"
       | conn_0 | False   | select REPLACE(a.name,'测试1','爱可生') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id | has{(('爱可生',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
       #case "REVERSE"
