@@ -61,14 +61,24 @@ if __name__ == "__main__":
 
 
     conn = create_conn(args)
-    #sqlContext = SQLContext(table="sbtest1", cols={"id":"int"}, targetCol={"c":"blob"})
     sqlContext2 = SQLContext(table="sbtest2", cols={"id":"int"}, targetCol={"c":"longblob"})
+    # sqlContext3 = SQLContext(table="test2", cols={"id": "int"}, targetCol={"c": "longblob"})
+    # sqlContext4 = SQLContext(table="sharding_2_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    # sqlContext5 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
+
+    large_packet_test(16*1024*1024, conn, sqlContext2)
+    # large_packet_test(16*1024*1024, conn, sqlContext3)
+    # large_packet_test(16*1024*1024, conn, sqlContext4)
+    # large_packet_test(16*1024*1024, conn, sqlContext5)
+
+
+
+    #sqlContext = SQLContext(table="sbtest1", cols={"id":"int"}, targetCol={"c":"blob"})
 
     #large_column_test(4*1024*1024+1, conn, sqlContext)
     #large_column_test(4*1024*1024, conn, sqlContext)
     #large_column_test(65574, conn, sqlContext)
-
     #large_packet_test(16*1024*1024, conn, sqlContext)
 
-    large_packet_test(16*1024*1024, conn, sqlContext2)
+
     conn.close()
