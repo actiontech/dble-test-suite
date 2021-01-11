@@ -5,10 +5,10 @@ Feature: test "binlog" in zk cluster
   # Pull the consistent binlog line
 
 
-  @skip_restart @restore_mysql_service
-  Scenario: prepare  #1
+  @skip_restart @restore_mysql_config @restore_mysql_service
+  Scenario: prepare and query  #1
     """
-    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
     """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
      """
@@ -19,7 +19,6 @@ Feature: test "binlog" in zk cluster
      /server-id/a binlog_format=row
      /server-id/a relay-log=mysql-relay-bin
      """
-    Given stop dble cluster and zk service
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
@@ -47,6 +46,7 @@ Feature: test "binlog" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
       """
+    Then execute admin cmd "reload @@config_all"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       /-Dprocessors=/d
@@ -80,9 +80,10 @@ Feature: test "binlog" in zk cluster
       """
       $a showBinlogStatusTimeout=5000
       """
-    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
-    Given reset dble registered nodes in zk
-    Then start dble in order
+    Given Restart dble in "dble-1" success
+    Given Restart dble in "dble-2" success
+    Given Restart dble in "dble-3" success
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_1 | False   | drop table if exists vertical1                               | success | schema2 |
@@ -103,8 +104,7 @@ Feature: test "binlog" in zk cluster
       | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
 
 
-  @skip_restart
-  Scenario: during "transaction",happen bad block,check "showBinlogStatusTimeout"   #2
+    # during "transaction",happen bad block,check "showBinlogStatusTimeout"
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect  | db      |
       | conn_11 | False   | begin                              | success | schema1 |
@@ -133,8 +133,20 @@ Feature: test "binlog" in zk cluster
     Given delete file "/tmp/dble_admin_query.log" on "dble-3"
 
 
-  @skip_restart @btrace
-  Scenario: query "show @@binlog.status" timeout, do ddl #3
+  @skip_restart @btrace  @restore_mysql_config @restore_mysql_service
+  Scenario: query "show @@binlog.status" timeout, do ddl #2
+    """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     """
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
+     """
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -365,8 +377,20 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-3"
 
 
-  @skip_restart  @btrace
-  Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #4
+  @skip_restart  @btrace  @restore_mysql_config @restore_mysql_service
+  Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set timeout  #3
+    """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     """
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
+     """
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql                     | expect  |
       | conn_2  | False    | show databases         | success |
@@ -456,8 +480,20 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @skip_restart @btrace
-  Scenario: query "show @@binlog.status" don't timeout, do ddl #5
+  @skip_restart @btrace  @restore_mysql_config @restore_mysql_service
+  Scenario: query "show @@binlog.status" don't timeout, do ddl #4
+    """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     """
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
+     """
     Given stop dble cluster and zk service
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
       """
@@ -643,11 +679,23 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-2"
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-3"
-    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-3"
+    Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-3
 
 
-  @skip_restart  @btrace
-  Scenario: during "transaction" ,the commit would "hang" #6
+  @skip_restart  @btrace  @restore_mysql_config @restore_mysql_service
+  Scenario: during "transaction" ,the commit would "hang" #5
+    """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     """
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
+     """
     Then execute sql in "dble-2" in "user" mode
       | conn    | toClose | sql                                    | expect  | db      |
       | conn_21 | False   | begin                                  | success | schema1 |
@@ -711,8 +759,20 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @skip_restart  @btrace
-  Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set not timeout  #7
+  @skip_restart  @btrace @restore_mysql_config @restore_mysql_service
+  Scenario: during "transaction" ,the admin cmd of "show @@binlog.status" be blocked,and set not timeout  #6
+    """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     """
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
+     """
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql                     | expect  |
       | conn_2  | False    | show databases         | success |
@@ -797,11 +857,20 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @btrace @restore_mysql_service
-  Scenario: during query ,one dble stop,check other dble status #8
-     """
-    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+  @btrace @restore_mysql_service @restore_mysql_config
+  Scenario: during query ,one dble stop,check other dble status #7
     """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}},'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+     """
+     /log-bin=/d
+     /binlog_format=/d
+     /relay-log=/d
+     /server-id/a log-bin=mysql-bin
+     /server-id/a binlog_format=row
+     /server-id/a relay-log=mysql-relay-bin
+     """
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
@@ -834,12 +903,7 @@ Feature: test "binlog" in zk cluster
     Then execute sql in "dble-2" in "admin" mode
       | conn     | toClose | sql                      | expect     |
       | conn_2   | true    | show @@binlog.status     | success    |
-    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
-     """
-     /log-bin=/d
-     /binlog_format=/d
-     /relay-log=/d
-     """
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_1 | True    | drop table if exists vertical1                               | success | schema2 |
