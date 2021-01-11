@@ -35,7 +35,8 @@ class SQLContext:
 
         prepare_sqls = [
             "drop table if exists {0}".format(self.table),
-            "create table {0}({1})".format(self.table, cols_def)
+            "create table {0}({1})".format(self.table, cols_def),
+            # "insert into {0} values (7,7)".format(self.table)
         ]
 
         return prepare_sqls
