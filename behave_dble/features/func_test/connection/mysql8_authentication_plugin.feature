@@ -6,10 +6,10 @@
 # for DBLE0REQ-189
 Feature: check mysql 8.0 authentication plugin
 
-  @restore_mysql_service
+  @restore_mysql_config
   Scenario: check mysql 8.0 default authentication plugin #1
   """
-    {'restore_mysql_service':{'mysql8-master1':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql8-master1':{'default_authentication_plugin':'mysql_native_password'}}}
   """
 
 # create use test1 use mysql 8.0 default authentication plugin
@@ -76,10 +76,10 @@ Feature: check mysql 8.0 authentication plugin
     """
     Given restart mysql in "mysql8-master1"
 
-  @restore_mysql_service
+  @restore_mysql_config
   Scenario: check mysql 8.0 mysql_native_password authentication plugin #2
   """
-    {'restore_mysql_service':{'mysql8-master1':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql8-master1':{'default_authentication_plugin':'mysql_native_password'}}}
   """
 # update mysql 8.0 default_authentication_plugin=mysql_native_password
     Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
@@ -205,10 +205,10 @@ Feature: check mysql 8.0 authentication plugin
     """
     Given restart mysql in "mysql8-master1"
 
-  @restore_mysql_service
+  @restore_mysql_config
   Scenario: check mysql 8.0 sha256_password Authentication Plugin #3
   """
-    {'restore_mysql_service':{'mysql8-master1':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql8-master1':{'default_authentication_plugin':'mysql_native_password'}}}
   """
 # update mysql 8.0 default_authentication_plugin=sha256_password
     Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
@@ -291,12 +291,3 @@ Feature: check mysql 8.0 authentication plugin
     """
     support the password plugin sha256_password,please check the default auth Plugin
     """
-
-# reset mysql 8.0 default_authentication_plugin to default
-    Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
-    """
-    /default_authentication_plugin/d
-    /server-id/a default_authentication_plugin = mysql_native_password
-    """
-    Given restart mysql in "mysql8-master1"
-
