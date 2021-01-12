@@ -91,7 +91,7 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
   @skip
-  Scenario: test "insert" and "delete" sql #2
+  Scenario: test "insert" sql #2
     Given delete file "/opt/LargePacket.py" on "dble-1"
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
@@ -775,7 +775,7 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
   @skip_restart
-  Scenario: test "update" sql #5
+  Scenario: test "select" sql #5
     Given delete file "/opt/LargePacket.py" on "dble-1"
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
@@ -829,3 +829,23 @@ Feature:Support MySQL's large package protocol
       | conn_0 | true    | insert into sharding_2_t1 values (1,repeat("x",16*1024*1024)),(2,repeat("x",14*1024*1024))                                                             | success | schema1 |
 
 
+    #prepare largepacket
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024/16\*1024\*1024-2/g
+      s/sbtest2/test1/g
+      """
+    #change insert sql to delete
+    Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
+      """
+      s/\"drop table if/# \"drop table if/g
+      s/\"create table {0}/# \"create table {0}/g
+
+      s/insert into {0}({1},{2}) values ({3},/delete from {0} where {1}=/g
+      s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table,target_col_key)/g
+      s/)'\''/ or {0}={1}'\''.format(cols_keys,cols_values)/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python /opt/LargePacket.py
+      """
