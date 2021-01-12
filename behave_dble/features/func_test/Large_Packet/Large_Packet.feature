@@ -5,20 +5,21 @@
 
 Feature:Support MySQL's large package protocol
 
-
-
-  @skip @restore_mysql_service
-  Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
-    """
-    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
-    """
+  Background:delete file and upload file
     Given delete file "/opt/LargePacket.py" on "dble-1"
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
     Given upload file "./features/steps/LargePacket.py" to "dble-1" success
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
-    #set dble.log level "info" , maxPacketSize=8M
+
+  @restore_mysql_service @skip
+    #blocked by issue
+  Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
+    """
+    #set dble.log level "info" , maxPacketSize=5M
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
@@ -34,7 +35,7 @@ Feature:Support MySQL's large package protocol
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       /DmaxPacketSize/d
-      /# processor/a -DmaxPacketSize=8388608
+      /# processor/a -DmaxPacketSize=5242880
       """
     Given Restart dble in "dble-1" success
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
@@ -43,14 +44,15 @@ Feature:Support MySQL's large package protocol
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect               | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('8388608',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('5242880',),)} | dble_information |
 
     #dble accpect largepacket > 8M
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/sbtest2/test/g
       """
-    Given execute linux command in "dble-1" and contains exception "Got a packet bigger than 'max_allowed_packet' bytes"
+    #_mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")
+    Given execute linux command in "dble-1" and contains exception "Got a packet bigger than"
       """
       python /opt/LargePacket.py
       """
@@ -90,13 +92,8 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
-  @skip
+
   Scenario: test "insert" sql #2
-    Given delete file "/opt/LargePacket.py" on "dble-1"
-    Given delete file "/opt/SQLContext.py" on "dble-1"
-    Given delete file "/opt/SQLContext.pyc" on "dble-1"
-    Given upload file "./features/steps/LargePacket.py" to "dble-1" success
-    Given upload file "./features/steps/SQLContext.py" to "dble-1" success
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -317,13 +314,8 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
-  @skip
+
   Scenario: test "update" sql #3
-    Given delete file "/opt/LargePacket.py" on "dble-1"
-    Given delete file "/opt/SQLContext.py" on "dble-1"
-    Given delete file "/opt/SQLContext.pyc" on "dble-1"
-    Given upload file "./features/steps/LargePacket.py" to "dble-1" success
-    Given upload file "./features/steps/SQLContext.py" to "dble-1" success
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -556,13 +548,9 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
-  @skip
+
   Scenario: test "delete" sql #4
-    Given delete file "/opt/LargePacket.py" on "dble-1"
-    Given delete file "/opt/SQLContext.py" on "dble-1"
-    Given delete file "/opt/SQLContext.pyc" on "dble-1"
-    Given upload file "./features/steps/LargePacket.py" to "dble-1" success
-    Given upload file "./features/steps/SQLContext.py" to "dble-1" success
+
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -774,11 +762,10 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
-  @skip_restart
+  @skip
+    #todo be blocked by select "largepacket" would "Lost connection to MySQL server during query"
   Scenario: test "select" sql #5
-    Given delete file "/opt/LargePacket.py" on "dble-1"
-    Given delete file "/opt/SQLContext.py" on "dble-1"
-    Given delete file "/opt/SQLContext.pyc" on "dble-1"
+
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -820,13 +807,13 @@ Feature:Support MySQL's large package protocol
       | conn_0 | false   | create table global3 (id int,c longblob)                                                                                                               | success | schema1 |
       | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                         | success | schema1 |
       | conn_0 | false   | create table sharding_2_t1 (id int,c longblob)                                                                                                         | success | schema1 |
-      | conn_0 | false   | insert into test values (1,repeat("x",16*1024*1024))                                                                                                   | success | schema1 |
-      | conn_0 | false   | insert into sing1 values (1,repeat("x",16*1024*1024))                                                                                                  | success | schema1 |
-      | conn_0 | false   | insert into global1 values (1,repeat("x",16*1024*1024))                                                                                                | success | schema1 |
-      | conn_0 | false   | insert into global2 values (1,repeat("x",14*1024*1024))                                                                                                | success | schema1 |
-      | conn_0 | false   | insert into global3 values (1,repeat("x",20*1024*1024))                                                                                                | success | schema1 |
-      | conn_0 | false   | insert into sharding_4_t1 values (1,repeat("x",40*1024*1024)),(2,repeat("x",32*1024*1024)) ,(3,repeat("x",20*1024*1024)) ,(4,repeat("x",12*1024*1024)) | success | schema1 |
-      | conn_0 | true    | insert into sharding_2_t1 values (1,repeat("x",16*1024*1024)),(2,repeat("x",14*1024*1024))                                                             | success | schema1 |
+      | conn_0 | false   | insert into test values (7,repeat("x",16*1024*1024))                                                                                                   | success | schema1 |
+      | conn_0 | false   | insert into sing1 values (7,repeat("x",16*1024*1024))                                                                                                  | success | schema1 |
+      | conn_0 | false   | insert into global1 values (7,repeat("x",16*1024*1024))                                                                                                | success | schema1 |
+      | conn_0 | false   | insert into global2 values (7,repeat("x",14*1024*1024))                                                                                                | success | schema1 |
+      | conn_0 | false   | insert into global3 values (7,repeat("x",20*1024*1024))                                                                                                | success | schema1 |
+      | conn_0 | false   | insert into sharding_4_t1 values (7,repeat("x",40*1024*1024)),(5,repeat("x",32*1024*1024)) ,(6,repeat("x",20*1024*1024)) ,(8,repeat("x",12*1024*1024)) | success | schema1 |
+      | conn_0 | true    | insert into sharding_2_t1 values (7,repeat("x",16*1024*1024)),(2,repeat("x",14*1024*1024))                                                             | success | schema1 |
 
 
     #prepare largepacket
@@ -840,12 +827,14 @@ Feature:Support MySQL's large package protocol
       """
       s/\"drop table if/# \"drop table if/g
       s/\"create table {0}/# \"create table {0}/g
-
-      s/insert into {0}({1},{2}) values ({3},/delete from {0} where {1}=/g
-      s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table,target_col_key)/g
-      s/)'\''/ or {0}={1}'\''.format(cols_keys,cols_values)/g
+      s/insert into {0}({1},{2}) values ({3},/select * from {0} where {1}={3} or {2} =/g
+      s/.format(self.table, cols_keys, target_col_key, cols_values)/.format(self.table, cols_keys, target_col_key,cols_values)/g
+      s/)'\''/'\''/g
       """
     Given execute linux command in "dble-1"
       """
       python /opt/LargePacket.py
       """
+
+
+
