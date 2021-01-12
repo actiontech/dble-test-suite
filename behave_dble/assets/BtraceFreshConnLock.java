@@ -34,6 +34,21 @@ public final class BtraceFreshConnLock {
     }
 
     @OnMethod(
+            clazz = "com.actiontech.dble.meta.ReloadManager",
+            method = "startReload"
+    )
+    public static void startReload(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        long startTime = System.currentTimeMillis();
+        BTraceUtils.println("time["+startTime+"], start ... " );
+        BTraceUtils.println("get reload lock");
+        BTraceUtils.println();
+        Thread.sleep(10L);
+        long endTime = System.currentTimeMillis();
+        BTraceUtils.println("time["+endTime+"], end ... " );
+        BTraceUtils.println();
+    }
+
+    @OnMethod(
             clazz = "com.actiontech.dble.btrace.provider.ConnectionPoolProvider",
             method = "freshConnGetRealodLocekAfter"
     )
