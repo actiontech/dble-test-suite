@@ -88,9 +88,9 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
 #case DBLE0REQ-774
-#    Then check resultset "session_connections_5" has lines with following column values
-#      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-17 | entry_id-18 |
-#      | 8066          | test   | NULL     | schema1  | set xa=on | Parse_SQL    | true              | 2           |
+    Then check resultset "session_connections_5" has lines with following column values
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-17 | entry_id-18 |
+      | 8066          | test   | NULL     | schema1  | set xa=on | Finished     | true              | 2           |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
       | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success |
