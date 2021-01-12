@@ -69,6 +69,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | dble_algorithm               |
       | dble_blacklist               |
       | dble_child_table             |
+      | dble_config                  |
       | dble_db_group                |
       | dble_db_instance             |
       | dble_ddl_lock                |
@@ -99,7 +100,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(30)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(31)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
