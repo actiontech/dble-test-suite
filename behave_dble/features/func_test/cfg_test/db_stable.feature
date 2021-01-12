@@ -1,5 +1,6 @@
 # Copyright (C) 2016-2021 ActionTech.
-# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.# Created by zhaohongjie at 2018/12/7
+# License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
+# Created by zhaohongjie at 2018/12/7
 Feature: db config stable test
 
   Background delete default configs not must，reload @@config_all success
