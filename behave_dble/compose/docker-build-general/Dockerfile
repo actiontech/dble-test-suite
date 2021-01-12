@@ -21,7 +21,12 @@ RUN echo "export JAVA_HOME=/opt/jdk">>/etc/bashrc
 RUN echo "export PATH=$JAVA_HOME/bin:$PATH">>/etc/bashrc
 
 #install python3 and dependency
-RUN yum install -y gcc python3-devel.x86_64 mysql-devel vim less iproute
+RUN yum install -y gcc python3-devel.x86_64 mysql-devel vim less iproute &&\
+    pip3 install six -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    pip3 install coloredlogs -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    pip3 install rsa -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    pip3 install mysqlclient -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    ln -s /usr/local/mysql/lib/libmysqlclient.so.20.3.0 /usr/lib64/libmysqlclient.so.20
 
 #install mysql
 COPY mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz /tmp/mysql-5.7.13-linux-glibc2.5-x86_64.tar.gz
