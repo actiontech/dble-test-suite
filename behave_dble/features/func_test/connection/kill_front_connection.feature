@@ -1,9 +1,10 @@
-# Copyright (C) 2016-2020 ActionTech.
+# Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wangjuan at 2020/12/7
 Feature: test KILL [CONNECTION | QUERY] processlist_id
 
 # for DBLE0REQ-12
+  @skip
   @btrace
   Scenario: check kill query processlist_id #1
 # case 1: kill query current processlist_id
@@ -185,6 +186,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
 
 # for DBLE0REQ-726
+  @skip
   Scenario: check kill connection processlist_id #2
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                             | expect  | db      |
