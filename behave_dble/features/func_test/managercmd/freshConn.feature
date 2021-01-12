@@ -56,7 +56,7 @@ Feature: test fresh backend connection pool
     Given update file content "./assets/BtraceFreshConnLock.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
-    /reloadWithoutCluster/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    /startReload/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceFreshConnLock.java" in "dble-1"
     Then execute admin cmd  in "dble-1" at background
