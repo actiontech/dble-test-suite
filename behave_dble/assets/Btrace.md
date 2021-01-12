@@ -147,6 +147,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.ConnectionPoolProvider#freshConnGetRealodLocekAfter||刷新连接池操作，会获取reload锁(此锁的目的与持有reload锁的操作是互斥的)|
 |com.actiontech.dble.btrace.provider.ConnectionPoolProvider#stopConnGetFrenshLocekAfter||刷新连接池，进入停止连接阶段获取锁(此锁与获取连接(与getConnGetFrenshLocekAfter)是互斥的)|
 |com.actiontech.dble.btrace.provider.ConnectionPoolProvider#getConnGetFrenshLocekAfter||从连接池中获取连接时获取锁|
+|com.actiontech.dble.meta.ReloadManager#startReload                                   ||配置生效之前获取reload锁|
 
 
 * xa事务调试断点
