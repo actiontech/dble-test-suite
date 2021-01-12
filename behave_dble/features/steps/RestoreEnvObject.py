@@ -116,7 +116,11 @@ class RestoreEnvObject(object):
             for host_name, mysql_vars in paras.items():
                 sed_str = ""
                 for k, v in mysql_vars.items():
-                    sed_str += "/{0}/d\n/server-id/a {0}={1}\n".format(k, v)
+                    m = ['log-bin', 'binlog_format', 'relay-log']
+                    if k in m:
+                        sed_str +="/{0}/d\n".format(k)
+                    else:
+                        sed_str += "/{0}/d\n/server-id/a {0}={1}\n".format(k, v)
 
                 mysql = ObjectFactory.create_mysql_object(host_name)
                 mysql.restart(sed_str)
