@@ -7,11 +7,11 @@ Feature: heartbeat basic test
   Scenario:  heartbeat is not limited by maxCon #1
     #when connections exceeded the maxCon, the heartbeat connection still can be created
     Given delete the following xml segment
-      | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | sharding.xml | {'tag':'root'} | {'tag':'function'} |
-      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
@@ -35,8 +35,8 @@ Feature: heartbeat basic test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1   | success | schema1 |
+     | user | passwd | conn   | toClose  | sql                                                    | expect  | db     |
+     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
@@ -44,34 +44,34 @@ Feature: heartbeat basic test
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-     | test | 111111 | conn_1 | False    | begin   | success | schema1  |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
-     | test | 111111 | conn_2 | False    | begin   | success | schema1  |
-     | test | 111111 | conn_2 | False    | select * from sharding_2_t1 | success | schema1 |
+     | user | passwd | conn   | toClose  | sql                         | expect  | db       |
+     | test | 111111 | conn_1 | False    | begin                       | success | schema1  |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1  |
+     | test | 111111 | conn_2 | False    | begin                       | success | schema1  |
+     | test | 111111 | conn_2 | False    | select * from sharding_2_t1 | success | schema1  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql             |
       | show @@backend |
     Then check resultset "rs_A" has lines with following column values
-      | HOST-3           | USED_FOR_HEARTBEAT-22  |
-      |    172.100.9.5  | false                     |
-      |    172.100.9.5  | false                     |
-      |    172.100.9.5  | false                     |
-      |    172.100.9.5  | false                     |
-      |    172.100.9.5  | true                      |
+      | HOST-3       | USED_FOR_HEARTBEAT-22    |
+      | 172.100.9.5  | false                     |
+      | 172.100.9.5  | false                     |
+      | 172.100.9.5  | false                     |
+      | 172.100.9.5  | false                     |
+      | 172.100.9.5  | true                      |
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql              | expect  | db     |
+     | user | passwd | conn   | toClose  | sql              | expect  | db       |
      | test | 111111 | conn_1 | True     | commit           | success | schema1  |
      | test | 111111 | conn_2 | True     | commit           | success | schema1  |
 
   @btrace
   Scenario: heartbeat timeout test #2
     Given delete the following xml segment
-      | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
-      | sharding.xml | {'tag':'root'} | {'tag':'function'} |
-      | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
+      | sharding.xml | {'tag':'root'} | {'tag':'function'}     |
+      | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema name="schema1" sqlMaxLimit="100">
@@ -95,8 +95,8 @@ Feature: heartbeat basic test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1   | success | schema1 |
+     | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
+     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given record current dble log line number in "log_linenu"
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
@@ -127,6 +127,7 @@ Feature: heartbeat basic test
     heartbeat to \[172.100.9.5:3306\] setTimeout
     """
 
+
   Scenario: set errorRetryCount=0, kill the heartbeat connection, then check the heartbeat status #3
     #1 the killed heartbeat connection, heartbeat will set error at once, and then it will recover at next heartbeat period
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -146,7 +147,7 @@ Feature: heartbeat basic test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
+     | user | passwd | conn   | toClose  | sql                                  | expect  | db      |
      | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1   | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
@@ -159,10 +160,9 @@ Feature: heartbeat basic test
     """
     heartbeat to \[172.100.9.5:3306\] setError
     """
-    #skip for DBLE0REQ-688,now query success after the heartbeat setError
-#    Then execute sql in "dble-1" in "user" mode
-#     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-#     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | error totally whack | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+     | user | passwd | conn   | toClose  | sql                         | expect              | db      |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | error totally whack | schema1 |
 
       #sleep 3s for heartbeat recover
     Given sleep "3" seconds
@@ -170,7 +170,7 @@ Feature: heartbeat basic test
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
 
-  @btrace
+  @btrace   @skip_restart
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -189,8 +189,8 @@ Feature: heartbeat basic test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1   | success | schema1 |
+     | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
+     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
@@ -248,10 +248,9 @@ Feature: heartbeat basic test
     heartbeat to \[172.100.9.5:3306\] setError
     retry to do heartbeat for the 3 times
     """
-    #skip for DBLE0REQ-688, now query success after the heartbeat setError
-#    Then execute sql in "dble-1" in "user" mode
-#     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-#     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | error totally whack | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+     | user | passwd | conn   | toClose  | sql                         | expect              | db     |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | error totally whack | schema1 |
     Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
@@ -260,8 +259,8 @@ Feature: heartbeat basic test
   @btrace
   Scenario: heartbeat connection recover success in retry 'errorRetryCount' times, the heartbeat will set as Ok,and the connection pool is available in retry period #5
     Given delete the following xml segment
-      | file       | parent         | child              |
-      | sharding.xml | {'tag':'root'} | {'tag':'schema'}   |
+      | file         | parent         | child                  |
+      | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
       | db.xml | {'tag':'root'} | {'tag':'dbGroup'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -283,8 +282,8 @@ Feature: heartbeat basic test
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
-     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1   | success | schema1 |
+     | user | passwd | conn   | toClose  | sql                                                    | expect  | db      |
+     | test | 111111 | conn_0 | False    | drop table if exists sharding_2_t1                     | success | schema1 |
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
