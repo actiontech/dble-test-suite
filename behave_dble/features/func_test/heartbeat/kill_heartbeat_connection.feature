@@ -170,7 +170,7 @@ Feature: heartbeat basic test
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
 
-  @btrace   @skip_restart
+  @btrace
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -317,7 +317,7 @@ Feature: heartbeat basic test
     before heartbeat
     """
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
+     | user | passwd | conn   | toClose  | sql                         | expect  | db      |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
     Given record current dble log line number in "log_linenu"
     #sleep 5s coz issue: http://10.186.18.11/jira/browse/DBLE0REQ-701
