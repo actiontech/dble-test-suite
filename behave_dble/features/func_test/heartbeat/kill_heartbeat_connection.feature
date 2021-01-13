@@ -118,7 +118,7 @@ Feature: heartbeat basic test
     """
     Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
     Given destroy btrace threads list
-    Given delete file "/opt/d：qble/BtraceHeartbeat.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
     Given delete file "/opt/dble/BtraceHeartbeat.java.log" on "dble-1"
     #sleep 10s to let heartbeat timeout(2 heartbeat times)
     Given sleep "10" seconds
@@ -249,8 +249,8 @@ Feature: heartbeat basic test
     retry to do heartbeat for the 3 times
     """
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect              | db     |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | error totally whack | schema1 |
+     | user | passwd | conn   | toClose  | sql                         | expect              | db      |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success  | schema1 |
     Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
@@ -304,8 +304,9 @@ Feature: heartbeat basic test
     before heartbeat
     """
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect  | db     |
+     | user | passwd | conn   | toClose  | sql                         | expect  | db      |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
+    Given sleep "3" seconds
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
     mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
@@ -320,7 +321,7 @@ Feature: heartbeat basic test
      | user | passwd | conn   | toClose  | sql                         | expect  | db      |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
     Given record current dble log line number in "log_linenu"
-    #sleep 5s coz issue: http://10.186.18.11/jira/browse/DBLE0REQ-701
+    #sleep 5s coz issue: DBLE0REQ-701
     Given sleep "5" seconds
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
