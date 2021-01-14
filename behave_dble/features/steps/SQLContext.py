@@ -35,7 +35,8 @@ class SQLContext:
 
         prepare_sqls = [
             "drop table if exists {0}".format(self.table),
-            "create table {0}({1})".format(self.table, cols_def)
+            "create table {0}({1})".format(self.table, cols_def),
+            # "insert into {0} values (7,7)".format(self.table)
         ]
 
         return prepare_sqls
@@ -93,7 +94,8 @@ class SQLContext:
         cols_keys = ",".join(self.cols.keys())
         target_col_key = ",".join(self.targetCol.keys())
 
-        cols_values = self.get_cols_values()
+        # cols_values = self.get_cols_values()
+        cols_values = 7
 
         pre = 'insert into {0}({1},{2}) values ({3},"'.format(self.table, cols_keys, target_col_key, cols_values)
         post = '")'
