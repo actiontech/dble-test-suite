@@ -44,27 +44,41 @@ def create_conn(args):
     return conn
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Usage example: python3 LargePacket.py --host 10.186.60.31 --user test --passwd 111111 --database schema1 --port 7131")
-    parser.add_argument('--host', type=str, default='127.0.0.1')
-    parser.add_argument('--user', type=str, default='root')
+    # parser = argparse.ArgumentParser(description="Usage example: python3 LargePacket.py --host 10.186.60.31 --user test --passwd 111111 --database schema1 --port 7131")
+    # parser.add_argument('--host', type=str, default='127.0.0.1')
+    # parser.add_argument('--user', type=str, default='root')
+    # parser.add_argument('--passwd', type=str, default='111111')
+    # parser.add_argument('--database', type=str, default=None, help="database")
+    # parser.add_argument('--port', type=int, default=3306, help="port")
+    parser = argparse.ArgumentParser(description="Usage example: python3 LargePacket.py --host 172.100.9.1 --user test --passwd 111111 --database schema1 --port 8066")
+    parser.add_argument('--host', type=str, default='172.100.9.1')
+    parser.add_argument('--user', type=str, default='test')
     parser.add_argument('--passwd', type=str, default='111111')
-    parser.add_argument('--database', type=str, default=None, help="database")
-    parser.add_argument('--port', type=int, default=3306, help="port")
+    parser.add_argument('--database', type=str, default='schema1', help="database")
+    parser.add_argument('--port', type=int, default='8066', help="port")
 
     args = parser.parse_args()
 
 
     conn = create_conn(args)
-    sqlContext = SQLContext(table="sbtest1", cols={"id":"int"}, targetCol={"c":"blob"})
-    sqlContext2 = SQLContext(table="sbtest1", cols={"id":"int"}, targetCol={"c":"longblob"})
+    sqlContext2 = SQLContext(table="sbtest2", cols={"id":"int"}, targetCol={"c":"longblob"})
+    # sqlContext3 = SQLContext(table="test2", cols={"id": "int"}, targetCol={"c": "longblob"})
+    # sqlContext4 = SQLContext(table="sharding_2_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
+    # sqlContext5 = SQLContext(table="sharding_4_t1", cols={"id": "int"}, targetCol={"c": "longblob"})
+
+    large_packet_test(16*1024*1024, conn, sqlContext2)
+    # large_packet_test(16*1024*1024, conn, sqlContext3)
+    # large_packet_test(16*1024*1024, conn, sqlContext4)
+    # large_packet_test(16*1024*1024, conn, sqlContext5)
+
+
+
+    #sqlContext = SQLContext(table="sbtest1", cols={"id":"int"}, targetCol={"c":"blob"})
 
     #large_column_test(4*1024*1024+1, conn, sqlContext)
     #large_column_test(4*1024*1024, conn, sqlContext)
     #large_column_test(65574, conn, sqlContext)
-    #large_column_test(65575, conn, sqlContext)
-    #large_column_test(65535, conn, sqlContext)
-    #large_column_test(65536, conn, sqlContext)
-
     #large_packet_test(16*1024*1024, conn, sqlContext)
-    large_packet_test(512*1024, conn, sqlContext2)
+
+
     conn.close()
