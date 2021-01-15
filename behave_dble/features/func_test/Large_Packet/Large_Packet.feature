@@ -13,11 +13,11 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-  @restore_mysql_service @skip
+  @restore_mysql_config @skip
     #blocked by issue
   Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
-    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1},'mysql-master2':{'start_mysql':1}}}
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
     """
     #set dble.log level "info" , maxPacketSize=5M
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
@@ -93,7 +93,11 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
 
+  @restore_mysql_config
   Scenario: test "insert" sql #2
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
+    """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -315,7 +319,11 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
 
+  @restore_mysql_config
   Scenario: test "update" sql #3
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
+    """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -549,8 +557,11 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
 
+  @restore_mysql_config
   Scenario: test "delete" sql #4
-
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
+    """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -762,10 +773,12 @@ Feature:Support MySQL's large package protocol
     Given delete file "/opt/SQLContext.py" on "dble-1"
     Given delete file "/opt/SQLContext.pyc" on "dble-1"
 
-  @skip
+  @skip   @restore_mysql_config
     #todo be blocked by select "largepacket" would "Lost connection to MySQL server during query"
   Scenario: test "select" sql #5
-
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
+    """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 

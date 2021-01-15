@@ -116,7 +116,7 @@ class RestoreEnvObject(object):
             for host_name, mysql_vars in paras.items():
                 sed_str = ""
                 for k, v in mysql_vars.items():
-                    m = ['log-bin', 'binlog_format', 'relay-log']
+                    m = ['log-bin', 'binlog_format', 'relay-log', 'max_allowed_packet']
                     if k in m:
                         sed_str +="/{0}/d\n".format(k)
                     else:
