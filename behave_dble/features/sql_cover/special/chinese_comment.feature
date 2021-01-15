@@ -48,7 +48,8 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
         <property name="hashSlice">0:8</property>
      </function>
     """
-    Then execute admin cmd "reload @@config"
+    #coz DBLE0REQ-688
+    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect       | db      | charset |
       | conn_0 | False    | drop table if exists cl_idx_data_monitor   | success      | schema1 | utf8mb4 |
