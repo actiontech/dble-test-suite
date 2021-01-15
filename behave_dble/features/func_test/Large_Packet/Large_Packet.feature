@@ -37,11 +37,12 @@ Feature:Support MySQL's large package protocol
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=5242880
       """
-    Given Restart dble in "dble-1" success
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
       s/debug/info/g
       """
+    Given Restart dble in "dble-1" success
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect               | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('5242880',),)} | dble_information |
@@ -115,11 +116,12 @@ Feature:Support MySQL's large package protocol
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
-    Given Restart dble in "dble-1" success
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
       s/debug/info/g
       """
+    Given Restart dble in "dble-1" success
+
 
     #prepare largepacket 16M-2,the insert sql length 39b, 16M-2=16777175+39
     #select length('insert into test1(id,c) values (7,"")')
@@ -341,11 +343,12 @@ Feature:Support MySQL's large package protocol
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
-    Given Restart dble in "dble-1" success
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
       s/debug/info/g
       """
+    Given Restart dble in "dble-1" success
+
 
     #prepare largepacket 16M-2,the update sql length 42b, 16M-2=16777172+42
     #select length('update sharding_2_t1 set c="" where id=7')
@@ -579,11 +582,12 @@ Feature:Support MySQL's large package protocol
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
-    Given Restart dble in "dble-1" success
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
       s/debug/info/g
       """
+    Given Restart dble in "dble-1" success
+
 
     #prepare largepacket 16M-2,the delete sql length 39b, 16M-2=16777175+39
     #select length('delete from test1 where c="" and id=7')
@@ -798,11 +802,12 @@ Feature:Support MySQL's large package protocol
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
-    Given Restart dble in "dble-1" success
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
       s/debug/info/g
       """
+    Given Restart dble in "dble-1" success
+
     #prepare largepacket values
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                    | expect  | db      |
