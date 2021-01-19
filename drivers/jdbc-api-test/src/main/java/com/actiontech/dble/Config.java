@@ -46,6 +46,7 @@ public class Config {
 	private static Config _instance;
 
 	public static String GENERAL_LOG = "/var/lib/mysql/mysql-slave1.log";
+	public static String DBLE_LOG;
 
 
 	public Config() {
@@ -109,6 +110,7 @@ public class Config {
 			TEST_INSTALL_PATH = ini.get("dble","install_path");
 			ROOT_PATH = ini.get("env","root_path");
 			SQLS_CONFIG = ROOT_PATH + "features/sql_cover/sql.feature";
+			DBLE_LOG = TEST_INSTALL_PATH + "dble/logs/dble.log";
 
 		} catch (IOException e) {
 			e.printStackTrace();
