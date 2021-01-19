@@ -18,7 +18,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(90)}      | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(96)}      | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -26,7 +26,7 @@ Feature:  dble_variables test
     Then check resultset "dble_variables_2" has lines with following column values
       | variable_name-0             | variable_value-1                | comment-2                                                                                                                                                   | read_only-3 |
       | version_comment             | dble Server (ActionTech)        | version_comment                                                                                                                                             | true        |
-      | isOnline                    | true                            | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error                                                     | false     |
+      | isOnline                    | true                            | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error                                                     | false       |
       | heap_memory_max             | 1029177344                      | The maximum amount of memory that the virtual machine will attempt to use, measured in bytes                                                                | true        |
       | direct_memory_max           | 1073741824                      | Max direct memory                                                                                                                                           | true        |
       | enableFlowControl           | false                           | Whether use flow control feature                                                                                                                            | false       |
@@ -38,11 +38,13 @@ Feature:  dble_variables test
       | flushSlowLogSize            | 1000                            | The max size for flushing log to disk, the default is 1000                                                                                                  | false       |
       | enableAlert                 | true                            | enable or disable alert                                                                                                                                     | false       |
       | capClientFoundRows          | false                           | Whether to turn on EOF_Packet to return found rows,The default value is false                                                                               | false       |
+      | enableGeneralLog            | false                           | Enable general log                                                                                                                                          | false       |
+      | generalLogFile              | /opt/dble/general/general.log   | The path of general log,The default value is ./general/general.log                                                                                          | false       |
       | clusterEnable               | false                           | Whether enable the cluster mode                                                                                                                             | true        |
       | showBinlogStatusTimeout     | 60000ms                         | The time out from show @@binlog.status.The default value is 60000ms                                                                                         | true        |
       | sequenceHandlerType         | Local TimeStamp(like Snowflake) | Global Sequence Type. The default is Local TimeStamp(like Snowflake)                                                                                        | true        |
       | sequenceStartTime           | None                            | valid for sequenceHandlerType=2 or 3, default is 2010-11-04 09:42:54                                                                                        | true        |
-      | sequenceInstanceByZk        | true                            | valid for sequenceHandlerType=3 and clusterMode is zk, default true                                                                                       | true        |
+      | sequenceInstanceByZk        | true                            | valid for sequenceHandlerType=3 and clusterMode is zk, default true                                                                                         | true        |
       | serverId                    | server_1                        | serverID of machine which install dble, the default value is the machine IP                                                                                 | true        |
       | instanceName                | 1                               | instanceName used to create xa transaction and unique key for cluster                                                                                       | true        |
       | instanceId                  | 1                               | instanceId used to when sequenceHandlerType=2 or (sequenceHandlerType=3 and sequenceInstanceByZk)                                                           | true        |
@@ -52,11 +54,11 @@ Feature:  dble_variables test
       | serverPort                  | 8066                            | User connection port. The default number is 8066                                                                                                            | true        |
       | managerPort                 | 9066                            | Manager connection port. The default number is 9066                                                                                                         | true        |
       | processors                  | 1                               | The size of frontend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                      | true        |
-      | backendProcessors           | 8                               | The size of backend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                       | true        |
+      | backendProcessors           | 16                              | The size of backend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                       | true        |
       | processorExecutor           | 1                               | The size of fixed thread pool named of frontend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2    | true        |
-      | backendProcessorExecutor    | 8                               | The size of fixed thread pool named of backend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2     | true        |
+      | backendProcessorExecutor    | 16                              | The size of fixed thread pool named of backend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2     | true        |
       | complexExecutor             | 8                               | The size of fixed thread pool named of writeToBackendExecutor,the default is the number of processors available to the Java virtual machine * 2             | true        |
-      | writeToBackendExecutor      | 8                               | The executor for complex query.The default value is min(8, default value of processorExecutor)                                                              | true        |
+      | writeToBackendExecutor      | 16                              | The executor for complex query.The default value is min(8, default value of processorExecutor)                                                              | true        |
       | serverBacklog               | 2048                            | The NIO/AIO reactor backlog,the max of create connection request at one time.The default value is 2048                                                      | true        |
       | maxCon                      | 0                               | The number of max connections the server allowed                                                                                                            | true        |
       | useCompression              | 0                               | Whether the Compression is enable,The default number is 0                                                                                                   | true        |
@@ -115,14 +117,18 @@ Feature:  dble_variables test
       | maxCharsPerColumn           | 65535                           | The maximum number of characters allowed for per column when load data.The default value is 65535                                                           | true        |
       | maxRowSizeToFile            | 10000                           | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 10000                                            | true        |
       | traceEndPoint               | null                            | The trace Jaeger server endPoint                                                                                                                            | true        |
+      | generalLogFileSize          | 16M                             | The max size of the general log file.The default value is 16M                                                                                               | true        |
+      | generalLogQueueSize         | 4096                            | Sets the queue size for consuming general log, value must not be less than 1 and must be a power of 2,The default value is 4069                             | true        |
+      | maxHeapTableSize            | 4096                            | used for temp table persistence of cursor , Temp table which size larger than that will save to disk.                                                       | true        |
+      | heapTableBufferChunkSize    | 4096                            | used for temp table persistence of cursor, setting for read-buffer size.                                                                                    | true        |
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(10)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(90)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(12)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(12)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(96)} | dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -139,14 +145,17 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
     Then check resultset "dble_variables_4" has lines with following column values
-      | variable_name-0           | variable_value-1 | comment-2                                                                     | read_only-3 |
-      | sqlSlowTime               | 100ms            | The threshold of Slow Query, the default is 100ms                             | false       |
-      | flushSlowLogPeriod        | 1s               | The period for flushing log to disk, the default is 1 second                  | false       |
-      | flowControlStopThreshold  | 256              | The recover threshold of write queue to stop the flow control                 | false       |
-      | flowControlStartThreshold | 4096             | The start threshold of write queue to start the flow control                  | false       |
-      | enableFlowControl         | false            | Whether use flow control feature                                              | false       |
-      | enableAlert               | true             | enable or disable alert                                                       | false       |
-      | capClientFoundRows        | false            | Whether to turn on EOF_Packet to return found rows,The default value is false | false       |
+      | variable_name-0           | variable_value-1              | comment-2                                                                                               | read_only-3 |
+      | sqlSlowTime               | 100ms                         | The threshold of Slow Query, the default is 100ms                                                       | false       |
+      | isOnline                  | true                          | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error | false       |
+      | generalLogFile            | /opt/dble/general/general.log | The path of general log,The default value is ./general/general.log                                      | false       |
+      | flushSlowLogSize          | 1000                          | The max size for flushing log to disk, the default is 1000                                              | false       |
+      | flushSlowLogPeriod        | 1s                            | The period for flushing log to disk, the default is 1 second                                            | false       |
+      | flowControlStopThreshold  | 256                           | The recover threshold of write queue to stop the flow control                                           | false       |
+      | flowControlStartThreshold | 4096                          | The start threshold of write queue to start the flow control                                            | false       |
+      | enableSlowLog             | false                         | Enable Slow Query Log                                                                                   | false       |
+      | enableGeneralLog          | false                         | Enable general log                                                                                      | false       |
+      | enableFlowControl         | false                         | Whether use flow control feature                                                                        | false       |
   #case supported select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
@@ -163,8 +172,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 10      |
-      | true        | 80      |
+      | false       | 12      |
+      | true        | 84      |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -198,8 +207,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{('./slowlogs/')} | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{('xalog')}       | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(73)}         | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(72)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(79)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(78)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
