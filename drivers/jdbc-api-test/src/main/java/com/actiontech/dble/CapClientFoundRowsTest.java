@@ -27,7 +27,7 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             e.printStackTrace();
         }finally {
             System.out.println("reset capClientFoundRows=true in bootstrap.cnf => start");
-            resetDbleConfig(true);
+            resetDbleConfig(false);
             System.out.println("reset capClientFoundRows=true in bootstrap.cnf => end");
         }
     }
