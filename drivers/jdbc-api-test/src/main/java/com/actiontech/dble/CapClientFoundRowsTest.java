@@ -4,6 +4,7 @@
 package com.actiontech.dble;
 
 import java.sql.*;
+import java.util.Vector;
 
 /**
  * @author wangjuan
@@ -20,70 +21,96 @@ public class CapClientFoundRowsTest extends InterfaceTest {
 
     protected void start() throws SQLException {
         try {
-            testCapClientFoundRowsFalse();
-        }catch (Exception e){
+            testCapClientFoundRows();
+        } catch (Exception e) {
             System.out.println("throw exception ====> " + e.getMessage());
             e.printStackTrace();
         }finally {
-            resetDbleConfig();
+            System.out.println("reset capClientFoundRows=true in bootstrap.cnf => start");
+            resetDbleConfig(false);
+            System.out.println("reset capClientFoundRows=true in bootstrap.cnf => end");
         }
     }
 
+    private void testCapClientFoundRows() throws Exception {
+        Main.print_debug("start :" + this.getClass() + " -> testCapClientFoundRows()");
+
+        String trueLogStr = "the client requested CLIENT_FOUND_ROWS capabilities is 'affect rows', dble is configured as 'found rows',pls set the same.";
+        String falseLogStr = "the client requested CLIENT_FOUND_ROWS capabilities is 'found rows', dble is configured as 'affect rows',pls set the same.";
+
+
+        System.out.println("step 1:----> capClientFoundRows=true, useAffectedRows=true, return found rows and check logs");
+        checkCapClientFoundRows(true, null, true, trueLogStr, 1);
+
+        System.out.println("step 2:----> capClientFoundRows=true, useAffectedRows=false, return found rows");
+        checkCapClientFoundRows(null, null, false, null, 1);
+
+        //reset capClientFoundRows to default
+        resetDbleConfig(false);
+        System.out.println("step 3:----> capClientFoundRows=false, useAffectedRows=true, return found rows");
+        checkCapClientFoundRows(false, null, true, null, 0);
+
+        System.out.println("step 4:----> capClientFoundRows=false, useAffectedRows=false, return found rows and check logs");
+        checkCapClientFoundRows(null, null, false, falseLogStr, 0);
+
+        System.out.println("step 5:----> enable @@cap_client_found_rows, useAffectedRows=true, return found rows and check logs");
+        checkCapClientFoundRows(null, true, true, trueLogStr, 1);
+
+        System.out.println("step 6:----> enable @@cap_client_found_rows, useAffectedRows=false, return found rows");
+        checkCapClientFoundRows(null, true, false, null, 1);
+
+        System.out.println("step 7:----> disable @@cap_client_found_rows, useAffectedRows=true, return found rows");
+        checkCapClientFoundRows(null, false, true, null, 0);
+
+        System.out.println("step 8:----> disable @@cap_client_found_rows, useAffectedRows=false, return found rows and check logs");
+        checkCapClientFoundRows(null, false, false, falseLogStr, 0);
+
+        Main.print_debug("end :" + this.getClass() + " -> testCapClientFoundRows()");
+    }
+
     /**
-     * set capClientFoundRows=false
+     * check capClientFoundRows
      * @throws SQLException
      */
-    private void testCapClientFoundRowsFalse() throws SQLException{
-        System.out.println("start :" + this.getClass() + " -> testUseAffectedRowsFalse()");
+    private void checkCapClientFoundRows(Boolean capClientFoundRows, Boolean capClientFoundRowsStatus,
+                                         Boolean useAffectedRows, String logStr, Integer expectResult) throws Exception {
 
-        System.out.println("step 1:---->");
-        SSHCommandExecutor sshExecutor = new SSHCommandExecutor(dbleProp.serverName, Config.SSH_USER,
-				Config.SSH_PASSWORD);
-        String cmd = "sed -i '/capClientFoundRows/s/-DcapClientFoundRows=true/-DcapClientFoundRows=false/g' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
-		sshExecutor.execute(cmd);
+        if (capClientFoundRows != null){
+            String cmd = "sed -i -e '/-DcapClientFoundRows/d' -e '$a -DcapClientFoundRows=" + capClientFoundRows
+                    + "' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
+            executeCommand(cmd);
+            Thread.sleep(5000);
+        }
 
-        Connection dbleTestConn = null;
-        String errorMsg = null;
-        try {
-            dbleTestConn = getDbleClientConnection(false);
-        }catch (SQLException e){
-            errorMsg = e.getMessage();
-            e.printStackTrace(System.err);
-        }finally {
-            if (dbleTestConn == null) {
-                System.out.println("pass! dble connection error : " + errorMsg);
+        if(capClientFoundRowsStatus != null){
+            String cmd;
+            if (capClientFoundRowsStatus){
+                cmd = Config.getdbleAdminCmd("enable @@cap_client_found_rows");
             }else{
-                on_assert_fail("except dble connection error, but connection success");
-                dbleTestConn.close();
+                cmd = Config.getdbleAdminCmd("disable @@cap_client_found_rows");
+            }
+            executeCommand(cmd);
+
+            //fresh connection command
+            String freshCmd = Config.getdbleAdminCmd("fresh conn where dbGroup ='ha_group1';fresh conn where dbGroup ='ha_group2';");
+            executeCommand(freshCmd);
+        }
+
+        Connection connection = null;
+        try {
+            connection = getDbleClientConnection(useAffectedRows);
+            executeSpecialSql(connection, expectResult);
+            if (logStr != null && !logStr.trim().equals("")) {
+                checkLogs(logStr);
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }finally {
+            if (connection != null) {
+                connection.close();
             }
         }
-
-        System.out.println("step 2:---->");
-        //enable @@cap_client_found_rows
-        String enableCmd = Config.getdbleAdminCmd("enable @@cap_client_found_rows");
-        sshExecutor.execute(enableCmd);
-        String freshCmd = Config.getdbleAdminCmd("fresh conn where dbGroup ='ha_group1';fresh conn where dbGroup ='ha_group2';");
-        sshExecutor.execute(freshCmd);
-        Connection connection = getDbleClientConnection(false);
-        executeSpecialSql(connection, 1);
-
-        System.out.println("step 3:---->");
-        //disable @@cap_client_found_rows
-        String disableCmd = Config.getdbleAdminCmd("disable @@cap_client_found_rows");
-        sshExecutor.execute(disableCmd);
-        sshExecutor.execute(freshCmd);
-        executeSpecialSql(connection, 0);
-
-        System.out.println("step 4:---->");
-        //useAffectedRows=true
-        Connection trueConn = getDbleClientConnection(true);
-        executeSpecialSql(trueConn, 0);
-
-        if (dbleTestConn != null) {
-            dbleTestConn.close();
-        }
-
-        System.out.println("end :" + this.getClass() + " -> testUseAffectedRowsFalse()");
     }
 
     /**
@@ -93,7 +120,7 @@ public class CapClientFoundRowsTest extends InterfaceTest {
      * @throws SQLException
      */
     private void executeSpecialSql(Connection dbleTestConn, int expectResult) throws SQLException{
-        System.out.println("start :" + this.getClass() + " -> enableCapClientFoundRows()");
+        Main.print_debug("start :" + this.getClass() + " -> executeSpecialSql()");
 
         Statement statement = null;
 
@@ -114,34 +141,38 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             int returnResult = resultAry[3];
 
             if(expectResult != returnResult) {
-                on_assert_fail("INSERT INTO ... ON DUPLICATE KEY UPDATE... expect result : "
+                on_assert_fail("failed! INSERT INTO ... ON DUPLICATE KEY UPDATE... expect result : "
                         + expectResult + ", but return : " + returnResult);
             }else{
-                System.out.println("pass! INSERT INTO ... ON DUPLICATE KEY UPDATE... return success => " + returnResult);
+                System.out.println("pass! return => " + returnResult);
             }
 
         }catch (SQLException e){
             System.out.println(e.getMessage());
-            e.printStackTrace(System.err);
+            e.printStackTrace();
         }finally {
             if(statement != null) {
                 statement.close();
             }
         }
 
-        System.out.println("end :" + this.getClass() + " -> enableCapClientFoundRows()");
+        Main.print_debug("end :" + this.getClass() + " -> executeSpecialSql()");
     }
 
     /**
-     * reset capClientFoundRows=true in bootstrap.cnf
+     * reset capClientFoundRows in bootstrap.cnf
      */
-    private void resetDbleConfig(){
-        SSHCommandExecutor sshExecutor = new SSHCommandExecutor(dbleProp.serverName, Config.SSH_USER,
-                Config.SSH_PASSWORD);
-        String adminCmd = Config.getdbleAdminCmd("enable @@cap_client_found_rows");
-        sshExecutor.execute(adminCmd);
-        String cmd = "sed -i '/capClientFoundRows/s/-DcapClientFoundRows=false/-DcapClientFoundRows=true/g' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
-        sshExecutor.execute(cmd);
+    private void resetDbleConfig(boolean resetType){
+        String adminCmd;
+        if(resetType){
+            adminCmd = Config.getdbleAdminCmd("enable @@cap_client_found_rows");
+        } else {
+            adminCmd = Config.getdbleAdminCmd("disable @@cap_client_found_rows");
+        }
+        executeCommand(adminCmd);
+        String cmd = "sed -i -e '/-DcapClientFoundRows/d' -e '$a -DcapClientFoundRows="+ resetType
+                + "' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
+        executeCommand(cmd);
     }
 
     /**
@@ -150,13 +181,58 @@ public class CapClientFoundRowsTest extends InterfaceTest {
      * @return
      * @throws SQLException
      */
-    private Connection getDbleClientConnection(boolean useAffectedRows) throws SQLException{
+    private Connection getDbleClientConnection(Boolean useAffectedRows) throws SQLException{
         String urlString = "jdbc:mysql://" + dbleProp.serverName + ":" + dbleProp.portNumber + "";
-        String fullUrlString = urlString + "?useSSL=false&allowMultiQueries=true&autoReconnect=true&failOverReadOnly=false&useAffectedRows=" + useAffectedRows;
+        String fullUrlString = urlString + "?useSSL=false";
+        if(useAffectedRows != null){
+            fullUrlString += "&useAffectedRows=" + useAffectedRows;
+        }
         Main.print_debug(fullUrlString + ",user " + dbleProp.userName + ", password " + dbleProp.password);
 
         Connection dbleTestConn = DriverManager.getConnection(fullUrlString, dbleProp.userName, dbleProp.password);
 
         return dbleTestConn;
+    }
+
+    /**
+     * count str display times
+     * @param str
+     * @return
+     */
+    private String countStrTime(String str){
+        SSHCommandExecutor sshExecutor = new SSHCommandExecutor(dbleProp.serverName, Config.SSH_USER,
+                Config.SSH_PASSWORD);
+        String countCmd = "tail -n +0 " + Config.DBLE_LOG + " | grep -n \"" + str + "\" | wc -l";
+        sshExecutor.execute(countCmd);
+        Vector<String> outVector = sshExecutor.getStandardOutput();
+
+        String result = "";
+        if (outVector != null){
+            result = outVector.firstElement();
+        }
+        Main.print_debug("str count result : " + result);
+        return result;
+    }
+
+    /**
+     * check dble.log
+     * @param logStr
+     */
+    private void checkLogs(String logStr){
+        String falseResult = countStrTime(logStr);
+        if(falseResult != null && Integer.parseInt(falseResult.trim())> 0){
+            System.out.println("pass! dble.log check success.");
+        }else{
+            on_assert_fail("failed! except dble.log records inconsistent logs, but cannot find " + logStr + "in dble.log");
+        }
+    }
+
+    /**
+     * execute command on dble
+     */
+    private void executeCommand(String cmd){
+        SSHCommandExecutor sshExecutor = new SSHCommandExecutor(dbleProp.serverName, Config.SSH_USER,
+                Config.SSH_PASSWORD);
+		sshExecutor.execute(cmd);
     }
 }
