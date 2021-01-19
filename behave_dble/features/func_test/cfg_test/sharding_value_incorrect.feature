@@ -46,7 +46,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
   @NORMAL @restore_mysql_config
   Scenario: config sharding property, reload the configs #5
    """
-    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},{'mysql-master2':{'lower_case_table_names':0}}}
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
    """
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
@@ -62,19 +62,19 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
       <singleTable name="Tb_Single" shardingNode="dn5" sqlMaxLimit="105"/>
     """
-    Then execute admin cmd "reload @@config_all"
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               | expect                   | db      |
-      | conn_0 | False   | drop table if exists Tb_Single                    | success                  | schema1 |
-      | conn_0 | False   | create table Tb_Single(id int,name char(20))      | success                  | schema1 |
-      | conn_0 | False   | insert into tb_single(id) value(1)                | success                  | schema1 |
-      | conn_0 | False   | select id from TB_Single                          | success                  | schema1 |
-      | conn_0 | False   | select tb_single.id from Tb_Single                | success                  | schema1 |
-      | conn_0 | False   | select Tb_Single.id from tb_single                | success                  | schema1 |
-      | conn_0 | False   | select schema1.tb_single.id from schema1.Tb_Single| success                  | schema1 |
-      | conn_0 | False   | select schema1.Tb_Single.id from schema1.tb_single| success                  | schema1 |
-      | conn_0 | True    | select schema1.Tb_Single.id from schema1.Tb_Single| success                  | schema1 |
+      | conn   | toClose | sql                                                | expect                   | db      |
+      | conn_0 | False   | drop table if exists Tb_Single                     | success                  | schema1 |
+      | conn_0 | False   | create table Tb_Single(id int,name char(20))       | success                  | schema1 |
+      | conn_0 | False   | insert into tb_single(id) value(1)                 | success                  | schema1 |
+      | conn_0 | False   | select id from TB_Single                           | success                  | schema1 |
+      | conn_0 | False   | select tb_single.id from Tb_Single                 | success                  | schema1 |
+      | conn_0 | False   | select Tb_Single.id from tb_single                 | success                  | schema1 |
+      | conn_0 | False   | select schema1.tb_single.id from schema1.Tb_Single | success                  | schema1 |
+      | conn_0 | False   | select schema1.Tb_Single.id from schema1.tb_single | success                  | schema1 |
+      | conn_0 | True    | select schema1.Tb_Single.id from schema1.Tb_Single | success                  | schema1 |
+
 
   Scenario: config sharding property, reload the configs #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
