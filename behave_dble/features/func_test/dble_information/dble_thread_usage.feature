@@ -4,7 +4,7 @@
 
 Feature:  dble_thread_usage table test
 
-   Scenario:  dble_thread_usage  table #1
+    Scenario:  dble_thread_usage  table #1
   #case desc dble_thread_usage
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_1"
       | conn   | toClose | sql                    | db               |
@@ -23,11 +23,19 @@ Feature:  dble_thread_usage table test
 
   #case set useThreadUsageStat and useCostTimeStat
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    $a -DuseThreadUsageStat=1
-    $a -DuseCostTimeStat=1
-    """
-    Given Restart dble in "dble-1" success
+     """
+     $a -DuseThreadUsageStat=1
+     $a -DuseCostTimeStat=1
+     /DbackendProcessorExecutor/d
+     /DcomplexExecutor/d
+     /DwriteToBackendExecutor/d
+     /DbackendProcessors/d
+     $a  -DbackendProcessorExecutor=8
+     $a  -DcomplexExecutor=8
+     $a  -DwriteToBackendExecutor=8
+     $a  -DbackendProcessors=8
+     """
+    Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_2"
       | conn   | toClose | sql                             | db               |
       | conn_0 | True    | select * from dble_thread_usage | dble_information |
@@ -61,12 +69,12 @@ Feature:  dble_thread_usage table test
       | writeToBackendExecutor7  |
   #case change bootstrap.cnf to check result
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
+     """
      s/-DprocessorExecutor=1/-DprocessorExecutor=2/
-     $a  -DbackendProcessors=4
-     $a  -DbackendProcessorExecutor=4
-     $a  -DwriteToBackendExecutor=4
-    """
+     s/-DbackendProcessors=8/-DbackendProcessors=4/
+     s/-DbackendProcessorExecutor=8/-DbackendProcessorExecutor=4/
+     s/-DwriteToBackendExecutor=8/-DwriteToBackendExecutor=4/
+     """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_usage_4"
       | conn   | toClose | sql                              | db               |
