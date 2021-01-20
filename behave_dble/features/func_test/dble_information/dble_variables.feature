@@ -5,6 +5,18 @@
 Feature:  dble_variables test
 
  Scenario:  dble_variables table #1
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+     """
+     /DbackendProcessorExecutor/d
+     /DcomplexExecutor/d
+     /DwriteToBackendExecutor/d
+     /DbackendProcessors/d
+     $a  -DbackendProcessorExecutor=8
+     $a  -DcomplexExecutor=8
+     $a  -DwriteToBackendExecutor=8
+     $a  -DbackendProcessors=8
+     """
+    Then restart dble in "dble-1" success
   #case desc dble_variables
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_1"
       | conn   | toClose | sql                 | db               |
@@ -27,7 +39,6 @@ Feature:  dble_variables test
       | variable_name-0             | variable_value-1                | comment-2                                                                                                                                                   | read_only-3 |
       | version_comment             | dble Server (ActionTech)        | version_comment                                                                                                                                             | true        |
       | isOnline                    | true                            | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error                                                     | false       |
-      | heap_memory_max             | 1029177344                      | The maximum amount of memory that the virtual machine will attempt to use, measured in bytes                                                                | true        |
       | direct_memory_max           | 1073741824                      | Max direct memory                                                                                                                                           | true        |
       | enableFlowControl           | false                           | Whether use flow control feature                                                                                                                            | false       |
       | flowControlStartThreshold   | 4096                            | The start threshold of write queue to start the flow control                                                                                                | false       |
@@ -54,11 +65,11 @@ Feature:  dble_variables test
       | serverPort                  | 8066                            | User connection port. The default number is 8066                                                                                                            | true        |
       | managerPort                 | 9066                            | Manager connection port. The default number is 9066                                                                                                         | true        |
       | processors                  | 1                               | The size of frontend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                      | true        |
-      | backendProcessors           | 16                              | The size of backend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                       | true        |
+      | backendProcessors           | 8                               | The size of backend NIOProcessor, the default value is the number of processors available to the Java virtual machine                                       | true        |
       | processorExecutor           | 1                               | The size of fixed thread pool named of frontend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2    | true        |
-      | backendProcessorExecutor    | 16                              | The size of fixed thread pool named of backend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2     | true        |
+      | backendProcessorExecutor    | 8                               | The size of fixed thread pool named of backend businessExecutor,the default value is the number of processors available to the Java virtual machine * 2     | true        |
       | complexExecutor             | 8                               | The size of fixed thread pool named of writeToBackendExecutor,the default is the number of processors available to the Java virtual machine * 2             | true        |
-      | writeToBackendExecutor      | 16                              | The executor for complex query.The default value is min(8, default value of processorExecutor)                                                              | true        |
+      | writeToBackendExecutor      | 8                               | The executor for complex query.The default value is min(8, default value of processorExecutor)                                                              | true        |
       | serverBacklog               | 2048                            | The NIO/AIO reactor backlog,the max of create connection request at one time.The default value is 2048                                                      | true        |
       | maxCon                      | 0                               | The number of max connections the server allowed                                                                                                            | true        |
       | useCompression              | 0                               | Whether the Compression is enable,The default number is 0                                                                                                   | true        |

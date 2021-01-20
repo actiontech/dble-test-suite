@@ -232,6 +232,7 @@ Feature: test " check @@global schema = '' [and table = '']"
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 1, 2),)}     |
       | conn_0 | true    | check @@global schema='schema2' and table = 'g3'   | has{(('schema2', 'g3', 1, 2),)}     |
     Given start mysql in host "mysql-master1"
+    Given sleep "11" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                | expect                              |
       | conn_0 | False   | check @@global schema='schema1' and table = 'g1'   | has{(('schema1', 'g1', 3, 0),)}     |

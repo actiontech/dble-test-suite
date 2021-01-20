@@ -24,8 +24,8 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@disable name='ha_group2'"
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                         | expect                          | db       |
-      | conn_0 | true     | select * from sharding_4_t1 |  [ha_group2.hostM2] is disabled | schema1  |
+      | conn   | toClose  | sql                         | expect                                                                           | db       |
+      | conn_0 | true     | select * from sharding_4_t1 | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1  |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
