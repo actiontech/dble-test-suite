@@ -4,6 +4,13 @@
 
 Feature:  dble_thread_pool test
    Scenario:  dble_thread_pool table #1
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+     $a  -DbackendProcessorExecutor=8
+     $a  -DcomplexExecutor=8
+     $a  -DwriteToBackendExecutor=8
+    """
+    Then restart dble in "dble-1" success
   #case desc dble_thread_pool
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
       | conn   | toClose | sql                      | db               |
@@ -53,9 +60,9 @@ Feature:  dble_thread_pool test
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
      s/-DprocessorExecutor=1/-DprocessorExecutor=4/
-     $a  -DbackendProcessorExecutor=12
-     $a  -DcomplexExecutor=12
-     $a  -DwriteToBackendExecutor=12
+     s/-DbackendProcessorExecutor=8/-DbackendProcessorExecutor=12/
+     s/-DcomplexExecutor=8/-DcomplexExecutor=12/
+     s/-DwriteToBackendExecutor=8/-DwriteToBackendExecutor=12/
     """
     Then restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_3"
