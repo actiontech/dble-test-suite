@@ -3,7 +3,7 @@
 # Created by wangjuan at 2020/12/7
 Feature: test KILL [CONNECTION | QUERY] processlist_id
 
-# for DBLE0REQ-12
+# for xa
   @skip
   @btrace
   Scenario: check kill query processlist_id #1
@@ -185,9 +185,9 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
       | conn_0 | False   | select * from sharding_4_t1        | success | schema1 |
       | conn_0 | True    | drop table if exists sharding_4_t1 | success | schema1 |
 
-# for DBLE0REQ-726
-  @skip
-  Scenario: check kill connection processlist_id #2
+
+
+  Scenario: check kill connection processlist_id for DBLE0REQ-726 #2
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                             | expect  | db      |
       | conn_3 | False   | drop table if exists sharding_4_t1                              | success | schema1 |
