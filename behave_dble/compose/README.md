@@ -7,6 +7,8 @@ linux Centos7 ，基础环境依赖自行安装: docker,docker-compose,python 2.
      wget https://raw.githubusercontent.com/actiontech/dble-test-suite/master/behave_dble/compose/start_env.sh
      bash start_env.sh
 
+    注：之前下载过的请先关闭所有docker并删除，删除所有相关image和network，重新下载start_env.sh并bash
+
 ### 三、执行测试
 
      wget https://raw.githubusercontent.com/actiontech/dble-test-suite/master/behave_dble/compose/start_dble_test.sh
