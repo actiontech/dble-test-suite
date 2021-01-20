@@ -4,8 +4,9 @@
 
 Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat on
 
-  @NORMAL
+  @NORMAL @skip
   Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat on, and then execute query success #1
+#DBLE0REQ-852
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DusePerformanceMode=1
