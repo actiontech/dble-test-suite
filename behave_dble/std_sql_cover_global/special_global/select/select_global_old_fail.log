@@ -1,11 +1,11 @@
 ===file:special_global/select/select_global_old.sql, id:220, sql:[select sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-dble err:(-1, 'error totally whack')
+dble err:(4004, 'column o_custkey not found')
 ===file:special_global/select/select_global_old.sql, id:221, sql:[select ALL HIGH_PRIORITY STRAIGHT_JOIN SQL_SMALL_RESULT SQL_BIG_RESULT SQL_BUFFER_RESULT SQL_CACHE SQL_CALC_FOUND_ROWS sum(O_TOTALPRICE) as sums,O_CUSTKEY,count(O_ORDERKEY) counts from test1 where O_CUSTKEY between 'CUSTKEY_002' and 'CUSTKEY_050' group by 2 asc having O_CUSTKEY<(select max(c_custkey) from schema2.test2) order by (select C_ORDERKEY from schema2.test2 where c_custkey=o_custkey) asc]===
 dble:[None]
 mysql:[((Decimal('300000'), 'CUSTKEY_003', 2L), (Decimal('323456'), 'CUSTKEY_012', 1L))]
-dble err:(-1, 'error totally whack')
+dble err:(4004, 'column o_custkey not found')
 ===file:special_global/select/select_global_old.sql, id:255, sql:[select id,O_CUSTKEY,O_ORDERKEY,O_TOTALPRICE from test1 a where (a.O_ORDERKEY,O_CUSTKEY)=(select c_ORDERKEY,c_CUSTKEY from schema2.test2 where c_name='yanglu')]===
 dble:[None]
 mysql:[((6L, 'CUSTKEY_420', 'ORDERKEY_006', 231L),)]
