@@ -1,11 +1,11 @@
 ===file:sqls_util/transaction/trx_syntax.sql, id:504, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:509, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:510, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1),)]
 mysql:[()]
@@ -15,11 +15,11 @@ mysql:[((1, 1, '1', 10),)]
 ===file:sqls_util/transaction/trx_syntax.sql, id:522, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:526, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:527, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1),)]
 mysql:[()]
@@ -33,11 +33,11 @@ mysql:[((1, 1, '1', 1),)]
 ===file:sqls_util/transaction/trx_syntax.sql, id:539, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:543, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:544, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1), (2, 2, '2', 2))]
 mysql:[()]
@@ -47,11 +47,11 @@ mysql:[((1, 1, '1', 10), (2, 2, '2', 2))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:556, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:560, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:561, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1), (2, 2, '2', 2))]
 mysql:[()]
@@ -68,11 +68,11 @@ mysql:[((1, 1, '1', 1), (5, 5, '5', 5), (6, 6, '6', 6))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:573, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:577, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:578, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1), (2, 2, '2', 2), (3, 3, '3', 3))]
 mysql:[()]
@@ -82,11 +82,11 @@ mysql:[((1, 1, '1', 10), (2, 2, '2', 2), (3, 3, '3', 3))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:590, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:594, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:595, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1), (2, 2, '2', 2), (3, 3, '3', 3))]
 mysql:[()]
@@ -103,11 +103,11 @@ mysql:[((1, 1, '1', 1), (5, 5, '5', 5), (6, 6, '6', 6), (7, 7, '7', 7))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:607, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:611, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:612, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1), (2, 2, '2', 2), (3, 3, '3', 3), (4, 4, '4', 4))]
 mysql:[()]
@@ -117,11 +117,11 @@ mysql:[((1, 1, '1', 10), (2, 2, '2', 2), (3, 3, '3', 3), (4, 4, '4', 4))]
 ===file:sqls_util/transaction/trx_syntax.sql, id:624, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:628, sql:[start transaction read write]===
 dble:[None]
 mysql:[()]
-dble err:(1064, 'sql syntax error, no terminated. IDENTIFIER')
+dble err:(1064, 'syntax error, expect ONLY, actual IDENTIFIER, pos 28, line 1, column 24, token IDENTIFIER write')
 ===file:sqls_util/transaction/trx_syntax.sql, id:629, sql:[select * from test1 order by id]===
 dble:[((1, 1, '1', 1), (2, 2, '2', 2), (3, 3, '3', 3), (4, 4, '4', 4))]
 mysql:[()]
