@@ -2,16 +2,17 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
 
-
+@skip
+  #case DBLE0REQ-855
 Feature: test "ha" in zk cluster
   ######case points:
   #  1.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbgroup"
   #  2.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbinstance"
 
 
+
   @skip_restart
   Scenario: prepare and when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"  #1
-    Given stop dble cluster and zk service
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
@@ -44,6 +45,7 @@ Feature: test "ha" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
+    Then execute admin cmd "reload @@config"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       $a -DuseOuterHa=true
@@ -71,9 +73,10 @@ Feature: test "ha" in zk cluster
       s/needSyncHa=false/needSyncHa=true/
       s/clusterEnable=false/clusterEnable=true/
       """
-    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
-    Given reset dble registered nodes in zk
-    Then start dble in order
+    Then restart dble in "dble-1" success
+    Then restart dble in "dble-2" success
+    Then restart dble in "dble-3" success
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
       | conn_0 | False   | drop table if exists vertical1                               | success | schema2 |
@@ -237,16 +240,20 @@ Feature: test "ha" in zk cluster
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    #java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status
       """
-      due to the dbInstance\[ha_group2.hostM2\] is disabled.
+      the dbInstance\[172.100.9.6:3306\] can
+      Please check the dbInstance status
       """
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    #java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status
       """
-      due to the dbInstance\[ha_group2.hostM2\] is disabled.
+      the dbInstance\[172.100.9.6:3306\] can
+      Please check the dbInstance status
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect                                                                                                | db      |
@@ -261,32 +268,32 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | select * from sharding2                  | length{(2)}                                                                              | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostM2] is disabled. | schema1 |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | can't connect to shardingNode[dn4], due to the dbInstance[ha_group2.hostM2] is disabled. | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostM2] is disabled. | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | select * from sharding4                  | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(1)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=1       | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                  | schema1 |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                  | schema1 |
       | conn_2  | true    | select * from child1                     | length{(2)}                                                                              | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | can't connect to shardingNode[dn4], due to the dbInstance[ha_group2.hostM2] is disabled. | schema3 |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostM2] is disabled. | schema3 |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
       | conn_21 | true    | select * from sharding21                 | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                   | db      |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                  | schema1 |
       | conn_3  | False   | select * from sing1                   | length{(1)}                                                                              | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostM2] is disabled. | schema1 |
+      | conn_3  | False   | insert into sing2 values (1)          | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_3  | False   | select * from sing2                   | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                  | schema1 |
       | conn_3  | true    | select * from no_sharding1            | length{(1)}                                                                              | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | can't connect to shardingNode[dn4], due to the dbInstance[ha_group2.hostM2] is disabled. | schema3 |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
       | conn_31 | true    | select * from no_sharding2            | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
       | conn_32 | False   | show tables                           | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostM2] is disabled. | schema2 |
+      | conn_32 | False   | insert into vertical1 values (1)      | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema2 |
       | conn_32 | true    | select * from  vertical1              | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
     #case change master to slave1 on mysql group
     Given execute linux command in "behave"
@@ -464,8 +471,10 @@ Feature: test "ha" in zk cluster
 
 
 
+
   @skip_restart
   Scenario: when ClusterEnable=true && useOuterHa=true && needSyncHa=true ,check "dbinstance"  #2
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "Res_A"
       | sql               |
       | show @@dbinstance |
@@ -570,16 +579,20 @@ Feature: test "ha" in zk cluster
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    #java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status
       """
-      due to the dbInstance\[ha_group2.hostS1\] is disabled.
+      the dbInstance[172.100.9.2:3306] can
+      Please check the dbInstance status
       """
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    #java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status
       """
-      due to the dbInstance\[ha_group2.hostS1\] is disabled.
+      the dbInstance[172.100.9.2:3306] can
+      Please check the dbInstance status
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
@@ -592,32 +605,32 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | select * from sharding2                  | length{(6)}                                                                              | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema1 |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | can't connect to shardingNode[dn4], due to the dbInstance[ha_group2.hostS1] is disabled. | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | select * from sharding4                  | length{(8)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(3)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=1       | length{(1)}                                                                              | schema1 |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                  | schema1 |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                  | schema1 |
       | conn_2  | true    | select * from child1                     | length{(5)}                                                                              | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | can't connect to shardingNode[dn4], due to the dbInstance[ha_group2.hostS1] is disabled. | schema3 |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema3 |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_21 | False   | insert into sharding21 values (2,2)      |java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
       | conn_21 | true    | select * from sharding21                 | length{(2)}                                                                              | schema3 |
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                   | db      |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                  | schema1 |
       | conn_3  | False   | select * from sing1                   | length{(3)}                                                                              | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema1 |
+      | conn_3  | False   | insert into sing2 values (1)          | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_3  | False   | select * from sing2                   | length{(1)}                                                                              | schema1 |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                  | schema1 |
       | conn_3  | true    | select * from no_sharding1            | length{(3)}                                                                              | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | can't connect to shardingNode[dn4], due to the dbInstance[ha_group2.hostS1] is disabled. | schema3 |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
       | conn_31 | true    | select * from no_sharding2            | length{(1)}                                                                              | schema3 |
       | conn_32 | False   | show tables                           | success                                                                                  | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | can't connect to shardingNode[dn2], due to the dbInstance[ha_group2.hostS1] is disabled. | schema2 |
+      | conn_32 | False   | insert into vertical1 values (1)      | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
     #case change master to slave2 on mysql group
     Given execute linux command in "behave"
@@ -769,22 +782,9 @@ Feature: test "ha" in zk cluster
       | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
+
   Scenario: restore mysql binlog and clear table  #3
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                          | expect  | db      |
-#      | conn_0 | true    | drop table if exists vertical1                               | success | schema2 |
-#      | conn_0 | False   | drop table if exists no_sharding2                            | success | schema3 |
-#      | conn_0 | true    | drop table if exists sharding21                              | success | schema3 |
-#      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
-#      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
-#      | conn_0 | False   | drop table if exists global3                                 | success | schema1 |
-#      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
-#      | conn_0 | False   | drop table if exists sharding3                               | success | schema1 |
-#      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
-#      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
-#      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
-#      | conn_0 | False   | drop table if exists sing2                                   | success | schema1 |
-#      | conn_0 | true    | drop table if exists no_sharding1                            | success | schema1 |
+    Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/resetReplication.sh
