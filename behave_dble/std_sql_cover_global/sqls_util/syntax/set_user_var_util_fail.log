@@ -7,7 +7,7 @@ mysql:[[(1L, 1L)]]
 ===file:sqls_util/syntax/set_user_var_util.sql, id:39, sql:[SET @total_tax = (SELECT SUM(id) FROM test1)]===
 dble:[None]
 mysql:[()]
-dble err:(-1, 'error totally whack')
+dble err:(1046, 'No database selected')
 ===file:sqls_util/syntax/set_user_var_util.sql, id:40, sql:[SELECT @total_tax]===
 dble:[[(None,)]]
 mysql:[[(Decimal('17'),)]]

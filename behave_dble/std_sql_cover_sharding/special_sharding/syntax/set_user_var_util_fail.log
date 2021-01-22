@@ -1,4 +1,4 @@
 ===file:special_sharding/syntax/set_user_var_util.sql, id:21, sql:[(SELECT id FROM sharding_2_t1 WHERE id=@id_a AND B=67.29) UNION (SELECT id FROM schema2.sharding_3_t1 WHERE id=@id_b AND B=2) order by @id_a ;]===
 dble:[None]
-mysql:[((2L,), (10L,))]
-dble err:(-1, 'error totally whack')
+mysql:[((2,), (10,))]
+dble err:(4004, "Unknown column '2' in order statement")
