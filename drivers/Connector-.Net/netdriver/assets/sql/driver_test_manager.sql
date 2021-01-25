@@ -29,7 +29,7 @@ show @@shardingNode
 show @@shardingNode where schema=schema1;
 show @@shardingNode where schema=schema1 and table=aly_test;
 show @@dbInstance
-show @@dbInstance.cluster
+#show @@dbInstance.cluster
 show @@dbInstance.synstatus
 show @@dbInstance.syndetail where name=172.100.9.1
 show @@directmemory
@@ -79,7 +79,7 @@ reload @@query_cf=aly_test&id
 reload @@query_cf
 reload @@query_cf=aly_test&id
 reload @@query_cf=NULL
-rollback @@config
+#rollback @@config
 #offline
 #online
 file @@list
