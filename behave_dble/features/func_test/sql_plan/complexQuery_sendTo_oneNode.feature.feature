@@ -99,10 +99,10 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select count(*) from aly_test a where a.c='a' or a.c='b' and a.id =1 |
     Then check resultset "rs_4" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
-      | dn1_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
-      | dn2_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
-      | dn3_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
-      | dn4_0           | BASE SQL      | select COUNT(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
+      | dn1_0           | BASE SQL      | select count(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
+      | dn2_0           | BASE SQL      | select count(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
+      | dn3_0           | BASE SQL      | select count(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
+      | dn4_0           | BASE SQL      | select count(*) as `_$COUNT$_rpda_0` from  `aly_test` `a` where  (  ( `a`.`c` = 'b' AND `a`.`id` = 1) OR `a`.`c` in ('a')) LIMIT 100 |
       | merge_1         | MERGE         | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                           |
       | aggregate_1     | AGGREGATE     | merge_1                                                                                                                              |
       | limit_1         | LIMIT         | aggregate_1                                                                                                                          |
