@@ -3,8 +3,7 @@
 # Created by wangjuan at 2020/12/7
 Feature: test KILL [CONNECTION | QUERY] processlist_id
 
-# for xa
-  @skip
+
   @btrace
   Scenario: check kill query processlist_id #1
 # case 1: kill query current processlist_id

@@ -5,8 +5,7 @@
 
 #2.20.04.0#dble-8170
 
-  @skip
-  #coz DBLE0REQ-846
+
 Feature: xa_transaction: kill node before transaction commit
   @restore_mysql_service
   Scenario: begin transaction and insert data , kill one node before transaction commit #1
