@@ -29,7 +29,7 @@ show @@shardingNode
 show @@shardingNode where schema=schema1;
 show @@shardingNodes where schema=schema1 and table=aly_test;
 show @@dbInstance
-show @@dbInstance.cluster
+#show @@dbInstance.cluster
 show @@dbInstance.synstatus
 show @@dbInstance.syndetail where name=172.100.9.1
 show @@directmemory
@@ -63,9 +63,9 @@ show @@white
 show @@ddl
 show @@processlist
 SHOW VARIABLES WHERE Variable_name ='language' OR Variable_name = 'net_write_timeout' OR Variable_name = 'interactive_timeout' OR Variable_name = 'wait_timeout' OR Variable_name = 'character_set_client' OR Variable_name = 'character_set_connection' OR Variable_name = 'character_set' OR Variable_name = 'character_set_server' OR Variable_name = 'tx_isolation' OR Variable_name = 'transaction_isolation' OR Variable_name = 'character_set_results' OR Variable_name = 'timezone' OR Variable_name = 'time_zone' OR Variable_name = 'system_time_zone' OR Variable_name = 'lower_case_table_names' OR Variable_name = 'max_allowed_packet' OR Variable_name = 'net_buffer_length' OR Variable_name = 'sql_mode' OR Variable_name = 'query_cache_type' OR Variable_name = 'query_cache_size' OR Variable_name = 'init_connect';
-switch @@dbInstance dbGroup
-switch @@dbInstance 172.100.9.5
-switch @@dbInstance dbGroup$0-4
+#switch @@dbInstance dbGroup
+#switch @@dbInstance 172.100.9.5
+#switch @@dbInstance dbGroup$0-4
 #kill @@connection
 #kill @@connection id1,id2,...
 stop @@heartbeat dbGroup:5000
@@ -82,7 +82,7 @@ reload @@query_cf=aly_test&id
 reload @@query_cf
 reload @@query_cf=aly_test&id
 reload @@query_cf=NULL
-rollback @@config
+#rollback @@config
 offline
 online
 file @@list
