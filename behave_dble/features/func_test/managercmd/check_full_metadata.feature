@@ -394,7 +394,8 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test_shard    | success  | schema1 |
       | conn_0 | True    | drop table if exists test_no_shard | success  | schema1 |
 
-  @regression
+  @regression @skip
+    #coz DBLE0REQ-870
   Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
@@ -431,10 +432,12 @@ Feature: test "check full @@metadata...'"
       """
       CREATE TABLE `test_shard`
       """
-    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
        """
-       a/-DcheckTableConsistency=1
-       a/-DcheckTableConsistencyPeriod=1000
+       /-DcheckTableConsistency/d
+       /-DcheckTableConsistencyPeriod/d
+       $a -DcheckTableConsistency=1
+       $a -DcheckTableConsistencyPeriod=1000
        """
     Given Restart dble in "dble-1" success
     Then check following text exist "N" in file "dble.log" in host "dble-1"
@@ -467,6 +470,8 @@ Feature: test "check full @@metadata...'"
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                         | expect                          |
       | check full @@metadata where consistent_in_sharding_nodes =0 | hasNoStr{`mytest_auto_test1`}   |
+
+    
 
   Scenario: add filter for reload @@metadata #9
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
