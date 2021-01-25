@@ -26,9 +26,9 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             System.out.println("throw exception ====> " + e.getMessage());
             e.printStackTrace();
         }finally {
-            System.out.println("reset capClientFoundRows=true in bootstrap.cnf => start");
+            System.out.println("reset capClientFoundRows=false in bootstrap.cnf => start");
             resetDbleConfig(false);
-            System.out.println("reset capClientFoundRows=true in bootstrap.cnf => end");
+            System.out.println("reset capClientFoundRows=false in bootstrap.cnf => end");
         }
     }
 
@@ -141,6 +141,7 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             int returnResult = resultAry[3];
 
             if(expectResult != returnResult) {
+                resetDbleConfig(false);
                 on_assert_fail("failed! INSERT INTO ... ON DUPLICATE KEY UPDATE... expect result : "
                         + expectResult + ", but return : " + returnResult);
             }else{
@@ -171,8 +172,9 @@ public class CapClientFoundRowsTest extends InterfaceTest {
         }
         executeCommand(adminCmd);
         String cmd = "sed -i -e '/-DcapClientFoundRows/d' -e '$a -DcapClientFoundRows="+ resetType
-                + "' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
+                + "' /opt/dble/conf/bootstrap.cnf && sed -i -e '/capClientFoundRows/d' /opt/dble/conf/bootstrap.dynamic.cnf && /opt/dble/bin/dble restart";
         executeCommand(cmd);
+        System.out.println("reset capClientFoundRows=" + resetType + " in bootstrap.cnf success");
     }
 
     /**
