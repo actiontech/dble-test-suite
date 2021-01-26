@@ -35,7 +35,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case2********;
-	sprintf(sql, "create table t3(id int)\0;create table t4(id int)");
+	sprintf(sql, "create table t3(id int)\\0;create table t4(id int)");
 	//	printf("%s\n", sql);
 	status = mysql_real_query(mysql, sql, 50);
 	if(status){
@@ -48,7 +48,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case3********
-	sprintf(sql, "drop table if exists t5;create table t5(id int);\0create table t6(id int)");
+	sprintf(sql, "drop table if exists t5;create table t5(id int);\\0create table t6(id int)");
 	//	printf("%s\n", sql);
 	status = mysql_real_query(mysql, sql, 50);
 	if(status){
@@ -71,7 +71,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case4********
-	sprintf(sql, "select 1\0,2");
+	sprintf(sql, "select 1\\0,2");
 	//	printf("%s\n", sql);
 	if(mysql_real_query(conn, sql, 50)){
 		const char * err=mysql_error(conn);
@@ -82,7 +82,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case5********
-	sprintf(sql, "select 1,\02");
+	sprintf(sql, "select 1,\\02");
 //	printf("%s\n", sql);
 	if(mysql_real_query(conn, sql, 50)){
 		const char * err=mysql_error(conn);
@@ -93,7 +93,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case6********
-	sprintf(sql, "select '1,\02'");
+	sprintf(sql, "select '1,\\02'");
 //	printf("%s\n", sql);
 	if(mysql_real_query(conn, sql, 50)){
 		const char * err=mysql_error(conn);
@@ -104,7 +104,7 @@ void case_null_in_sql(){
 	}
 
 	//*******case7********
-	sprintf(sql, "\0select '1'");
+	sprintf(sql, "\\0select '1'");
 //	printf("%s\n", sql);
 	if(mysql_real_query(conn, sql, 50)){
 		const char * err=mysql_error(conn);
