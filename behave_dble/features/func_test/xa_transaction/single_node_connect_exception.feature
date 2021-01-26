@@ -47,8 +47,9 @@ Feature: backend node disconnect,causing xa abnormal
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
-  @btrace
-  Scenario:backend node connection is abnormal, causing xa end is abnormal, transaction manual rollback
+  @btrace  @skip
+    #DBLE0REQ-874
+  Scenario:backend node connection is abnormal, causing xa end is abnormal, transaction manual rollback  #2
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-Dprocessors=1/c -Dprocessors=2
@@ -86,8 +87,8 @@ Feature: backend node disconnect,causing xa abnormal
       | conn_1 | false   | begin                                                   | success     | schema1 |
       | conn_1 | false   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success     | schema1 |
       | conn_1 | false   | commit                                                  | success     | schema1 |
-      | conn_1 | True   | select * from sharding_4_t1                             | length{(4)} | schema1 |
+      | conn_1 | True    | select * from sharding_4_t1                             | length{(4)} | schema1 |
      #DDL is not allowed to be executed in xa transaction in 3.20.07, so we need use a new connect to drop table.
-      | new | true    | drop table if exists sharding_4_t1                      | success     | schema1 |
+      | new    | true    | drop table if exists sharding_4_t1                      | success     | schema1 |
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
