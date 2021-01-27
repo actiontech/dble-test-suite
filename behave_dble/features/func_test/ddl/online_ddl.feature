@@ -364,25 +364,93 @@ Feature: test online ddl
        """
 
 
-
   @skip_restart
-  Scenario: supported CREATE INDEX name ON table (col_list) / ALTER TABLE tbl_name ADD INDEX name (col_list)    #2
+  Scenario: DROP INDEX name ON table / ALTER TABLE tbl_name DROP INDEX name   #3
+    #case drop index time is less,don't check dml
     #nosharding table
     Given record current dble log line number in "log_linenu"
     Given execute sqls in "dble-1" at background
-      | conn   | toClose | sql                                            | db      |
-      | conn_1 | false   | alter table nosharding add index nosha(name)   | schema1 |
+      | conn   | toClose | sql                                      | db      |
+      | conn_1 | false   | alter table nosharding drop index nosha  | schema1 |
+      | conn_1 | false   | drop index index1 on nosharding          | schema1 |
+
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                              | expect            | db      |
-      | conn_2 | false   | insert into nosharding values (3,'nosh',22)      | success           | schema1 |
-      | conn_2 | false   | show index from nosharding                       | hasNoStr{nosha}   | schema1 |
-    Given sleep "10" seconds
+      | conn   | toClose | sql                                              | expect    | db      |
+      | conn_2 | false   | insert into nosharding values (3,'nosh',22)      | success   | schema1 |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                              | expect         | db      |
-      | conn_1 | false   | show index from nosharding       | hasStr{nosha}  | schema1 |
+      | conn   | toClose | sql                              | expect           | db      |
+      | conn_1 | false   | show index from nosharding       | hasNoStr{nosha}  | schema1 |
+      | conn_1 | false   | show index from nosharding       | hasNoStr{index1} | schema1 |
+
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
        """
        stage = LOCK
        """
-
-
+    #sing table
+    Given record current dble log line number in "log_linenu"
+    Given execute sqls in "dble-1" at background
+      | conn   | toClose | sql                                    | db      |
+      | conn_1 | false   | alter table sing drop index sig        | schema1 |
+      | conn_1 | false   | drop index index2 on sing              | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                        | expect          | db      |
+      | conn_2 | false   | insert into sing values (3,'sing',11)      | success         | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect             | db      |
+      | conn_1 | false   | show index from sing             | hasNoStr{sig}      | schema1 |
+      | conn_1 | false   | show index from sing             | hasNoStr{index2}   | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+       """
+       stage = LOCK
+       """
+    #global table
+    Given record current dble log line number in "log_linenu"
+    Given execute sqls in "dble-1" at background
+      | conn   | toClose | sql                                      | db      |
+      | conn_1 | false   | alter table global drop index glo        | schema1 |
+      | conn_1 | false   | drop index index3 on global              | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                          | expect          | db      |
+      | conn_2 | false   | insert into global values (3,'sing',11)      | success         | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                | expect             | db      |
+      | conn_1 | false   | show index from global             | hasNoStr{glo}      | schema1 |
+      | conn_1 | false   | show index from global             | hasNoStr{index3}   | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+       """
+       stage = LOCK
+       """
+    #sharding table
+    Given record current dble log line number in "log_linenu"
+    Given execute sqls in "dble-1" at background
+      | conn   | toClose | sql                                  | db      |
+      | conn_1 | false   | alter table sharding2 drop index sha | schema1 |
+      | conn_1 | false   | drop index index4 on sharding2       | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                             | expect          | db      |
+      | conn_2 | false   | insert into sharding2 values (3,'sing',11)      | success         | schema1 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                   | expect             | db      |
+      | conn_1 | false   | show index from sharding2             | hasNoStr{sha}      | schema1 |
+      | conn_1 | false   | show index from sharding2             | hasNoStr{index4}   | schema1 |
+   Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+       """
+       stage = LOCK
+       """
+   #vertical table
+    Given record current dble log line number in "log_linenu"
+    Given execute sqls in "dble-1" at background
+      | conn   | toClose | sql                                | db      |
+      | conn_3 | false   | alter table ver drop index verti   | schema2 |
+      | conn_3 | false   | drop index index5 on ver           | schema2 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                       | expect          | db      |
+      | conn_4 | false   | insert into ver values (3,'sing',11)      | success         | schema2 |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                             | expect           | db      |
+      | conn_3 | false   | show index from ver             | hasNoStr{verti}  | schema2 |
+      | conn_3 | false   | show index from ver             | hasNoStr{index5} | schema2 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+       """
+       stage = LOCK
+       """
