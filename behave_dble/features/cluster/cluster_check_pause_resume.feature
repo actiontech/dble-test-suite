@@ -11,7 +11,7 @@ Feature: test "pause/resume" in zk cluster
   #  4. create xa ,check pause_node.lock,during pause or resume restart one dble
   #  5. create xa ,check pause_node.lock but pause or resume timeout
 
-
+@skip_restart
   Scenario: pause @@shardingNode and resume  #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                 | expect   | db       |
@@ -71,22 +71,22 @@ Feature: test "pause/resume" in zk cluster
       | conn_21 | False   | resume                                                                  | success                 |
       | conn_21 | True    | show @@pause                                                            | length{(0)}             |
 
-
+@skip_restart
   Scenario: check pause_node.lock  ,then dble1 pause,dble2 or dble3 can resume   #2
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                                 | expect   | db       |
       | conn_3 | False    | drop table if exists sharding_4_t1                  | success  | schema1  |
       | conn_3 | False    | create table sharding_4_t1(id int,name varchar(20)) | success  | schema1  |
       | conn_3 | false    | begin                                               | success  | schema1  |
-      | conn_3 | true     | insert into sharding_4_t1 values (1,'4'),(2,'4'),(3,'4'),(4,'4')            | success  | schema1  |
+      | conn_3 | false    | insert into sharding_4_t1 values (1,'4')            | success  | schema1  |
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                                                                            | db                 |
-      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 10,queue=10,wait_limit=1        | dble_information   |
-    Given sleep "10" seconds
+      | conn_11 | false   | pause @@shardingNode = 'dn1,dn2' and timeout = 20,queue=10,wait_limit=1        | dble_information   |
+    Given sleep "5" seconds
     #case check lock on zookeeper
     Then get result of oscmd named "A" in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock | grep "pause_node.lock" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
       """
     Then check result "A" value is "1"
     Then execute sql in "dble-2" in "admin" mode
@@ -121,20 +121,21 @@ Feature: test "pause/resume" in zk cluster
       | conn_2 | True     | select * from sharding_4_t1               | success   | schema1  |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
-      | conn_3 | True     | select * from sharding_4_t1               | length{(4)}   | schema1  |
+      | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
 
+@skip_restart
   Scenario: create xa ,check pause_node.lock,during pause or resume restart one dble #3
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                                                 | expect    | db       |
-      | conn_2 | False    | drop table if exists sharding_4_t1                  | success  | schema1  |
-      | conn_2 | False    | create table sharding_4_t1(id int,name varchar(20)) | success  | schema1  |
+      | conn_2 | False    | drop table if exists sharding_4_t1                  | success   | schema1  |
+      | conn_2 | False    | create table sharding_4_t1(id int,name varchar(20)) | success   | schema1  |
       | conn_2 | false    | begin                                               | success   | schema1  |
       | conn_2 | false    | insert into sharding_4_t1 values (4,'4')            | success   | schema1  |
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                                                                                | db                 |
-      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 10,queue=10,wait_limit=1            | dble_information   |
+      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 20,queue=10,wait_limit=1            | dble_information   |
     #case check lock on zookeeper
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -144,10 +145,10 @@ Feature: test "pause/resume" in zk cluster
     Then stop dble in "dble-3"
     #to check dble-3 had stop
     Given sleep "2" seconds
-    Then Start dble in "dble-3"
+    Given Restart dble in "dble-3" success
     Then execute sql in "dble-3" in "admin" mode
-      | conn    | toClose | sql                                                                      | expect                                               |
-      | conn_31 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 30,queue=10,wait_limit=1  | Other node is doing pause operation concurrently     |
+      | conn    | toClose | sql                                                                      | expect                                                   |
+      | conn_31 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 30,queue=10,wait_limit=1  | There are some node in cluster can't recycle backend     |
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql        | expect    | db       |
       | conn_2 | True     | commit     | success   | schema1  |
@@ -180,12 +181,12 @@ Feature: test "pause/resume" in zk cluster
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
-
+@skip_restart
   Scenario: create xa ,check pause_node.lock but pause or resume timeout #4
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                                 | expect    | db       |
-      | conn_3 | False    | drop table if exists sharding_4_t1                  | success  | schema1  |
-      | conn_3 | False    | create table sharding_4_t1(id int,name varchar(20)) | success  | schema1  |
+      | conn_3 | False    | drop table if exists sharding_4_t1                  | success   | schema1  |
+      | conn_3 | False    | create table sharding_4_t1(id int,name varchar(20)) | success   | schema1  |
       | conn_3 | false    | begin                                               | success   | schema1  |
       | conn_3 | false    | insert into sharding_4_t1 values (4,'4')            | success   | schema1  |
     Then execute "admin" cmd  in "dble-1" at background
