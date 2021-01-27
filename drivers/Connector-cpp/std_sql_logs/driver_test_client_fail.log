@@ -1,15 +1,12 @@
 ===file:assets/sql/driver_test_client.sql,id:19,sql:explain select * from schema2.test2 where id=1;
-dble: [((dn2,BASE SQL,SELECT * FROM test2 WHERE id = 1 LIMIT 100), )]
+dble: [((dn2,BASE SQL,select * from test2 where id=1), )]
 mysql: [((1,SIMPLE,test2,,const,PRIMARY,PRIMARY,4,const,1,100.00,), )]
 ===file:assets/sql/driver_test_client.sql,id:20,sql:explain2 shardingNode=dn2 sql=select * from test_shard where id=1;
 dble: [((1,SIMPLE,test_shard,,const,PRIMARY,PRIMARY,4,const,1,100.00,), )]
-mysql: [(([(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'explain2 shardingNode=dn2 sql=select * from test_shard where id=1' at line 1)]), )]
-===file:assets/sql/driver_test_client.sql,id:23,sql:/*40101%%%%%????&&&**djdjj*/;===
-dble: [(1064: error pos 33, line 1, column 5, token EOF)]
-mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1)]
-===file:assets/sql/driver_test_client.sql,id:24,sql:/*dfghdfgh*/;===
-dble: [(1064: error pos 17, line 1, column 5, token EOF)]
-mysql: [(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 1)]
-===file:assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;===
-dble: [(4004: with rollup is not supported yet!)]
-mysql: [((1,2),(3,1),(4,1),(6,1),(,5),)]
+mysql: [(([(1064: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'explain2 shardingnode=dn2 sql=select * from test_shard where id=1' at line 1)]), )]
+===file:assets/sql/driver_test_client.sql,id:25,sql:select (@aa:=id) AS a, (@aa+3) AS b from test_shard where R_NAME=(select CHARSET(X'4D7953514C'));
+dble: [(([(4004: not support assignment)]), )]
+mysql: [()]
+===file:assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;
+dble: [(([(4004: with rollup is not supported yet!)]), )]
+mysql: [((1,2), (3,1), (4,1), (6,1), (,5), )]
