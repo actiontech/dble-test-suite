@@ -50,9 +50,9 @@ RUN sed -i 's/java -cp/java -Dcom.sun.btrace.unsafe=true -cp/' /opt/btrace/bin/b
 RUN echo "export PATH=/opt/btrace/bin/:$PATH">>/etc/bashrc
 
 #install zookeeper
-COPY zookeeper-3.4.6.tar.gz /tmp/zookeeper-3.4.6.tar.gz
+COPY zookeeper-3.5.2-alpha.tar.gz /tmp/zookeeper-3.5.2-alpha.tar.gz
 RUN mkdir /opt/zookeeper
-RUN tar -zxvf /tmp/zookeeper-3.4.6.tar.gz -C /opt/zookeeper --strip-components=1
+RUN tar -zxvf /tmp/zookeeper-3.5.2-alpha.tar.gz -C /opt/zookeeper --strip-components=1
 RUN echo " ">> /opt/zookeeper/conf/zoo.cfg \
     && sed -i "$ a tickTime=2000\ninitLimit=10\nsyncLimit=5 \nclientPort=2181" /opt/zookeeper/conf/zoo.cfg \
     && sed -i "$ a dataDir=/opt/zookeeper/data\ndataLoginDir=/opt/zookeeper/logs" /opt/zookeeper/conf/zoo.cfg \
