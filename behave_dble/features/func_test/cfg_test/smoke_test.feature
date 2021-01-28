@@ -5,13 +5,14 @@
 Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat on
 
   @NORMAL
-  Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat on, and then execute query success #1
+  Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat & useCompression on, and then execute query success #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DusePerformanceMode=1
     $a\-DusingAIO=1
     $a\-DuseThreadUsageStat=1
     $a\-DuseCostTimeStat=1
+    $a\-DuseCompression=1
     """
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
