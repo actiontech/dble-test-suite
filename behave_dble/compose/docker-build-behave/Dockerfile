@@ -40,11 +40,13 @@ RUN chmod u+s /usr/sbin/ntpdate
 #config $PATH with jdk and mvn
 RUN echo "export PATH=/opt/jdk/bin:/usr/local/apache-maven/bin:$PATH">>/etc/bashrc
 
+RUN mkdir ~/.ssh
+RUN echo 'sshpass'| passwd --stdin root
+RUN rm -rf /etc/ssh/ssh_host_*
 RUN ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
 RUN ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
 RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
 RUN ssh-keygen -t rsa -N ""  -f "/root/.ssh/id_rsa"
-RUN touch /root/.ssh/authorized_keys
 
 COPY * /docker-build/
 
