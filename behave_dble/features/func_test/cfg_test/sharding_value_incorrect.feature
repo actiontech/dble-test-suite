@@ -119,5 +119,5 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
     Then execute admin cmd "reload @@config" get the following output
       """
-      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [sharding.xml] occurred  parse errors, The detailed errors are as follows .  com.actiontech.dble.config.util.ConfigException: invalid shardingNode config: dn1,dn2,dn3,dn3 for ShardingTableConfig sharding_4_t2 ,the nodes duplicated
+      invalid shardingNode config: dn1,dn2,dn3,dn3 for ShardingTableConfig sharding_4_t2 ,the nodes duplicated
       """

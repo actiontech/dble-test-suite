@@ -40,7 +40,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute value "h~ost@M3" of type NMTOKEN must be a name token
+      'h~ost@M3' is not a valid value for 'NMTOKEN'
     """
 
   Scenario: config db property, reload the configs #4

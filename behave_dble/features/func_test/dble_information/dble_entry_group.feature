@@ -416,8 +416,8 @@ Feature:  dble_entry test
     """
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                  | expect                                                                                                                                                 |
-      | conn_0 | False   | reload @@config      | Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [user.xml] occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct  |
-      | conn_0 | False   | dryrun                | com.actiontech.dble.config.util.ConfigException: User [test]'s schema [schema1]'s privilege's dml is not correct  |
+      | conn_0 | False   | reload @@config      | User [test]'s schema [schema1]'s privilege's dml is not correct  |
+      | conn_0 | False   | dryrun                | User [test]'s schema [schema1]'s privilege's dml is not correct  |
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
