@@ -8,5 +8,6 @@ docker network create -d bridge --ipv6 --subnet "2001:3984:3989::/64" --gateway 
 docker-compose -f docker-compose.yml up -d --force
 docker exec driver-test sh -c "/etc/init.d/ssh start"
 docker exec -it behave bash "/init_assets/dble-test-suite/behave_dble/compose/docker-build-behave/init_test_env.sh"
+docker cp docker-build-driver/init_driver_env.sh driver-test:/docker-build  && docker exec -it driver-test bash "/docker-build/init_driver_env.sh"
 
 /bin/bash
