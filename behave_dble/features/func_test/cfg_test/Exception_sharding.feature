@@ -244,7 +244,7 @@ Feature: sharding basic config test
     """
 
   Scenario: config two tables with same name, reload fail #13
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml" with duplicate name
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
@@ -379,7 +379,7 @@ Feature: sharding basic config test
     """
     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
         <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
-        <shardingTable name="`table1, ,table2`" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="`table1,table2`" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
     </schema>
     """
     Then execute admin cmd "reload @@config_all"
