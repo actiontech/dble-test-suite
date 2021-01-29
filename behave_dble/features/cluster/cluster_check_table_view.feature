@@ -15,7 +15,7 @@ Feature: test view in zk cluster
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect    | db      |
       | conn_1 | false   | drop table if exists sharding_4_t1               | success   | schema1 |
-      | conn_1 | true    | create table sharding_4_t1 (id int,name char(5)) | success   | schema1 |
+      | conn_1 | false   | create table sharding_4_t1 (id int,name char(5)) | success   | schema1 |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -24,7 +24,7 @@ Feature: test view in zk cluster
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                     | db      |
-      | conn_1 | True    | create view view_test as select * from sharding_4_t1    | schema1 |
+      | conn_1 | false   | create view view_test as select * from sharding_4_t1    | schema1 |
     #case check lock on zookeeper values is 1
     Then get result of oscmd named "A" in "dble-1"
       """
@@ -63,7 +63,7 @@ Feature: test view in zk cluster
       | conn_1 | true    | show create view view_test  | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                          | character_set_client-2 | collation_connection-3 |
-      | view_test | create view view_test as  select * from sharding_4_t1  | latin1                 | latin1_swedish_ci      |
+      | view_test | create view view_test as select * from sharding_4_t1   | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-2" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_2 | true    | show create view view_test  | schema1 |
@@ -100,7 +100,7 @@ Feature: test view in zk cluster
       | conn_2 | true    | show create view view_test  | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                                     | character_set_client-2 | collation_connection-3 |
-      | view_test | create view view_test as  select * from sharding_4_t1 where id =1 | latin1                 | latin1_swedish_ci      |
+      | view_test | create view view_test as select * from sharding_4_t1 where id =1  | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_test  | schema1 |
@@ -183,7 +183,7 @@ Feature: test view in zk cluster
       | conn_2 | true    | show create view view_view  | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                                     | character_set_client-2 | collation_connection-3 |
-      | view_view | create view view_view as  select * from sharding_4_t1 where id =1 | latin1                 | latin1_swedish_ci      |
+      | view_view | create view view_view as select * from sharding_4_t1 where id =1  | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_view  | schema1 |
@@ -258,7 +258,7 @@ Feature: test view in zk cluster
       | conn_3 | true    | show create view view_3     | schema1 |
     Then check resultset "Res_A" has lines with following column values
       | View-0    | Create View-1                                                  | character_set_client-2 | collation_connection-3 |
-      | view_3    | create view view_3 as  select * from sharding_4_t1 where id =2 | latin1                 | latin1_swedish_ci      |
+      | view_3    | create view view_3 as select * from sharding_4_t1 where id =2  | latin1                 | latin1_swedish_ci      |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "Res_B"
       | conn   | toClose | sql                         | db      |
       | conn_1 | true    | show create view view_3     | schema1 |

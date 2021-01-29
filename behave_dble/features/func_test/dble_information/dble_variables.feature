@@ -50,7 +50,7 @@ Feature:  dble_variables test
       | enableAlert                 | true                            | enable or disable alert                                                                                                                                     | false       |
       | capClientFoundRows          | false                           | Whether to turn on EOF_Packet to return found rows,The default value is false                                                                               | false       |
       | enableGeneralLog            | false                           | Enable general log                                                                                                                                          | false       |
-      | generalLogFile              | /opt/dble/general/general.log   | The path of general log,The default value is ./general/general.log                                                                                          | false       |
+      | generalLogFile              | /opt/dble/./general/general.log | The path of general log,The default value is ./general/general.log                                                                                          | false       |
       | clusterEnable               | false                           | Whether enable the cluster mode                                                                                                                             | true        |
       | showBinlogStatusTimeout     | 60000ms                         | The time out from show @@binlog.status.The default value is 60000ms                                                                                         | true        |
       | sequenceHandlerType         | Local TimeStamp(like Snowflake) | Global Sequence Type. The default is Local TimeStamp(like Snowflake)                                                                                        | true        |
@@ -156,17 +156,17 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
     Then check resultset "dble_variables_4" has lines with following column values
-      | variable_name-0           | variable_value-1              | comment-2                                                                                               | read_only-3 |
-      | sqlSlowTime               | 100ms                         | The threshold of Slow Query, the default is 100ms                                                       | false       |
-      | isOnline                  | true                          | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error | false       |
-      | generalLogFile            | /opt/dble/general/general.log | The path of general log,The default value is ./general/general.log                                      | false       |
-      | flushSlowLogSize          | 1000                          | The max size for flushing log to disk, the default is 1000                                              | false       |
-      | flushSlowLogPeriod        | 1s                            | The period for flushing log to disk, the default is 1 second                                            | false       |
-      | flowControlStopThreshold  | 256                           | The recover threshold of write queue to stop the flow control                                           | false       |
-      | flowControlStartThreshold | 4096                          | The start threshold of write queue to start the flow control                                            | false       |
-      | enableSlowLog             | false                         | Enable Slow Query Log                                                                                   | false       |
-      | enableGeneralLog          | false                         | Enable general log                                                                                      | false       |
-      | enableFlowControl         | false                         | Whether use flow control feature                                                                        | false       |
+      | variable_name-0           | variable_value-1                 | comment-2                                                                                               | read_only-3 |
+      | sqlSlowTime               | 100ms                            | The threshold of Slow Query, the default is 100ms                                                       | false       |
+      | isOnline                  | true                             | When it is set to offline, COM_PING/COM_HEARTBEAT/SELECT USER()/SELECT CURRENT_USER() will return error | false       |
+      | generalLogFile            | /opt/dble/./general/general.log  | The path of general log,The default value is ./general/general.log                                      | false       |
+      | flushSlowLogSize          | 1000                             | The max size for flushing log to disk, the default is 1000                                              | false       |
+      | flushSlowLogPeriod        | 1s                               | The period for flushing log to disk, the default is 1 second                                            | false       |
+      | flowControlStopThreshold  | 256                              | The recover threshold of write queue to stop the flow control                                           | false       |
+      | flowControlStartThreshold | 4096                             | The start threshold of write queue to start the flow control                                            | false       |
+      | enableSlowLog             | false                            | Enable Slow Query Log                                                                                   | false       |
+      | enableGeneralLog          | false                            | Enable general log                                                                                      | false       |
+      | enableFlowControl         | false                            | Whether use flow control feature                                                                        | false       |
   #case supported select field from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_5"
       | conn   | toClose | sql                                                | db               |
