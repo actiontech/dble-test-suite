@@ -476,7 +476,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: \[db.xml\] occurred  parse errors, The detailed errors are as follows . java.lang.NumberFormatException: For input string: "1.2"
+      '1.2' is not a valid value for 'integer'
       """
     #case check on zookeeper
     Then get result of oscmd named "A" in "dble-1"
