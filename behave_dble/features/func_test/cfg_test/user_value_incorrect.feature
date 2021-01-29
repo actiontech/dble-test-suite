@@ -30,7 +30,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute "password" is required and must be specified for element type "shardingUser"
+      Attribute 'password' must appear on element 'shardingUser'
     """
 
   Scenario:  usingDecrypt="true",config password with plaintext, reload failed #4
@@ -60,7 +60,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute "schemas" is required and must be specified for element type "shardingUser"
+      Attribute 'schemas' must appear on element 'shardingUser'
     """
     
   Scenario:  config case sensitive, check privileges #7
