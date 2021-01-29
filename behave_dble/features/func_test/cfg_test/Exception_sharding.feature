@@ -25,7 +25,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Attribute "name" is required and must be specified for element type "shardingNode"
+    Attribute 'name' must appear on element 'shardingNode'
     """
 
   Scenario: config two shardingNode with same name, reload fail #3
@@ -88,7 +88,7 @@ Feature: sharding basic config test
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Attribute value "" of type NMTOKEN must be a name token
+    shardingColumn of sharding_2_t1 is empty
     """
 
   Scenario: test the effectiveness of wildcard , reload success #7
