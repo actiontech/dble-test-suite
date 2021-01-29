@@ -40,7 +40,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute value "h~ost@M3" of type NMTOKEN must be a name token
+      'h~ost@M3' is not a valid value for 'NMTOKEN'
     """
 
   Scenario: config db property, reload the configs #4
@@ -66,7 +66,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      Attribute "url" is required and must be specified for element type "dbInstance"
+      Attribute 'url' must appear on element 'dbInstance'
     """
 
   Scenario: config db property, reload the configs #6
@@ -93,7 +93,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      The content of element type "dbGroup" is incomplete, it must match "(heartbeat,dbInstance+)"
+      The content of element 'dbGroup' is not complete. One of '{dbInstance}' is expected
     """
 
   @test-no-dbgroup
@@ -104,7 +104,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      dbGroup not exists ha_group1
+      The content of element 'dble:db' is not complete. One of '{dbGroup}' is expected
     """
 
 
@@ -119,5 +119,5 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [db.xml] occurred  parse errors, The detailed errors are as follows . com.actiontech.dble.config.util.ConfigException: dbGroup[ha_group2]'s child url [172.100.9.6:3306]  duplicated!
+      dbGroup[ha_group2]'s child url [172.100.9.6:3306]  duplicated!
       """
