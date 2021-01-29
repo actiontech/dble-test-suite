@@ -12,7 +12,7 @@ Feature: test config in user.xml
 
     Then execute admin cmd "reload @@config_all"
     """
-    Attribute "test" must be declared for element type "shardingUser"
+    Attribute 'test' is not allowed to appear in element 'shardingUser'
     """
 
   @TRIVIAL
@@ -322,6 +322,6 @@ Feature: test config in user.xml
     """
     Then execute admin cmd "reload @@config" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit.
+    The group[rwS1.ha_group1] has been used by sharding node, can't be used by rwSplit
     """
 
