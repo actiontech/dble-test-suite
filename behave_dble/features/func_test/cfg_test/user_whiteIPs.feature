@@ -12,7 +12,7 @@ Feature: check whiteIPs in user.xml
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [user.xml] occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: The configuration contains incorrect IP["172.100.9.1000"]
+    The configuration contains incorrect IP["172.100.9.1000"]
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -22,7 +22,7 @@ Feature: check whiteIPs in user.xml
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    Reload config failure.The reason is com.actiontech.dble.config.util.ConfigException: [user.xml] occurred  parse errors, The detailed results are as follows . com.actiontech.dble.config.util.ConfigException: The configuration contains incorrect IP["172.100.9"]
+    The configuration contains incorrect IP["172.100.9"]
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
