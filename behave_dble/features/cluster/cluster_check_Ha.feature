@@ -2,7 +2,6 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
 
-@skip
   #case DBLE0REQ-855
 Feature: test "ha" in zk cluster
   ######case points:
@@ -258,7 +257,7 @@ Feature: test "ha" in zk cluster
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect                                                                                                | db      |
       | conn_1 | False   | select * from global1          | length{(0)}                                                                                           | schema1 |
-      | conn_1 | False   | select * from global2          | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.                        | schema1 |
+      | conn_1 | False   | select * from global2          | the dbGroup[ha_group2] doesn't contain active dbInstance.                        | schema1 |
       #case global3 donot route ha_group2(dn2 or dn4)
       | conn_1 | False   | insert into global3 values (1) | success                                                                                               | schema1 |
       | conn_1 | False   | insert into global3 values (2) | success                                                                                               | schema1 |
@@ -268,34 +267,38 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | select * from sharding2                  | length{(2)}                                                                              | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
-      | conn_2  | False   | select * from sharding4                  | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | select * from sharding4                  | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(1)}                                                                              | schema1 |
-      | conn_2  | False   | select * from sharding4 where id=1       | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
+      | conn_2  | False   | select * from sharding4 where id=1       | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                  | schema1 |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                  | schema1 |
       | conn_2  | true    | select * from child1                     | length{(2)}                                                                              | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
-      | conn_21 | False   | insert into sharding21 values (2,2)      | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
-      | conn_21 | true    | select * from sharding21                 | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_21 | true    | select * from sharding21                 | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                   | db      |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                  | schema1 |
       | conn_3  | False   | select * from sing1                   | length{(1)}                                                                              | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
-      | conn_3  | False   | select * from sing2                   | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
+      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_3  | False   | select * from sing2                   | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema1 |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                  | schema1 |
       | conn_3  | true    | select * from no_sharding1            | length{(1)}                                                                              | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
-      | conn_31 | true    | select * from no_sharding2            | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
-      | conn_32 | False   | show tables                           | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | java.io.IOException: the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema2 |
-      | conn_32 | true    | select * from  vertical1              | java.io.IOException: the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_31 | true    | select * from no_sharding2            | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema3 |
+      | conn_32 | False   | show tables                           | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
+      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema2 |
+      | conn_32 | true    | select * from  vertical1              | the dbGroup[ha_group2] doesn't contain active dbInstance.           | schema2 |
     #case change master to slave1 on mysql group
+    Given update file content "./compose/docker-build-behave/ChangeMaster.sh" in "behave" with sed cmds
+    """
+    s/grant replication slave on *.* to '\''repl'\''@'\''%'\''/grant replication slave on *.* to '\''repl'\''@'\''%'\'' identified by '\''111111'\''/
+    """
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
@@ -362,15 +365,17 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | DISABLED   | 10           |
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
-    Then execute sql in "mysql-slave2"
-      | conn   | toClose | sql                                          | expect   |
-      | conn_0 | true    | show master status                           | success  |
+    #check master had changed
+    Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql                                          | expect        |
+      | conn_0 | false   | show master status                           | success       |
+      | conn_0 | true    | show slave status                            | hasNoStr{Yes} |
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                          | expect   |
-      | conn_0 | true    | show slave status                            | success  |
+      | conn   | toClose | sql                                            | expect         |
+      | conn_0 | true    | show slave status                              | hasStr{Yes}    |
     Then execute sql in "mysql-slave2"
-      | conn   | toClose | sql                                          | expect   |
-      | conn_0 | true    | show slave status                            | success  |
+      | conn   | toClose | sql                                            | expect         |
+      | conn_0 | true    | show slave status                              | hasStr{Yes}    |
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
@@ -429,12 +434,7 @@ Feature: test "ha" in zk cluster
       | NAME       | 1            |
       | W/R        | 4            |
       | DISABLED   | 10           |
-    Then check resultsets "Res_2" and "Res_3" are same in following columns
-      | column     | column_index |
-      | DB_GROUP   | 0            |
-      | NAME       | 1            |
-      | W/R        | 4            |
-      | DISABLED   | 10           |
+
     #case check sql query will be success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
@@ -468,7 +468,6 @@ Feature: test "ha" in zk cluster
       | conn_32 | False   | show tables                           | success     | schema2 |
       | conn_32 | False   | insert into vertical1 values (1)      | success     | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)} | schema2 |
-
 
 
 
@@ -581,7 +580,7 @@ Feature: test "ha" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     #java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status
       """
-      the dbInstance[172.100.9.2:3306] can
+      the dbInstance\[172.100.9.2:3306\] can
       Please check the dbInstance status
       """
     Given delete file "/tmp/dble_user_query.log" on "dble-1"
@@ -591,7 +590,7 @@ Feature: test "ha" in zk cluster
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     #java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status
       """
-      the dbInstance[172.100.9.2:3306] can
+      the dbInstance\[172.100.9.2:3306\] can
       Please check the dbInstance status
       """
     Then execute sql in "dble-1" in "user" mode
@@ -605,32 +604,32 @@ Feature: test "ha" in zk cluster
       | conn_2  | False   | insert into sharding2 values (1,1)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding2 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | select * from sharding2                  | length{(6)}                                                                              | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1)       | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
-      | conn_2  | False   | insert into sharding4 values (3,3)       | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1)       | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (3,3)       | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | insert into sharding4 values (2,2)       | success                                                                                  | schema1 |
       | conn_2  | False   | insert into sharding4 values (4,4)       | success                                                                                  | schema1 |
-      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_2  | False   | insert into sharding4 values (1,1),(2,2) | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_2  | False   | select * from sharding4                  | length{(8)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=2       | length{(3)}                                                                              | schema1 |
       | conn_2  | False   | select * from sharding4 where id=1       | length{(1)}                                                                              | schema1 |
       | conn_2  | False   | insert into child1 values (1,1)          | success                                                                                  | schema1 |
       | conn_2  | False   | insert into child1 values (2,2)          | success                                                                                  | schema1 |
       | conn_2  | true    | select * from child1                     | length{(5)}                                                                              | schema1 |
-      | conn_21 | False   | insert into sharding21 values (1,1)      | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
-      | conn_21 | False   | insert into sharding21 values (2,2)      |java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_21 | False   | insert into sharding21 values (1,1)      | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_21 | False   | insert into sharding21 values (2,2)      | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
       | conn_21 | true    | select * from sharding21                 | length{(2)}                                                                              | schema3 |
     Then execute sql in "dble-3" in "user" mode
       | conn    | toClose | sql                                   | expect                                                                                   | db      |
       | conn_3  | False   | insert into sing1 values (1)          | success                                                                                  | schema1 |
       | conn_3  | False   | select * from sing1                   | length{(3)}                                                                              | schema1 |
-      | conn_3  | False   | insert into sing2 values (1)          | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
+      | conn_3  | False   | insert into sing2 values (1)          | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema1 |
       | conn_3  | False   | select * from sing2                   | length{(1)}                                                                              | schema1 |
       | conn_3  | False   | insert into no_sharding1 values (1,1) | success                                                                                  | schema1 |
       | conn_3  | true    | select * from no_sharding1            | length{(3)}                                                                              | schema1 |
-      | conn_31 | False   | insert into no_sharding2 values (1,1) | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
+      | conn_31 | False   | insert into no_sharding2 values (1,1) | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema3 |
       | conn_31 | true    | select * from no_sharding2            | length{(1)}                                                                              | schema3 |
       | conn_32 | False   | show tables                           | success                                                                                  | schema2 |
-      | conn_32 | False   | insert into vertical1 values (1)      | java.io.IOException: the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema2 |
+      | conn_32 | False   | insert into vertical1 values (1)      | the dbInstance[172.100.9.2:3306] can't reach. Please check the dbInstance status | schema2 |
       | conn_32 | true    | select * from  vertical1              | length{(1)}                                                                              | schema2 |
     #case change master to slave2 on mysql group
     Given execute linux command in "behave"
@@ -700,15 +699,19 @@ Feature: test "ha" in zk cluster
       | W/R        | 4            |
       | DISABLED   | 10           |
     Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
+    #check master had changed
     Then execute sql in "mysql-slave2"
-      | conn   | toClose | sql                                          | expect   |
-      | conn_0 | true    | show master status                           | success  |
-    Then execute sql in "mysql-slave1"
-      | conn   | toClose | sql                                          | expect   |
-      | conn_0 | true    | show slave status                            | success  |
+      | conn   | toClose | sql                                          | expect        |
+      | conn_0 | false   | show master status                           | success       |
+      | conn_0 | true    | show slave status                            | hasNoStr{Yes} |
     Then execute sql in "mysql-master2"
-      | conn   | toClose | sql                                          | expect   |
-      | conn_0 | true    | show slave status                            | success  |
+      | conn   | toClose | sql                                            | expect         |
+      | conn_0 | true    | show slave status                              | hasStr{Yes}    |
+    Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql                                            | expect         |
+      | conn_0 | true    | show slave status                              | hasStr{Yes}    |
+
+
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
       <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
@@ -783,8 +786,14 @@ Feature: test "ha" in zk cluster
       | conn_32 | true    | select * from  vertical1              | length{(2)} | schema2 |
 
 
+
   Scenario: restore mysql binlog and clear table  #3
-    Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
+
+    Given update file content "./compose/docker-build-behave/ChangeMaster.sh" in "behave" with sed cmds
+    """
+    s/grant replication slave on *.* to '\''repl'\''@'\''%'\'' identified by '\''111111'\''/grant replication slave on *.* to '\''repl'\''@'\''%'\''/
+    """
+
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/resetReplication.sh
