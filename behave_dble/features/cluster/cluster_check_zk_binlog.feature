@@ -833,7 +833,7 @@ Feature: test "binlog" in zk cluster
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                          | expect  | db      |
-      | conn_1 | True    | drop table if exists vertical1                               | success | schema2 |
+      | conn_0 | False   | drop table if exists schema2.vertical1                       | success | schema1 |
       | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
       | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
       | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
