@@ -4,7 +4,7 @@
 Feature:check metadata is right in cluster after alter table failed or succeed
 #github issue #1038
 
-  @CRITICAL @skip_restart
+  @CRITICAL
   Scenario: check metadata is right in cluster after alter table failed or succeed #1
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql                        | expect   | db        |
