@@ -9,7 +9,7 @@ count=${#mysql_install[@]}
 #restart all mysqlds
 for((i=0; i<count; i=i+1)); do
 	echo "restart mysql and delete none-sys dbs in ${mysql_install[$i]}"
-	ssh root@${mysql_install[$i]}  "sed -i -e '/lower_case_table_names=/d' -e '/\[mysqld\]/a lower_case_table_names=0' /etc/my.cnf" \
+	ssh root@${mysql_install[$i]}  "sed -i -e '/lower_case_table_names/d' -e '/server-id/a lower_case_table_names = 0' /etc/my.cnf" \
 	&& ssh root@${mysql_install[$i]}  "/usr/local/mysql/support-files/mysql.server restart" \
 	&& scp ${base_dir}/deleteDb.sql "root@${mysql_install[$i]}:/" \
 	&& sleep 5s \
