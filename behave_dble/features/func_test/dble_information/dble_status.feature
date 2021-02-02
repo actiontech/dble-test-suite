@@ -17,35 +17,35 @@ Feature:  dble_status test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                          | expect            | db               |
       | conn_0 | False   | desc dble_status             | length{(3)}       | dble_information |
-      | conn_0 | False   | select * from dble_status    | success           | dble_information |
+      | conn_0 | False   | select * from dble_status    | length{(12)}      | dble_information |
    #case select * from dble_status
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_2"
       | conn   | toClose | sql                       | db                |
       | conn_0 | False   | select * from dble_status | dble_information  |
    Then check resultset "dble_status_2" has lines with following column values
       | variable_name-0         | comment-2                                                                                                          |
-      | uptime                  | length of time to start dble                                                                                       |
-      | current_timestamp       | the current time of the dble system                                                                                |
-      | startup_timestamp       | dble system startup time                                                                                           |
-      | config_reload_timestamp | last config load time                                                                                              |
-      | heap_memory_max         | the maximum amount of memory that the virtual machine will attempt to use, measured in bytes                       |
-      | heap_memory_used        | heap memory usage, measured in bytes                                                                               |
-      | heap_memory_total       | the total of heap memory, measured in bytes                                                                        |
-      | direct_memory_max       | max direct memory, measured in bytes                                                                               |
-      | direct_memory_pool_size | size of the memory pool, is equal to the product of BufferPoolPagesize and BufferPoolPagenumber, measured in bytes |
-      | direct_memory_pool_used | directmemory memory in the memory pool that has been used, measured in bytes                                       |
-      | questions               | number of requests                                                                                                 |
-      | transactions            | number of transactions                                                                                             |
+      | uptime                  | Length of time to start dble                                                                                       |
+      | current_timestamp       | The current time of the dble system                                                                                |
+      | startup_timestamp       | Dble system startup time                                                                                           |
+      | config_reload_timestamp | Last config load time                                                                                              |
+      | heap_memory_max         | The maximum amount of memory that the virtual machine will attempt to use, measured in bytes                       |
+      | heap_memory_used        | Heap memory usage, measured in bytes                                                                               |
+      | heap_memory_total       | The total of heap memory, measured in bytes                                                                        |
+      | direct_memory_max       | Max direct memory, measured in bytes                                                                               |
+      | direct_memory_pool_size | Size of the memory pool, is equal to the product of BufferPoolPagesize and BufferPoolPagenumber, measured in bytes |
+      | direct_memory_pool_used | DirectMemory memory in the memory pool that has been used, measured in bytes                                       |
+      | questions               | Number of requests                                                                                                 |
+      | transactions            | Number of transactions                                                                                             |
 # compare with show @@time.startup
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_3"
-      | conn   | toClose | sql                                                                             | db               |
-      | conn_0 | False   | select variable_value from dble_status where variable_name ='startup_timestamp' |dble_information  |
+      | conn   | toClose | sql                                                                             | db                |
+      | conn_0 | False   | select variable_value from dble_status where variable_name ='startup_timestamp' | dble_information  |
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_4"
       | conn   | toClose | sql                    | db               |
       | conn_0 | False   | show @@time.startup    | dble_information |
    Then check resultsets "dble_status_3" and "dble_status_4" are same in following columns
-      |column          | column_index |
-      |variable_value  | 0            |
+      | column          | column_index |
+      | variable_value  | 0            |
 
    #case supported select  table limit/order by/where like
    Then execute sql in "dble-1" in "admin" mode
@@ -61,7 +61,7 @@ Feature:  dble_status test
       | conn_0 | False   | select max(variable_name) from dble_status                                             | has{('uptime')}                                                        |
       | conn_0 | False   | select min(variable_name) from dble_status                                             | has{('config_reload_timestamp')}                                       |
   #case supported select field from table
-      | conn_0 | False   | select variable_name from dble_status where variable_value = '0'                       | has{(('questions',), ('transactions',))}                                    |
+      | conn_0 | False   | select variable_name from dble_status where variable_value = '0'                       | has{(('questions',), ('transactions',))}                               |
   #case unsupported update/delete/insert
       | conn_0 | False   | delete from dble_status where variable_name='questions'                                | Access denied for table 'dble_status'   |
       | conn_0 | False   | update dble_status set comment='number of requests' where variable_value='0'           | Access denied for table 'dble_status'   |
