@@ -26,10 +26,10 @@ for((i=1; i<5; i=i+1)); do
 done
 
 echo "reset replication for mysql5.7"
-sh ${base_dir}/ChangeMaster.sh mysql-master2 dble-2 dble-3
+bash ${base_dir}/ChangeMaster.sh mysql-master2 dble-2 dble-3
 
 echo "reset replication for mysql8.0"
-sh ${base_dir}/ChangeMaster.sh mysql8-master2 mysql8-slave1 mysql8-slave2
+bash ${base_dir}/ChangeMaster.sh mysql8-master2 mysql8-slave1 mysql8-slave2
 
 echo "create database in compare mysql"
 ssh root@${mysql_install[0]}  "/usr/local/mysql/bin/mysql -uroot -p111111 -h127.0.0.1 -e \"create database schema1;create database schema2;create database schema3;\" "
