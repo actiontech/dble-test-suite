@@ -348,7 +348,7 @@ Feature: test "reload @@config" in zk cluster
 
 
 
-  @skip_restart
+  #@skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=2 and change xml failed then reload on admin mode #3
     #case change config on sharding.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
