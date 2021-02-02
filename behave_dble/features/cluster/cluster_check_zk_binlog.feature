@@ -791,8 +791,11 @@ Feature: test "binlog" in zk cluster
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
 
-  @skip_restart  @btrace
+  @btrace   @restore_mysql_config
   Scenario: during query ,one dble stop,check other dble status #7
+    """
+    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}}}
+    """
     Then get result of oscmd named "A" in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
@@ -826,18 +829,13 @@ Feature: test "binlog" in zk cluster
       | conn     | toClose | sql                      | expect     |
       | conn_2   | true    | show @@binlog.status     | success    |
 
-  @restore_mysql_config
-  Scenario: restore env #8
-    """
-    {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}}}
-    """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                          | expect  | db      |
-      | conn_0 | False   | drop table if exists schema2.vertical1                       | success | schema1 |
-      | conn_0 | False   | drop table if exists global1                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists global2                                 | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding4                               | success | schema1 |
-      | conn_0 | False   | drop table if exists sharding2                               | success | schema1 |
-      | conn_0 | False   | drop table if exists child1                                  | success | schema1 |
-      | conn_0 | False   | drop table if exists sing1                                   | success | schema1 |
-      | conn_0 | True    | drop table if exists no_sharding1                            | success | schema1 |
+      | conn    | toClose | sql                                                          | expect  | db      |
+      | conn_10 | False   | drop table if exists schema2.vertical1                       | success | schema1 |
+      | conn_10 | False   | drop table if exists global1                                 | success | schema1 |
+      | conn_10 | False   | drop table if exists global2                                 | success | schema1 |
+      | conn_10 | False   | drop table if exists sharding4                               | success | schema1 |
+      | conn_10 | False   | drop table if exists sharding2                               | success | schema1 |
+      | conn_10 | False   | drop table if exists child1                                  | success | schema1 |
+      | conn_10 | False   | drop table if exists sing1                                   | success | schema1 |
+      | conn_10 | True    | drop table if exists no_sharding1                            | success | schema1 |
