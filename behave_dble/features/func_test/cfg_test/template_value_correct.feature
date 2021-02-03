@@ -112,19 +112,19 @@ Feature: config all dble config files correct and restart dble
       | usePerformanceMode          | 0                               |
       | useCostTimeStat             | 0                               |
       | maxCostStatSize             | 100                             |
-      | costSamplePercent           | 1                               |
+      | costSamplePercent           | 1%                              |
       | charset                     | utf8mb4                         |
-      | maxPacketSize               | 4096                            |
+      | maxPacketSize               | 4096B                           |
       | txIsolation                 | REPEATABLE_READ                 |
       | checkTableConsistency       | 0                               |
       | checkTableConsistencyPeriod | 60000ms                         |
-      | processorCheckPeriod        | 1000ms                       |
-      | sqlExecuteTimeout           | 300 Seconds                     |
+      | processorCheckPeriod        | 1000ms                          |
+      | sqlExecuteTimeout           | 300s                            |
       | recordTxn                   | 1                               |
-      | transactionLogBaseDir       | ./txlogs/                         |
+      | transactionLogBaseDir       | ./txlogs/                       |
       | transactionLogBaseName      | server-tx                       |
       | transactionRotateSize       | 16M                             |
-      | xaRecoveryLogBaseDir        | ./xalogs/                         |
+      | xaRecoveryLogBaseDir        | ./xalogs/                       |
       | xaRecoveryLogBaseName       | xalog                           |
       | xaSessionCheckPeriod        | 1000ms                          |
       | xaLogCleanPeriod            | 1000ms                          |
@@ -138,7 +138,7 @@ Feature: config all dble config files correct and restart dble
       | bufferPoolChunkSize         | 4096B                           |
       | bufferPoolPageSize          | 2097152B                        |
       | bufferPoolPageNumber        | 512                             |
-      | mappedFileSize              | 67108864                        |
+      | mappedFileSize              | 67108864B                       |
       | useSqlStat                  | 1                               |
       | sqlRecordCount              | 10                              |
       | maxResultSet                | 524288B                         |
@@ -150,13 +150,13 @@ Feature: config all dble config files correct and restart dble
       | backSocketSoRcvbuf          | 4194304B                        |
       | backSocketSoSndbuf          | 1048576B                        |
       | backSocketNoDelay           | 1                               |
-      | viewPersistenceConfBaseDir  | ./viewConf/             |
+      | viewPersistenceConfBaseDir  | ./viewConf/                     |
       | viewPersistenceConfBaseName | viewJson                        |
       | joinQueueSize               | 1024                            |
       | mergeQueueSize              | 1024                            |
       | orderByQueueSize            | 1024                            |
-      | enableSlowLog               | false                            |
-      | slowLogBaseDir              | ./slowlogs/             |
+      | enableSlowLog               | false                           |
+      | slowLogBaseDir              | ./slowlogs/                     |
       | slowLogBaseName             | slow-query                      |
       | flushSlowLogPeriod          | 1s                              |
       | flushSlowLogSize            | 1000                            |

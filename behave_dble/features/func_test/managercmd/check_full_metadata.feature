@@ -394,7 +394,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test_shard    | success  | schema1 |
       | conn_0 | True    | drop table if exists test_no_shard | success  | schema1 |
 
-  @regression @skip
+  @regression
     #coz DBLE0REQ-870
   Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
