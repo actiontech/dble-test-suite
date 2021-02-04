@@ -291,8 +291,8 @@ Feature:  dble_entry test
 #case supported select limit/order by/where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                                                                    |
-      | conn_0 | False   | select name,property_key from dble_blacklist order by property_key desc limit 2            | has{(('black1', 'wrapAllow'), ('blacklist2', 'wrapAllow'))}               |
-      | conn_0 | False   | select name,property_key from dble_blacklist where property_key like '%truncate%' limit 2  | has{(('black1','truncateAllow',),('blacklist2','truncateAllow',))}        |
+      | conn_0 | False   | select name,property_key from dble_blacklist order by property_key desc limit 2            | has{(('list3', 'wrapAllow'), ('blacklist', 'wrapAllow'))}                 |
+      | conn_0 | False   | select name,property_key from dble_blacklist where property_key like '%truncate%' limit 2  | has{(('list3','truncateAllow',),('blacklist','truncateAllow',))}          |
 #case supported select max/min
       | conn_0 | False   | select max(property_key) from dble_blacklist                      | has{(('wrapAllow',),)}        |
       | conn_0 | False   | select min(property_key) from dble_blacklist                      | has{(('alterTableAllow',),)}  |
