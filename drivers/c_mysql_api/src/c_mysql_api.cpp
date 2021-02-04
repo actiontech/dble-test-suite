@@ -39,7 +39,7 @@ int main(int argc, char *argv[]) {
     case_mysql_set_local_infile_handler();
     case_mysql_sqlstate(conn);
     case_mysql_stat(conn);
-    case_mysql_thread_id();
+   //case_mysql_thread_id(); dble unsupported kill myself front id
     case_mysql_use_result(conn);
     case_null_in_sql();
 
