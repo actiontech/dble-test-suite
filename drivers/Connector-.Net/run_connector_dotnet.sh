@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 
@@ -14,7 +15,3 @@ cd ${DIR}/netdriver && csc -out:test.exe -r:MySql.Data.dll -r:YamlDotNet.dll *.c
 
 echo '=======                        driver test                           ======='
 cd ${DIR} && bash do_run_connector_dotnet.sh -c
-
-echo '=======                   save logs for ci artifacts                 ======='
-scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
-mv ${DIR}/sql_logs ${DIR}/dble_logs/sql_logs
