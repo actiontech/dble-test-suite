@@ -56,7 +56,7 @@ class MySQLObject(object):
             obj = re.search(success_p, stop_out)
             isSuccess = obj is not None
             if isSuccess != 1:
-                cmd_kill = "kill -9 `ps -ef | grep mysqld | awk '{print $2}'`"
+                cmd_kill = "kill -9 `ps -ef | grep mysqld |grep -v grep | awk '{print $2}'`"
                 rc, sto, ste = self._mysql_meta.ssh_conn.exec_command(cmd_kill)
                 assert len(ste) == 0, "kill mysql failed for: {0}".format(ste)
             else:
