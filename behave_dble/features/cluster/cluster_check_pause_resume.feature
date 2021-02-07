@@ -125,7 +125,62 @@ Feature: test "pause/resume" in zk cluster
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
 
-#@skip_restart
+  @skip_restart
+  Scenario: create xa ,check pause_node.lock,during pause or resume restart one dble will failed DBLE0REQ-898 #3
+    Then stop dble in "dble-3"
+    Then execute sql in "dble-2" in "user" mode
+      | conn   | toClose  | sql                                                 | expect    | db       |
+      | conn_2 | False    | drop table if exists sharding_4_t1                  | success   | schema1  |
+      | conn_2 | False    | create table sharding_4_t1(id int,name varchar(20)) | success   | schema1  |
+      | conn_2 | false    | begin                                               | success   | schema1  |
+      | conn_2 | false    | insert into sharding_4_t1 values (4,'4')            | success   | schema1  |
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn    | toClose | sql                                                                                | db                 |
+      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 60,queue=10,wait_limit=1            | dble_information   |
+    #case check lock on zookeeper
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      """
+    Then check result "A" value is "1"
+    # restart dble would failed for "err:(2013, "Lost connection to MySQL server at 'reading initial communication packet', system error: 104")"
+    Then restart dble in "dble-3" failed for
+    """
+    reading initial communication packet
+    """
+    Then execute sql in "dble-2" in "user" mode
+      | conn   | toClose  | sql        | expect    | db       |
+      | conn_2 | True     | commit     | success   | schema1  |
+  #dble1 stop hang and return success
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+      """
+      There are some node in cluster can
+      recycle backend
+      """
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                       | expect                                                     | db       |
+      | conn_1 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
+   Then execute sql in "dble-1" in "admin" mode
+      | conn    | toClose | sql     | expect                     |
+      | conn_11 | false   | resume  | success                    |
+    #case check lock on zookeeper
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      """
+    Then check result "A" value is "0"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                       | expect        | db       |
+      | conn_1 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
+    Then execute sql in "dble-2" in "user" mode
+      | conn   | toClose  | sql                                       | expect        | db       |
+      | conn_2 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
+    Given Restart dble in "dble-3" success
+    Then execute sql in "dble-3" in "user" mode
+      | conn   | toClose  | sql                                       | expect        | db       |
+      | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
+    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+
   Scenario: create xa ,check pause_node.lock but pause or resume timeout #4
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                                 | expect    | db       |
@@ -169,7 +224,6 @@ Feature: test "pause/resume" in zk cluster
       | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
-    Given stop dble cluster and zk service
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       /-DidleTimeout=/d
@@ -185,9 +239,9 @@ Feature: test "pause/resume" in zk cluster
       /-DidleTimeout=/d
       $a -DidleTimeout=10000
       """
-    Given config zookeeper cluster in all dble nodes with "local zookeeper host"
-    Given reset dble registered nodes in zk
-    Then start dble in order
+    Then restart dble in "dble-1" success
+    Then restart dble in "dble-2" success
+    Then restart dble in "dble-3" success
     Then execute sql in "dble-1" in "admin" mode
       | conn    | toClose | sql                                                                     | expect                  |
       | conn_11 | true    | pause @@shardingNode = 'dn1,dn2' and timeout = 5,queue=10,wait_limit=1  | success                 |
@@ -249,64 +303,8 @@ Feature: test "pause/resume" in zk cluster
       | conn_3 | false    | select * from sharding_4_t1               | length{(1)}   | schema1  |
       | conn_3 | True     | drop table if exists sharding_4_t1        | success       | schema1  |
 
-@skip
-#_restart
-# todo be blocked by DBLE0REQ-898
-  Scenario: create xa ,check pause_node.lock,during pause or resume restart one dble will failed #3
-    Then stop dble in "dble-3"
-    Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql                                                 | expect    | db       |
-      | conn_2 | False    | drop table if exists sharding_4_t1                  | success   | schema1  |
-      | conn_2 | False    | create table sharding_4_t1(id int,name varchar(20)) | success   | schema1  |
-      | conn_2 | false    | begin                                               | success   | schema1  |
-      | conn_2 | false    | insert into sharding_4_t1 values (4,'4')            | success   | schema1  |
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn    | toClose | sql                                                                                | db                 |
-      | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 60,queue=10,wait_limit=1            | dble_information   |
-    #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
-      """
-    Then check result "A" value is "1"
-    # restart dble would failed for "err:(2013, "Lost connection to MySQL server at 'reading initial communication packet', system error: 104")"
-    Then restart dble in "dble-3" failed for
-    """
-    reading initial communication packet
-    """
-    Then execute sql in "dble-2" in "user" mode
-      | conn   | toClose  | sql        | expect    | db       |
-      | conn_2 | True     | commit     | success   | schema1  |
-  #dble 1 hang住的地方返回成功
-#    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
-#      """
-#      ERROR
-#      There are some node in cluster can
-#      recycle backend
-#      """
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose  | sql                                       | expect                                                     | db       |
-#      | conn_1 | True     | select * from sharding_4_t1               | waiting time exceeded wait_limit from pause shardingNode   | schema1  |
-#   Then execute sql in "dble-1" in "admin" mode
-#      | conn    | toClose | sql     | expect                     |
-#      | conn_11 | false   | resume  | success                    |
-#    #case check lock on zookeeper
-#    Then get result of oscmd named "A" in "dble-1"
-#      """
-#      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
-#      """
-#    Then check result "A" value is "0"
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose  | sql                                       | expect    | db       |
-#      | conn_1 | True     | select * from sharding_4_t1               | success   | schema1  |
-#    Then execute sql in "dble-2" in "user" mode
-#      | conn   | toClose  | sql                                       | expect    | db       |
-#      | conn_2 | True     | select * from sharding_4_t1               | success   | schema1  |
-#    Then execute sql in "dble-3" in "user" mode
-#      | conn   | toClose  | sql                                       | expect        | db       |
-#      | conn_3 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
-#    Given delete file "/tmp/dble_admin_query.log" on "dble-1"
-#
+
+
 
 
 
