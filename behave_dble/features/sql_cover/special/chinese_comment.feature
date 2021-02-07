@@ -4,7 +4,7 @@
 Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter feature name here
   # todo: the issue only occur under ushard ha env
 
-
+@skip
   Scenario: #1 todo not complete yet #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -19,7 +19,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | True    | drop table sharding_4_t1                                                                                                       | success | schema1 | utf8mb4 |
 
 
-
+@skip
   @restore_mysql_config
   Scenario: check support utf8mb4: case from issue DBLE0REQ-582 #2
    """
@@ -326,13 +326,15 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | select CHAR(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id        | has{((u'\x00',), (u'\x00',), (u'\x00',))}    | schema1 | utf8mb4 |
       | conn_0 | False   | select HEX(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id               | has{((u'E6B58BE8AF9531',), (u'E6B58BE8AF9532',), (u'E6B58BE8AF9532',))}    | schema1 | utf8mb4 |
       | conn_0 | False   | select CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'64938857152353585',), (u'64938857152353586',), (u'64938857152353586',))}                  | schema1 | utf8mb4 |
-      | conn_0 | False   | select CONV(HEX(a.name)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | Incorrect parameter count in the call to native function 'CONV'                 | schema1 | utf8mb4 |
+      #DBLE0REQ-908
+      #| conn_0 | False   | select CONV(HEX(a.name)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | Incorrect parameter count in the call to native function 'CONV'                 | schema1 | utf8mb4 |
       | conn_0 | False   | select HEX(CHAR(a.name)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((u'00',), (u'00',), (u'00',))}                  | schema1 | utf8mb4 |
       | conn_0 | False   | select HEX(a.name),CONV(HEX(a.name),16,10) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'E6B58BE8AF9531', u'64938857152353585'), (u'E6B58BE8AF9532', u'64938857152353586'), (u'E6B58BE8AF9532', u'64938857152353586'))}                 | schema1 | utf8mb4 |
       | conn_0 | False   | select CHAR_LENGTH(a.name),CHARACTER_LENGTH('爱可生社区') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((3, 5), (3, 5), (3, 5))}           | schema1 | utf8mb4 |
       | conn_0 | False   | select 'a.name' '爱可生社区'  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                               | has{(('a.name爱可生社区',), ('a.name爱可生社区',), ('a.name爱可生社区',))}           | schema1 | utf8mb4 |
       #case "BIN"   / "CHARSET"   issue:DBLE0REQ-746/DBLE0REQ-748
-      #| conn_0 | False   | select BIN(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((27979,),(27979,),(27979,))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select BIN(a.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{((u'0',), (u'0',), (u'0',))}     | schema1 | utf8mb4 |
+      | conn_0 | False   | select BIN('测试1') from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{((u'0',), (u'0',), (u'0',))}     | schema1 | utf8mb4 |
       #| conn_0 | False   | select CHARSET(CHAR(a.name)),CHARSET(CHAR(b.name USING utf8)) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   |                   | schema1 | utf8mb4 |
       #case "CONCAT_WS"
       | conn_0 | False   | select CONCAT_WS(',','a.name','爱可生社区')  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id   | has{(('a.name,爱可生社区',), ('a.name,爱可生社区',), ('a.name,爱可生社区',))}           | schema1 | utf8mb4 |
