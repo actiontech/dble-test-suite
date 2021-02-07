@@ -4,7 +4,6 @@
 Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter feature name here
   # todo: the issue only occur under ushard ha env
 
-@skip
   Scenario: #1 todo not complete yet #1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -19,7 +18,6 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | True    | drop table sharding_4_t1                                                                                                       | success | schema1 | utf8mb4 |
 
 
-@skip
   @restore_mysql_config
   Scenario: check support utf8mb4: case from issue DBLE0REQ-582 #2
    """
