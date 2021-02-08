@@ -107,8 +107,8 @@ Feature: test "pause/resume" manager cmd
       | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | dble_information   |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                            | expect                                            |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | Some shardingNodes is paused, please resume first |
+      | sql                                                                            | expect                                                                                               |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first  |
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                            | expect                                               |
