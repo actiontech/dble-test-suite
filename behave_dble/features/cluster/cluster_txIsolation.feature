@@ -9,7 +9,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
   Scenario: writeHost mysql < 8.0, readHost mysql >= 8.0 #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
@@ -17,7 +17,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
         </dbInstance>
     </dbGroup>
     """
-
+    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DtxIsolation/d
@@ -101,7 +101,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
   Scenario: writeHost mysql >= 8.0, readHost mysql < 8.0 #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
@@ -109,7 +109,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
         </dbInstance>
     </dbGroup>
     """
-
+    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DtxIsolation/d
@@ -165,12 +165,12 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     txIsolation=1
     """
 
-    Then execute sql in "mysql-master2"
+    Then execute sql in "mysql8-master2"
       | conn   | toClose | sql                                                                       | expect                                |
-      | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then execute sql in "mysql8-slave1"
+      | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
+    Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
-      | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
+      | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
 
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
@@ -193,7 +193,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
   Scenario: writeHost and readHost mysql >= 8.0 #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
@@ -201,7 +201,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
         </dbInstance>
     </dbGroup>
     """
-
+    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DtxIsolation/d
@@ -257,9 +257,9 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     txIsolation=1
     """
 
-    Then execute sql in "mysql-master2"
+    Then execute sql in "mysql8-master2"
       | conn   | toClose | sql                                                                       | expect                                |
-      | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
+      | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then execute sql in "mysql8-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -285,7 +285,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
   Scenario: writeHost and readHost mysql < 8.0 #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
@@ -293,7 +293,7 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
         </dbInstance>
     </dbGroup>
     """
-
+    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     /-DtxIsolation/d
@@ -352,9 +352,9 @@ Feature: check txIsolation supports tx_/transaction_ variables in zk cluster
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                       | expect                                |
       | conn_0 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
-    Then execute sql in "mysql8-slave1"
+    Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
-      | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
+      | conn_1 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
 
     Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
