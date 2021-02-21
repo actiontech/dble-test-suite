@@ -142,7 +142,9 @@ def start_dble_in_node(context, node, expect_success=True):
     dble_install_path = node.install_dir
     dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
-    if dble_dir_exist:
+    if not dble_dir_exist:
+        logger.info('start dble {0} skip, dble_dir_exist is {1}'.format(node.host_name, dble_dir_exist))
+    else:
         cmd = "{0}/dble/bin/dble start".format(node.install_dir)
         ssh_client.exec_command(cmd)
 
@@ -155,8 +157,6 @@ def start_dble_in_node(context, node, expect_success=True):
             cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
             rc, sto, ste = node.ssh_conn.exec_command(cmd)
             assert_that(sto, not equal_to_ignoring_whitespace("0"), "expect dble restart failed for {0}".format(expect_errInfo))
-    else:
-        logger.info('start dble {0} skip, dble_dir_exist is {1}'.format(node.host_name, dble_dir_exist))
 
 def check_dble_started(context, node):
     if not hasattr(context, "retry_start_dble"):
