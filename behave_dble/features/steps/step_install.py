@@ -139,18 +139,24 @@ def start_dble_in_hostname(context, hostname):
 
 def start_dble_in_node(context, node, expect_success=True):
     ssh_client = node.ssh_conn
-    cmd = "{0}/dble/bin/dble start".format(node.install_dir)
-    ssh_client.exec_command(cmd)
+    dble_install_path = node.install_dir
+    dble_pid_exist,dble_dir_exist = check_dble_exist(ssh_client, dble_install_path)
 
-    check_dble_started(context, node)
+    if not dble_dir_exist:
+        logger.info('start dble {0} skip, dble_dir_exist is {1}'.format(node.host_name, dble_dir_exist))
+    else:
+        cmd = "{0}/dble/bin/dble start".format(node.install_dir)
+        ssh_client.exec_command(cmd)
 
-    assert_that(context.dble_start_success==expect_success, "Expect restart dble success {0}".format(expect_success))
+        check_dble_started(context, node)
 
-    if not expect_success:
-        expect_errInfo = context.text.strip()
-        cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
-        rc, sto, ste = node.ssh_conn.exec_command(cmd)
-        assert_that(sto, not equal_to_ignoring_whitespace("0"), "expect dble restart failed for {0}".format(expect_errInfo))
+        assert_that(context.dble_start_success==expect_success, "Expect restart dble {0} success {1}".format(node.host_name, expect_success))
+
+        if not expect_success:
+            expect_errInfo = context.text.strip()
+            cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
+            rc, sto, ste = node.ssh_conn.exec_command(cmd)
+            assert_that(sto, not equal_to_ignoring_whitespace("0"), "expect dble restart failed for {0}".format(expect_errInfo))
 
 def check_dble_started(context, node):
     if not hasattr(context, "retry_start_dble"):
@@ -421,7 +427,7 @@ def replace_config_in_node(context, node):
         cmd = 'cp -r {0}/dble/conf {0}/dble/conf_bk'.format(dble_install_path)
         ssh_client.exec_command(cmd)
     else:
-        cmd = 'mkdir -p {0}/dble'.format(dble_install_path)
+        cmd = 'mkdir -p {0}/dble/conf'.format(dble_install_path)
         ssh_client.exec_command(cmd)
 
     files = os.listdir(sourceCfgDir)
