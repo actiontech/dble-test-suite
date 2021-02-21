@@ -392,4 +392,9 @@ create table sharding_2_t1 (id int ,areaId int ,name char(10))
 insert into sharding_2_t1 values(1,2,'q'),(4,5,'f'),(7,8,'h')
 select id as areaIda,count(1) as count from sharding_2_t1 group by id
 drop table if exists sharding_2_t1
-
+#github issue:1525
+drop table if exists sharding_2_t1
+create table sharding_2_t1 (id int)
+insert into sharding_2_t1 values(1),(2),(3),(4),(5)
+select * from (select * from sharding_2_t1) b limit 0
+drop table if exists sharding_2_t1
