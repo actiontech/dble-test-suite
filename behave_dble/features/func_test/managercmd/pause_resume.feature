@@ -103,12 +103,12 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | false   | begin                                                   | success | schema1 |
       | conn_0 | false   | insert into sharding_4_t1 values(1,1),(2,1),(3,1),(4,1) | success | schema1 |
     Then execute admin cmd  in "dble-1" at background
-      | sql                                                                            | db                |
+      | sql                                                                            | db                 |
       | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | dble_information   |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                                            | expect                                                                                               |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first  |
+      | sql                                                                            | expect                  |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | You are paused already  |
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                            | expect                                               |

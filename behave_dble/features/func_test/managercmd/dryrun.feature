@@ -4,7 +4,7 @@
 
 Feature: # dryrun test
 
-  Scenario: # from DBLE0REQ-721  #1
+  Scenario: check cmd "dryrun"  #1
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql         |
@@ -13,3 +13,5 @@ Feature: # dryrun test
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                  |
       | Xml     | NOTICE  | There is No RWSplit User                                                  |
       | Cluster | NOTICE  | Dble is in single mod                                                     |
+
+

@@ -12,7 +12,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | show tables                            | No database selected                                                   |
       | conn_0 | False   | show tables like 'dble%'               | No database selected                                                   |
       | conn_0 | False   | desc version                           | No database selected                                                   |
-      | conn_0 | False   | select * from version                  | get error call manager command Schema name or Table name is null!      |
+      | conn_0 | False   | select * from version                  | get error call manager command No database selected                    |
 #case  begin query with error shcema or not exists schema
       | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
       | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
@@ -94,13 +94,17 @@ Feature:  show databases/use dble_information/show tables [like]
       | processlist                  |
       | session_connections          |
       | session_variables            |
+      | sql_statistic_by_associate_tables_by_entry_by_user    |
+      | sql_statistic_by_frontend_by_backend_by_entry_by_user |
+      | sql_statistic_by_table_by_user_by_entry               |
+      | version                                               |
     Then check resultset "tables_1" has not lines with following column values
       | Tables_in_dble_information-0 |
       | demotest1                    |
       | demotest2                    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | show tables                          | length{(31)} | dble_information |
+      | conn_0 | False   | show tables                          | length{(34)} | dble_information |
  #case The query needs to be printed in the log，when management commands not supported by druid github:issues/1977
     Then execute sql in "dble-1" in "admin" mode
        | conn   | toClose | sql          | expect                |
