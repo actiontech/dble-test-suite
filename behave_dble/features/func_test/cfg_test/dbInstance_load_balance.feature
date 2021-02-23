@@ -5,6 +5,7 @@ Feature: test read load balance
 #0：不做均衡，直接分发到当前激活的write dbInstance，read dbInstance将被忽略,不会尝试建立连接
 #1：在除当前激活write dbInstance之外随机选择read dbInstance
 #2：读操作在所有read dbInstance和write dbInstance中均衡。
+#3: 读在从实例中均衡，但是从实例挂掉后，读发往主
 #todo: may need take various of dbInstance with primary="true" or dbInstance with primary="false" status abnormal into consideration
 
   @CRITICAL
@@ -57,10 +58,10 @@ Feature: test read load balance
   @CRITICAL
   Scenario: dbGroup rwSplitMode="1", do balance on read dbInstance #2
     Given delete the following xml segment
-      |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+      | file          | parent           | child                   |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
+      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
@@ -369,10 +370,10 @@ Feature: test read load balance
   @CRITICAL
   Scenario: dbGroup rwSplitMode="2", 1m readWeight=0, the write node only accepts write traffic and does not receive read traffic   #9
     Given delete the following xml segment
-      |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
+      |file          | parent          | child                   |
+      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
       |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+      |db.xml        |{'tag':'root'}   | {'tag':'dbGroup'}       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
       <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
@@ -435,3 +436,73 @@ Feature: test read load balance
       | sql                          |
       | set global general_log=off   |
 
+
+  @restore_mysql_service
+  Scenario: dbGroup rwSplitMode="3" and read dbInstance down, do read on write dbInstance #10
+     """
+     {'restore_mysql_service':{'mysql-slave1':{'start_mysql':1}}}
+     """
+    Given delete the following xml segment
+      | file          | parent           | child                   |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
+      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+      </schema>
+      <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+      <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+      <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+      <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+      <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3"/>
+      </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | toClose | sql                                         | expect   | db      |
+      | False   | drop table if exists test                   | success  | schema1 |
+      | True    | create table test(id int,name varchar(20))  | success  | schema1 |
+    Then connect "dble-1" to insert "1000" of data for "test"
+      Then execute sql in "mysql-slave1"
+      | conn   | toClose | sql                              |
+      | conn_0 | False   | set global general_log=on        |
+      | conn_0 | False   | set global log_output='table'    |
+      | conn_0 | True    | truncate table mysql.general_log |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql                              |
+      | conn_0 | False   | set global general_log=on        |
+      | conn_0 | False   | set global log_output='table'    |
+      | conn_0 | True    | truncate table mysql.general_log |
+    Given execute sql "1000" times in "dble-1" at concurrent
+      | sql                                | db      |
+      | select name from test where id ={} | schema1 |
+    Then execute sql in "mysql-slave1"
+      | sql                                                                                | expect        |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' | balance{1000} |
+    Then execute sql in "mysql-master2"
+      | sql                                                                                | expect     |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' | balance{0} |
+    Then execute sql in "mysql-slave1"
+      | sql                          |
+      | set global general_log=off   |
+    Given stop mysql in host "mysql-slave1"
+    Given execute sql "1100" times in "dble-1" at concurrent
+      | sql                                | db      |
+      | select name from test where id ={} | schema1 |
+    Then execute sql in "mysql-master2"
+      | sql                                                                                | expect        |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' | balance{1100} |
+    Then execute sql in "dble-1" in "user" mode
+      | toClose | sql                                         | expect        | db      |
+      | true    | drop table if exists test                   | success       | schema1 |
+    Then execute sql in "mysql-master2"
+      | sql                          |
+      | set global general_log=off   |

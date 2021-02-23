@@ -4,24 +4,24 @@
 Feature:check if sharding.xml in which writeHost contains "weight" push success in cluster after execute "reload @@config_all"
 #github issue #793
 
-  @CRITICAL @skip_restart
+  @CRITICAL
   Scenario: set parameter "readWeight" for writeHost in cluster, then reload #1
-       Given delete the following xml segment
-        |file         | parent         | child               |
-        |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-        |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-        |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
-       Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given delete the following xml segment
+      | file          | parent           | child                   |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
+      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
        """
-              <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
-                  <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test" function="hash-four" shardingColumn="id"/>
-              </schema>
-              <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
-             <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
-             <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
-             <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
-
-      """
+        <schema shardingNode="dn1" name="schema1" sqlMaxLimit="100">
+            <shardingTable shardingNode="dn1,dn2,dn3,dn4" name="test" function="hash-four" shardingColumn="id"/>
+        </schema>
+        
+        <shardingNode dbGroup="ha_group2" database="db1" name="dn1" />
+        <shardingNode dbGroup="ha_group2" database="db2" name="dn2" />
+        <shardingNode dbGroup="ha_group2" database="db3" name="dn3" />
+        <shardingNode dbGroup="ha_group2" database="db4" name="dn4" />
+       """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
