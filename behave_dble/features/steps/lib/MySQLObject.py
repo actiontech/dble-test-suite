@@ -54,8 +54,12 @@ class MySQLObject(object):
             stop_cd, stop_out, stop_err = self._mysql_meta.ssh_conn.exec_command(cmd_stop)
             success_p = "Shutting down MySQL.*?SUCCESS"
             obj = re.search(success_p, stop_out)
-            isSuccess = obj is not None
-            assert isSuccess, "stop mysql err:{}".format(stop_err)
+
+            if obj is None:
+                logger.debug("stop mysql err:{}".format(stop_err))
+                cmd_kill = "kill -9 `ps -ef | grep mysqld |grep -v grep | awk '{print $2}'`"
+                rc, sto, ste = self._mysql_meta.ssh_conn.exec_command(cmd_kill)
+                assert len(ste) == 0, "kill mysql failed for: {0}".format(ste)
 
         self._mysql_meta.close_ssh()
 
