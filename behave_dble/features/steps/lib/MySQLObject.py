@@ -60,8 +60,6 @@ class MySQLObject(object):
                 cmd_kill = "kill -9 `ps -ef | grep mysqld |grep -v grep | awk '{print $2}'`"
                 rc, sto, ste = self._mysql_meta.ssh_conn.exec_command(cmd_kill)
                 assert len(ste) == 0, "kill mysql failed for: {0}".format(ste)
-            else:
-                logger.debug("stop mysql success => {0}".format(self._mysql_meta.ip))
 
         self._mysql_meta.close_ssh()
 
