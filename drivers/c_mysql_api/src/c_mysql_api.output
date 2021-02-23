@@ -141,15 +141,11 @@ connect success    *****pass! mysql_real_connect create conn with no default db 
     create new conn!
     host:172.100.9.1, use:test, passwd:111111, port:8066
     create new ps success!
-    pass! execute ps get the same result as expect.
     pass! read prepare execute correctly
     *****two read ps should not affact each other*****
     create new ps success!
-    pass! execute ps get the same result as expect.
     close one ps.
-    pass! execute ps get the same result as expect.
     *****read ps should correctly in transaction*****
     start transaction.
-    pass! execute ps get the same result as expect.
     commit.
 !!!Test Over!!!
