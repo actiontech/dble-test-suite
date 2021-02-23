@@ -7,7 +7,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
   todo: add check dble.log has disable @@/dbgroup @@switch/enable @@
 
   @restore_mysql_service
-  Scenario: when useOuterHa is true, python script does not start
+  Scenario: when useOuterHa is true, python script does not start #1
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
      """
@@ -39,7 +39,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
 
   @restore_mysql_service
-  Scenario: when useOuterHa is false, mysql not slave, can`t change mysql master ,but python script run
+  Scenario: when useOuterHa is false, mysql not slave, can`t change mysql master ,but python script run #2
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
      """
@@ -77,7 +77,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
 
   @restore_mysql_service
-  Scenario: when useOuterHa is false, mysql has one slave, python script can change mysql master
+  Scenario: when useOuterHa is false, mysql has one slave, python script can change mysql master #3
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
      """
@@ -173,7 +173,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
 
   @restore_mysql_service
-  Scenario: when useOuterHa is false, mysql has two slave, python script can change mysql master
+  Scenario: when useOuterHa is false, mysql has two slave, python script can change mysql master #4
      """
      {'restore_mysql_service':{'mysql-master2':{'start_mysql':1}}}
      """

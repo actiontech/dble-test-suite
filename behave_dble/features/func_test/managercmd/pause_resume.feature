@@ -138,7 +138,25 @@ Feature: test "pause/resume" manager cmd
     Pause resume when recycle connection, pause revert
     """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                          | expect      |
-      | conn_0 | false   | select *  from sharding_4_t1 | length{(4)} |
-      | conn_0 | true    | commit                       | success     |
+      | conn   | toClose | sql                                        | expect      |
+      | conn_0 | false   | select *  from sharding_4_t1               | length{(4)} |
+      | conn_0 | false   | commit                                     | success     |
+      | conn_0 | true    | drop table if exists sharding_4_t1         | success     |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
+
+
+
+  @CRITICAL
+  Scenario: execute manager cmd "pause @@shardingNode" different  #7
+
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                              | expect                                                                                               |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | success                                                                                              |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5   | You are paused already                                                                               |
+      | pause @@shardingNode = 'dn1,dn2' and timeout =10 ,queue = 1,wait_limit = 5       | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first. |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 11,wait_limit = 5  | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first. |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | You can't run different PAUSE commands at the same time. Please resume previous PAUSE command first. |
+      | resume                                                                           | success                                                                                              |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                                                                              |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | You are paused already                                                                               |
+      | resume                                                                           | success                                                                                              |
