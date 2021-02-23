@@ -134,6 +134,15 @@ Feature:  dble_variables test
       | maxHeapTableSize            | 4096B                           | Used for temp table persistence of cursor, temp table which size larger than that will save to disk.                                                        | true        |
       | heapTableBufferChunkSize    | 4096B                           | Used for temp table persistence of cursor, setting for read-buffer size.                                                                                    | true        |
       | statisticQueueSize          | 4096                            | Sets the queue size for statistic, value must not be less than 1 and must be a power of 2,The default value is 4096                                         | true        |
+      | joinQueueSize               | 1024                            | Size of join queue,Avoid using too much memory                                                                                                              | true        |
+      | mergeQueueSize              | 1024                            | Size of merge queue,Avoid using too much memory                                                                                                             | true        |
+      | orderByQueueSize            | 1024                            | Size of order by queue, avoid using too much memory                                                                                                         | true        |
+      | enableStatistic                         | false               | Enable statistic sql                                                                                                                                        | false       |
+      | associateTablesByEntryByUserTableSize   | 1000                | AssociateTablesByEntryByUser table size, the default is 1000                                                                                                | false       |
+
+
+
+
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
