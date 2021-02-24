@@ -98,7 +98,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given Restart dble in "dble-1" success
 
     Given stop mysql in host "mysql-master2"
-    Given sleep "2" seconds
+    Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql                      | expect            |
       | show @@custom_mysql_ha   | has{(('1',),)}    |
