@@ -234,7 +234,6 @@ recycle  #7
       | db_group_name              | 1            |
       | db_instance_name           | 2            |
       | remote_processlist_id     | 5           |
-      | conn_estab_time            | 16           |
       | state                        | 18          |
 
   @CRITICAL
@@ -278,7 +277,6 @@ recycle  #8
       | db_group_name              | 1            |
       | db_instance_name           | 2            |
       | remote_processlist_id     | 5           |
-      | conn_estab_time            | 16           |
 
   @CRITICAL
   Scenario: connection shrink: idle connections > minCon and the idle connection's idle time < idleTimeout, the idle connections will not be
@@ -327,7 +325,6 @@ recycle  #9
       | db_group_name              | 1            |
       | db_instance_name           | 2            |
       | remote_processlist_id     | 5           |
-      | conn_estab_time            | 16           |
       | state                       | 18           |
 
   @CRITICAL
@@ -368,14 +365,13 @@ recycle  #10
       | conn   | toClose | sql                                                                                                                                      | expect        |db              |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'        | length{(6)} | dble_information  |
     #idle_connection_B contains idle_connection_A
-#    Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
-#      | column                      | column_index |
-#      | backend_conn_id            | 0           |
-#      | db_group_name              | 1            |
-#      | db_instance_name           | 2            |
-#      | remote_processlist_id     | 5           |
-#      | conn_estab_time            | 16           |
-#      | state                       | 18           |
+    Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
+      | column                      | column_index |
+      | backend_conn_id            | 0           |
+      | db_group_name              | 1            |
+      | db_instance_name           | 2            |
+      | remote_processlist_id     | 5           |
+      | state                       | 18           |
     #sleep 30s to wait into default scaling period
     Given sleep "30" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_C"
