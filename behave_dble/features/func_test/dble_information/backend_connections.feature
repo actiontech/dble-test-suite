@@ -32,6 +32,7 @@ Feature:  backend_connections test
       | conn_net_out              | int(11)       | NO     |       | None      |         |
       | conn_estab_time           | int(11)       | NO     |       | None      |         |
       | borrowed_from_pool        | varchar(5)    | NO     |       | None      |         |
+      | state                     | varchar(36)   | NO     |       | None      |         |
       | conn_recv_buffer          | int(11)       | NO     |       | None      |         |
       | conn_send_task_queue      | int(11)       | NO     |       | None      |         |
       | used_for_heartbeat        | varchar(5)    | NO     |       | None      |         |
@@ -40,7 +41,7 @@ Feature:  backend_connections test
       | in_transaction            | varchar(5)    | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
-      | conn_0 | False   | desc backend_connections             | length{(24)} | dble_information |
+      | conn_0 | False   | desc backend_connections             | length{(25)} | dble_information |
       | conn_0 | False   | select * from backend_connections    | success      | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
