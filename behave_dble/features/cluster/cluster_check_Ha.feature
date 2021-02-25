@@ -3,6 +3,8 @@
 # Created by quexiuping at 2020/12/11
 
   #case DBLE0REQ-855
+  @skip
+  #todo：回归时手动跑
 Feature: test "ha" in zk cluster
   ######case points:
   #  1.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbgroup"
