@@ -128,16 +128,6 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     """
     grep -c -i 'quit' /tmp/general.log
     """
-    #### add for debug issue end ######
-    Given execute oscmd in "mysql-master1"
-    """
-    cp -f /tmp/general.log /tmp/general_bk.log
-    """
-    Given execute oscmd in "mysql-master2"
-    """
-    cp -f /tmp/general.log /tmp/general_bk.log
-    """
-    #### add for debug issue start  ######
     Then check result "rs_B" value is "1"
     Then check result "rs_C" value is "1"
     Then check result "rs_D" value is "1"
