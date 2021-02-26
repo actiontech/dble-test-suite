@@ -436,5 +436,5 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 ####case unsupported funtion  "not"
       | conn_0 | False   | select a.name not b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | sql syntax error, no terminated. DOT     | schema1 | utf8mb4 |
 #case drop table
-#      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
-#      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
+      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
+      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
