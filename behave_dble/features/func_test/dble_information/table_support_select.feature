@@ -7,12 +7,12 @@ Feature:  show databases/use dble_information/show tables [like]
   Scenario:  show databases/use dble_information/show tables [like] #1
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                    | expect                                                                 |
+      | conn   | toClose | sql                                    | expect                                  |
 #case  begin query not use schema
-      | conn_0 | False   | show tables                            | No database selected                                                   |
-      | conn_0 | False   | show tables like 'dble%'               | No database selected                                                   |
-      | conn_0 | False   | desc version                           | No database selected                                                   |
-      | conn_0 | False   | select * from version                  | get error call manager command No database selected                    |
+      | conn_0 | False   | show tables                            | No database selected                    |
+      | conn_0 | False   | show tables like 'dble%'               | No database selected                    |
+      | conn_0 | False   | desc version                           | No database selected                    |
+      | conn_0 | False   | select * from version                  | No database selected                    |
 #case  begin query with error shcema or not exists schema
       | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
       | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
@@ -363,9 +363,9 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | select *, select 3 from dble_table order by id                                                  | Unsupported statement                                             |
       | conn_0 | False   | select * from dble_table where exists(select null) order by id                                  | not supported tree node type:NONAME                               |
       | conn_0 | False   | select *, (select 3) from dble_table order by id                                                | not supported tree node type:NONAME                               |
-      | conn_0 | False   | select *, (select id,parent_id from dble_child_table where id='C4') from dble_table order by id | get error call manager command Operand should contain 1 column(s) |
+      | conn_0 | False   | select *, (select id,parent_id from dble_child_table where id='C4') from dble_table order by id | Operand should contain 1 column(s) |
 #case unsupported Correlated Sub Queries
-      | conn_0 | True    | select * from dble_table where schema = ALL(select schema from dble_schema where sql_max_limit is null)  | get error call manager command Correlated Sub Queries is not supported    |
+      | conn_0 | True    | select * from dble_table where schema = ALL(select schema from dble_schema where sql_max_limit is null)  | Correlated Sub Queries is not supported    |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect  | db      |
