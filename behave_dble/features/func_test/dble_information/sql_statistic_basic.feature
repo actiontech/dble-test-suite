@@ -47,7 +47,7 @@ Feature:manager Cmd
       | conn_1 | False   | drop table if exists test                         | success | schema1 |
       | conn_1 | False   | create table sharding_4_t1 (id int,name char(20)) | success | schema1 |
       | conn_1 | False   | create table test (id int,name char(20))          | success | schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values (1,1)            | success | schema1 |
+      | conn_1 | true    | insert into sharding_4_t1 values (1,1)            | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_2 | False   | drop table if exists test_table               | success | db1 |
@@ -62,7 +62,7 @@ Feature:manager Cmd
    #case check dble_information.dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_2"
       | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
+      | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_2" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
       | enableStatistic                         | false            | Enable statistic sql, the default is false                     | false       |
@@ -71,26 +71,26 @@ Feature:manager Cmd
       | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
 
    #case check bootstrap.dynamic.cnf
-#    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
-#      """
-#      enableStatistic=0
-#      """
-#    Then restart dble in "dble-1" success
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_3"
-#      | conn   | toClose | sql                     | db               |
-#      | conn_0 | False   | show @@statistic        | dble_information |
-#    Then check resultset "version_3" has lines with following column values
-#      | NAME-0                                  | VALUE-1 |
-#      | statistic                               | OFF     |
-#      | associateTablesByEntryByUserTableSize   | 1024    |
-#      | frontendByBackendByEntryByUserTableSize | 1024    |
-#      | tableByUserByEntryTableSize             | 1024    |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      enableStatistic=0
+      """
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_3"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | true    | show @@statistic        | dble_information |
+    Then check resultset "version_3" has lines with following column values
+      | NAME-0                                  | VALUE-1 |
+      | statistic                               | OFF     |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
 
    # CASE TEST "enable @@statistic"
     Then execute admin cmd "enable @@statistic"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_4"
       | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | show @@statistic        | dble_information |
+      | conn_0 | true    | show @@statistic        | dble_information |
     Then check resultset "version_4" has lines with following column values
       | NAME-0                                  | VALUE-1 |
       | statistic                               | ON      |
@@ -98,10 +98,10 @@ Feature:manager Cmd
       | frontendByBackendByEntryByUserTableSize | 1024    |
       | tableByUserByEntryTableSize             | 1024    |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                 | expect      |
-      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} |
-      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(0)} |
-      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)} |
+      | conn   | toClose | sql                                                                 | expect      | db               |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(0)} | dble_information |
+      | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)} | dble_information |
 
     # rwSplitUser AND shardingUser do_execute_query,three table has some values
     Then execute sql in "dble-1" in "user" mode
@@ -121,29 +121,13 @@ Feature:manager Cmd
    #case check dble_information.dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_5"
       | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
+      | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_5" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
       | enableStatistic                         | true             | Enable statistic sql, the default is false                     | false       |
       | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
       | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
       | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
-
-   #case check bootstrap.dynamic.cnf
-#    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
-#      """
-#      enableStatistic=1
-#      """
-#    Then restart dble in "dble-1" success
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_6"
-#      | conn   | toClose | sql                     | db               |
-#      | conn_0 | False   | show @@statistic        | dble_information |
-#    Then check resultset "version_6" has lines with following column values
-#      | NAME-0                                  | VALUE-1 |
-#      | statistic                               | ON      |
-#      | associateTablesByEntryByUserTableSize   | 1024    |
-#      | frontendByBackendByEntryByUserTableSize | 1024    |
-#      | tableByUserByEntryTableSize             | 1024    |
 
     Then execute admin cmd "enable @@statistic"
     Then execute sql in "dble-1" in "admin" mode
@@ -170,14 +154,31 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(0)} | dble_information |
       | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)} | dble_information |
 
+   #case check bootstrap.dynamic.cnf
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      enableStatistic=1
+      """
+    Then restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_6"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | show @@statistic        | dble_information |
+    Then check resultset "version_6" has lines with following column values
+      | NAME-0                                  | VALUE-1 |
+      | statistic                               | ON      |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
+
+
 
   Scenario: reload @@statistic_table_size = ? [where table='?' | where table in (dble_information.tableA,...)]  Illegal value  #2
     Then execute admin cmd "enable @@statistic"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                 | expect      |
-#      | conn_0 | False   | reload @@statistic_table_size = -1    |  |
-#      | conn_0 | False   | reload @@statistic_table_size = 0     |  |
-#      | conn_0 | False   | reload @@statistic_table_size = 99999999999999     |  |
+      | conn   | toClose | sql                                                     | expect                            |
+      | conn_0 | False   | reload @@statistic_table_size = -1                      | tableSize must be greater than 0  |
+      | conn_0 | False   | reload @@statistic_table_size = 0                       | tableSize must be greater than 0  |
+      | conn_0 | False   | reload @@statistic_table_size = 99999999999999          | tableSize setting is not correct  |
 #      | conn_0 | False   | reload @@statistic_table_size = 999%     |  |
       | conn_0 | False   | reload @@statistic_table_size = 10 where table ='sql_statistic_by_asociate_tables_by_entry_by_user'       | Table `dble_information`.`sql_statistic_by_asociate_tables_by_entry_by_user` don't belong to statistic tables   |
       | conn_0 | False   | reload @@statistic_table_size = 10 where table ='sql_statistic_by_frontend_by_backend_by_entry_by_u'      | Table `dble_information`.`sql_statistic_by_frontend_by_backend_by_entry_by_u` don't belong to statistic tables  |
@@ -552,7 +553,7 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | length{(5)} | dble_information |
       | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(6)} | dble_information |
 
-    Then execute admin cmd "reload @@statistic_table_size = 1 where table ='sql_statistic_by_associate_tables_by_entry_by_user'"
+    Then execute admin cmd "reload @@statistic_table_size = 1 where table ='dble_information.sql_statistic_by_associate_tables_by_entry_by_user'"
     Then execute admin cmd "reload @@statistic_table_size = 2 where table ='sql_statistic_by_frontend_by_backend_by_entry_by_user'"
     Then execute admin cmd "reload @@statistic_table_size = 3 where table ='sql_statistic_by_table_by_user_by_entry'"
    #case check bootstrap.dynamic.cnf
@@ -579,7 +580,7 @@ Feature:manager Cmd
       | tableByUserByEntryTableSize             | 3                |
 
     Then execute admin cmd "reload @@statistic_table_size = 3 where table ='sql_statistic_by_associate_tables_by_entry_by_user'"
-    Then execute admin cmd "reload @@statistic_table_size = 3 where table ='sql_statistic_by_frontend_by_backend_by_entry_by_user'"
+    Then execute admin cmd "reload @@statistic_table_size = 3 where table ='dble_information.sql_statistic_by_frontend_by_backend_by_entry_by_user'"
     Then execute admin cmd "reload @@statistic_table_size = 4 where table ='sql_statistic_by_table_by_user_by_entry'"
    #case check bootstrap.dynamic.cnf
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
@@ -815,8 +816,8 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(6)} | dble_information |
 
     Then execute admin cmd "reload @@statistic_table_size = 2 where table in (sql_statistic_by_associate_tables_by_entry_by_user,sql_statistic_by_frontend_by_backend_by_entry_by_user)"
-    Then execute admin cmd "reload @@statistic_table_size = 3 where table in (sql_statistic_by_frontend_by_backend_by_entry_by_user,sql_statistic_by_table_by_user_by_entry)"
-    Then execute admin cmd "reload @@statistic_table_size = 4 where table in (sql_statistic_by_table_by_user_by_entry,sql_statistic_by_associate_tables_by_entry_by_user)"
+    Then execute admin cmd "reload @@statistic_table_size = 3 where table in (sql_statistic_by_frontend_by_backend_by_entry_by_user,dble_information.sql_statistic_by_associate_tables_by_entry_by_user)"
+    Then execute admin cmd "reload @@statistic_table_size = 4 where table in ('sql_statistic_by_table_by_user_by_entry',dble_information.sql_statistic_by_associate_tables_by_entry_by_user)"
    #case check bootstrap.dynamic.cnf
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
@@ -840,14 +841,14 @@ Feature:manager Cmd
       | frontendByBackendByEntryByUserTableSize | 3                |
       | tableByUserByEntryTableSize             | 4                |
 
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                  | expect      | db               |
-#      | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user          | success     | dble_information |
-#      | conn_0 | False   | truncate table sql_statistic_by_frontend_by_backend_by_entry_by_user | success     | dble_information |
-#      | conn_0 | False   | truncate dble_information.sql_statistic_by_table_by_user_by_entry    | success     | dble_information |
-#      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user     | length{(0)} | dble_information |
-#      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user  | length{(0)} | dble_information |
-#      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry                | length{(0)} | dble_information |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                  | expect      | db               |
+      | conn_0 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user          | success     | dble_information |
+      | conn_0 | False   | truncate table sql_statistic_by_frontend_by_backend_by_entry_by_user | success     | dble_information |
+      | conn_0 | False   | truncate dble_information.sql_statistic_by_table_by_user_by_entry    | success     | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user     | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user  | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry                | length{(0)} | dble_information |
 
     Then execute admin cmd "reload @@statistic_table_size = 5 where table in (sql_statistic_by_associate_tables_by_entry_by_user,sql_statistic_by_frontend_by_backend_by_entry_by_user,sql_statistic_by_table_by_user_by_entry)"
    #case check bootstrap.dynamic.cnf
@@ -1094,17 +1095,22 @@ Feature:manager Cmd
       | tableByUserByEntryTableSize             | 1024             |
 
 
-#    $a -DenableStatistic=-1
-#    $a DfrontendByBackendByEntryByUserTableSize=0
-#    $a DfrontendByBackendByEntryByUserTableSize=44%
-#    $a DtableByUserByEntryTableSize=-1
+
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DstatisticQueueSize=10
+    $a -DenableStatistic=-1
+    $a -DassociateTablesByEntryByUserTableSize=0
+    $a -DfrontendByBackendByEntryByUserTableSize=44%
+    $a -DtableByUserByEntryTableSize=-1
     """
     Then restart dble in "dble-1" failed for
     """
     Property [ statisticQueueSize ] '10' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
+    Property [ enableStatistic ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    property [ frontendByBackendByEntryByUserTableSize ] '44%' data type should be int
+    Property [ tableByUserByEntryTableSize ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    Property [ associateTablesByEntryByUserTableSize ] '0' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -1214,7 +1220,7 @@ Feature:manager Cmd
       | Field-0                  | Type-1       | Null-2 | Key-3 | Default-4 | Extra-5 |
       | entry                    | int(11)      | NO     | PRI   | None      |         |
       | user                     | varchar(20)  | NO     | PRI   | None      |         |
-      | tables                   | varchar(200) | NO     | PRI   | None      |         |
+      | associate_tables         | varchar(200) | NO     | PRI   | None      |         |
       | sql_select_count         | int(11)      | NO     |       | None      |         |
       | sql_select_examined_rows | int(11)      | NO     |       | None      |         |
       | sql_select_rows          | int(11)      | NO     |       | None      |         |
