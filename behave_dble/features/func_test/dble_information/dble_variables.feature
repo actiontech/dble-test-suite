@@ -121,9 +121,6 @@ Feature:  dble_variables test
       | backSocketNoDelay           | 1                               | The backend nagle is disabled. The default value is 1                                                                                                       | true        |
       | viewPersistenceConfBaseDir  | ./viewConf/                     | The directory of the view record file, the default value is ./viewConf/                                                                                     | true        |
       | viewPersistenceConfBaseName | viewJson                        | The name of the view record file. The default value is viewJson                                                                                             | true        |
-      | joinQueueSize               | 1024                            | Size of join queue,Avoid using too much memory                                                                                                              | true        |
-      | mergeQueueSize              | 1024                            | Size of merge queue,Avoid using too much memory                                                                                                             | true        |
-      | orderByQueueSize            | 1024                            | Size of order by queue, avoid using too much memory                                                                                                         | true        |
       | slowLogBaseDir              | ./slowlogs/                     | The directory of slow query log, the default value is ./slowlogs/                                                                                           | true        |
       | slowLogBaseName             | slow-query                      | The name of the slow query log. The default value is slow-query                                                                                             | true        |
       | maxCharsPerColumn           | 65535                           | The maximum number of characters allowed for per column when load data. The default value is 65535                                                          | true        |
@@ -137,9 +134,10 @@ Feature:  dble_variables test
       | joinQueueSize               | 1024                            | Size of join queue,Avoid using too much memory                                                                                                              | true        |
       | mergeQueueSize              | 1024                            | Size of merge queue,Avoid using too much memory                                                                                                             | true        |
       | orderByQueueSize            | 1024                            | Size of order by queue, avoid using too much memory                                                                                                         | true        |
-      | enableStatistic                         | false               | Enable statistic sql                                                                                                                                        | false       |
-      | associateTablesByEntryByUserTableSize   | 1000                | AssociateTablesByEntryByUser table size, the default is 1000                                                                                                | false       |
-
+      | enableStatistic                         | false               | Enable statistic sql, the default is false                                                                                                                  | false       |
+      | associateTablesByEntryByUserTableSize   | 1024                | AssociateTablesByEntryByUser table size, the default is 1024                                                                                                | false       |
+      | frontendByBackendByEntryByUserTableSize | 1024                | FrontendByBackendByEntryByUser table size, the default is 1024                                                                                              | false       |
+      | tableByUserByEntryTableSize             | 1024                | TableByUserByEntry table size, the default is 1024                                                                                                          | false       |
 
 
 

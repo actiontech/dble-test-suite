@@ -53,7 +53,7 @@ Feature:  dble_status test
       | conn_0 | False   | use dble_information                                                                   | success                                                                |
       | conn_0 | False   | select * from dble_status limit 5                                                      | length{(5)}                                                            |
       | conn_0 | False   | select * from dble_status order by variable_name desc limit 6                          | length{(6)}                                                            |
-      | conn_0 | False   | select * from dble_status where comment in (select common from dble_status )           | get error call manager command Correlated Sub Queries is not supported |
+      | conn_0 | False   | select * from dble_status where comment in (select common from dble_status )           | Correlated Sub Queries is not supported                                |
       | conn_0 | False   | select * from dble_status where comment > any (select variable_name from dble_status ) | length{(12)}                                                           |
       | conn_0 | False   | select * from dble_status where comment like '%of%'                                    | length{(7)}                                                            |
       | conn_0 | False   | select comment from dble_status                                                        | length{(12)}                                                           |
