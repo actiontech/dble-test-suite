@@ -210,6 +210,7 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | true     | drop table if exists rl_station_relation   | success      | schema1 | utf8mb4 |
 
 
+
    Scenario: check Functions and Operators support utf8mb4: case from issue DBLE0REQ-660 #3
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                           | expect                         | db      | charset |
@@ -404,10 +405,11 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       #case "STRCMP"
       | conn_0 | False   | select STRCMP(a.name,b.name) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id          | has{((0,), (0,), (-1,))}      | schema1 | utf8mb4 |
       #case "SUBSTR" / "SUBSTRING"   /  "SUBSTRING_INDEX"      DBLE0REQ-757
-      #| conn_0 | False   | select SUBSTR(a.name,1),SUBSTR(b.name,1,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                      |       | schema1 | utf8mb4 |
-      #| conn_0 | False   | select SUBSTRING(a.name,1),SUBSTRING(b.name,1,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                |      | schema1 | utf8mb4 |
-      #| conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name -1 from 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id     |      | schema1 | utf8mb4 |
-      #| conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name from -1 for 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  |      | schema1 | utf8mb4 |
+      | conn_0 | False   | select SUBSTR(a.name,1),SUBSTR(b.name,1,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                       | has{(('测试1','测试',), ('测试2','测试',), ('测试2','测试',))}              | schema1 | utf8mb4 |
+      | conn_0 | False   | select SUBSTRING(a.name,1),SUBSTRING(b.name,1,2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                 | has{(('测试1','测试',), ('测试2','测试',), ('测试2','测试',))}              | schema1 | utf8mb4 |
+      | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name -1 from 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id      | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
+      | conn_0 | False   | select SUBSTRING(a.name from 2),SUBSTRING(a.name from -1 for 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
+      | conn_0 | False   | select SUBSTRING(a.name from 1 for 2) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id                            | Incorrect parameter count in the call to native function 'SUBSTRING'     | schema1 | utf8mb4 |
       | conn_0 | False   | select SUBSTRING_INDEX(a.name ,'测', 1) from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id  | has{(('试1',), ('试2',), ('试2',))}        | schema1 | utf8mb4 |
         #case "LTRIM" / "RTRIM"  /  "TRIM"
       | conn_0 | False   | select LTRIM(    a.name)  from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id         | has{(('测试1',), ('测试2',), ('测试2',))}     | schema1 | utf8mb4 |
@@ -434,5 +436,5 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
 ####case unsupported funtion  "not"
       | conn_0 | False   | select a.name not b.name from sharding_2_t2 a inner join sharding_3_t1 b on a.id=b.id           | sql syntax error, no terminated. DOT     | schema1 | utf8mb4 |
 #case drop table
-      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
-      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
+#      | conn_0 | False   | drop table if exists sharding_2_t2      | success                        | schema1 | utf8mb4 |
+#      | conn_0 | True    | drop table if exists sharding_3_t1      | success                        | schema1 | utf8mb4 |
