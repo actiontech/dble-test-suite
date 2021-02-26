@@ -13,7 +13,7 @@ Feature: test show user related manager command
       | show @@help |
     Then check resultset "rs_A" has lines with following column values
       | STATEMENT-0                                                                                         | DESCRIPTION-1                                                                     |
-#      | select @@VERSION_COMMENT;                                                                           | Show the version comment of dble                                                  |
+      | select @@VERSION_COMMENT                                                                            | Show the version comment of dble                                                  |
       | show @@time.current                                                                                 | Report current timestamp                                                          |
       | show @@time.startup                                                                                 | Report startup timestamp                                                          |
       | show @@version                                                                                      | Report Server version                                                             |
@@ -32,21 +32,21 @@ Feature: test show user related manager command
       | show @@session                                                                                      | Report front session details                                                      |
       | show @@session.xa                                                                                   | Report front session and associated xa transaction details                        |
       | show @@connection.sql                                                                               | Report connection sql                                                             |
-#      | show @@connection.sql.status where FRONT_ID= ?;                                                     | Show current connection sql status and detail                                     |
+      | show @@connection.sql.status where FRONT_ID= ?                                                      | Show current connection sql status and detail                                     |
       | show @@sql                                                                                          | Report SQL list                                                                   |
       | show @@sql.high                                                                                     | Report Hight Frequency SQL                                                        |
       | show @@sql.slow                                                                                     | Report slow SQL                                                                   |
       | show @@sql.large                                                                                    | Report the sql witch resultset larger than 10000 rows                             |
       | show @@sql.condition                                                                                | Report the query of a specific table.column set by reload query_cf                |
       | show @@sql.resultset                                                                                | Report BIG RESULTSET SQL                                                          |
-     #| show @@sql.sum                                                                                     | Report  User RW Stat                                                               |
-     #| show @@sql.sum.user                                                                                | Report  User RW Stat                                                               |
-     #| show @@sql.sum.table                                                                               | Report  Table RW Stat                                                              |
+      | show @@sql.sum                                                                                      | Report  User RW Stat                                                               |
+      | show @@sql.sum.user                                                                                 | Report  User RW Stat                                                               |
+      | show @@sql.sum.table                                                                                | Report  Table RW Stat                                                              |
       | show @@heartbeat                                                                                    | Report heartbeat status                                                           |
       | show @@heartbeat.detail where name=?                                                                | Report heartbeat current detail                                                   |
       | show @@sysparam                                                                                     | Report system param                                                               |
       | show @@syslog limit=?                                                                               | Report system log                                                                 |
-     #| show @@white                                                                                       | Report server white host                                                          |
+      | show @@white                                                                                        | Report server white host                                                          |
       | show @@directmemory                                                                                 | Report server direct memory pool usage                                            |
       | show @@command.count                                                                                | Report the current number of querys                                               |
       | show @@connection.count                                                                             | Report the current number of connections                                          |
@@ -84,10 +84,10 @@ Feature: test show user related manager command
       | file @@upload filename content                                                                      | Write content to file                                                             |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
-     #| flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]    | Change the config of flow control                                                 |
+#      | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
       | log @@[file=? limit=? key=? regex=?]                                                                | Report logs by given regex                                                        |
       | dryrun                                                                                              | Dry run to check config before reload xml                                         |
-     #| pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                  | Block query requests witch specified shardingNodes involved                       |
+      | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                   | Block query requests witch specified shardingNodes involved                       |
       | RESUME                                                                                              | Resume the query requests of the paused shardingNodes                             |
       | show @@pause                                                                                        | Show which shardingNodes have bean pause                                          |
       | show @@slow_query_log                                                                               | Show if the slow query log is enabled                                             |
@@ -110,7 +110,7 @@ Feature: test show user related manager command
       | dbGroup @@disable name='?' (instance = '?')                                                         | disable some dbGroup/dbInstance                                                   |
       | dbGroup @@enable name='?' (instance = '?')                                                          | enable some dbGroup/dbInstance                                                    |
       | dbGroup @@switch name='?' master='?'                                                                | switch primary in one dbGroup                                                     |
-     #| dbGroup @@events                                                                                   | show all the dbGroup ha event which not finished yet                              |
+#      | dbGroup @@events                                                                                    | show all the dbGroup ha event which not finished yet                              |
       | split src dest -sschema -r500 -w500 -l10000 --ignore                                                | split dump file into multi dump files according to shardingNode                   |
       | fresh conn [forced] where dbGroup ='?' [and dbInstance ='?']                                        | fresh conn some dbGroup/dbInstance                                                |
       | show @@cap_client_found_rows                                                                        | Show if the clientFoundRows capabilities is enabled                               |
