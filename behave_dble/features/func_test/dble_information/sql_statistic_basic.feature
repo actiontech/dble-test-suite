@@ -31,9 +31,9 @@ Feature:manager Cmd
     Then check resultset "version_1" has lines with following column values
       | NAME-0                                  | VALUE-1 |
       | statistic                               | OFF     |
-      | associateTablesByEntryByUserTableSize   | 1000    |
-      | frontendByBackendByEntryByUserTableSize | 1000    |
-      | tableByUserByEntryTableSize             | 1000    |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect      | db               |
       | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} | dble_information |
@@ -47,10 +47,12 @@ Feature:manager Cmd
       | conn_1 | False   | drop table if exists test                         | success | schema1 |
       | conn_1 | False   | create table sharding_4_t1 (id int,name char(20)) | success | schema1 |
       | conn_1 | False   | create table test (id int,name char(20))          | success | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values (1,1)            | success | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_2 | False   | drop table if exists test_table               | success | db1 |
       | rwS1 | 111111 | conn_2 | False   | create table test_table(id int,name char(20)) | success | db1 |
+      | rwS1 | 111111 | conn_2 | true    | insert into test_table values (1,2)           | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect      |
       | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} |
@@ -63,10 +65,10 @@ Feature:manager Cmd
       | conn_0 | False   | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_2" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-      | enableStatistic                         | false            | Enable statistic sql                                           | false       |
-      | associateTablesByEntryByUserTableSize   | 1000             | AssociateTablesByEntryByUser table size, the default is 1000   | false       |
-      | frontendByBackendByEntryByUserTableSize | 1000             | FrontendByBackendByEntryByUser table size, the default is 1000 | false       |
-      | tableByUserByEntryTableSize             | 1000             | TableByUserByEntry table size, the default is 1000             | false       |
+      | enableStatistic                         | false            | Enable statistic sql, the default is false                     | false       |
+      | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
+      | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
+      | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
 
    #case check bootstrap.dynamic.cnf
 #    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
@@ -80,9 +82,9 @@ Feature:manager Cmd
 #    Then check resultset "version_3" has lines with following column values
 #      | NAME-0                                  | VALUE-1 |
 #      | statistic                               | OFF     |
-#      | associateTablesByEntryByUserTableSize   | 1000    |
-#      | frontendByBackendByEntryByUserTableSize | 1000    |
-#      | tableByUserByEntryTableSize             | 1000    |
+#      | associateTablesByEntryByUserTableSize   | 1024    |
+#      | frontendByBackendByEntryByUserTableSize | 1024    |
+#      | tableByUserByEntryTableSize             | 1024    |
 
    # CASE TEST "enable @@statistic"
     Then execute admin cmd "enable @@statistic"
@@ -92,9 +94,9 @@ Feature:manager Cmd
     Then check resultset "version_4" has lines with following column values
       | NAME-0                                  | VALUE-1 |
       | statistic                               | ON      |
-      | associateTablesByEntryByUserTableSize   | 1000    |
-      | frontendByBackendByEntryByUserTableSize | 1000    |
-      | tableByUserByEntryTableSize             | 1000    |
+      | associateTablesByEntryByUserTableSize   | 1024    |
+      | frontendByBackendByEntryByUserTableSize | 1024    |
+      | tableByUserByEntryTableSize             | 1024    |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect      |
       | conn_0 | False   | select * from sql_statistic_by_associate_tables_by_entry_by_user    | length{(0)} |
@@ -122,10 +124,10 @@ Feature:manager Cmd
       | conn_0 | False   | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
     Then check resultset "version_5" has lines with following column values
       | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-      | enableStatistic                         | true             | Enable statistic sql                                           | false       |
-      | associateTablesByEntryByUserTableSize   | 1000             | AssociateTablesByEntryByUser table size, the default is 1000   | false       |
-      | frontendByBackendByEntryByUserTableSize | 1000             | FrontendByBackendByEntryByUser table size, the default is 1000 | false       |
-      | tableByUserByEntryTableSize             | 1000             | TableByUserByEntry table size, the default is 1000             | false       |
+      | enableStatistic                         | true             | Enable statistic sql, the default is false                     | false       |
+      | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
+      | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
+      | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
 
    #case check bootstrap.dynamic.cnf
 #    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
@@ -189,9 +191,9 @@ Feature:manager Cmd
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
       | enableStatistic                         | true             |
-      | associateTablesByEntryByUserTableSize   | 1000             |
-      | frontendByBackendByEntryByUserTableSize | 1000             |
-      | tableByUserByEntryTableSize             | 1000             |
+      | associateTablesByEntryByUserTableSize   | 1024             |
+      | frontendByBackendByEntryByUserTableSize | 1024             |
+      | tableByUserByEntryTableSize             | 1024             |
 
 
   Scenario: reload @@statistic_table_size = ?   #3
@@ -228,9 +230,9 @@ Feature:manager Cmd
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
       | enableStatistic                         | true             |
-      | associateTablesByEntryByUserTableSize   | 1000             |
-      | frontendByBackendByEntryByUserTableSize | 1000             |
-      | tableByUserByEntryTableSize             | 1000             |
+      | associateTablesByEntryByUserTableSize   | 1024             |
+      | frontendByBackendByEntryByUserTableSize | 1024             |
+      | tableByUserByEntryTableSize             | 1024             |
 
     #do query create data
     Then execute sql in "dble-1" in "user" mode
@@ -1087,9 +1089,9 @@ Feature:manager Cmd
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
       | enableStatistic                         | false            |
-      | associateTablesByEntryByUserTableSize   | 1000             |
-      | frontendByBackendByEntryByUserTableSize | 1000             |
-      | tableByUserByEntryTableSize             | 1000             |
+      | associateTablesByEntryByUserTableSize   | 1024             |
+      | frontendByBackendByEntryByUserTableSize | 1024             |
+      | tableByUserByEntryTableSize             | 1024             |
 
 
 #    $a -DenableStatistic=-1

@@ -93,6 +93,8 @@ Feature:test sql_statistic_by_table_by_user_by_entry
       | conn_0 | False   | truncate table sql_statistic_by_table_by_user_by_entry              | success      | dble_information |
       | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)}  | dble_information |
 
+    Then execute admin cmd "reload @@statistic_table_size = 4 where table ='sql_statistic_by_table_by_user_by_entry'"
+
     #case Syntax error sql will not be counted
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                  | expect    | db      |
@@ -140,8 +142,12 @@ Feature:test sql_statistic_by_table_by_user_by_entry
       | 2       | test   | schema1.test100 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 1                  | 0                           | 0                  |
       | 2       | test   | schema1.test101 | 1                  | 0                 | 0                  | 0                 | 0                  | 0                 | 0                  | 0                           | 0                  |
       | 2       | test   | schema1.test102 | 0                  | 0                 | 0                  | 0                 | 1                  | 0                 | 0                  | 0                           | 0                  |
+    Then check resultset "resulte_1" has not lines with following column values
+      | entry-0 | user-1 | table-2 | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_examined_rows-10 | sql_select_rows-11 |
+      | 2       | test   | null    | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 5                  | 2                           | 4                  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect       | db               |
+      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(4)}  | dble_information |
       | conn_0 | False   | truncate table sql_statistic_by_table_by_user_by_entry              | success      | dble_information |
       | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)}  | dble_information |
 
