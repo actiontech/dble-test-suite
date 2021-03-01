@@ -1,8 +1,8 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/1/6
-@skip
-  #todo,加一个同生共死的校验
+
+
 Feature: test python script "custom_mysql_ha.py" to change mysql master
 
   todo: add check dble.log has disable @@/dbgroup @@switch/enable @@
@@ -37,6 +37,11 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | sql                      | expect            |
       | show @@custom_mysql_ha   | has{(('0',),)}    |
     Given start mysql in host "mysql-master2"
+    # in autotest ,Need to manually kill the python3 process
+    Given execute linux command in "dble-1"
+      """
+      kill -9 `ps -ef | grep python3 |grep -v grep | awk '{print $2}'`
+      """
 
 
   @restore_mysql_service
@@ -75,7 +80,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
       DbInstance 172.100.9.6:3306 in ha_group2 is normal!
       """
-
+    Given execute linux command in "dble-1"
+      """
+      kill -9 `ps -ef | grep python3 |grep -v grep | awk '{print $2}'`
+      """
 
   @restore_mysql_service
   Scenario: when useOuterHa is false, mysql has one slave, python script can change mysql master #3
@@ -171,6 +179,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 #      | conn   | toClose | sql                          | expect      | db      |
 #      | conn_1 | False   | drop table if exists test    | success     | schema1 |
 #      | conn_1 | True    | create table test (id int)   | success     | schema1 |
+    Given execute linux command in "dble-1"
+      """
+      kill -9 `ps -ef | grep python3 |grep -v grep | awk '{print $2}'`
+      """
 
 
   @restore_mysql_service
@@ -197,7 +209,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/custom_mysql_ha.log" in host "dble-1"
       """
-      DbInstance 172.100.9.6:3306 in ha_group2 is not alive!
+      172.100.9.6:3306 in ha_group2 is not alive!
       Get dbGroups from db.xml file.
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
@@ -209,4 +221,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       """
       <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       """
-
+    Given execute linux command in "dble-1"
+      """
+      kill -9 `ps -ef | grep python3 |grep -v grep | awk '{print $2}'`
+      """
