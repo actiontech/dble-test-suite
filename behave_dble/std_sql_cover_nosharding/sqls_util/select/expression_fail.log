@@ -4,7 +4,7 @@ mysql:[((18L, 18.0, 'A', 'test018'),)]
 ===file:sqls_util/select/expression.sql, id:45, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci]===
 dble:[None]
 mysql:[((18L, 18.0, 'A', 'test018'),)]
-dble err:(1064, 'sql syntax error, no terminated. BITS')
+dble err:(1064, 'druid not support sql syntax, the reason is java.lang.NullPointerException')
 ===file:sqls_util/select/expression.sql, id:46, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,_latin1 b'1000001' from test1]===
 dble:[None]
 mysql:[((1L, 1.0, 'a string', 'test001', 'A'), (2L, 2.0, 'a\nstring', 'test002', 'A'), (3L, 3.0, 'another string', 'test003', 'A'), (4L, 4.0, '\xe4\xb8\xad', 'test004', 'A'), (5L, 5.0, "a'string'", 'test005', 'A'), (6L, 6.0, 'a""string""', 'test006', 'A'), (7L, 7.0, 'a\x08string', 'test007', 'A'), (8L, 8.0, 'a\nstring', 'test008', 'A'), (9L, 9.0, 'a\rstring', 'test009', 'A'), (10L, 10.0, 'a\tstring', 'test010', 'A'), (11L, 11.0, 'azstring', 'test011', 'A'), (12L, 12.0, 'a\\string', 'test012', 'A'), (13L, 13.0, 'a\\%string', 'test013', 'A'), (14L, 14.0, 'a\\_string', 'test014', 'A'), (15L, 15.0, 'MySQL', 'test015', 'A'), (16L, 16.0, 'binary', 'test016', 'A'), (17L, 1.23457e+22, '17', '17', 'A'), (18L, 18.0, 'A', 'test018', 'A'), (19L, 19.0, '', 'test019', 'A'), (65L, 16.0, 'binary', 'test016', 'A'))]
