@@ -1278,3 +1278,69 @@ Feature:manager Cmd
       | sql_select_rows          | int(11)     | NO     |       | None      |         |
       | sql_select_time          | int(11)     | NO     |       | None      |         |
       | last_update_time         | varchar(26) | NO     |       | None      |         |
+
+
+
+  @skip_restart
+  Scenario:
+    Then execute admin cmd "enable @@statistic"
+    Then execute admin cmd "reload @@statistic_table_size = 10"
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+    """
+    s/debug/info/
+    """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+     | conn     | toClose | sql                                         | expect   | db      |
+     | conn_0   | False   | drop table if exists test                   | success  | schema1 |
+     | conn_0   | True    | create table test(id int,name varchar(20))  | success  | schema1 |
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Then connect "dble-1" to insert "150000" of data for "test"
+    Given execute sql "100000000" times in "dble-1" at concurrent
+      | sql                                        | db      |
+      | select name from test limit 4000000000     | schema1 |
+
+
+#    Then connect "dble-1" to insert "100" of data for "test"
+#
+#    Given execute sql "200" times in "dble-1" at concurrent
+#      | sql                                | db      |
+#      | select name from test where id ={} | schema1 |
