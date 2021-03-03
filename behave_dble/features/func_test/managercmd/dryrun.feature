@@ -46,11 +46,9 @@ Feature: # dryrun test
 
     Given delete the following xml segment
       | file       | parent         | child                  |
-      | user.xml   | {'tag':'root'} | {'tag':'managerUser'}  |
       | user.xml   | {'tag':'root'} | {'tag':'shardingUser'} |
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
        """
-       <managerUser name="root" password="111111"/>
        <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group1" maxCon="0"/>
        """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
