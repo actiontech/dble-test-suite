@@ -52,7 +52,7 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="5" primary="true" readWeight="1" id="dbInstance1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="5" primary="true">
              <property name="testOnBorrow">true</property>
              <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
@@ -70,29 +70,54 @@ Feature: test connection pool
       | conn_2 | False   | begin                                                      | success                    | schema1 |
       | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
-      | conn   | toClose | sql                                                                                               | db               |
-      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'    | dble_information |
+      | conn   | toClose | sql                                                                                                                             | db               |
+      | conn_0 | True    | select * from backend_connections where state='IDLE' and used_for_heartbeat='false' and db_instance_name='M1'    | dble_information |
+    Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IDLE'" named as "local_port_1"
     #simulate the rest connection's network was broken
-    Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IDLE' limit 1" named as "local_port_1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    """
+    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Then execute "user" cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                  | db      |
+      | conn_3 | False   | select * from sharding_4_t1 where id=2          | schema1 |
+    Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
+    """
+    sending ping signal
+    """
     Then execute oscmd in "mysql-master1" by parameter from resultset "local_port_1"
     """
     iptables -A INPUT -p tcp --dport {0} -j DROP
     """
-    Then execute "user" cmd  in "dble-1" at background
-      | conn   | toClose | sql                                                  | db      |
-      | conn_3 | False   | select * from sharding_4_t1 where id=2          | schema1 |
     #sleep 2s wait to exceed connectionHeartbeatTimeout
     Given sleep "2" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
-    2	2
+    ERROR
     """
+    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given destroy btrace threads list
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
+      | conn   | toClose | sql                                                                                                                             | db                 |
+      | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and db_instance_name='M1'    | dble_information |
+    #create a new connection to continue executing sql
+    Then check resultsets "idle_connection_B" does not including resultset "idle_connection_A" in following columns
+      | column                      | column_index |
+      | backend_conn_id            | 0           |
+      | remote_processlist_id     | 5           |
     Given execute sql "3" times in "dble-1" at concurrent
       | sql                             | db      |
       | select * from sharding_4_t1 | schema1 |
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                        | expect                     | db      |
-#      | conn_0 | True    | drop table if exists sharding_4_t1                     | success                    | schema1 |
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    """
+    2 2
+    """
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
 
   @NORMAL @btrace @restore_network
   Scenario: test connection param "testOnReturn"  #3
@@ -103,8 +128,9 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="5" primary="true" readWeight="1" id="dbInstance1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="5" primary="true">
              <property name="testOnReturn">true</property>
+             <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
         </dbInstance>
      </dbGroup>
@@ -120,7 +146,7 @@ Feature: test connection pool
       | conn_2 | False   | begin                                                      | success                    | schema1 |
       | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
       | conn_3 | False   | begin                                                      | success                    | schema1 |
-      | conn_3 | False   | select * from sharding_4_t1 where id=2                 | success                    | schema1 |
+      | conn_3 | False   | insert into sharding_4_t1 values(4,4)                 | success                    | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false'    | dble_information |
@@ -129,30 +155,36 @@ Feature: test connection pool
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /getConnection/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+#    Given sleep "5" seconds
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                  | db      |
-      | conn_3 | False   | commit                                              | schema1 |
+      | conn_3 | False   | commit                                               | schema1 |
     Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
     """
-    getting connection
+    sending ping signal
     """
     #simulate the rest connection's network was broken
-    Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IDLE' limit 1" named as "local_port_1"
+    #如何过滤出连接
+    Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IDLE'" named as "local_port_1"
     Then execute oscmd in "mysql-master1" by parameter from resultset "local_port_1"
     """
     iptables -A INPUT -p tcp --dport {0} -j DROP
     """
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
-    2	2
+    ERROR
     """
-    Given execute sql "3" times in "dble-1" at concurrent
-      | sql                             | db      |
-      | select * from sharding_4_t1 | schema1 |
-    
+    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+    Given destroy btrace threads list
+    Given execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                           | expect                    | db      |
+      | conn_0 | True    | select * from sharding_4_t1                | has{((2,'2'),(4,'4'),)} | schema1 |
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+
   @NORMAL @btrace @restore_network
   Scenario: test connection param "testOnCreate"  #4
     """
@@ -162,9 +194,9 @@ Feature: test connection pool
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="3" primary="true" readWeight="1" id="dbInstance1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="3" primary="true">
              <property name="testOnCreate">true</property>
-             <property name="connectionHeartbeatTimeout">true</property>
+             <property name="connectionHeartbeatTimeout">2000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
         </dbInstance>
      </dbGroup>
@@ -180,17 +212,12 @@ Feature: test connection pool
       | conn_2 | False   | begin                                                      | success                    | schema1 |
       | conn_2 | False   | select * from sharding_4_t1 where id=2                | success                    | schema1 |
     #simulate the rest connection's network was broken
-    Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IDLE' limit 1" named as "local_port_1"
-    Then execute oscmd in "mysql-master1" by parameter from resultset "local_port_1"
-    """
-    iptables -A INPUT -p tcp --dport {0} -j DROP
-    """
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /getConnection/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
@@ -198,25 +225,31 @@ Feature: test connection pool
       | conn_3 | False   | insert into sharding_4_t1 values(4,4)           | schema1 |
     Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
     """
-    getting connection
+    sending ping signal
     """
+    #simulate the rest connection's network was broken
+    Then get index:"0" column value of "select local_port from dble_information.backend_connections where db_instance_name='M1' and used_for_heartbeat='false' and state='IN CREATION OR OUT OF POOL'" named as "local_port_1"
+    Then execute oscmd in "mysql-master1" by parameter from resultset "local_port_1"
+    """
+    iptables -A INPUT -p tcp --dport {0} -j DROP
+    """
+    #sleep 5s to wait btrace hang over
+    Given sleep "5" seconds
     Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
     ERROR
     """
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
-      | conn   | toClose | sql                                                                                                                               | expect        |db              |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(1)} | dble_information  |
-    #sleep 5s to wait btrace hang over
-    Given sleep "5" seconds
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
+   Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+   Given destroy btrace threads list
+   #create a new connection to execute sql and then release
+   Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                                                                      | expect        |db              |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(0)} | dble_information  |
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
-    Given destroy btrace threads list
-    Given execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                           | expect  | db      |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5'         | length{(1)} | dble_information  |
+   Given execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                           | expect                    | db      |
       | conn_0 | True    | select * from sharding_4_t1                | has{((2,'2'),(4,'4'),)} | schema1 |
+   Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+   Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
 
   @NORMAL
   Scenario: test connection param "testWhileIdle"  #5
@@ -246,53 +279,34 @@ Feature: test connection pool
      db instance\[M1\] stats (total=5, active=2, idle=3, idleTest=0 waiting=0)
      """
 
-  @NAOMAL
-  #connectionTimeout未生效，已提issue @dev
+  @NAOMAL @restore_mysql_service
+  #DBLE0REQ-940
   Scenario: test connection param "connectionTimeout"  #6
+     """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="10" minCon="5" primary="true" id="dbInstance1">
-             <property name="connectionTimeout">8000</property>
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="10" minCon="3" primary="true" id="dbInstance1">
+             <property name="connectionTimeout">5000</property>
              <property name="heartbeatPeriodMillis">180000</property>
+             <property name="timeBetweenEvictionRunsMillis">180000</property>
         </dbInstance>
      </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
     Given execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                     | db      |
-      | conn_0 | True    | drop table if exists nosharding1    | schema1 |
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
-    """
-    s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /getConnection/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
-    """
-    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
-    Then execute "user" cmd  in "dble-1" at background
-      | conn   | toClose | sql                                                                      | db      |
-      | conn_0 | True    | create table if not exists nosharding1(id int,name varchar(10))  | schema1 |
-    Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
-    """
-    getting connection
-    """
-    Given sleep "3" seconds
-    Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
-    """
-    ERROR
-    """
-    #sleep 10s(3s+7s) to wait btrace hang over
-    Given sleep "7" seconds
-    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
-    """
-    ERROR
-    """
-    Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
-    Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+      | conn   | toClose | sql                                                              | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                           | success | schema1 |
+      | conn_0 | True    | create table sharding_4_t1(id int,name varchar(20))        | success | schema1 |
+    Given stop mysql in host "mysql-master1"
+    Given execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                      | expect  | db      |
+      | conn_0 | True    | insert into sharding_4_t1 values(4,4)                               | Connection is not available, request timed out after 50 | schema1 |
+      | conn_0 | True    | select * from sharding_4_t1 where id=2                              | Connection is not available, request timed out after 50 | schema1 |
+#      | conn_0 | True    | create table if not exists nosharding1(id int,name varchar(10)) | Connection is not available, request timed out after | schema1 |
 
   @CRITICAL
   Scenario: test reuse connection  #7
@@ -315,7 +329,7 @@ Feature: test connection pool
     """
     rm -rf /tmp/general.log
     """
-   Given execute sql in "dble-1" in "user" mode
+    Given execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                           | success | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))        | success | schema1 |
