@@ -44,13 +44,13 @@ Feature:  session_connections test
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
-      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
 	   <managerUser name="root" password="111111"/>
 	   <shardingUser name="test" password="111111" schemas="schema1"/>
        <shardingUser name="test1" password="111111" schemas="schema2" tenant="tenant1"/>
     """
-      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
        <schema shardingNode="dn1" name="schema2" sqlMaxLimit="1000" />
     """

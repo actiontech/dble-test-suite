@@ -24,63 +24,55 @@ Feature: #test show @@processlist
     </dbInstance>
     </dbGroup>
     """
-    Given Restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_A"
-      | sql                |
-      | show @@processlist |
-    Then check resultset "pro_rs_A" has lines with following column values
-      | Front_Id-0 | shardingNode-1  | MysqlId-2   | User-3    | db-5   | Command-6  | Time-7  | Info-9  |
-      |    2        | NULL       | NULL        | root      | NULL   | NULL       | 0       | NULL    |
+    Then execute admin cmd "reload @@config"
+
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                                              | db        |
-      | conn_0 | False    | drop table if exists test1                       |  schema1  |
-      | conn_0 | False    | create table test1(id int,name varchar(20))      |  schema1  |
-      | conn_0 | False    | drop table if exists test_shard                  |  schema1  |
-      | conn_0 | False    | create table test_shard(id int,name varchar(20)) |  schema1  |
-      | conn_0 | False    | begin                                            |  schema1  |
-      | conn_0 | False    | select * from test_shard                         |  schema1  |
+      | conn   | toClose  | sql                                              | db       |
+      | conn_0 | False    | drop table if exists test1                       | schema1  |
+      | conn_0 | False    | create table test1(id int,name varchar(20))      | schema1  |
+      | conn_0 | False    | drop table if exists test_shard                  | schema1  |
+      | conn_0 | False    | create table test_shard(id int,name varchar(20)) | schema1  |
+      | conn_0 | False    | begin                                            | schema1  |
+      | conn_0 | False    | select * from test_shard                         | schema1  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_B"
       | sql                |
       | show @@processlist |
     Then check resultset "pro_rs_B" has lines with following column values
-      | Front_Id-0 | shardingNode-1 | User-3 | db-5 | Command-6 | Info-9 |
-      | 3          | dn1        | test   | db1  | Sleep     | None   |
-      | 3          | dn2        | test   | db1  | Sleep     | None   |
-      | 3          | dn3        | test   | db2  | Sleep     | None   |
-      | 3          | dn4        | test   | db2  | Sleep     | None   |
+      | db_instance-1 | User-3 | db-5 | Command-6 | Info-9 |
+      | hostM1        | test   | db1  | Sleep     | None   |
+      | hostM2        | test   | db1  | Sleep     | None   |
+      | hostM1        | test   | db2  | Sleep     | None   |
+      | hostM2        | test   | db2  | Sleep     | None   |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                 | db        |
-      | conn_1 | False    | begin               |  schema1  |
-      | conn_1 | False    | select * from test1 |  schema1  |
+      | conn   | toClose  | sql                 | db       |
+      | conn_1 | False    | begin               | schema1  |
+      | conn_1 | False    | select * from test1 | schema1  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_C"
       | sql                |
       | show @@processlist |
     Then check resultset "pro_rs_C" has lines with following column values
-      | Front_Id-0 | shardingNode-1   | User-3    | db-5   | Command-6    | Info-9  |
-      |    3        | dn1         | test      | db1    | Sleep        | None    |
-      |    3        | dn2         | test      | db1    | Sleep        | None    |
-      |    3        | dn3         | test      | db2    | Sleep        | None    |
-      |    3        | dn4         | test      | db2    | Sleep        | None    |
-      |    5        | dn1         | test      | db1    | Sleep        | None    |
+      | db_instance-1 | User-3 | db-5 | Command-6 | Info-9 |
+      | hostM1        | test   | db1  | Sleep     | None   |
+      | hostM2        | test   | db1  | Sleep     | None   |
+      | hostM1        | test   | db2  | Sleep     | None   |
+      | hostM2        | test   | db2  | Sleep     | None   |
+      | hostM1        | test   | db1  | Sleep     | None   |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql    | db        |
-      | conn_1 | True     | commit |  schema1  |
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "pro_rs_D"
-      | sql                |
-      | show @@processlist |
-    Then check resultset "pro_rs_D" has not lines with following column values
-      | Front_Id-0 | shardingNode-1   | User-3  | db-5   | Command-6    | Info-9  |
-      |    5       | dn1          | test    | db1    | Sleep        | None    |
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                      | db        |
-      | conn_1 | False    | begin                    |  schema1  |
-      | conn_1 | False    | select * from test_shard |  schema1  |
+      | conn   | toClose  | sql    | db       |
+      | conn_1 | True     | commit | schema1  |
     Then execute sql in "dble-1" in "admin" mode
-      | sql                  | expect                |
-      | show @@processlist   | error totally whack   |
+      | conn   | toClose  | sql                | except       |
+      | conn_3 | True     | show @@processlist | length{(0)}  |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql     | expect    | db        |
-      | conn_1 | True    | commit  | success   |  schema1  |
+      | conn   | toClose  | sql                      | db       |
+      | conn_1 | False    | begin                    | schema1  |
+      | conn_1 | False    | select * from test_shard | schema1  |
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                  | expect                                     |
+      | show @@processlist   | backend connection acquisition exception   |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql     | expect    | db       |
+      | conn_1 | True    | commit  | success   | schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | sql                  |
       | show @@processlist   |
