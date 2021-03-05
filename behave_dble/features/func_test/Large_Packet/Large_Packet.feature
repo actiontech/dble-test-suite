@@ -2,8 +2,10 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/1/7
+
+
 @skip
-  #coz occur:Warning: Unknown table 'db1.sharding_2_t1'
+#  #coz occur:Warning: Unknown table 'db1.sharding_2_t1'
 Feature:Support MySQL's large package protocol
 
   Background:delete file and upload file
@@ -14,7 +16,7 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-  @restore_mysql_config @skip
+  @restore_mysql_config
     #blocked by issue
   Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
