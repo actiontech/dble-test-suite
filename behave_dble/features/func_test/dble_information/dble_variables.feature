@@ -51,7 +51,7 @@ Feature:  dble_variables test
       | enableAlert                 | true                            | Enable or disable alert                                                                                                                                     | false       |
       | capClientFoundRows          | false                           | Whether to turn on EOF_Packet to return found rows, the default value is false                                                                              | false       |
       | enableGeneralLog            | false                           | Enable general log                                                                                                                                          | false       |
-      | generalLogFile              | /opt/dble/./general/general.log | The path of general log, the default value is ./general/general.log                                                                                         | false       |
+      | generalLogFile              | /opt/dble/general/general.log   | The path of general log, the default value is ./general/general.log                                                                                         | false       |
       | clusterEnable               | false                           | Whether enable the cluster mode                                                                                                                             | true        |
       | showBinlogStatusTimeout     | 60000ms                         | The time out from show @@binlog.status.The default value is 60000ms                                                                                         | true        |
       | sequenceHandlerType         | Local TimeStamp(like Snowflake) | Global Sequence Type. The default is Local TimeStamp(like Snowflake)                                                                                        | true        |
@@ -168,7 +168,7 @@ Feature:  dble_variables test
       | variable_name-0           | variable_value-1                 | read_only-3 |
       | sqlSlowTime               | 100ms                            | false       |
       | isOnline                  | true                             | false       |
-      | generalLogFile            | /opt/dble/./general/general.log  | false       |
+      | generalLogFile            | /opt/dble/general/general.log    | false       |
       | flushSlowLogSize          | 1000                             | false       |
       | flushSlowLogPeriod        | 1s                               | false       |
       | flowControlStopThreshold  | 256                              | false       |
