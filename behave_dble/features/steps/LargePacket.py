@@ -26,7 +26,7 @@ def do_query(conn, queries):
     cursor = conn.cursor()
 
     for sql in queries:
-        print(sql[0:20])
+        print(sql[0:50])
         cursor.execute(sql)
         cursor.fetchall()
 
@@ -50,6 +50,7 @@ if __name__ == "__main__":
     # parser.add_argument('--passwd', type=str, default='111111')
     # parser.add_argument('--database', type=str, default=None, help="database")
     # parser.add_argument('--port', type=int, default=3306, help="port")
+
     parser = argparse.ArgumentParser(description="Usage example: python3 LargePacket.py --host 172.100.9.1 --user test --passwd 111111 --database schema1 --port 8066")
     parser.add_argument('--host', type=str, default='172.100.9.1')
     parser.add_argument('--user', type=str, default='test')
