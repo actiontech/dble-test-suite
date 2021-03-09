@@ -1416,7 +1416,7 @@ Feature:manager Cmd
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
       | conn   | toClose | sql                     | db               |
-      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
+      | conn_0 | true    | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
     Then check resultset "version_1" has lines with following column values
       | variable_name-0                         | variable_value-1 |
       | enableStatistic                         | false            |
