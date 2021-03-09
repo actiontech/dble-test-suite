@@ -212,7 +212,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       """
 
-    @skip
+
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -239,32 +239,32 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
       """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
-#      | conn   | toClose | sql                                                                                                                      | db               |
-#      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-#    Then check resultset "2" has lines with following column values
-#      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-#      | hostM1 | ha_group1  | 172.100.9.5 | 3306   | true      | 0                   | 10                | 1000             | false      |
-#      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 0                 | 1000             | false      |
-#      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | true      | 0                   | 10                | 1000             | false      |
-#      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 0                 | 1000             | false      |
-#      Given sleep "30" seconds
-#      #timeBetweenEvictionRunsMillis defalut is 30s
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "3"
-#      | conn   | toClose | sql                                                                                                                      | db               |
-#      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
-#    Then check resultset "3" has lines with following column values
-#      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-#      | hostM1 | ha_group1  | 172.100.9.5 | 3306   | true      | 0                   | 10                | 1000             | false      |
-#      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 10                | 1000             | false      |
-#      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | true      | 0                   | 10                | 1000             | false      |
-#      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 0                 | 1000             | false      |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "2" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM1 | ha_group1  | 172.100.9.5 | 3306   | true      | 0                   | 10                | 1000             | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 0                 | 1000             | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | true      | 0                   | 10                | 1000             | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 0                 | 1000             | false      |
+      Given sleep "30" seconds
+      #timeBetweenEvictionRunsMillis defalut is 30s
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "3"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "3" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM1 | ha_group1  | 172.100.9.5 | 3306   | true      | 0                   | 10                | 1000             | false      |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 10                | 1000             | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | true      | 0                   | 10                | 1000             | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 0                 | 1000             | false      |
 
     Given execute linux command in "behave"
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
       """
-    Then execute admin cmd "dbGroup @@switch name = 'hostS1' master = 'ha_group2'"
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
 
 
   Scenario: in autotest ,Need to manually kill the python3 process #6
