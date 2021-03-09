@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/1/7
 
-@skip
+
 Feature:Support MySQL's large package protocol
 
   Background:delete file and upload file
@@ -642,7 +642,7 @@ Feature:Support MySQL's large package protocol
 
 
 
-  @restore_mysql_config  @skip_restart
+  @restore_mysql_config
   Scenario: test "delete" sql #4
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
@@ -661,7 +661,7 @@ Feature:Support MySQL's large package protocol
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx4G/g
+      s/-Xmx1G/-Xmx8G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
@@ -680,7 +680,7 @@ Feature:Support MySQL's large package protocol
       s/16\*1024\*1024/16\*1024\*1024-2/g
       s/sbtest2/test1/g
       """
-    #change insert sql to delete
+    #change insert sql to delete   delete from table where c='' or id =7
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
       s/# \"insert into/"insert into/g
@@ -855,10 +855,11 @@ Feature:Support MySQL's large package protocol
       | conn_0 | true    | select * from sing1   | length{(0)}  | schema1  |
     Then check general log in host "mysql-master2" has "delete from sing1 where c=\"aaaaaa" occured "==6" times
 
-    #prepare largepacket 40M,the delete sql length 47, 40M=41942993+47
+    #prepare largepacket 20M,the delete sql length 47, 20M=20971473+47
     #shardingtable
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
+      s/40\*1024\*1024/20\*1024\*1024/g
       s/sing1/sharding_4_t1/g
       """
     Given execute linux command in "dble-1"
@@ -868,10 +869,10 @@ Feature:Support MySQL's large package protocol
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                           | expect       | db       |
       | conn_0 | true    | select * from sharding_4_t1   | length{(0)}  | schema1  |
-    Then check general log in host "mysql-master2" has "delete from sharding_4_t1 where c=\"aaaaaa"
-    Then check general log in host "mysql-master1" has not "delete from sharding_4_t1 where c=\"aaaaaa"
+    Then check general log in host "mysql-master2" has "delete from sharding_4_t1 where c=\"aaaaaa" occured "==2" times
+    Then check general log in host "mysql-master1" has "delete from sharding_4_t1 where c=\"aaaaaa" occured "==2" times
 
-    #prepare largepacket 40M,the delete sql length 40, 40M=41943000+40
+    #prepare largepacket 20M,the delete sql length 40, 20M=20971480+40
     #globaltable
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
@@ -892,7 +893,8 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
-  @skip_restart   @restore_mysql_config
+
+ @restore_mysql_config
   Scenario: test "select" sql #5
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
@@ -913,7 +915,7 @@ Feature:Support MySQL's large package protocol
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx4G/g
+      s/-Xmx1G/-Xmx8G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
@@ -926,21 +928,21 @@ Feature:Support MySQL's large package protocol
     #prepare largepacket values
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                                                    | expect  | db      |
-      | conn_0 | false   | drop table if exists test                                                                                                                              | success | schema1 |
+      | conn_0 | false   | drop table if exists noshar                                                                                                                            | success | schema1 |
       | conn_0 | false   | drop table if exists sing1                                                                                                                             | success | schema1 |
       | conn_0 | false   | drop table if exists global1                                                                                                                           | success | schema1 |
       | conn_0 | false   | drop table if exists global2                                                                                                                           | success | schema1 |
       | conn_0 | false   | drop table if exists global3                                                                                                                           | success | schema1 |
       | conn_0 | false   | drop table if exists sharding_4_t1                                                                                                                     | success | schema1 |
       | conn_0 | false   | drop table if exists sharding_2_t1                                                                                                                     | success | schema1 |
-      | conn_0 | false   | create table test (id int,c longblob)                                                                                                                  | success | schema1 |
+      | conn_0 | false   | create table noshar (id int,c longblob)                                                                                                                | success | schema1 |
       | conn_0 | false   | create table sing1 (id int,c longblob)                                                                                                                 | success | schema1 |
       | conn_0 | false   | create table global1 (id int,c longblob)                                                                                                               | success | schema1 |
       | conn_0 | false   | create table global2 (id int,c longblob)                                                                                                               | success | schema1 |
       | conn_0 | false   | create table global3 (id int,c longblob)                                                                                                               | success | schema1 |
       | conn_0 | false   | create table sharding_4_t1 (id int,c longblob)                                                                                                         | success | schema1 |
       | conn_0 | false   | create table sharding_2_t1 (id int,c longblob)                                                                                                         | success | schema1 |
-      | conn_0 | false   | insert into test values (7,repeat("x",16*1024*1024))                                                                                                   | success | schema1 |
+      | conn_0 | false   | insert into noshar values (7,repeat("x",16*1024*1024))                                                                                                 | success | schema1 |
       | conn_0 | false   | insert into sing1 values (7,repeat("x",16*1024*1024))                                                                                                  | success | schema1 |
       | conn_0 | false   | insert into global1 values (7,repeat("x",16*1024*1024))                                                                                                | success | schema1 |
       | conn_0 | false   | insert into global2 values (7,repeat("x",14*1024*1024))                                                                                                | success | schema1 |
@@ -953,9 +955,9 @@ Feature:Support MySQL's large package protocol
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
       """
       s/16\*1024\*1024/16\*1024\*1024-2/g
-      s/sbtest2/test1/g
+      s/sbtest2/sing1/g
       """
-    #change insert sql to delete
+    #change insert sql to select
     Given update file content "/opt/SQLContext.py" in "dble-1" with sed cmds
       """
       s/\"drop table if/# \"drop table if/g
@@ -969,5 +971,128 @@ Feature:Support MySQL's large package protocol
       python3 /opt/LargePacket.py
       """
 
+    #16-1
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024-2/16\*1024\*1024-1/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+    #16
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024-1/16\*1024\*1024/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
 
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024/16\*1024\*1024+1/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
 
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024+1/16\*1024\*1024+2/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/16\*1024\*1024+2/20\*1024\*1024/g
+      s/sing1/global1/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/20\*1024\*1024/32\*1024\*1024-4/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024-4/32\*1024\*1024-2/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024-2/32\*1024\*1024/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024/32\*1024\*1024+2/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/32\*1024\*1024+2/32\*1024\*1024+4/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/global1/sharding_4_t1/g
+      s/32\*1024\*1024+4/40\*1024\*1024/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/sharding_4_t1/noshar/g
+      """
+    Given execute linux command in "dble-1"
+      """
+      python3 /opt/LargePacket.py
+      """
+
+    Given delete file "/opt/LargePacket.py" on "dble-1"
+    Given delete file "/opt/SQLContext.py" on "dble-1"
+    Given delete file "/opt/SQLContext.pyc" on "dble-1"
+    Given turn off general log in "mysql-master1"
+    Given turn off general log in "mysql-master2"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                        | expect  | db      |
+      | conn_0 | false   | drop table if exists noshar                | success | schema1 |
+      | conn_0 | false   | drop table if exists sing1                 | success | schema1 |
+      | conn_0 | false   | drop table if exists global1               | success | schema1 |
+      | conn_0 | false   | drop table if exists global2               | success | schema1 |
+      | conn_0 | false   | drop table if exists global3               | success | schema1 |
+      | conn_0 | false   | drop table if exists sharding_4_t1         | success | schema1 |
+      | conn_0 | false   | drop table if exists sharding_2_t1         | success | schema1 |
