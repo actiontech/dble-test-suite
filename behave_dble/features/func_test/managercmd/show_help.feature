@@ -84,7 +84,7 @@ Feature: test show user related manager command
       | file @@upload filename content                                                                      | Write content to file                                                             |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
-#      | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
+      | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
       | log @@[file=? limit=? key=? regex=?]                                                                | Report logs by given regex                                                        |
       | dryrun                                                                                              | Dry run to check config before reload xml                                         |
       | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                   | Block query requests witch specified shardingNodes involved                       |
@@ -110,7 +110,7 @@ Feature: test show user related manager command
       | dbGroup @@disable name='?' (instance = '?')                                                         | disable some dbGroup/dbInstance                                                   |
       | dbGroup @@enable name='?' (instance = '?')                                                          | enable some dbGroup/dbInstance                                                    |
       | dbGroup @@switch name='?' master='?'                                                                | switch primary in one dbGroup                                                     |
-#      | dbGroup @@events                                                                                    | show all the dbGroup ha event which not finished yet                              |
+      | dbGroup @@events                                                                                    | show all the dbGroup ha event which not finished yet                              |
       | split src dest -sschema -r500 -w500 -l10000 --ignore                                                | split dump file into multi dump files according to shardingNode                   |
       | fresh conn [forced] where dbGroup ='?' [and dbInstance ='?']                                        | fresh conn some dbGroup/dbInstance                                                |
       | show @@cap_client_found_rows                                                                        | Show if the clientFoundRows capabilities is enabled                               |
