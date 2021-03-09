@@ -179,7 +179,8 @@ Feature:manager Cmd
       | conn_0 | False   | reload @@statistic_table_size = -1                      | tableSize must be greater than 0  |
       | conn_0 | False   | reload @@statistic_table_size = 0                       | tableSize must be greater than 0  |
       | conn_0 | False   | reload @@statistic_table_size = 99999999999999          | tableSize setting is not correct  |
-#      | conn_0 | False   | reload @@statistic_table_size = 999%     |  |
+      | conn_0 | False   | reload @@statistic_table_size = 999%                    | tableSize setting is not correct  |
+      | conn_0 | False   | reload @@statistic_table_size = 999.99                  | tableSize setting is not correct  |
       | conn_0 | False   | reload @@statistic_table_size = 10 where table ='sql_statistic_by_asociate_tables_by_entry_by_user'       | Table `dble_information`.`sql_statistic_by_asociate_tables_by_entry_by_user` don't belong to statistic tables   |
       | conn_0 | False   | reload @@statistic_table_size = 10 where table ='sql_statistic_by_frontend_by_backend_by_entry_by_u'      | Table `dble_information`.`sql_statistic_by_frontend_by_backend_by_entry_by_u` don't belong to statistic tables  |
       | conn_0 | False   | reload @@statistic_table_size = 10 where table ='sql_statistic_by_table_by_user_by_ent'                   | Table `dble_information`.`sql_statistic_by_table_by_user_by_ent` don't belong to statistic tables               |
@@ -1207,7 +1208,7 @@ Feature:manager Cmd
       | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(3)} | dble_information |
 
 
-  Scenario: desc table   #7
+  Scenario: desc table and unsupported dml  #7
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect       | db               |
       | conn_0 | False   | desc sql_statistic_by_associate_tables_by_entry_by_user    | length{(8)}  | dble_information |
@@ -1278,69 +1279,153 @@ Feature:manager Cmd
       | sql_select_rows          | int(11)     | NO     |       | None      |         |
       | sql_select_time          | int(11)     | NO     |       | None      |         |
       | last_update_time         | varchar(26) | NO     |       | None      |         |
+    #case unsupported update/delete/insert
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                         | expect                                                                             | db               |
+      | conn_0 | False   | delete from sql_statistic_by_associate_tables_by_entry_by_user where entry=1                | Access denied for table 'sql_statistic_by_associate_tables_by_entry_by_user'       | dble_information |
+      | conn_0 | False   | update sql_statistic_by_associate_tables_by_entry_by_user set entry=22 where entry=1        | Access denied for table 'sql_statistic_by_associate_tables_by_entry_by_user'       | dble_information |
+      | conn_0 | True    | insert into sql_statistic_by_associate_tables_by_entry_by_user (entry) values (22)          | Access denied for table 'sql_statistic_by_associate_tables_by_entry_by_user'       | dble_information |
+      | conn_0 | False   | delete from sql_statistic_by_frontend_by_backend_by_entry_by_user where entry=1                | Access denied for table 'sql_statistic_by_frontend_by_backend_by_entry_by_user'       | dble_information |
+      | conn_0 | False   | update sql_statistic_by_frontend_by_backend_by_entry_by_user set entry=22 where entry=1        | Access denied for table 'sql_statistic_by_frontend_by_backend_by_entry_by_user'       | dble_information |
+      | conn_0 | True    | insert into sql_statistic_by_frontend_by_backend_by_entry_by_user (entry) values (22)          | Access denied for table 'sql_statistic_by_frontend_by_backend_by_entry_by_user'       | dble_information |
+      | conn_0 | False   | delete from sql_statistic_by_table_by_user_by_entry where entry=1                | Access denied for table 'sql_statistic_by_table_by_user_by_entry'       | dble_information |
+      | conn_0 | False   | update sql_statistic_by_table_by_user_by_entry set entry=22 where entry=1        | Access denied for table 'sql_statistic_by_table_by_user_by_entry'       | dble_information |
+      | conn_0 | True    | insert into sql_statistic_by_table_by_user_by_entry (entry) values (22)          | Access denied for table 'sql_statistic_by_table_by_user_by_entry'       | dble_information |
 
 
 
-  @skip_restart
-  Scenario:
-    Then execute admin cmd "enable @@statistic"
-    Then execute admin cmd "reload @@statistic_table_size = 10"
-    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+   Scenario: add btrace check manage cmd
+    Given delete file "/opt/dble/BtraceAboutsqlStatistic.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutsqlStatistic.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutsqlStatistic.java" in "behave" with sed cmds
     """
-    s/debug/info/
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    /updateTableMaxSize/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
-    Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "user" mode
-     | conn     | toClose | sql                                         | expect   | db      |
-     | conn_0   | False   | drop table if exists test                   | success  | schema1 |
-     | conn_0   | True    | create table test(id int,name varchar(20))  | success  | schema1 |
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Then connect "dble-1" to insert "150000" of data for "test"
-    Given execute sql "100000000" times in "dble-1" at concurrent
-      | sql                                        | db      |
-      | select name from test limit 4000000000     | schema1 |
+    Given prepare a thread run btrace script "BtraceAboutsqlStatistic.java" in "dble-1"
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                 | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 100 | dble_information |
+    Then check btrace "BtraceAboutsqlStatistic.java" output in "dble-1"
+    """
+    reload tablesize
+    """
+    Given sleep "3" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                 | db               |
+      | conn_1 | True    | reload @@statistic_table_size = 111 | dble_information |
+    Given sleep "7" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | show @@statistic                   | dble_information |
+    Given sleep "8" seconds
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
+    Then check resultset "version_1" has lines with following column values
+      | variable_name-0                         | variable_value-1 |
+      | enableStatistic                         | false            |
+      | associateTablesByEntryByUserTableSize   | 111              |
+      | frontendByBackendByEntryByUserTableSize | 111              |
+      | tableByUserByEntryTableSize             | 111              |
+
+    #case reload @@statistic_table_size = 200 where table =
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 200 where table ='sql_statistic_by_associate_tables_by_entry_by_user' | dble_information |
+    Given sleep "3" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                                                                   | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 222 where table ='sql_statistic_by_associate_tables_by_entry_by_user' | dble_information |
+    Given sleep "7" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | show @@statistic                   | dble_information |
+    Given sleep "8" seconds
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
+    Then check resultset "version_1" has lines with following column values
+      | variable_name-0                         | variable_value-1 |
+      | enableStatistic                         | false            |
+      | associateTablesByEntryByUserTableSize   | 222              |
+      | frontendByBackendByEntryByUserTableSize | 111              |
+      | tableByUserByEntryTableSize             | 111              |
+
+    #case reload @@statistic_table_size = 200 where table in
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                                                                                                                             | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 300 where table in (sql_statistic_by_associate_tables_by_entry_by_user,sql_statistic_by_frontend_by_backend_by_entry_by_user)   | dble_information |
+    Given sleep "3" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                                                                                                                             | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 333 where table in (sql_statistic_by_frontend_by_backend_by_entry_by_user,sql_statistic_by_table_by_user_by_entry)              | dble_information |
+    Given sleep "7" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | show @@statistic                   | dble_information |
+    Given sleep "8" seconds
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
+    Then check resultset "version_1" has lines with following column values
+      | variable_name-0                         | variable_value-1 |
+      | enableStatistic                         | false            |
+      | associateTablesByEntryByUserTableSize   | 300              |
+      | frontendByBackendByEntryByUserTableSize | 333              |
+      | tableByUserByEntryTableSize             | 333              |
+
+    #case reload and enable
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                              | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 555              | dble_information |
+    Given sleep "3" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | enable @@statistic                 | dble_information |
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | show @@statistic                   | dble_information |
+    Given sleep "8" seconds
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
+    Then check resultset "version_1" has lines with following column values
+      | variable_name-0                         | variable_value-1 |
+      | enableStatistic                         | true             |
+      | associateTablesByEntryByUserTableSize   | 555              |
+      | frontendByBackendByEntryByUserTableSize | 555              |
+      | tableByUserByEntryTableSize             | 555              |
+
+    #case reload and disable
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                              | db               |
+      | conn_0 | True    | reload @@statistic_table_size = 666              | dble_information |
+    Given sleep "3" seconds
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | disable @@statistic                | dble_information |
+    Then execute admin cmd  in "dble-1" at background
+      | conn   | toClose | sql                                | db               |
+      | conn_0 | True    | show @@statistic                   | dble_information |
+    Given sleep "8" seconds
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select variable_name,variable_value from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')      | dble_information |
+    Then check resultset "version_1" has lines with following column values
+      | variable_name-0                         | variable_value-1 |
+      | enableStatistic                         | false            |
+      | associateTablesByEntryByUserTableSize   | 666              |
+      | frontendByBackendByEntryByUserTableSize | 666              |
+      | tableByUserByEntryTableSize             | 666              |
 
 
-#    Then connect "dble-1" to insert "100" of data for "test"
-#
-#    Given execute sql "200" times in "dble-1" at concurrent
-#      | sql                                | db      |
-#      | select name from test where id ={} | schema1 |
+    Given stop btrace script "BtraceAboutsqlStatistic.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceAboutsqlStatistic.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutsqlStatistic.java.log" on "dble-1"
