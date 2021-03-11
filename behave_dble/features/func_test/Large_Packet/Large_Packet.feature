@@ -14,38 +14,44 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-  @restore_mysql_config
-  Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
+   @restore_mysql_config
+   Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
     """
     #set dble.log level "info" , maxPacketSize=5M
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
-      /server-id/a max_allowed_packet = 4M
+      /server-id/a max_allowed_packet = 6M
       """
     Given restart mysql in "mysql-master2" with sed cmds to update mysql config
       """
       /max_allowed_packet/d
-      /server-id/a max_allowed_packet = 4M
+      /server-id/a max_allowed_packet = 6M
       """
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       /DmaxPacketSize/d
-      /# processor/a -DmaxPacketSize=5242880
+      /# processor/a -DmaxPacketSize=7340032
       """
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
       """
       s/debug/info/g
       """
     Given Restart dble in "dble-1" success
-
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('5242880B',),)} | dble_information |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('7340032B',),)} | dble_information |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql                                              | expect                                    |
+      | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '7341056'),)} |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose | sql                                              | expect                                    |
+      | conn_2 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '7341056'),)} |
+
 
     #dble accpect largepacket > 8M
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -85,6 +91,12 @@ Feature:Support MySQL's large package protocol
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                 | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('16777216B',),)} | dble_information |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose | sql                                              | expect                                     |
+      | conn_1 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '17825792'),)} |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose | sql                                              | expect                                     |
+      | conn_2 | True    | show variables like 'max_allowed_packet%'        | has{(('max_allowed_packet', '16778240'),)} |
     # 16777216+1024
     Then check general log in host "mysql-master1" has "set global max_allowed_packet=16778240"
     Then check general log in host "mysql-master2" has not "set global max_allowed_packet=16778240"
@@ -92,12 +104,7 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
-
-  @restore_mysql_config
-  Scenario: test "insert" sql about large packet#2
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
-    """
+   Scenario: test "insert" sql about large packet#2
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -353,12 +360,7 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
-
-  @restore_mysql_config
-  Scenario: test "update" sql #3
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
-    """
+   Scenario: test "update" sql #3
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -641,12 +643,7 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
-
-  @restore_mysql_config
-  Scenario: test "delete" sql #4
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
-    """
+   Scenario: test "delete" sql #4
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
@@ -893,12 +890,7 @@ Feature:Support MySQL's large package protocol
     Given turn off general log in "mysql-master2"
 
 
-
- @restore_mysql_config
-  Scenario: test "select" sql #5
-    """
-    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':0},'mysql-master2':{'max_allowed_packet':0}}}
-    """
+   Scenario: test "select" sql #5
     Given turn on general log in "mysql-master1"
     Given turn on general log in "mysql-master2"
 
