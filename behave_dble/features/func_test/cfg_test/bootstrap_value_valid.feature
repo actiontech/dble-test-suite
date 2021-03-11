@@ -230,80 +230,64 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: testcon
     """
 
-  @restore_global_setting
+  @restore_mysql_config
   Scenario:config  MaxPacketSize in bootstrap.cnf, dble will get the lower value of MaxPacketSize and (max_allowed_packet-1024) #8
-  """
-    {'restore_global_setting':{'mysql-master1':{'general_log':0}}}
+    """
+    {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DmaxPacketSize=6291456
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql             |
-      | show @@sysparam |
-    Then check resultset "sysparam_rs" has lines with following column values
-      | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 6291456B      |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('6291456B',),)} | dble_information |
 
     #case2 max_packet_size < max_allowed_packet
-    Given stop dble in "dble-1"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user1" maxCon="1000" minCon="10" primary="true">
-          </dbInstance>
-      </dbGroup>
-    """
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 8388608
+      """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+      """
+      /max_allowed_packet/d
+      /server-id/a max_allowed_packet = 8388608
+      """
     Given execute sql in "mysql-master1"
-      | conn   | toClose | sql                                            | expect  |
-      | conn_0 | False   | set global general_log=on                      | success |
-      | conn_0 | False   | drop user if exists 'user1'@'%'                | success |
-      | conn_0 | False   | create user 'user1'@'%' identified by '111111' | success |
-      | conn_0 | False   | grant select on *.* to 'user1'@'%'             | success |
+      | conn   | toClose | sql                                            | expect                                    |
+      | conn_1 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '8388608'),)} |
+    Given execute sql in "mysql-master2"
+      | conn   | toClose | sql                                            | expect                                    |
+      | conn_2 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '8388608'),)} |
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-DmaxPacketSize=5000000
+    s/-DmaxPacketSize=6291456/-DmaxPacketSize=9000000/
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql             |
-      | show @@sysparam |
-    Then check resultset "sysparam_rs" has lines with following column values
-      | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 5000000B      |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9000000B',),)} | dble_information |
 
     #case 3  max_packet_size > max_allowed_packet
-    Given stop dble in "dble-1"
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
-          <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user2" maxCon="1000" minCon="10" primary="true">
-          </dbInstance>
-      </dbGroup>
-    """
-    Given execute sql in "mysql-master1"
-      | conn   | toClose | sql                                            | expect  |
-      | conn_0 | False   | set global general_log=on                      | success |
-      | conn_0 | False   | drop user if exists 'user2'@'%'                | success |
-      | conn_0 | False   | create user 'user2'@'%' identified by '111111' | success |
-      | conn_0 | False   | grant select on *.* to 'user2'@'%'             | success |
-
+#    Given execute sql in "mysql-master1"
+#      | conn   | toClose | sql                                            | expect                                    |
+#      | conn_1 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '9001024'),)} |
+#    Given execute sql in "mysql-master2"
+#      | conn   | toClose | sql                                            | expect                                    |
+#      | conn_2 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '9001024'),)} |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    $a\-DmaxPacketSize=8000000
+    s/-DmaxPacketSize=9000000/-DmaxPacketSize=8000000/
     """
     Then restart dble in "dble-1" success
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "sysparam_rs"
-      | sql             |
-      | show @@sysparam |
-    Then check resultset "sysparam_rs" has lines with following column values
-      | PARAM_NAME-0  | PARAM_VALUE-1 |
-      | maxPacketSize | 6291456B      |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('8000000B',),)} | dble_information |
+
+
 
   @restore_view
   Scenario: homePath and viewPersistenceConfBaseDir in bootstrap.cnf, restart dble and check paths #9
