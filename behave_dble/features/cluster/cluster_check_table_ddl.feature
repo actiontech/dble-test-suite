@@ -2,8 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
 
-  @skip
-  #todo：回归时手动跑
+#  @skip
+#  #todo：回归时手动跑
 Feature: test "ddl" in zk cluster
   ######case points:
   #  1.shardingtable query ddl,check on dble-1,dble-2.dble-3

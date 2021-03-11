@@ -3,8 +3,8 @@
 # Created by quexiuping at 2020/12/11
 
   #case DBLE0REQ-855
-  @skip
-  #todo：回归时手动跑
+#  @skip
+#  #todo：回归时手动跑
 Feature: test "ha" in zk cluster
   ######case points:
   #  1.ClusterEnable=true && useOuterHa=true && needSyncHa=true,check "dbgroup"
@@ -14,10 +14,10 @@ Feature: test "ha" in zk cluster
 
   @skip_restart
   Scenario: prepare and when ClusterEnable=true && useOuterHa=true && needSyncHa=true, check "dbgroup"  #1
-    Given execute linux command in "behave"
-      """
-      bash ./compose/docker-build-behave/resetReplication.sh
-      """
+#    Given execute linux command in "behave"
+#      """
+#      bash ./compose/docker-build-behave/resetReplication.sh
+#      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
