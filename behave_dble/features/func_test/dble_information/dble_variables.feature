@@ -30,7 +30,7 @@ Feature:  dble_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect            | db               |
       | conn_0 | False   | desc dble_variables             | length{(4)}       | dble_information |
-      | conn_0 | False   | select * from dble_variables    | length{(101)}     | dble_information |
+      | conn_0 | False   | select * from dble_variables    | length{(102)}     | dble_information |
   #case select * from dble_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_2"
       | conn   | toClose | sql                          | db               |
@@ -124,7 +124,7 @@ Feature:  dble_variables test
       | slowLogBaseDir              | ./slowlogs/                     | The directory of slow query log, the default value is ./slowlogs/                                                                                           | true        |
       | slowLogBaseName             | slow-query                      | The name of the slow query log. The default value is slow-query                                                                                             | true        |
       | maxCharsPerColumn           | 65535                           | The maximum number of characters allowed for per column when load data. The default value is 65535                                                          | true        |
-      | maxRowSizeToFile            | 10000                           | The maximum row size,if over this value, row data will be saved to file when load data. The default value is 10000                                          | true        |
+      | maxRowSizeToFile            | 100000                          | The maximum row size,if over this value,row data will be saved to file when load data.The default value is 100000                                           | false       |
       | traceEndPoint               | null                            | The trace Jaeger server endPoint                                                                                                                            | true        |
       | generalLogFileSize          | 16M                             | The max size of the general log file. The default value is 16M                                                                                              | true        |
       | generalLogQueueSize         | 4096                            | Sets the queue size for consuming general log, value must not be less than 1 and must be a power of 2, the default value is 4096                            | true        |
@@ -138,7 +138,7 @@ Feature:  dble_variables test
       | associateTablesByEntryByUserTableSize   | 1024                | AssociateTablesByEntryByUser table size, the default is 1024                                                                                                | false       |
       | frontendByBackendByEntryByUserTableSize | 1024                | FrontendByBackendByEntryByUser table size, the default is 1024                                                                                              | false       |
       | tableByUserByEntryTableSize             | 1024                | TableByUserByEntry table size, the default is 1024                                                                                                          | false       |
-
+      | enableBatchLoadData                     | false               | Enable Batch Load Data                                                                                                                                      | false       |
 
 
   #case supported select limit /order by/ where like
@@ -146,9 +146,9 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                               | expect       | db               |
       | conn_0 | False   | select * from dble_variables limit 10                             | length{(10)} | dble_information |
       | conn_0 | False   | select * from dble_variables order by variable_name desc limit 10 | length{(10)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(16)} | dble_information |
-      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(16)} | dble_information |
-      | conn_0 | False   | select read_only from dble_variables                              | length{(101)}| dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only ='false'             | length{(18)} | dble_information |
+      | conn_0 | False   | select * from dble_variables where read_only like 'fals%'         | length{(18)} | dble_information |
+      | conn_0 | False   | select read_only from dble_variables                              | length{(102)}| dble_information |
   #case supported select order by concat()
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_3"
       | conn   | toClose | sql                                                                             | db               |
@@ -190,8 +190,8 @@ Feature:  dble_variables test
       | conn_0 | False   | select read_only,count(*) from dble_variables group by read_only | dble_information |
     Then check resultset "dble_variables_6" has lines with following column values
       | read_only-0 | count-1 |
-      | false       | 16      |
-      | true        | 85      |
+      | false       | 18      |
+      | true        | 84      |
 
   #case supported select field from dble_variables where XXX  DBLE0REQ-485
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_variables_7"
@@ -215,8 +215,8 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                              | expect               | db               |
       | conn_0 | False   | select max(variable_value) from dble_variables                                                   | has{('./slowlogs/')} | dble_information |
       | conn_0 | False   | select min(variable_value) from dble_variables                                                   | has{('xalog')}       | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(84)}         | dble_information |
-      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(82)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name < any (select variable_name from dble_status )  | length{(85)}         | dble_information |
+      | conn_0 | False   | select * from dble_variables where variable_name > any (select variable_name from dble_status )  | length{(83)}         | dble_information |
       | conn_0 | False   | select * from dble_variables where variable_name > all (select variable_name from dble_status )  | length{(17)}         | dble_information |
   #case unsupported update/delete
       | conn_0 | False   | delete from dble_variables where variable_name='sqlSlowTime'                 | Access denied for table 'dble_variables' | dble_information |
