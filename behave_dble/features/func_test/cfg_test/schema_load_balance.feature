@@ -306,8 +306,8 @@ Feature: test read load balance
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master2"
     Then execute sql in "dble-1" in "user" mode
-    | user  | passwd    | conn   | toClose | sql                   | expect  | db       |
-    | test  | 111111    | conn_0 | True    | select name from test | error totally whack | schema1  |
+    | user  | passwd    | conn   | toClose | sql                   | expect                                                                                          | db       |
+    | test  | 111111    | conn_0 | True    | select name from test | java.io.IOException: the data source[172.100.9.6:3306] can't reached, please check the dataHost | schema1  |
     Given start mysql in host "mysql-master2"
     Then execute sql in "mysql-master2"
     | user  | passwd    | conn   | toClose | sql                            | expect  | db  |
