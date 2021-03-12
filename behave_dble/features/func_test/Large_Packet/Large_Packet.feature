@@ -14,7 +14,7 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-   @restore_mysql_config
+   @restore_mysql_config @skip
    Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
@@ -658,7 +658,7 @@ Feature:Support MySQL's large package protocol
       """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      s/-Xmx1G/-Xmx8G/g
+      s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=167772160
       """
@@ -885,6 +885,15 @@ Feature:Support MySQL's large package protocol
     Then check general log in host "mysql-master2" has "delete from global where c=\"aaaaaa" occured "==2" times
     Then check general log in host "mysql-master1" has "delete from global where c=\"aaaaaa" occured "==2" times
 
+    Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
+      """
+      s/20\*1024\*1024/80\*1024\*1024/g
+      """
+    #_mysql_exceptions.OperationalError: ((1152, 'Connection {dbInstance[172.100.9.6:3306],Schema[db1],threadID[1362]} was closed ,reason is [writeDirectly err:java.lang.OutOfMemoryError: Direct buffer memory]'))
+    Given execute linux command in "dble-1" and contains exception "Direct buffer memory"
+      """
+      python3 /opt/LargePacket.py
+      """
 
     Given turn off general log in "mysql-master1"
     Given turn off general log in "mysql-master2"
