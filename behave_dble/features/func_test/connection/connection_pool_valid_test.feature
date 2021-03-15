@@ -43,7 +43,7 @@ Feature: test connection pool
     property [[] testWhileIdle []] '\''string'\'' data type should be boolean
     """
 
-  @NORMAL @restore_network @aa @skip
+  @NORMAL @restore_network
   Scenario: test connection param "testOnBorrow"  #2
      """
     {'restore_network':'mysql-master1'}
@@ -65,10 +65,10 @@ Feature: test connection pool
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
       | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))  | success                    | schema1 |
       | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
-#      | conn_1 | False   | begin                                                      | success                    | schema1 |
-#      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-#      | conn_2 | False   | begin                                                      | success                    | schema1 |
-#      | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
+      | conn_1 | False   | begin                                                      | success                    | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
+      | conn_2 | False   | begin                                                      | success                    | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                                                             | db               |
       | conn_0 | True    | select * from backend_connections where state='IDLE' and used_for_heartbeat='false' and db_instance_name='M1'    | dble_information |
@@ -84,7 +84,6 @@ Feature: test connection pool
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                  | db      |
-#      | conn_3 | True    | insert into sharding_4_t1 values(4,4)          | schema1 |
       | conn_3 | True    | select * from sharding_4_t1 where id=2          | schema1 |
     Then check btrace "BtraceAboutConnection.java" output in "dble-1" with "1" times
     """
@@ -106,7 +105,7 @@ Feature: test connection pool
       | conn   | toClose | sql                                                                                                                             | db                 |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and db_instance_name='M1'    | dble_information |
     #create a new connection to continue executing sql
-    Then check resultsets "idle_connection_B" does not including resultset "idle_connection_A" in following columns
+    Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
       | column                      | column_index |
       | backend_conn_id            | 0           |
       | remote_processlist_id     | 5           |
@@ -115,7 +114,7 @@ Feature: test connection pool
       | select * from sharding_4_t1 | schema1 |
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
-    2 2
+    2	2
     """
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
@@ -146,8 +145,6 @@ Feature: test connection pool
       | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
       | conn_2 | False   | begin                                                      | success                    | schema1 |
       | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-#      | conn_3 | False   | begin                                                      | success                    | schema1 |
-#      | conn_3 | False   | insert into sharding_4_t1 values(4,4)                 | success                    | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                                                            | db               |
       | conn_0 | True    | select * from backend_connections where state='idle' and used_for_heartbeat='false' and db_instance_name='M1'   | dble_information |
@@ -159,7 +156,6 @@ Feature: test connection pool
     /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
-#    Given sleep "5" seconds
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                  | db      |
       | conn_3 | True    | insert into sharding_4_t1 values(4,4)           | schema1 |
