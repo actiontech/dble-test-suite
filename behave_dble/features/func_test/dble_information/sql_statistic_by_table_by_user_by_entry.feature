@@ -4,8 +4,8 @@
 
 Feature:test sql_statistic_by_table_by_user_by_entry
 
- @skip_restart
-  Scenario: sql_statistic_by_table_by_user_by_entry   #1
+
+   Scenario: sql_statistic_by_table_by_user_by_entry   #1
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -525,3 +525,11 @@ Feature:test sql_statistic_by_table_by_user_by_entry
       | conn_0 | False   | truncate table sql_statistic_by_table_by_user_by_entry              | success      | dble_information |
       | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)}  | dble_information |
 
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                     | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1                                                      | success | schema1 |
+      | conn_1 | False   | drop table if exists test                                                               | success | schema1 |
+      | conn_1 | true    | drop table if exists sharding_2_t1                                                      | success | schema1 |
+      | conn_2 | False   | drop table if exists test1                                                              | success | schema2 |
+      | conn_2 | False   | drop table if exists test2                                                              | success | schema2 |
+      | conn_2 | true    | drop table if exists sing1                                                              | success | schema2 |
