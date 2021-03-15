@@ -14,7 +14,6 @@ Feature:manager Cmd
         <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
-    #1 more than one rwSplitUsers can use the same dbGroup
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
     <managerUser name="root" password="111111"/>
