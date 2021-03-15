@@ -200,10 +200,10 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
-@Then('execute oscmd in "{hostname}" by parameter from resultset {rs_name}')
+@Then('execute oscmd in "{hostname}" by parameter from resultset "{rs_name}"')
 @Given('execute oscmd in "{hostname}" and "{num}" less than result')
 @Given('execute oscmd in "{hostname}"')
-def step_impl(context,hostname,num=None, rs_name=None):
+def step_impl(context,hostname,num=None,rs_name=None):
     cmd = context.text.strip()
     ssh = get_ssh(hostname)
 
