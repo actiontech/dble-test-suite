@@ -7,7 +7,7 @@
 Feature: In order to calculate the route, the where condition needs to be processed
 
 
-@skip
+#@skip
   Scenario: prepare env and update log from "debug" to "trace"
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -57,7 +57,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | insert into noshard_t1 values(1,1,'noshard_t1中id为1',1),(2,2,'test_2',2),(3,3,'noshard_t1中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)                                                                              | success | schema1 | utf8mb4 |
       | conn_0 | true    | insert into schema2.global_4_t1 values(1,1,'global_4_t1中id为1',1),(2,2,'test_2',2),(3,3,'global_4_t1中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1),(6,6,'test6',6)                                                                 | success | schema1 | utf8mb4 |
 
-@skip
+#@skip
   Scenario: "where" minimum condition #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -112,7 +112,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | drop table if exists tb_child         | success     | schema1 |
 
 
-@skip
+#@skip
   Scenario: "where" function condition #2
 
     Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
@@ -537,7 +537,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | drop table if exists sharding_4_t1      | success     | schema1 |
 
 
-@skip
+#@skip
   Scenario: Complex query -- one route #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -889,7 +889,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | drop table if exists schema2.sharding_4_t2                                              | success     | schema1 |
 
 
-@skip
+#@skip
   Scenario:Complex query "where" has one table shardingColumn, 2 routes  #4
     #(after calculating the route for the first time, it is found that it cannot be delivered to a node as a whole,Discard the routing result and calculate the route again in a complex query)
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -1598,7 +1598,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | drop table if exists schema2.sharding_4_t2                                              | success     | schema1 |
 
 
-  @skip_restart
+#  @skip_restart
   Scenario:Complex query "where" more than one table shardingColumn, 2 routes  #5
     #(after calculating the route for the first time, it is found that it cannot be delivered to a node as a whole,Discard the routing result and calculate the route again in a complex query)
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -1795,9 +1795,417 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
 
 
+    #case "union", a table is send to 2 nodes, and b table is empty condition broadcast
+    Given record current dble log line number in "log_6"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                            | expect      | db      |
+      | conn_0 | False   | (select id,age,name from sharding_4_t1 where (age=1 and id=1) or (id=2 and name=2)) union (select id,age,name from schema2.sharding_4_t2 where age=1 or id=1)  | length{(2)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                                                          |
+      | Execute_SQL           | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | Fetch_result          | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | Execute_SQL           | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | Fetch_result          | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | MERGE                 | merge_1         | dn2_0; dn3_0                                                                                                                                                                                                                       |
+      | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                            |
+      | Execute_SQL           | dn1_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Fetch_result          | dn1_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Execute_SQL           | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Fetch_result          | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Execute_SQL           | dn3_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Fetch_result          | dn3_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Execute_SQL           | dn4_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | Fetch_result          | dn4_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1))                                    |
+      | MERGE                 | merge_2         | dn1_0; dn2_1; dn3_1; dn4_0                                                                                                                                                                                                         |
+      | SHUFFLE_FIELD         | shuffle_field_3 | merge_2                                                                                                                                                                                                                            |
+      | UNION_ALL             | union_all_1     | shuffle_field_1; shuffle_field_3                                                                                                                                                                                                   |
+      | DISTINCT              | distinct_1      | union_all_1                                                                                                                                                                                                                        |
+      | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                         |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_6" in host "dble-1"
+    """
+    these conditions will try to pruning:{(() or ()) and (() or ())}
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    { RouteCalculateUnit 1 :}
+    these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 2) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
+    condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{(((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1)))}
+    condition \[schema2.sharding_4_t2.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    whereUnit \[((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1))\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :}
+    """
+
+    #case "union", a table is send to 2 nodes, and b table is send to 1 nodes
+    Given record current dble log line number in "log_7"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                             | expect      | db      |
+      | conn_0 | False   | (select id,age,name from sharding_4_t1 where (age=1 and id=1) or (id=2 and name=2)) union (select id,age,name from schema2.sharding_4_t2 where age=1 and id=1)  | length{(2)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                                                          |
+      | Execute_SQL           | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | Fetch_result          | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | Execute_SQL           | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | Fetch_result          | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 2 AND `sharding_4_t1`.`name` = 2)) |
+      | MERGE                 | merge_1         | dn2_0; dn3_0                                                                                                                                                                                                                       |
+      | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                            |
+      | Execute_SQL           | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                         |
+      | Fetch_result          | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                         |
+      | MERGE                 | merge_2         | dn2_1                                                                                                                                                                                                                              |
+      | SHUFFLE_FIELD         | shuffle_field_3 | merge_2                                                                                                                                                                                                                            |
+      | UNION_ALL             | union_all_1     | shuffle_field_1; shuffle_field_3                                                                                                                                                                                                   |
+      | DISTINCT              | distinct_1      | union_all_1                                                                                                                                                                                                                        |
+      | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                         |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_7" in host "dble-1"
+    """
+    these conditions will try to pruning:{(() or ()) and (((schema2.sharding_4_t2.id = 1)))}
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 2) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
+    condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    """
+
+    #case "union", a table is send to 2 nodes, and b table is empty condition broadcast
+    Given record current dble log line number in "log_8"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                               | expect      | db      |
+      | conn_0 | False   | (select id,age,name from sharding_4_t1 where age=1 and (id=2 or id=1)) union (select id,age,name from schema2.sharding_4_t2 where age=1 or id=1)  | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                       |
+      | Execute_SQL           | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` in (1,2))                            |
+      | Fetch_result          | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` in (1,2))                            |
+      | Execute_SQL           | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` in (1,2))                            |
+      | Fetch_result          | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` in (1,2))                            |
+      | MERGE                 | merge_1         | dn2_0; dn3_0                                                                                                                                                                                    |
+      | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                         |
+      | Execute_SQL           | dn1_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Fetch_result          | dn1_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Execute_SQL           | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Fetch_result          | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Execute_SQL           | dn3_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Fetch_result          | dn3_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Execute_SQL           | dn4_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | Fetch_result          | dn4_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`id` in (1) OR `sharding_4_t2`.`age` in (1)) |
+      | MERGE                 | merge_2         | dn1_0; dn2_1; dn3_1; dn4_0                                                                                                                                                                      |
+      | SHUFFLE_FIELD         | shuffle_field_3 | merge_2                                                                                                                                                                                         |
+      | UNION_ALL             | union_all_1     | shuffle_field_1; shuffle_field_3                                                                                                                                                                |
+      | DISTINCT              | distinct_1      | union_all_1                                                                                                                                                                                     |
+      | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                      |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_8" in host "dble-1"
+    """
+    these conditions will try to pruning:{(() or ()) and (() or ())}
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :}
+    these conditions will try to pruning:{(((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    { RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},}
+    changeAndToOr from \[\[\]\] and \[\[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]\] merged to \[{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},\]
+    these conditions will try to pruning:{(((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1)))}
+    condition \[schema2.sharding_4_t2.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    whereUnit \[((schema2.sharding_4_t2.age IN 1)) or ((schema2.sharding_4_t2.id IN 1))\] will be pruned for contains useless or condition
+    { RouteCalculateUnit 1 :}
+    changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
+    """
+
+    #case "union", a table is send to 2 nodes, and b table is send to 1 nodes
+    Given record current dble log line number in "log_9"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                                         | expect      | db      |
+      | conn_0 | False   | (select id,age,name from sharding_4_t1 where age=1 and (name=2 and (pad=1 and (id=2 or id=1)))) union (select id,age,name from schema2.sharding_4_t2 where age=1 and id=1)  | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                                                         |
+      | Execute_SQL           | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) |
+      | Fetch_result          | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) |
+      | Execute_SQL           | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) |
+      | Fetch_result          | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) |
+      | MERGE                 | merge_1         | dn2_0; dn3_0                                                                                                                                                                                                                      |
+      | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                           |
+      | Execute_SQL           | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                        |
+      | Fetch_result          | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                        |
+      | MERGE                 | merge_2         | dn2_1                                                                                                                                                                                                                             |
+      | SHUFFLE_FIELD         | shuffle_field_3 | merge_2                                                                                                                                                                                                                           |
+      | UNION_ALL             | union_all_1     | shuffle_field_1; shuffle_field_3                                                                                                                                                                                                  |
+      | DISTINCT              | distinct_1      | union_all_1                                                                                                                                                                                                                       |
+      | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                        |
+
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_9" in host "dble-1"
+    """
+    these conditions will try to pruning:{(() or ()) and (((schema2.sharding_4_t2.id = 1)))}
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{(((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    condition \[schema1.sharding_4_t1.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[schema1.sharding_4_t1.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[schema1.sharding_4_t1.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    { RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[1, 2\]\]},}
+    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    """
+
+    #case "union", a table is broadcast, and b table is send to 1 nodes
+    Given record current dble log line number in "log_10"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                                         | expect      | db      |
+      | conn_0 | False   | (select id,age,name from sharding_4_t1 where age=1 or (name=2 and (pad=1 and (id=2 or id=1)))) union (select id,age,name from schema2.sharding_4_t2 where age=1 and id=1)   | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                                                               |
+      | Execute_SQL           | dn1_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Fetch_result          | dn1_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Execute_SQL           | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Fetch_result          | dn2_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Execute_SQL           | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Fetch_result          | dn3_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Execute_SQL           | dn4_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | Fetch_result          | dn4_0           | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`name` = 2 AND `sharding_4_t1`.`pad` = 1 AND `sharding_4_t1`.`id` in (1,2)) OR `sharding_4_t1`.`age` in (1)) |
+      | MERGE                 | merge_1         | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                                                                                                                              |
+      | SHUFFLE_FIELD         | shuffle_field_1 | merge_1                                                                                                                                                                                                                                 |
+      | Execute_SQL           | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                              |
+      | Fetch_result          | dn2_1           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                              |
+      | MERGE                 | merge_2         | dn2_1                                                                                                                                                                                                                                   |
+      | SHUFFLE_FIELD         | shuffle_field_3 | merge_2                                                                                                                                                                                                                                 |
+      | UNION_ALL             | union_all_1     | shuffle_field_1; shuffle_field_3                                                                                                                                                                                                        |
+      | DISTINCT              | distinct_1      | union_all_1                                                                                                                                                                                                                             |
+      | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                                                              |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_10" in host "dble-1"
+    """
+    these conditions will try to pruning:{(() or (() or ())) and (((schema2.sharding_4_t2.id = 1)))}
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    whereUnit \[() or (() or ())\] will be pruned for contains useless or condition
+    { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{(((schema1.sharding_4_t1.age IN 1)) or ((schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2))))}
+    condition \[schema1.sharding_4_t1.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    whereUnit \[((schema1.sharding_4_t1.age IN 1)) or ((schema1.sharding_4_t1.name = 2) and (schema1.sharding_4_t1.pad = 1) and (schema1.sharding_4_t1.id IN (1, 2)))\] will be pruned for contains useless or condition
+    { RouteCalculateUnit 1 :}
+    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    { RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    """
+
+    #case "union", a table is is send to 1 nodes, and b table is send to 1 nodes
+    Given record current dble log line number in "log_11"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                         | expect      | db      |
+      | conn_0 | False   | (select id,age,name from sharding_4_t1 where (id=1 or id=2) and (id=3 or id=4)) union (select id,age,name from schema2.sharding_4_t2 where age=1 and id=1)  | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                  |
+      | Execute_SQL           | dn2_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1) |
+      | Fetch_result          | dn2_0           | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1) |
+      | MERGE                 | merge_2         | dn2_0                                                                                                                                                                                      |
+      | SHUFFLE_FIELD         | shuffle_field_3 | merge_2                                                                                                                                                                                    |
+      | UNION_ALL             | union_all_1     | shuffle_field_1; shuffle_field_3                                                                                                                                                           |
+      | DISTINCT              | distinct_1      | union_all_1                                                                                                                                                                                |
+      | SHUFFLE_FIELD         | shuffle_field_2 | distinct_1                                                                                                                                                                                 |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
+    """
+    these conditions will try to pruning:{(() or ()) and (() or ()) and (((schema2.sharding_4_t2.id = 1)))}
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    whereUnit \[() or ()\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{(((schema1.sharding_4_t1.id IN (1, 2)) and (schema1.sharding_4_t1.id IN (3, 4))))}
+    ColumnRoute\[value in \[1, 2\]\] and ColumnRoute\[value in \[3, 4\]\] will merge to ColumnRoute\[\]
+    this condition  is always false, so this RouteCalculateUnit will be always false
+    RouteCalculateUnit 1 :}
+    the condition is always false ,route from broadcast to single
+    these conditions will try to pruning:{(((schema2.sharding_4_t2.age = 1) and (schema2.sharding_4_t2.id = 1)))}
+    condition \[schema2.sharding_4_t2.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},}
+    """
 
 
+    #case "subquery", where a.id=1 and b.id=1  a.id=2 and b.id=2
+    Given record current dble log line number in "log_12"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                | expect      | db      |
+      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where (a.age=1 and b.id=1) or (a.id=2 and b.name=2))m   | length{(2)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                                                                                                                |
+      | Execute_SQL              | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`age` = 1 AND `b`.`id` = 1) OR  ( `a`.`id` = 2 AND `b`.`name` = 2)) |
+      | Fetch_result             | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`age` = 1 AND `b`.`id` = 1) OR  ( `a`.`id` = 2 AND `b`.`name` = 2)) |
+      | Execute_SQL              | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`age` = 1 AND `b`.`id` = 1) OR  ( `a`.`id` = 2 AND `b`.`name` = 2)) |
+      | Fetch_result             | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`age` = 1 AND `b`.`id` = 1) OR  ( `a`.`id` = 2 AND `b`.`name` = 2)) |
+      | MERGE                    | merge_1                    | dn2_0; dn3_0                                                                                                                                                                             |
+      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                                                                                                  |
+      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_1                                                                                                                                                                          |
+      | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                                               |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_12" in host "dble-1"
+    """
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 2) and (b.name = 2) and (b.id = 2)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.id = 2) and (b.name = 2) and (b.id = 2)) or ((a.age = 1) and (b.id = 1) and (a.id = 1))))}
+    condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    RouteCalculateUnit 1 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}{ RouteCalculateUnit 2 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}
+    """
 
+    #case "subquery",where a.id=1 and b.id=1  a.id=2 and b.id=2
+    Given record current dble log line number in "log_13"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                 | expect      | db      |
+      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where a.age=1 and (a.id=2 or b.id=1))m   | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                                                                                               |
+      | Execute_SQL              | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | Fetch_result             | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | Execute_SQL              | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | Fetch_result             | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | MERGE                    | merge_1                    | dn2_0; dn3_0                                                                                                                                                            |
+      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                                                                                 |
+      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_1                                                                                                                                                         |
+      | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                              |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_13" in host "dble-1"
+    """
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 2) and (b.id = 2))))}
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (((b.id IN 1)) or ((a.id IN 2))))}
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1\]\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[2\]\]},}
+    """
+
+    #case "subquery", where a.id=1 and b.id=1  a.id=2 and b.id=2
+    Given record current dble log line number in "log_14"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                             | expect      | db      |
+      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where a.age=1 and (b.name=2 and (a.pad=1 and (a.id=2 or b.id=1))))m  | length{(0)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                                                                                                                                    |
+      | Execute_SQL              | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | Fetch_result             | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | Execute_SQL              | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | Fetch_result             | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  ( `a`.`age` = 1 AND `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) |
+      | MERGE                    | merge_1                    | dn2_0; dn3_0                                                                                                                                                                                                 |
+      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                                                                                                                      |
+      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_1                                                                                                                                                                                              |
+      | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                                                                   |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_14" in host "dble-1"
+    """
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id = 1) and (a.id = 1)) or ((a.id = 2) and (b.id = 2))))}
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=1\]},{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=1\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value=2\]},{schema:schema2,table:sharding_4_t2,column:ID,value :\[value=2\]},}
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (a.age = 1) and (b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))}
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    RouteCalculateUnit 1 :{schema:schema2,table:sharding_4_t2,column:ID,value :\[value in \[1\]\]},}{ RouteCalculateUnit 2 :{schema:schema1,table:sharding_4_t1,column:ID,value :\[value in \[2\]\]},}
+    """
+
+    #case "subquery", broadcast
+    Given record current dble log line number in "log_15"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                                            | expect      | db      |
+      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where a.age=1 or (b.name=2 and (a.pad=1 and (a.id=2 or b.id=1))))m | length{(1)} | schema1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+      | conn   | toClose | sql          |
+      | conn_0 | False   | show trace   |
+    Then check resultset "rs_1" has lines with following column values
+      | OPERATION-0              | SHARDING_NODE-4            | SQL/REF-5                                                                                                                                                                                                          |
+      | Execute_SQL              | dn1_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Fetch_result             | dn1_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Execute_SQL              | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Fetch_result             | dn2_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Execute_SQL              | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Fetch_result             | dn3_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Execute_SQL              | dn4_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | Fetch_result             | dn4_0                      | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `b`.`name` = 2 AND `a`.`pad` = 1 AND  ( `a`.`id` in (2) OR `b`.`id` in (1))) OR `a`.`age` in (1)) |
+      | MERGE                    | merge_1                    | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                                                                                                         |
+      | SHUFFLE_FIELD            | shuffle_field_1            | merge_1                                                                                                                                                                                                            |
+      | RENAME_DERIVED_SUB_QUERY | rename_derived_sub_query_1 | shuffle_field_1                                                                                                                                                                                                    |
+      | SHUFFLE_FIELD            | shuffle_field_2            | rename_derived_sub_query_1                                                                                                                                                                                         |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_15" in host "dble-1"
+    """
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2))))))}
+    condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.age = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    whereUnit \[((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2))))\] will be pruned for contains useless or condition
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    whereUnit \[(a.id =) and (b.id =) and (((a.age = 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id = 1)) or ((a.id = 2)))))\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :}
+    these conditions will try to pruning:{((a.id =) and (b.id =) and (((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))))}
+    condition \[b.name = 2\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.pad = 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    condition \[a.age IN 1\] will be pruned for columnName is not shardingColumn/joinColumn
+    whereUnit \[((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2))))\] will be pruned for contains useless or condition
+    condition \[a.id =\] will be pruned for empty values
+    condition \[b.id =\] will be pruned for empty values
+    whereUnit \[(a.id =) and (b.id =) and (((a.age IN 1)) or ((b.name = 2) and (a.pad = 1) and (((b.id IN 1)) or ((a.id IN 2)))))\] will be pruned for contains useless or condition
+    RouteCalculateUnit 1 :}
+    changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
+    """
+
+#    #case "subquery",no simply
+#    Given record current dble log line number in "log_16"
+#    Then execute sql in "dble-1" in "user" mode
+#      | conn   | toClose | sql                                                                                                                                           | expect      | db      |
+#      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=2) and (a.id=3 or b.id=3))m  | length{(1)} | schema1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
+#      | conn   | toClose | sql          |
+#      | conn_0 | true    | show trace   |
+#    Then check resultset "rs_1" has lines with following column values
+#      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                  |
+#
+#                                                                                                                                                                              |
+#   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_16" in host "dble-1"
+#    """
+#
+#    """
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                     | expect      | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                                                      | success     | schema1 |
+      | conn_0 | true    | drop table if exists schema2.sharding_4_t2                                              | success     | schema1 |
 
 
 
