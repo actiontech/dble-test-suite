@@ -13,7 +13,7 @@ Feature: check mysql 8.0 authentication plugin
   """
 
 # create use test1 use mysql 8.0 default authentication plugin
-    Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
+    Given update config of mysql "8.0.18" in "single" type in "mysql8-master1" with sed cmds
     """
     /default_authentication_plugin/d
     """
@@ -36,7 +36,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3306" user="test1" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test1" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -69,7 +69,7 @@ Feature: check mysql 8.0 authentication plugin
     | conn_2 | True    | drop table if exists test | success | schema1 |
 
 # reset mysql 8.0 default_authentication_plugin to default
-    Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
+    Given update config of mysql "8.0.18" in "single" type in "mysql8-master1" with sed cmds
     """
     /default_authentication_plugin/d
     /server-id/a default_authentication_plugin = mysql_native_password
@@ -82,7 +82,7 @@ Feature: check mysql 8.0 authentication plugin
     {'restore_mysql_config':{'mysql8-master1':{'default_authentication_plugin':'mysql_native_password'}}}
   """
 # update mysql 8.0 default_authentication_plugin=mysql_native_password
-    Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
+     Given update config of mysql "8.0.18" in "single" type in "mysql8-master1" with sed cmds
     """
     /default_authentication_plugin/d
     /server-id/a default_authentication_plugin = mysql_native_password
@@ -105,7 +105,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3306" user="test2" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test2" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -129,7 +129,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3306" user="test1" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test1" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -148,7 +148,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -167,12 +167,12 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3306" user="test1" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3307" user="test1" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -198,7 +198,7 @@ Feature: check mysql 8.0 authentication plugin
     | test | 111111 | conn_0 | False   | DROP USER IF EXISTS 'test2'@'%' | success |
 
   # reset mysql 8.0 default_authentication_plugin to default
-    Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
+    Given update config of mysql "8.0.18" in "single" type in "mysql8-master1" with sed cmds
     """
     /default_authentication_plugin/d
     /server-id/a default_authentication_plugin = mysql_native_password
@@ -211,7 +211,7 @@ Feature: check mysql 8.0 authentication plugin
     {'restore_mysql_config':{'mysql8-master1':{'default_authentication_plugin':'mysql_native_password'}}}
   """
 # update mysql 8.0 default_authentication_plugin=sha256_password
-    Given update file content "/etc/my.cnf" in "mysql8-master1" with sed cmds
+    Given update config of mysql "8.0.18" in "single" type in "mysql8-master1" with sed cmds
     """
     /default_authentication_plugin/d
     /server-id/a default_authentication_plugin = sha256_password
@@ -234,7 +234,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3306" user="test3" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test3" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -263,12 +263,12 @@ Feature: check mysql 8.0 authentication plugin
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3306" user="test1" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3307" user="test1" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -283,7 +283,7 @@ Feature: check mysql 8.0 authentication plugin
     Then restart dble in "dble-1" success
 
     Given execute linux command in "dble-1" and contains exception "Please check the dbInstance status"
-    #java.io.IOException: the dbInstance[172.100.9.9:3306] can't reach. Please check the dbInstance status
+    #java.io.IOException: the dbInstance[172.100.9.9:3307] can't reach. Please check the dbInstance status
     """
     mysql -P{node:client_port} -u{node:client_user} -e "drop table if exists schema1.test"
     """

@@ -9,22 +9,22 @@ Feature: subquery execute plan should be optimized for ER/Global table join #dbl
     """
     {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0},'mysql-slave1':{'lower_case_table_names':0},'mysql-slave2':{'lower_case_table_names':0}}}
     """
-    Given update file content "/etc/my.cnf" in "mysql-master1" with sed cmds
+   Given update config of mysql "5.7.25" in "single" type in "mysql-master1" with sed cmds
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
     """
-    Given update file content "/etc/my.cnf" in "mysql-master2" with sed cmds
+   Given update config of mysql "5.7.25" in "single" type in "mysql-master2" with sed cmds
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
     """
-    Given update file content "/etc/my.cnf" in "mysql-slave1" with sed cmds
+   Given update config of mysql "5.7.25" in "single" type in "mysql-slave1" with sed cmds
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1
      """
-    Given update file content "/etc/my.cnf" in "mysql-slave2" with sed cmds
+   Given update config of mysql "5.7.25" in "single" type in "mysql-slave2" with sed cmds
     """
      /lower_case_table_names/d
      /server-id/a lower_case_table_names = 1

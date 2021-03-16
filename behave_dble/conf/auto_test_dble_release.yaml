@@ -33,53 +33,53 @@ cfg_dble:
 cfg_mysql:
   user: test
   password: 111111
-  client_port: 3306
+  client_port: 3307
   install_path: /usr/local/mysql
   group1:
     master1:
       ip: 172.100.9.5
-      port: 3306
+      port: 3307
       hostname: mysql-master1
   group2:
     master1:
       ip: 172.100.9.6
-      port: 3306
+      port: 3307
       hostname: mysql-master2
     slave1:
       ip: 172.100.9.2
-      port: 3306
+      port: 3307
       hostname: mysql-slave1
     slave2:
       ip: 172.100.9.3
-      port: 3306
+      port: 3307
       hostname: mysql-slave2
   group3:
     master1:
       ip: 172.100.9.1
-      port: 3306
+      port: 3307
       hostname: mysql-master3
   group4:
     master1:
       ip: 172.100.9.9
-      port: 3306
+      port: 3307
       hostname: mysql8-master1
   group5:
     master1:
       ip: 172.100.9.10
-      port: 3306
+      port: 3307
       hostname: mysql8-master2
     slave1:
       ip: 172.100.9.11
-      port: 3306
+      port: 3307
       hostname: mysql8-slave1
     slave2:
       ip: 172.100.9.12
-      port: 3306
+      port: 3307
       hostname: mysql8-slave2
   compare_mysql:
     master1:
       ip: 172.100.9.4
-      port: 3306
+      port: 3307
       hostname: mysql
 cfg_zookeeper:
   home: /opt/zookeeper

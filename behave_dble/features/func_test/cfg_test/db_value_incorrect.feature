@@ -8,8 +8,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
-        <dbInstance name="hostM4" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostM4" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
      </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -22,7 +22,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="false"/>
      </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -35,7 +35,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="h~ost@M3" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="h~ost@M3" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true"/>
      </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
@@ -74,7 +74,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
         <heartbeat timeout="0" errorRetryCount="0">select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" usingDecrypt="false" maxCon="1000" minCon="10" readWeight="0" primary="true" disabled="false">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" usingDecrypt="false" maxCon="1000" minCon="10" readWeight="0" primary="true" disabled="false">
           <property name="evictorShutdownTimeoutMillis_fake">10L * 1000L</property>
         </dbInstance>
       </dbGroup>
@@ -113,11 +113,11 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
-        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" />
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostS2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all" get the following output
       """
-      dbGroup[ha_group2]'s child url [172.100.9.6:3306]  duplicated!
+      dbGroup[ha_group2]'s child url [172.100.9.6:3307]  duplicated!
       """
