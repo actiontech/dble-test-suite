@@ -24,7 +24,7 @@ Feature: shardingNode's lettercase is insensitive, that should not be affected b
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="9" minCon="3" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="9" minCon="3" primary="true">
         </dbInstance>
     </dbGroup>
     """

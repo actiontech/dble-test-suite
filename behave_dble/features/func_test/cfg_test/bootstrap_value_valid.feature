@@ -253,7 +253,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user1" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="user1" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """
@@ -282,7 +282,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="user2" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="user2" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """

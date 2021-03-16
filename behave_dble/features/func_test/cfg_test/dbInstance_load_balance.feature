@@ -24,8 +24,8 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -76,8 +76,8 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -122,8 +122,8 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="150" minCon="10" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="150" minCon="10"/>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -168,9 +168,9 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" readWeight="1" primary="true"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3306" user="test" maxCon="150" minCon="10" readWeight="2"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="150" minCon="10" readWeight="1" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3307" user="test" maxCon="150" minCon="10" readWeight="2"/>
       </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -226,10 +226,10 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true">
               <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3">
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3">
               <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
       </dbGroup>
@@ -274,10 +274,10 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true">
              <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3">
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3">
              <property name="heartbeatPeriodMillis">1000</property>
           </dbInstance>
       </dbGroup>
@@ -319,9 +319,9 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true" readWeight="1"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3306" user="test" maxCon="150" minCon="10" readWeight="0"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="150" minCon="10" primary="true" readWeight="1"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3307" user="test" maxCon="150" minCon="10" readWeight="0"/>
       </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -388,9 +388,9 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="150" minCon="10" primary="true" readWeight="0"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
-          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3306" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="150" minCon="10" primary="true" readWeight="0"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="150" minCon="10" readWeight="1"/>
+          <dbInstance name="hostM3" password="111111" url="172.100.9.3:3307" user="test" maxCon="150" minCon="10" readWeight="1"/>
       </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -461,8 +461,8 @@ Feature: test read load balance
     """
       <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true"/>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3"/>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true"/>
+          <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3"/>
       </dbGroup>
     """
     Then execute admin cmd "reload @@config"
