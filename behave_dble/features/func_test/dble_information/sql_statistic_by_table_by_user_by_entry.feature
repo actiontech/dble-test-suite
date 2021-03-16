@@ -5,7 +5,7 @@
 Feature:test sql_statistic_by_table_by_user_by_entry
 
 
-   Scenario: sql_statistic_by_table_by_user_by_entry   #1
+    Scenario: sql_statistic_by_table_by_user_by_entry   #1
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -485,11 +485,13 @@ Feature:test sql_statistic_by_table_by_user_by_entry
       | conn   | toClose | sql                                                    | db               |
       | conn_0 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | entry-0 | user-1 | table-2 | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_examined_rows-10 | sql_select_rows-11 |
-      | 2       | test   | null    | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 5                  | 2                           | 4                  |
+      | entry-0 | user-1 | table-2        | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_examined_rows-10 | sql_select_rows-11 |
+      | 2       | test   | null           | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 5                  | 2                           | 4                  |
+      | 3       | rwS1   | db1.test_table | 0                  | 0                 | 0                  | 0                 | 1                  | 0                 | 0                  | 0                           | 0                  |
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect       | db               |
-      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(1)}  | dble_information |
+      | conn_0 | False   | select * from sql_statistic_by_table_by_user_by_entry               | length{(2)}  | dble_information |
       | conn_0 | False   | truncate table sql_statistic_by_table_by_user_by_entry              | success      | dble_information |
       | conn_0 | true    | select * from sql_statistic_by_table_by_user_by_entry               | length{(0)}  | dble_information |
 
