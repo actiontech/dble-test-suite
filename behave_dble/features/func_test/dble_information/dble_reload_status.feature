@@ -3,8 +3,7 @@
 # update by quexiuping at 2020/9/2
 
 
-  @skip
- # DBLE0REQ-965
+
 Feature:  dble_reload_status test
    Scenario:  dble_reload_status  table #1
   #case desc dble_reload_status
@@ -24,26 +23,8 @@ Feature:  dble_reload_status test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                 | expect            | db               |
       | conn_0 | False   | desc dble_reload_status             | length{(8)}       | dble_information |
-      | conn_0 | False   | select * from dble_reload_status    | length{(1)}       | dble_information |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_2"
-#      | conn   | toClose | sql                               | db               |
-#      | conn_0 | False   | select * from  dble_reload_status | dble_information |
-#    Then check resultset "dble_reload_status_2" has lines with following column values
-#      | index-0 | cluster-1 | reload_type-2 | reload_status-3 | last_reload_start-4 | last_reload_end-5 | trigger_type-6 | end_type-7 |
-#      | 0       | None      |               | NOT_RELOADING   |                     |                   |                |            |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_reload_status_3"
-#      | conn   | toClose | sql                     | db               |
-#      | conn_0 | False   | show @@reload_status    | dble_information |
-#    Then check resultsets "dble_reload_status_2" and "dble_reload_status_3" are same in following columns
-#      | column             | column_index |
-#      | index              | 0            |
-#      | cluster            | 1            |
-#      | reload_type        | 2            |
-#      | reload_status      | 3            |
-#      | last_reload_start  | 4            |
-#      | last_reload_end    | 5            |
-#      | trigger_type       | 6            |
-#      | end_type           | 7            |
+      #DBLE0REQ-965
+      | conn_0 | False   | select * from dble_reload_status    | length{(0)}       | dble_information |
 
   #case change sharding.xml and reload
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
