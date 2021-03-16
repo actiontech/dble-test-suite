@@ -54,7 +54,7 @@ Feature: reload @@config_all -r
     """
     <dbGroup name="ha_group2" rwSplitMode="0" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostW1" url="172.100.9.4:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostW1" url="172.100.9.4:3307" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """

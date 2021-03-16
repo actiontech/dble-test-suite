@@ -32,7 +32,7 @@ Feature: sharding basic config test
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """
@@ -67,7 +67,7 @@ Feature: sharding basic config test
      """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-            <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
+            <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """
@@ -81,7 +81,7 @@ Feature: sharding basic config test
   Scenario: config dbGroup xml node closed with none abbr mode, expect reload success, but fail at present #5
     Given add xml segment to node with attribute "{'tag':'root','kv_map':{'name':'ha_group2'}}" in "db.xml"
      """
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10"/>
     """
     #todo: reload should success
     Then execute admin cmd "reload @@config_all" get the following output
@@ -92,7 +92,7 @@ Feature: sharding basic config test
   Scenario:.when <read dbInstance > put outside <wirte dbInstance>, reload fail #6
     Given add xml segment to node with attribute "{'tag':'root','kv_map':{'name':'ha_group2'}}" in "db.xml"
      """
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10"/>
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10"/>
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
@@ -158,7 +158,7 @@ Feature: sharding basic config test
      """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="100" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="100" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
       """

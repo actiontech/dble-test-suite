@@ -24,7 +24,7 @@ Feature: show @@connection.sql test
     """
         <dbGroup rwSplitMode="0" name="ha_test" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.1:3306" user="test" maxCon="9" minCon="3" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.1:3307" user="test" maxCon="9" minCon="3" primary="true">
           </dbInstance>
         </dbGroup>
     """

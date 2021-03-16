@@ -53,7 +53,7 @@ Feature: test "reload @@config" in zk cluster
       """
        <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM3" url="172.100.9.5:3306" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true">
+         <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true">
          </dbInstance>
        </dbGroup>
     """
@@ -73,7 +73,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM3" url="172.100.9.5:3306" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true">
+      <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true">
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
@@ -90,7 +90,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM3" url="172.100.9.5:3306" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true"/>
+      <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
@@ -107,7 +107,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM3" url="172.100.9.5:3306" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true"/>
+      <dbInstance name="hostM3" url="172.100.9.5:3307" password="111111" user="test" maxCon="107" minCon="10" disabled="false" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
@@ -224,7 +224,7 @@ Feature: test "reload @@config" in zk cluster
       """
        <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM" url="172.100.9.5:3306" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true">
+         <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true">
          </dbInstance>
        </dbGroup>
     """
@@ -247,7 +247,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
-      <dbInstance name="hostM" url="172.100.9.5:3306" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true">
+      <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true">
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
@@ -260,7 +260,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
       """
-      <dbInstance name="hostM" url="172.100.9.5:3306" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true"/>
+      <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
       """
@@ -273,7 +273,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
       """
-      <dbInstance name="hostM" url="172.100.9.5:3306" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true"/>
+      <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="108" minCon="1" disabled="false" primary="true"/>
       """
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
       """
@@ -449,7 +449,7 @@ Feature: test "reload @@config" in zk cluster
       """
        <dbGroup rwSplitMode="1.2" name="ha_group1" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM" url="172.100.9.5:3306" password="111111" user="test" maxCon="10086" minCon="1" disabled="false" primary="true">
+         <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="10086" minCon="1" disabled="false" primary="true">
          </dbInstance>
        </dbGroup>
       """
@@ -500,7 +500,7 @@ Feature: test "reload @@config" in zk cluster
       """
        <dbGroup rwSplitMode="1" name="ha_group1" delayThreshold="100" >
          <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM" url="172.100.9.5:3306" password="111111" user="test" maxCon="10086" minCon="1" disabled="false" primary="true">
+         <dbInstance name="hostM" url="172.100.9.5:3307" password="111111" user="test" maxCon="10086" minCon="1" disabled="false" primary="true">
          </dbInstance>
        </dbGroup>
       """

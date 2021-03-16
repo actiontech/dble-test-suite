@@ -15,12 +15,12 @@ Feature: #test show @@processlist
     """
     <dbGroup rwSplitMode="0"  name="ha_group1" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" primary="true" maxCon="4" minCon="4">
+    <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" primary="true" maxCon="4" minCon="4">
     </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0"  name="ha_group2" delayThreshold="100" >
     <heartbeat>select user()</heartbeat>
-    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" primary="true" maxCon="4" minCon="4">
+    <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" primary="true" maxCon="4" minCon="4">
     </dbInstance>
     </dbGroup>
     """

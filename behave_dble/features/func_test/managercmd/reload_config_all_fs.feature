@@ -54,9 +54,9 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10"  readWeight="1" primary="true">
+         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10"  readWeight="1" primary="true">
          </dbInstance>
-         <dbInstance name="hostS1" url="172.100.9.2:3306" user="testx" password="111111" maxCon="1000" minCon="10" readWeight="2">
+         <dbInstance name="hostS1" url="172.100.9.2:3307" user="testx" password="111111" maxCon="1000" minCon="10" readWeight="2">
          </dbInstance>
       </dbGroup>
     """
@@ -92,7 +92,7 @@ Feature: execute manager cmd: "reload @@config_all -fs" or "reload @@config_all 
     """
     <dbGroup name="ha_group2" rwSplitMode="0" delayThreshold="100">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" url="172.100.9.4:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" url="172.100.9.4:3307" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """

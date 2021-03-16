@@ -12,7 +12,7 @@ import re
 import time
 
 from steps.lib.ConnUtil import MysqlConnUtil
-from steps.lib.utils import update_file_with_sed
+from steps.lib.utils import update_file_with_sed,get_mysql_cnf_path
 
 logger = logging.getLogger('lib.MySQLObject')
 
@@ -40,19 +40,20 @@ class MySQLObject(object):
         self.start(sed_str)
 
     def stop(self):
-        cmd_status = "{0} status".format(self._mysql_meta.mysql_init_shell)
-        cmd_stop = "{0} stop".format(self._mysql_meta.mysql_init_shell)
+        cmd_status = "{0}/status".format(self._mysql_meta.mysql_init_shell)
+        cmd_stop = "{0}/stop".format(self._mysql_meta.mysql_init_shell)
 
         rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
 
         # if mysqld already stopped,do not stop it again
-        if status_out.find("MySQL running") != -1:
+        if status_out.find("msb*? on") != -1:
             # self.turn_off_general_log_and_clean()
 
             logger.debug("try to stop mysql")
 
             stop_cd, stop_out, stop_err = self._mysql_meta.ssh_conn.exec_command(cmd_stop)
-            success_p = "Shutting down MySQL.*?SUCCESS"
+            # success_p = "Shutting down MySQL.*?SUCCESS"
+            success_p = "stop /root/sandboxes/msb_{0}".format(self._mysql_meta.mysql_version)
             obj = re.search(success_p, stop_out)
 
             if obj is None:
@@ -65,18 +66,18 @@ class MySQLObject(object):
 
     def start(self, sed_str=None):
         if sed_str:
-            self.update_config(sed_str)
+            self.update_config(sed_str,self._mysql_meta.mysql_version)
 
         # if mysqld already started,do not start it again
-        cmd_status = "{0} status".format(self._mysql_meta.mysql_init_shell)
+        cmd_status = "{0}/status".format(self._mysql_meta.mysql_init_shell)
         rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
-        if status_out.find("MySQL running") == -1:
+        if status_out.find("msb_*? on") == -1:
             logger.debug("try to start mysql......")
-            cmd_start = "{0} start".format(self._mysql_meta.mysql_init_shell)
+            cmd_start = "{0}/start".format(self._mysql_meta.mysql_init_shell)
             cd, out, err =self._mysql_meta.ssh_conn.exec_command(cmd_start)
             self._mysql_meta.close_ssh()
             logger.debug("Checking MySQL start success......")
-            success_p = "Starting MySQL.*?SUCCESS"
+            success_p = "msb_{0} on".format(self._mysql_meta.mysql_version)
             obj = re.search(success_p, out)
             isSuccess = obj is not None
             assert isSuccess, "start mysql err: {1}".format(err)
@@ -85,7 +86,8 @@ class MySQLObject(object):
             self.connect_test()
 
     def update_config(self, sed_str):
-        update_file_with_sed(sed_str, "/etc/my.cnf", self._mysql_meta)
+        mysql_cnf_path = get_mysql_cnf_path(self._mysql_meta.mysql_version,"single")
+        update_file_with_sed(sed_str, mysql_cnf_path, self._mysql_meta)
 
     def connect_test(self):
         conn = None

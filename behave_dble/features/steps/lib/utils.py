@@ -89,6 +89,32 @@ def step_impl(context, num):
     int_num = int(num)
     time.sleep(int_num)
 
+@Given ('update config of mysql "{mysql_version}" in "{mysql_type}" type in "{host_name}" with sed cmds')
+def update_file_content(context,mysql_version,host_name,mysql_type,sed_str=None):
+    if not sed_str and len(context.text)>0:
+        sed_str = context.text
+
+    if host_name == "behave":
+        node = None
+    else:
+        node = get_node(host_name)
+
+    mysql_cnf_path = get_mysql_cnf_path(mysql_version,mysql_type)
+
+# replace all vars in file name with corresponding node attribute value
+    vars = re.findall(r'\{(.*?)\}', mysql_cnf_path, re.I)
+    logger.debug("debug vars: {}".format(vars))
+    for var in vars:
+        mysql_cnf_path = mysql_cnf_path.replace("{"+var+"}", getattr(node,var))
+
+    update_file_with_sed(sed_str, mysql_cnf_path, node)
+
+def get_mysql_cnf_path(version='5.7.25', type='single'):
+    prefix = version.replace('.', '_')
+    if type == 'single':
+        prefix = 'msb_' + prefix
+    return f"/root/sandboxes/{prefix}/my.sandbox.cnf"
+
 @Given ('update file content "{filename}" in "{host_name}" with sed cmds')
 def update_file_content(context,filename, host_name, sed_str=None):
     if not sed_str and len(context.text)>0:
