@@ -9,7 +9,7 @@ Feature: db basic config test
     """
       <dbGroup rwSplitMode="4" name="ha_group1" delayThreshold="100" >
           <heartbeat>select user()</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """

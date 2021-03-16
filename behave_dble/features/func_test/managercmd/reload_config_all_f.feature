@@ -49,17 +49,17 @@ Feature: reload @@config_all -f
       | show @@backend |
     Then check resultset "C" has lines with following column values
       | PORT-4 | HOST-3      |
-      | 3306   | 172.100.9.5 |
-      | 3306   | 172.100.9.6 |
+      | 3307   | 172.100.9.5 |
+      | 3307   | 172.100.9.6 |
     Then check resultset "B" has not lines with following column values
       | PORT-4 | HOST-3      |USED_FOR_HEARTBEAT-22|
-      | 3306   | 172.100.9.6 |false                  |
+      | 3307   | 172.100.9.6 |false                  |
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostW1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostW1" password="111111" url="172.100.9.4:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -69,11 +69,11 @@ Feature: reload @@config_all -f
       | show @@backend |
     Then check resultset "D" has not lines with following column values
       | PORT-4 | HOST-3      |
-      | 3306   | 172.100.9.6 |
+      | 3307   | 172.100.9.6 |
     Then check resultset "D" has lines with following column values
       | PORT-4 | HOST-3      |
-      | 3306   | 172.100.9.4 |
-      | 3306   | 172.100.9.5 |
+      | 3307   | 172.100.9.4 |
+      | 3307   | 172.100.9.5 |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
       <shardingNode name="dn1" dbGroup="ha_group1" database="db1"/>
@@ -98,9 +98,9 @@ Feature: reload @@config_all -f
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
        <heartbeat>show slave status()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="slave1" url="172.100.9.2:3306" user="test" password="111111" maxCon="1000" minCon="10" >
+        <dbInstance name="slave1" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10" >
         </dbInstance>
      </dbGroup>
     """
