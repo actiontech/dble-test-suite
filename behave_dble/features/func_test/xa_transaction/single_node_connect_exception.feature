@@ -47,8 +47,7 @@ Feature: backend node disconnect,causing xa abnormal
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
 
-  @btrace  @skip
-    #DBLE0REQ-874
+  @btrace
   Scenario:backend node connection is abnormal, causing xa end is abnormal, transaction manual rollback  #2
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -74,13 +73,14 @@ Feature: backend node disconnect,causing xa abnormal
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_B"
        | sql               |
-       | show @@session  |
+       | show @@session    |
     Then get first mysqlId of "mysql-master1" from "rs_B" named "mysqlID2"
     Then kill mysql connection by "mysqlID2" in "mysql-master1"
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
+        #DBLE0REQ-874
       | conn   | toClose | sql                                                     | expect      | db      |
       | conn_1 | false   | select * from sharding_4_t1                             | rollback    | schema1 |
       | conn_1 | false   | rollback                                                | success     | schema1 |

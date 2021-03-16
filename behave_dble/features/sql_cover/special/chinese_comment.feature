@@ -17,7 +17,7 @@ Feature: verify issue 92 #Enter feature name here
       | conn_0 | True    | drop table sharding_4_t1                                                                                                       | success | schema1 | utf8mb4 |
 
 
-  @restore_mysql_config @skip
+  @restore_mysql_config
   Scenario: check support utf8mb4: case from issue DBLE0REQ-582 #2
    """
    {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
