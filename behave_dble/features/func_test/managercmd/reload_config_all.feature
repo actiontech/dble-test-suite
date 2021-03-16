@@ -27,7 +27,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -67,7 +67,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -77,10 +77,10 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | show @@backend |
     Then check resultset "backend_rs_C" has not lines with following column values
       | PORT-4      | HOST-3       |
-      | 3306        | 172.100.9.5  |
+      | 3307        | 172.100.9.5  |
     Then check resultset "backend_rs_C" has lines with following column values
       | PORT-4    | HOST-3      |
-      | 3306      | 172.100.9.6 |
+      | 3307      | 172.100.9.6 |
 
     #reload @@config_all, eg: backend conn in use will not be dropped even the dbInstance was removed, reload @@config_all -f, reload @@config_all -r, reload @@config_all -s
     Then execute sql in "dble-1" in "user" mode
@@ -93,7 +93,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>show slave status</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -103,7 +103,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | show @@backend |
     Then check resultset "backend_rs_D" has lines with following column values
       | PORT-4      | HOST-3      |
-      | 3306        | 172.100.9.6 |
+      | 3307        | 172.100.9.6 |
     #2 reload @@config_all -f, kill in use backend conn, do diff
     Then execute admin cmd "reload @@config_all -f"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_rs_E"
@@ -111,7 +111,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | show @@backend |
     Then check resultset "backend_rs_E" has not lines with following column values
       | PORT-4      | HOST-3       |
-      | 3306        | 172.100.9.6  |
+      | 3307        | 172.100.9.6  |
     Then check resultsets "backend_rs_D" including resultset "backend_rs_E" in following columns
       |column               | column_index |
       |processor            | 0            |
@@ -147,12 +147,12 @@ Feature: reload @@config_all base test, not including all cases in testlink
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -167,7 +167,7 @@ Feature: reload @@config_all base test, not including all cases in testlink
       | show @@backend |
     Then check resultset "backend_rs_H" has not lines with following column values
       | PORT-4      | HOST-3       |
-      | 3306        | 172.100.9.6  |
+      | 3307        | 172.100.9.6  |
     Then check resultsets "backend_rs_G" including resultset "backend_rs_H" in following columns
       |column               | column_index |
       |processor            | 0            |

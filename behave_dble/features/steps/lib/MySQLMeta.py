@@ -20,6 +20,7 @@ class MySQLMeta(ServerMeta):
         self.mysql_user = self._config_dic.pop("user")
         self.mysql_password = self._config_dic.pop("password")
         self.install_path = self._config_dic.pop("install_path")
+        self.version = self._config_dic.pop("version")
 
     @property
     def mysql_port(self):
@@ -52,8 +53,16 @@ class MySQLMeta(ServerMeta):
     @install_path.setter
     def install_path(self, value):
         self._install_path = value
-        self._mysql_init_shell = "{0}/support-files/mysql.server".format(self._install_path)
+        self._mysql_init_shell = "{0}".format(self._install_path)
 
     @property
     def mysql_init_shell(self):
         return self._mysql_init_shell
+
+    @property
+    def mysql_version(self):
+        return self._mysql_version
+
+    @mysql_version.setter
+    def mysql_version(self, value):
+        self._mysql_version = value

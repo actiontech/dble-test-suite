@@ -9,15 +9,15 @@ Feature: db heartbeat test
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat>select @@read_only</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
 
       <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
           <heartbeat>show slave status</heartbeat>
-          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
-          <dbInstance name="hosts1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="false">
+          <dbInstance name="hosts1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10" primary="false">
           </dbInstance>
       </dbGroup>
     """
@@ -29,7 +29,7 @@ Feature: db heartbeat test
     """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
           <heartbeat errorRetryCount="-1" timeout="10">select @@read_only</heartbeat>
-          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+          <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
           </dbInstance>
       </dbGroup>
     """

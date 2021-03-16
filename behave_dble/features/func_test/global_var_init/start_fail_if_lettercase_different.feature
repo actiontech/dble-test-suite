@@ -31,9 +31,9 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3306" user="test" maxCon="9" minCon="3" primary="true" readWeight="1">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.6:3307" user="test" maxCon="9" minCon="3" primary="true" readWeight="1">
         </dbInstance>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3306" user="test" maxCon="9" minCon="3" readWeight="2">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.2:3307" user="test" maxCon="9" minCon="3" readWeight="2">
         </dbInstance>
     </dbGroup>
     """
@@ -67,7 +67,7 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -96,13 +96,13 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" >
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" >
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" >
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" >
         </dbInstance>
     </dbGroup>
     """
@@ -125,21 +125,21 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
           <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
            <property name="heartbeatPeriodMillis">2000</property>
         </dbInstance>
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
     Given stop mysql in host "mysql-master1"
-    Given update file content "/etc/my.cnf" in "mysql-master1" with sed cmds
+    Given update config of mysql "5.7.25" in "single" type in "mysql-master1" with sed cmds
     """
     /lower_case_table_names/d
     /server-id/a lower_case_table_names = 1
@@ -152,6 +152,6 @@ Feature: dble start fail if global var lower_case_table_names are not consistent
     Given sleep "3" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    this dbInstance\[=172.100.9.5:3306\].s lower_case is wrong, set heartbeat Error
+    this dbInstance\[=172.100.9.5:3307\].s lower_case is wrong, set heartbeat Error
     """
 

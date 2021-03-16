@@ -29,7 +29,7 @@ Feature: check 'kill @@ddl_lock where schema=? and table=?' work normal
      """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100">
      <heartbeat>select user()</heartbeat>
-     <dbInstance name="hostM1" url="172.100.9.5:3306" password="111111" user="test" maxCon="5" minCon="4" primary="true"/>
+     <dbInstance name="hostM1" url="172.100.9.5:3307" password="111111" user="test" maxCon="5" minCon="4" primary="true"/>
      </dbGroup>
     """
      Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"

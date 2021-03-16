@@ -22,7 +22,7 @@ Feature: show @@binlog.status
      """
      <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
      </dbGroup>
      """
@@ -36,4 +36,4 @@ Feature: show @@binlog.status
       | show @@binlog.status |
     Then check resultset "sql_rs" has lines with following column values
         | Url-0 |
-        | 172.100.9.5:3306 |
+        | 172.100.9.5:3307 |

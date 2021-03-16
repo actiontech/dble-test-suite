@@ -54,7 +54,7 @@ Feature:  dble_db_instance table test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"  id="xx1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"  id="xx1">
              <property name="connectionTimeout">10000</property>
              <property name="connectionHeartbeatTimeout">30</property>
              <property name="testOnCreate">true</property>
@@ -67,7 +67,7 @@ Feature:  dble_db_instance table test
              <property name="heartbeatPeriodMillis">20000</property>
         </dbInstance>
 
-        <dbInstance name="s1" password="111111" url="172.100.9.1:3306" user="test" maxCon="100" minCon="10" readWeight="2" >
+        <dbInstance name="s1" password="111111" url="172.100.9.1:3307" user="test" maxCon="100" minCon="10" readWeight="2" >
              <property name="connectionTimeout">5000</property>
              <property name="connectionHeartbeatTimeout">10</property>
              <property name="testOnCreate">true</property>
@@ -80,7 +80,7 @@ Feature:  dble_db_instance table test
              <property name="heartbeatPeriodMillis">15000</property>
         </dbInstance>
 
-        <dbInstance name="s2" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" readWeight="3" disabled="true">
+        <dbInstance name="s2" password="111111" url="172.100.9.2:3307" user="test" maxCon="10" minCon="3" readWeight="3" disabled="true">
              <property name="connectionTimeout">100000</property>
              <property name="connectionHeartbeatTimeout">20</property>
              <property name="testOnCreate">false</property>
@@ -97,7 +97,7 @@ Feature:  dble_db_instance table test
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M2" password="MmQ1VfdjVK4VbF7z7WXQ1Zj81wN7EDHJmwwZO9MA2q5RK8rs+fT2Zjy/3XdOyutXRcSLhTqJsAQs1A1M2ww8Pw=="
-             usingDecrypt="true" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             usingDecrypt="true" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """
@@ -107,10 +107,10 @@ Feature:  dble_db_instance table test
       | conn_0 | False   | select name,db_group,addr,port from dble_db_instance   | dble_information |
     Then check resultset "dble_db_instance_2" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 |
-      | M1     | ha_group1  | 172.100.9.5 | 3306   |
-      | s1     | ha_group1  | 172.100.9.1 | 3306   |
-      | s2     | ha_group1  | 172.100.9.2 | 3306   |
-      | M2     | ha_group2  | 172.100.9.6 | 3306   |
+      | M1     | ha_group1  | 172.100.9.5 | 3307   |
+      | s1     | ha_group1  | 172.100.9.1 | 3307   |
+      | s2     | ha_group1  | 172.100.9.2 | 3307   |
+      | M2     | ha_group2  | 172.100.9.6 | 3307   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_3"
       | conn   | toClose | sql                                                                                                        | db               |
       | conn_0 | False   | select user,encrypt_configured,disabled,read_weight,max_conn_count,min_conn_count,id from dble_db_instance | dble_information |
@@ -188,14 +188,14 @@ Feature:  dble_db_instance table test
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="T1" password="111111" url="172.100.9.5:3306" user="t1" maxCon="1000" minCon="10" primary="true" readWeight="1" >
+        <dbInstance name="T1" password="111111" url="172.100.9.5:3307" user="t1" maxCon="1000" minCon="10" primary="true" readWeight="1" >
         </dbInstance>
 
     </dbGroup>
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M2" password="MmQ1VfdjVK4VbF7z7WXQ1Zj81wN7EDHJmwwZO9MA2q5RK8rs+fT2Zjy/3XdOyutXRcSLhTqJsAQs1A1M2ww8Pw=="
-             usingDecrypt="true" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             usingDecrypt="true" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
     """

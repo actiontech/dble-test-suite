@@ -15,9 +15,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="1000" minCon="10">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -74,7 +74,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3306[]] setError
+    heartbeat to [[]172.100.9.6:3307[]] setError
     """
     Given start mysql in host "mysql-master2"
     Given sleep "30" seconds
@@ -83,7 +83,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
       | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3306[]] setOK
+    heartbeat to [[]172.100.9.6:3307[]] setOK
     """
 
 # stop, start readHost
@@ -91,7 +91,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.11:3306[]] setError
+    heartbeat to [[]172.100.9.11:3307[]] setError
     """
     Given start mysql in host "mysql8-slave1"
     Given sleep "30" seconds
@@ -100,7 +100,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
       | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.11:3306[]] setOK
+    heartbeat to [[]172.100.9.11:3307[]] setOK
     """
 
   @restore_mysql_service
@@ -113,9 +113,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -172,7 +172,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.10:3306[]] setError
+    heartbeat to [[]172.100.9.10:3307[]] setError
     """
     Given start mysql in host "mysql8-master2"
     Given sleep "30" seconds
@@ -181,7 +181,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
       | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.10:3306[]] setOK
+    heartbeat to [[]172.100.9.10:3307[]] setOK
     """
 
 # stop, start readHost
@@ -189,7 +189,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.2:3306[]] setError
+    heartbeat to [[]172.100.9.2:3307[]] setError
     """
     Given start mysql in host "mysql-slave1"
     Given sleep "30" seconds
@@ -198,7 +198,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
       | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.2:3306[]] setOK
+    heartbeat to [[]172.100.9.2:3307[]] setOK
     """
 
 
@@ -212,15 +212,15 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
     </dbGroup>
 
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="1000" minCon="10">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -277,7 +277,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.10:3306[]] setError
+    heartbeat to [[]172.100.9.10:3307[]] setError
     """
     Given start mysql in host "mysql8-master2"
     Given sleep "30" seconds
@@ -286,7 +286,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.10:3306[]] setOK
+    heartbeat to [[]172.100.9.10:3307[]] setOK
     """
 
 # stop, start readHost
@@ -294,7 +294,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.11:3306[]] setError
+    heartbeat to [[]172.100.9.11:3307[]] setError
     """
     Given start mysql in host "mysql8-slave1"
     Given sleep "30" seconds
@@ -303,7 +303,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.11:3306[]] setOK
+    heartbeat to [[]172.100.9.11:3307[]] setOK
     """
 
 
@@ -317,9 +317,9 @@ Feature: check txIsolation supports tx_/transaction_ variables
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10">
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3307" user="test" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -376,7 +376,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3306[]] setError
+    heartbeat to [[]172.100.9.6:3307[]] setError
     """
     Given start mysql in host "mysql-master2"
     Given sleep "30" seconds
@@ -385,7 +385,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.6:3306[]] setOK
+    heartbeat to [[]172.100.9.6:3307[]] setOK
     """
 
 # stop, start readHost
@@ -393,7 +393,7 @@ Feature: check txIsolation supports tx_/transaction_ variables
     Given sleep "30" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.2:3306[]] setError
+    heartbeat to [[]172.100.9.2:3307[]] setError
     """
     Given start mysql in host "mysql-slave1"
     Given sleep "30" seconds
@@ -402,5 +402,5 @@ Feature: check txIsolation supports tx_/transaction_ variables
     | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
-    heartbeat to [[]172.100.9.2:3306[]] setOK
+    heartbeat to [[]172.100.9.2:3307[]] setOK
     """

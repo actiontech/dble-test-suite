@@ -291,9 +291,9 @@ Feature: test "check full @@metadata...'"
     """
     <dbGroup name="ha_group2" rwSplitMode="0">
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" url="172.100.9.6:3306" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
+        <dbInstance name="hostM2" url="172.100.9.6:3307" user="test" password="111111" maxCon="1000" minCon="10" primary="true">
         </dbInstance>
-       <dbInstance name="hostS2" url="172.100.9.2:3306" user="test" password="111111" maxCon="1000" minCon="10">
+       <dbInstance name="hostS2" url="172.100.9.2:3307" user="test" password="111111" maxCon="1000" minCon="10">
         </dbInstance>
     </dbGroup>
     """
@@ -412,7 +412,7 @@ Feature: test "check full @@metadata...'"
       """
       <dbGroup name="host1" rwSplitMode="0" delayThreshold="100">
          <heartbeat>show slave status</heartbeat>
-         <dbInstance name="hostM2" url="172.100.9.5:3306" user="test" password="111111" maxCon="1000" minCon="5" primary="true">
+         <dbInstance name="hostM2" url="172.100.9.5:3307" user="test" password="111111" maxCon="1000" minCon="5" primary="true">
          </dbInstance>
       </dbGroup>
       """
