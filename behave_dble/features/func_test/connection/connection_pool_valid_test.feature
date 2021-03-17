@@ -289,7 +289,8 @@ Feature: test connection pool
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="10" minCon="3" primary="true" id="dbInstance1">
-             <property name="connectionTimeout">5000</property>
+             <property name="testOnBorrow">true</property>
+             <property name="connectionTimeout">4000</property>
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="timeBetweenEvictionRunsMillis">180000</property>
         </dbInstance>
@@ -300,12 +301,29 @@ Feature: test connection pool
       | conn   | toClose | sql                                                              | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                           | success | schema1 |
       | conn_0 | True    | create table sharding_4_t1(id int,name varchar(20))        | success | schema1 |
+    Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    """
+    Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
+    Then execute "user" cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                                     | db      |
+      | conn_3 | True    | insert into sharding_4_t1 values(4,4)                              | schema1 |
+#      | conn_0 | True    | create table if not exists nosharding1(id int,name varchar(10)) | schema1 |
     Given stop mysql in host "mysql-master1"
-    Given execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                      | expect  | db      |
-      | conn_0 | True    | insert into sharding_4_t1 values(4,4)                               | Connection is not available, request timed out after 50 | schema1 |
-      | conn_0 | True    | select * from sharding_4_t1 where id=2                              | Connection is not available, request timed out after 50 | schema1 |
-#      | conn_0 | True    | create table if not exists nosharding1(id int,name varchar(10)) | Connection is not available, request timed out after | schema1 |
+    #sleep 5s to wait btrace hang over
+    Given sleep "5" seconds
+    Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
+    """
+    Connection is not available, request timed out after
+    """
+   Given stop btrace script "BtraceAboutConnection.java" in "dble-1"
+   Given destroy btrace threads list
+   Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
+   Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
 
   @CRITICAL @restore_global_setting
   Scenario: test reuse connection  #7

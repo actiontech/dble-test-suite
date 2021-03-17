@@ -195,6 +195,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.cluster.ClusterLogic#syncUserXmlToLocal||user.xml文件落盘|
 |com.actiontech.dble.cluster.ClusterLogic#syncDbXmlToLocal||db.xml文件落盘|
 |com.actiontech.dble.cluster.ClusterLogic#syncShardingXmlToLocal||sharding.xml文件落盘|
+|com.actiontech.dble.backend.mysql.nio.handler.ConnectionHeartBeatHandler|ping|连接有效性测试|
 
 ### 小版本改动：
 * 版本号
