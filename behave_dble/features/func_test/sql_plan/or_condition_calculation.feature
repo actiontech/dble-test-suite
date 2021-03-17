@@ -2252,12 +2252,11 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
       #"update" / "select" / "delete" not "where" condition ,but send empty condition broadcast,have trace log
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                      | expect  | db      | charset |
-      | conn_0 | False   | update sharding_2_t1 set age = 99  | success | schema1 | utf8mb4 |
-      | conn_0 | False   | update test set age = 99  | success | schema1 | utf8mb4 |
-      | conn_0 | False   | update tb_parent set age = 99  | success | schema1 | utf8mb4 |
-      | conn_0 | False   | update tb_child set age = 99  | success | schema1 | utf8mb4 |
-      | conn_0 | False   | update nosharding set age = 99  | success | schema1 | utf8mb4 |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                |
+      | dn1             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
+      | dn2             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
+      | dn3             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
+      | dn4             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
     Then get result of oscmd named "A" in "dble-1"
     """
     grep " TRACE " /opt/dble/logs/dble.log | wc -l
@@ -2453,4 +2452,3 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | drop table if exists nosharding                                                                        | success | schema1 | utf8mb4 |
       | conn_0 | False   | drop table if exists noshard_t1                                                                        | success | schema1 | utf8mb4 |
       | conn_0 | true    | drop table if exists schema2.global_4_t1                                                               | success | schema1 | utf8mb4 |
-    
