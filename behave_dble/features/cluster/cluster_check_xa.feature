@@ -5,7 +5,7 @@
 
 Feature: on zookeeper to check "xa"
 
-  @btrace
+  @btrace @skip
   Scenario: check during xa ,check xalog on zookeeper #1
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                     | expect   | db       |

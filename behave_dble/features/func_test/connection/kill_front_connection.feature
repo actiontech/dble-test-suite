@@ -201,7 +201,7 @@ Feature: test KILL [CONNECTION | QUERY] processlist_id
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "connection_2"
       | conn   | toClose | sql                | expect | db |
-      | conn_5 | True    | select sharding_node, user, mysql_db from processlist | hasnot{(('dn1', 'test', 'db1',),('dn2', 'test', 'db1',),('dn3', 'test', 'db2',),('dn4', 'test', 'db2',),)} | dble_information |
+      | conn_5 | True    | select db_instance, user, mysql_db from processlist | hasnot{(('hostM1', 'test', 'db1',),('hostM2', 'test', 'db1',),('hostM1', 'test', 'db2',),('hostM2', 'test', 'db2',),)} | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                       | expect                     | db      |

@@ -195,6 +195,10 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.cluster.ClusterLogic#syncUserXmlToLocal||user.xml文件落盘|
 |com.actiontech.dble.cluster.ClusterLogic#syncDbXmlToLocal||db.xml文件落盘|
 |com.actiontech.dble.cluster.ClusterLogic#syncShardingXmlToLocal||sharding.xml文件落盘|
+|com.actiontech.dble.btrace.provider.StatisticProvider#updateTableMaxSize||sql统计表的大小，reload命令|
+|com.actiontech.dble.btrace.provider.StatisticProvider#getStatisticQueueSize||sql统计表，获取StatisticQueueSize|
+|com.actiontech.dble.btrace.provider.StatisticProvider#onOffStatistic||sql统计表的，开关命令|
+|com.actiontech.dble.btrace.provider.StatisticProvider#showStatistic||sql统计表，show命令|
 |com.actiontech.dble.backend.mysql.nio.handler.ConnectionHeartBeatHandler|ping|连接有效性测试|
 
 ### 小版本改动：
