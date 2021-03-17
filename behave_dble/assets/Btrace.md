@@ -199,8 +199,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.StatisticProvider#getStatisticQueueSize||sql统计表，获取StatisticQueueSize|
 |com.actiontech.dble.btrace.provider.StatisticProvider#onOffStatistic||sql统计表的，开关命令|
 |com.actiontech.dble.btrace.provider.StatisticProvider#showStatistic||sql统计表，show命令|
-
-
+|com.actiontech.dble.backend.mysql.nio.handler.ConnectionHeartBeatHandler|ping|连接有效性测试|
 
 ### 小版本改动：
 * 版本号
