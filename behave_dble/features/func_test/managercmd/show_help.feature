@@ -111,7 +111,7 @@ Feature: test show user related manager command
       | dbGroup @@enable name='?' (instance = '?')                                                          | enable some dbGroup/dbInstance                                                    |
       | dbGroup @@switch name='?' master='?'                                                                | switch primary in one dbGroup                                                     |
       | dbGroup @@events                                                                                    | show all the dbGroup ha event which not finished yet                              |
-      | split src dest -sschema -r500 -w500 -l10000 --ignore                                                | split dump file into multi dump files according to shardingNode                   |
+      | split src dest -sschema -r500 -w500 -l10000 --ignore -t2                                            | split dump file into multi dump files according to shardingNode                   |
       | fresh conn [forced] where dbGroup ='?' [and dbInstance ='?']                                        | fresh conn some dbGroup/dbInstance                                                |
       | show @@cap_client_found_rows                                                                        | Show if the clientFoundRows capabilities is enabled                               |
       | enable @@cap_client_found_rows                                                                      | Turn on the clientFoundRows capabilities                                          |

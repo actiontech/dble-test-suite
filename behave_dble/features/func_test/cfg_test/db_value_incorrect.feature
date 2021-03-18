@@ -104,7 +104,7 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-      The content of element 'dble:db' is not complete. One of '{dbGroup}' is expected
+    The dbGroup[ha_group1] associated with ShardingNode[dn3] does not exist
     """
 
 
