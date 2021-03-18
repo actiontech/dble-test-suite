@@ -138,7 +138,7 @@ Feature:  dble_variables test
       | associateTablesByEntryByUserTableSize   | 1024                | AssociateTablesByEntryByUser table size, the default is 1024                                                                                                | false       |
       | frontendByBackendByEntryByUserTableSize | 1024                | FrontendByBackendByEntryByUser table size, the default is 1024                                                                                              | false       |
       | tableByUserByEntryTableSize             | 1024                | TableByUserByEntry table size, the default is 1024                                                                                                          | false       |
-      | enableBatchLoadData                     | false               | Enable Batch Load Data                                                                                                                                      | false       |
+      | enableBatchLoadData                     | false               | Enable Batch Load Data. The default value is false                                                                                                          | false       |
 
 
   #case supported select limit /order by/ where like
