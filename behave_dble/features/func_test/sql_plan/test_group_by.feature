@@ -106,7 +106,7 @@ Feature: test group by
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
-  @NORMAL @skip # skip for mysql8.0 replication env
+  @NORMAL
   Scenario: Scenario: the version of all backend mysql nodes are 8.0.* #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
