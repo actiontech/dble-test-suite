@@ -5,7 +5,7 @@ RUN sed -i.backup 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.
     curl -o /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo && \
     yum clean all
 
-RUN yum install -y openssh-server wget numactl libaio bash-completion bash-completion-extras && \
+RUN yum install -y openssh-server openssh-clients wget numactl libaio bash-completion bash-completion-extras && \
     yum clean all && \
     echo 'root:sshpass' | chpasswd && \
     sed -i 's/session\s*required\s*pam_loginuid.so/session optional pam_loginuid.so/g' /etc/pam.d/sshd && \
