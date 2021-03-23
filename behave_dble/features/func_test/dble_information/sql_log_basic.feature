@@ -198,6 +198,7 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(0)} | dble_information |
 
 
+ @skip_restart
   Scenario: test samplingRate=100 and simple sql   #4
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -786,7 +787,6 @@ Feature:manager Cmd
       | conn_6  | true     | drop table if exists sharding_2_t1                                              | success | schema1 |
 
 
- @skip_restart
   Scenario: test samplingRate=100 and transaction sql  ---- rwSplitUser  #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -903,39 +903,331 @@ Feature:manager Cmd
       | rwS1 | 111111 | conn_31 | False   | delete from test_table       | success | db1 |
 
       | rwS1 | 111111 | conn_31 | False   | begin                        | success | db1 |
-      | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table   | success | db1 |
+      | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
-      | sql_id-0 | sql_stmt-1                                       | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
-|     19 | start transaction                                        | 19       |     5 |     1 | rwS1 | 172.100.9.8 |        8066 |    0 |             0 |
-|     20 | delete from test_table                                   | 20       |     5 |     1 | rwS1 | 172.100.9.8 |        8066 |    3 |             3 |
-|     21 | begin                                                    | 21       |     5 |     1 | rwS1 | 172.100.9.8 |        8066 |    0 |             0 |
-|     22 | delete from db2.test_table                               | 22       |     6 |     1 | rwS1 | 172.100.9.8 |        8066 |    1 |             1 |
-|     23 | exit                                                     | 23       |     6 |     1 | rwS1 | 172.100.9.8 |        8066 |    0 |             0 |
-
-
+      | sql_id-0 | sql_stmt-1                  | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
+      | 19       | start transaction           | 19         | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 20       | delete from test_table      | 20         | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 3      | 3               |
+      | 21       | begin                       | 21         | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 22       | delete from db2.test_table1 | 22         | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2               |
+      | 23       | exit                        | 23         | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
-|     5 |     1 | rwS1 | 172.100.9.8 |        8066 | 19,20,21       |         3 |               3 |
-|     6 |     1 | rwS1 | 172.100.9.8 |        8066 | 22,23          |         2 |              1 |
+      | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 19,20,21  | 3           | 3               |
+      | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 22,23     | 2           | 2               |
+
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn    | toClose | sql                                                           | expect  | db  |
+      | rwS1 | 111111 | conn_31 | False   | set autocommit=0                                              | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | update test_table set name='test_name'                        | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | select * from test_table                                      | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | commit                                                        | success | db1 |
+
+      | rwS1 | 111111 | conn_31 | False   | delete from db2.test_table1 where id in (1, 4)                | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | rollback                                                      | success | db1 |
+
+      | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select * from sql_log   | dble_information |
+    Then check resultset "resulte_1" has lines with following column values
+      | sql_id-0 | sql_stmt-1                                                    | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
+      | 1        | set autocommit=0                                              | 1          | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 2        | update test_table set name='test_name'                        | 2          | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 3        | select * from test_table                                      | 3          | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 4        | commit                                                        | 4          | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 5        | delete from db2.test_table1 where id in (1, 4)                | 5          | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 6        | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | 6          | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2               |
+      | 7        | rollback                                                      | 7          | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 8        | delete from db2.test_table1                                   | 8          | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2               |
+      | 9        | exit                                                          | 9          | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0               |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
+      | conn   | toClose | sql                                          | db               |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
+    Then check resultset "resulte_2" has lines with following column values
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | 1       | 1       | rwS1   | 172.100.9.8   | 8066          | 1,2,3,4   | 4           | 0               |
+      | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 5,6,7     | 3           | 3               |
+      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 8,9       | 2           | 2               |
+
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn    | toClose | sql                                              | expect  | db  |
+      | rwS1 | 111111 | conn_31 | False   | begin                                            | success | db1 |
+      | rwS1 | 111111 | conn_31 | False   | select * from test_table                         | success | db1 |
+
+      | rwS1 | 111111 | conn_41 | False   | start transaction                                  | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =33 where id=1          | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | delete from test_table1 where id=5                 | success | db2 |
+      | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                   | expect       | db               |
+      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |
+
+
+  Scenario: test samplingRate=100 and xa transaction sql  ---- shardinguser  #9
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                                             | expect  | db      |
+      | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
+      | conn_1 | False    | create table sharding_4_t1(id int, name varchar(20))                            | success | schema1 |
+      | conn_1 | true     | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
+     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /DsamplingRate/d
+    /DtableSqlLogSize/d
+    /# processor/a -DsamplingRate=100
+    /# processor/a -DtableSqlLogSize=100
+    """
+    Given Restart dble in "dble-1" success
+    Then execute admin cmd "enable @@statistic"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                                             | expect  | db      |
+      | conn_1 | False    | set autocommit=0                                                                | success | schema1 |
+      | conn_1 | False    | set xa=on                                                                       | success | schema1 |
+      | conn_1 | False    | update sharding_4_t1 set name='dn2' where id=1                                  | success | schema1 |
+      | conn_1 | False    | select * from sharding_4_t1                                                     | success | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                   | expect       | db               |
+      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                                             | expect  | db      |
+      | conn_1 | False    | commit                                                                          | success | schema1 |
+      | conn_1 | False    | insert into sharding_4_t1 values(5,'name5')                                     | success | schema1 |
+      | conn_1 | False    | delete from sharding_4_t1 where id=4                                            | success | schema1 |
+      | conn_1 | False    | rollback                                                                        | success | schema1 |
+      | conn_1 | True     | delete from sharding_4_t1                                                       | success | schema1 |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select * from sql_log   | dble_information |
+    Then check resultset "resulte_1" has lines with following column values
+      | sql_id-0 | sql_stmt-1                                     | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
+      | 1        | set autocommit=0                               | 1          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 2        | set xa=on                                      | 2          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 3        | update sharding_4_t1 set name='dn2' where id=1 | 3          | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 4        | select * from sharding_4_t1                    | 4          | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 5        | commit                                         | 5          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 6        | commit                                         | 6          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 7        | insert into sharding_4_t1 values(5,'name5')    | 7          | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 8        | delete from sharding_4_t1 where id=4           | 8          | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 9        | rollback                                       | 9          | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 10       | rollback                                       | 10         | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 11       | delete from sharding_4_t1                      | 11         | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 12       | exit                                           | 12         | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
+      | conn   | toClose | sql                                            | db               |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
+    Then check resultset "resulte_2" has lines with following column values
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3,4,5 | 5           | 5               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 6,7,8,9   | 4           | 2               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12  | 3           | 4               |
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                         | expect  | db      |
+      | conn_1 | False    | drop table if exists sharding_4_t1          | success | schema1 |
+
+
+  Scenario: test samplingRate=100 and implict commit   #10
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        <shardingTable name="sharding_4_t2" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config_all"
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                                             | expect  | db      |
+      | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
+      | conn_1 | False    | drop table if exists sharding_4_t2                                              | success | schema1 |
+      | conn_1 | true     | create table sharding_4_t1(id int, name varchar(20))                            | success | schema1 |
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /DsamplingRate/d
+    /DtableSqlLogSize/d
+    /# processor/a -DsamplingRate=100
+    /# processor/a -DtableSqlLogSize=100
+    """
+    Given Restart dble in "dble-1" success
+    Then execute admin cmd "enable @@statistic"
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                          | expect      | db               |
+      | conn_0 | False   | select * from sql_log                        | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(0)} | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                                                                             | expect  | db      |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
+      | conn_1 | False    | create table sharding_4_t2(id int, name varchar(20))                            | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | insert into sharding_4_t2 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
+      | conn_1 | False    | create index index_name1 on sharding_4_t1 (name)                                | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | update sharding_4_t1 set name='dn1' where id=4                                  | success | schema1 |
+      | conn_1 | False    | drop index index_name1 on sharding_4_t1                                         | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | select * from sharding_4_t1                                                     | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | update sharding_4_t1 set name='dn4' where id=3                                  | success | schema1 |
+      | conn_1 | False    | start transaction                                                               | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | set autocommit=0                                                                | success | schema1 |
+      | conn_1 | False    | select * from sharding_4_t1                                                     | success | schema1 |
+      | conn_1 | False    | set autocommit=1                                                                | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | delete from sharding_4_t1 where id=1                                            | success | schema1 |
+      | conn_1 | False    | truncate table sharding_4_t2                                                    | success | schema1 |
+      | conn_1 | False    | begin                                                                           | success | schema1 |
+      | conn_1 | False    | delete from sharding_4_t1 where id=2                                            | success | schema1 |
+      | conn_1 | False    | drop table if exists sharding_4_t2                                              | success | schema1 |
+      | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select * from sql_log   | dble_information |
+    Then check resultset "resulte_1" has lines with following column values
+      | sql_id-0 | sql_stmt-1                                                                      | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
+      | 1        | begin                                                                           | 1          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 2        | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | 2          | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 3        | create table sharding_4_t2(id int, name varchar(20))                            | 3          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 4        | begin                                                                           | 4          | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 5        | insert into sharding_4_t2 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | 5          | 2       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 6        | create index index_name1 on sharding_4_t1 (name)                                | 6          | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 7        | begin                                                                           | 7          | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 8        | update sharding_4_t1 set name='dn1' where id=4                                  | 8          | 3       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 9        | drop index index_name1 on sharding_4_t1                                         | 9          | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 10       | begin                                                                           | 10         | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 11       | select * from sharding_4_t1                                                     | 11         | 4       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 12       | begin                                                                           | 12         | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 13       | begin                                                                           | 13         | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 14       | begin                                                                           | 14         | 5       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 15       | begin                                                                           | 15         | 5       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 16       | update sharding_4_t1 set name='dn4' where id=3                                  | 16         | 6       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 17       | start transaction                                                               | 17         | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 18       | start transaction                                                               | 18         | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 19       | begin                                                                           | 19         | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 20       | begin                                                                           | 20         | 7       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 21       | set autocommit=0                                                                | 21         | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 22       | select * from sharding_4_t1                                                     | 22         | 8       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 23       | set autocommit=1                                                                | 23         | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 24       | begin                                                                           | 24         | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 25       | delete from sharding_4_t1 where id=1                                            | 25         | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 26       | truncate table sharding_4_t2                                                    | 26         | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 27       | begin                                                                           | 27         | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 28       | delete from sharding_4_t1 where id=2                                            | 28         | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 29       | drop table if exists sharding_4_t2                                              | 29         | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 30       | drop table if exists sharding_4_t1                                              | 30         | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
+      | conn   | toClose | sql                                          | db               |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
+    Then check resultset "resulte_2" has lines with following column values
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5   | sql_count-6 | examined_rows-9 |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3       | 3           | 8               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6       | 3           | 8               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8,9       | 3           | 5               |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12    | 3           | 4               |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 13,14       | 2           | 0               |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 15,16,17    | 3           | 1               |
+      | 7       | 2       | test   | 172.100.9.8   | 8066          | 18,19       | 2           | 0               |
+      | 8       | 2       | test   | 172.100.9.8   | 8066          | 20,21,22,23 | 4           | 4               |
+      | 9       | 2       | test   | 172.100.9.8   | 8066          | 24,25,26    | 3           | 5               |
+      | 10      | 2       | test   | 172.100.9.8   | 8066          | 27,28,29    | 3           | 5               |
+      | 11      | 2       | test   | 172.100.9.8   | 8066          | 30          | 1           | 4               |
 
 
 # @skip_restart
-#  Scenario: test samplingRate=100 and xa transaction sql  ---- shardinguser  #9
+  Scenario: test samplingRate=100 and error sql   #11
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema name="schema2" sqlMaxLimit="100">
+        <globalTable name="test1" shardingNode="dn1,dn2" />
+        <shardingTable name="sharding_2" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id"/>
+    </schema>
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
+      <dbInstance name="hostS3" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
+    </dbGroup>
+    """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <shardingUser name="test" password="111111" schemas="schema1,schema2"/>
+    <shardingUser name="test1" password="111111" schemas="schema1,schema2" readOnly="false"/>
+    <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
+    """
+    Then execute admin cmd "reload @@config_all"
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    /DsamplingRate/d
+    /DtableSqlLogSize/d
+    /# processor/a -DsamplingRate=100
+    /# processor/a -DtableSqlLogSize=2044
+    """
+    Given Restart dble in "dble-1" success
+    Then execute admin cmd "enable @@statistic"
 
-# @skip_restart
-#  Scenario: test samplingRate=100 and implict commit   #10
+   #case Syntax error sql will not be counted --shardinguser
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                  | expect                                | db      |
+      # not send shardingnode,select +0 tx_count+1
+      | conn_1 | False   | SELECT DATABASE()                    | success                               | schema1 |
+      | conn_1 | False   | SELECT USER()                        | success                               | schema1 |
+      #  send shardingnode dn5  select +1 tx_count+1
+      | conn_1 | False   | SELECT 2                             | success                               | schema1 |
+      # to general.log check has none,but has one global table "test" tx_count+1
+      | conn_1 | true    | show tables                          | success                               | schema1 |
+      # "use schema" implicitly sent "SELECT DATABASE() ",but not send shardingnode
+      | conn_1 | False   | use schema66                         | Unknown database 'schema66'           | schema1 |
+      # to general.log check has "select user",tx +1,select +1
+      | conn_1 | False   | select user                          | Unknown column 'user' in 'field list' | schema1 |
+      #case "explain"/"explain2"  select +0 tx_count+0
+      | conn_1 | False   | explain select * from test           | success                               | schema1 |
+      | conn_1 | False   | explain2 select * from test          | success                               | schema1 |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select * from sql_log   | dble_information |
+    Then check resultset "resulte_1" has lines with following column values
+      | sql_id-0 | sql_stmt-1       | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
+|      1 | use schema1       | 1        |     1 |     2 | test | 172.100.9.8 |        8066 |    0 |             0 |
+|      2 | SELECT DATABASE() | 2        |     2 |     2 | test | 172.100.9.8 |        8066 |    1 |             0 |
+|      3 | SELECT USER()     | 3        |     3 |     2 | test | 172.100.9.8 |        8066 |    1 |             0 |
+|      4 | SELECT 2          | 4        |     4 |     2 | test | 172.100.9.8 |        8066 |    1 |             1 |
+|      5 | show tables       | 5        |     5 |     2 | test | 172.100.9.8 |        8066 |    1 |             1 |
+|      6 | select user       | 6        |     8 |     2 | test | 172.100.9.8 |        8066 |    0 |             0 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
+      | conn   | toClose | sql                                            | db               |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
+    Then check resultset "resulte_2" has lines with following column values
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      |     1 |     2 | test | 172.100.9.8 |        8066 | 1       |         1 |             0 |
+|     2 |     2 | test | 172.100.9.8 |        8066 | 2       |         1 |              0 |
+|     3 |     2 | test | 172.100.9.8 |        8066 | 3       |         1 |               0 |
+|     4 |     2 | test | 172.100.9.8 |        8066 | 4       |         1 |             1 |
+|     5 |     2 | test | 172.100.9.8 |        8066 | 5       |         1 |              1 |
+|     6 |     2 | test | 172.100.9.8 |        8066 | 6       |         1 |                 0 |
+|     8 |     2 | test | 172.100.9.8 |        8066 | 7       |         1 |                 0 |
 
 
-
-# @skip_restart
-#  Scenario: test samplingRate=100 and error sql   #11
 
 
    Scenario: test samplingRate>0 and samplingRate<100   #12
@@ -978,55 +1270,3 @@ Feature:manager Cmd
 #      | conn   | toClose | sql                                          | expect         | db               |
 #      | conn_0 | False   | select * from sql_log                        | length{(5000)} | dble_information |
 #      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(5000)} | dble_information |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- @skip
-  Scenario: reload @@samplingRate   #2
-   #CASE PREPARE rwSplitUser AND shardingUser
-    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-        <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
-    </dbGroup>
-    """
-    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <managerUser name="root" password="111111"/>
-    <shardingUser name="test" password="111111" schemas="schema1"/>
-    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" maxCon="0"/>
-    """
-    Then execute admin cmd "reload @@config"
-
-   # CASE TEST "disable @@statistic" and  "reload @@samplingRate"
-    Then execute admin cmd "disable @@statistic"
-#    Then execute admin cmd "reload @@samplingRate=0"
-#
-#   #case check dble_information.dble_variables
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "version_2"
-#      | conn   | toClose | sql                     | db               |
-#      | conn_0 | true    | select * from dble_information.dble_variables where variable_name in ('enableStatistic' ,'associateTablesByEntryByUserTableSize','tableByUserByEntryTableSize','frontendByBackendByEntryByUserTableSize')       | dble_information |
-#    Then check resultset "version_2" has lines with following column values
-#      | variable_name-0                         | variable_value-1 | comment-2                                                      | read_only-3 |
-#      | enableStatistic                         | false            | Enable statistic sql, the default is false                     | false       |
-#      | associateTablesByEntryByUserTableSize   | 1024             | AssociateTablesByEntryByUser table size, the default is 1024   | false       |
-#      | frontendByBackendByEntryByUserTableSize | 1024             | FrontendByBackendByEntryByUser table size, the default is 1024 | false       |
-#      | tableByUserByEntryTableSize             | 1024             | TableByUserByEntry table size, the default is 1024             | false       |
-#
-#
-
-
-
