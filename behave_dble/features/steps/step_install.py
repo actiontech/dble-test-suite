@@ -9,10 +9,10 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
-from lib.MySQLMeta import MySQLMeta
-from lib.DbleMeta import DbleMeta
-from lib.DBUtil import *
-from lib.utils import get_node, get_ssh
+from steps.lib.MySQLMeta import MySQLMeta
+from steps.lib.DbleMeta import DbleMeta
+from steps.lib.DBUtil import *
+from steps.lib.utils import get_node, get_ssh
 
 LOGGER = logging.getLogger('steps.install')
 
