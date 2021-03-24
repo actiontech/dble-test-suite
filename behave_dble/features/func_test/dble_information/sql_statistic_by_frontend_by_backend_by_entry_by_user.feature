@@ -664,8 +664,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user test
       | conn   | toClose | sql                                                                                                                                                                                                                                                                                   | db               |
       | conn_0 | True    | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "res_11" has lines with following column values
-      | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 2       | test   | 172.100.9.5    | 3306           | dn5             | hostM1        | 3          | 1         | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 2                   | 1                  |
+      | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
+      | 2       | test   | 172.100.9.5    | 3306           | dn5             | hostM1        | 3          | 0                  | 0                 | 0                   | 0                  | 0                   | 0                  | 2                   | 1                  |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect       | db               |
