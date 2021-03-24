@@ -35,7 +35,7 @@ def before_all(context):
     test_config = context.config.userdata["test_config"].lower() #"./conf/auto_dble_test.yaml"
     #convert auto_dble_test.yaml attr to context attr
     parsed = load_yaml_config("./conf/"+test_config)
-    for name, values in parsed.iteritems():
+    for name, values in parsed.items():
         setattr(context, name, values)
 
     context.userDebug = context.config.userdata["user_debug"].lower() == "true"
