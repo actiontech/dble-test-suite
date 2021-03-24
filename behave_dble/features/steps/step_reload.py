@@ -37,7 +37,7 @@ def get_admin_conn(context, user="", passwd=""):
     conn = None
     try:
         conn = DBUtil(node.ip, user, passwd, "", node.manager_port,context)
-    except MySQLdb.Error, e:
+    except MySQLdb.Error as e:
         assert False, "create manager conn meets error:{0}".format(e.args)
     return conn
 

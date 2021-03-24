@@ -27,7 +27,7 @@ class MySQLObject(object):
     def create_conn(self):
         try:
             conn = MySQLdb.connect(self._mysql_meta.ip, self._mysql_meta.mysql_user, self._mysql_meta.mysql_password, '', self._mysql_meta.mysql_port, autocommit = True)
-        except MySQLdb.Error, e:
+        except MySQLdb.Error as e:
             assert False, "create connection failed for: {}".format(e.args)
         return conn
 
@@ -98,7 +98,7 @@ class MySQLObject(object):
                 conn = MysqlConnUtil(host=self._mysql_meta.ip, user=self._mysql_meta.mysql_user,
                                      passwd=self._mysql_meta.mysql_password, db='',
                                      port=self._mysql_meta.mysql_port, autocommit=True)
-            except MySQLdb.Error, e:
+            except MySQLdb.Error as e:
                 logger.debug("connect to '{0}' failed for:{1}".format(self._mysql_meta.ip, e))
                 conn = None
             finally:
@@ -187,7 +187,7 @@ class MySQLObject(object):
             logger.debug("Can't find a exist conn '{0}', try to create a new conn".format(query_meta.conn_id))
             try:
                 conn = MysqlConnUtil(host=query_meta.ip, user=query_meta.user, passwd=query_meta.passwd, db=query_meta.db, port=query_meta.port, autocommit=True, charset=query_meta.charset)
-            except MySQLdb.Error, e:
+            except MySQLdb.Error as e:
                 err = e.args
                 return None, err, 0
 

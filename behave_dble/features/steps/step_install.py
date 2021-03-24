@@ -168,7 +168,7 @@ def check_dble_started(context, node):
         dble_conn = DBUtil(node.ip, node.manager_user, node.manager_password, "",
                            node.manager_port, context)
         res, err = dble_conn.query("show @@version")
-    except MySQLdb.Error, e:
+    except MySQLdb.Error as e:
         err = e.args
     finally:
         if dble_conn:dble_conn.close()

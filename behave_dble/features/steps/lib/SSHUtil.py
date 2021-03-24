@@ -51,14 +51,14 @@ class SFTPClient(Logging):
             t = paramiko.Transport((self._host, self.port))
             t.connect(username = self._user, password = self._password)
             self._sftp_ssh = paramiko.SFTPClient.from_transport(t)
-        except Exception, e:
+        except Exception as e:
             raise
 
     def sftp_put(self, local_path, remote_path):
         try:
             self.logger.info('sftp put local_path:{1}, remote_path:{0}'.format(remote_path, local_path))
             self._sftp_ssh.put(local_path, remote_path)
-        except Exception, e:
+        except Exception as e:
             self.logger.debug("sftp put exception: {0}".format(e.message))
             raise
 
@@ -66,7 +66,7 @@ class SFTPClient(Logging):
         try:
             self.logger.info('sftp get remote_path:{0}, local_path:{1}'.format(remote_path, local_path))
             self._sftp_ssh.get(remote_path, local_path)
-        except Exception, e:
+        except Exception as e:
             self.logger.debug("sftp get exception: {0}".format(e.message))
             raise
 
