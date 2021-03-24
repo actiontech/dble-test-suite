@@ -33,7 +33,7 @@ def createConn(context,num,sql):
         time.sleep(5)
         conn.commit()
         conn.close()
-    except MySQLdb.Error, e:
+    except MySQLdb.Error as e:
         conn.close()
         if e.args:
             context.logger.info("get error{0}:##########################".format(e.args))

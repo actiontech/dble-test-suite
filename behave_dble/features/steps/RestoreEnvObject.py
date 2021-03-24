@@ -5,7 +5,7 @@
 # @Author  : irene-coming
 import logging
 
-from lib import utils
+from .lib import utils
 
 from steps.lib.ObjectFactory import ObjectFactory
 from steps.mysql_steps import execute_sql_in_host

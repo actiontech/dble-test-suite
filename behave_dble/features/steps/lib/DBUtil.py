@@ -23,7 +23,7 @@ class DBUtil:
                 self._conn = MySQLdb.connect(host=strHost, user=strUser, passwd=str(strPassword), db=strDataBase, port=strPort,
                                          autocommit=True)
             self._cursor = self._conn.cursor()
-        except MySQLdb.Error, e:
+        except MySQLdb.Error as e:
             errMsg = e.args
             context.logger.debug("create connect err: {0}".format(errMsg))
             raise
@@ -38,7 +38,7 @@ class DBUtil:
             while True:
                 result.append(self._cursor.fetchall())
                 if self._cursor.nextset() is None: break
-        except MySQLdb.Error,e:
+        except MySQLdb.Error as e:
             errMsg = e.args
         except UnicodeEncodeError, codeErr:
             errMsg = ((codeErr.args[1],codeErr.args[4]))

@@ -14,7 +14,7 @@ class MysqlConnUtil:
         try:
             self._conn = MySQLdb.connect(*args, **kwargs)
             self._kwargs = kwargs
-        except MySQLdb.Error, e:
+        except MySQLdb.Error as e:
             errMsg = e.args
             logger.debug("create connect err: {0}".format(errMsg))
             raise
@@ -33,7 +33,7 @@ class MysqlConnUtil:
                 if cursor.nextset() is None: break
 
             cursor.close()
-        except MySQLdb.Error,e:
+        except MySQLdb.Error as e:
             errMsg = e.args
         except UnicodeEncodeError, codeErr:
             errMsg = ((codeErr.args[1],codeErr.args[4]))

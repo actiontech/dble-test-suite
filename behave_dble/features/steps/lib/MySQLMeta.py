@@ -4,7 +4,7 @@
 # @Time    : 2020/4/1 PM1:44
 # @Author  : irene-coming
 
-from ServerMeta import ServerMeta
+from .ServerMeta import ServerMeta
 class MySQLMeta(ServerMeta):
     mysqls = ()
     def __init__(self, config_dic):
