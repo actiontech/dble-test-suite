@@ -10,8 +10,8 @@ import time
 
 from behave import *
 
-from lib.QueryMeta import QueryMeta
-from lib.utils import get_sftp, get_ssh,get_node
+from steps.lib.QueryMeta import QueryMeta
+from steps.lib.utils import get_sftp, get_ssh,get_node
 
 global btrace_threads
 btrace_threads = []

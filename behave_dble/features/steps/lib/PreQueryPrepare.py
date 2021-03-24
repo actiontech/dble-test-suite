@@ -4,7 +4,7 @@
 # @Time    : 2020/4/4 下午3:54
 # @Author  : irene-coming
 import re
-from ObjectFactory import ObjectFactory
+from steps.lib.ObjectFactory import ObjectFactory
 
 class PreQueryPrepare(object):
     def __init__(self, query_meta):

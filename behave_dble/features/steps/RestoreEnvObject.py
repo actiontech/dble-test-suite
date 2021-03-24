@@ -5,12 +5,12 @@
 # @Author  : irene-coming
 import logging
 
-from .lib import utils
+from steps.lib import utils
 
 from steps.lib.ObjectFactory import ObjectFactory
 from steps.mysql_steps import execute_sql_in_host
 # from steps.lib.utils import get_ssh
-from lib.utils import get_sftp, get_ssh,get_node
+from steps.lib.utils import get_sftp, get_ssh,get_node
 
 import re
 

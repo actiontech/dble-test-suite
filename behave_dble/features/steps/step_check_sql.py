@@ -5,18 +5,18 @@ import difflib
 import os
 import re
 import shutil
-from Queue import Queue
+from queue import Queue
 from time import sleep
 
 import MySQLdb
 from behave import *
 from hamcrest import *
 
-from .lib.utils import get_node
-from step_reload import get_dble_conn
+from steps.lib.utils import get_node
+from steps.step_reload import get_dble_conn
 
-from lib.DBUtil import DBUtil
-from lib.MyThread import MyThread
+from steps.lib.DBUtil import DBUtil
+from steps.lib.MyThread import MyThread
 
 global sql_queues
 global sql_threads

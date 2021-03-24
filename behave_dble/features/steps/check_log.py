@@ -6,7 +6,7 @@
 import re
 from behave import *
 
-from lib.utils import get_node
+from steps.lib.utils import get_node
 
 @Then('check "{file}" in "{hostname}" was empty')
 def step_impl(context,hostname, file):

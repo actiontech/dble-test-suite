@@ -9,9 +9,9 @@
 from lxml import etree as ET
 from behave import *
 
-from lib.utils import get_node,get_ssh
-from step_reload import get_abs_path
-from lib.XMLUtil import get_node_by_keyvalue
+from steps.lib.utils import get_node,get_ssh
+from steps.step_reload import get_abs_path
+from steps.lib.XMLUtil import get_node_by_keyvalue
 
 
 @Then('check exist xml node "{node}" in "{target_file}" in host "{host_name}"')

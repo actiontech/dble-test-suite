@@ -12,13 +12,13 @@ import re
 
 import time
 
-from lib.DBUtil import DBUtil
-from lib.utils import get_sftp,get_ssh,get_node
-from lib.generate_util import generate
+from steps.lib.DBUtil import DBUtil
+from steps.lib.utils import get_sftp,get_ssh,get_node
+from steps.lib.generate_util import generate
 
 from behave import *
 from hamcrest import *
-from step_reload import get_admin_conn, get_dble_conn
+from steps.step_reload import get_admin_conn, get_dble_conn
 logger = logging.getLogger('steps.function')
 
 @then('Test the data types supported by the sharding column in "{sql_name}"')

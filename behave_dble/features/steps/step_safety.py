@@ -11,7 +11,7 @@ sys.path.append("..")
 from behave import *
 from hamcrest import *
 
-from lib.DBUtil import DBUtil
+from steps.lib.DBUtil import DBUtil
 
 LOGGER = logging.getLogger('steps.safety')
 
