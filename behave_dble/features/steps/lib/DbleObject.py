@@ -5,7 +5,7 @@
 # @Author  : irene-coming
 import logging
 
-from .MySQLObject import MySQLObject
+from steps.lib.MySQLObject import MySQLObject
 
 logger = logging.getLogger('DbleObject')
 

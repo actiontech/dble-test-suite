@@ -9,8 +9,8 @@ import json
 
 from behave import *
 from hamcrest import *
-from lib.DBUtil import *
-from lib.utils import get_node, get_ssh
+from steps.lib.DBUtil import *
+from steps.lib.utils import get_node, get_ssh
 
 LOGGER = logging.getLogger('steps.check_zk_meta')
 

@@ -9,7 +9,7 @@ import MySQLdb
 from behave import *
 from hamcrest import *
 
-from step_reload import get_dble_conn
+from steps.step_reload import get_dble_conn
 
 LOGGER = logging.getLogger('steps.install')
 

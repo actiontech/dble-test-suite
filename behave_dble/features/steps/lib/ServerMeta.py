@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # @Time    : 2020/4/1 PM1:53
 # @Author  : irene-coming
-from .SSHUtil import SSHClient, SFTPClient
+from steps.lib.SSHUtil import SSHClient, SFTPClient
 
 class ServerMeta(object):
     def __init__(self, config_dic):

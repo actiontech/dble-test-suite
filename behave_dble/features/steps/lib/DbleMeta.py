@@ -4,7 +4,7 @@
 # @Time    : 2020/4/1 PM5:13
 # @Author  : irene-coming
 
-from .ServerMeta import ServerMeta
+from steps.lib.ServerMeta import ServerMeta
 
 
 class DbleMeta(ServerMeta):

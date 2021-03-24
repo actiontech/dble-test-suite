@@ -1,7 +1,7 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 from behave import *
-from .step_reload import get_admin_conn
+from steps.step_reload import get_admin_conn
 
 
 def destroy_share_n_conn(context):
