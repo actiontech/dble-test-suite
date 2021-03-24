@@ -2,8 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 from random import sample
 
-from .Logging import Logging
-from .SSHUtil import SSHClient, SFTPClient
+from steps.lib.Logging import Logging
+from steps.lib.SSHUtil import SSHClient, SFTPClient
 
 
 class Node(Logging):

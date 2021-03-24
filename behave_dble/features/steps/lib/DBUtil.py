@@ -40,7 +40,7 @@ class DBUtil:
                 if self._cursor.nextset() is None: break
         except MySQLdb.Error as e:
             errMsg = e.args
-        except UnicodeEncodeError, codeErr:
+        except UnicodeEncodeError as codeErr:
             errMsg = ((codeErr.args[1],codeErr.args[4]))
         finally:
             pass
