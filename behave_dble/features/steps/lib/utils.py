@@ -61,7 +61,7 @@ def init_meta(context, flag):
         DbleMeta.dbles = (node,)
     elif flag == "dble_cluster":
         nodes = []
-        for _, childNode in context.cfg_dble[flag].iteritems():
+        for _, childNode in context.cfg_dble[flag].items():
             cfg_dic = {}
             cfg_dic.update(childNode)
             cfg_dic.update(context.cfg_server)
@@ -71,8 +71,8 @@ def init_meta(context, flag):
         DbleMeta.dbles = tuple(nodes)
     elif flag == "mysqls":
         nodes = []
-        for k, v in context.cfg_mysql.iteritems():
-            for ck, cv in context.cfg_mysql[k].iteritems():
+        for k, v in context.cfg_mysql.items():
+            for ck, cv in context.cfg_mysql[k].items():
                 cfg_dic = {}
                 cfg_dic.update(cv)
                 cfg_dic.update(context.cfg_server)
