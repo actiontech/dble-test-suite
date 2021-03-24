@@ -453,7 +453,7 @@ def dble_mng_connect_test(context, ip):
     while conn is None:
         try:
             conn = DBUtil(ip, user, passwd, '', port, context)
-        except MySQLdb.Error, e:
+        except MySQLdb.Error as e:
             context.logger.info("connect to {0} err:{1}".format(ip, e))
             conn = None
         finally:
