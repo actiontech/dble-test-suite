@@ -66,7 +66,7 @@ class MySQLObject(object):
 
     def start(self, sed_str=None):
         if sed_str:
-            self.update_config(sed_str,self._mysql_meta.mysql_version)
+            self.update_config(sed_str)
 
         # if mysqld already started,do not start it again
         cmd_status = "{0}/status".format(self._mysql_meta.mysql_init_shell)
