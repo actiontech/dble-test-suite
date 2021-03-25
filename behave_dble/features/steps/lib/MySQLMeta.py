@@ -20,7 +20,7 @@ class MySQLMeta(ServerMeta):
         self.mysql_user = self._config_dic.pop("user")
         self.mysql_password = self._config_dic.pop("password")
         self.install_path = self._config_dic.pop("install_path")
-        self.version = self._config_dic.pop("version")
+        self.mysql_version = self._config_dic.pop("version")
 
     @property
     def mysql_port(self):
