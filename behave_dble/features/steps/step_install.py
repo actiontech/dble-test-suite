@@ -104,7 +104,8 @@ def download_dble(context, dble_packet_name):
 
     LOGGER.debug(cmd)
     os.popen(cmd)
-
+    #sleep 5s to wait download over
+    time.sleep(5)
     cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_docker'],
                                                           dble_packet_name)
     LOGGER.debug(cmd)
