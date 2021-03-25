@@ -7,7 +7,7 @@ Feature: test show user related manager command
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(111)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(112)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -124,4 +124,4 @@ Feature: test show user related manager command
       | enable @@statistic                                                                                  | Turn on statistic sql                                                             |
       | disable @@statistic                                                                                 | Turn off statistic sql                                                            |
       | reload @@statistic_table_size = ? [where table='?' \| where table in (dble_information.tableA,...)] | Statistic table size                                                              |
-
+      | reload @@samplingRate=?                                                                             | Reset the samplingRate size                                                       |
