@@ -198,7 +198,7 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(0)} | dble_information |
 
 
- @skip_restart
+# @skip_restart
   Scenario: test samplingRate=100 and simple sql   #4
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -975,22 +975,25 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |
 
-
+@skip_restart
   Scenario: test samplingRate=100 and xa transaction sql  ---- shardinguser  #9
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
       | conn_1 | False    | create table sharding_4_t1(id int, name varchar(20))                            | success | schema1 |
       | conn_1 | true     | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
-     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-    """
-    /DsamplingRate/d
-    /DtableSqlLogSize/d
-    /# processor/a -DsamplingRate=100
-    /# processor/a -DtableSqlLogSize=100
-    """
-    Given Restart dble in "dble-1" success
+#     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+#    """
+#    /DsamplingRate/d
+#    /DtableSqlLogSize/d
+#    /# processor/a -DsamplingRate=100
+#    /# processor/a -DtableSqlLogSize=100
+#    """
+#    Given Restart dble in "dble-1" success
+#    Then execute admin cmd "enable @@statistic"
+    Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "enable @@statistic"
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | False    | set autocommit=0                                                                | success | schema1 |
@@ -1014,11 +1017,11 @@ Feature:manager Cmd
       | conn_0 | False   | select * from sql_log   | dble_information |
     Then check resultset "resulte_1" has lines with following column values
       | sql_id-0 | sql_stmt-1                                     | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
-      | 1        | set autocommit=0                               | 1          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
-      | 2        | set xa=on                                      | 2          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
-      | 3        | update sharding_4_t1 set name='dn2' where id=1 | 3          | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
-      | 4        | select * from sharding_4_t1                    | 4          | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
-      | 5        | commit                                         | 5          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 1        | set autocommit=0                               | 8          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 2        | set xa=on                                      | 8          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 3        | update sharding_4_t1 set name='dn2' where id=1 | 11         | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
+      | 4        | select * from sharding_4_t1                    | 7          | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
+      | 5        | commit                                         | 2          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 6        | commit                                         | 6          | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 7        | insert into sharding_4_t1 values(5,'name5')    | 7          | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
       | 8        | delete from sharding_4_t1 where id=4           | 8          | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
