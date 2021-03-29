@@ -202,14 +202,14 @@ Feature: test connection pool
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                        | expect                     | db      |
-      | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))  | success                    | schema1 |
-      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
-      | conn_1 | False   | begin                                                      | success                    | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_2 | False   | begin                                                      | success                    | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1 where id=2                | success                    | schema1 |
+      | conn   | toClose | sql                                                    | expect      | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                     | success     | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))    | success     | schema1 |
+      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success     | schema1 |
+      | conn_1 | False   | begin                                                  | success     | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                            | success     | schema1 |
+      | conn_2 | False   | begin                                                  | success     | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                            | success     | schema1 |
     #simulate the rest connection's network was broken
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
@@ -280,6 +280,9 @@ Feature: test connection pool
 
   @NAOMAL @restore_mysql_service
   #DBLE0REQ-940
+
+      @skip
+#    DBLE0REQ-1028
   Scenario: test connection param "connectionTimeout"  #6
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -306,16 +309,17 @@ Feature: test connection pool
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                     | db      |
-      | conn_3 | True    | insert into sharding_4_t1 values(4,4)                              | schema1 |
+      | conn_3 | True    | insert into sharding_4_t1 values(4,4)                          | schema1 |
 #      | conn_0 | True    | create table if not exists nosharding1(id int,name varchar(10)) | schema1 |
     Given stop mysql in host "mysql-master1"
     #sleep 5s to wait btrace hang over
     Given sleep "5" seconds
+    #    DBLE0REQ-1028
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
     Connection is not available, request timed out after
