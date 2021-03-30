@@ -5,8 +5,7 @@
   # 2.19.11.0#dble-7888
 
 
-  @skip
-  #because  DBLE0REQ-964
+
 Feature: connect dble in mysql-master1, and execute cmd "load data" with relative path or absolute path
 
   Scenario: load data with relative path #1
