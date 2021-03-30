@@ -9,8 +9,7 @@ Given reset replication and none system databases
 Given reset views in "dble-1" if exists
 """
 
-@skip
-  #because DBLE0REQ-964
+
    Scenario:cover empty line in file, no line in file, chinese character in file, special character in file for sql syntax: load data [local] infile ...#1
      Given set sql cover log dir "sql_cover_sharding"
      Given prepare loaddata.sql data for sql test
