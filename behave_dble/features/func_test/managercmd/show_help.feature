@@ -1,7 +1,9 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-# Created by quexiuping at 2020/02/23
-Feature: test show user related manager command
+# Created by quexiuping at 2021/03/11
+
+
+Feature: test show @@help
 
   @NORMAL
   Scenario: test "show @@help" #1
@@ -125,3 +127,9 @@ Feature: test show user related manager command
       | disable @@statistic                                                                                 | Turn off statistic sql                                                            |
       | reload @@statistic_table_size = ? [where table='?' \| where table in (dble_information.tableA,...)] | Statistic table size                                                              |
       | reload @@samplingRate=?                                                                             | Reset the samplingRate size                                                       |
+
+    Then check resultset "rs_A" has not lines with following column values
+      | STATEMENT-0                            |
+      | switch @@datasources                   |
+      | switch @@dbinstance                    |
+
