@@ -140,7 +140,7 @@ Feature:  dble_variables test
       | tableByUserByEntryTableSize             | 1024                | TableByUserByEntry table size, the default is 1024                                                                                                          | false       |
       | enableBatchLoadData                     | false               | Enable Batch Load Data. The default value is false                                                                                                          | false       |
       | sqlLogTableSize                         | 1024                | SqlLog table size, the default is 1024                                                                                                                      | false       |
-      | samplingRate                            | 0                   | sampling rate, the default is 0                                                                                                                             | false       |
+      | samplingRate                            | 0                   | Sampling rate, the default is 0, it is a percentage                                                                                                         | false       |
   #case supported select limit /order by/ where like
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                               | expect       | db               |
@@ -165,7 +165,7 @@ Feature:  dble_variables test
       | conn   | toClose | sql                                                                                               | db               |
       | conn_0 | False   | select * from dble_variables where read_only like  '%fals%'  order by variable_name desc limit 10 | dble_information |
     Then check resultset "dble_variables_4" has lines with following column values
-      | variable_name-0                         | variable_value-1                 | read_only-3 |
+      | variable_name-0                         | variable_value-1               | read_only-3 |
       | tableByUserByEntryTableSize             | 1024                           | false     |
       | sqlSlowTime                             | 100ms                          | false     |
       | sqlLogTableSize                         | 1024                           | false     |
