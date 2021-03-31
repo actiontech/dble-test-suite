@@ -121,3 +121,19 @@ Feature: config db config files incorrect and restart dble or reload configs
       """
       dbGroup[ha_group2]'s child url [172.100.9.6:3306]  duplicated!
       """
+
+
+   Scenario: dbInstance's has non-exist parameters, reload the configs #10
+     #dble-9114
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" switchType="1" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+      """
+      Attribute 'switchType' is not allowed to appear in element 'dbGroup'
+      """
+
