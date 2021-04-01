@@ -115,11 +115,10 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name="slave1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
       """
 
-      # block by issue DBLE0REQ-816
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                   | expect      | db      |
-#      | conn_1 | False   | drop table if exists sharding_4_t1    | success     | schema1 |
-#      | conn_1 | True    | create table sharding_4_t1 (id int)   | success     | schema1 |
+     Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                   | expect      | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1    | success     | schema1 |
+      | conn_1 | True    | create table sharding_4_t1 (id int)   | success     | schema1 |
 
     Given start mysql in host "mysql-master2"
 
@@ -167,11 +166,13 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | enable @@custom_mysql_ha    | success           |
       | show @@custom_mysql_ha      | has{(('1',),)}    |
 
-      # block by issue DBLE0REQ-816
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                          | expect      | db      |
-#      | conn_1 | False   | drop table if exists test    | success     | schema1 |
-#      | conn_1 | True    | create table test (id int)   | success     | schema1 |
+     Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                          | expect      | db      |
+      | conn_1 | False   | drop table if exists test    | success     | schema1 |
+      | conn_1 | False   | create table test (id int)   | success     | schema1 |
+      | conn_1 | False   | insert into test values (1)  | success     | schema1 |
+      | conn_1 | False   | drop table if exists sharding_4_t1    | success     | schema1 |
+      | conn_1 | True    | drop table if exists test             | success     | schema1 |
 
 
 
@@ -212,13 +213,15 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
       """
 
-
   Scenario: don't use "disable/enable", can change mysql master and active idle DBLE0REQ-816   #5
+    # rwSplitMode="0"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
-       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true"/>
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" />
        <dbInstance name="hostS2" password="111111" url="172.100.9.3:3306" user="test" maxCon="1000" minCon="10" />
     </dbGroup>
@@ -229,7 +232,6 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "1" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM1 | ha_group1  | 172.100.9.5 | 3306   | true      | 0                   | 10                | 1000             | false      |
       | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 10                | 1000             | false      |
       | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 0                 | 1000             | false      |
       | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 0                 | 1000             | false      |
@@ -239,18 +241,172 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
       """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
-    Given sleep "31" seconds
-      #timeBetweenEvictionRunsMillis defalut is 30s,so hostS1 and hostM2(former master) idle_conn_count is 10
+    Given sleep "5" seconds
+      #timeBetweenEvictionRunsMillis is 5s,so hostS1 and hostM2(former master) idle_conn_count is 10
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "3"
       | conn   | toClose | sql                                                                                                                      | db               |
       | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
     Then check resultset "3" has lines with following column values
       | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
-      | hostM1 | ha_group1  | 172.100.9.5 | 3306   | true      | 0                   | 10                | 1000             | false      |
       | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 10                | 1000             | false      |
       | hostS1 | ha_group2  | 172.100.9.2 | 3306   | true      | 0                   | 10                | 1000             | false      |
       | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 0                 | 1000             | false      |
 
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                          | expect      | db      |
+      | conn_1 | False   | drop table if exists test    | success     | schema1 |
+      | conn_1 | False   | create table test (id int)   | success     | schema1 |
+      | conn_1 | true    | insert into test values (1)  | success     | schema1 |
+
+     Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
+      """
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
+
+    # rwSplitMode="1"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="1" name="ha_group2" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
+       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.3:3306" user="test" maxCon="10" minCon="3" >
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 3                 | 10               | false      |
+    Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
+      """
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | true      | 0                   | 3                 | 10               | false      |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                          | expect      | db      |
+      | conn_1 | False   | drop table if exists test    | success     | schema1 |
+      | conn_1 | False   | create table test (id int)   | success     | schema1 |
+      | conn_1 | true    | insert into test values (1)  | success     | schema1 |
+
+
+     Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
+      """
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
+
+    # rwSplitMode="2"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
+       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.3:3306" user="test" maxCon="10" minCon="3" >
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 3                 | 10               | false      |
+    Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
+      """
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | true      | 0                   | 3                 | 10               | false      |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                          | expect      | db      |
+      | conn_1 | False   | drop table if exists test    | success     | schema1 |
+      | conn_1 | False   | create table test (id int)   | success     | schema1 |
+      | conn_1 | true    | insert into test values (1)  | success     | schema1 |
+
+
+     Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
+      """
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
+
+    # rwSplitMode="3"
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="3" name="ha_group2" delayThreshold="100" >
+      <heartbeat>select user()</heartbeat>
+       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="3" primary="true">
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
+       <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="10" minCon="3" />
+       <dbInstance name="hostS2" password="111111" url="172.100.9.3:3306" user="test" maxCon="10" minCon="3" >
+           <property name="timeBetweenEvictionRunsMillis">5000</property>
+       </dbInstance>
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | true      | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | false     | 0                   | 3                 | 10               | false      |
+    Given execute linux command in "behave"
+      """
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
+      """
+    Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
+    Given sleep "5" seconds
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                                                                                                                      | db               |
+      | conn_0 | False   | select name,db_group,addr,port,primary,active_conn_count,idle_conn_count,max_conn_count,disabled from dble_db_instance   | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | addr-2      | port-3 | primary-4 | active_conn_count-5 | idle_conn_count-6 | max_conn_count-7 | disabled-8 |
+      | hostM2 | ha_group2  | 172.100.9.6 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS1 | ha_group2  | 172.100.9.2 | 3306   | false     | 0                   | 3                 | 10               | false      |
+      | hostS2 | ha_group2  | 172.100.9.3 | 3306   | true      | 0                   | 3                 | 10               | false      |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                          | expect      | db      |
+      | conn_1 | False   | drop table if exists test    | success     | schema1 |
+      | conn_1 | False   | create table test (id int)   | success     | schema1 |
+      | conn_1 | False   | insert into test values (1)  | success     | schema1 |
+      | conn_1 | true    | drop table if exists test    | success     | schema1 |
 
 
   Scenario: in autotest ,Need to manually kill the python3 process #6

@@ -3,10 +3,11 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by yangxiaoliang at 2020/1/2
 
-@skip #skip coz run for a long time
+#@skip #skip coz run for a long time
 #2.20.04.0#dble-8175
 Feature: retry policy after xa transaction commit failed for network anomaly
-  @btrace @restore_network
+
+   @btrace @restore_network
   Scenario: mysql node network shock causing xa transaction fail to commit, recovery network before the front end attempts to commit 5 times #1
     """
     {'restore_network':'mysql-master1'}
@@ -44,15 +45,17 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     iptables -D INPUT -s 172.100.9.1 -j REJECT
     """
-    Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
+    Given destroy sql threads list
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect      | db      |
       | conn_1 | False   | select * from sharding_4_t1 | length{(4)} | schema1 |
       | conn_1 | True    | delete from sharding_4_t1   | success     | schema1 |
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+
+
 
   @btrace @restore_network
   Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2
@@ -102,7 +105,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
     """
-    Given destroy sql threads list
+#    Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     #sleep 6s for inner retry phase 5 times over and go into background retry phase
@@ -129,7 +132,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_network
+  @btrace @restore_network @skip #skip coz run for a long time on "Given destroy sql threads list"
   Scenario:  mysql node network shock causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' and 'xa commit'  #3
     """
     {'restore_network':'mysql-master1'}
@@ -159,9 +162,9 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
     """
-    Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
+    Given destroy sql threads list
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql               |
       | show @@session.xa |
@@ -199,13 +202,20 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_network
+  @btrace @restore_network   @skip #skip coz run for a long time on "Given destroy sql threads list"
   Scenario: mysql node network shock causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #4
     """
     {'restore_network':'mysql-master1'}
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-DxaRetryCount=/d
+      $a -DxaRetryCount=2
+      """
+    Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -229,9 +239,10 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     """
     iptables -A INPUT -s 172.100.9.1 -j REJECT
     """
-    Given destroy sql threads list
+#    Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
+    Given destroy sql threads list
     Given execute oscmd in "mysql-master1"
     """
     iptables -D INPUT -s 172.100.9.1 -j REJECT
