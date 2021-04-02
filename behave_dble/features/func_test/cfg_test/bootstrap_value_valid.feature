@@ -264,23 +264,23 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    s/-DmaxPacketSize=6291456/-DmaxPacketSize=9000000/
+    s/-DmaxPacketSize=6291456/-DmaxPacketSize=9437184/
     """
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                              | expect                | db               |
-      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9000000B',),)} | dble_information |
+      | conn   | toClose | sql                                                                              | expect                 | db               |
+      | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184B',),)}  | dble_information |
 
     #case 3  max_packet_size > max_allowed_packet
-#    Given execute sql in "mysql-master1"
-#      | conn   | toClose | sql                                            | expect                                    |
-#      | conn_1 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '9001024'),)} |
-#    Given execute sql in "mysql-master2"
-#      | conn   | toClose | sql                                            | expect                                    |
-#      | conn_2 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '9001024'),)} |
+    Given execute sql in "mysql-master1"
+      | conn   | toClose | sql                                            | expect                                    |
+      | conn_1 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '9438208'),)} |
+    Given execute sql in "mysql-master2"
+      | conn   | toClose | sql                                            | expect                                    |
+      | conn_2 | True    | show variables like 'max_allowed_packet%'      | has{(('max_allowed_packet', '9438208'),)} |
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
-    s/-DmaxPacketSize=9000000/-DmaxPacketSize=8000000/
+    s/-DmaxPacketSize=9437184/-DmaxPacketSize=8000000/
     """
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
