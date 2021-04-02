@@ -14,7 +14,7 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-   @restore_mysql_config @skip
+   @restore_mysql_config
    Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
@@ -190,7 +190,7 @@ Feature:Support MySQL's large package protocol
       python3 /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                            | expect       | db       |
+      | conn   | toClose | sql                                             | expect       | db       |
       | conn_0 | false   | select id from test1 where length(c)>16777178   | length{(0)}  | schema1  |
       | conn_0 | true    | select id from test1 where length(c)=16777178   | length{(1)}  | schema1  |
     Then check general log in host "mysql-master1" has "insert into test1(id,c) values (7,\"aaaaaaaaaaa" occured "==4" times
