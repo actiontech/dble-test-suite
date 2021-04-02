@@ -55,37 +55,36 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_0 | True    | insert into sql_log_by_tx_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
 
 
-#@skip_restart
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
 
     #case check defalut values
-#    Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
-#      """
-#      -DsamplingRate=0
-#      -DsqlLogTableSize=1024
-#      """
-#    #error values
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#    $a -DsamplingRate=-1
-#    $a -DsqlLogTableSize=-1
-#    """
-#    Then restart dble in "dble-1" failed for
-#    """
-#    Property [ samplingRate ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-#    Property [ sqlLogTableSize ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
-#    """
-#
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#    $a -DsamplingRate=1000
-#    $a -DsqlLogTableSize=99.99
-#    """
-#    Then restart dble in "dble-1" failed for
-#    """
-#    Property [ samplingRate ] '1000' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-#    property [ sqlLogTableSize ] '99.99' data type should be int
-#    """
+    Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
+      """
+      -DsamplingRate=0
+      -DsqlLogTableSize=1024
+      """
+    #error values
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DsamplingRate=-1
+    $a -DsqlLogTableSize=-1
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    Property [ samplingRate ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    Property [ sqlLogTableSize ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    """
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a -DsamplingRate=1000
+    $a -DsqlLogTableSize=99.99
+    """
+    Then restart dble in "dble-1" failed for
+    """
+    Property [ samplingRate ] '1000' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    property [ sqlLogTableSize ] '99.99' data type should be int
+    """
 
    #case set correct values
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -147,7 +146,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       """
 
    #samplingRate 100% but disable @@statistic
-#    Then execute admin cmd "disable @@statistic"
+    Then execute admin cmd "disable @@statistic"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                | expect                                | db      |
       | conn_1 | False   | SELECT 1           | success                               | schema1 |
@@ -161,6 +160,8 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                    | expect                                | db      |
       | conn_1 | False   | SELECT 2               | success                               | schema1 |
+    Then execute admin cmd "disable @@statistic"
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect      | db               |
       | conn_0 | False   | select * from sql_log                        | length{(2)} | dble_information |
@@ -176,28 +177,21 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_0 | False   | reload @@statistic_table_size =0 where table ='sql_log'                               | tableSize must be greater than 0 | dble_information |
 
       | conn_0 | False   | reload @@statistic_table_size =1             | success     | dble_information |
-#      | conn_0 | False   | select * from sql_log                        | length{(1)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log                        | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(1)} | dble_information |
 
       | conn_0 | False   | reload @@statistic_table_size =100           | success     | dble_information |
-#      | conn_0 | False   | select * from sql_log                        | length{(1)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log                        | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(1)} | dble_information |
 
     Given execute sql "101" times in "dble-1" at concurrent
-      | sql                                | db      |
-      | select name from test where id ={} | schema1 |
+      | sql             | db      |
+      | select 1        | schema1 |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect        | db               |
       | conn_0 | False   | select * from sql_log                        | length{(100)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(100)} | dble_information |
-
-
-
-
-
-
-
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | length{(100)} | dble_information |
 
 
   Scenario: test samplingRate=0    #3
@@ -1280,6 +1274,12 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
     <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
+    Given execute oscmd in "dble-1"
+      """
+      mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
+      mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
+      """
+
     Then execute admin cmd "reload @@samplingRate=100"
 
    #case Syntax error sql will not be counted --shardinguser
@@ -1309,7 +1309,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 1        | SELECT DATABASE() | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0               |
       | 2        | SELECT USER()     | Select     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0               |
       | 3        | SELECT 2          | Select     | 3       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
-#      | 4        | show tables       | Show       | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 1               |
+      | 4        | show tables       | Show       | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 5        | select user       | Select     | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
@@ -1319,7 +1319,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 0               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 0               |
       | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           | 1               |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 1               |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 0               |
       | 6       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           | 0               |
 
     Then execute sql in "dble-1" in "user" mode
@@ -1469,6 +1469,18 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn   | toClose | sql                                          | expect       | db               |
       | conn_0 | False   | select * from sql_log                        | length{(10)} | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | length{(10)} | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | toClose | sql                                         | expect   | db      |
+      | true    | drop table if exists test                   | success  | schema1 |
+
+    Given execute oscmd in "dble-1"
+      """
+      mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
+      mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
+      """
+
+
+  # Test sampling rate when samplingRate>0 and samplingRate<100
 
 #    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
 #    """
@@ -1484,5 +1496,5 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
 #
 #    Then execute sql in "dble-1" in "admin" mode
 #      | conn   | toClose | sql                                          | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                        | length{(5000)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(5000)} | dble_information |
+#      | conn_0 | False   | select * from sql_log                        | length{(?)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(?)} | dble_information |
