@@ -26,7 +26,7 @@ def do_query(conn, queries):
     cursor = conn.cursor()
 
     for sql in queries:
-        print(sql[0:50])
+        print(sql[0:100])
         cursor.execute(sql)
         cursor.fetchall()
 
