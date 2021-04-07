@@ -543,7 +543,7 @@ Feature: test "reload @@config" in zk cluster
     #case change user config
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema4"/>
+      <shardingUser name="test" password="111111" schemas="schema1,schema4444"/>
       """
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql                 | db                 |
@@ -551,7 +551,7 @@ Feature: test "reload @@config" in zk cluster
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
       """
-      <shardingUser name="test" password="111111" schemas="schema1,schema4"/>
+      <shardingUser name="test" password="111111" schemas="schema1,schema4444"/>
       """
     #check config on dble-2
     Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
@@ -563,10 +563,11 @@ Feature: test "reload @@config" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
+    Given sleep "10" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
-    # Reload config failure.The reason is SelfCheck### User[name:test]'s schema [schema4] is not exist!
+    # Reload config failure.The reason is SelfCheck### User[name:test]'s schema [schema4444] is not exist!
       """
-      is not exist
+      Reload config failure
       """
     #case check on zookeeper
     Then get result of oscmd named "A" in "dble-1"
@@ -575,7 +576,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then get result of oscmd named "B" in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep ""schema1,schema4"" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep ""schema1,schema4444"" | wc -l
       """
     Then get result of oscmd named "C" in "dble-3"
       """
