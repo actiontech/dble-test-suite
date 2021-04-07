@@ -1,31 +1,36 @@
 package com.actiontech.dble.btrace.script;
 
-import com.sun.btrace.annotations.BTrace;
-import com.sun.btrace.annotations.OnMethod;
-import com.sun.btrace.annotations.ProbeClassName;
-import com.sun.btrace.annotations.ProbeMethodName;
-import com.sun.btrace.annotations.Location;
-import com.sun.btrace.annotations.Duration;
-import com.sun.btrace.annotations.Return;
-import com.sun.btrace.annotations.Kind;
-
 import com.sun.btrace.BTraceUtils;
+import com.sun.btrace.annotations.*;
+
 
 @BTrace(unsafe = true)
 public final class BtraceAddMetaLock {
     private BtraceAddMetaLock() {
 
     }
-    @OnMethod(
+
+@OnMethod(
             clazz = "com.actiontech.dble.meta.ProxyMetaManager",
-            method = "addMetaLock",
-            location=@Location(value=Kind.LINE,line=113)
+            method = "addMetaLock"
     )
-    public static void sleepWhenAddMetaLockDuring(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.println("enter metalock and start sleep");
-        BTraceUtils.println("---------------");
+    public static void sleepWhenAddMetaLock(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.println("get into addMetaLock,start sleep ");
+        BTraceUtils.println(" __________________________ ");
         Thread.sleep(30000L);
         BTraceUtils.println("sleep end ");
-        BTraceUtils.println("---------------");
+        BTraceUtils.println(" __________________________ ");
+    }
+
+@OnMethod(
+            clazz = "com.actiontech.dble.backend.mysql.nio.handler.MultiNodeDDLExecuteHandler",
+            method = "execute"
+    )
+    public static void sleepWhenClearIfSession(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.println("get into clearIfSessionClosed,start sleep ");
+        BTraceUtils.println(" __________________________ ");
+        Thread.sleep(30000L);
+        BTraceUtils.println("sleep end ");
+        BTraceUtils.println(" __________________________ ");
     }
 }
