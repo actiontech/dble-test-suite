@@ -563,6 +563,7 @@ Feature: test "reload @@config" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
+    Given sleep "5" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     # Reload config failure.The reason is SelfCheck### User[name:test]'s schema [schema4] is not exist!
       """
