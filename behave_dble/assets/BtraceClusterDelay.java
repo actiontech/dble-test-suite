@@ -393,18 +393,6 @@ public final class BtraceClusterDelay {
         BTraceUtils.println(" __________________________ ");
     }
  @OnMethod(
-	        clazz = "com.actiontech.dble.route.RouteResultsetNode",
-            method = "setRunOnSlave"
-    )
-    public static void ClearIfSessionClosed(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.println("get into clearIfSessionClosed,start sleep");
-        BTraceUtils.println(" __________________________ ");
-        Thread.sleep(30000L);
-        BTraceUtils.println("sleep end ");
-        BTraceUtils.println(" __________________________ ");
-    }
-
- @OnMethod(
             clazz = "com.actiontech.dble.singleton.PauseShardingNodeManager",
             method = "tryResume"
     )
