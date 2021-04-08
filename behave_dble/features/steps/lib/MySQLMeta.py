@@ -65,4 +65,4 @@ class MySQLMeta(ServerMeta):
 
     @mysql_version.setter
     def mysql_version(self, value):
-        self._mysql_version = value
+        self._mysql_version = str(value)
