@@ -64,7 +64,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_5_7_25
-      version: 5_7_25
+      version: 5.7.25
   group2:
     master1:
       ip: 172.100.9.6
@@ -73,7 +73,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_5_7_25
-      version: 5_7_25
+      version: 5.7.25
     slave1:
       ip: 172.100.9.2
       port: 3307
@@ -81,7 +81,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_5_7_25
-      version: 5_7_25
+      version: 5.7.25
     slave2:
       ip: 172.100.9.3
       port: 3307
@@ -89,7 +89,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_5_7_25
-      version: 5_7_25
+      version: 5.7.25
   group3:
     master1:
       ip: 172.100.9.1
@@ -98,7 +98,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_5_7_25
-      version: 5_7_25
+      version: 5.7.25
   group4:
     master1:
       ip: 172.100.9.9
@@ -107,7 +107,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_8_0_18
-      version: 8_0_18
+      version: 8.0.18
   group5:
     master1:
       ip: 172.100.9.10
@@ -116,7 +116,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_8_0_18
-      version: 8_0_18
+      version: 8.0.18
     slave1:
       ip: 172.100.9.11
       port: 3307
@@ -124,7 +124,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_8_0_18
-      version: 8_0_18
+      version: 8.0.18
     slave2:
       ip: 172.100.9.12
       port: 3307
@@ -132,7 +132,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_8_0_18
-      version: 8_0_18
+      version: 8.0.18
   compare_mysql:
   #mysql for comparing query result
     master1:
@@ -142,7 +142,7 @@ cfg_mysql:
       user: test
       password: 111111
       install_path: /root/sandboxes/msb_5_7_25
-      version: 5_7_25
+      version: 5.7.25
 cfg_zookeeper:
   home: /opt/zookeeper
   port: 2181
