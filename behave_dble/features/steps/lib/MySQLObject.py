@@ -71,7 +71,7 @@ class MySQLObject(object):
         # if mysqld already started,do not start it again
         cmd_status = "{0}/status".format(self._mysql_meta.mysql_init_shell)
         rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
-        if status_out.find("msb_*? on") == -1:
+        if status_out.find("msb_{} on".format(self._mysql_meta.mysql_version)) == -1:
             logger.debug("try to start mysql......")
             cmd_start = "{0}/start".format(self._mysql_meta.mysql_init_shell)
             cd, out, err =self._mysql_meta.ssh_conn.exec_command(cmd_start)
