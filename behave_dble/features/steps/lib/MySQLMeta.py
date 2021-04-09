@@ -14,6 +14,7 @@ class MySQLMeta(ServerMeta):
         :param str user:
         :param str password:
         :param str install_path:
+        :param str mysql_version:
         """
         super(MySQLMeta, self).__init__(config_dic)
         self.mysql_port = self._config_dic.pop("port")
@@ -65,4 +66,4 @@ class MySQLMeta(ServerMeta):
 
     @mysql_version.setter
     def mysql_version(self, value):
-        self._mysql_version = str(value)
+        self._mysql_version = str(value).replace('.','_')
