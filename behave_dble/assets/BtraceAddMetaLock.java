@@ -33,4 +33,16 @@ public final class BtraceAddMetaLock {
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
+
+@OnMethod(
+            clazz = "com.actiontech.dble.backend.mysql.nio.handler.SingleNodeDDLHandler",
+            method = "execute"
+    )
+    public static void sleepWhensingTable(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.println("get into clearIfSessionClosed,start sleep ");
+        BTraceUtils.println(" __________________________ ");
+        Thread.sleep(30000L);
+        BTraceUtils.println("sleep end ");
+        BTraceUtils.println(" __________________________ ");
+    }
 }
