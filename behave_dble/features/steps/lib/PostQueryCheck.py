@@ -5,6 +5,7 @@
 # @Author  : irene-coming
 import logging
 import re
+import operator
 
 from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
@@ -121,7 +122,7 @@ class PostQueryCheck(object):
                 assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
         else:  # for single query resultset
             if len(resExpect) == len(res) and type(resExpect[0]) == type(res[0]):
-                real = cmp(sorted(list(resExpect)), sorted(list(res))) == 0
+                real = operator.eq(sorted(list(resExpect)), sorted(list(res))) == 1
             else:
                 real = res.__contains__(resExpect)
 
@@ -147,7 +148,7 @@ class PostQueryCheck(object):
             partOfSubRes = subRes[0:num]
             logger.debug("partOfSubRes:{0} length{1}".format((partOfSubRes), len(partOfSubRes)))
             logger.debug("partOfExpect:{0} length{1}".format((partOfExpect), len(partOfExpect)))
-            if cmp(partOfSubRes, partOfExpect) == 0:
+            if operator.eq(partOfSubRes, partOfExpect) == 1:
                 subRes_list.append(partOfSubRes)
 
         logger.debug("expect subRes_list:{0}".format(subRes_list))
