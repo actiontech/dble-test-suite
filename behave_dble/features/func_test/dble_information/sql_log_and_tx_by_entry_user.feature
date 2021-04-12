@@ -1309,7 +1309,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 1        | SELECT DATABASE() | Select     | 1       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0               |
       | 2        | SELECT USER()     | Select     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 0               |
       | 3        | SELECT 2          | Select     | 3       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
-      | 4        | show tables       | Show       | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+#      | 4        | show tables       | Show       | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 5        | select user       | Select     | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
@@ -1319,7 +1319,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 0               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 0               |
       | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           | 1               |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 0               |
+#      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 0               |
       | 6       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           | 0               |
 
     Then execute sql in "dble-1" in "user" mode
