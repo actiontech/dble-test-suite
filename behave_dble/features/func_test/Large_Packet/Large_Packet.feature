@@ -55,7 +55,7 @@ Feature:Support MySQL's large package protocol
     #_mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")
     Given execute linux command in "dble-1" and contains exception "Got a packet bigger than"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     # global table "test"  will route master1: dn1,dn3 and master2:dn2,dn4
     Then check general log in host "mysql-master1" has "create table test(id int,c longblob)" occured "==2" times
@@ -133,7 +133,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -150,7 +150,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -165,7 +165,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -180,7 +180,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                            | expect       | db       |
@@ -195,7 +195,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -211,7 +211,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -229,7 +229,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -246,7 +246,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -261,7 +261,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -276,7 +276,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -291,7 +291,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -306,7 +306,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -323,7 +323,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect       | db       |
@@ -342,7 +342,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -402,7 +402,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -419,7 +419,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -434,7 +434,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -449,7 +449,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -464,7 +464,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -479,7 +479,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -502,7 +502,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -519,7 +519,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -534,7 +534,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -549,7 +549,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -564,7 +564,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -579,7 +579,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect       | db       |
@@ -595,7 +595,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                             | expect       | db       |
@@ -611,7 +611,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect       | db       |
@@ -628,7 +628,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect       | db       |
@@ -690,7 +690,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -706,7 +706,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -720,7 +720,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -734,7 +734,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -748,7 +748,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -762,7 +762,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -777,7 +777,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -792,7 +792,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -806,7 +806,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -820,7 +820,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -834,7 +834,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -848,7 +848,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                   | expect       | db       |
@@ -864,7 +864,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                           | expect       | db       |
@@ -880,7 +880,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                    | expect       | db       |
@@ -968,7 +968,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     #16-1
@@ -978,7 +978,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
     #16
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -987,7 +987,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -996,7 +996,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1005,7 +1005,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1015,7 +1015,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1024,7 +1024,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1033,7 +1033,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1042,7 +1042,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1051,7 +1051,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1060,7 +1060,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1070,7 +1070,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given update file content "/opt/LargePacket.py" in "dble-1" with sed cmds
@@ -1079,7 +1079,7 @@ Feature:Support MySQL's large package protocol
       """
     Given execute linux command in "dble-1"
       """
-      python3 /opt/LargePacket.py
+      python /opt/LargePacket.py
       """
 
     Given delete file "/opt/LargePacket.py" on "dble-1"
