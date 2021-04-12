@@ -11,7 +11,7 @@
 
 Feature: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located
 
-  @restore_network @skip_restart
+  @restore_network
   Scenario: Before the xa transaction is rolled back, open the firewall to the dble on the host where a certain fragment is located    #1
     """
     {'restore_network':'mysql-master1'}
