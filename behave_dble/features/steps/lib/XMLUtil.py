@@ -4,8 +4,8 @@
 # @Time    : 2018/3/30 PM5:54
 # @Author  : zhaohongjie@actionsky.com
 
-# from xml.etree import ElementTree as ET
-from lxml import etree as ET
+import xml.etree.ElementTree as ET
+# from lxml import etree as ET
 
 
 def if_match(node, kv_map):
