@@ -280,9 +280,6 @@ Feature: test connection pool
 
   @NAOMAL @restore_mysql_service
   #DBLE0REQ-940
-
-      @skip
-#    DBLE0REQ-1028
   Scenario: test connection param "connectionTimeout"  #6
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
@@ -309,16 +306,16 @@ Feature: test connection pool
     Given update file content "./assets/BtraceAboutConnection.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
-    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /ping/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceAboutConnection.java" in "dble-1"
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                     | db      |
-      | conn_3 | True    | insert into sharding_4_t1 values(4,4)                          | schema1 |
+      | conn_3 | False   | insert into sharding_4_t1 values(4,4)                          | schema1 |
 #      | conn_0 | True    | create table if not exists nosharding1(id int,name varchar(10)) | schema1 |
     Given stop mysql in host "mysql-master1"
-    #sleep 5s to wait btrace hang over
-    Given sleep "5" seconds
+    #sleep 15s to wait btrace hang over
+    Given sleep "15" seconds
     #    DBLE0REQ-1028
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
     """
