@@ -4,8 +4,8 @@
 # @Time    : 2018/3/30 PM5:54
 # @Author  : zhaohongjie@actionsky.com
 
-import xml.etree.ElementTree as ET
-# from lxml import etree as ET
+# import xml.etree.ElementTree as ET
+from lxml import etree as ET
 
 
 def if_match(node, kv_map):
@@ -159,7 +159,7 @@ def add_child_in_xml(file, pos_kv_map, childNode):
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
-        f.writelines(xmlstr)
+        f.write(xmlstr)
 
 def add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode):
     """
@@ -222,7 +222,7 @@ def add_child_in_xml_with_duplicate_name(file, pos_kv_map, childNode):
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
-        f.writelines(xmlstr)
+        f.write(xmlstr)
 
 
 def delete_child_node(file, kv_child, kv_parent):
@@ -267,7 +267,7 @@ def delete_child_node(file, kv_child, kv_parent):
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
-        f.writelines(xmlstr)
+        f.write(xmlstr)
 
 
 def del_node_by_name(node, child):
@@ -331,7 +331,7 @@ def change_node_properties(file, kv_map, is_delete=False):
 
     xmlstr = ET.tostring(tree, encoding="utf-8", xml_declaration=True, doctype=doctype)
     with open(file, 'wb') as f:
-        f.writelines(xmlstr)
+        f.write(xmlstr)
 
 #This part is just for self-testing
 if __name__ == "__main__":
