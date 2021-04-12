@@ -9,12 +9,6 @@ Feature: backend node disconnect,causing xa abnormal
 
   @btrace
   Scenario: backend node connection is abnormal, causing xa prepare is abnormal, transaction automatic rollback #1
-#    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#    /DidleTimeout/d
-#    /# processor/a -DidleTimeout=3600000
-#    """
-#    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -42,12 +36,6 @@ Feature: backend node disconnect,causing xa abnormal
     Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_timeout_rs1"
-      | conn   | toClose | sql                                                                                        | db               |
-      | conn_a | true    | select variable_name, variable_value from dble_variables where variable_name='idleTimeout' | dble_information |
-    Then check resultset "idle_timeout_rs1" has lines with following column values
-      | variable_name-0 | variable_value-1 |
-      | idleTimeout     | 600000ms        |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect      | db      |
       | new    | True    | select * from sharding_4_t1                             | length{(0)} | schema1 |
