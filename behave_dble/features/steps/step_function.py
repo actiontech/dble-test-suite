@@ -13,6 +13,7 @@ reload(sys)
 import logging
 import os
 import re
+import operator
 
 import time
 
@@ -137,7 +138,7 @@ def step_impl(context, filename):
     if os.path.exists(filename):
         os.remove(filename)
 
-    if cmp(text,'10000+lines')==0:
+    if operator.eq(text,'10000+lines') == 1:
         with open(filename, 'w') as fp:
             col1 = 1
             col2 = col1 +1
