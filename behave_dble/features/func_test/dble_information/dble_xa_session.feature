@@ -56,6 +56,7 @@ Feature:  dble_xa_session test
       | XA COMMIT FAIL STAGE | dn3             |
       | XA COMMIT FAIL STAGE | dn1             |
     Given start mysql in host "mysql-master1"
+    Given sleep "10" seconds
 
 #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
