@@ -65,7 +65,7 @@ def step_impl(context, rs_name):
                 expect_col = expect_row[i]
                 col_idx = col_idx_list[i]
                 real_col = rs_row[col_idx]
-                isFound = unicode(real_col) == unicode(expect_col)
+                isFound = str(real_col) == str(expect_col)
                 if not isFound: break
             assert not isFound, "expect line not in resultset {0}".format(rs_name)
         context.logger.debug("expect row:{0}, not found".format(expect_row))
@@ -123,9 +123,9 @@ def step_impl(context, rs_name):
                         context.logger.info(
                             "col index:{0}, expect col:{1}, real_col:{2}".format(i, expect_col, real_col))
                     elif (check_line):
-                        isFound = (unicode(real_col) == unicode(expect_col)) and (real_line == expect_line)
+                        isFound = (str(real_col) == str(expect_col)) and (real_line == expect_line)
                     else:
-                        isFound = (unicode(real_col) == unicode(expect_col))
+                        isFound = (str(real_col) == str(expect_col))
                         # context.logger.debug("col index:{0}, expect col:{1}, real_col:{2}".format(i,expect_col,real_col))
                 if not isFound: break
             if isFound: break
