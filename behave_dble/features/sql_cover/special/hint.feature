@@ -22,7 +22,7 @@ Feature: verify hint sql
       | conn   | toClose | sql                      | expect                  | db  |
       | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
       | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
-      | conn_0 | True    | select * from test_table | has{(2L, 'test2'),}     | db1 |
+      | conn_0 | True    | select * from test_table | has{(2, 'test2'),}     | db1 |
       | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
       | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
@@ -94,7 +94,7 @@ Feature: verify hint sql
       | conn   | toClose | sql                      | expect                  | db  |
       | conn_0 | False   | show tables              | has{('test_table'),}    | db1 |
       | conn_0 | False   | show tables              | has{('test_index'),}    | db1 |
-      | conn_0 | True    | select * from test_table | has{(2L, 'test2'),}     | db1 |
+      | conn_0 | True    | select * from test_table | has{(2, 'test2'),}     | db1 |
       | conn_1 | False   | show tables              | hasnot{('test_table'),} | db2 |
       | conn_1 | True    | show tables              | hasnot{('test_index'),} | db2 |
     Then execute sql in "dble-1" in "user" mode
@@ -352,8 +352,8 @@ Feature: verify hint sql
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                 | expect                     | db      |
-      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                              | has{[((2L, 'test_sp2'),)]} | schema1 |
-      | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | has{[((2L, 'test_sp2'),)]} | schema1 |
+      | conn_0 | False   | /*!dble:shardingNode=dn1*/call select_name                              | has{[((2, 'test_sp2'),)]} | schema1 |
+      | conn_0 | True    | /*!dble:sql=select id from test_shard where id =2*/call select_name | has{[((2, 'test_sp2'),)]} | schema1 |
 
   @regression
   Scenario: routed node when index with hint    from issue: 892    author:maofei #7
