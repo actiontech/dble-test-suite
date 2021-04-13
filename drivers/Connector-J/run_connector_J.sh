@@ -7,7 +7,7 @@ DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd ${DIR}/../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
 
 echo '=======           restart dble with sql_cover_sharding               ======='
-cd ${DIR}/../../behave_dble && behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
+cd ${DIR}/../../behave_dble && pipenv run behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
 echo '=======                       package                                ======='
 cd ${DIR} && /usr/local/apache-maven-3.6.3/bin/mvn -DskipTest clean package assembly:assembly
