@@ -448,6 +448,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_1 | False   | insert into schema2.sharding2 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
       | conn_1 | true    | insert into schema2.sing1 values (1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')     | success | schema1 |
 
+    Then execute admin cmd "enable @@statistic"
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                    | expect  | db      |
