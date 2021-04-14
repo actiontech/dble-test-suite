@@ -673,9 +673,14 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | False    | insert into sharding_2_t1 values(1,'name1'),(2,'name2')                         | success | schema1 |
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                            | expect  | db               |
-      | conn_1 | False   | enable @@statistic                                             | success | dble_information |
-      | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user | success | dble_information |
+      | conn   | toClose | sql                                                                        | expect      | db               |
+      | conn_1 | False   | enable @@statistic                                                         | success     | dble_information |
+      | conn_1 | False   | truncate sql_statistic_by_frontend_by_backend_by_entry_by_user             | success     | dble_information |
+      | conn_1 | False   | truncate sql_statistic_by_table_by_user_by_entry                           | success     | dble_information |
+      | conn_1 | False   | truncate sql_statistic_by_associate_tables_by_entry_by_user                | success     | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -728,6 +733,9 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                        | expect      | db               |
       | conn_1 | False   | select count(*) from sql_statistic_by_frontend_by_backend_by_entry_by_user | has{(4,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_table_by_user_by_entry               | has{(0,)}   | dble_information |
+      | conn_1 | False   | select count(*) from sql_statistic_by_associate_tables_by_entry_by_user    | has{(0,)}   | dble_information |
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_41"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select * from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
@@ -737,6 +745,8 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | 2       | test   | 172.100.9.5    | 3306           | dn1             | hostM1        | 8          | 8         | 1                   | 1                  | 3                   | 1                  | 4                   | 4                  | 2                   | 2                  |
       | 2       | test   | 172.100.9.6    | 3306           | dn4             | hostM2        | 6          | 8         | 1                   | 1                  | 2                   | 2                  | 3                   | 3                  | 2                   | 2                  |
       | 2       | test   | 172.100.9.5    | 3306           | dn3             | hostM1        | 6          | 8         | 1                   | 1                  | 1                   | 1                  | 3                   | 3                  | 3                   | 3                  |
+
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_0 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
