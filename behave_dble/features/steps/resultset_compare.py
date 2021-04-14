@@ -52,9 +52,9 @@ def step_impl(context, rs_A_name, rs_B_name):
 def step_impl(context, rs_name):
     # headings in form "columnName-columnIndex"
     col_idx_list = []
-    for str in context.table.headings:
-        assert str.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
-        idx = int(str.split("-")[-1])
+    for str1 in context.table.headings:
+        assert str1.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
+        idx = int(str1.split("-")[-1])
         col_idx_list.append(idx)
 
     rs = getattr(context, rs_name)
@@ -77,14 +77,14 @@ def step_impl(context, rs_name):
     col_idx_list = []
     check_line =False
 
-    for str in context.table.headings:
-        if str.rfind('expect_result_line')!=-1:
+    for str1 in context.table.headings:
+        if str1.rfind('expect_result_line')!=-1:
             check_line =True
             continue
         else:
             # headings in form "columnName-columnIndex"
-            assert str.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
-            idx = int(str.split("-")[-1])
+            assert str1.rfind('-')!=-1, "context.table heading format error. expect:columnName-columnIndex"
+            idx = int(str1.split("-")[-1])
             col_idx_list.append(idx)
 
     rs = getattr(context, rs_name)
