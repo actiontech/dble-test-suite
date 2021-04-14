@@ -127,8 +127,8 @@ class PostQueryCheck(object):
                 real = res.__contains__(resExpect)
 
                 if not real == bHas:
-                    unicode_expect = resExpect.decode('utf8')
-                    expect_tuple = map(lambda x: filter(lambda y: y == unicode_expect, x), res)
+                    # unicode_expect = resExpect.decode('utf8')
+                    expect_tuple = map(lambda x: filter(lambda y: y == resExpect, x), res)
                     real = len(expect_tuple) > 0
                     # LOGGER.debug("***zhj debug 2, len expect_tuple {0}".format(len(expect_tuple)))
 
