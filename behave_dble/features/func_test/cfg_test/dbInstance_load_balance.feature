@@ -50,10 +50,10 @@ Feature: test read load balance
       | select name from test where id ={} | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect         |
-      | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(1000L,),} |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(1000,),} |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect       |
-      | select count(*) from mysql.general_log where argument like'select name%from test%' |  has{(0L,),} |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' |  has{(0,),} |
 
   @CRITICAL
   Scenario: dbGroup rwSplitMode="1", do balance on read dbInstance #2
@@ -246,7 +246,7 @@ Feature: test read load balance
       | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect         |
-      | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(1000L,),} |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(1000,),} |
     Given start mysql in host "mysql-master2"
 
   @NORMAL @restore_mysql_service
@@ -356,7 +356,7 @@ Feature: test read load balance
       | select count(*) from mysql.general_log where argument like'select name%from test%' | balance{5000} |
     Then execute sql in "mysql-slave2"
       | sql                                                                                | expect        |
-      | select count(*) from mysql.general_log where argument like'select name%from test%' |  has{(0L,),}  |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' |  has{(0,),}  |
     Then execute sql in "mysql-master2"
       | sql                          |
       | set global general_log=off   |
@@ -419,7 +419,7 @@ Feature: test read load balance
       | select name from test where id ={}  | schema1 |
     Then execute sql in "mysql-master2"
       | sql                                                                                | expect        |
-      | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(0L,),}   |
+      | select count(*) from mysql.general_log where argument like'select name%from test%' | has{(0,),}   |
     Then execute sql in "mysql-slave1"
       | sql                                                                                | expect        |
       | select count(*) from mysql.general_log where argument like'select name%from test%' | balance{5000} |
