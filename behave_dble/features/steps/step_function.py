@@ -144,7 +144,7 @@ def step_impl(context, filename):
             col2 = col1 +1
             col3 = "abcd"
             col4 = "1234"
-            for i in xrange(15000):
+            for i in range(15000):
                 data = str(col1)+','+str(col2)+','+str(col3)+','+str(col4)
                 fp.write(data + '\n')
                 col1= col1+1
@@ -153,7 +153,7 @@ def step_impl(context, filename):
         s = "a"
         with open(filename, 'w') as fp:
             fp.writelines(s + ",")
-            for i in xrange(68888):
+            for i in range(68888):
                 fp.writelines(s)
 
     else:
