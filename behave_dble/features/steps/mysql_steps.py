@@ -111,7 +111,7 @@ def step_impl(context, host_name, num, concur="100"):
         my_dic["toClose"] = "False"
         last_count = tasks_count-1
         sql_raw = my_dic["sql"]
-        for k in range(tasks_count):
+        for k in range(int(tasks_count)):
             if k==last_count:
                 my_dic["toClose"] = "true"
             id = base_id+k
