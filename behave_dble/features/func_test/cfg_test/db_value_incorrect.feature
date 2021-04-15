@@ -123,7 +123,7 @@ Feature: config db config files incorrect and restart dble or reload configs
       """
 
 
-   Scenario: dbInstance's has non-exist parameters, reload the configs #10
+  Scenario: dbInstance's has non-exist parameters, reload the configs #10
      #dble-9114
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
