@@ -4,6 +4,8 @@
 
 Feature:  dble_sharding_node table test
 
+
+
  Scenario:  dble_sharding_node table #1
   #case desc dble_sharding_node
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_node_1"
@@ -145,4 +147,51 @@ Feature:  dble_sharding_node table test
       | dn5    | ha_group1  | db3         | false   |
       | dn6    | ha_group2  | db3         | false   |
 
+
+  Scenario:  check sharding_node on schema #2
+
+     #When add a new dn is xml, but there is no table in sharding.xml that is actually in use,shardingnode will not show in table
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <shardingNode dbGroup="ha_group2" database="db3" name="dn6" />
+    """
+    Then execute admin cmd "reload @@config"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "1"
+      | conn   | toClose | sql                              | db               |
+      | conn_0 | False   | select * from dble_sharding_node | dble_information |
+    Then check resultset "1" has lines with following column values
+      | name-0 | db_group-1 | db_schema-2 | pause-3 |
+      | dn1    | ha_group1  | db1         | false   |
+      | dn2    | ha_group2  | db1         | false   |
+      | dn3    | ha_group1  | db2         | false   |
+      | dn4    | ha_group2  | db2         | false   |
+      | dn5    | ha_group1  | db3         | false   |
+    Then check resultset "1" has not lines with following column values
+      | name-0 | db_group-1 | db_schema-2 | pause-3 |
+      | dn6    | ha_group2  | db3         | false   |
+
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn6" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Then execute admin cmd "reload @@config"
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
+      | conn   | toClose | sql                              | db               |
+      | conn_0 | False   | select * from dble_sharding_node | dble_information |
+    Then check resultset "2" has lines with following column values
+      | name-0 | db_group-1 | db_schema-2 | pause-3 |
+      | dn1    | ha_group1  | db1         | false   |
+      | dn2    | ha_group2  | db1         | false   |
+      | dn3    | ha_group1  | db2         | false   |
+      | dn4    | ha_group2  | db2         | false   |
+      | dn6    | ha_group2  | db3         | false   |
+    Then check resultset "2" has not lines with following column values
+      | name-0 | db_group-1 | db_schema-2 | pause-3 |
+      | dn5    | ha_group1  | db3         | false   |
 

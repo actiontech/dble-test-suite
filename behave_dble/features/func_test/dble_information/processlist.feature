@@ -80,7 +80,7 @@ Feature:  processlist test
       | conn_1 | False   | drop table if exists test                        | success |
       | conn_1 | True    | drop table if exists sharding_4_t1               | success |
 
-
+   #github 1843
     Given delete the following xml segment
       | file         | parent         | child                  |
       | user.xml     | {'tag':'root'} | {'tag':'shardingUser'} |
@@ -90,6 +90,7 @@ Feature:  processlist test
     """
     Then execute admin cmd "reload @@config"
     Then execute admin cmd "select * from dble_information.processlist"
+    Then execute admin cmd "show @@processlist"
 
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
@@ -107,4 +108,4 @@ Feature:  processlist test
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_1 | False   | commit                                        | success | db1 |
-      | rwS1 | 111111 | conn_1 | True    | drop table if exists test_table                | success | db1 |
+      | rwS1 | 111111 | conn_1 | True    | drop table if exists test_table               | success | db1 |
