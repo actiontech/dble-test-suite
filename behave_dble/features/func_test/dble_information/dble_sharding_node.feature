@@ -5,7 +5,7 @@
 Feature:  dble_sharding_node table test
 
 
-  @skip
+
  Scenario:  dble_sharding_node table #1
   #case desc dble_sharding_node
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_sharding_node_1"
