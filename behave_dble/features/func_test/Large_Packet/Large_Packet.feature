@@ -34,6 +34,7 @@ Feature:Support MySQL's large package protocol
     Given turn on general log in "mysql-master2"
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
+      s/-Xmx1G/-Xmx4G/g
       /DmaxPacketSize/d
       /# processor/a -DmaxPacketSize=7340032
       """
