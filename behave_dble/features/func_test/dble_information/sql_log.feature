@@ -1034,6 +1034,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 19,20,21  | 3           | 3               |
       | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 22,23     | 2           | 2               |
 
+
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                                           | expect  | db  |
@@ -1391,7 +1392,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | length{(0)} | dble_information |
 
 
-    #case Syntax error sql will not be counted --shardinguser
+    #case Syntax error sql will not be counted --rwSplitUser
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
       | split1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
