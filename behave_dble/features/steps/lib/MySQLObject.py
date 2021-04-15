@@ -46,7 +46,7 @@ class MySQLObject(object):
         rc, status_out, std_err = self._mysql_meta.ssh_conn.exec_command(cmd_status)
 
         # if mysqld already stopped,do not stop it again
-        if status_out.find("msb*? on") != -1:
+        if status_out.find("msb_{} on".format(self._mysql_meta.mysql_version)) != -1:
             # self.turn_off_general_log_and_clean()
 
             logger.debug("try to stop mysql")
@@ -77,7 +77,7 @@ class MySQLObject(object):
             cd, out, err =self._mysql_meta.ssh_conn.exec_command(cmd_start)
             self._mysql_meta.close_ssh()
             logger.debug("Checking MySQL start success......")
-            success_p = "msb_{0} on".format(self._mysql_meta.mysql_version)
+            success_p = "sandbox server started"
             obj = re.search(success_p, out)
             isSuccess = obj is not None
             assert isSuccess, "start mysql err: {1}".format(err)

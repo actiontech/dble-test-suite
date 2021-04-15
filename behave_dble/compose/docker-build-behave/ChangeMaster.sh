@@ -18,10 +18,10 @@ sleep 5s
 
 echo "==================  reset slave ${2}  =================="
 ssh root@${2}  "mysql -uroot -p111111 -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
-ssh root@${2}  "mysql -uroot -p111111 -e \"change master to master_host='${master_ip}', master_user='repl', master_password='111111', master_auto_position=1;\""
+ssh root@${2}  "mysql -uroot -p111111 -e \"change master to master_host='${master_ip}', master_port=3307, master_user='repl', master_password='111111', master_auto_position=1;\""
 ssh root@${2}  "mysql -uroot -p111111 -e \"start slave;\" "
 
 echo "==================  reset slave ${3}  =================="
 ssh root@${3}  "mysql -uroot -p111111 -e \"reset master;stop slave;reset slave all;set global gtid_purged='';\" "
-ssh root@${3}  "mysql -uroot -p111111 -e \"change master to master_host='${master_ip}', master_user='repl', master_password='111111', master_auto_position=1;\""
+ssh root@${3}  "mysql -uroot -p111111 -e \"change master to master_host='${master_ip}', master_port=3307, master_user='repl', master_password='111111', master_auto_position=1;\""
 ssh root@${3}  "mysql -uroot -p111111 -e \"start slave;\" "
