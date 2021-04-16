@@ -1757,24 +1757,11 @@ Feature: In order to calculate the route, the where condition needs to be proces
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
-   #case "join", no predigest
-#    Given record current dble log line number in "log_5"
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                                                                                                   | expect      | db      |
-#      | conn_0 | False   | select * from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=2) and (a.id=3 or b.id=3)   | length{(1)} | schema1 |
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
-#      | conn   | toClose | sql          |
-#      | conn_0 | False   | show trace   |
-#    Then check resultset "rs_1" has lines with following column values
-#      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                                                                                                                 |
-#
-
-#    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
-#    """
-#
-#    """
-
-
+   #case "join", no predigest # 1014
+    Given record current dble log line number in "log_5"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                  | expect                                                            | db      |
+      | conn_0 | False   | select * from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=2) and (a.id=3 or b.id=3)   | join node mergebuild exception! Error:can not execute empty rrss! | schema1 |
 
     #case "union", a table is send to 2 nodes, and b table is empty condition broadcast
     Given record current dble log line number in "log_6"
@@ -2166,22 +2153,11 @@ Feature: In order to calculate the route, the where condition needs to be proces
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
-#    #case "subquery",no simply
-#    Given record current dble log line number in "log_16"
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                                                                                                                           | expect      | db      |
-#      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=2) and (a.id=3 or b.id=3))m  | length{(1)} | schema1 |
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
-#      | conn   | toClose | sql          |
-#      | conn_0 | true    | show trace   |
-#    Then check resultset "rs_1" has lines with following column values
-#      | OPERATION-0           | SHARDING_NODE-4 | SQL/REF-5                                                                                                                                                                                  |
-#
-#                                                                                                                                                                              |
-#   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_16" in host "dble-1"
-#    """
-#
-#    """
+    #case "subquery",no simply  # 1014
+    Given record current dble log line number in "log_16"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                           | expect                                                            | db      |
+      | conn_0 | False   | select * from (select a.id,b.age from sharding_4_t1 a,schema2.sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=2) and (a.id=3 or b.id=3))m  | join node mergebuild exception! Error:can not execute empty rrss! | schema1 |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                     | expect      | db      |
