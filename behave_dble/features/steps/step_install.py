@@ -476,7 +476,7 @@ def check_cluster_successd(context, expectNodes):
     cmd_ssh = get_ssh("dble-1")
     rc, sto, ste = cmd_ssh.exec_command(cmd)
     LOGGER.debug("add debug to check the result of executing {0} is :sto:{1}".format(cmd,sto))
-    sub_sto = re.findall(r'[[](.*)[]]', sto)
+    sub_sto = re.findall(r'[\[](.*)[\]]', sto)
     LOGGER.debug("add debug to check the result of sub_sto is :{0}".format(sub_sto))
     nodes = sub_sto[0].replace(",", " ").split()
     LOGGER.debug("add debug to check the result of nodes is:{0}".format(nodes))
