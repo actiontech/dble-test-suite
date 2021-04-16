@@ -2,7 +2,7 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 echo "master is ${1},slaves are ${2} and ${3},and mysql version is ${4}"
-master_ip=`ssh root@${1} "hostname -i"`
+master_ip=`ssh root@${1} "hostname -i" | cut -d " " -f 2`
 echo "master ip is ${master_ip}"
 
 mysql_version=`echo ${4} | sed 's/\./\_/g'`
