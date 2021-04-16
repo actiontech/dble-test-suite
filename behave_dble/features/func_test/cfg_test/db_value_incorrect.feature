@@ -102,10 +102,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
       4,14d
     """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-    The dbGroup[ha_group1] associated with ShardingNode[dn3] does not exist
-    """
+    Then execute admin cmd "reload @@config_all"
+
 
 
   Scenario: dbInstance's url duplicate in one dbGroup, reload the configs #9
