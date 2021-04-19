@@ -6,6 +6,7 @@
 import logging
 import re
 import operator
+import collections
 
 from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
@@ -122,7 +123,7 @@ class PostQueryCheck(object):
                 assert real == bHas, "expect {0} in resultset {1}".format(resExpect, bHas)
         else:  # for single query resultset
             if len(resExpect) == len(res) and type(resExpect[0]) == type(res[0]):
-                real = operator.eq(sorted(list(resExpect)), sorted(list(res))) == 1
+                real = collections.Counter(list(resExpect)) == collections.Counter(list(res))
             else:
                 real = res.__contains__(resExpect)
 
