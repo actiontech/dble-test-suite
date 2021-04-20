@@ -25,7 +25,7 @@ def step_impl(context, host_name, mode_name,rs_name, result_key=None):
     info_dict['sql'] = info_dict['sql'].format(param_value)
     context.logger.debug("the sql value is {0} ".format(info_dict['sql']))
 
-    if info_dict.has_key('expect'):
+    if 'expect' in info_dict:
         expect = info_dict['expect']
         length_obj = re.search(r"length\{(.*?)\}", expect, re.I)
         context.logger.debug("the length_obj value is {0} ".format(length_obj))
