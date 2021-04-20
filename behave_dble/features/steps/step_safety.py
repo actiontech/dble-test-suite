@@ -69,7 +69,7 @@ def test_readonly_schema(context):
         value = int(item['dml'])
         LOGGER.info("dml: {0}".format(value / 1))
         for i in range(4):
-            if value % 10 == 1:
+            if int(value % 10) == 1:
                 if i == 0:
                     permission.append("DELETE")
                 if i == 1:
