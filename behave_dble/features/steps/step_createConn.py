@@ -62,7 +62,7 @@ def step_impl(context,num,maxNum):
 def step_impl(context, num, sql):
     num = int(num)
     for i in range(0,num):
-        thread.start_new_thread(createConn,(context,i,sql))
+        _thread.start_new_thread(createConn,(context,i,sql))
     time.sleep(10)
     if context.text:
         context.logger.info("create conn got err:{0}".format(errs))
