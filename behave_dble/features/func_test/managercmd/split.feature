@@ -64,11 +64,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
       | conn_0 | False    | create table global_sequence(id bigint,name varchar(30),age int,PRIMARY KEY(id),INDEX id(name))        | schema1 |
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
-      mv /opt/schema1_with_only_data.sql-dn3-*.dump /opt/schema1_with_only_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn3.dump && \
-      mv /opt/schema1_with_only_data.sql-dn5-*.dump /opt/schema1_with_only_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn5.dump && \
-      mv /opt/schema1_with_only_data.sql-dn2-*.dump /opt/schema1_with_only_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn2.dump && \
-      mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
+      mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
+      mv /opt/schema1_with_only_data.sql-dn3-*.dump /opt/schema1_with_only_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn3.dump && \
+      mv /opt/schema1_with_only_data.sql-dn5-*.dump /opt/schema1_with_only_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn5.dump && \
+      mv /opt/schema1_with_only_data.sql-dn2-*.dump /opt/schema1_with_only_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn2.dump && \
+      mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                        | expect       |db          |
@@ -114,11 +114,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
-      mv /opt/schema1_with_only_data.sql-dn3-*.dump /opt/schema1_with_only_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn3.dump && \
-      mv /opt/schema1_with_only_data.sql-dn5-*.dump /opt/schema1_with_only_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn5.dump && \
-      mv /opt/schema1_with_only_data.sql-dn2-*.dump /opt/schema1_with_only_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn2.dump && \
-      mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
+      mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
+      mv /opt/schema1_with_only_data.sql-dn3-*.dump /opt/schema1_with_only_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn3.dump && \
+      mv /opt/schema1_with_only_data.sql-dn5-*.dump /opt/schema1_with_only_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn5.dump && \
+      mv /opt/schema1_with_only_data.sql-dn2-*.dump /opt/schema1_with_only_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn2.dump && \
+      mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                            | expect                                       |db          |
@@ -182,11 +182,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/noschema_only_table_data.sql-dn1-*.dump /opt/noschema_only_table_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb1< /opt/noschema_only_table_data.sql-dn1.dump && \
-      mv /opt/noschema_only_table_data.sql-dn3-*.dump /opt/noschema_only_table_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb2 < /opt/noschema_only_table_data.sql-dn3.dump && \
-      mv /opt/noschema_only_table_data.sql-dn5-*.dump /opt/noschema_only_table_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 -Ddb3< /opt/noschema_only_table_data.sql-dn5.dump && \
-      mv /opt/noschema_only_table_data.sql-dn2-*.dump /opt/noschema_only_table_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb1< /opt/noschema_only_table_data.sql-dn2.dump && \
-      mv /opt/noschema_only_table_data.sql-dn4-*.dump /opt/noschema_only_table_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 -Ddb2< /opt/noschema_only_table_data.sql-dn4.dump
+      mv /opt/noschema_only_table_data.sql-dn1-*.dump /opt/noschema_only_table_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 -Ddb1< /opt/noschema_only_table_data.sql-dn1.dump && \
+      mv /opt/noschema_only_table_data.sql-dn3-*.dump /opt/noschema_only_table_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 -Ddb2 < /opt/noschema_only_table_data.sql-dn3.dump && \
+      mv /opt/noschema_only_table_data.sql-dn5-*.dump /opt/noschema_only_table_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 -Ddb3< /opt/noschema_only_table_data.sql-dn5.dump && \
+      mv /opt/noschema_only_table_data.sql-dn2-*.dump /opt/noschema_only_table_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 -Ddb1< /opt/noschema_only_table_data.sql-dn2.dump && \
+      mv /opt/noschema_only_table_data.sql-dn4-*.dump /opt/noschema_only_table_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 -Ddb2< /opt/noschema_only_table_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -239,11 +239,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
-      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
-      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
-      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
-      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn4.dump
+      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
+      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
+      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
+      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
+      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -279,11 +279,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
-      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
-      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
-      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
-      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn4.dump
+      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
+      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
+      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
+      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
+      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -319,11 +319,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
-      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
-      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
-      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
-      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data.sql-dn4.dump
+      mv /opt/schema1_with_data.sql-dn1-*.dump /opt/schema1_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn1.dump && \
+      mv /opt/schema1_with_data.sql-dn3-*.dump /opt/schema1_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn3.dump && \
+      mv /opt/schema1_with_data.sql-dn5-*.dump /opt/schema1_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn5.dump && \
+      mv /opt/schema1_with_data.sql-dn2-*.dump /opt/schema1_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn2.dump && \
+      mv /opt/schema1_with_data.sql-dn4-*.dump /opt/schema1_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -377,11 +377,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/all_schemas_with_data.sql-dn1-*.dump /opt/all_schemas_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn1.dump && \
-      mv /opt/all_schemas_with_data.sql-dn3-*.dump /opt/all_schemas_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn3.dump && \
-      mv /opt/all_schemas_with_data.sql-dn5-*.dump /opt/all_schemas_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn5.dump && \
-      mv /opt/all_schemas_with_data.sql-dn2-*.dump /opt/all_schemas_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn2.dump && \
-      mv /opt/all_schemas_with_data.sql-dn4-*.dump /opt/all_schemas_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn4.dump
+      mv /opt/all_schemas_with_data.sql-dn1-*.dump /opt/all_schemas_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn1.dump && \
+      mv /opt/all_schemas_with_data.sql-dn3-*.dump /opt/all_schemas_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn3.dump && \
+      mv /opt/all_schemas_with_data.sql-dn5-*.dump /opt/all_schemas_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn5.dump && \
+      mv /opt/all_schemas_with_data.sql-dn2-*.dump /opt/all_schemas_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn2.dump && \
+      mv /opt/all_schemas_with_data.sql-dn4-*.dump /opt/all_schemas_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -424,11 +424,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     #upload data into every nodes and check data is correct in dble
     Given execute oscmd in "dble-1"
      """
-      mv /opt/all_schemas_with_data.sql-dn1-*.dump /opt/all_schemas_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn1.dump && \
-      mv /opt/all_schemas_with_data.sql-dn3-*.dump /opt/all_schemas_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn3.dump && \
-      mv /opt/all_schemas_with_data.sql-dn5-*.dump /opt/all_schemas_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn5.dump && \
-      mv /opt/all_schemas_with_data.sql-dn2-*.dump /opt/all_schemas_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn2.dump && \
-      mv /opt/all_schemas_with_data.sql-dn4-*.dump /opt/all_schemas_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/all_schemas_with_data.sql-dn4.dump
+      mv /opt/all_schemas_with_data.sql-dn1-*.dump /opt/all_schemas_with_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn1.dump && \
+      mv /opt/all_schemas_with_data.sql-dn3-*.dump /opt/all_schemas_with_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn3.dump && \
+      mv /opt/all_schemas_with_data.sql-dn5-*.dump /opt/all_schemas_with_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn5.dump && \
+      mv /opt/all_schemas_with_data.sql-dn2-*.dump /opt/all_schemas_with_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn2.dump && \
+      mv /opt/all_schemas_with_data.sql-dn4-*.dump /opt/all_schemas_with_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/all_schemas_with_data.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
@@ -521,11 +521,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_only_data.sql-dn5-*.dump" in "dble-1" should exist
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
-      mv /opt/schema1_with_only_data.sql-dn3-*.dump /opt/schema1_with_only_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn3.dump && \
-      mv /opt/schema1_with_only_data.sql-dn5-*.dump /opt/schema1_with_only_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn5.dump && \
-      mv /opt/schema1_with_only_data.sql-dn2-*.dump /opt/schema1_with_only_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn2.dump && \
-      mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
+      mv /opt/schema1_with_only_data.sql-dn1-*.dump /opt/schema1_with_only_data.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn1.dump && \
+      mv /opt/schema1_with_only_data.sql-dn3-*.dump /opt/schema1_with_only_data.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn3.dump && \
+      mv /opt/schema1_with_only_data.sql-dn5-*.dump /opt/schema1_with_only_data.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn5.dump && \
+      mv /opt/schema1_with_only_data.sql-dn2-*.dump /opt/schema1_with_only_data.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn2.dump && \
+      mv /opt/schema1_with_only_data.sql-dn4-*.dump /opt/schema1_with_only_data.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_only_data.sql-dn4.dump
      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                            | expect                                                                        |db          |
@@ -623,11 +623,11 @@ Feature: test split: split src dest [-sschema] [-r500] [-w500] [-l10000] [-ignor
     Then check path "/opt/schema1_with_data_special.sql-dn5-*.dump" in "dble-1" should exist
     Given execute oscmd in "dble-1"
      """
-      mv /opt/schema1_with_data_special.sql-dn1-*.dump /opt/schema1_with_data_special.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn1.dump && \
-      mv /opt/schema1_with_data_special.sql-dn3-*.dump /opt/schema1_with_data_special.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn3.dump && \
-      mv /opt/schema1_with_data_special.sql-dn5-*.dump /opt/schema1_with_data_special.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn5.dump && \
-      mv /opt/schema1_with_data_special.sql-dn2-*.dump /opt/schema1_with_data_special.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn2.dump && \
-      mv /opt/schema1_with_data_special.sql-dn4-*.dump /opt/schema1_with_data_special.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3306 -p111111 < /opt/schema1_with_data_special.sql-dn4.dump
+      mv /opt/schema1_with_data_special.sql-dn1-*.dump /opt/schema1_with_data_special.sql-dn1.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data_special.sql-dn1.dump && \
+      mv /opt/schema1_with_data_special.sql-dn3-*.dump /opt/schema1_with_data_special.sql-dn3.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data_special.sql-dn3.dump && \
+      mv /opt/schema1_with_data_special.sql-dn5-*.dump /opt/schema1_with_data_special.sql-dn5.dump && mysql -h172.100.9.5 -utest -P3307 -p111111 < /opt/schema1_with_data_special.sql-dn5.dump && \
+      mv /opt/schema1_with_data_special.sql-dn2-*.dump /opt/schema1_with_data_special.sql-dn2.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data_special.sql-dn2.dump && \
+      mv /opt/schema1_with_data_special.sql-dn4-*.dump /opt/schema1_with_data_special.sql-dn4.dump && mysql -h172.100.9.6 -utest -P3307 -p111111 < /opt/schema1_with_data_special.sql-dn4.dump
      """
     Then execute admin cmd "reload @@metadata"
     Then execute sql in "dble-1" in "user" mode
