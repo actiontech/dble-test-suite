@@ -102,7 +102,7 @@ def step_impl(context, host_name, num, concur="100"):
     info_dic = row.as_dict()
     concur = min(int(concur), num)
 
-    tasks_per_thread = num/concur
+    tasks_per_thread = int(num/concur)
     mod_tasks = num%concur
 
     def do_thread_tasks(host_name, info_dic, base_id, tasks_count, eflag):
