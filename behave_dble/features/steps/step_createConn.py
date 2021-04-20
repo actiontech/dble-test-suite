@@ -11,7 +11,7 @@ from hamcrest import *
 
 from steps.step_reload import get_dble_conn
 
-LOGGER = logging.getLogger('steps.install')
+LOGGER = logging.getLogger('steps.createConn')
 
 my_thread={}
 def createConn(context,num,sql):
@@ -44,7 +44,7 @@ def step_impl(context,num,maxNum):
     maxNum = int(maxNum)
 
     for i in range(0,num):
-        thread.start_new_thread(createConn,(context,i,''))
+        _thread.start_new_thread(createConn,(context,i,''))
 
     time.sleep(15)
     if context.text:
