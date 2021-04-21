@@ -69,7 +69,7 @@ class PostQueryCheck(object):
                 assert_that(self._real_err is None, "expect query success, but failed for '{0}'".format(self._real_err))
                 match_Obj = matchObj.group(1)
                 logger.debug("expect match_obj:{0}".format(match_Obj))
-                match_Obj_Split = re.split(r'[;,\s]', match_Obj.encode('ascii'))
+                match_Obj_Split = re.split(r'[;,\s]', str(match_Obj.encode('ascii')))
                 logger.debug("expect match_Obj_Split:{0}".format(match_Obj_Split))
                 self.matchResultSet(self._real_res, match_Obj_Split, len(match_Obj_Split) - 1)
                 break

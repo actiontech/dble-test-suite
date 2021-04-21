@@ -112,7 +112,7 @@ def step_impl(context):
     ssh_client = mysql_node.ssh_conn;
 
     cmd="rm -rf {0}".format(local_file)
-    ssh_client.exec_command(cmd);
+    ssh_client.exec_command(cmd)
 
     context.ssh_sftp.sftp_get(source_remote_file, local_file)
     mysql_node.sftp_conn.sftp_put(local_file, target_remote_file)
