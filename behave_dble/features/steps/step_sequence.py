@@ -17,10 +17,11 @@ def insertOneRow(context, table, rowsPerThread):
     conn = get_dble_conn(context)
     sql = "insert into {0} values('abc')".format(table)
     context.logger.debug("execute query in subthread")
-    for i in range(rowsPerThread):
+    for i in range(int(rowsPerThread)):
         res, errMsg = conn.query(sql)
         assert errMsg is None, "expect '{0}' success, but get: {1}".format(sql, errMsg)
     conn.close()
+
 
 @Then('insert "{totalsRowsInsert:d}" rows to global sequence table "{table}" in "{threadNum:d}" thread')
 def step_impl(context, totalsRowsInsert, table, threadNum):
