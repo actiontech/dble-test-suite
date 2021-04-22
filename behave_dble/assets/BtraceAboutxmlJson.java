@@ -16,7 +16,7 @@ public final class BtraceAboutxmlJson {
     public static void syncJsonToLocal(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
         BTraceUtils.println("get into sleep");
         BTraceUtils.println("---------------");
-        Thread.sleep(20000L);
+        Thread.sleep(60000L);
         BTraceUtils.println("sleep end ");
         BTraceUtils.println("---------------");
     }

@@ -765,10 +765,10 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
 
     #case update sql
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
+      | conn   | toClose | sql                                                                                                       | expect         | db               |
       | conn_0 | true    | update dble_db_group set heartbeat_stmt='select user()',heartbeat_timeout=1 where name = 'ha_group3'      | success        | dble_information |
       | conn_0 | true    | update dble_db_instance set max_conn_count= '999' where db_group = 'ha_group3'                            | success        | dble_information |
-      | conn_0 | true    | update dble_rw_split_entry set max_conn_count = '1000' where db_group = 'ha_group3'                         | success        | dble_information |
+      | conn_0 | true    | update dble_rw_split_entry set max_conn_count = '1000' where db_group = 'ha_group3'                       | success        | dble_information |
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
@@ -929,37 +929,3 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
 
     Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  #    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-#      """
-#      $a sequenceHandlerType=4
-#      """
-#    When Add some data in "sequence_conf.properties"
-#    """
-#    `schema2`.`GLOBAL`.MINID=10001
-#    `schema2`.`GLOBAL`.MAXID=20000
-#    `schema2`.`GLOBAL`.CURID=10000
-#    """
-#    Then Restart dble in "dble-1" success
-#    Then execute "admin" cmd  in "dble-1" at background
-#      | conn   | toClose | sql                         | db               |
-#      | conn_1 | True    | select * from dble_config   | dble_information |
-#    Given sleep "2" seconds
