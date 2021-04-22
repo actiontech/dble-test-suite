@@ -121,7 +121,7 @@ def test_schema_table(context):
         value = int(item['schema_dml'])
         LOGGER.info("dml: {0}".format(value / 1))
         for i in range(4):
-            if value % 10 == 1:
+            if int(value % 10) == 1:
                 if i == 0:
                     schema_permission.append("DELETE")
                 if i == 1:
@@ -170,7 +170,7 @@ def test_schema_table(context):
             table_permission = []
             value = int(conf_table['dml'])
             for i in range(4):
-                if value % 10 == 1:
+                if int(value % 10) == 1:
                     if i == 0:
                         table_permission.append("DELETE")
                     if i == 1:
