@@ -259,12 +259,12 @@ Feature: test some import nodes attr in sharding.xml
     Given Restart dble in "dble-1" success
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master2"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
     #wait 1s for minCon recover
@@ -292,12 +292,12 @@ Feature: test some import nodes attr in sharding.xml
     Then execute admin cmd "reload @@config_all -f"
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep '172.100.9.5'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master2"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep '172.100.9.6'| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master2" except ones in "heartbeat_Ids_master2"
     Given sleep "1" seconds
@@ -330,7 +330,7 @@ Feature: test some import nodes attr in sharding.xml
     Given Restart dble in "dble-1" success
     Given execute linux command in "dble-1" and save result in "heartbeat_Ids_master1"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill all backend conns in "mysql-master1" except ones in "heartbeat_Ids_master1"
     #wait 1s for minCon recover
