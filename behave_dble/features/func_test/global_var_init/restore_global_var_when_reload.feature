@@ -233,11 +233,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
 # find backend conns of query "insert into sharrding_2_t1 values(1),(2)" and heartbeat used in dble.log
     Given execute linux command in "dble-1" and save result in "heartbeat_master1"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep "172.100.9.5"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep "172.100.9.5"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given execute linux command in "dble-1" and save result in "heartbeat_master2"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep "172.100.9.6"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep "172.100.9.6"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given execute linux command in "mysql-master1" and save result in "backendIds_master1"
     """
@@ -297,11 +297,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
       | conn_0 | true    | commit                                  | success | schema1 |
     Given execute linux command in "dble-1" and save result in "heartbeat_master1"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep "172.100.9.5"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep "172.100.9.5"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given execute linux command in "dble-1" and save result in "heartbeat_master2"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" |grep "172.100.9.6"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" |grep "172.100.9.6"| awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given execute linux command in "mysql-master1" and save result in "backendIds_master1"
     """

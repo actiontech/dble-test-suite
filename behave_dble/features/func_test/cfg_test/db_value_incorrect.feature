@@ -102,10 +102,8 @@ Feature: config db config files incorrect and restart dble or reload configs
     """
       4,14d
     """
-    Then execute admin cmd "reload @@config_all" get the following output
-    """
-      The content of element 'dble:db' is not complete. One of '{dbGroup}' is expected
-    """
+    Then execute admin cmd "reload @@config_all"
+
 
 
   Scenario: dbInstance's url duplicate in one dbGroup, reload the configs #9
@@ -120,4 +118,19 @@ Feature: config db config files incorrect and restart dble or reload configs
     Then execute admin cmd "reload @@config_all" get the following output
       """
       dbGroup[ha_group2]'s child url [172.100.9.6:3307]  duplicated!
+      """
+
+
+  Scenario: dbInstance's has non-exist parameters, reload the configs #10
+     #dble-9114
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" switchType="1" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true" />
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config_all" get the following output
+      """
+      Attribute 'switchType' is not allowed to appear in element 'dbGroup'
       """

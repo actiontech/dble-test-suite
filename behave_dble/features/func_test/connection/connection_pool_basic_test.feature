@@ -107,7 +107,7 @@ Feature: connection pool basic test
     Then execute admin cmd "reload @@config_all"
     Given execute linux command in "dble-1" and save result in "dble_idle_connections"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -Ddble_information -e "select remote_processlist_id from backend_connections where used_for_heartbeat='false' and db_instance_name='M1' "
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -Ddble_information -e "select remote_processlist_id from backend_connections where used_for_heartbeat='false' and db_instance_name='M1' "
     """
     Given kill mysql conns in "mysql-master1" in "dble_idle_connections"
     Then execute sql in "dble-1" in "admin" mode
