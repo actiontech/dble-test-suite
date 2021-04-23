@@ -40,7 +40,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     Then execute sql in "dble-1" in "user" mode
@@ -109,7 +109,7 @@ Feature: heartbeat basic test
    Given prepare a thread run btrace script "BtraceHeartbeat.java" in "dble-1"
    Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3,$NF}' | grep true |awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3,$NF}' | grep true |awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     Then check btrace "BtraceHeartbeat.java" output in "dble-1"
@@ -152,7 +152,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_0 | True     | create table sharding_2_t1(id int,name varchar(30))    | success | schema1 |
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given record current dble log line number in "log_linenu"
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
@@ -204,7 +204,7 @@ Feature: heartbeat basic test
     Given record current dble log line number in "log_linenu"
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     #the first time retry failed, and connection pool is available
@@ -217,7 +217,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     #the second time retry failed, and connection pool is available
@@ -230,7 +230,7 @@ Feature: heartbeat basic test
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     #the 3trd time retry failed, the heartbeat set error and connection pool is not available
@@ -240,7 +240,7 @@ Feature: heartbeat basic test
     """
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
@@ -295,7 +295,7 @@ Feature: heartbeat basic test
     Given prepare a thread run btrace script "BtraceHeartbeat.java" in "dble-1"
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     #the first time retry failed,and connection pool is available
@@ -309,7 +309,7 @@ Feature: heartbeat basic test
     Given sleep "3" seconds
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     #the second time retry failed,and connection pool is available
@@ -325,7 +325,7 @@ Feature: heartbeat basic test
     Given sleep "5" seconds
     Given execute linux command in "dble-1" and save result in "master1_heartbeat_id"
     """
-    mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
+    mysql -P{node:manager_port} -u{node:manager_user} -h{node:ip} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
     #the 3trd time retry success, the heartbeat setOk and connection pool is available
