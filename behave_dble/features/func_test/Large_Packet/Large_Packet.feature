@@ -14,7 +14,8 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-   @restore_mysql_config
+   @skip  @restore_mysql_config
+     # DBLE0REQ-960
    Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
