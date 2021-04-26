@@ -266,7 +266,7 @@ Feature:  dble_entry test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                             | expect          | db               |
       | conn_0 | False   | desc dble_blacklist             | length{(4)}     | dble_information |
-      | conn_0 | False   | select * from dble_blacklist    | length{(236)}   | dble_information |
+      | conn_0 | False   | select * from dble_blacklist    | length{(240)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_blacklist_2"
       | conn   | toClose | sql                                                       | db               |
       | conn_0 | False   | select * from dble_blacklist where user_configured='true' | dble_information |
@@ -296,7 +296,7 @@ Feature:  dble_entry test
 #case supported select max/min
       | conn_0 | False   | select max(property_key) from dble_blacklist                      | has{(('wrapAllow',),)}        |
       | conn_0 | False   | select min(property_key) from dble_blacklist                      | has{(('alterTableAllow',),)}  |
-      | conn_0 | False   | select count(name),name from dble_blacklist group by name         | has{((59,'black1',),(59,'blacklist2',),(59,'list3',),(59,'blacklist',))}  |
+      | conn_0 | False   | select count(name),name from dble_blacklist group by name         | has{((60,'black1',),(60,'blacklist2',),(60,'list3',),(60,'blacklist',))}  |
 #case unsupported dml
       | conn_0 | False   | delete from dble_blacklist where property_value='true'                         | Access denied for table 'dble_blacklist'     |
       | conn_0 | False   | update dble_blacklist set property_value = 'a' where property_value='true'     | Access denied for table 'dble_blacklist'     |
