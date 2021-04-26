@@ -818,7 +818,7 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
 
     #case delete sql
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
+      | conn   | toClose | sql                                                                                  | expect         | db               |
       | conn_0 | true    | delete from dble_rw_split_entry where db_group = 'ha_group3'                         | success        | dble_information |
       | conn_0 | true    | delete from dble_db_instance where db_group = 'ha_group3'                            | success        | dble_information |
       | conn_0 | true    | delete from dble_db_group where name='ha_group3'                                     | success        | dble_information |

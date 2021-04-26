@@ -1275,7 +1275,6 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
 
 
-@skip_restart
   Scenario: test dble_information dble_config dml check json on zk config #5
 
     #case insert sql
@@ -1406,15 +1405,980 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     <shardingUser name="test" password="111111" schemas="schema1"/>
     <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
     """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select 1</heartbeat>
+        <dbInstance name="hostM3" url="172.100.9.1:3306" password="111111" user="test" maxCon="7544" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+            <property name="connectionTimeout">30000</property>
+            <property name="connectionHeartbeatTimeout">20</property>
+            <property name="testOnCreate">false</property>
+            <property name="testOnBorrow">false</property>
+            <property name="testOnReturn">false</property>
+            <property name="testWhileIdle">false</property>
+            <property name="timeBetweenEvictionRunsMillis">30000</property>
+            <property name="evictorShutdownTimeoutMillis">10000</property>
+            <property name="idleTimeout">600000</property>
+            <property name="heartbeatPeriodMillis">10000</property>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select 1</heartbeat>
+        <dbInstance name="hostM3" url="172.100.9.1:3306" password="111111" user="test" maxCon="7544" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+            <property name="connectionTimeout">30000</property>
+            <property name="connectionHeartbeatTimeout">20</property>
+            <property name="testOnCreate">false</property>
+            <property name="testOnBorrow">false</property>
+            <property name="testOnReturn">false</property>
+            <property name="testWhileIdle">false</property>
+            <property name="timeBetweenEvictionRunsMillis">30000</property>
+            <property name="evictorShutdownTimeoutMillis">10000</property>
+            <property name="idleTimeout">600000</property>
+            <property name="heartbeatPeriodMillis">10000</property>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+
+
 
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
-      | conn_1 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,0,100,'false')                                                             | success        | dble_information |
-    Given execute sql in "dble-2" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
-      | conn_2 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3306','test','111111','false','true','1','7544')       | success        | dble_information |
+      | conn_1 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group4','select user()',0,1,0,100,'false')                                                        | success        | dble_information |
+      | conn_1 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM4','ha_group4','172.100.9.2','3306','test','111111','false','true','1','89757')      | success        | dble_information |
     Given execute sql in "dble-3" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
-      | conn_3 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw1','111111','false','100','ha_group3')                                                                                 | success        | dble_information |
+      | conn_3 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','999','ha_group4')                                                                                 | success        | dble_information |
 
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group4","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM4","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":89757,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    "property":\[
+    {"value":"30000","name":"connectionTimeout"},
+    {"value":"20","name":"connectionHeartbeatTimeout"},
+    {"value":"false","name":"testOnCreate"},
+    {"value":"false","name":"testOnBorrow"},
+    {"value":"false","name":"testOnReturn"},
+    {"value":"false","name":"testWhileIdle"},
+    {"value":"30000","name":"timeBetweenEvictionRunsMillis"},
+    {"value":"10000","name":"evictorShutdownTimeoutMillis"},
+    {"value":"600000","name":"idleTimeout"},
+    {"value":"10000","name":"heartbeatPeriodMillis"}
+    """
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+    """
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":999}
+    """
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group4","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM4","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":89757,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    "property":\[
+    {"value":"30000","name":"connectionTimeout"},
+    {"value":"20","name":"connectionHeartbeatTimeout"},
+    {"value":"false","name":"testOnCreate"},
+    {"value":"false","name":"testOnBorrow"},
+    {"value":"false","name":"testOnReturn"},
+    {"value":"false","name":"testWhileIdle"},
+    {"value":"30000","name":"timeBetweenEvictionRunsMillis"},
+    {"value":"10000","name":"evictorShutdownTimeoutMillis"},
+    {"value":"600000","name":"idleTimeout"},
+    {"value":"10000","name":"heartbeatPeriodMillis"}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":999}
+    """
+
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group4","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM4","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":89757,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    "property":\[
+    {"value":"30000","name":"connectionTimeout"},
+    {"value":"20","name":"connectionHeartbeatTimeout"},
+    {"value":"false","name":"testOnCreate"},
+    {"value":"false","name":"testOnBorrow"},
+    {"value":"false","name":"testOnReturn"},
+    {"value":"false","name":"testWhileIdle"},
+    {"value":"30000","name":"timeBetweenEvictionRunsMillis"},
+    {"value":"10000","name":"evictorShutdownTimeoutMillis"},
+    {"value":"600000","name":"idleTimeout"},
+    {"value":"10000","name":"heartbeatPeriodMillis"}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":999}
+    """
+
+    Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group4","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM4","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":89757,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    "property":\[
+    {"value":"30000","name":"connectionTimeout"},
+    {"value":"20","name":"connectionHeartbeatTimeout"},
+    {"value":"false","name":"testOnCreate"},
+    {"value":"false","name":"testOnBorrow"},
+    {"value":"false","name":"testOnReturn"},
+    {"value":"false","name":"testWhileIdle"},
+    {"value":"30000","name":"timeBetweenEvictionRunsMillis"},
+    {"value":"10000","name":"evictorShutdownTimeoutMillis"},
+    {"value":"600000","name":"idleTimeout"},
+    {"value":"10000","name":"heartbeatPeriodMillis"}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":999}
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select user()</heartbeat>
+        <dbInstance name="hostM4" url="172.100.9.2:3306" password="111111" user="test" maxCon="89757" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+            <property name="connectionTimeout">30000</property>
+            <property name="connectionHeartbeatTimeout">20</property>
+            <property name="testOnCreate">false</property>
+            <property name="testOnBorrow">false</property>
+            <property name="testOnReturn">false</property>
+            <property name="testWhileIdle">false</property>
+            <property name="timeBetweenEvictionRunsMillis">30000</property>
+            <property name="evictorShutdownTimeoutMillis">10000</property>
+            <property name="idleTimeout">600000</property>
+            <property name="heartbeatPeriodMillis">10000</property>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="999" dbGroup="ha_group4"/>
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select user()</heartbeat>
+        <dbInstance name="hostM4" url="172.100.9.2:3306" password="111111" user="test" maxCon="89757" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+            <property name="connectionTimeout">30000</property>
+            <property name="connectionHeartbeatTimeout">20</property>
+            <property name="testOnCreate">false</property>
+            <property name="testOnBorrow">false</property>
+            <property name="testOnReturn">false</property>
+            <property name="testWhileIdle">false</property>
+            <property name="timeBetweenEvictionRunsMillis">30000</property>
+            <property name="evictorShutdownTimeoutMillis">10000</property>
+            <property name="idleTimeout">600000</property>
+            <property name="heartbeatPeriodMillis">10000</property>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="999" dbGroup="ha_group4"/>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group4" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select user()</heartbeat>
+        <dbInstance name="hostM4" url="172.100.9.2:3306" password="111111" user="test" maxCon="89757" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+            <property name="connectionTimeout">30000</property>
+            <property name="connectionHeartbeatTimeout">20</property>
+            <property name="testOnCreate">false</property>
+            <property name="testOnBorrow">false</property>
+            <property name="testOnReturn">false</property>
+            <property name="testWhileIdle">false</property>
+            <property name="timeBetweenEvictionRunsMillis">30000</property>
+            <property name="evictorShutdownTimeoutMillis">10000</property>
+            <property name="idleTimeout">600000</property>
+            <property name="heartbeatPeriodMillis">10000</property>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="999" dbGroup="ha_group4"/>
+    """
+
+
+
+  Scenario: test dble_information dble_config dml check json on zk config use btrace  #6
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-DprocessorExecutor=/d
+      $a -DprocessorExecutor=4
+      """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+      """
+      /-DprocessorExecutor=/d
+      $a -DprocessorExecutor=4
+      """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+      """
+      /-DprocessorExecutor=/d
+      $a -DprocessorExecutor=4
+      """
+    Given Restart dble in "dble-1" success
+    Given Restart dble in "dble-2" success
+    Given Restart dble in "dble-3" success
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                                                                                                                    | expect         | db               |
+      | conn_1 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,0,100,'false')                                                             | success        | dble_information |
+      | conn_1 | true    | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3306','test','111111','false','true','1','7544')       | success        | dble_information |
+      | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw1','111111','false','100','ha_group3')                                                                                 | success        | dble_information |
+
+   #case dble-2 add btrace
+    Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-2"
+    Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-2"
+    Given update file content "./assets/BtraceAboutxmlJson.java" in "behave" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+    /syncJsonToLocal/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    """
+    Given prepare a thread run btrace script "BtraceAboutxmlJson.java" in "dble-2"
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                                                            | db               |
+      | conn_1 | True    | delete from dble_rw_split_entry where db_group = 'ha_group3'   | dble_information |
+    Then check btrace "BtraceAboutxmlJson.java" output in "dble-2" with "1" times
+    """
+    get into sleep
+    """
+    Given execute sql in "dble-2" in "admin" mode
+      | conn   | toClose | sql                                                                   | expect                                                     | db               |
+      | conn_2 | true    | delete from dble_db_instance where db_group = 'ha_group3'             | Other instance is reloading, please try again later        | dble_information |
+      | conn_2 | true    | select * from dble_config                                             | hasStr{ha_group3}                                          | dble_information |
+    Given execute sql in "dble-3" in "admin" mode
+      | conn   | toClose | sql                                                                   | expect                                                     | db               |
+      | conn_3 | true    | delete from dble_db_group where name='ha_group3'                      | Other instance is reloading, please try again later        | dble_information |
+      | conn_3 | true    | select * from dble_config                                             | hasStr{ha_group3}                                          | dble_information |
+      | conn_3 | true    | reload @@config_all                                                   | Other instance is reloading, please try again later        | dble_information |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                                                        | expect                                                     | db               |
+      | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group3')                     | Other instance is reloading, please try again later        | dble_information |
+      | conn_1 | true    | select * from dble_config                                                                                                                                                  | hasNoStr{rw2}                                              | dble_information |
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group3","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select 1","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM3","url":"172.100.9.1:3306","password":"111111","user":"test","maxCon":7544,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true
+    """
+
+    Given execute linux command in "dble-3"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+    """
+    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-3"
+    """
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw1","password":"111111","usingDecrypt":"false","maxCon":100}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":100}
+    """
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group3","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select 1","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM3","url":"172.100.9.1:3306","password":"111111","user":"test","maxCon":7544,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw1","password":"111111","usingDecrypt":"false","maxCon":100}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":100}
+    """
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_2 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group3","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select 1","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM3","url":"172.100.9.1:3306","password":"111111","user":"test","maxCon":7544,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw1","password":"111111","usingDecrypt":"false","maxCon":100}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":100}
+    """
+    Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_3 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group3","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select 1","timeout":0,"errorRetryCount":1}
+    "dbInstance":\[
+    {"name":"hostM3","url":"172.100.9.1:3306","password":"111111","user":"test","maxCon":7544,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw1","password":"111111","usingDecrypt":"false","maxCon":100}
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw2","password":"111111","usingDecrypt":"false","maxCon":100}
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select 1</heartbeat>
+        <dbInstance name="hostM3" url="172.100.9.1:3306" password="111111" user="test" maxCon="7544" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-1"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    """
+    Then check following text exist "N" in file "/opt/dble/conf/user.xml" in host "dble-1"
+    """
+    <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select 1</heartbeat>
+        <dbInstance name="hostM3" url="172.100.9.1:3306" password="111111" user="test" maxCon="7544" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+    Then check following text exist "N" in file "/opt/dble/conf/user.xml" in host "dble-2"
+    """
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select 1</heartbeat>
+        <dbInstance name="hostM3" url="172.100.9.1:3306" password="111111" user="test" maxCon="7544" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-3"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    """
+    Then check following text exist "N" in file "/opt/dble/conf/user.xml" in host "dble-3"
+    """
+    <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+
+    Given stop btrace script "BtraceAboutxmlJson.java" in "dble-2"
+    Given destroy btrace threads list
+    Given sleep "60" seconds
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
+        <heartbeat timeout="0" errorRetryCount="1">select 1</heartbeat>
+        <dbInstance name="hostM3" url="172.100.9.1:3306" password="111111" user="test" maxCon="7544" minCon="1" usingDecrypt="false" disabled="false" readWeight="0" primary="true">
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/user.xml" in host "dble-2"
+    """
+    <managerUser name="root" password="111111"/>
+    <shardingUser name="test" password="111111" schemas="schema1"/>
+    """
+    Then check following text exist "N" in file "/opt/dble/conf/user.xml" in host "dble-2"
+    """
+    <rwSplitUser name="rw1" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    <rwSplitUser name="rw2" password="111111" usingDecrypt="false" maxCon="100" dbGroup="ha_group3"/>
+    """
+
+
+
+  Scenario: test ha with check json on zk config use btrace  #8
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" primary="false" />
+        <dbInstance name="hostS2" password="111111" url="172.100.9.3:3306" user="test" maxCon="1000" minCon="10" primary="false" />
+    </dbGroup>
+    """
+    Then execute admin cmd "reload @@config"
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      /-DprocessorExecutor=/d
+      $a -DprocessorExecutor=4
+      """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+      """
+      /-DprocessorExecutor=/d
+      $a -DprocessorExecutor=4
+      """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+      """
+      /-DprocessorExecutor=/d
+      $a -DprocessorExecutor=4
+      """
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+      """
+      s/needSyncHa=false/needSyncHa=true/
+      s/clusterEnable=false/clusterEnable=true/
+      """
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-2" with sed cmds
+      """
+      s/needSyncHa=false/needSyncHa=true/
+      s/clusterEnable=false/clusterEnable=true/
+      """
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-3" with sed cmds
+      """
+      s/needSyncHa=false/needSyncHa=true/
+      s/clusterEnable=false/clusterEnable=true/
+      """
+    Given Restart dble in "dble-1" success
+    Given Restart dble in "dble-2" success
+    Given Restart dble in "dble-3" success
+
+    Then execute admin cmd "dbGroup @@disable name='ha_group2' instance = 'hostM2'"
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"dbGroup":"ha_group2","dbInstance":\[{"name":"hostM2","disable":true,"primary":true},{"name":"hostS1","disable":false,"primary":false},{"name":"hostS2","disable":false,"primary":false}\]}
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_2 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+    Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_3 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+
+    Then execute admin cmd "dbGroup @@enable name='ha_group2' instance = 'hostM2'"
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"dbGroup":"ha_group2","dbInstance":\[{"name":"hostM2","disable":false,"primary":true},{"name":"hostS1","disable":false,"primary":false},{"name":"hostS2","disable":false,"primary":false}\]}
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_2 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+    Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_3 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+
+   #case dble-1 add btrace
+    Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutxmlJson.java" in "behave" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(10L)/
+    /updateDbGroupConf/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(30000L)/;/\}/!ba}
+    """
+    Given prepare a thread run btrace script "BtraceAboutxmlJson.java" in "dble-1"
+
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                                    | db               |
+      | conn_2 | True    | dbGroup @@disable name = 'ha_group2'   | dble_information |
+    Given sleep "5" seconds
+    Given execute sql in "dble-3" in "admin" mode
+      | conn   | toClose | sql                                                                   | expect                                                               | db               |
+      | conn_3 | true    | dbGroup @@switch name='ha_group2' master='hostS1'                     | Other instance is changing the dbGroup, please try again later       | dble_information |
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"dbGroup":"ha_group2","dbInstance":\[{"name":"hostM2","disable":true,"primary":true},{"name":"hostS1","disable":true,"primary":false},{"name":"hostS2","disable":true,"primary":false}\]}
+    """
+    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"dbGroup":"ha_group2","dbInstance":\[{"name":"hostM2","disable":true,"primary":false},{"name":"hostS1","disable":true,"primary":true},{"name":"hostS2","disable":true,"primary":false}\]}
+    """
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false}
+    """
+
+    Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false}
+    """
+
+    Then check following text exist "N" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    </dbGroup>
+    """
+    Given stop btrace script "BtraceAboutxmlJson.java" in "dble-1"
+    Given destroy btrace threads list
+    Given sleep "60" seconds
+
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    </dbGroup>
+    """
+
+    Then execute admin cmd "dbGroup @@switch name='ha_group2' master='hostS1'"
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"dbGroup":"ha_group2","dbInstance":\[{"name":"hostM2","disable":true,"primary":false},{"name":"hostS1","disable":true,"primary":true},{"name":"hostS2","disable":true,"primary":false}\]}
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" disabled="true" primary="false"/>
+    </dbGroup>
+    """
+     Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false}
+    """
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false}
+    """
+     Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":true},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"disabled":"true","primary":false}
+    """
+    Given execute sql in "dble-3" in "admin" mode
+      | conn   | toClose | sql                                                           | expect                                                                                        | db               |
+      | conn_3 | true    | select name,primary from dble_db_instance                     | has{(('hostM1', 'true'), ('hostM2', 'false'), ('hostS1', 'true'), ('hostS2', 'false'))}       | dble_information |
+
+    Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
+
+    Given execute linux command in "dble-2"
+    """
+    cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/dbGroups/dbGroup_status/ha_group2 >/tmp/dble_zk_db.log 2>&1 &
+    """
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-2"
+    """
+    {"dbGroup":"ha_group2","dbInstance":\[{"name":"hostM2","disable":false,"primary":false},{"name":"hostS1","disable":false,"primary":true},{"name":"hostS2","disable":false,"primary":false}\]}
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-2"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+    Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-3"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100">
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" url="172.100.9.6:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+        <dbInstance name="hostS1" url="172.100.9.2:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="true"/>
+        <dbInstance name="hostS2" url="172.100.9.3:3306" password="111111" user="test" maxCon="1000" minCon="10" primary="false"/>
+    </dbGroup>
+    """
+     Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+     Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
+    "dbInstance":\[
+    {"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false},
+    {"name":"hostS1","url":"172.100.9.2:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true},
+    {"name":"hostS2","url":"172.100.9.3:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":false}
+    """
+
+    Then execute admin cmd "dbGroup @@disable name = 'ha_group2'"
+    Given sleep "3" seconds
+    Then execute admin cmd "dbGroup @@switch name='ha_group2' master='hostM2'"
+    Given sleep "3" seconds
+    Then execute admin cmd "dbGroup @@enable name = 'ha_group2'"
+
+
+
+  Scenario: test xml to json with only rwSplitUser  #9
+
+    Given delete the following xml segment
+      | file       | parent         | child                  |
+      | user.xml   | {'tag':'root'} | {'tag':'managerUser'}  |
+      | user.xml   | {'tag':'root'} | {'tag':'shardingUser'} |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <managerUser name="root" password="111111"/>
+    <rwSplitUser name="test" password="111111" dbGroup="ha_group2"/>
+    """
+    Then execute admin cmd "reload @@config_all"
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    "user":\[
+    {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group2","name":"test","password":"111111"}
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    "type":"ShardingUser"
+    """
+    Then execute "admin" cmd  in "dble-2" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_2 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
+    """
+    "user":\[
+    {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group2","name":"test","password":"111111"}
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    "type":"ShardingUser"
+    """
+    Then execute "admin" cmd  in "dble-3" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_3 | True    | select * from dble_config   | dble_information |
+    Given sleep "1" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-3"
+    """
+    "user":\[
+    {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group2","name":"test","password":"111111"}
+    """
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    "type":"ShardingUser"
+    """
+    Given execute sql in "dble-3" in "admin" mode
+      | conn   | toClose | sql                                          | expect                      | db               |
+      | conn_3 | true    | select * from dble_entry                     | hasStr{rwSplitUser}         | dble_information |
+      | conn_3 | true    | select * from dble_entry                     | hasNoStr{shardingUser}      | dble_information |
+
+
+
+  Scenario: test xml to json with special case  #10
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+    <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4,dn10" function="hash-four" shardingColumn="id"/>
+    </schema>
+    """
+    Given execute sql in "dble-2" in "admin" mode
+      | conn   | toClose | sql                                | expect          | db               |
+      | conn_2 | true    | reload @@config                    | success         | dble_information |
+
+    Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
+    """
+    dn10
+    """

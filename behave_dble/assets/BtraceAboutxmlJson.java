@@ -20,4 +20,21 @@ public final class BtraceAboutxmlJson {
         BTraceUtils.println("sleep end ");
         BTraceUtils.println("---------------");
     }
+
+    @OnMethod(
+            clazz = "com.actiontech.dble.singleton.HaConfigManager",
+            method = "updateDbGroupConf"
+    )
+    public static void updateDbGroupConf(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        long startTime = System.currentTimeMillis();
+        BTraceUtils.println("time["+startTime+"], start ... " );
+        BTraceUtils.println("befroe updateDbGroupConf ...");
+        BTraceUtils.println();
+        Thread.sleep(120000L);
+        long endTime = System.currentTimeMillis();
+        BTraceUtils.println("time["+endTime+"], end ... " );
+        BTraceUtils.println();
+    }
+
+
 }
