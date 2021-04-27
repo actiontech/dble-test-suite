@@ -27,7 +27,7 @@ Feature: general log test
     /-DenableGeneralLog/d
     /-DgeneralLogFileSize/d
     $a\-DenableGeneralLog=-1
-    $a\-DgeneralLogFileSize=0
+    $a\-DgeneralLogFileSize=-1
     """
     Then restart dble in "dble-1" failed for
     """
