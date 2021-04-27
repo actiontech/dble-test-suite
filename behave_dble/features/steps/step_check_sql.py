@@ -154,8 +154,8 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
 
     if type(dble_result) == tuple and type(mysql_result) == tuple:
         if (isAllowDiffSequ) or (sql.lower().find('order by') == -1):
-            dble_result = sorted(dble_result)
-            mysql_result = sorted(mysql_result)
+            dble_result = sorted(dble_result, key=lambda x: x[0] if x[0] is not None else chr(ord(str(None)[0])-46))
+            mysql_result = sorted(mysql_result, key=lambda x: x[0] if x[0] is not None else chr(ord(str(None)[0])-46))
 
         if (isContIndex or isAllowTenDiff):
             g = difflib.SequenceMatcher(None, str(dble_result), str(mysql_result)).ratio()
