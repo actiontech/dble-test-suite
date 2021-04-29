@@ -200,6 +200,11 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.StatisticProvider#onOffStatistic||sql统计表的，开关命令|
 |com.actiontech.dble.btrace.provider.StatisticProvider#showStatistic||sql统计表，show命令|
 |com.actiontech.dble.backend.mysql.nio.handler.ConnectionHeartBeatHandler|ping|连接有效性测试|
+|com.actiontech.dble.btrace.provider.GeneralProvider|getGeneralLogQueueSize|general log队列值|
+|com.actiontech.dble.btrace.provider.GeneralProvider|onOffGeneralLog|开启general log|
+|com.actiontech.dble.btrace.provider.GeneralProvider|updateGeneralLogFile|reload general log日志文件|
+|com.actiontech.dble.btrace.provider.GeneralProvider|showGeneralLog|查看general log参数|
+
 
 ### 小版本改动：
 * 版本号

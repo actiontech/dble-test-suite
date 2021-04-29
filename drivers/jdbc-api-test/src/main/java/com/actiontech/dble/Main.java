@@ -75,6 +75,9 @@ public class Main {
 			DriverManagerTest dmt = new DriverManagerTest(mysqlProp, testProp);
 			dmt.start_test();
 
+			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp);
+			generalLogTest.start_test();
+
 			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp);
 			capClientFoundRowsTest.start_test();
 
