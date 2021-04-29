@@ -2339,7 +2339,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group2","name":"test","password":"111111"}
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-2"
     """
     "type":"ShardingUser"
     """
@@ -2353,7 +2353,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group2","name":"test","password":"111111"}
     """
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-3"
     """
     "type":"ShardingUser"
     """

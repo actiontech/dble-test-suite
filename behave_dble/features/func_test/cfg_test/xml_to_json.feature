@@ -344,15 +344,6 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
     """
     <property name="lifo">true</property>
     """
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn   | toClose | sql                         | db               |
-      | conn_1 | True    | select * from dble_config   | dble_information |
-    Given sleep "2" seconds
-    Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
-    """
-    "name":"ha_group5"
-    lifo
-    """
 
 
 
