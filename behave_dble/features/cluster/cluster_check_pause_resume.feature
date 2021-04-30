@@ -143,10 +143,10 @@ Feature: test "pause/resume" in zk cluster
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
       """
     Then check result "A" value is "1"
-    # restart dble would failed for "err:(2013, "Lost connection to MySQL server at 'reading initial communication packet', system error: 104")"
+
     Then restart dble in "dble-3" failed for
     """
-    reading initial communication packet
+    Other node in cluster is doing pause/resume operation. We can't bootstrap unless this operation is ok.
     """
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose  | sql        | expect    | db       |
