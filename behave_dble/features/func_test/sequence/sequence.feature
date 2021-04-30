@@ -123,6 +123,9 @@ Feature: Functional testing of global sequences
       | sql                                                            | expect      | db      |
       | select count(*) from test_auto having count(*) > 1 group by id | length{(0)} | schema1 |
 
+
+
+
  Scenario: Verify the illegal value of the parameter in the sequence_time_conf.properties  #3
   #    case points:
   #  1.Verify the illegal value of the instanceId
@@ -143,7 +146,7 @@ Feature: Functional testing of global sequences
     """
     Then restart dble in "dble-1" failed for
     """
-        instanceId can't be greater than 1023 or less than 0
+    instanceId can't be greater than 1023 or less than 0
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -157,7 +160,7 @@ Feature: Functional testing of global sequences
     """
     Then restart dble in "dble-1" failed for
     """
-        instanceId can't be greater than 1023 or less than 0
+    instanceId can't be greater than 1023 or less than 0
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -165,7 +168,7 @@ Feature: Functional testing of global sequences
     """
     Then restart dble in "dble-1" failed for
     """
-        instanceId can't be greater than 1023 or less than 0
+     instanceId can't be greater than 1023 or less than 0
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -179,7 +182,7 @@ Feature: Functional testing of global sequences
      """
     Then restart dble in "dble-1" failed for
     """
-        Invalid format: "2010/11/04 09:42:54" is malformed at "/11/04 09:42:54"
+    sequenceStartTime in cluster.cnf invalid format, you can use default value 2010-11-04 09:42:54
     """
 #    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
 #    """
@@ -197,7 +200,7 @@ Feature: Functional testing of global sequences
     """
     Then restart dble in "dble-1" failed for
     """
-      sequenceStartTime in cluster.cnf mustn't be over than dble start time
+    sequenceStartTime in cluster.cnf mustn't be over than dble start time
     """
 #    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
 #    """

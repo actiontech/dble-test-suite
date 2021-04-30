@@ -24,7 +24,7 @@ Feature: test config in user.xml
 
     Then Restart dble in "dble-1" failed for
      """
-     schema testdb referred by user test_user3 is not exist!
+     User\[name:test_user3\]'s schema \[testdb\] is not exist!
      """
 
   @BLOCKER
