@@ -460,7 +460,7 @@ def reset_zk_nodes(context):
     
 @Then ('Monitored folling nodes online')
 def step_impl(context):
-    text = context.text.strip().encode('utf-8')
+    text = context.text.strip()
     expectNodes = text.splitlines()
     
     check_cluster_successd(context, expectNodes)
