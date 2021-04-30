@@ -71,8 +71,8 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
     """
     Then restart dble in "dble-1" failed for
     """
-    Property [ samplingRate ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-    Property [ sqlLogTableSize ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    Property \[ samplingRate \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    Property \[ sqlLogTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -82,8 +82,8 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
     """
     Then restart dble in "dble-1" failed for
     """
-    Property [ samplingRate ] '1000' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-    property [ sqlLogTableSize ] '99.99' data type should be int
+    Property \[ samplingRate \] '1000' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    property \[ sqlLogTableSize \] '99.99' data type should be int
     """
 
    #case set correct values
