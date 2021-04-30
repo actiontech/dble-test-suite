@@ -3,6 +3,9 @@
 # Created by maofei at 2019/4/16
 Feature: #mysql node disconnected,check the change of dble
   # Enter feature description here
+
+
+
   @restore_mysql_service
   Scenario: # only one mysql node and it was disconnected    #1
      """
@@ -40,7 +43,7 @@ Feature: #mysql node disconnected,check the change of dble
       | conn_0 | True    | reload @@config_all   | Reload config failure.The reason is Can't get variables from any dbInstance, because all of dbGroup can't connect to MySQL correctly  |
     Then restart dble in "dble-1" failed for
     """
-    Can't get variables from data node
+    Can't get variables from all dbGroups
     """
     Given start mysql in host "mysql-master1"
     Given Restart dble in "dble-1" success

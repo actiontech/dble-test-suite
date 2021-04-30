@@ -1106,11 +1106,11 @@ Feature:manager Cmd
     """
     Then restart dble in "dble-1" failed for
     """
-    Property [ statisticQueueSize ] '10' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
-    Property [ enableStatistic ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
-    property [ frontendByBackendByEntryByUserTableSize ] '44%' data type should be int
-    Property [ tableByUserByEntryTableSize ] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
-    Property [ associateTablesByEntryByUserTableSize ] '0' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    Property \[ statisticQueueSize \] '10' in bootstrap.cnf is illegal, size must not be less than 1 and must be a power of 2, you may need use the default value 4096 replaced
+    Property \[ enableStatistic \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    property \[ frontendByBackendByEntryByUserTableSize \] '44%' data type should be int
+    Property \[ tableByUserByEntryTableSize \] '-1' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
+    Property \[ associateTablesByEntryByUserTableSize \] '0' in bootstrap.cnf is illegal, you may need use the default value 1024 replaced
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds

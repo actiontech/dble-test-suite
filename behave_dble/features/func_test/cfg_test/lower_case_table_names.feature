@@ -120,14 +120,14 @@ Feature: check collation/lower_case_table_names works right for dble
     """
     Then restart dble in "dble-1" failed for
     """
-    schema DbTest referred by user test is not exist!
+    User\[name:test\]'s schema \[DbTest\] is not exist!
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
-        <schema name="DbTest">
-             <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
-        </schema>
+    <schema name="DbTest">
+         <shardingTable name="Test_Table" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" />
+    </schema>
     """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -161,6 +161,9 @@ Feature: check collation/lower_case_table_names works right for dble
       | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from Test)          |Test doesn't exist  | schema1 |
       | conn_1 | True    |select s.id from DbTest.Test_Table S union (select id from test)          |error totally whack | schema1 |
       | conn_1 | True    |select s.id from DbTest.`Test_Table` s where s.name='aa'                  |success             | schema1 |
+
+
+
 
   @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #3
@@ -202,15 +205,15 @@ Feature: check collation/lower_case_table_names works right for dble
     Then execute admin cmd "reload @@config_all"
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user      | passwd | conn   | toClose | sql                                             | expect  | db |
-      | test_user | 111111 | conn_0 | False   | use schema1                                     | success |    |
-      | test_user | 111111 | conn_0 | False   | drop table if exists aly_test                   | success |    |
-      | test_user | 111111 | conn_0 | False   | create table aly_test(id int, name varchar(10)) | success |    |
-      | test_user | 111111 | conn_0 | False   | insert into aly_test value(1,'a')               | success |    |
-      | test_user | 111111 | conn_0 | False   | update aly_test set name='b' where id=1         | success |    |
-      | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |    |
-      | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |    |
-      | test_user | 111111 | conn_0 | true    | show create table aly_test                      | success |    |
+      | user      | passwd | conn   | toClose | sql                                             | expect  |
+      | test_user | 111111 | conn_0 | False   | use schema1                                     | success |
+      | test_user | 111111 | conn_0 | False   | drop table if exists aly_test                   | success |
+      | test_user | 111111 | conn_0 | False   | create table aly_test(id int, name varchar(10)) | success |
+      | test_user | 111111 | conn_0 | False   | insert into aly_test value(1,'a')               | success |
+      | test_user | 111111 | conn_0 | False   | update aly_test set name='b' where id=1         | success |
+      | test_user | 111111 | conn_0 | False   | select * from aly_test                          | success |
+      | test_user | 111111 | conn_0 | False   | delete from aly_test                            | success |
+      | test_user | 111111 | conn_0 | true    | show create table aly_test                      | success |
 
   @BLOCKER @restore_mysql_config
   Scenario:set backend mysql lower_case_table_names=1 , dble will deal with queries case sensitive #4
@@ -245,19 +248,19 @@ Feature: check collation/lower_case_table_names works right for dble
     Then execute admin cmd "reload @@config_all"
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                                                       | expect  | db |
-      | test | 111111 | conn_0 | False   | use schema1                                                               | success |    |
-      | test | 111111 | conn_0 | False   | drop table if exists tb_child1                                            | success |    |
-      | test | 111111 | conn_0 | False   | create table tb_child1(child1_id int, name varchar(10))                   | success |    |
-      | test | 111111 | conn_0 | False   | insert into tb_child1 value(1,'a')                                        | success |    |
-      | test | 111111 | conn_0 | False   | update tb_child1 set name='b' where child1_id=1                           | success |    |
-      | test | 111111 | conn_0 | False   | select * from tb_child1                                                   | success |    |
-      | test | 111111 | conn_0 | False   | delete from tb_child1                                                     | success |    |
-      | test | 111111 | conn_0 | False   | show create table tb_child1                                               | success |    |
-      | test | 111111 | conn_0 | False   | drop table if exists tb_grandson1                                         | success |    |
-      | test | 111111 | conn_0 | False   | create table tb_grandson1 (grandson1_id int, name varchar(10))            | success |    |
-      | test | 111111 | conn_0 | False   | insert into tb_grandson1  value(1,'a')                                    | success |    |
-      | test | 111111 | conn_0 | False   | update tb_grandson1  set name='b' where grandson1_id=1                    | success |    |
-      | test | 111111 | conn_0 | False   | select * from tb_grandson1                                                | success |    |
-      | test | 111111 | conn_0 | False   | delete from tb_grandson1                                                  | success |    |
-      | test | 111111 | conn_0 | true    | show create table tb_grandson1                                            | success |    |
+      | user | passwd | conn   | toClose | sql                                                                       | expect  |
+      | test | 111111 | conn_0 | False   | use schema1                                                               | success |
+      | test | 111111 | conn_0 | False   | drop table if exists tb_child1                                            | success |
+      | test | 111111 | conn_0 | False   | create table tb_child1(child1_id int, name varchar(10))                   | success |
+      | test | 111111 | conn_0 | False   | insert into tb_child1 value(1,'a')                                        | success |
+      | test | 111111 | conn_0 | False   | update tb_child1 set name='b' where child1_id=1                           | success |
+      | test | 111111 | conn_0 | False   | select * from tb_child1                                                   | success |
+      | test | 111111 | conn_0 | False   | delete from tb_child1                                                     | success |
+      | test | 111111 | conn_0 | False   | show create table tb_child1                                               | success |
+      | test | 111111 | conn_0 | False   | drop table if exists tb_grandson1                                         | success |
+      | test | 111111 | conn_0 | False   | create table tb_grandson1 (grandson1_id int, name varchar(10))            | success |
+      | test | 111111 | conn_0 | False   | insert into tb_grandson1  value(1,'a')                                    | success |
+      | test | 111111 | conn_0 | False   | update tb_grandson1  set name='b' where grandson1_id=1                    | success |
+      | test | 111111 | conn_0 | False   | select * from tb_grandson1                                                | success |
+      | test | 111111 | conn_0 | False   | delete from tb_grandson1                                                  | success |
+      | test | 111111 | conn_0 | true    | show create table tb_grandson1                                            | success |
