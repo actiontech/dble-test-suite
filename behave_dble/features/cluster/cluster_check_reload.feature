@@ -143,31 +143,47 @@ Feature: test "reload @@config" in zk cluster
       | dn1             | BASE SQL   | INSERT INTO sharding2 VALUES (12, 12, 12) |
       | dn2             | BASE SQL   | INSERT INTO sharding2 VALUES (11, 11, 11) |
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding2" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "hostM3" | wc -l
+      "name":"sharding2"
       """
-    Then get result of oscmd named "C" in "dble-2"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep "schema1,schema2" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
       """
-    Then get result of oscmd named "D" in "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common | grep "schema1" | wc -l
+      "name":"hostM3"
       """
-    Then get result of oscmd named "E" in "dble-3"
+    Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
       """
-    Then check result "A" value is "1"
-    Then check result "B" value is "1"
-    Then check result "C" value is "1"
-    Then check result "D" value is "1"
-    Then check result "E" value is "0"
+    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+      """
+      "schemas":"schema1,schema2","name":"test"
+      """
+    Given execute linux command in "dble-2"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common  >/tmp/dble_zk_sequences.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/tmp/dble_zk_sequences.log" in host "dble-2"
+      """
+      {"sequence_db_conf.properties":"{\\\"`schema1`.`test_auto`\\\":\\\"dn1\\\"}"
+      """
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
+
     #change config on dble-2,then check on dble-1 dble-3
     Given update file content "/opt/dble/conf/sharding.xml" in "dble-2" with sed cmds
     """
@@ -232,13 +248,7 @@ Feature: test "reload @@config" in zk cluster
       """
       <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3"/>
       """
-    # has issue
-#    When Add some data in "sequence_conf.properties"
-#    """
-#    `schema2`.`GLOBAL`.MINID=10001
-#    `schema2`.`GLOBAL`.MAXID=20000
-#    `schema2`.`GLOBAL`.CURID=10000
-#    """
+
     Then execute admin cmd "reload @@config_all"
     #check config on dble-1
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
@@ -305,31 +315,40 @@ Feature: test "reload @@config" in zk cluster
       | dn2             | BASE SQL   | INSERT INTO sharding3 VALUES (12, 12, 12) |
       | dn1             | BASE SQL   | INSERT INTO sharding3 VALUES (11, 11, 11) |
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "108" | wc -l
+      "name":"sharding3"
       """
-    Then get result of oscmd named "C" in "dble-2"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep "schema1,schema2,schema3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
       """
-#    Then get result of oscmd named "D" in "dble-2"
-#      """
-#      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sequences/common | grep "schema2" | wc -l
-#      """
-    Then get result of oscmd named "E" in "dble-3"
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "name":"hostM"
+      "maxCon":108
       """
-    Then check result "A" value is "1"
-    Then check result "B" value is "1"
-    Then check result "C" value is "1"
-#    Then check result "D" value is "1"
-    Then check result "E" value is "0"
+    Given execute linux command in "dble-2"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
+      """
+      "schemas":"schema1,schema2,schema3","name":"test"
+      """
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
+
     #case change config on dble-3
     Given update file content "/opt/dble/conf/sharding.xml" in "dble-3" with sed cmds
     """
@@ -348,7 +367,7 @@ Feature: test "reload @@config" in zk cluster
 
 
 
-  #@skip_restart
+  @skip_restart
   Scenario: set cluster.cnf sequenceHandlerType=2 and change xml failed then reload on admin mode #3
     #case change config on sharding.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -388,21 +407,26 @@ Feature: test "reload @@config" in zk cluster
       Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : ID > table shardingNode size : 2, please make sure table shardingnode size = function partition size
       """
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding4" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding3" | wc -l
+      "name":"sharding4"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "name":"sharding3"
       """
-    Then check result "A" value is "0"
-    Then check result "B" value is "1"
-    Then check result "C" value is "0"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
     #case change config corrnect
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
@@ -427,21 +451,26 @@ Feature: test "reload @@config" in zk cluster
       <shardingTable name="sharding4" shardingNode="dn2,dn1,dn3" function="hash-three" shardingColumn="id"/>
       """
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding4" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding3" | wc -l
+      "name":"sharding3"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "name":"sharding4"
       """
-    Then check result "A" value is "1"
-    Then check result "B" value is "0"
-    Then check result "C" value is "0"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
 
 
     #case change db config
@@ -480,21 +509,28 @@ Feature: test "reload @@config" in zk cluster
       '\''1.2'\'' is not a valid value for '\''integer'\''
       """
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "10086" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "108" | wc -l
+      "maxCon":108
+      "rwSplitMode":0,"name":"ha_group1"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "maxCon":10086
+      "rwSplitMode":1.2
       """
-    Then check result "A" value is "0"
-    Then check result "B" value is "1"
-    Then check result "C" value is "0"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
       """
@@ -524,21 +560,28 @@ Feature: test "reload @@config" in zk cluster
       maxCon="10086"
       """
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "108" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db  >/tmp/dble_zk_db.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "N" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/db | grep "10086" | wc -l
+      "maxCon":108
+      "rwSplitMode":0,"name":"ha_group1"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "Y" in file "/tmp/dble_zk_db.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "maxCon":10086
+      "rwSplitMode":1
       """
-    Then check result "A" value is "0"
-    Then check result "B" value is "1"
-    Then check result "C" value is "0"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
 
     #case change user config
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -570,21 +613,26 @@ Feature: test "reload @@config" in zk cluster
       Reload config failure
       """
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep "schema1,schema2,schema3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep ""schema1,schema4444"" | wc -l
+      "schemas":"schema1,schema2,schema3","name":"test"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "schemas":"schema1,schema4444","name":"test"
       """
-    Then check result "A" value is "1"
-    Then check result "B" value is "0"
-    Then check result "C" value is "0"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
 
     Then execute sql in "dble-3" in "admin" mode
       | sql             | expect      |
@@ -632,26 +680,29 @@ Feature: test "reload @@config" in zk cluster
       | dn2             | BASE SQL   | INSERT INTO sharding4 VALUES (12, 12, 12)   |
       | dn1             | BASE SQL   | INSERT INTO sharding4 VALUES (13, 13, 13)   |
     #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep "schema1,schema2,schema3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user  >/tmp/dble_zk_user.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/user | grep ""schema1,schema4"" | wc -l
+      "schemas":"schema1,schema2,schema3","name":"test"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "N" in file "/tmp/dble_zk_user.log" in host "dble-2"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock " | wc -l
+      "schemas":"schema1,schema4444","name":"test"
       """
-    Then check result "A" value is "1"
-    Then check result "B" value is "0"
-    Then check result "C" value is "0"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
 
 
-
-  @btrace @skip
-    #todo the btrace is blocked
+  @btrace
   Scenario: change xml ,use btrace create lock   #4
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -669,10 +720,10 @@ Feature: test "reload @@config" in zk cluster
     Then execute admin cmd  in "dble-1" at background
       | conn   | toClose | sql               | db               |
       | conn_1 | True    | reload @@config   | dble_information |
-#    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
-#       """
-#       get into delayBeforeDeleteReloadLock
-#       """
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+       """
+       get into delayBeforeDeleteReloadLock
+       """
     Then execute admin cmd  in "dble-2" at background
       | conn   | toClose | sql               | db               |
       | conn_2 | True    | reload @@config   | dble_information |
@@ -694,21 +745,26 @@ Feature: test "reload @@config" in zk cluster
       KeeperErrorCode = NodeExists for /dble/cluster-1/lock/confChange.lock
       """
      #case check on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding5" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding  >/tmp/dble_zk_sharding.log 2>&1 &
       """
-    Then get result of oscmd named "B" in "dble-2"
+    Then check following text exist "Y" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  get /dble/cluster-1/conf/sharding | grep "sharding4" | wc -l
+      "name":"sharding5"
       """
-    Then get result of oscmd named "C" in "dble-3"
+    Then check following text exist "N" in file "/tmp/dble_zk_sharding.log" in host "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock" | wc -l
+      "name":"sharding4"
       """
-    Then check result "A" value is "1"
-    Then check result "B" value is "0"
-    Then check result "C" value is "1"
+    Given execute linux command in "dble-3"
+      """
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
+      """
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
     Given sleep "22" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
@@ -762,11 +818,15 @@ Feature: test "reload @@config" in zk cluster
       | dn1             | BASE SQL   | INSERT INTO sharding5 VALUES (13, 13, 13)   |
       | dn4             | BASE SQL   | INSERT INTO sharding5 VALUES (14, 14, 14)   |
      #case check on zookeeper
-    Then get result of oscmd named "C" in "dble-3"
+    Given execute linux command in "dble-3"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "confChange.lock" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "C" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-3"
+      """
+      confChange.lock
+      """
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                          | expect  | db      |
       | conn_1 | true    | drop table if exists sharding2               | success | schema2 |
@@ -775,3 +835,15 @@ Feature: test "reload @@config" in zk cluster
       | conn_1 | true    | drop table if exists sharding5               | success | schema3 |
     Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """
+    Given execute linux command in "dble-2"
+    """
+    rm -rf /tmp/dble_*
+    """
+    Given execute linux command in "dble-3"
+    """
+    rm -rf /tmp/dble_*
+    """

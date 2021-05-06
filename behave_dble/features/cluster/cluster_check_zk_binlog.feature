@@ -128,6 +128,8 @@ Feature: test "binlog" in zk cluster
       | conn_21 | true    | alter table global1 drop name      | success        | schema1 |
     Given delete file "/tmp/dble_admin_query.log" on "dble-3"
 
+
+
   @skip_restart @btrace
   Scenario: query "show @@binlog.status" timeout, do ddl #2
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
@@ -148,11 +150,15 @@ Feature: test "binlog" in zk cluster
       wait all session finished
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -179,11 +185,14 @@ Feature: test "binlog" in zk cluster
       """
       wait all session finished
       """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -209,11 +218,14 @@ Feature: test "binlog" in zk cluster
       """
       wait all session finished
       """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
@@ -266,11 +278,14 @@ Feature: test "binlog" in zk cluster
       """
       wait all session finished
       """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
@@ -410,11 +425,14 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       """
    # check on zk cluster has binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     #wait 15s,because btrace sleep 15s,create timeout showBinlogStatusTimeout=5000
     Given sleep "15" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -425,11 +443,14 @@ Feature: test "binlog" in zk cluster
       wait all session finished
       """
    # check on zk cluster hasn't binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect      | db      |
       | conn_11 | False   | select * from global1              | length{(4)} | schema1 |
@@ -487,11 +508,14 @@ Feature: test "binlog" in zk cluster
       172.100.9.5:3306
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -520,11 +544,14 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
@@ -552,11 +579,14 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
@@ -613,11 +643,14 @@ Feature: test "binlog" in zk cluster
       172.100.9.6:3306
       172.100.9.5:3306
       """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given sleep "10" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
@@ -666,11 +699,14 @@ Feature: test "binlog" in zk cluster
       get into ShowBinlogStatus,start sleep
       """
    # during "hang",to check on zk cluster has binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     #"hang" query has not result
     Then check following text exist "N" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
@@ -683,11 +719,14 @@ Feature: test "binlog" in zk cluster
     Given destroy btrace threads list
     Given destroy sql threads list
    # check on zk cluster hasn't binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
       172.100.9.5:3306
@@ -753,11 +792,14 @@ Feature: test "binlog" in zk cluster
       | conn_23 | true    | insert into no_sharding1 values (3,3,3)         | success | schema1 |
       | conn_24 | true    | insert into vertical1 values (3,3)              | success | schema2 |
    # check on zk cluster has binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     #wait 18s,because btrace sleep 18s,create not timeout ,showBinlogStatusTimeout=20000
     Given sleep "18" seconds
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
@@ -768,11 +810,14 @@ Feature: test "binlog" in zk cluster
       wait all session finished
       """
    # check on zk cluster hasn't binlog_pause "status"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                | expect      | db      |
       | conn_11 | False   | select * from global1              | length{(7)} | schema1 |
@@ -796,11 +841,14 @@ Feature: test "binlog" in zk cluster
     """
     {'restore_mysql_config':{'mysql-master1':{'log-bin':0,'binlog_format':0,'relay-log':0}}}
     """
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause | grep "status" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause  >/tmp/dble_zk_binlog.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_binlog.log" in host "dble-1"
+      """
+      status
+      """
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
@@ -810,11 +858,15 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-1" at background
       | conn    | toClose | sql                  | db               |
       | conn_1  | true    | show @@binlog.status | dble_information |
-    Then get result of oscmd named "A" in "dble-1"
+
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause/status | grep "1, 2, 3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/binlog_pause/status  >/tmp/dble_zk_status.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_status.log" in host "dble-1"
+      """
+      \[1, 2, 3\]
+      """
     Given stop dble in "dble-1"
     Then execute sql in "dble-2" in "admin" mode
       | conn     | toClose | sql                      | expect                                               |
@@ -829,13 +881,15 @@ Feature: test "binlog" in zk cluster
       | conn     | toClose | sql                      | expect     |
       | conn_2   | true    | show @@binlog.status     | success    |
 
-    Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose | sql                                                          | expect  | db      |
-      | conn_10 | False   | drop table if exists schema2.vertical1                       | success | schema1 |
-      | conn_10 | False   | drop table if exists global1                                 | success | schema1 |
-      | conn_10 | False   | drop table if exists global2                                 | success | schema1 |
-      | conn_10 | False   | drop table if exists sharding4                               | success | schema1 |
-      | conn_10 | False   | drop table if exists sharding2                               | success | schema1 |
-      | conn_10 | False   | drop table if exists child1                                  | success | schema1 |
-      | conn_10 | False   | drop table if exists sing1                                   | success | schema1 |
-      | conn_10 | True    | drop table if exists no_sharding1                            | success | schema1 |
+    # drop table
+    Given execute oscmd in "dble-1"
+      """
+      mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
+      mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql" && \
+      mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema2 -e "source /opt/dble/test.sql"
+      """
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """
+

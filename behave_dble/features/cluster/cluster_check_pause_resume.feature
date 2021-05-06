@@ -59,11 +59,14 @@ Feature: test "pause/resume" in zk cluster
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_3 | True     | select * from sharding_4_t1               | length{(4)}   | schema1  |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql                                                                     | expect                  |
       | conn_21 | False   | pause @@shardingNode = 'dn3,dn4' and timeout = 5,queue=10,wait_limit=1  | success                 |
@@ -84,11 +87,14 @@ Feature: test "pause/resume" in zk cluster
       | conn_11 | false   | pause @@shardingNode = 'dn1,dn2' and timeout = 20,queue=10,wait_limit=1        | dble_information   |
     Given sleep "5" seconds
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql                                                                     | expect                                               |
       | conn_21 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 5,queue=10,wait_limit=1  | Other node is doing pause operation concurrently     |
@@ -99,11 +105,14 @@ Feature: test "pause/resume" in zk cluster
       | conn   | toClose  | sql        | expect    | db       |
       | conn_3 | True     | commit     | success   | schema1  |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep 'pause_node.lock' |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Then execute sql in "dble-2" in "admin" mode
       | conn    | toClose | sql      | expect      |
       | conn_21 | True    | resume   | success     |
@@ -138,11 +147,14 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql                                                                                | db                 |
       | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 60,queue=10,wait_limit=1            | dble_information   |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
 
     Then restart dble in "dble-3" failed for
     """
@@ -164,11 +176,14 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql     | expect                     |
       | conn_11 | false   | resume  | success                    |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_1 | True     | select * from sharding_4_t1               | length{(1)}   | schema1  |
@@ -192,11 +207,14 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql                                                                        | db                 |
       | conn_11 | True    | pause @@shardingNode = 'dn1,dn2' and timeout = 10,queue=10,wait_limit=1    | dble_information   |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Given sleep "10" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
      """
@@ -205,11 +223,14 @@ Feature: test "pause/resume" in zk cluster
      recycle backend
      """
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql        | expect    | db       |
       | conn_3 | True     | commit     | success   | schema1  |
@@ -256,11 +277,14 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql       | db                 |
       | conn_11 | True    | resume    | dble_information   |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     #sleep 10s,because idleTimeout=10000
     Given sleep "11" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
@@ -287,11 +311,14 @@ Feature: test "pause/resume" in zk cluster
       | conn    | toClose | sql     | expect                     |
       | conn_11 | true    | resume  | No shardingNode paused     |
     #case check lock on zookeeper
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock | grep "pause_node.lock" |wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      pause_node.lock
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                       | expect    | db       |
       | conn_1 | True     | select * from sharding_4_t1               | success   | schema1  |
@@ -302,9 +329,7 @@ Feature: test "pause/resume" in zk cluster
       | conn   | toClose  | sql                                       | expect        | db       |
       | conn_3 | false    | select * from sharding_4_t1               | length{(1)}   | schema1  |
       | conn_3 | True     | drop table if exists sharding_4_t1        | success       | schema1  |
-
-
-
-
-
-
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """
