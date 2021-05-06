@@ -2382,3 +2382,16 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     dn10
     """
+
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """
+    Given execute linux command in "dble-2"
+    """
+    rm -rf /tmp/dble_*
+    """
+    Given execute linux command in "dble-3"
+    """
+    rm -rf /tmp/dble_*
+    """
