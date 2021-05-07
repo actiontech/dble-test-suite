@@ -1,4 +1,4 @@
-From docker-registry:5000/centos/systemd:7
+From centos:centos7
 
 RUN sed -i.backup 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf && \
     curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo && \
@@ -25,7 +25,7 @@ RUN echo "" >> /lib/systemd/system/systemd-user-sessions.service && \
 RUN systemctl enable systemd-user-sessions && \
     systemctl enable sshd
 
-COPY dbdeployer_completion.sh /
+COPY dbdeployer_completion.sh /dbdeployer_completion.sh
 
 RUN VERSION=1.58.2 && \
     OS=linux && \
@@ -35,14 +35,14 @@ RUN VERSION=1.58.2 && \
     chmod +x dbdeployer-$VERSION.$OS && \
     mv dbdeployer-$VERSION.$OS /usr/local/bin/dbdeployer && \
     dbdeployer init --skip-tarball-download --skip-shell-completion && \
-    dbdeployer defaults enable-bash-completion dbdeployer_completion.sh && \
+    dbdeployer defaults enable-bash-completion /dbdeployer_completion.sh && \
     dbdeployer defaults update reserved-ports '1186' && \
     dbdeployer downloads get-unpack mysql-5.7.25-linux-glibc2.12-x86_64.tar.gz && \
     dbdeployer downloads get-unpack mysql-8.0.18-linux-glibc2.12-x86_64.tar.xz && \
     rm -f dbdeployer-$VERSION.$OS.tar.gz && \
     rm -f mysql-5.7.25-linux-glibc2.12-x86_64.tar.gz && \
     rm -f mysql-8.0.18-linux-glibc2.12-x86_64.tar.xz && \
-    rm -f dbdeployer_completion.sh
+    rm -f /dbdeployer_completion.sh
 
 COPY * /docker-build/
 
