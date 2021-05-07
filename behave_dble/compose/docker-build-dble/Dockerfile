@@ -1,11 +1,11 @@
-From docker-registry:5000/centos/systemd:7
+From centos:centos7
 
 RUN sed -i.backup 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.conf && \
     curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo && \
     curl -o /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo && \
     yum clean all
 
-RUN yum install -y openssh-server openssh-clients net-tools iproute wget numactl libaio bash-completion bash-completion-extras && \
+RUN yum install -y openssh-server openssh-clients net-tools make iproute wget numactl libaio bash-completion bash-completion-extras openssl gcc python3-dev mysql-devel libmysqlclient && \
     yum clean all && \
     echo 'root:sshpass' | chpasswd && \
     sed -i 's/session\s*required\s*pam_loginuid.so/session optional pam_loginuid.so/g' /etc/pam.d/sshd && \
@@ -18,11 +18,18 @@ RUN yum install -y openssh-server openssh-clients net-tools iproute wget numactl
     localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LC_ALL=zh_CN.UTF-8
 
-RUN echo "" >> /lib/systemd/system/systemd-user-sessions.service && \
-    echo "[Install]" >> /lib/systemd/system/systemd-user-sessions.service && \
-    echo "WantedBy=multi-user.target" >> /lib/systemd/system/systemd-user-sessions.service && \
-    systemctl enable systemd-user-sessions && \
-    systemctl enable sshd
+#install libs for custom_mysql_ha
+COPY requirements.txt /tmp/requirements.txt
+RUN pip3 install --upgrade pip3
+RUN pip3 install -r /tmp/requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+
+#install python3 and dependency
+RUN yum install -y gcc python3-devel.x86_64 mysql-devel vim less iproute &&\
+    pip3 install six -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    pip3 install coloredlogs -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    pip3 install rsa -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    pip3 install mysqlclient -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
+    ln -s /usr/local/mysql/lib/libmysqlclient.so.20.3.0 /usr/lib64/libmysqlclient.so.20
 
 # install jdk
 COPY jdk-8u121-linux-x64.tar.gz /tmp/jdk-8u121-linux-x64.tar.gz
@@ -65,8 +72,9 @@ RUN wget -P /tmp https://archive.apache.org/dist/zookeeper/zookeeper-3.5.2-alpha
     sed -i "$ a dataDir=/opt/zookeeper/data\ndataLoginDir=/opt/zookeeper/logs" /opt/zookeeper/conf/zoo.cfg && \
     sed -i "$ a server.1=dble-1:2888:3888\nserver.2=dble-2:2888:3888\nserver.3=dble-3:2888:3888" /opt/zookeeper/conf/zoo.cfg && \
     mkdir /opt/zookeeper/data/ && \
-    rm -rf /tmp/zookeeper-3.5.2-alpha.tar.gz && \
-    echo "export PATH=/opt/zookeeper/bin:/opt/btrace/bin/:/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc
+    rm -rf /tmp/zookeeper-3.5.2-alpha.tar.gz
+
+RUN echo "export PATH=/opt/zookeeper/bin:/opt/btrace/bin/:/usr/local/mysql/bin:/opt/jdk/bin:$PATH">>/etc/bashrc
 
 COPY * /docker-build/
 
