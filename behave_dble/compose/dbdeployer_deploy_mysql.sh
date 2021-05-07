@@ -4,7 +4,7 @@
 
 set -e;
 
-echo "mysql_version is ${1}"
+echo "mysql version is ${1}"
 mysql_version=`echo ${1} | sed 's/\./\_/g'`
 echo "mysql_version is: ${mysql_version}"
 
@@ -15,5 +15,9 @@ dbdeployer deploy single ${1} --remote-access % --bind-address 0.0.0.0 -c skip-n
 #create soft link
 rm -rf /usr/bin/mysql && ln -sf /root/opt/mysql/${1}/bin/mysql /usr/bin/mysql
 rm -f /tmp/mysql.sock  && ln -s /tmp/mysql_sandbox3307.sock /tmp/mysql.sock
+
+#create different uuid for every mysql
+rm -f /root/sandboxes/msb_${mysql_version}/data/auto.cnf
+/root/sandboxes/msb_${mysql_version}/restart
 
 echo "mysql all install success"
