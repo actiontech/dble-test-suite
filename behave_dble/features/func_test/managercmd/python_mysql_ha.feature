@@ -236,7 +236,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3 5.7.25
       """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "2"
@@ -262,7 +262,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
 
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3
+      bash ./compose/docker-build-behave/ChangeMaster.sh mysql-master2 dble-2 dble-3 5.7.25
       """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostM2'"
 
