@@ -108,7 +108,7 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       Property \[ checkTableConsistency \] '-10100101' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
       Property \[ checkTableConsistencyPeriod \] '-1800' in bootstrap.cnf is illegal, you may need use the default value 1800000 replaced
       Property \[ clearBigSQLResultSetMapMs \] '-600000' in bootstrap.cnf is illegal, you may need use the default value 600000 replaced
-      Property \[ complexExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value 8 replaced
+      Property \[ complexExecutor \] '-4' in bootstrap.cnf is illegal, you may need use the default value
       Property \[ costSamplePercent \] '-2' in bootstrap.cnf is illegal, you may need use the default value 1 replaced
       property \[ enableFlowControl \] '1' data type should be boolean
       Property \[ enableSlowLog \] '2' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
