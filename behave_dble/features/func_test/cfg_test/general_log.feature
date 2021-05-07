@@ -440,6 +440,7 @@ Feature: general log test
     /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGeneralLog.java" in "dble-1"
+    Given sleep "5" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_0"
     Then check btrace "BtraceGeneralLog.java" output in "dble-1"
     """
@@ -486,7 +487,7 @@ Feature: general log test
     Given delete file "/opt/dble/BtraceGeneralLog.java.log" on "dble-1"
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-  Scenario: check general log records - manager user #5
+  Scenario: check general log records - manager user #6
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                          | expect                           | db               |
@@ -580,7 +581,7 @@ Feature: general log test
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-  Scenario: check general log records - sharding user #6
+  Scenario: check general log records - sharding user #7
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -696,7 +697,7 @@ Feature: general log test
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-  Scenario: check general log records - rwSplitUser #7
+  Scenario: check general log records - rwSplitUser #8
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -773,4 +774,7 @@ Feature: general log test
       Quit
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
-
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd | conn   | toClose | sql                                                          | expect  | db  |
+      | split1 | 111111 | conn_1 | False   | drop table if exists test_table2                             | success | db2 |
+      | split1 | 111111 | conn_1 | true    | drop table if exists test_table1                             | success | db1 |

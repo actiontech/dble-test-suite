@@ -1453,6 +1453,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
       | split1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
+      | split1 | 111111 | conn_3 | true    | drop table if exists test_table2                          | success | db1 |
 
 
   Scenario: test samplingRate>0 and samplingRate<100   #12
@@ -1480,23 +1481,3 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
       mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
       """
-
-
-  # Test sampling rate when samplingRate>0 and samplingRate<100
-
-#    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-#    """
-#    /DsamplingRate/d
-#    /DtableSqlLogSize/d
-#    /# processor/a -DsamplingRate=50
-#    /# processor/a -DtableSqlLogSize=1000000
-#    """
-#    Given Restart dble in "dble-1" success
-#    Given execute sql "10000" times in "dble-1" at concurrent
-#      | sql                                | db      |
-#      | select name from test where id ={} | schema1 |
-#
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                          | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                        | length{(?)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user | length{(?)} | dble_information |
