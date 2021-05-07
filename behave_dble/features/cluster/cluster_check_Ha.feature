@@ -307,7 +307,7 @@ Feature: test "ha" in zk cluster
     """
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3 5.7.25
       """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
@@ -640,7 +640,7 @@ Feature: test "ha" in zk cluster
     #case change master to slave2 on mysql group
     Given execute linux command in "behave"
       """
-      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
+      bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2 5.7.25
      """
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
 
