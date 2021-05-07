@@ -18,6 +18,12 @@ RUN yum install -y openssh-server openssh-clients net-tools make iproute wget nu
     localedef -i en_US -f UTF-8 en_US.UTF-8
 ENV LC_ALL=zh_CN.UTF-8
 
+RUN echo "" >> /lib/systemd/system/systemd-user-sessions.service && \
+    echo "[Install]" >> /lib/systemd/system/systemd-user-sessions.service && \
+    echo "WantedBy=multi-user.target" >> /lib/systemd/system/systemd-user-sessions.service && \
+    systemctl enable systemd-user-sessions && \
+    systemctl enable sshd
+
 #install libs for custom_mysql_ha
 COPY requirements.txt /tmp/requirements.txt
 RUN pip3 install --upgrade pip3
