@@ -230,3 +230,132 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
       | conn   | toClose  | sql                           | expect        |
       | conn_0 | False    | show databases like 'da00'    | length{(0)}   |
       | conn_0 | True     | show databases like 'da01'    | length{(0)}   |
+      
+      
+  @NORMAL
+  Scenario: add new dbGroup & "create database @@..." & "show @@shardingnode" when sharding  #4
+     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+     """
+     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.4:3306" user="test" maxCon="1000" minCon="10" primary="true">
+        </dbInstance>
+     </dbGroup>
+     """
+     Given add xml segment to node with attribute "{'tag':'root','prev':'schema'}" in "sharding.xml"
+     """
+        <schema shardingNode="dn6" name="schema2" sqlMaxLimit="100"/>
+
+        <shardingNode dbGroup="ha_group1" database="db1" name="dn1" />
+        <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+        <shardingNode dbGroup="ha_group1" database="db2" name="dn3" />
+        <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+        <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
+        <shardingNode dbGroup="ha_group3" database="db4" name="dn6" />
+    """
+    Then execute sql in "mysql-master1"
+      | conn   | toClose  | sql                         | expect   |
+      | conn_0 | False    | drop database if exists db1 | success  |
+      | conn_0 | False    | drop database if exists db2 | success  |
+      | conn_0 | True     | drop database if exists db3 | success  |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose  | sql                         | expect   |
+      | conn_0 | False    | drop database if exists db1 | success  |
+      | conn_0 | True     | drop database if exists db2 | success  |
+    Then execute sql in "mysql"
+      | conn   | toClose  | sql                         | expect   |
+      | conn_0 | False    | drop database if exists db4 | success  |
+     Then execute admin cmd "reload @@config_all"
+     Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5,dn6'"
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
+      | sql                        |
+      | show @@shardingNode        |
+     Then check resultset "A" has lines with following column values
+       | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+       | dn1    | ha_group1/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn2    | ha_group2/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn3    | ha_group1/db2     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn4    | ha_group2/db2     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn5    | ha_group1/db3     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn6    | ha_group3/db4     | true            | 0        | 0      | 1000   | 0         | -1              |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose  | sql                       | expect          |
+      | conn_0 | False    | show databases like 'db1' | has{('db1',),}  |
+      | conn_0 | False    | show databases like 'db2' | has{('db2',),}  |
+      | conn_0 | True     | show databases like 'db3' | has{('db3',),}  |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose  | sql                        | expect          |
+      | conn_0 | False    | show databases like 'db1'  | has{('db1',),}  |
+      | conn_0 | True     | show databases like 'db2'  | has{('db2',),}  |
+    Then execute sql in "mysql"
+      | conn   | toClose  | sql                        | expect          |
+      | conn_0 | True     | show databases like 'db4'  | has{('db4',),}  |
+     Given delete the following xml segment
+       |file          | parent          | child                   |
+       |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}        |
+     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+     """
+     <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2,dn3,dn4" />
+        <shardingTable name="sharding_2_t1" shardingNode="dn1,dn2" function="hash-two" shardingColumn="id" />
+        <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+     </schema>
+     """
+    Then execute admin cmd "reload @@config_all"
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
+      | sql                        |
+      | show @@shardingNode        |
+     Then check resultset "B" has lines with following column values
+       | NAME-0 | DB_GROUP-1        | SCHEMA_EXISTS-2 | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+       | dn1    | ha_group1/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn2    | ha_group2/db1     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn3    | ha_group1/db2     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn4    | ha_group2/db2     | true            | 0        | 0      | 1000   | 0         | -1              |
+       | dn5    | ha_group1/db3     | true            | 0        | 0      | 1000   | 0         | -1              |
+     #CASE show @@shardingNodes where schema=? and table=?;
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
+      | sql                                                                 |
+      | show @@shardingNodes where schema = schema1 and table = test        |
+     Then check resultset "C" has lines with following column values
+       | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
+       | dn1    | 0          | 172.100.9.5   | 3306   | db1               | test   | 111111     |
+       | dn2    | 1          | 172.100.9.6   | 3306   | db1               | test   | 111111     |
+       | dn3    | 2          | 172.100.9.5   | 3306   | db2               | test   | 111111     |
+       | dn4    | 3          | 172.100.9.6   | 3306   | db2               | test   | 111111     |
+     #CASE show @@shardingNode where schema=?
+     Given execute single sql in "dble-1" in "admin" mode and save resultset in "D"
+       | conn   | toClose  | sql                                               | db               |
+       | conn_0 | False    | show @@shardingNode  where schema = schema1       | dble_information |
+     Then check resultset "D" has lines with following column values
+       | NAME-0 | DB_GROUP-1      | SCHEMA_EXISTS-2 |ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+       | dn1  | ha_group1/db1     | true            |      0  |    0   | 1000   |       0   |            -1   |
+       | dn2  | ha_group2/db1     | true            |      0  |    0   | 1000   |       0   |            -1   |
+       | dn3  | ha_group1/db2     | true            |      0  |    0   | 1000   |       0   |            -1   |
+       | dn4  | ha_group2/db2     | true            |      0  |    0   | 1000   |       0   |            -1   |
+       | dn5  | ha_group1/db3     | true            |      0  |    0   | 1000   |       0   |            -1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                          | expect                            |
+      | conn_0 | False    | drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5,dn6'      | shardingNode dn6 does not exists  |
+      | conn_0 | true     | drop database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'          | success                           |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "E"
+      | sql                 |
+      | show @@shardingnode |
+    Then check resultset "E" has lines with following column values
+      | NAME-0 | DB_GROUP-1     | SCHEMA_EXISTS-2  | ACTIVE-3 | IDLE-4 | SIZE-5 | EXECUTE-6 | RECOVERY_TIME-7 |
+      | dn1    | ha_group1/db1  | false            | 0        | 0      | 1000   | 0         | -1              |
+      | dn2    | ha_group2/db1  | false            | 0        | 0      | 1000   | 0         | -1              |
+      | dn3    | ha_group1/db2  | false            | 0        | 0      | 1000   | 0         | -1              |
+      | dn4    | ha_group2/db2  | false            | 0        | 0      | 1000   | 0         | -1              |
+      | dn5    | ha_group1/db3  | false            | 0        | 0      | 1000   | 0         | -1              |
+    Then execute sql in "mysql-master1"
+      | conn   | toClose  | sql                        | expect          |
+      | conn_0 | False    | show databases like 'db1'  | length{(0)}     |
+      | conn_0 | False    | show databases like 'db2'  | length{(0)}     |
+      | conn_0 | True     | show databases like 'db3'  | length{(0)}     |
+    Then execute sql in "mysql-master2"
+      | conn   | toClose  | sql                           | expect        |
+      | conn_0 | False    | show databases like 'db1'     | length{(0)}   |
+      | conn_0 | True     | show databases like 'db2'     | length{(0)}   |
+    Then execute sql in "mysql"
+      | conn   | toClose  | sql                           | expect           |
+      | conn_0 | true     | show databases like 'db4'     | has{('db4',),}   |
