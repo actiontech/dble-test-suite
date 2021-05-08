@@ -10,7 +10,7 @@ echo "mysql_version is: ${mysql_version}"
 
 # initial mysql
 #dbdeployer delete --skip-confirm ALL
-dbdeployer deploy single ${1} --remote-access % --bind-address 0.0.0.0 -c skip-name-resolve --server-id ${2} --port 3307 -p 111111 -u test --gtid --force
+dbdeployer deploy single ${1} --remote-access % --bind-address 0.0.0.0 -c skip-name-resolve --server-id ${2} --port 3307 -p 111111 --my-cnf-options="default_authentication_plugin=mysql_native_password" --pre-grants-sql="create user test@'%' identified with mysql_native_password by '111111';grant all on *.* to test@'%' with grant option;flush privileges;" --gtid --force
 
 #create soft link
 rm -rf /usr/bin/mysql && ln -sf /root/opt/mysql/${1}/bin/mysql /usr/bin/mysql
