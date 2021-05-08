@@ -5,7 +5,7 @@ RUN sed -i.backup 's/^enabled=1/enabled=0/' /etc/yum/pluginconf.d/fastestmirror.
     curl -o /etc/yum.repos.d/epel-7.repo http://mirrors.aliyun.com/repo/epel-7.repo && \
     yum clean all
 
-RUN yum install -y openssh-server openssh-clients net-tools make iproute wget numactl libaio bash-completion bash-completion-extras openssl gcc python3-dev mysql-devel libmysqlclient && \
+RUN yum install -y openssh-server openssh-clients net-tools make iproute wget numactl.x86_64 libaio bash-completion bash-completion-extras openssl && \
     yum clean all && \
     echo 'root:sshpass' | chpasswd && \
     sed -i 's/session\s*required\s*pam_loginuid.so/session optional pam_loginuid.so/g' /etc/pam.d/sshd && \
@@ -24,13 +24,8 @@ RUN echo "" >> /lib/systemd/system/systemd-user-sessions.service && \
     systemctl enable systemd-user-sessions && \
     systemctl enable sshd
 
-#install libs for custom_mysql_ha
-COPY requirements.txt /tmp/requirements.txt
-RUN pip3 install --upgrade pip3
-RUN pip3 install -r /tmp/requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
-
-#install python3 and dependency
-RUN yum install -y gcc python3-devel.x86_64 mysql-devel vim less iproute &&\
+##install python3 and dependency for custom_mysql_ha
+RUN yum install -y gcc python3-devel.x86_64 mysql-devel &&\
     pip3 install six -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
     pip3 install coloredlogs -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
     pip3 install rsa -i http://pypi.douban.com/simple --trusted-host pypi.douban.com &&\
