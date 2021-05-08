@@ -30,7 +30,7 @@ public class Config {
 	public static String TEST_DB = "schema1";
 	public static int TEST_PORT;
 	public static int TEST_ADMIN_PORT;
-	public static int MYSQL_PORT = 3306;
+	public static int MYSQL_PORT = 3307;
 	public static String TEST_SETVER_NAME;
 
 	public static String SSH_USER;
