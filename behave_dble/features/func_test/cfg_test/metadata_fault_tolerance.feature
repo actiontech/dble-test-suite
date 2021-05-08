@@ -42,9 +42,10 @@ Feature: fault tolerance detection
       | conn_0 | True    | create table test5(id int,age int) | success | schema1 |
       | conn_0 | True    | create table test6(id int,age int) | success | schema1 |
     Then execute admin cmd "reload @@config_all -r"
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                 | expect                                                                                                                                                                 |
-      | conn_1 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;}   |
+    # 3.21.06  remove manage cmd "log @@file"  DBLE0REQ-314
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                 | expect                                                                                                                                                                 |
+#      | conn_1 | True    | log @@file=dble.log | hasStr{show create table `test4`;show create table `test5`;show create table `test2`;show create table `test3`;show create table `test6`;show create table `test1`;}   |
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
