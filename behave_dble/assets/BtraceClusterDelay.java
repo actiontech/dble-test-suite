@@ -416,6 +416,52 @@ public final class BtraceClusterDelay {
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
+    @OnMethod(
+            clazz = "com.actiontech.dble.meta.table.MultiTablesInitMetaHandler",
+            method = "schemaMetaFinish"
+    )
+    public static void schemaMetaFinish(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into schemaMetaFinish ");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(1L);
+    }
+    @OnMethod(
+            clazz = "com.actiontech.dble.manager.response.ReloadConfig",
+            method = "reloadAll"
+    )
+    public static void reloadAll(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into schemaMetaFinish reloadAll");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(1L);
+    }
+   @OnMethod(
+            clazz = "com.actiontech.dble.meta.table.ConfigTableMetaHandler",
+            method = "countdown"
+    )
+    public static void countdown(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into countdown ");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(60000L);
+    }
+    @OnMethod(
+            clazz = "com.actiontech.dble.backend.mysql.nio.handler.transaction.normal.NormalCommitNodesHandler",
+            method = "setResponseTime"
+    )
+    public static void setResponseTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("delay in setResponseTime");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(1000L);
+    }
+    @OnMethod(
+            clazz = "com.actiontech.dble.backend.mysql.nio.handler.query.impl.BaseSelectHandler",
+            method = "rowResponse"
+    )
+    public static void rowResponse(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into rowResponse ");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(200);
+    }
+
 
 
 }
