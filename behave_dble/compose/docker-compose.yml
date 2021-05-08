@@ -5,7 +5,7 @@ networks:
        name: dble_test
 services:
     dble-1:
-        image: docker-registry:5000/actiontech/dble-runtime-centos7:latest
+        image: dble/dble_test_dble:latest
         container_name: dble-1
         hostname: dble-1
         privileged: true
@@ -27,7 +27,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     dble-2:
-        image: docker-registry:5000/actiontech/dble-runtime-centos7:latest
+        image: dble/dble_test_dble:latest
         container_name: dble-2
         hostname: dble-2
         privileged: true
@@ -49,7 +49,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     dble-3:
-        image: docker-registry:5000/actiontech/dble-runtime-centos7:latest
+        image: dble/dble_test_dble:latest
         container_name: dble-3
         hostname: dble-3
         privileged: true
@@ -71,7 +71,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql
         hostname: mysql
         privileged: true
@@ -91,7 +91,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql-master1:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql-master1
         hostname: mysql-master1
         privileged: true
@@ -111,7 +111,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql-master2:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql-master2
         hostname: mysql-master2
         privileged: true
@@ -131,7 +131,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     behave:
-        image: dble/dble_test_behave:v1
+        image: dble/dble_test_behave:latest
         container_name: behave
         hostname: behave
         privileged: true
@@ -148,7 +148,7 @@ services:
         working_dir: /init_assets
 
     mysql8-master1:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql8-master1
         hostname: mysql8-master1
         privileged: true
@@ -168,7 +168,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql8-master2:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql8-master2
         hostname: mysql8-master2
         privileged: true
@@ -188,7 +188,7 @@ services:
         dns: 114.114.114.114
         working_dir: /opt
     mysql8-slave1:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql8-slave1
         hostname: mysql8-slave1
         privileged: true
@@ -209,7 +209,7 @@ services:
         working_dir: /opt
 
     mysql8-slave2:
-        image: docker-registry:5000/actiontech/centos7-dbdeployer:latest
+        image: dble/dble_test_mysql:latest
         container_name: mysql8-slave2
         hostname: mysql8-slave2
         privileged: true
