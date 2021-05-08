@@ -95,24 +95,3 @@ Feature: test with show @@shardingnode
      Then check resultset "E" has lines with following column values
        | NAME-0 | DB_GROUP-1      | SCHEMA_EXISTS-2 |SIZE-5     |
        | dn7    | ha_group3/db4   | true            |1000       |
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
