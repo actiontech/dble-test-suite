@@ -1,21 +1,12 @@
-FROM docker-registry:5000/actiontech/autotest-agent:v1
-#FROM docker-registry:5000/ubuntu:18.04
+From ubuntu:18.04
 MAINTAINER Jolie <wujinling@actionsky.com>
-
-#clean env
-#RUN apt-get update && \
-#    apt-get install -y language-pack-zh-hans xfonts-wqy vim wget iputils-ping sudo apt-utils && \
-#    locale-gen zh_CN.UTF.8 && \
-#    update-locale LANG=zh_CN.UTF-8 LANGUAGE=zh_CN.UTF-8 LC_ALL=zh_CN.UTF-8 && \
-#    echo "go ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers && \
-#    apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #set CST timezone
 RUN echo "Asia/shanghai" > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 RUN apt-get update && \
-    apt-get install -y yum-utils vim wget gcc g++ git net-tools libaio1 hwloc openssh-server sshpass ntp ntpdate less iproute2 && \
+    apt-get install -y yum-utils vim wget gcc g++ git net-tools libaio1 hwloc openssh-server openssh-clients sshpass ntp ntpdate less iproute2 && \
     apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #c/cpp dependency
@@ -50,30 +41,23 @@ RUN mkdir /opt/jdk  && \
 
 
 # install pipenv pyenv
-#ENV PYENV_ROOT=/home/go/.pyenv
-#ENV PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
-#RUN apt-get update && \
-#    apt-get install -y build-essential libssl-dev libreadline-dev zlib1g-dev libbz2-dev libsqlite3-dev libffi-dev jq python-mysql.connector && \
-#    git clone https://github.com/pyenv/pyenv.git /home/go/.pyenv && \
-#    echo 'export PYENV_ROOT="/home/go/.pyenv"' >> /home/go/.bashrc && \
-#    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> /home/go/.bashrc && \
-#    echo 'if command -v pyenv 1>/dev/null 2>&1; then' >> /home/go/.bashrc && \
-#    echo '  eval "$(pyenv init -)"' >> /home/go/.bashrc && \
-#    echo 'fi' >> /home/go/.bashrc && \
-#    pyenv install 3.7.10 && \
-#    pyenv rehash && \
-#    pyenv global 3.7.10 && \
-#    pip install --upgrade pip && \
-#    pip install pipenv && \
-#    chown -R go:go /home/go/.pyenv && \
-#    apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-#install pip and requirements
-#RUN yum install -y epel-release
-#RUN yum install -y  python-pip
-#COPY requirements.txt /tmp/requirements.txt
-#RUN pip install --upgrade pip
-#RUN pip install -r /tmp/requirements.txt
+ENV PYENV_ROOT=/home/go/.pyenv
+ENV PATH=$PYENV_ROOT/shims:$PYENV_ROOT/bin:$PATH
+RUN apt-get update && \
+    apt-get install -y build-essential libssl-dev libreadline-dev zlib1g-dev libbz2-dev libsqlite3-dev libffi-dev jq python-mysql.connector && \
+    git clone https://github.com/pyenv/pyenv.git /home/go/.pyenv && \
+    echo 'export PYENV_ROOT="/home/go/.pyenv"' >> /home/go/.bashrc && \
+    echo 'export PATH="$PYENV_ROOT/bin:$PATH"' >> /home/go/.bashrc && \
+    echo 'if command -v pyenv 1>/dev/null 2>&1; then' >> /home/go/.bashrc && \
+    echo '  eval "$(pyenv init -)"' >> /home/go/.bashrc && \
+    echo 'fi' >> /home/go/.bashrc && \
+    pyenv install 3.7.10 && \
+    pyenv rehash && \
+    pyenv global 3.7.10 && \
+    pip install --upgrade pip && \
+    pip install pipenv && \
+    chown -R go:go /home/go/.pyenv && \
+    apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #.net dependency
 RUN apt-get update && \
@@ -86,8 +70,8 @@ RUN apt-get update && \
 
 
 #download latest released dble
-#RUN version=$(curl "https://github.com/actiontech/dble/releases/latest"|awk -F "/" '{print $8}') && \
-#    wget -P /opt/share https://github.com/actiontech/dble/releases/download/$version%2Ftag/actiontech-dble-$version.tar.gz
+RUN version=$(curl "https://github.com/actiontech/dble/releases/latest"|awk -F "/" '{print $8}') && \
+    wget -P /opt/share https://github.com/actiontech/dble/releases/download/$version%2Ftag/actiontech-dble-$version.tar.gz
 
 #install maven
 COPY apache-maven-3.6.3-bin.tar.gz /docker-build/apache-maven-3.6.3-bin.tar.gz
@@ -102,10 +86,10 @@ RUN chmod u+s /usr/sbin/ntpdate
 RUN echo "export PATH=/opt/jdk/bin:/usr/local/apache-maven/bin:$PATH">>/etc/bashrc
 
 RUN mkdir ~/.ssh
-#RUN sed -i -e "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-#RUN ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
-#RUN ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
-#RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
+RUN sed -i -e "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
+RUN ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
+RUN ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
 RUN ssh-keygen -t rsa -N ""  -f "/root/.ssh/id_rsa"
 RUN echo root:sshpass|chpasswd
 
