@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2020/11/30
 
-Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat on
+Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat & useSerializableMode on
 
   @NORMAL
   Scenario: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostTimeStat & useCompression on, and then execute query success #1
@@ -26,3 +26,19 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
       | conn_0 | False   | commit                                          | success                       | schema1 |
       | conn_0 | False   | select * from sharding_4_t1 order by id         | has{((2,), (4,))}             | schema1 |
       | conn_0 | True    | drop table sharding_4_t1                        | success                       | schema1 |
+      
+  Scenario: test with useSerializableMode on, and then execute DDL fail #2
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-DuseSerializableMode=1
+    """
+    Then Restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
+      | conn   | toClose  | sql                                            | db          |
+      | conn_0 | False    | show variables like "%autocommit%"             | schema1     |
+    Then check resultset "A" has lines with following column values
+      | Variable_name-0         | Value-1 |
+      | autocommit              | ON      |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                             | expect                                                       | db      |
+      | conn_0 | true    | drop table if exists sharding_4_t1              | DDL is not allowed to be executed in xa transaction          | schema1 |
