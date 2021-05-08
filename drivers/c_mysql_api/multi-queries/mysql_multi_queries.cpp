@@ -19,7 +19,7 @@ char Host_Dble[50] = "172.100.9.1";
 char TEST_USER[100]="test";
 char TEST_USER_PASSWD[100]="111111";
 char TEST_DB[50]="schema1";
-unsigned int PORT=3306;
+unsigned int PORT=3307;
 unsigned int DPORT=8066;
 
 int doPrintResult(MYSQL* mysql, MYSQL_RES  *res){
