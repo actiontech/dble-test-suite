@@ -2,14 +2,15 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2021/3/22
 
+  @skip
 Feature:test sql_log and sql_log_by_tx_by_entry_by_user
 
 
   Scenario: desc table and unsupported dml  #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                 | expect        | db               |
-      | conn_0 | False   | desc sql_log                        | length{(12)}  | dble_information |
-      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | length{(10)}  | dble_information |
+      | conn_0 | False   | desc sql_log                        | length{(13)}  | dble_information |
+#      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | length{(10)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_1"
       | conn   | toClose | sql          | db               |
       | conn_0 | False   | desc sql_log | dble_information |
@@ -17,6 +18,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
       | sql_id        | int(11)       | NO     | PRI   | None      |         |
       | sql_stmt      | varchar(1024) | NO     |       | None      |         |
+      | sql_digest    | varchar(1024) | NO     |       | None      |         |
       | sql_type      | varchar(16)   | NO     |       | None      |         |
       | tx_id         | int(11)       | NO     | PRI   | None      |         |
       | entry         | int(11)       | NO     |       | None      |         |
@@ -28,21 +30,21 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | start_time    | int(11)       | NO     |       | None      |         |
       | duration      | int(11)       | NO     |       | None      |         |
 
-    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
-      | conn   | toClose | sql                                 | db               |
-      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | dble_information |
-    Then check resultset "table_2" has lines with following column values
-      | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | tx_id         | int(11)       | NO     | PRI   | None      |         |
-      | entry         | int(11)       | NO     | PRI   | None      |         |
-      | user          | varchar(20)   | NO     | PRI   | None      |         |
-      | source_host   | varchar(20)   | NO     |       | None      |         |
-      | source_port   | int(11)       | NO     |       | None      |         |
-      | sql_ids       | varchar(1024) | NO     |       | None      |         |
-      | sql_count     | int(11)       | NO     |       | None      |         |
-      | tx_duration   | int(11)       | NO     |       | None      |         |
-      | busy_time     | int(11)       | NO     |       | None      |         |
-      | examined_rows | int(11)       | NO     |       | None      |         |
+#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
+#      | conn   | toClose | sql                                 | db               |
+#      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | dble_information |
+#    Then check resultset "table_2" has lines with following column values
+#      | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
+#      | tx_id         | int(11)       | NO     | PRI   | None      |         |
+#      | entry         | int(11)       | NO     | PRI   | None      |         |
+#      | user          | varchar(20)   | NO     | PRI   | None      |         |
+#      | source_host   | varchar(20)   | NO     |       | None      |         |
+#      | source_port   | int(11)       | NO     |       | None      |         |
+#      | sql_ids       | varchar(1024) | NO     |       | None      |         |
+#      | sql_count     | int(11)       | NO     |       | None      |         |
+#      | tx_duration   | int(11)       | NO     |       | None      |         |
+#      | busy_time     | int(11)       | NO     |       | None      |         |
+#      | examined_rows | int(11)       | NO     |       | None      |         |
 
     #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
@@ -50,9 +52,9 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_0 | False   | delete from sql_log where entry=1                                | Access denied for table 'sql_log'                        | dble_information |
       | conn_0 | False   | update sql_log set entry=22 where entry=1                        | Access denied for table 'sql_log'                        | dble_information |
       | conn_0 | True    | insert into sql_log (entry) values (22)                          | Access denied for table 'sql_log'                        | dble_information |
-      | conn_0 | False   | delete from sql_log_by_tx_by_entry_by_user where entry=1         | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
-      | conn_0 | False   | update sql_log_by_tx_by_entry_by_user set entry=22 where entry=1 | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
-      | conn_0 | True    | insert into sql_log_by_tx_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
+#      | conn_0 | False   | delete from sql_log_by_tx_by_entry_by_user where entry=1         | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
+#      | conn_0 | False   | update sql_log_by_tx_by_entry_by_user set entry=22 where entry=1 | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
+#      | conn_0 | True    | insert into sql_log_by_tx_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
 
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
