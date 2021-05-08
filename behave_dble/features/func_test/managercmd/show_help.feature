@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(112)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(110)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -47,7 +47,6 @@ Feature: test show @@help
       | show @@heartbeat                                                                                    | Report heartbeat status                                                           |
       | show @@heartbeat.detail where name=?                                                                | Report heartbeat current detail                                                   |
       | show @@sysparam                                                                                     | Report system param                                                               |
-      | show @@syslog limit=?                                                                               | Report system log                                                                 |
       | show @@white                                                                                        | Report server white host                                                          |
       | show @@directmemory                                                                                 | Report server direct memory pool usage                                            |
       | show @@command.count                                                                                | Report the current number of querys                                               |
@@ -58,7 +57,7 @@ Feature: test show @@help
       | show @@help                                                                                         | Report usage of manager port                                                      |
       | show @@processlist                                                                                  | Report correspondence between front and backend session                           |
       | show @@cost_time                                                                                    | Report cost time of query , contains back End ,front End and over all             |
-      | show @@thread_used                                                                                  | Report all bussiness&reactor thread usage                                         |
+      | show @@thread_used                                                                                  | Report usage of all bussiness&reactor threads, for optimize performance           |
       | show @@shardingNodes where schema='?' and table='?'                                                 | Report the sharding nodes info of a table                                         |
       | show @@algorithm where schema='?' and table='?'                                                     | Report the algorithm info of a table                                              |
       | show @@ddl                                                                                          | Report all ddl info in progress                                                   |
@@ -87,7 +86,6 @@ Feature: test show @@help
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
       | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
-      | log @@[file=? limit=? key=? regex=?]                                                                | Report logs by given regex                                                        |
       | dryrun                                                                                              | Dry run to check config before reload xml                                         |
       | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                   | Block query requests witch specified shardingNodes involved                       |
       | RESUME                                                                                              | Resume the query requests of the paused shardingNodes                             |
@@ -132,4 +130,6 @@ Feature: test show @@help
       | STATEMENT-0                            |
       | switch @@datasources                   |
       | switch @@dbinstance                    |
+      | log @@[file=? limit=? key=? regex=?]   |
+      | show @@syslog limit=?                  |
 
