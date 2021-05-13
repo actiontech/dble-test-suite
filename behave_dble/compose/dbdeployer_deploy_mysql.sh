@@ -11,7 +11,8 @@ echo "mysql_version is: ${mysql_version}"
 # initial mysql
 #dbdeployer delete --skip-confirm ALL
 dbdeployer deploy single ${1} --remote-access % --bind-address 0.0.0.0 -c skip-name-resolve --server-id ${2} --port 3307 -p 111111 \
---my-cnf-options="default_authentication_plugin=mysql_native_password" --my-cnf-options="sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES" \
+--my-cnf-options="default_authentication_plugin=mysql_native_password" --my-cnf-options="secure_file_priv=" --my-cnf-options="sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES" \
+--my-cnf-options="session_track_schema=1" --my-cnf-options="session_track_state_change=1" --my-cnf-options="session_track_system_variables="*"" \
 --pre-grants-sql="create user test@'%' identified with mysql_native_password by '111111';grant all on *.* to test@'%' with grant option;flush privileges;" --gtid --force
 
 #create soft link
