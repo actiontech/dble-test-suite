@@ -133,3 +133,9 @@ Feature: test show @@help
       | log @@[file=? limit=? key=? regex=?]   |
       | show @@syslog limit=?                  |
 
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                              | expect                 | db               |
+      | conn_0 | False   | switch @@datasources             | Unsupported statement  | dble_information |
+      | conn_0 | False   | switch @@dbinstance              | Unsupported statement  | dble_information |
+      | conn_0 | False   | show @@syslog limit=100          | Unsupported statement  | dble_information |
+      | conn_0 | true    | log @@file limit 10              | Unsupported statement  | dble_information |
