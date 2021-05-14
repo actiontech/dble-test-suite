@@ -137,3 +137,14 @@ def step_impl(context,rs_name,num,host):
     rs = getattr(context, rs_name)
     stoList = re.findall(host,str(rs))
     assert str(len(stoList)) == num, "expect only has {0} {1} connection, but has {2}".format(num,host,len(stoList))
+    
+@Then('check "{rs_name1}" is calculated by "{rs_name2}" according to a certain relationship with "{table_type}"')
+def step_impl(context,rs_name1,rs_name2,table_type):
+    rs1 = getattr(context,rs_name1)
+    rs2 = getattr(context,rs_name2)
+    if table_type == "sharding_table":
+        expect_num = int((2500000 - rs2[0][0])/100000)
+    else:
+        expect_num = int((5000000 - rs2[0][0])/100000)
+
+    assert int(rs1) == expect_num, "expect file num is {0}, but is {1}".format(expect_num,rs1)    
