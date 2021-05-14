@@ -123,8 +123,9 @@ def step_impl(context, fildername,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr) == 0, "create filder content with:{1}, got err:{0}".format(stderr, cmd))
 
+@Given('create local and server file "{filename}" with "{num}" lines')    
 @Given('create local and server file "{filename}" and fill with text')
-def step_impl(context, filename):
+def step_impl(context, filename，num=None):
     logger.debug("*** debug context.text:{0}".format(context.text))
 
     text = context.text
@@ -132,28 +133,41 @@ def step_impl(context, filename):
     # remove old file in behave resides server
     if os.path.exists(filename):
         os.remove(filename)
+    
+    if num is None:
+        if cmp(text,'10000+lines')==0:
+            with open(filename, 'w') as fp:
+                col1 = 1
+                col2 = col1 +1
+                col3 = "abcd"
+                col4 = "1234"
+                for i in xrange(15000):
+                    data = str(col1)+','+str(col2)+','+str(col3)+','+str(col4)
+                    fp.write(data + '\n')
+                    col1= col1+1
+                    col2 = col2+1
+        elif text.find("68888") == 1:
+            s = "a"
+            with open(filename, 'w') as fp:
+                fp.writelines(s + ",")
+                for i in xrange(68888):
+                    fp.writelines(s)
 
-    if cmp(text,'10000+lines')==0:
+        else:
+            with open(filename, 'w') as fp:
+                fp.write(context.text)
+    else:
+        num_int = int(num)
         with open(filename, 'w') as fp:
             col1 = 1
             col2 = col1 +1
             col3 = "abcd"
             col4 = "1234"
-            for i in xrange(15000):
+            for i in xrange(num_int):
                 data = str(col1)+','+str(col2)+','+str(col3)+','+str(col4)
                 fp.write(data + '\n')
                 col1= col1+1
                 col2 = col2+1
-    elif text.find("68888") == 1:
-        s = "a"
-        with open(filename, 'w') as fp:
-            fp.writelines(s + ",")
-            for i in xrange(68888):
-                fp.writelines(s)
-
-    else:
-        with open(filename, 'w') as fp:
-            fp.write(context.text)
 
     # cp file to dble
     dble_node = get_node("dble-1")
