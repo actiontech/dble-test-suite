@@ -158,13 +158,20 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '21',), ('transactions', '13',))}    |
-#case compare with show @@questions
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                |
+      | conn_1 | False   | insert into test values (60,60); update test set code=50 where id>3; select * from test where code=50; delete from test where id=4 |
+      # multiple sql, questions add 4 and transactions add 4
+   Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                       | expect                                               |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '25',), ('transactions', '17',))} |
+   #case compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_5"
       | conn   | toClose | sql              | db                |
       | conn_0 | True    | show @@questions | dble_information  |
    Then check resultset "dble_status_5" has lines with following column values
       | Questions-0 | Transactions-1 |
-      | 21          | 13             |
+      | 25          | 17             |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                               |
       | conn_1 | True    | drop table if exists test         |
@@ -388,13 +395,29 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                       | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '81',), ('transactions', '37',))} | dble_information |
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                                                                                                                                                 |
+     # questions add 1 and transactions add 1
+     | conn_2 | False   | use schema1                                                                                                                                         |
+     # multiple sql, questions add 6 and transactions add 1
+     | conn_2 | False   | begin; delete from test where code>4; insert into test values (50,50); update test set code=55 where id>3; select * from test where code=55; commit |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                       | expect                                               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '88',), ('transactions', '39',))} |
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                                      |
+     | conn_2 | False   | set autocommit=0; begin; begin; rollback |
+     # multiple sql, questions add 4 and transactions add 3
+     Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                       | expect                                               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '92',), ('transactions', '42',))} |
    # compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_6"
      | conn   | toClose | sql              | db                |
      | conn_0 | True    | show @@questions | dble_information  |
    Then check resultset "dble_status_6" has lines with following column values
      | Questions-0 | Transactions-1 |
-     | 81          | 37             |
+     | 92          | 42             |
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                       | db      |
       | conn_2 | True    | drop table if exists test | schema1 |
@@ -755,12 +778,22 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '32',), ('transactions', '21',))} | dble_information |
    Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql                   |
-     | conn_2 | True    | use schema1           |
+     | user  | passwd | conn   | toClose | sql                   |
+     | split | 111111 | conn_2 | True    | use db1               |
    #case query in different seesion,questions and transactions add 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '33',), ('transactions', '22',))}    |
+# DBLE0REQ-1117
+#   Then execute sql in "dble-1" in "user" mode
+#     | user  | passwd | conn   | toClose | sql                                                                                                                                |
+#     # questions add 1 and transactions add 1
+#     | split | 111111 | conn_2 | False   | create table if not exists test(id int, code int)                                                                                  |
+#     # multiple sql, questions add 4 and transactions add 4
+#     | split | 111111 | conn_2 | False   | insert into test values (60,60); update test set code=66 where id>3; select * from test where code=66; delete from test where id=4 |
+#   Then execute sql in "dble-1" in "admin" mode
+#     | conn   | toClose | sql                                                                                       | expect                                               |
+#     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '38',), ('transactions', '27',))} |
    #case compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_8"
       | conn   | toClose | sql              | db                |
@@ -795,8 +828,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    # questions + 5, transactions + 4
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                |
-     | split | 111111 | conn_1 | False   | drop table if exists test                          |
-     | split | 111111 | conn_1 | False   | create table test(id int,code int)                 |
+     | split | 111111 | conn_1 | False   | drop table if exists test_2                        |
+     | split | 111111 | conn_1 | False   | create table test_2(id int,code int)               |
      | split | 111111 | conn_1 | False   | begin                                              |
      | split | 111111 | conn_1 | False   | begin                                              |
      | split | 111111 | conn_1 | False   | commit                                             |
@@ -809,7 +842,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | split | 111111 | conn_1 | False   | set autocommit=0                                   |
      | split | 111111 | conn_1 | False   | begin                                              |
      | split | 111111 | conn_1 | False   | begin                                              |
-     | split | 111111 | conn_1 | False   | insert into test values (1,1),(2,2)                |
+     | split | 111111 | conn_1 | False   | insert into test_2 values (1,1),(2,2)              |
      | split | 111111 | conn_1 | False   | commit                                             |
      | split | 111111 | conn_1 | False   | set autocommit=1                                   |
    Then execute sql in "dble-1" in "admin" mode
@@ -819,9 +852,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | set autocommit=0                                   |
-     | split | 111111 | conn_1 | False   | insert into test values (3,3)                      |
+     | split | 111111 | conn_1 | False   | insert into test_2 values (3,3)                    |
      | split | 111111 | conn_1 | False   | begin                                              |
-     | split | 111111 | conn_1 | False   | select * from test                                 |
+     | split | 111111 | conn_1 | False   | select * from test_2                               |
      | split | 111111 | conn_1 | False   | set autocommit=1                                   |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -831,7 +864,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
      | split | 111111 | conn_1 | False   | set autocommit=0                                   |
-     | split | 111111 | conn_1 | False   | update test set code=22 where id=2                 |
+     | split | 111111 | conn_1 | False   | update test_2 set code=22 where id=2               |
      | split | 111111 | conn_1 | False   | set autocommit=1                                   |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -841,9 +874,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
      | split | 111111 | conn_1 | False   | set autocommit=0                                   |
-     | split | 111111 | conn_1 | False   | delete from test where id=2                        |
+     | split | 111111 | conn_1 | False   | delete from test_2 where id=2                      |
      | split | 111111 | conn_1 | False   | commit                                             |
-     | split | 111111 | conn_1 | False   | update test set code=33 where id=3                 |
+     | split | 111111 | conn_1 | False   | update test_2 set code=33 where id=3               |
      | split | 111111 | conn_1 | False   | set autocommit=1                                   |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -852,9 +885,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
-     | split | 111111 | conn_1 | False   | insert into test values (2,2)                      |
+     | split | 111111 | conn_1 | False   | insert into test_2 values (2,2)                    |
      | split | 111111 | conn_1 | False   | set autocommit=1                                   |
-     | split | 111111 | conn_1 | False   | select * from test                                 |
+     | split | 111111 | conn_1 | False   | select * from test_2                               |
      | split | 111111 | conn_1 | False   | commit                                             |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -864,7 +897,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
      | split | 111111 | conn_1 | False   | set autocommit=1                                   |
-     | split | 111111 | conn_1 | False   | select * from test                                 |
+     | split | 111111 | conn_1 | False   | select * from test_2                               |
      | split | 111111 | conn_1 | False   | commit                                             |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -873,7 +906,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
-     | split | 111111 | conn_1 | False   | delete from test where id=3                        |
+     | split | 111111 | conn_1 | False   | delete from test_2 where id=3                      |
      | split | 111111 | conn_1 | False   | rollback                                           |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -882,7 +915,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
-     | split | 111111 | conn_1 | False   | select * from test                                 |
+     | split | 111111 | conn_1 | False   | select * from test_2                               |
      | split | 111111 | conn_1 | False   | commit                                             |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -891,7 +924,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                |
      | split | 111111 | conn_1 | False   | begin                                              |
-     | split | 111111 | conn_1 | False   | select * from test                                 |
+     | split | 111111 | conn_1 | False   | select * from test_2                               |
      | split | 111111 | conn_1 | False   | create table IF NOT EXISTS sharding_4_t1 (id int)  |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -900,7 +933,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | begin                                                 |
-     | split | 111111 | conn_1 | False   | select * from test                                    |
+     | split | 111111 | conn_1 | False   | select * from test_2                                  |
      | split | 111111 | conn_1 | False   | alter table sharding_4_t1 add column name varchar(10) |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -909,7 +942,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | begin                                                 |
-     | split | 111111 | conn_1 | False   | select * from test                                    |
+     | split | 111111 | conn_1 | False   | select * from test_2                                  |
      | split | 111111 | conn_1 | False   | truncate table sharding_4_t1                          |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -918,7 +951,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | begin                                                 |
-     | split | 111111 | conn_1 | False   | select * from test                                    |
+     | split | 111111 | conn_1 | False   | select * from test_2                                  |
      | split | 111111 | conn_1 | False   | drop table IF EXISTS sharding_4_t1                    |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -927,8 +960,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | begin                                                 |
-     | split | 111111 | conn_1 | False   | select * from test                                    |
-     | split | 111111 | conn_1 | False   | create index id_index on test(id)                     |
+     | split | 111111 | conn_1 | False   | select * from test_2                                  |
+     | split | 111111 | conn_1 | False   | create index id_index on test_2(id)                   |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '57',), ('transactions', '23',))} | dble_information |
@@ -936,8 +969,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | begin                                                 |
-     | split | 111111 | conn_1 | False   | select * from test                                    |
-     | split | 111111 | conn_1 | False   | drop index id_index on test                           |
+     | split | 111111 | conn_1 | False   | select * from test_2                                  |
+     | split | 111111 | conn_1 | False   | drop index id_index on test_2                         |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '60',), ('transactions', '24',))} | dble_information |
@@ -982,7 +1015,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | set autocommit=0                                      |
-     | split | 111111 | conn_1 | False   | create index id_index on test(id)                     |
+     | split | 111111 | conn_1 | False   | create index id_index on test_2(id)                   |
      | split | 111111 | conn_1 | False   | set autocommit=1                                      |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -991,7 +1024,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | set autocommit=0                                      |
-     | split | 111111 | conn_1 | False   | drop index id_index on test                           |
+     | split | 111111 | conn_1 | False   | drop index id_index on test_2                         |
      | split | 111111 | conn_1 | False   | set autocommit=1                                      |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
@@ -1001,7 +1034,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | user  | passwd | conn   | toClose | sql                         |
      | split | 111111 | conn_1 | False   | set autocommit=0            |
      | split | 111111 | conn_1 | False   | xa start 'xa_test_1'        |
-     | split | 111111 | conn_1 | False   | delete from test where id=3 |
+     | split | 111111 | conn_1 | False   | delete from test_2 where id=3 |
      | split | 111111 | conn_1 | False   | xa end 'xa_test_1'          |
      | split | 111111 | conn_1 | False   | xa prepare 'xa_test_1'      |
      | split | 111111 | conn_1 | False   | xa commit 'xa_test_1'       |
@@ -1015,7 +1048,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | user  | passwd | conn   | toClose | sql                         | expect                                                                                            |
      | split | 111111 | conn_1 | False   | begin                       | success                                                                                           |
      | split | 111111 | conn_1 | False   | xa start 'xa_test_2'        | XAER_OUTSIDE: Some work is done outside global transaction                                        |
-     | split | 111111 | conn_1 | False   | delete from test where id=2 | success                                                                                           |
+     | split | 111111 | conn_1 | False   | delete from test_2 where id=2 | success                                                                                           |
      | split | 111111 | conn_1 | False   | xa end 'xa_test_2'          | XAER_RMFAIL: The command cannot be executed when global transaction is in the  NON-EXISTING state |
      | split | 111111 | conn_1 | False   | xa prepare 'xa_test_2'      | XAER_RMFAIL: The command cannot be executed when global transaction is in the  NON-EXISTING state |
      | split | 111111 | conn_1 | False   | xa rollback 'xa_test_2'     | XAER_NOTA: Unknown XID                                                                            |
@@ -1027,10 +1060,27 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | user  | passwd | conn   | toClose | sql                                                   |
      | split | 111111 | conn_1 | False   | begin                                                 |
-     | split | 111111 | conn_1 | True    | select * from test                                    |
+     | split | 111111 | conn_1 | True    | select * from test_2                                  |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                       | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '96',), ('transactions', '40',))} | dble_information |
+# DBLE0REQ-1117
+#   Then execute sql in "dble-1" in "user" mode
+#     | user  | passwd | conn   | toClose | sql                                                                                                                                                       |
+#     # questions add 2 and transactions add 2
+#     | split | 111111 | conn_2 | False   | use db1;create table if not exists test_2(id int, code int)                                                                                               |
+#     # multiple sql, questions add 6 and transactions add 1
+#     | split | 111111 | conn_2 | False   | begin; insert into test_2 values (60,60); update test_2 set code=66 where id>3; select * from test_2 where code=66; delete from test_2 where id=3; commit |
+#   Then execute sql in "dble-1" in "admin" mode
+#     | conn   | toClose | sql                                                                                       | expect                                                |
+#     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '104',), ('transactions', '43',))} |
+#   Then execute sql in "dble-1" in "user" mode
+#     | user  | passwd | conn   | toClose | sql                                      |
+#     | split | 111111 | conn_2 | False   | set autocommit=0; begin; begin; rollback |
+#     # multiple sql, questions add 4 and transactions add 3
+#     Then execute sql in "dble-1" in "admin" mode
+#     | conn   | toClose | sql                                                                                       | expect                                                |
+#     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '108',), ('transactions', '45',))} |
    # compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_9"
      | conn   | toClose | sql              | db                |
@@ -1040,7 +1090,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | 96          | 40             |
    Then execute sql in "dble-1" in "user" mode
       | user  | passwd | conn   | toClose | sql                               | db  |
-      | split | 111111 | conn_2 | True    | drop table if exists test         | db1 |
+      | split | 111111 | conn_2 | True    | drop table if exists test_2       | db1 |
 
    Scenario: check questions/transactions set command - rwSplitUser #8
    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -1238,7 +1288,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '1',), ('transactions', '1',))} | dble_information |
-   Given prepare a thread execute sql "drop table if exist test" with "conn_1"
+   Given prepare a thread execute sql "drop table if exist test_1" with "conn_1"
    # 1064 error sql questions and transactions add 1
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                       | expect                                             | db               |
@@ -1253,9 +1303,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '3',), ('transactions', '2',))} | dble_information |
    # other error, questions + 2, transactions + 2
    Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql                               | expect                         |
-     | conn_1 | False   | delete from test                  | Table 'db1.test' doesn't exist |
-     | conn_1 | False   | create index id_index on test(id) | Table 'db1.test' doesn't exist |
+     | conn   | toClose | sql                                 | expect                           |
+     | conn_1 | False   | delete from test_1                  | Table 'db1.test_1' doesn't exist |
+     | conn_1 | False   | create index id_index on test_1(id) | Table 'db1.test_1' doesn't exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '5',), ('transactions', '4',))} | dble_information |
@@ -1263,16 +1313,16 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                              |
      | conn_1 | False   | begin                            |
-   Given prepare a thread execute sql "drop table if exist test" with "conn_1"
+   Given prepare a thread execute sql "drop table if exist test_1" with "conn_1"
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '7',), ('transactions', '4',))} | dble_information |
    # other error, questions + 3, transactions + 2
    Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql                               | expect                         |
-     | conn_1 | False   | rollback                          | success                        |
-     | conn_1 | False   | begin                             | success                        |
-     | conn_1 | False   | create index id_index on test(id) | Table 'db1.test' doesn't exist |
+     | conn   | toClose | sql                                 | expect                           |
+     | conn_1 | False   | rollback                            | success                          |
+     | conn_1 | False   | begin                               | success                          |
+     | conn_1 | False   | create index id_index on test_1(id) | Table 'db1.test_1' doesn't exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '10',), ('transactions', '6',))} | dble_information |
@@ -1284,5 +1334,5 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | Questions-0 | Transactions-1 |
      | 10          | 6              |
    Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql                       | db      |
-     | conn_1 | True    | drop table if exists test | schema1 |
+     | conn   | toClose | sql                         | db      |
+     | conn_1 | True    | drop table if exists test_1 | schema1 |
