@@ -3,7 +3,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/4/2
 
-
+@skip
 Feature:Support MySQL's large package protocol about 'ps protocol'
 
   Background:delete file and upload file
