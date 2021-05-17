@@ -550,6 +550,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | drop table if exists sharding_4_t1      | success     | schema1 |
 
 
+
   Scenario: Complex query -- one route #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -654,11 +655,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                                                                                                                                                                                |
-      | Execute_SQL   | dn2_0             | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad`,`b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
-      | Fetch_result  | dn2_0             | select `a`.`id`,`a`.`aid`,`a`.`name`,`a`.`age`,`a`.`pad`,`b`.`id`,`b`.`pad`,`b`.`name`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
-      | MERGE         | merge_1           | dn2_0    |
-      | SHUFFLE_FIELD | shuffle_field_1   | merge_1  |
+      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                        |
+      | Execute_SQL   | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
+      | Fetch_result  | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
     these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id = 5) and (a.id = 5)) or ((a.id = 1) and (b.id = 1)))) and ((a.id =) and (b.id =) and (((b.id = 13) and (a.id = 13)) or ((a.id = 9) and (b.id = 9))))}
@@ -682,18 +681,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                                                                                                                                          |
-      | Execute_SQL   | dn2_0             | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 1 AND `sharding_4_t1`.`name` = 2)) |
-      | Fetch_result  | dn2_0             | select `sharding_4_t1`.`id`,`sharding_4_t1`.`age`,`sharding_4_t1`.`name` from  `sharding_4_t1` where  (  ( `sharding_4_t1`.`age` = 1 AND `sharding_4_t1`.`id` = 1) OR  ( `sharding_4_t1`.`id` = 1 AND `sharding_4_t1`.`name` = 2)) |
-      | Execute_SQL   | dn2_1             | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                         |
-      | Fetch_result  | dn2_1             | select `sharding_4_t2`.`id` as `id`,`sharding_4_t2`.`age` as `age`,`sharding_4_t2`.`name` as `name` from  `sharding_4_t2` where  ( `sharding_4_t2`.`age` = 1 AND `sharding_4_t2`.`id` = 1)                                         |
-      | MERGE         | merge_1           | dn2_0                             |
-      | SHUFFLE_FIELD | shuffle_field_1   | merge_1                           |
-      | MERGE         | merge_2           | dn2_1                             |
-      | SHUFFLE_FIELD | shuffle_field_3   | merge_2                           |
-      | UNION_ALL     | union_all_1       | shuffle_field_1; shuffle_field_3  |
-      | DISTINCT      | distinct_1        | union_all_1                       |
-      | SHUFFLE_FIELD | shuffle_field_2   | distinct_1                        |
+      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                                                             |
+      | Execute_SQL   | dn2               | (select id,age,name from sharding_4_t1 where (age=1 and id=1)or (id=1 and name=2)) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
+      | Fetch_result  | dn2               | (select id,age,name from sharding_4_t1 where (age=1 and id=1)or (id=1 and name=2)) union (select id,age,name from sharding_4_t2 where age=1 and id=1) |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
     """
     these conditions will try to pruning:{(((schema1.sharding_4_t1.id = 1) and (schema1.sharding_4_t1.name = 2)) or ((schema1.sharding_4_t1.age = 1) and (schema1.sharding_4_t1.id = 1)))}
@@ -820,13 +810,9 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql          |
       | conn_0 | true    | show trace   |
     Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0                | SHARDING_NODE-4              | SQL/REF-5                                                                                                                                                                                         |
-      | Execute_SQL                | dn2_0                        | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
-      | Fetch_result               | dn2_0                        | select `a`.`id`,`b`.`age` from  `sharding_4_t1` `a` join  `sharding_4_t2` `b` on `a`.`id` = `b`.`id` where  (  ( `a`.`id` in (1) OR `b`.`id` in (5)) AND  ( `a`.`id` in (9) OR `b`.`id` in (13))) |
-      | MERGE                      | merge_1                      | dn2_0                             |
-      | SHUFFLE_FIELD              | shuffle_field_1              | merge_1                           |
-      | RENAME_DERIVED_SUB_QUERY   | rename_derived_sub_query_1   | shuffle_field_1                   |
-      | SHUFFLE_FIELD              | shuffle_field_2              | rename_derived_sub_query_1        |
+      | OPERATION-0      | SHARDING_NODE-4    | SQL/REF-5                                                                                                                                  |
+      | Execute_SQL      | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
+      | Fetch_result     | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
     these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id = 5) and (a.id = 5)) or ((a.id = 1) and (b.id = 1)))) and ((a.id =) and (b.id =) and (((b.id = 13) and (a.id = 13)) or ((a.id = 9) and (b.id = 9))))}
