@@ -134,7 +134,7 @@ select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,(0b01 - interval 
 drop table if exists test1
 create table test1 (id int(11) primary key,R_bit bit(64),R_NAME varchar(50),R_COMMENT varchar(50))
 insert into test1 (id,R_bit,R_NAME,R_COMMENT) values (1,b'0001', 'a','test001'),(2,b'0010', 'a string','test002'),(3,b'0011', '1','test001'),(4,b'1010', '1','test001')
-select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'1000001' not in (select R_NAME from test1 where id =1)
+-- select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'1000001' not in (select R_NAME from test1 where id =1)
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'1000001'  in (select R_NAME from test1 where id =18)
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where 0b01  in (select R_NAME from test1 where id =18)
 select test1.id,test1.R_bit,test1.R_NAME,test1.R_COMMENT from test1 where b'01' not in (1,'string')
