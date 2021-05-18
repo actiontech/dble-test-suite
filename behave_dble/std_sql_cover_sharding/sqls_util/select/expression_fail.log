@@ -1,14 +1,14 @@
 ===file:sqls_util/select/expression.sql, id:44, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_latin1 b'1000001']===
-dble:[None]
-mysql:[((18L, 18.0, 'A', 'test018'),)]
+dble:[[]]
+mysql:[[(18, 18.0, 'A', 'test018')]]
 ===file:sqls_util/select/expression.sql, id:45, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where R_NAME=_utf8 0b1000001 COLLATE utf8_danish_ci]===
 dble:[None]
-mysql:[((18L, 18.0, 'A', 'test018'),)]
-dble err:(1064, 'sql syntax error, no terminated. BITS')
+mysql:[((18, 18.0, 'A', 'test018'),)]
+dble err:(1064, 'druid not support sql syntax, the reason is java.lang.NullPointerException')
 ===file:sqls_util/select/expression.sql, id:46, sql:[select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT,_latin1 b'1000001' from test1]===
 dble:[None]
 mysql:[((1, 1.0, 'a string', 'test001', 'A'), (2, 2.0, 'a\nstring', 'test002', 'A'), (3, 3.0, 'another string', 'test003', 'A'), (4, 4.0, '\xe4\xb8\xad', 'test004', 'A'), (5, 5.0, "a'string'", 'test005', 'A'), (6, 6.0, 'a""string""', 'test006', 'A'), (7, 7.0, 'a\x08string', 'test007', 'A'), (8, 8.0, 'a\nstring', 'test008', 'A'), (9, 9.0, 'a\rstring', 'test009', 'A'), (10, 10.0, 'a\tstring', 'test010', 'A'), (11, 11.0, 'azstring', 'test011', 'A'), (12, 12.0, 'a\\string', 'test012', 'A'), (13, 13.0, 'a\\%string', 'test013', 'A'), (14, 14.0, 'a\\_string', 'test014', 'A'), (15, 15.0, 'MySQL', 'test015', 'A'), (16, 16.0, 'binary', 'test016', 'A'), (17, 1.23457e+22, '17', '17', 'A'), (18, 18.0, 'A', 'test018', 'A'), (19, 19.0, '', 'test019', 'A'), (65, 16.0, 'binary', 'test016', 'A'))]
-dble err:(1064, 'syntax error, expect X, actual BITS, pos 81, line 1, column 72, token BITS')
+dble err:(1064, 'druid not support sql syntax, the reason is syntax error, expect X, actual BITS, pos 81, line 1, column 72, token BITS')
 ===file:sqls_util/select/expression.sql, id:58, sql:[SELECT (@aa:=id) AS a, (@aa+3) AS b FROM test1]===
 dble:[None]
 mysql:[((1, 4.0), (2, 5.0), (3, 6.0), (4, 7.0), (5, 8.0), (6, 9.0), (7, 10.0), (8, 11.0), (9, 12.0), (10, 13.0), (11, 14.0), (12, 15.0), (13, 16.0), (14, 17.0), (15, 18.0), (16, 19.0), (17, 20.0), (18, 21.0), (19, 22.0), (65, 68.0))]
