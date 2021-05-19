@@ -345,6 +345,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When Start dble in "dble-1"
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
     When execute admin cmd "dbGroup @@enable name='ha_group1'" success
+    Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
