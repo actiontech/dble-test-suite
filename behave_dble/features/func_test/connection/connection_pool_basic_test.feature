@@ -82,15 +82,20 @@ Feature: connection pool basic test
     2	2
     """
 
+
+
   @CRITICAL
   Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #3
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                          | expect        |db                   |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                             | expect        |db                 |
+      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((21),)}  | dble_information  |
     Then execute admin cmd "reload @@config_all -r"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                          | expect        |db                   |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                             | expect        |db                 |
+      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((21),)}  | dble_information  |
+
+
+
 
   @CRITICAL
   Scenario: connection expansion: kill the connections until the idle connections less than minCon, after timeBetweenEvictionRunsMillis the connections will increase to minCon #4
@@ -151,9 +156,9 @@ Feature: connection pool basic test
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'                 | has{((16),)} | dble_information  |
       | conn_0 | True    | select count(*) from backend_connections where state='in use' and used_for_heartbeat='false'               | has{((8),)} | dble_information  |
 
+
   @CRITICAL
-  Scenario: connection shrink: idle connections > minCon and the idle connection's idle time >= idleTimeout, the connection will be
-recycle  #6
+  Scenario: connection shrink: idle connections > minCon and the idle connection's idle time >= idleTimeout, the connection will be  recycle  #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -167,37 +172,36 @@ recycle  #6
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                        | expect                     | db      |
-      | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))  | success                    | schema1 |
-      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
-      | conn_1 | False   | begin                                                      | success                    | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_2 | False   | begin                                                      | success                    | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_3 | False   | begin                                                      | success                    | schema1 |
-      | conn_3 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_4 | False   | begin                                                      | success                    | schema1 |
-      | conn_4 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_5 | False   | begin                                                      | success                    | schema1 |
-      | conn_5 | False   | select * from sharding_4_t1                             | success                    | schema1 |
+      | conn   | toClose | sql                                                       | expect                     | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                        | success                    | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))       | success                    | schema1 |
+      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                     | success                    | schema1 |
+      | conn_1 | False   | begin                                                     | success                    | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_2 | False   | begin                                                     | success                    | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_3 | False   | begin                                                     | success                    | schema1 |
+      | conn_3 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_4 | False   | begin                                                     | success                    | schema1 |
+      | conn_4 | False   | select * from sharding_4_t1                               | success                    | schema1 |
+      | conn_5 | False   | begin                                                     | success                    | schema1 |
+      | conn_5 | False   | select * from sharding_4_t1                               | success                    | schema1 |
       | conn_1 | False   | commit                                                    | success                    | schema1 |
       | conn_2 | False   | commit                                                    | success                    | schema1 |
       | conn_3 | False   | commit                                                    | success                    | schema1 |
       | conn_4 | False   | commit                                                    | success                    | schema1 |
       | conn_5 | False   | commit                                                    | success                    | schema1 |
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                         | expect        |db              |
+      | conn   | toClose | sql                                                                                             | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'      | has{((20),)}  | dble_information  |
     #sleep 5s to wait connections idle timeout and into scaling period
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                        | expect        |db              |
-      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'     | has{((14),)} | dble_information  |
+      | conn   | toClose | sql                                                                                            | expect        | db                |
+      | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'     | has{((14),)}  | dble_information  |
 
   @CRITICAL
-  Scenario: connection shrink: idle connections < minCon and the idle connection's idle time >= idleTimeout, the idle connections will not be
-recycle  #7
+  Scenario: connection shrink: idle connections < minCon and the idle connection's idle time >= idleTimeout, the idle connections will not be  recycle  #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -211,34 +215,33 @@ recycle  #7
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                        | expect                     | db      |
-      | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))  | success                    | schema1 |
-      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
-      | conn_1 | False   | begin                                                      | success                    | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_2 | False   | begin                                                      | success                    | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
+      | conn   | toClose | sql                                                 | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20)) | success | schema1 |
+      | conn_0 | True    | insert into sharding_4_t1 values(2,2)               | success | schema1 |
+      | conn_1 | False   | begin                                               | success | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                         | success | schema1 |
+      | conn_2 | False   | begin                                               | success | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                         | success | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
-      | conn   | toClose | sql                                                                                                                                      | expect        |db              |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(2)} | dble_information  |
+      | conn   | toClose | sql                                                                                                               | expect        | db                |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(2)}   | dble_information  |
     #sleep 5s to wait connections idle timeout and into scaling period
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
-      | conn   | toClose | sql                                                                                                                                      | expect        |db              |
-      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)} | dble_information  |
+      | conn   | toClose | sql                                                                                                               | expect        | db                |
+      | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)}   | dble_information  |
     #idle_connection_B contains idle_connection_A
     Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
-      | column                      | column_index |
-      | backend_conn_id            | 0           |
-      | db_group_name              | 1            |
-      | db_instance_name           | 2            |
-      | remote_processlist_id     | 5           |
-      | state                        | 18          |
+      | column                | column_index |
+      | backend_conn_id       | 0            |
+      | db_group_name         | 1            |
+      | db_instance_name      | 2            |
+      | remote_processlist_id | 5            |
+      | state                 | 18           |
 
   @CRITICAL
-  Scenario: connection shrink: idle connections = minCon and the idle connection's idle time >= idleTimeout, the idle connections will not be
-recycle  #8
+  Scenario: connection shrink: idle connections = minCon and the idle connection's idle time >= idleTimeout, the idle connections will not be  recycle  #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -279,8 +282,7 @@ recycle  #8
       | remote_processlist_id     | 5           |
 
   @CRITICAL
-  Scenario: connection shrink: idle connections > minCon and the idle connection's idle time < idleTimeout, the idle connections will not be
-recycle  #9
+  Scenario: connection shrink: idle connections > minCon and the idle connection's idle time < idleTimeout, the idle connections will not be  recycle  #9
         Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -320,16 +322,15 @@ recycle  #9
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(8)} | dble_information  |
     #idle_connection_B contains idle_connection_A
     Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
-      | column                      | column_index |
-      | backend_conn_id            | 0           |
+      | column                     | column_index |
+      | backend_conn_id            | 0            |
       | db_group_name              | 1            |
       | db_instance_name           | 2            |
-      | remote_processlist_id     | 5           |
-      | state                       | 18           |
+      | remote_processlist_id      | 5            |
+      | state                      | 18           |
 
   @CRITICAL
-  Scenario: connection shrink: timeBetweenEvictionRunsMillis<=0(in this case, dble will use the default value 30s), idle connections > minCon and the idle connection's idle time >= idleTimeout, the idle connections will be
-recycle  #10
+  Scenario: connection shrink: timeBetweenEvictionRunsMillis<=0(in this case, dble will use the default value 30s), idle connections > minCon and the idle connection's idle time >= idleTimeout, the idle connections will be  recycle  #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
@@ -410,7 +411,7 @@ recycle  #10
      """
     Given restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                                       | expect                            |db                  |
+      | conn   | toClose | sql                                                                                                                                                  | expect                          | db                |
       | conn_0 | True    | select idle_timeout,time_between_eviction_runs_millis,evictor_shutdown_timeout_millis from dble_db_instance where db_group='ha_group1' and name='M1' | has{((600000,30000,10000),)}    | dble_information  |
 
 
