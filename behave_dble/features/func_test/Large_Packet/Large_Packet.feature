@@ -14,8 +14,7 @@ Feature:Support MySQL's large package protocol
     Given upload file "./features/steps/SQLContext.py" to "dble-1" success
 
 
-   @skip  @restore_mysql_config
-     # DBLE0REQ-960
+   @restore_mysql_config
    Scenario: test dble's maxPacketSize and mysql's max_allowed_packet #1
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
@@ -60,7 +59,7 @@ Feature:Support MySQL's large package protocol
       """
       s/sbtest2/test/g
       """
-    #_mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")
+    #_mysql_exceptions.OperationalError: (1153, "Got a packet bigger than 'max_allowed_packet' bytes")       # DBLE0REQ-960
     Given execute linux command in "dble-1" and contains exception "Got a packet bigger than"
       """
       python3 /opt/LargePacket.py
