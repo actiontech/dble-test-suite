@@ -122,6 +122,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given kill all backend conns in "mysql-master1"
 #    force rotate general log
     Given turn on general log in "mysql-master1"
+    Given sleep "5" seconds
     When execute sql in "dble-1" in "user" mode
       | sql                                | expect                      | db      |
       | drop table if exists sharding_4_t1 | DROP command denied to user | schema1 |
@@ -136,6 +137,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     </dbGroup>
     """
     When execute admin cmd "reload @@config_all " success
+    Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "set global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
   @restore_global_setting
@@ -283,7 +285,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
         </dbInstance>
     </dbGroup>
     """
-    Given Restart dble in "dble-1" success
+    Then execute admin cmd "reload @@config_all"
     Given execute sql in "dble-1" in "user" mode
       | sql                                | expect  |db      |
       | drop table if exists sharding_2_t1 | success |schema1 |
@@ -317,9 +319,11 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Then check general log in host "mysql-master2" has "SET autocommit=0"
     Given kill all backend conns in "mysql-master1" except ones in "ids_to_kill_master1"
     Given kill all backend conns in "mysql-master2" except ones in "ids_to_kill_master2"
+    Given sleep "5" seconds
     Given execute sql in "dble-1" in "user" mode
       | sql                         | expect  | db      |
       | select * from sharding_2_t1 | success | schema1 |
+    Given sleep "5" seconds
     Then check general log in host "mysql-master1" has "SET autocommit=1"
     Then check general log in host "mysql-master2" has "SET autocommit=1"
 
