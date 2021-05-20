@@ -4,7 +4,8 @@
 
 Feature:  session_connections test
 
-   Scenario:  session_connections table #1
+
+  Scenario:  session_connections table #1
   #case desc session_connections
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_1"
       | conn   | toClose | sql                      | db               |
@@ -28,17 +29,18 @@ Feature:  session_connections test
       | conn_estab_time      | int(11)       | NO     |       | None      |         |
       | conn_recv_buffer     | int(11)       | NO     |       | None      |         |
       | conn_send_task_queue | int(11)       | NO     |       | None      |         |
+      | conn_recv_task_queue | int(11)       | NO     |       | None      |         |
       | in_transaction       | varchar(5)    | NO     |       | None      |         |
       | entry_id             | int(11)       | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect         | db               |
-      | conn_0 | False   | desc session_connections             | length{(19)}   | dble_information |
+      | conn_0 | False   | desc session_connections             | length{(20)}   | dble_information |
       | conn_0 | False   | select * from session_connections    | length{(1)}    | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_2"
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_2" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-17  | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-18  | entry_id-19 |
       | 9066          | root   | NULL     | dble_information | select * from session_connections | Manager connection | Manager connection | 1           |
   #case change user.xml and reload success,check remote_addr,remote_port,user,tenant,schema,sql,sql_stage,entry_id
     Given delete the following xml segment
@@ -74,7 +76,7 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_4" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-17  | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-18  | entry_id-19 |
       | 8066          | test   | NULL     | schema1          | create table test1 (id int)       | Finished           | false              | 2           |
       | 9066          | root   | NULL     | dble_information | select * from session_connections | Manager connection | Manager connection | 1           |
     Then execute sql in "dble-1" in "user" mode
@@ -89,7 +91,7 @@ Feature:  session_connections test
       | conn_0 | False   | select * from session_connections | dble_information |
 #case DBLE0REQ-774
     Then check resultset "session_connections_5" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-17 | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-18 | entry_id-19 |
       | 8066          | test   | NULL     | schema1  | set xa=on | Finished     | true              | 2           |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
@@ -98,7 +100,7 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_6" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                            | sql_stage-11 | in_transaction-17 | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                            | sql_stage-11 | in_transaction-18 | entry_id-19 |
       | 8066          | test   | NULL     | schema1  | insert into sharding_2_t1 values (1),(2),(3),(4) | Finished     | true              | 2           |
 
     Then execute sql in "dble-1" in "user" mode
