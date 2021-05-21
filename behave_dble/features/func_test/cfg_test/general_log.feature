@@ -499,7 +499,6 @@ Feature: general log test
       | conn_0 | false   | show @@pause                                                                 | success                          | dble_information |
       | conn_0 | false   | RESUME                                                                       | No shardingNode paused           | dble_information |
       | conn_0 | false   | reload @@config_all                                                          | success                          | dble_information |
-      | conn_0 | false   | file @@list                                                                  | success                          | dble_information |
       | conn_0 | false   | dryrun                                                                       | success                          | dble_information |
       | conn_0 | false   | check full @@metadata where schema="schema1" and table="sharding_4_t1"       | success                          | dble_information |
       | conn_0 | false   | reload @@metadata                                                            | success                          | dble_information |
@@ -545,7 +544,6 @@ Feature: general log test
       show @@pause
       RESUME
       reload @@config_all
-      file @@list
       dryrun
       check full @@metadata where schema="schema1" and table="sharding_4_t1"
       reload @@metadata
