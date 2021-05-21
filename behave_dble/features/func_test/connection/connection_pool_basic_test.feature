@@ -42,14 +42,14 @@ Feature: connection pool basic test
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                        | expect                     | db      |
+      | conn   | toClose | sql                                                    | expect                     | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))  | success                    | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))    | success                    | schema1 |
       | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
-      | conn_1 | False   | begin                                                      | success                    | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_2 | False   | begin                                                      | success                    | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
+      | conn_1 | False   | begin                                                  | success                    | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                            | success                    | schema1 |
+      | conn_2 | False   | begin                                                  | success                    | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                            | success                    | schema1 |
     #add btrace before create connection
     Given delete file "/opt/dble/BtraceAboutConnection.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutConnection.java.log" on "dble-1"
@@ -83,18 +83,35 @@ Feature: connection pool basic test
     """
 
 
-
   @CRITICAL
   Scenario: test initial connection pool: except heartbeat connection the other connection is in idle status #3
+    # sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             <property name="idleTimeout">5000</property>
+        </dbInstance>
+    </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true">
+             <property name="idleTimeout">5000</property>
+        </dbInstance>
+    </dbGroup>
+     """
+    Then execute admin cmd "reload @@config_all"
+    Given sleep "6" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                             | expect        |db                 |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((21),)}  | dble_information  |
+      | conn   | toClose | sql                                                                                             | expect        | db                |
+      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20),)}  | dble_information  |
     Then execute admin cmd "reload @@config_all -r"
+    Given sleep "6" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                             | expect        |db                 |
-      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((21),)}  | dble_information  |
-
-
+      | conn   | toClose | sql                                                                                             | expect        | db                |
+      | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20),)}  | dble_information  |
 
 
   @CRITICAL
@@ -116,12 +133,12 @@ Feature: connection pool basic test
     """
     Given kill mysql conns in "mysql-master1" in "dble_idle_connections"
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                     | expect         |db              |
+      | conn   | toClose | sql                                                                                             | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((10),)}  | dble_information  |
     #sleep 5s to go into scaling period
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                     | expect        |db              |
+      | conn   | toClose | sql                                                                                             | expect       | db                |
       | conn_0 | True    | select count(*) from backend_connections where state='idle' and used_for_heartbeat='false'      | has{((20),)} | dble_information  |
 
   @CRITICAL
@@ -169,6 +186,13 @@ Feature: connection pool basic test
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
      </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="4" primary="true">
+             <property name="idleTimeout">3000</property>
+        </dbInstance>
+    </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -200,6 +224,7 @@ Feature: connection pool basic test
       | conn   | toClose | sql                                                                                            | expect        | db                |
       | conn_0 | True    | select count(*) from backend_connections where used_for_heartbeat='false' and state='idle'     | has{((14),)}  | dble_information  |
 
+
   @CRITICAL
   Scenario: connection shrink: idle connections < minCon and the idle connection's idle time >= idleTimeout, the idle connections will not be  recycle  #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -212,6 +237,13 @@ Feature: connection pool basic test
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
      </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="6" primary="true">
+             <property name="idleTimeout">5000</property>
+        </dbInstance>
+    </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -226,8 +258,8 @@ Feature: connection pool basic test
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
       | conn   | toClose | sql                                                                                                               | expect        | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(2)}   | dble_information  |
-    #sleep 5s to wait connections idle timeout and into scaling period
-    Given sleep "5" seconds
+    #sleep 6s to wait connections idle timeout and into scaling period
+    Given sleep "6" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
       | conn   | toClose | sql                                                                                                               | expect        | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)}   | dble_information  |
@@ -252,34 +284,41 @@ Feature: connection pool basic test
              <property name="timeBetweenEvictionRunsMillis">5000</property>
         </dbInstance>
      </dbGroup>
+
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="20" minCon="6" primary="true">
+             <property name="idleTimeout">1000</property>
+        </dbInstance>
+    </dbGroup>
      """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                        | expect                     | db      |
-      | conn_0 | False   | drop table if exists sharding_4_t1                     | success                    | schema1 |
-      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20))  | success                    | schema1 |
-      | conn_0 | True    | insert into sharding_4_t1 values(2,2)                  | success                    | schema1 |
-      | conn_1 | False   | begin                                                      | success                    | schema1 |
-      | conn_1 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_2 | False   | begin                                                      | success                    | schema1 |
-      | conn_2 | False   | select * from sharding_4_t1                             | success                    | schema1 |
-      | conn_1 | True    | commit                                                     | success                    | schema1 |
-      | conn_2 | True    | commit                                                     | success                    | schema1 |
+      | conn   | toClose | sql                                                 | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                  | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name varchar(20)) | success | schema1 |
+      | conn_0 | True    | insert into sharding_4_t1 values(2,2)               | success | schema1 |
+      | conn_1 | False   | begin                                               | success | schema1 |
+      | conn_1 | False   | select * from sharding_4_t1                         | success | schema1 |
+      | conn_2 | False   | begin                                               | success | schema1 |
+      | conn_2 | False   | select * from sharding_4_t1                         | success | schema1 |
+      | conn_1 | True    | commit                                              | success | schema1 |
+      | conn_2 | True    | commit                                              | success | schema1 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_A"
-      | conn   | toClose | sql                                                                                                                                      | expect        |db              |
+      | conn   | toClose | sql                                                                                                               | expect      | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)} | dble_information  |
     #sleep 5s to wait connections idle timeout and into scaling period
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "idle_connection_B"
-      | conn   | toClose | sql                                                                                                                                      | expect        |db              |
+      | conn   | toClose | sql                                                                                                               | expect      | db                |
       | conn_0 | True    | select * from backend_connections where used_for_heartbeat='false' and state='idle' and remote_addr='172.100.9.5' | length{(6)} | dble_information  |
     #idle_connection_B is the same with idle_connection_A
     Then check resultsets "idle_connection_B" including resultset "idle_connection_A" in following columns
-      | column                      | column_index |
-      | backend_conn_id            | 0           |
-      | db_group_name              | 1            |
-      | db_instance_name           | 2            |
-      | remote_processlist_id     | 5           |
+      | column                | column_index |
+      | backend_conn_id       | 0            |
+      | db_group_name         | 1            |
+      | db_instance_name      | 2            |
+      | remote_processlist_id | 5            |
 
   @CRITICAL
   Scenario: connection shrink: idle connections > minCon and the idle connection's idle time < idleTimeout, the idle connections will not be  recycle  #9
