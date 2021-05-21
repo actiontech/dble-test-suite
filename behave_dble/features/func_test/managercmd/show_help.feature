@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(110)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(107)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -80,9 +80,6 @@ Feature: test show @@help
       | release @@reload_metadata                                                                           | Release reload process , unlock the config meta lock                              |
       | offline                                                                                             | Change Server status to OFF                                                       |
       | online                                                                                              | Change Server status to ON                                                        |
-      | file @@list                                                                                         | List all the file in conf directory                                               |
-      | file @@show filename                                                                                | Show the file data of specific file                                               |
-      | file @@upload filename content                                                                      | Write content to file                                                             |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
       | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
@@ -132,10 +129,18 @@ Feature: test show @@help
       | switch @@dbinstance                    |
       | log @@[file=? limit=? key=? regex=?]   |
       | show @@syslog limit=?                  |
+      | file @@list                            |
+      | file @@show filename                   |
+      | file @@upload filename content         |
+
+
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                              | expect                 | db               |
       | conn_0 | False   | switch @@datasources             | Unsupported statement  | dble_information |
       | conn_0 | False   | switch @@dbinstance              | Unsupported statement  | dble_information |
       | conn_0 | False   | show @@syslog limit=100          | Unsupported statement  | dble_information |
-      | conn_0 | true    | log @@file limit 10              | Unsupported statement  | dble_information |
+      | conn_0 | False   | log @@file limit 10              | Unsupported statement  | dble_information
+      | conn_0 | False   | file @@list                      | Unsupported statement  | dble_information |
+      | conn_0 | False   | file @@show filename             | Unsupported statement  | dble_information |
+      | conn_0 | true    | file @@upload filename content   | Unsupported statement  | dble_information |
