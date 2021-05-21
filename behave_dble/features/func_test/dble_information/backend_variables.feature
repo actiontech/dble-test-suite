@@ -42,6 +42,7 @@ Feature:  backend_variables test
     <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="4" minCon="3" primary="true">
+             <property name="idleTimeout">8000</property>
         </dbInstance>
     </dbGroup>
     """
@@ -56,6 +57,8 @@ Feature:  backend_variables test
     <shardingNode dbGroup="ha_group1" database="db3" name="dn5" />
     """
     Then execute admin cmd "reload @@config"
+     #sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
+    Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                      | expect          |
       | conn_0 | False   | select * from backend_variables where variable_name='autocommit' and variable_value='true'                               | length{(4)}     |
@@ -77,7 +80,7 @@ Feature:  backend_variables test
       | conn_1 | False   | insert into sharding_2_t1 values (1),(2),(3),(4) | success | schema1 |
  #case supoorted select
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_variables_3"
-      | conn   | toClose | sql                                                                                                                                                                | db               |
+      | conn   | toClose | sql                                                                                                                                                                 | db               |
       | conn_0 | False   | select * from backend_variables where backend_conn_id in (select backend_conn_id from backend_connections where sql='INSERT INTO sharding_2_t1 VALUES (2),  (4)')   | dble_information |
     Then check resultset "backend_variables_3" has lines with following column values
       | variable_name-1          | variable_value-2   | variable_type-3 |
@@ -168,6 +171,8 @@ Feature:  backend_variables test
     $a -Dcharset=latin1
     """
     Given Restart dble in "dble-1" success
+     #sleep time > idle time,because Connection pool initialization #DBLE0REQ-1132
+    Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                      | expect          |
       | conn_0 | False   | use dble_information                                                                                                     | success         |

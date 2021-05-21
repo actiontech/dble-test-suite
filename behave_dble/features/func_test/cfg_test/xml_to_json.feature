@@ -14,7 +14,7 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {"dbGroup":\[
+    "dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"heartbeat":{"value":"select user()"},
     "dbInstance":\[{"name":"hostM1","url":"172.100.9.5:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true}\]},
     {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},
@@ -38,7 +38,7 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
     {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]}\],
     "user":\[
     {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
-    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"111111"}}\]}
+    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"111111"}}\]
     """
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -222,7 +222,7 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {"dbGroup":\[
+    "dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":10,"errorRetryCount":0},
     "dbInstance":\[
     {"name":"hostM1","url":"172.100.9.5:3306","password":"EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
@@ -529,7 +529,7 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
     Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
     """
-    {"dbGroup":\[
+    "dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":10,"errorRetryCount":0},
     "dbInstance":\[
     {"name":"hostM1","url":"172.100.9.5:3306","password":"EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
