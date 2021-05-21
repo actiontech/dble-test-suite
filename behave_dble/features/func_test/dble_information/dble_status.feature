@@ -146,7 +146,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
       | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '19',), ('transactions', '11',))}    |
-   Given prepare a thread execute sql "exit" with "conn_1"
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql  | expect |
+      | conn_1 | False   | exit | druid not support sql syntax, the reason is syntax error, error in :'exit, pos 4, line 1, column 5, token IDENTIFIER exit |
   #case query exit, questions and transactions add 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
@@ -434,7 +436,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                      | expect                                                     |
      | conn_1 | False   | set autocommit=2                         | java.sql.SQLSyntaxErrorException: illegal value[2]         |
-   Given prepare a thread execute sql "drop table if exist test" with "conn_1"
+     | conn_1 | False   | drop table if exist test                 | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    # TODO transactions + 1? transactions + 2?
    # 1064 error, questions + 2, transactions + 1
    Then execute sql in "dble-1" in "admin" mode
@@ -450,9 +452,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '6',), ('transactions', '5',))} | dble_information |
    # 1064 error in transaction, questions + 2, transactions + 0
    Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql                              |
-     | conn_1 | False   | begin                            |
-   Given prepare a thread execute sql "drop table if exist test" with "conn_1"
+     | conn   | toClose | sql                       | expect  |
+     | conn_1 | False   | begin                     | success |
+     | conn_1 | False   | drop table if exist test  | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '8',), ('transactions', '5',))} | dble_information |
@@ -490,7 +492,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then check resultset "dble_status_7" has lines with following column values
      | Questions-0 | Transactions-1 |
      | 13          | 8              |
-   Given prepare a thread execute sql "drop table if exist global_t1" with "conn_1"
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                           | expect |
+     | conn_1 | False   | drop table if exist global_t1 | druid not support sql syntax, the reason is syntax error, error in :'e if exist global_t1', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    # 1064 error, questions + 1, transactions + 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
@@ -505,9 +509,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '16',), ('transactions', '11',))} | dble_information |
    # 1064 error in transaction, questions + 2, transactions + 0
    Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql                              |
-     | conn_1 | False   | begin                            |
-   Given prepare a thread execute sql "drop table if exist test" with "conn_1"
+     | conn   | toClose | sql                       | expect  |
+     | conn_1 | False   | begin                     | success |
+     | conn_1 | False   | drop table if exist test  | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '18',), ('transactions', '11',))} | dble_information |
