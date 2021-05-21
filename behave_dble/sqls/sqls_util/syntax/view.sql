@@ -1,6 +1,6 @@
 #!default_db:schema1
 drop table if exists test1
-create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT int(11))
+create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT int(11)) default charset=utf8
 insert into test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string',1),(3,3, 'another',3),(2,2, 'a\nstring',3),(4,4, '中',2),(5,5, 'a\'string\'',5),(6,6, 'a\""string\""',5),(7,7, 'a\bstring',5),(8,8, 'a\nstring',6),(9,9, 'a\rstring',6),(10,10, 'a\tstring',2)
 ###########################select grammar on the view####################
 drop view if exists view_test
@@ -135,7 +135,7 @@ drop view view_test
 #####################issue:1280###################################
 drop table if exists test1
 drop table if exists schema2.test2
-create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT int(11))
+create table test1 (id int(11) primary key,R_REGIONKEY float,R_NAME varchar(50),R_COMMENT int(11)) default charset=utf8
 insert into test1 (id,R_REGIONKEY,R_NAME,R_COMMENT) values (1,1, 'a string',1),(3,3, 'another',3),(2,2, 'a\nstring',3),(4,4, '中',2),(5,5, 'a\'string\'',5),(6,6, 'a\""string\""',5),(7,7, 'a\bstring',5),(8,8, 'a\nstring',6),(9,9, 'a\rstring',6),(10,10, 'a\tstring',2)
 CREATE TABLE schema2.test2(`id` int(10) unsigned NOT NULL,`o_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`o_id`))DEFAULT CHARACTER SET = utf8
 insert into schema2.test2 values(1,1,'order中id为1',1),(2,2,'test_2',2),(3,3,'order中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1)
