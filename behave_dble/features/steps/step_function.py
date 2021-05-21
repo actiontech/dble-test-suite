@@ -125,7 +125,7 @@ def step_impl(context, fildername,hostname):
 
 @Given('create local and server file "{filename}" with "{num}" lines')    
 @Given('create local and server file "{filename}" and fill with text')
-def step_impl(context, filename，num=None):
+def step_impl(context, filename, num=None):
     logger.debug("*** debug context.text:{0}".format(context.text))
 
     text = context.text
