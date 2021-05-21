@@ -2,7 +2,7 @@
 #============values.py generate_sql==================
 #============char_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,char_columns char(255))
+create table test1(id int,char_columns char(255)) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
@@ -28,7 +28,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============varchar_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,varchar_columns varchar(255))
+create table test1(id int,varchar_columns varchar(255)) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
@@ -210,7 +210,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============tinytext_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,tinytext_columns tinytext)
+create table test1(id int,tinytext_columns tinytext) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
@@ -236,7 +236,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============text_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,text_columns text)
+create table test1(id int,text_columns text) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
@@ -262,7 +262,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============mediumtext_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,mediumtext_columns mediumtext)
+create table test1(id int,mediumtext_columns mediumtext) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
@@ -288,7 +288,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============longtext_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,longtext_columns longtext)
+create table test1(id int,longtext_columns longtext) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
