@@ -1173,6 +1173,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
 
       | conn_2 | False    | begin                                                                           | success | schema1 |
       | conn_2 | true     | delete from sharding_4_t1                                                       | success | schema1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1225,6 +1226,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_3 | False    | rollback                                                                        | success | schema1 |
 
       | conn_3 | True     | delete from sharding_4_t1                                                       | success | schema1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1477,6 +1479,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
 
       | rwS1 | 111111 | conn_31 | False   | begin                        | success | db1 |
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1546,6 +1549,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | rwS1 | 111111 | conn_31 | False   | rollback                                                      | success | db1 |
 
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1                                   | success | db1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1561,7 +1565,6 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 7        | rollback                                                      | rollback                                     | Rollback   | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from db2.test_table1                                   | delete from db2.test_table1                  | Delete     | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
       | 9        | exit                                                          |                                              | Other      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
-
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                          | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
@@ -1654,6 +1657,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_1 | False    | delete from sharding_4_t1 where id=4                                            | success | schema1 |
       | conn_1 | False    | rollback                                                                        | success | schema1 |
       | conn_1 | True     | delete from sharding_4_t1                                                       | success | schema1 |
+    Given sleep "2" seconds
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
