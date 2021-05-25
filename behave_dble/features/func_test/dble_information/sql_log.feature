@@ -3,14 +3,22 @@
 # update by quexiuping at 2021/3/22
 
 Feature:test sql_log and sql_log_by_tx_by_entry_by_user
-
 #DBLE0REQ-985
+sql_log
+sql_log_by_tx_by_entry_by_user
+sql_log_by_digest_by_entry_by_user
+sql_log_by_tx_digest_by_entry_by_user
+
+
 
   Scenario: desc table and unsupported dml  #1
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                 | expect        | db               |
-      | conn_0 | False   | desc sql_log                        | length{(13)}  | dble_information |
-#      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | length{(10)}  | dble_information |
+      | conn   | toClose | sql                                        | expect        | db               |
+      | conn_0 | False   | desc sql_log                               | length{(13)}  | dble_information |
+      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user        | length{(10)}  | dble_information |
+      | conn_0 | False   | desc sql_log_by_digest_by_entry_by_user    | length{(8)}   | dble_information |
+      | conn_0 | False   | desc sql_log_by_tx_digest_by_entry_by_user | length{(11)}  | dble_information |
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_1"
       | conn   | toClose | sql          | db               |
       | conn_0 | False   | desc sql_log | dble_information |
@@ -30,21 +38,52 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | start_time    | int(11)       | NO     |       | None      |         |
       | duration      | int(11)       | NO     |       | None      |         |
 
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
-#      | conn   | toClose | sql                                 | db               |
-#      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | dble_information |
-#    Then check resultset "table_2" has lines with following column values
-#      | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
-#      | tx_id         | int(11)       | NO     | PRI   | None      |         |
-#      | entry         | int(11)       | NO     | PRI   | None      |         |
-#      | user          | varchar(20)   | NO     | PRI   | None      |         |
-#      | source_host   | varchar(20)   | NO     |       | None      |         |
-#      | source_port   | int(11)       | NO     |       | None      |         |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
+      | conn   | toClose | sql                                 | db               |
+      | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | dble_information |
+    Then check resultset "table_2" has lines with following column values
+      | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | tx_id         | int(11)       | NO     | PRI   | None      |         |
+      | entry         | int(11)       | NO     |       | None      |         |
+      | user          | varchar(20)   | NO     |       | None      |         |
+      | source_host   | varchar(20)   | NO     |       | None      |         |
+      | source_port   | int(11)       | NO     |       | None      |         |
 #      | sql_ids       | varchar(1024) | NO     |       | None      |         |
-#      | sql_count     | int(11)       | NO     |       | None      |         |
-#      | tx_duration   | int(11)       | NO     |       | None      |         |
-#      | busy_time     | int(11)       | NO     |       | None      |         |
-#      | examined_rows | int(11)       | NO     |       | None      |         |
+      | sql_exec      | int(11)       | NO     |       | None      |         |
+      | tx_duration   | int(11)       | NO     |       | None      |         |
+      | busy_time     | int(11)       | NO     |       | None      |         |
+      | examined_rows | int(11)       | NO     |       | None      |         |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_3"
+      | conn   | toClose | sql                                     | db               |
+      | conn_0 | False   | desc sql_log_by_digest_by_entry_by_user | dble_information |
+    Then check resultset "table_3" has lines with following column values
+      | Field-0       | Type-1      | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | sql_digest    | int(11)     | NO     |       | None      |         |
+      | entry         | int(11)     | NO     |       | None      |         |
+      | user          | varchar(20) | NO     |       | None      |         |
+      | exec          | int(11)     | NO     |       | None      |         |
+      | duration      | int(11)     | NO     |       | None      |         |
+      | rows          | int(11)     | NO     |       | None      |         |
+      | examined_rows | int(11)     | NO     |       | None      |         |
+      | avg_duration  | int(11)     | NO     |       | None      |         |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_4"
+      | conn   | toClose | sql                                        | db               |
+      | conn_0 | False   | desc sql_log_by_tx_digest_by_entry_by_user | dble_information |
+    Then check resultset "table_4" has lines with following column values
+      | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
+      | tx_digest     | varchar(1024) | NO     | PRI   | None      |         |
+      | exec          | int(11)       | NO     | PRI   | None      |         |
+      | entry         | int(11)       | NO     |       | None      |         |
+      | user          | varchar(20)   | NO     |       | None      |         |
+      | sql_exec      | int(11)       | NO     |       | None      |         |
+      | source_host   | varchar(20)   | NO     |       | None      |         |
+      | source_port   | int(11)       | NO     |       | None      |         |
+#      | sql_ids       | VARCHAR(1024) | NO     |       | None      |         |
+      | tx_duration   | int(11)       | NO     |       | None      |         |
+      | busy_time     | int(11)       | NO     |       | None      |         |
+      | examined_rows | int(11)       | NO     |       | None      |         |
 
     #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
@@ -313,7 +352,6 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | rwS2 | 111111 | conn_4 | true    | drop table if exists test_table               | success | db2 |
 
 
-
   Scenario: test samplingRate=100 and simple sql   #4
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -365,7 +403,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn   | toClose | sql                                                                 | expect       | db               |
       | conn_0 | False   | select * from sql_log                                               | length{(12)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(12)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                    | length{(12)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                    | length{(12)} | dble_information |
 #      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                 | length{(12)} | dble_information |
 
 
@@ -419,8 +457,8 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | INSERT INTO test1 VALUES (?, ?)                     | 2       | test   | 1      | 2      | 2               |
       | INSERT INTO test_table VALUES (?, ?)                | 3       | rwS1   | 1      | 1      | 1               |
       | select * from test1                                 | 2       | test   | 1      | 2      | 2               |
-#      | SELECT ?                                            | 3       | rwS1   | 1      | 1      | 1               |
-#      | SELECT ?                                            | 2       | test   | 1      | 1      | 1               |
+      | SELECT ?                                            | 3       | rwS1   | 1      | 1      | 1               |
+      | SELECT ?                                            | 2       | test   | 1      | 1      | 1               |
       | show databases                                      | 2       | test   | 1      | 1      | 0               |
       | UPDATE test1 SET name = ? WHERE id = ?              | 2       | test   | 1      | 1      | 1               |
 

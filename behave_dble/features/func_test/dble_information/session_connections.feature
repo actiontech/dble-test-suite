@@ -110,9 +110,41 @@ Feature:  session_connections test
       | conn_1 | False   | set autocommit=1                       | success |
       | conn_1 | False   | set xa=off                             | success |
       | conn_1 | True    | drop table if exists sharding_2_t1     | success |
+
+
+  #rwSplitUser DBLE0REQ-1133
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
+    </dbGroup>
+    """
+    #1 more than one rwSplitUsers can use the same dbGroup
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
+  Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_6"
+      | conn   | toClose | sql                               | db               |
+      | conn_0 | False   | select * from session_connections | dble_information |
+    Then check resultset "session_connections_6" has lines with following column values
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                              | sql_stage-11 | in_transaction-18 | entry_id-20 |
+      | 8066          | rwS1   | NULL     | db1      | insert into test_table values (1,'1',1),(2, '2',2) | NULL         | false             | 1           |
+
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
+      | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
   #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                   | expect                                                                                                        |
+      | conn   | toClose | sql                                                                   | expect                                              |
       | conn_0 | False   | delete from session_connections where remote_port=8066                | Access denied for table 'session_connections'       |
       | conn_0 | False   | update session_connections set entry_id=2 where entry_id=1            | Access denied for table 'session_connections'       |
       | conn_0 | True    | insert into session_connections values ('a',1,2,3)                    | Access denied for table 'session_connections'       |
