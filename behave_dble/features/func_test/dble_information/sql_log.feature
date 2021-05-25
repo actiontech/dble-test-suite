@@ -509,8 +509,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
 
 
-
-  Scenario: test samplingRate=100 and complex sql   #5
+   Scenario: test samplingRate=100 and complex sql   #5
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -535,7 +534,12 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
     <shardingUser name="test1" password="111111" schemas="schema1,schema2"/>
     <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
     """
-    Then execute admin cmd "reload @@config"
+
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+     $a -DinSubQueryTransformToJoin=true
+    """
+    Then restart dble in "dble-1" success
 
     #case for mysql 5.7 shrdinguser
     Then execute sql in "dble-1" in "user" mode

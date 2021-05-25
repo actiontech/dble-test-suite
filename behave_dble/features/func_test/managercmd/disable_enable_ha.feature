@@ -1,12 +1,15 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by zhaohongjie at 2019/12/11
+
+
 Feature: test high-availability related commands
   ha related commands to test:
   dbGroup @@disable name='xxx' [instance='xxx']
   dbGroup @@enable name='xxx' [instance='xxx']
   dbGroup @@switch name='xxx' master='xxx'
   show @@dbinstance
+
 
   Scenario: end to end ha switch test
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -24,8 +27,8 @@ Feature: test high-availability related commands
     Then execute admin cmd "dbGroup @@disable name='ha_group2'"
 #    check transaction is killed forcely
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                         | expect                                                                           | db       |
-      | conn_0 | true     | select * from sharding_4_t1 | the dbInstance[172.100.9.6:3306] can't reach. Please check the dbInstance status | schema1  |
+      | conn   | toClose  | sql                         | expect                                                                                                        | db       |
+      | conn_0 | true     | select * from sharding_4_t1 | java.io.IOException: the dbInstance[172.100.9.6:3306] is disable. Please check the dbInstance disable status  | schema1  |
 
     Then check exist xml node "{'tag':'dbGroup/dbInstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
 #    The expect fail msg is tmp,for github issue:#1528
@@ -84,8 +87,7 @@ Feature: test high-availability related commands
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5| DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3306   | R      |     0   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3306   | W      |     0   | false       |
-#     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
-#     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'slave1'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
+
 #    dble-2 is slave1's server
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |
