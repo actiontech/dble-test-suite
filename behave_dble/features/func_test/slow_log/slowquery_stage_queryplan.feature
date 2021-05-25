@@ -70,7 +70,14 @@ Feature: check sql execute stage and connection query plan
     Given delete file "/opt/dble/BtraceSessionStage.java.log" on "dble-1"
 
 
+
   Scenario: check "show @@connection.sql.status where FRONT_ID=?" #2
+    Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+     $a -DinSubQueryTransformToJoin=true
+    """
+    Then restart dble in "dble-1" success
+
 # case 1: use default @@slow_query_log and disable @@slow_query_log
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                        | expect                               |
