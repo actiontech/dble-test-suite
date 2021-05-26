@@ -159,7 +159,7 @@ Feature: test mysql one node down
     Given sleep "6" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
-      was closed ,reason is \[DDL find connection close\]
+      was closed ,reason is
       """
     Given start mysql in host "mysql-master2"
     Given sleep "30" seconds

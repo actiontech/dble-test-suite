@@ -96,6 +96,7 @@ sql_log_by_tx_digest_by_entry_by_user
 #      | conn_0 | True    | insert into sql_log_by_tx_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
 
 
+
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
 
     #case check defalut values
@@ -191,6 +192,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                | expect                                | db      |
       | conn_1 | False   | SELECT 1           | success                               | schema1 |
+    Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
       | conn_0 | False   | select * from sql_log                               | length{(1)} | dble_information |
