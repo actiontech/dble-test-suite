@@ -655,6 +655,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                          |
      | conn_1 | True    | set autocommit=1,trace=1,xa=1,autocommit=0   |
+   Given sleep "2" seconds
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '20',), ('transactions', '11',))} | dble_information |
