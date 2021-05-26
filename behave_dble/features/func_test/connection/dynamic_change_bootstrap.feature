@@ -37,13 +37,13 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_0 | False   | insert into dble_thread_pool values ('aa',1,1,1,1)         | not support insert | dble_information |
       | conn_0 | False   | delete from dble_thread_pool where name='BusinessExecutor' | not support delete | dble_information |
     #unsupported update illegal number
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=0 where name ='$_NIO_REACTOR_FRONT-' | Column 'core_pool_size' can not be empty or '0' | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=0.5 where name ='$_NIO_REACTOR_FRONT-' | Not Supported of Value EXPR :0.5 | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='$_NIO_REACTOR_FRONT-' | unknown error:For input string: "null" | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='$_NIO_REACTOR_FRONT-' | Column 'core_pool_size' cannot be null | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size='afr' where name ='$_NIO_REACTOR_FRONT-' | unknown error:For input string: "afr" | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=' ' where name ='$_NIO_REACTOR_FRONT-' | Column 'core_pool_size' can not be empty or '0' | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size='-1' where name ='$_NIO_REACTOR_FRONT-' | unknown error:null | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=0.5 where name ='$_NIO_REACTOR_FRONT-'    | Not Supported of Value EXPR :0.5                | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=0 where name ='$_NIO_REACTOR_FRONT-'      | Column 'core_pool_size' can not be empty or '0' | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=' ' where name ='$_NIO_REACTOR_FRONT-'    | Column 'core_pool_size' can not be empty or '0' | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='-1' where name ='$_NIO_REACTOR_FRONT-'   | unknown error:null                              | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='afr' where name ='$_NIO_REACTOR_FRONT-'  | unknown error:For input string: "afr"           | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='$_NIO_REACTOR_FRONT-' | unknown error:For input string: "null"          | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='$_NIO_REACTOR_FRONT-'   | Column 'core_pool_size' cannot be null          | dble_information |
 
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
