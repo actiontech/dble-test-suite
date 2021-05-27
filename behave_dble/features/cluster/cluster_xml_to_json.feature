@@ -903,22 +903,22 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     #case change config on dble-3.reload would be error
     Given update file content "/opt/dble/conf/sharding.xml" in "dble-3" with sed cmds
     """
-     s/sharding_4_t1/sharding4/g
+     s/sharding_4_t1/sharding44/g
     """
      Then execute sql in "dble-3" in "admin" mode
       | conn   | toClose  | sql                                 | expect                                                | db               |
       | conn_3 | true     | reload @@config_all                 | Other instance is reloading, please try again later   | dble_information |
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      name="sharding4"
+      name="sharding44"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      name="sharding4"
+      name="sharding44"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      name="sharding4"
+      name="sharding44"
       """
     Given stop btrace script "BtraceAboutxmlJson.java" in "dble-2"
     Given destroy btrace threads list
@@ -926,15 +926,15 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-3"
       """
-      name="sharding4"
+      name="sharding44"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
-      name="sharding4"
+      name="sharding44"
       """
     Then check following text exist "N" in file "/opt/dble/conf/sharding.xml" in host "dble-2"
       """
-      name="sharding4"
+      name="sharding44"
       """
     Then check following text exist "Y" in file "/opt/dble/conf/sharding.xml" in host "dble-1"
       """
@@ -1020,19 +1020,19 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn   | toClose  | sql                                 | expect               | db               |
       | conn_1 | true     | select * from dble_schema           | hasStr{schema2}      | dble_information |
       | conn_1 | true     | select * from dble_table            | hasStr{global99}     | dble_information |
-      | conn_1 | true     | select * from dble_table            | hasNoStr{sharding4}  | dble_information |
+      | conn_1 | true     | select * from dble_table            | hasNoStr{sharding44} | dble_information |
 
      Then execute sql in "dble-2" in "admin" mode
       | conn   | toClose  | sql                                 | expect               | db               |
       | conn_2 | true     | select * from dble_schema           | hasStr{schema2}      | dble_information |
       | conn_2 | true     | select * from dble_table            | hasStr{global99}     | dble_information |
-      | conn_2 | true     | select * from dble_table            | hasNoStr{sharding4}  | dble_information |
+      | conn_2 | true     | select * from dble_table            | hasNoStr{sharding44} | dble_information |
 
      Then execute sql in "dble-3" in "admin" mode
       | conn   | toClose  | sql                                 | expect               | db               |
       | conn_3 | true     | select * from dble_schema           | hasStr{schema2}      | dble_information |
       | conn_3 | true     | select * from dble_table            | hasStr{global99}     | dble_information |
-      | conn_3 | true     | select * from dble_table            | hasNoStr{sharding4}  | dble_information |
+      | conn_3 | true     | select * from dble_table            | hasNoStr{sharding44} | dble_information |
 
 
 
