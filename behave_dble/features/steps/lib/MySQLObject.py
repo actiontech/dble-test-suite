@@ -79,7 +79,7 @@ class MySQLObject(object):
             success_p = "Starting MySQL.*?SUCCESS"
             obj = re.search(success_p, out)
             isSuccess = obj is not None
-            assert isSuccess, "start mysql err: {1}".format(err)
+            assert isSuccess, "start mysql err: {0}".format(err)
 
             logger.debug("start mysql connect_test")
             self.connect_test()
