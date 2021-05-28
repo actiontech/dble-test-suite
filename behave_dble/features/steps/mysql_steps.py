@@ -96,7 +96,8 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
 
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
 @Given('execute sql "{num}" times in "{host_name}" at concurrent {concur}')
-def step_impl(context, host_name, num, concur="100"):
+@Given('execute "{mode_name}" sql "{num}" times in "{host_name}" at concurrent')
+def step_impl(context, host_name, num, concur="100",mode_name="admin"):
     row = context.table[0]
     num = int(num)
     info_dic = row.as_dict()
@@ -118,7 +119,10 @@ def step_impl(context, host_name, num, concur="100"):
             my_dic["sql"] = sql_raw.format(id)
             # logger.debug("debug1, my_dic:{}, conn:{}".format(my_dic["sql"], my_dic["conn"]))
             try:
-                execute_sql_in_host(host_name, my_dic, "user")
+                if mode_name == "admin":
+                    execute_sql_in_host(host_name, my_dic, "admin")
+                else:
+                    execute_sql_in_host(host_name, my_dic, "user")
             except Exception as e:
                 eflag.exception = e
 

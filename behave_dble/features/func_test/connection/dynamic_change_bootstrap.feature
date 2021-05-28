@@ -106,14 +106,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 #@skip_restart
   Scenario: test "processors"  #2
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      $a  -DbackendProcessorExecutor=1
-      $a  -DwriteToBackendExecutor=1
-      $a  -DbackendProcessors=1
-      $a  -DcomplexExecutor=2
-      """
-    Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='$_NIO_REACTOR_FRONT-'                   | success                                | dble_information |
@@ -152,6 +144,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_8  | False   | select * from sharding_4_t1                             | success | schema1 |
       | conn_9  | False   | select * from sharding_4_t1                             | success | schema1 |
       | conn_10 | False   | select * from sharding_4_t1                             | success | schema1 |
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
@@ -175,19 +170,31 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
     Given execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                                     | expect  | db      |
-      | conn_1  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_2  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_3  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_4  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_5  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_6  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_7  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_8  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_9  | False   | select * from sharding_4_t1                             | success | schema1 |
-      | conn_10 | False   | select * from sharding_4_t1                             | success | schema1 |
+      | conn_1  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_2  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_3  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_4  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_5  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_6  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_7  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_8  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_9  | true    | select * from sharding_4_t1                             | success | schema1 |
+      | conn_10 | true    | select * from sharding_4_t1                             | success | schema1 |
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      unknown error:
+      caught err:
+      NullPointerException
+      """
 
 # 设置前端超时时间小一点，update超时
 # 加桩，缩容期间前端加业务
+# 缩容期间，mysql down
+
 
 
 @skip_restart
@@ -222,13 +229,47 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       backendProcessors=4
       """
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
-    Then execute admin cmd "reload @@config_all"
+    Given execute "admin" sql "20" times in "dble-1" at concurrent
+      | sql                       | db                |
+      | reload @@config_all -r    | dble_information  |
+    Given sleep "5" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      INFO \[$_NIO_REACTOR_BACKEND-0-RW\]
+      INFO \[$_NIO_REACTOR_BACKEND-1-RW\]
+      INFO \[$_NIO_REACTOR_BACKEND-2-RW\]
+      INFO \[$_NIO_REACTOR_BACKEND-3-RW\]
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                   | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_BACKEND-'                   | success                                  | dble_information |
+      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='$_NIO_REACTOR_BACKEND-'     | has{(('$_NIO_REACTOR_BACKEND-', 2, 2),)} | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A1" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_BACKEND' | wc -l
+      """
+    Then check result "A1" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                                | occur_times |
+      | interrupt thread:Thread\[$_NIO_REACTOR_BACKEND     | 4           |
+      | set to file success:/bootstrap.dynamic.cnf         | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      backendProcessors=2
+      """
+    Given execute "admin" sql "10" times in "dble-1" at concurrent
+      | sql                       | db                |
+      | reload @@config_all -r    | dble_information  |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      unknown error:
+      caught err:
+      NullPointerException
+      """
+
+
+@skip_restart
+  Scenario: test "processorExecutor"  #4
