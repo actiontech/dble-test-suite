@@ -106,6 +106,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 #@skip_restart
   Scenario: test "processors"  #2
+  # on bootstrap.cnf the default value : -Dprocessors=1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='$_NIO_REACTOR_FRONT-'                   | success                                | dble_information |
@@ -186,6 +187,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
+      setError
       unknown error:
       caught err:
       NullPointerException
@@ -197,7 +199,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-@skip_restart
+#@skip_restart
   Scenario: test "backendProcessors"  #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -207,6 +209,21 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DcomplexExecutor=2
       """
     Then restart dble in "dble-1" success
+    Given execute "admin" sql "20" times in "dble-1" at concurrent
+      | sql                       | db                |
+      | reload @@config_all -r    | dble_information  |
+    Given sleep "5" seconds
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      INFO \[$_NIO_REACTOR_BACKEND-0-RW\]
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      INFO \[$_NIO_REACTOR_BACKEND-1-RW\]
+      INFO \[$_NIO_REACTOR_BACKEND-2-RW\]
+      INFO \[$_NIO_REACTOR_BACKEND-3-RW\]
+      """
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='$_NIO_REACTOR_BACKEND-'                   | success                                  | dble_information |
@@ -265,11 +282,127 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
+      setError
       unknown error:
       caught err:
       NullPointerException
       """
 
 
-@skip_restart
+#@skip_restart
   Scenario: test "processorExecutor"  #4
+  # on bootstrap.cnf the default value : -DprocessorExecutor=1
+  # check dble.log has one BusinessExecutor0
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql         | db        |
+      | select 1    | schema1   |
+   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      INFO \[BusinessExecutor0\]
+      """
+   Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      INFO \[BusinessExecutor1\]
+      INFO \[BusinessExecutor2\]
+      INFO \[BusinessExecutor3\]
+      """
+
+    # change core_pool_size 1-4
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                           | expect                                 | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='BusinessExecutor'                   | success                                | dble_information |
+      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='BusinessExecutor'     | has{(('BusinessExecutor', 4, 4),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"BusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "4"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will execute thread                        | 3           |
+      | Running, pool size = 1                     | 1           |
+      | Running, pool size = 2                     | 1           |
+      | Running, pool size = 3                     | 1           |
+      | set to file success:/bootstrap.dynamic.cnf | 1           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      processorExecutor=4
+      """
+
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql         | db        |
+      | select 1    | schema1   |
+   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      INFO \[BusinessExecutor0\]
+      INFO \[BusinessExecutor1\]
+      INFO \[BusinessExecutor2\]
+      INFO \[BusinessExecutor3\]
+      """
+
+    # change core_pool_size 4-2
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                           | expect                                 | db               |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='BusinessExecutor'                   | success                                | dble_information |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                           | expect                                 | db               |
+      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='BusinessExecutor'     | has{(('BusinessExecutor', 2, 2),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"BusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | interrupt thread:Thread\[BusinessExecutor  | 4           |
+      | set to file success:/bootstrap.dynamic.cnf | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      processorExecutor=2
+      """
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql         | db        |
+      | select 1    | schema1   |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      setError
+      unknown error:
+      caught err:
+      NullPointerException
+      """
+
+
+
+#@skip_restart
+  Scenario: test "writeToBackendExecutor"  #5
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a  -DbackendProcessorExecutor=1
+      $a  -DwriteToBackendExecutor=1
+      $a  -DbackendProcessors=1
+      $a  -DcomplexExecutor=2
+      """
+    Then restart dble in "dble-1" success
+
+
+
+
+
+
+
+
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      setError
+      unknown error:
+      caught err:
+      NullPointerException
+      """
+
