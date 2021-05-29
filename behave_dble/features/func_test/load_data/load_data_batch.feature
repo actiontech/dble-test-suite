@@ -284,7 +284,7 @@ Feature: case about load data batch
     """
     Given execute oscmd in "dble-1"
     """
-    echo -e '1,1\n2,2\n3,3\n4,4\n5,5\n6,6\n7,7\n8,8\n9,9\n10,10\n11,11\n12,12\n13,13' > /opt/dble/data.txt
+    echo -e '1,1\n2,2\n3,3\n4,4\n5,5\n6,a\n7,7\n8,8\n9,9\n10,10\n11,11\n12,12\n13,13' > /opt/dble/data.txt
     """
     Given connect "dble-1" with user "test" in "dble-1" to execute sql
     """
@@ -297,10 +297,6 @@ Feature: case about load data batch
     """
     Then execute admin cmd "enable @@load_data_batch"
     Then execute admin cmd "reload @@load_data.num=2"
-    Given update file content "/opt/dble/data.txt" in "dble-1" with sed cmds
-    """
-    6s/6,6/6,a/
-    """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                                        | expect          | db      |
       | conn_0 | true    | load data infile '/opt/dble/data.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n'   | success         | schema1 |
