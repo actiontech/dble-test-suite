@@ -97,7 +97,7 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
 @Given('execute sql "{num}" times in "{host_name}" at concurrent {concur}')
 @Given('execute "{mode_name}" sql "{num}" times in "{host_name}" at concurrent')
-def step_impl(context, host_name, num, concur="100",mode_name="admin"):
+def step_impl(context, host_name, num, concur="100",mode_name="user"):
     row = context.table[0]
     num = int(num)
     info_dic = row.as_dict()

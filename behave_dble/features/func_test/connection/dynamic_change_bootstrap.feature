@@ -289,7 +289,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
-#@skip_restart
+@skip_restart
   Scenario: test "processorExecutor"  #4
   # on bootstrap.cnf the default value : -DprocessorExecutor=1
   # check dble.log has one BusinessExecutor0
