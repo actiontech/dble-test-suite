@@ -450,15 +450,16 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '6',), ('transactions', '5',))} | dble_information |
-   # 1064 error in transaction, questions + 2, transactions + 0
+   # 1064 error in transaction, questions + 3, transactions + 0
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                       | expect  |
      | conn_1 | False   | begin                     | success |
+     | conn_1 | False   | delete * from test        | druid not support sql syntax, the reason is syntax error. pos 8, line 1, column 8, token * |
      | conn_1 | False   | drop table if exist test  | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                             | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '8',), ('transactions', '5',))} | dble_information |
-   # other error, questions + 4, transactions + 2
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '9',), ('transactions', '5',))} | dble_information |
+   # other error in transaction, questions + 4, transactions + 2
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                      | expect                                                     |
      | conn_1 | False   | rollback                                 | success                                                    |
@@ -467,15 +468,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_1 | False   | create index id_index on no_sharding(id) | Table 'db3.no_sharding' doesn't exist                      |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                              | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '12',), ('transactions', '7',))} | dble_information |
-   # TODO: This step will be deleted after fixed DBLE0REQ-1110
-   # rollback Table 'db3.no_sharding' doesn't exist, questions + 1, transactions + 1
-   Then execute sql in "dble-1" in "user" mode
-     | conn   | toClose | sql      |
-     | conn_1 | False   | rollback |
-   Then execute sql in "dble-1" in "admin" mode
-     | conn   | toClose | sql                                                                                     | expect                                              | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '13',), ('transactions', '8',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '13',), ('transactions', '7',))} | dble_information |
 
    # no default shardingNode
    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -491,14 +484,14 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_0 | False   | show @@questions | dble_information  |
    Then check resultset "dble_status_7" has lines with following column values
      | Questions-0 | Transactions-1 |
-     | 13          | 8              |
+     | 13          | 7              |
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                           | expect |
      | conn_1 | False   | drop table if exist global_t1 | druid not support sql syntax, the reason is syntax error, error in :'e if exist global_t1', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    # 1064 error, questions + 1, transactions + 1
    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                       | expect                                                  |
-      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '14',), ('transactions', '9',))}     |
+      | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%'   | has{(('questions', '14',), ('transactions', '8',))}     |
    # other error, questions + 2, transactions + 2
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                          | expect                                                           |
@@ -506,16 +499,34 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_1 | False   | create table if not exists global_1 (id int) | Table 'schema1.global_1' doesn't exist in the config of sharding |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '16',), ('transactions', '11',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '16',), ('transactions', '10',))} | dble_information |
    # 1064 error in transaction, questions + 2, transactions + 0
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                       | expect  |
      | conn_1 | False   | begin                     | success |
+     | conn_1 | False   | delete * from test        | druid not support sql syntax, the reason is syntax error. pos 8, line 1, column 8, token * |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                               | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '18',), ('transactions', '10',))} | dble_information |
+   # other error in transaction, questions + 3, transactions + 0
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                             | expect                              |
+     | conn_1 | False   | rollback                        | success                             |
+     | conn_1 | False   | begin                           | success                             |
+     | conn_1 | False   | delete froms test1              | Table 'schema1.froms' doesn't exist |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                               | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '21',), ('transactions', '11',))} | dble_information |
+   # 1064 error in Implicit Commit, questions + 3, transactions + 0
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                       | expect  |
+     | conn_1 | False   | rollback                  | success |
+     | conn_1 | False   | begin                     | success |
      | conn_1 | False   | drop table if exist test  | druid not support sql syntax, the reason is syntax error, error in :'e if exist test', expect EXISTS, actual null, pos 19, line 1, column 15, token IDENTIFIER exist |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '18',), ('transactions', '11',))} | dble_information |
-   # return error and table does not config in sharding.xml, questions + 3, transactions + 2
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '24',), ('transactions', '12',))} | dble_information |
+   # other error in Implicit Commit and table does not config in sharding.xml, questions + 3, transactions + 2
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                             | expect                                                           |
      | conn_1 | False   | rollback                        | success                                                          |
@@ -523,9 +534,7 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_1 | False   | create table global_1 (id int)  | Table 'schema1.global_1' doesn't exist in the config of sharding |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
-      #TODO: This step will be deleted after fixed DBLE0REQ-1110
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '21',), ('transactions', '12',))} | dble_information |
-#     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '21',), ('transactions', '13',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '27',), ('transactions', '14',))} | dble_information |
    # no error and table does not config in sharding.xml, questions + 2, transactions + 1
      Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                             |
@@ -533,16 +542,14 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_1 | False   | drop table if exists global_1   |
    Then execute sql in "dble-1" in "admin" mode
      | conn   | toClose | sql                                                                                     | expect                                               | db               |
-     #TODO: This step will be deleted after fixed DBLE0REQ-1110
-     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '23',), ('transactions', '13',))} | dble_information |
-#     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '23',), ('transactions', '14',))} | dble_information |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '29',), ('transactions', '15',))} | dble_information |
    # compare with show @@questions
    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_status_8"
      | conn   | toClose | sql              | db                |
      | conn_0 | True    | show @@questions | dble_information  |
    Then check resultset "dble_status_8" has lines with following column values
      | Questions-0 | Transactions-1 |
-     | 23          | 13             |
+     | 29          | 15             |
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                       | db      |
      | conn_1 | True    | drop table if exists test | schema1 |
