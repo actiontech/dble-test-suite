@@ -381,6 +381,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 #@skip_restart
   Scenario: test "writeToBackendExecutor"  #5
+    # writeToBackendExecutor donot exists dble.log
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
       $a  -DbackendProcessorExecutor=1
@@ -389,14 +390,69 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DcomplexExecutor=2
       """
     Then restart dble in "dble-1" success
+    Given execute sql in "dble-1" in "user" mode
+      | conn    | toClose | sql                                                     | expect  | db      |
+      | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
+      | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
+
+    # change core_pool_size 1-4
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                       | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='writeToBackendExecutor'                   | success                                      | dble_information |
+      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='writeToBackendExecutor'     | has{(('writeToBackendExecutor', 4, 4),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"writeToBackendExecutor' | wc -l
+      """
+    Then check result "A" value is "4"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will execute thread                        | 3           |
+      | Running, pool size = 1                     | 1           |
+      | Running, pool size = 2                     | 1           |
+      | Running, pool size = 3                     | 1           |
+      | set to file success:/bootstrap.dynamic.cnf | 1           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      writeToBackendExecutor=4
+      """
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
 
 
-
-
-
-
-
-
+    # change core_pool_size 4-2
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                 | db               |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='writeToBackendExecutor'                   | success                                | dble_information |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                       | db               |
+      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='writeToBackendExecutor'     | has{(('writeToBackendExecutor', 2, 2),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"writeToBackendExecutor' | wc -l
+      """
+    Then check result "A" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                              | occur_times |
+      | interrupt thread:Thread\[writeToBackendExecutor  | 4           |
+      | set to file success:/bootstrap.dynamic.cnf       | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      writeToBackendExecutor=2
+      """
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -406,3 +462,301 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       NullPointerException
       """
 
+
+
+#@skip_restart
+  Scenario: test "complexExecutor"  #6
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a  -DbackendProcessorExecutor=1
+      $a  -DwriteToBackendExecutor=1
+      $a  -DbackendProcessors=1
+      $a  -DcomplexExecutor=2
+      """
+    Then restart dble in "dble-1" success
+
+    Given execute sql in "dble-1" in "user" mode
+      | conn    | toClose | sql                                                     | expect  | db      |
+      | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
+      | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                                       | db       |
+      | select * from sharding_4_t1  where id in (select id from sharding_4_t1)   | schema1  |
+
+
+    # change core_pool_size 1-4
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                               | expect                                     | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='complexQueryExecutor'                   | success                                    | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='complexQueryExecutor'               | has{(('complexQueryExecutor', 4),)}        | dble_information |
+    # keepAlivetime is 60s, 'complexExecutor' heartbeat and 9066 cmd would use it
+    Given sleep "60" seconds
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"complexQueryExecutor' | wc -l
+      """
+    Then check result "A" value is "4"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will execute thread                        | 0           |
+      | set to file success:/bootstrap.dynamic.cnf | 1           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      complexExecutor=4
+      """
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                                           | db       |
+      | select * from sharding_4_t1  where name in (select name from sharding_4_t1)   | schema1  |
+
+
+    # change core_pool_size 4-2
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                               | expect                                 | db               |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='complexQueryExecutor'                   | success                                | dble_information |
+    Given sleep "60" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                               | expect                                     | db               |
+      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='complexQueryExecutor'     | has{(('complexQueryExecutor', 2, 2),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"complexQueryExecutor' | wc -l
+      """
+    Then check result "A" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                              | occur_times |
+      | interrupt thread:Thread\[complexQueryExecutor    | 0           |
+      | set to file success:/bootstrap.dynamic.cnf       | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      complexExecutor=2
+      """
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                                       | db       |
+      | select * from sharding_4_t1  where id in (select id from sharding_4_t1)   | schema1  |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      setError
+      unknown error:
+      caught err:
+      NullPointerException
+      """
+
+
+
+#@skip_restart
+  Scenario: test "backendProcessorExecutor" and usePerformanceMode=0 #7
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a  -DbackendProcessorExecutor=1
+      $a  -DwriteToBackendExecutor=1
+      $a  -DbackendProcessors=1
+      $a  -DcomplexExecutor=2
+      """
+    Then restart dble in "dble-1" success
+
+    Given execute sql in "dble-1" in "user" mode
+      | conn    | toClose | sql                                                     | expect  | db      |
+      | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
+      | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                        | db        |
+      | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[backendBusinessExecutor0\]
+      """
+   Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[backendBusinessExecutor1\]
+      \[backendBusinessExecutor2\]
+      \[backendBusinessExecutor3\]
+      """
+
+    # change core_pool_size 1-4
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                        | expect                                     | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='backendBusinessExecutor'         | success                                    | dble_information |
+      | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 4),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"backendBusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "1"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will execute thread                        | 0           |
+      | set to file success:/bootstrap.dynamic.cnf | 1           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      backendProcessorExecutor=4
+      """
+
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                        | db        |
+      | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 4, 4),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"backendBusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "4"
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[backendBusinessExecutor0\]
+      \[backendBusinessExecutor1\]
+      \[backendBusinessExecutor2\]
+      \[backendBusinessExecutor3\]
+      """
+
+    # change core_pool_size 4-2
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                 | db               |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='backendBusinessExecutor'                   | success                                | dble_information |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 2, 2),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"backendBusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                                 | occur_times |
+      | interrupt thread:Thread\[backendBusinessExecutor    | 2           |
+      | set to file success:/bootstrap.dynamic.cnf          | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      backendProcessorExecutor=2
+      """
+
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                        | db        |
+      | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      setError
+      unknown error:
+      caught err:
+      NullPointerException
+      """
+
+
+
+#@skip_restart
+  Scenario: test "backendProcessorExecutor" and usePerformanceMode=1 #8
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a  -DbackendProcessorExecutor=1
+      $a  -DwriteToBackendExecutor=1
+      $a  -DbackendProcessors=1
+      $a  -DcomplexExecutor=2
+      $a  -DusePerformanceMode=1
+      """
+    Then restart dble in "dble-1" success
+
+
+    Given execute sql in "dble-1" in "user" mode
+      | conn    | toClose | sql                                                     | expect  | db      |
+      | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
+      | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                        | db        |
+      | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+   Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[backendBusinessExecutor0\]
+      """
+   Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[backendBusinessExecutor1\]
+      \[backendBusinessExecutor2\]
+      \[backendBusinessExecutor3\]
+      """
+
+    # change core_pool_size 1-4
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='backendBusinessExecutor'                   | success                                       | dble_information |
+      | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 4, 4),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"backendBusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "4"
+
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | occur_times |
+      | will execute thread                        | 3           |
+      | Running, pool size = 1                     | 1           |
+      | Running, pool size = 2                     | 1           |
+      | Running, pool size = 3                     | 1           |
+      | set to file success:/bootstrap.dynamic.cnf | 1           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      backendProcessorExecutor=4
+      """
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                        | db        |
+      | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      \[backendBusinessExecutor0\]
+      \[backendBusinessExecutor1\]
+      \[backendBusinessExecutor2\]
+      \[backendBusinessExecutor3\]
+      """
+
+    # change core_pool_size 4-2
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                 | db               |
+      | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='backendBusinessExecutor'                   | success                                | dble_information |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn_0 | true    | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 2, 2),)}     | dble_information |
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '"backendBusinessExecutor' | wc -l
+      """
+    Then check result "A" value is "2"
+    # use dble.log check
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                                 | occur_times |
+      | interrupt thread:Thread\[backendBusinessExecutor    | 4           |
+      | set to file success:/bootstrap.dynamic.cnf          | 2           |
+    Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
+      """
+      backendProcessorExecutor=2
+      """
+
+    Given execute "user" sql "20" times in "dble-1" at concurrent
+      | sql                                                        | db        |
+      | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      setError
+      unknown error:
+      caught err:
+      NullPointerException
+      """
