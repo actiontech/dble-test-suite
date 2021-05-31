@@ -170,6 +170,7 @@ Feature: heartbeat basic test
      | user | passwd | conn   | toClose  | sql                         | expect  | db     |
      | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success | schema1 |
 
+
   @btrace
   Scenario: heartbeat connection is recover failed in retry 'errorRetryCount' times, the heartbeat will set as error,and the connection pool is available in retry period #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -186,6 +187,7 @@ Feature: heartbeat basic test
            <property name="heartbeatPeriodMillis">180000</property>
         </dbInstance>
      </dbGroup>
+
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
@@ -243,14 +245,15 @@ Feature: heartbeat basic test
     mysql -P{node:manager_port} -u{node:manager_user} -e "show @@backend" | awk '{print $3, $NF}' | grep true | awk '{print $1}'
     """
     Given kill mysql conns in "mysql-master1" in "master1_heartbeat_id"
+    #DBLE0REQ-960
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    heartbeat to \[172.100.9.5:3306\] setError
+    heartbeat conn for sql\[select user()\] is closed, due to stream closed by peer, we will try again immediately
     retry to do heartbeat for the 3 times
     """
     Then execute sql in "dble-1" in "user" mode
-     | user | passwd | conn   | toClose  | sql                         | expect              | db      |
-     | test | 111111 | conn_1 | False    | select * from sharding_2_t1 | success  | schema1 |
+     | user | passwd | conn   | toClose  | sql                           | expect   | db      |
+     | test | 111111 | conn_1 | False    | select * from sharding_2_t1   | success  | schema1 |
     Given stop btrace script "BtraceHeartbeat.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceHeartbeat.java" on "dble-1"
