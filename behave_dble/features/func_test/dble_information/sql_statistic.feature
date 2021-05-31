@@ -1101,6 +1101,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_0 | True     | drop table if exists sharding_2_t1                                              | success | schema1 |
 
 
+
   Scenario: implict commit test #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
