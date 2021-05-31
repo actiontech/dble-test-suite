@@ -548,8 +548,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
 
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
-   Scenario: test samplingRate=100 and complex sql   #5
+
+
+  Scenario: test samplingRate=100 and complex sql   #5
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -948,7 +954,10 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
       | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario: test samplingRate=100 and sharding user hint sql  #6
@@ -1062,6 +1071,11 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_1 | true     | drop table if exists sharding_4_t1                                              | success | schema1 |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
 
@@ -1256,7 +1270,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | delete from sharding_4_t1,                        | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 22,23     | 4                |
       | start transaction,delete from sharding_2_t1,begin | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 19,20,21  | 2                |
 
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -1354,6 +1371,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_11  | true     | drop table if exists sharding_4_t1             | success | schema1 |
       | conn_12  | false    | commit                                         | success | schema1 |
       | conn_12  | true     | drop table if exists sharding_2_t1             | success | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
 
@@ -1402,6 +1423,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_4 | False   | delete from test_table1 where id=5                 | success | db2 |
       | rwS1 | 111111 | conn_4 | False   | update test_table1 set age =44 where id=100        | success | db2 |
       | rwS1 | 111111 | conn_4 | False   | commit                                             | success | db2 |
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1460,7 +1482,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_4 | False   | update test_table1 set age=age-1 where id=1              | success | db2 |
       | rwS1 | 111111 | conn_4 | False   | update test_table1 set age=age*3 where id=2              | success | db2 |
       | rwS1 | 111111 | conn_4 | False   | rollback                                                 | success | db2 |
-
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1524,7 +1546,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_31 | False   | begin                        | success | db1 |
       | rwS1 | 111111 | conn_31 | true    | delete from db2.test_table1  | success | db1 |
     Given sleep "2" seconds
-
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1579,6 +1600,11 @@ sql_log_by_tx_digest_by_entry_by_user
       | start transaction,delete from test_table,begin                                                                                                                        | 1      | rwS1   | 1       | 3          | 172.100.9.8   | 8066          | 19,20,21       | 3                |
       | start transaction,SELECT * FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = age - ? WHERE id = ?,UPDATE test_table1 SET age = age * ? WHERE id = ?,rollback | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 3                |
       | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -1642,7 +1668,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | delete from db2.test_table1,                                                                      | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 8,9       | 2                |
       | SET autocommit = ?,UPDATE test_table SET name = ?,select * from test_table,commit                 | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 0                |
 
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                              | expect  | db  |
@@ -1812,7 +1841,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False    | delete from sharding_4_t1 where id=2                                            | success | schema1 |
       | conn_1 | False    | drop table if exists sharding_4_t2                                              | success | schema1 |
       | conn_1 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
-
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1823,10 +1852,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | 3        | create table sharding_4_t2(id int, name varchar(20))                            | CREATE TABLE sharding_4_t2 (  id int,  name varchar(20) ) | DDL        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4                |
       | 4        | begin                                                                           | begin                                                     | Begin      | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 5        | insert into sharding_4_t2 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | INSERT INTO sharding_4_t2 VALUES (?, ?)                   | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 6        | create index index_name1 on sharding_4_t1 (name)                                | CREATE INDEX index_name1 ON sharding_4_t1 (name)          | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4                |
+      | 6        | create index index_name1 on sharding_4_t1 (name)                                | CREATE INDEX index_name1 ON sharding_4_t1 (name)          | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 7        | begin                                                                           | begin                                                     | Begin      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | update sharding_4_t1 set name='dn1' where id=4                                  | UPDATE sharding_4_t1 SET name = ? WHERE id = ?            | Update     | 3       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 9        | drop index index_name1 on sharding_4_t1                                         | DROP INDEX index_name1 ON sharding_4_t1                   | DDL        | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4                |
+      | 9        | drop index index_name1 on sharding_4_t1                                         | DROP INDEX index_name1 ON sharding_4_t1                   | DDL        | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 10       | begin                                                                           | begin                                                     | Begin      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 11       | select * from sharding_4_t1                                                     | select * from sharding_4_t1                               | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
       | 12       | begin                                                                           | begin                                                     | Begin      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
@@ -1839,10 +1868,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | 19       | set autocommit=1                                                                | SET autocommit = ?                                        | Set        | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 20       | begin                                                                           | begin                                                     | Begin      | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 21       | delete from sharding_4_t1 where id=1                                            | DELETE FROM sharding_4_t1 WHERE id = ?                    | Delete     | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 22       | truncate table sharding_4_t2                                                    | truncate table sharding_4_t2                              | DDL        | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4                |
+      | 22       | truncate table sharding_4_t2                                                    | truncate table sharding_4_t2                              | DDL        | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 23       | begin                                                                           | begin                                                     | Begin      | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 24       | delete from sharding_4_t1 where id=2                                            | DELETE FROM sharding_4_t1 WHERE id = ?                    | Delete     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 25       | drop table if exists sharding_4_t2                                              | DROP TABLE IF EXISTS sharding_4_t2                        | DDL        | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 4                |
+      | 25       | drop table if exists sharding_4_t2                                              | DROP TABLE IF EXISTS sharding_4_t2                        | DDL        | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 26       | drop table if exists sharding_4_t1                                              | DROP TABLE IF EXISTS sharding_4_t1                        | DDL        | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 4                |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
@@ -1851,15 +1880,15 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3     | 3           | 8               |
-      | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6     | 3           | 8               |
-      | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8,9     | 3           | 5               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6     | 3           | 4               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8,9     | 3           | 1               |
       | 4       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12  | 3           | 4               |
       | 5       | 2       | test   | 172.100.9.8   | 8066          | 13        | 1           | 0               |
       | 6       | 2       | test   | 172.100.9.8   | 8066          | 14,15     | 2           | 1               |
       | 7       | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           | 0               |
       | 8       | 2       | test   | 172.100.9.8   | 8066          | 17,18,19  | 3           | 4               |
-      | 9       | 2       | test   | 172.100.9.8   | 8066          | 20,21,22  | 3           | 5               |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 23,24,25  | 3           | 5               |
+      | 9       | 2       | test   | 172.100.9.8   | 8066          | 20,21,22  | 3           | 1               |
+      | 10      | 2       | test   | 172.100.9.8   | 8066          | 23,24,25  | 3           | 1               |
       | 11      | 2       | test   | 172.100.9.8   | 8066          | 26        | 1           | 4               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
@@ -1868,18 +1897,18 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                              | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | begin                                                     | 2       | test   | 9      | 0      | 0               |
-      | CREATE INDEX index_name1 ON sharding_4_t1 (name)          | 2       | test   | 1      | 0      | 4               |
+      | CREATE INDEX index_name1 ON sharding_4_t1 (name)          | 2       | test   | 1      | 0      | 0               |
       | CREATE TABLE sharding_4_t2 (  id int,  name varchar(20) ) | 2       | test   | 1      | 0      | 4               |
       | DELETE FROM sharding_4_t1 WHERE id = ?                    | 2       | test   | 2      | 2      | 2               |
-      | DROP INDEX index_name1 ON sharding_4_t1                   | 2       | test   | 1      | 0      | 4               |
+      | DROP INDEX index_name1 ON sharding_4_t1                   | 2       | test   | 1      | 0      | 0               |
       | DROP TABLE IF EXISTS sharding_4_t1                        | 2       | test   | 1      | 0      | 4               |
-      | DROP TABLE IF EXISTS sharding_4_t2                        | 2       | test   | 1      | 0      | 4               |
+      | DROP TABLE IF EXISTS sharding_4_t2                        | 2       | test   | 1      | 0      | 0               |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)                   | 2       | test   | 1      | 4      | 4               |
       | INSERT INTO sharding_4_t2 VALUES (?, ?)                   | 2       | test   | 1      | 4      | 4               |
       | select * from sharding_4_t1                               | 2       | test   | 2      | 8      | 8               |
       | SET autocommit = ?                                        | 2       | test   | 2      | 0      | 0               |
       | start transaction                                         | 2       | test   | 1      | 0      | 0               |
-      | truncate table sharding_4_t2                              | 2       | test   | 1      | 0      | 4               |
+      | truncate table sharding_4_t2                              | 2       | test   | 1      | 0      | 0               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ?            | 2       | test   | 2      | 2      | 2               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
@@ -1888,12 +1917,12 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                             | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | begin                                                                                                   | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 13,16     | 0                |
-      | begin,DELETE FROM sharding_4_t1 WHERE id = ?,DROP TABLE IF EXISTS sharding_4_t2                         | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 23,24,25  | 5                |
-      | begin,DELETE FROM sharding_4_t1 WHERE id = ?,truncate table sharding_4_t2                               | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 20,21,22  | 5                |
+      | begin,DELETE FROM sharding_4_t1 WHERE id = ?,DROP TABLE IF EXISTS sharding_4_t2                         | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 23,24,25  | 1                |
+      | begin,DELETE FROM sharding_4_t1 WHERE id = ?,truncate table sharding_4_t2                               | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 20,21,22  | 1                |
       | begin,INSERT INTO sharding_4_t1 VALUES (?, ?),CREATE TABLE sharding_4_t2 (  id int,  name varchar(20) ) | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 1,2,3     | 8                |
-      | begin,INSERT INTO sharding_4_t2 VALUES (?, ?),CREATE INDEX index_name1 ON sharding_4_t1 (name)          | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 4,5,6     | 8                |
+      | begin,INSERT INTO sharding_4_t2 VALUES (?, ?),CREATE INDEX index_name1 ON sharding_4_t1 (name)          | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 4,5,6     | 4                |
       | begin,select * from sharding_4_t1,begin                                                                 | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 10,11,12  | 4                |
-      | begin,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,DROP INDEX index_name1 ON sharding_4_t1            | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 7,8,9     | 5                |
+      | begin,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,DROP INDEX index_name1 ON sharding_4_t1            | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 7,8,9     | 1                |
       | DROP TABLE IF EXISTS sharding_4_t1                                                                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 26        | 4                |
       | SET autocommit = ?,select * from sharding_4_t1,SET autocommit = ?                                       | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 17,18,19  | 4                |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ?,start transaction                                        | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 14,15     | 1                |
@@ -1925,8 +1954,8 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute admin cmd "reload @@config_all"
     Given execute oscmd in "dble-1"
       """
-      mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
-      mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
+      mysql -uroot -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
+      mysql -utest -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
       """
 
     Then execute admin cmd "reload @@samplingRate=100"
@@ -2091,7 +2120,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
 
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
     #case Syntax error sql will not be counted --rwSplitUser
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
@@ -2222,6 +2254,6 @@ sql_log_by_tx_digest_by_entry_by_user
 
     Given execute oscmd in "dble-1"
       """
-      mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
-      mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
+      mysql -uroot -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
+      mysql -utest -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
       """
