@@ -80,17 +80,27 @@ sql_log_by_tx_digest_by_entry_by_user
       | sql_exec      | int(11)       | NO     |       | None      |         |
       | source_host   | varchar(20)   | NO     |       | None      |         |
       | source_port   | int(11)       | NO     |       | None      |         |
-      | sql_ids       | VARCHAR(1024) | NO     |       | None      |         |
+#      | sql_ids       | VARCHAR(1024) | NO     |       | None      |         |
       | tx_duration   | int(11)       | NO     |       | None      |         |
       | busy_time     | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
 
     #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                              | expect                                                   | db               |
-      | conn_0 | False   | delete from sql_log where entry=1                                | Access denied for table 'sql_log'                        | dble_information |
-      | conn_0 | False   | update sql_log set entry=22 where entry=1                        | Access denied for table 'sql_log'                        | dble_information |
-      | conn_0 | True    | insert into sql_log (entry) values (22)                          | Access denied for table 'sql_log'                        | dble_information |
+      | conn   | toClose | sql                                                                     | expect                                                          | db               |
+      | conn_0 | False   | delete from sql_log where entry=1                                       | Access denied for table 'sql_log'                               | dble_information |
+      | conn_0 | False   | update sql_log set entry=22 where entry=1                               | Access denied for table 'sql_log'                               | dble_information |
+      | conn_0 | True    | insert into sql_log (entry) values (22)                                 | Access denied for table 'sql_log'                               | dble_information |
+      | conn_0 | False   | delete from sql_log_by_tx_by_entry_by_user where entry=1                | Access denied for table 'sql_log_by_tx_by_entry_by_user'        | dble_information |
+      | conn_0 | False   | update sql_log_by_tx_by_entry_by_user set entry=22 where entry=1        | Access denied for table 'sql_log_by_tx_by_entry_by_user'        | dble_information |
+      | conn_0 | True    | insert into sql_log_by_tx_by_entry_by_user (entry) values (22)          | Access denied for table 'sql_log_by_tx_by_entry_by_user'        | dble_information |
+      | conn_0 | False   | delete from sql_log_by_digest_by_entry_by_user where entry=1            | Access denied for table 'sql_log_by_digest_by_entry_by_user'    | dble_information |
+      | conn_0 | False   | update sql_log_by_digest_by_entry_by_user set entry=22 where entry=1    | Access denied for table 'sql_log_by_digest_by_entry_by_user'    | dble_information |
+      | conn_0 | True    | insert into sql_log_by_digest_by_entry_by_user (entry) values (22)      | Access denied for table 'sql_log_by_digest_by_entry_by_user'    | dble_information |
+      | conn_0 | False   | delete from sql_log_by_tx_digest_by_entry_by_user where entry=1         | Access denied for table 'sql_log_by_tx_digest_by_entry_by_user' | dble_information |
+      | conn_0 | False   | update sql_log_by_tx_digest_by_entry_by_user set entry=22 where entry=1 | Access denied for table 'sql_log_by_tx_digest_by_entry_by_user' | dble_information |
+      | conn_0 | True    | insert into sql_log_by_tx_digest_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_digest_by_entry_by_user' | dble_information |
+
 
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
@@ -402,7 +412,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                                               | length{(12)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user                        | length{(12)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user                    | length{(12)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                 | length{(12)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user                 | length{(12)} | dble_information |
 
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
@@ -474,8 +484,8 @@ sql_log_by_tx_digest_by_entry_by_user
       | INSERT INTO test1 VALUES (?, ?)                     | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         | 2                |
       | INSERT INTO test_table VALUES (?, ?)                | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 11        | 1                |
       | select * from test1                                 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         | 2                |
-#      | SELECT ?                                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         | 1                |
-#      | SELECT ?                                            | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 12        | 1                |
+      | SELECT ?                                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         | 1                |
+      | SELECT ?                                            | 1      | rwS1   | 3       | 1          | 172.100.9.8   | 8066          | 12        | 1                |
       | show databases                                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         | 0                |
       | UPDATE test1 SET name = ? WHERE id = ?              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         | 1                |
 
