@@ -43,12 +43,12 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | desc sql_log_by_tx_by_entry_by_user | dble_information |
     Then check resultset "table_2" has lines with following column values
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | tx_id         | int(11)       | NO     | PRI   | None      |         |
+      | tx_id         | int(11)       | NO     |       | None      |         |
       | entry         | int(11)       | NO     |       | None      |         |
       | user          | varchar(20)   | NO     |       | None      |         |
       | source_host   | varchar(20)   | NO     |       | None      |         |
       | source_port   | int(11)       | NO     |       | None      |         |
-#      | sql_ids       | varchar(1024) | NO     |       | None      |         |
+      | sql_ids       | varchar(1024) | NO     |       | None      |         |
       | sql_exec      | int(11)       | NO     |       | None      |         |
       | tx_duration   | int(11)       | NO     |       | None      |         |
       | busy_time     | int(11)       | NO     |       | None      |         |
@@ -73,14 +73,14 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | desc sql_log_by_tx_digest_by_entry_by_user | dble_information |
     Then check resultset "table_4" has lines with following column values
       | Field-0       | Type-1        | Null-2 | Key-3 | Default-4 | Extra-5 |
-      | tx_digest     | varchar(1024) | NO     | PRI   | None      |         |
-      | exec          | int(11)       | NO     | PRI   | None      |         |
+      | tx_digest     | varchar(1024) | NO     |       | None      |         |
+      | exec          | int(11)       | NO     |       | None      |         |
       | entry         | int(11)       | NO     |       | None      |         |
       | user          | varchar(20)   | NO     |       | None      |         |
       | sql_exec      | int(11)       | NO     |       | None      |         |
       | source_host   | varchar(20)   | NO     |       | None      |         |
       | source_port   | int(11)       | NO     |       | None      |         |
-#      | sql_ids       | VARCHAR(1024) | NO     |       | None      |         |
+      | sql_ids       | VARCHAR(1024) | NO     |       | None      |         |
       | tx_duration   | int(11)       | NO     |       | None      |         |
       | busy_time     | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
@@ -91,10 +91,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | delete from sql_log where entry=1                                | Access denied for table 'sql_log'                        | dble_information |
       | conn_0 | False   | update sql_log set entry=22 where entry=1                        | Access denied for table 'sql_log'                        | dble_information |
       | conn_0 | True    | insert into sql_log (entry) values (22)                          | Access denied for table 'sql_log'                        | dble_information |
-#      | conn_0 | False   | delete from sql_log_by_tx_by_entry_by_user where entry=1         | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
-#      | conn_0 | False   | update sql_log_by_tx_by_entry_by_user set entry=22 where entry=1 | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
-#      | conn_0 | True    | insert into sql_log_by_tx_by_entry_by_user (entry) values (22)   | Access denied for table 'sql_log_by_tx_by_entry_by_user' | dble_information |
-
 
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
@@ -894,7 +890,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | create view test_view(id,name) AS select * from test union select * from schema2.global2 | success | schema1 |
       | conn_1 | False   | select * from test union select * from schema2.global2                                   | success | schema1 |
       | conn_1 | False   | drop view test_view                                                                      | success | schema1 |
-
+    Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
