@@ -34,7 +34,7 @@ services:
         labels:
             - "creator:zhaohongjie"
         extra_hosts:
-          - "docker-registry:10.186.18.20"
+          - "docker-registry:10.186.18.90"
           - "gocd-server:10.186.18.19"
         working_dir: "/opt"
         networks: 
@@ -70,7 +70,7 @@ services:
         labels:
             - "creator:zhaohongjie"
         extra_hosts:
-          - "docker-registry:10.186.18.20"
+          - "docker-registry:10.186.18.90"
           - "gocd-server:10.186.18.19"
         working_dir: "/opt"
         networks: 
