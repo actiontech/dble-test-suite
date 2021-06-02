@@ -53,7 +53,7 @@ cfg_dble:
       manager_password: 111111
       manager_port: 9066
   packet_name: actiontech-dble.tar.gz
-  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/9.9.9.9/
+  ftp_path: ftp://10.186.18.90/actiontech-dble/qa/9.9.9.9/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   group1:
