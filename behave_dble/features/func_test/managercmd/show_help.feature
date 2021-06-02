@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(107)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(111)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -122,6 +122,11 @@ Feature: test show @@help
       | disable @@statistic                                                                                 | Turn off statistic sql                                                            |
       | reload @@statistic_table_size = ? [where table='?' \| where table in (dble_information.tableA,...)] | Statistic table size                                                              |
       | reload @@samplingRate=?                                                                             | Reset the samplingRate size                                                       |
+      | show @@statistic_queue.usage                                                                        | Show the queue usage                                                              |
+      | drop @@statistic_queue.usage                                                                        | Drop the queue usage                                                              |
+      | start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]]                            | Start monitoring queue usage, Unit: (s,m/min,h)                                   |
+      | stop @@statistic_queue_monitor                                                                      | Stop monitoring queue usage                                                       |
+
 
     Then check resultset "rs_A" has not lines with following column values
       | STATEMENT-0                            |
