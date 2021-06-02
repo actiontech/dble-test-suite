@@ -444,27 +444,6 @@ public final class BtraceClusterDelay {
         Thread.sleep(60000L);
     }
     @OnMethod(
-            clazz = "com.actiontech.dble.backend.mysql.nio.handler.transaction.normal.NormalCommitNodesHandler",
-            method = "setResponseTime"
-    )
-    public static void setResponseTime(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.print("delay in setResponseTime");
-        BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(1000L);
-    }
-    @OnMethod(
-            clazz = "com.actiontech.dble.backend.mysql.nio.handler.query.impl.BaseSelectHandler",
-            method = "rowResponse"
-    )
-    public static void rowResponse(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.print("get into rowResponse ");
-        BTraceUtils.print(" for order __________________________ ");
-        Thread.sleep(200);
-    }
-
-
-
-    @OnMethod(
             clazz = "com.actiontech.dble.btrace.provider.ClusterDelayProvider",
             method = "delayDdLToDeliver"
     )
