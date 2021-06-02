@@ -2149,7 +2149,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | drop table if exists sharding_4_t1                                                      | success     | schema1 |
       | conn_0 | true    | drop table if exists schema2.sharding_4_t2                                              | success     | schema1 |
 
-@skip_restart
+
+
+
+#@skip_restart
   Scenario: Unchanged items, unaffected   #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -2450,8 +2453,8 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn   | toClose | sql                                                 |
       | conn_0 | False   | explain delete from noshard_t1 where id=1 or t_id=1 |
     Then check resultset "rs_1" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                 |
-      | dn5           | BASE SQL | delete from noshard_t1 where id=1 or t_id=1 |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                   |
+      | dn5             | BASE SQL | delete from noshard_t1 where id=1 or t_id=1 |
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" after line "log_6" in host "dble-1"
     """
     these conditions will try to pruning:{(() or ())}
