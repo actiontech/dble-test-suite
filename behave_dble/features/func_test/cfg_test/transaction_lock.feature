@@ -60,36 +60,19 @@ Feature:  unexpected packet should not in dble log
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect      | db      |
-      | conn_0 | False   | set autocommit = 0                                        | success      | schema1 |
+      | conn_0 | False   | set autocommit = 0                                        | success     | schema1 |
       | conn_0 | False   | select a.id from aly_test a,aly_order b where a.id=b.id   | length{(1)} | schema1 |
-    Given sleep "2" seconds
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect  | db      |
-      | conn_0 | true    | commit                                                    | success | schema1 |
-    Given sleep "2" seconds
+      | conn_0 | true    | commit                                                    | success     | schema1 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect          | db      |
       | conn_1 | False   | set autocommit = 0                                        | success         | schema1 |
       | conn_1 | False   | select * from aly_test                                    | length{(1)}     | schema1 |
-    Given sleep "2" seconds
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect          | db      |
       | conn_1 | False   | select * from aly_order                                   | length{(100)}   | schema1 |
-    Given sleep "2" seconds
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect          | db      |
       | conn_1 | False   | select t.id,t.name from(select aly_test.id,aly_order.name from aly_test,aly_order where aly_test.id = aly_order.id) t ,a_manager where t.id = a_manager.id | length{(1)}| schema1|
-    Given sleep "10" seconds
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect  | db      |
       | conn_1 | true    | commit                                                    | success | schema1 |
-    Given sleep "2" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect | db      |
       | conn_2 | False   | select t.id,t.name from(select aly_test.id,aly_order.name from aly_test,aly_order where aly_test.id = aly_order.id) t ,a_manager where t.id = a_manager.id |length{(1)} | schema1 |
-    Given sleep "10" seconds
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                       | expect  | db      |
       | conn_2 | False   | drop table if exists aly_test                             | success | schema1 |
       | conn_2 | False   | drop table if exists aly_order                            | success | schema1 |
       | conn_2 | true    | drop table if exists a_manager                            | success | schema1 |
