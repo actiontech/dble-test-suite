@@ -47,6 +47,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 #      | conn_0 | False   | update dble_thread_pool set core_pool_size='afr' where name ='$complexQueryExecutor'     | unknown error:For input string: "afr"           | dble_information |
 #      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='$backendBusinessExecutor' | unknown error:For input string: "null"          | dble_information |
 #      | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='BusinessExecutor'           | Column 'core_pool_size' cannot be null          | dble_information |
+#      | conn_0 | False   | update dble_thread_pool set core_pool_size=-1 where name ='$_NIO_REACTOR_FRONT-'         | unknown error:null                              | dble_information |
 
     # unsupported update "name/active_count/waiting_task_count/pool_size"
       | conn_0 | False   | update dble_thread_pool set name='a' where name ='$_NIO_REACTOR_FRONT-'             | Primary column 'name' can not be update, please use delete & insert     | dble_information |
@@ -107,8 +108,14 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 #@skip_restart
   Scenario: test "processors"  #2
   # on bootstrap.cnf the default value : -Dprocessors=1
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a  -DuseThreadUsageStat=1
+      """
+    Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_FRONT%'                     | length{(1)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='$_NIO_REACTOR_FRONT-'                   | success                                | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='$_NIO_REACTOR_FRONT-'     | has{(('$_NIO_REACTOR_FRONT-', 4, 4),)} | dble_information |
     # use jstack check number
@@ -151,6 +158,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_FRONT%'                     | length{(4)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_FRONT-'                   | success                                | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='$_NIO_REACTOR_FRONT-'     | has{(('$_NIO_REACTOR_FRONT-', 2, 2),)} | dble_information |
     # use jstack check number
@@ -184,6 +192,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given execute "user" sql "20" times in "dble-1" at concurrent
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect          | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_FRONT%'         | length{(2)}     | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -199,6 +210,45 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
+@skip_restart  @btrace
+  Scenario: test "processors" and use btrace check method  #2.1
+  # on bootstrap.cnf the default value : -Dprocessors=1
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a -DuseThreadUsageStat=1
+      $a -DidleTimeout=8000
+      """
+    Then restart dble in "dble-1" success
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect     | db               |
+      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | success    | dble_information |
+
+    Given update file content "./assets/BtraceAboutBootstrap.java" in "behave" with sed cmds
+      """
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+      /WriteDynamicBootstrap/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      """
+    Given prepare a thread run btrace script "BtraceAboutBootstrap.java" in "dble-1"
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn    | toClose | sql                                                                                | db                 |
+      | conn_11 | True    | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_FRONT-'    | dble_information   |
+
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect                                                                                           | db               |
+      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | Other threads are executing management commands(insert/update/delete), please try again later    | dble_information |
+    # set idleTimeout
+    Given sleep "10" seconds
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      Lost connection to MySQL server during query
+      """
+
+
+
+
+
 #@skip_restart
   Scenario: test "backendProcessors"  #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -207,6 +257,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DwriteToBackendExecutor=1
       $a  -DbackendProcessors=1
       $a  -DcomplexExecutor=2
+      $a  -DuseThreadUsageStat=1
       """
     Then restart dble in "dble-1" success
     Given execute "admin" sql "20" times in "dble-1" at concurrent
@@ -226,6 +277,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_BACKEND%'                     | length{(1)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='$_NIO_REACTOR_BACKEND-'                   | success                                  | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='$_NIO_REACTOR_BACKEND-'     | has{(('$_NIO_REACTOR_BACKEND-', 4, 4),)} | dble_information |
     # use jstack check number
@@ -259,7 +311,11 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_BACKEND%'                     | length{(4)}                              | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_BACKEND-'                   | success                                  | dble_information |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                   | db               |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='$_NIO_REACTOR_BACKEND-'     | has{(('$_NIO_REACTOR_BACKEND-', 2, 2),)} | dble_information |
     # use jstack check number
     Then get result of oscmd named "A1" in "dble-1"
@@ -279,6 +335,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given execute "admin" sql "10" times in "dble-1" at concurrent
       | sql                       | db                |
       | reload @@config_all -r    | dble_information  |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                   | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_BACKEND%'                     | length{(2)}                              | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -289,11 +348,16 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
-@skip_restart
+#@skip_restart
   Scenario: test "processorExecutor"  #4
   # on bootstrap.cnf the default value : -DprocessorExecutor=1
   # check dble.log has one BusinessExecutor0
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a  -DuseThreadUsageStat=1
+      """ 
+   Then restart dble in "dble-1" success
+   Given execute "user" sql "20" times in "dble-1" at concurrent
       | sql         | db        |
       | select 1    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -310,6 +374,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 1-4
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                           | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'BusinessExecutor%'                    | length{(1)}                            | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='BusinessExecutor'                   | success                                | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='BusinessExecutor'     | has{(('BusinessExecutor', 4, 4),)}     | dble_information |
     # use jstack check number
@@ -345,6 +410,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 4-2
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                           | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'BusinessExecutor%'                    | length{(4)}                            | dble_information |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='BusinessExecutor'                   | success                                | dble_information |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
@@ -368,6 +434,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given execute "user" sql "20" times in "dble-1" at concurrent
       | sql         | db        |
       | select 1    | schema1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                           | expect                                 | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'BusinessExecutor%'                    | length{(2)}                            | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -388,6 +457,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DwriteToBackendExecutor=1
       $a  -DbackendProcessors=1
       $a  -DcomplexExecutor=2
+      $a  -DuseThreadUsageStat=1
       """
     Then restart dble in "dble-1" success
     Given execute sql in "dble-1" in "user" mode
@@ -402,6 +472,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 1-4
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                       | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'writeToBackendExecutor%'                    | length{(1)}                                  | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='writeToBackendExecutor'                   | success                                      | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='writeToBackendExecutor'     | has{(('writeToBackendExecutor', 4, 4),)}     | dble_information |
     # use jstack check number
@@ -430,6 +501,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 4-2
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'writeToBackendExecutor%'                    | length{(4)}                            | dble_information |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='writeToBackendExecutor'                   | success                                | dble_information |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
@@ -453,6 +525,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given execute "user" sql "20" times in "dble-1" at concurrent
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                 | expect                                 | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'writeToBackendExecutor%'                    | length{(2)}                            | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -556,6 +631,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DwriteToBackendExecutor=1
       $a  -DbackendProcessors=1
       $a  -DcomplexExecutor=2
+      $a  -DuseThreadUsageStat=1
       """
     Then restart dble in "dble-1" success
 
@@ -581,6 +657,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 1-4
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                        | expect                                     | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'          | length{(1)}                                | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='backendBusinessExecutor'         | success                                    | dble_information |
       | conn_0 | False   | select name,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 4),)}     | dble_information |
     # use jstack check number
@@ -623,6 +700,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 4-2
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                  | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(4)}                            | dble_information |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='backendBusinessExecutor'                   | success                                | dble_information |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
@@ -647,6 +725,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given execute "user" sql "20" times in "dble-1" at concurrent
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect                                 | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(2)}                            | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -667,6 +748,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DbackendProcessors=1
       $a  -DcomplexExecutor=2
       $a  -DusePerformanceMode=1
+      $a  -DuseThreadUsageStat=1
       """
     Then restart dble in "dble-1" success
 
@@ -693,6 +775,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 1-4
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                  | expect                                        | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(1)}                                   | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=4 where name ='backendBusinessExecutor'                   | success                                       | dble_information |
       | conn_0 | False   | select name,pool_size,core_pool_size from dble_thread_pool where name ='backendBusinessExecutor'     | has{(('backendBusinessExecutor', 4, 4),)}     | dble_information |
     # use jstack check number
@@ -728,6 +811,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # change core_pool_size 4-2
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                  | expect                                 | db               |
+      | conn_0 | False   | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(4)}                            | dble_information |
       | conn_0 | true    | update dble_thread_pool set core_pool_size=2 where name ='backendBusinessExecutor'                   | success                                | dble_information |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
@@ -752,6 +836,9 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given execute "user" sql "20" times in "dble-1" at concurrent
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                  | expect             | db               |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(2)}        | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
