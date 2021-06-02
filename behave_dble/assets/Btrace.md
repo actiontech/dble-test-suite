@@ -97,7 +97,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.ClusterDelayProvider#delaycommit||事务下发commit之后延迟##待定|
 |resetCommitNodesHandler||丢弃|
 |com.actiontech.dble.btrace.provider.ClusterDelayProvider#setRunOnSlave||执行ddl时，hang住|
-
+|com.actiontech.dble.cluster.logic.delayReadyToDeliver||binlog|
 
 
 * 简单sql语句执行流程可断点
