@@ -177,3 +177,42 @@ def step_impl(context, host_name, conn_ids):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_conns(conn_ids)
 
+@Given('execute sql "{num}" times in "{host_name}" together use {concur} connection not close')
+def step_impl(context, host_name, num, concur="100"):
+    row = context.table[0]
+    num = int(num)
+    info_dic = row.as_dict()
+    concur = min(int(concur), num)
+
+    tasks_per_thread = num/concur
+    mod_tasks = num%concur
+
+    def do_thread_tasks(host_name, info_dic, base_id, tasks_count, eflag):
+        my_dic = info_dic.copy()
+        my_dic["conn"] = "concurr_conn_{}".format(i)
+        my_dic["toClose"] = "False"
+        last_count = tasks_count-1
+        sql_raw = my_dic["sql"]
+        for k in range(tasks_count):
+            if k==last_count:
+                my_dic["toClose"] = "False"
+            id = base_id+k
+            my_dic["sql"] = sql_raw.format(id)
+            # logger.debug("debug1, my_dic:{}, conn:{}".format(my_dic["sql"], my_dic["conn"]))
+            try:
+                execute_sql_in_host(host_name, my_dic, "user")
+            except Exception as e:
+                eflag.exception = e
+
+    for i in range(concur):
+        if i < mod_tasks:
+            tasks_count = tasks_per_thread + 1
+        else:
+            tasks_count = tasks_per_thread
+        base_id = i*tasks_per_thread
+        thd = Thread(target=do_thread_tasks, args=(host_name, info_dic, base_id, tasks_count, Flag))
+        thd.start()
+        thd.join()
+
+        if Flag.exception:
+            raise Flag.exception
