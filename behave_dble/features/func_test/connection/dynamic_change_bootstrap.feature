@@ -105,7 +105,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-#@skip_restart
+@skip_restart
   Scenario: test "processors"  #2
   # on bootstrap.cnf the default value : -Dprocessors=1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -152,10 +152,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_8  | False   | select * from sharding_4_t1                             | success | schema1 |
       | conn_9  | False   | select * from sharding_4_t1                             | success | schema1 |
       | conn_10 | False   | select * from sharding_4_t1                             | success | schema1 |
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" at concurrent
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
-
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                               | expect                                 | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_FRONT%'                     | length{(4)}                            | dble_information |
@@ -189,9 +191,13 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_8  | true    | select * from sharding_4_t1                             | success | schema1 |
       | conn_9  | true    | select * from sharding_4_t1                             | success | schema1 |
       | conn_10 | true    | select * from sharding_4_t1                             | success | schema1 |
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" at concurrent
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
+      | sql                           | db       |
+      | select * from sharding_4_t1   | schema1  |
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                   | expect          | db               |
       | conn_0 | true    | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_FRONT%'         | length{(2)}     | dble_information |
@@ -210,7 +216,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-@skip_restart  @btrace
+#@skip_restart  @btrace
   Scenario: test "processors" and use btrace check method  #2.1
   # on bootstrap.cnf the default value : -Dprocessors=1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -244,7 +250,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       Lost connection to MySQL server during query
       """
-
 
 
 
