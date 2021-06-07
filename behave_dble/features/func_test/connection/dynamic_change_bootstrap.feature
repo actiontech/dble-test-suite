@@ -39,15 +39,15 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_0 | False   | insert into dble_thread_pool values ('aa',1,1,1,1)         | not support insert | dble_information |
       | conn_0 | False   | delete from dble_thread_pool where name='BusinessExecutor' | not support delete | dble_information |
 
-    # unsupported update "core_pool_size" illegal number  DBLE0REQ-1149
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size=0.5 where name ='$_NIO_REACTOR_FRONT-'        | Not Supported of Value EXPR :0.5                | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size=0 where name ='writeToBackendExecutor'        | Column 'core_pool_size' can not be empty or '0' | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size=' ' where name ='$_NIO_REACTOR_BACKEND-'      | Column 'core_pool_size' can not be empty or '0' | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size='-1' where name ='$_NIO_REACTOR_FRONT-'       | unknown error:null                              | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size='afr' where name ='$complexQueryExecutor'     | unknown error:For input string: "afr"           | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='$backendBusinessExecutor' | unknown error:For input string: "null"          | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='BusinessExecutor'           | Column 'core_pool_size' cannot be null          | dble_information |
-#      | conn_0 | False   | update dble_thread_pool set core_pool_size=-1 where name ='$_NIO_REACTOR_FRONT-'         | unknown error:null                              | dble_information |
+#     unsupported update "core_pool_size" illegal number  DBLE0REQ-1149
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=0.5 where name ='$_NIO_REACTOR_FRONT-'        | Not Supported of Value EXPR :0.5                                    | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=0 where name ='writeToBackendExecutor'        | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=' ' where name ='$_NIO_REACTOR_BACKEND-'      | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='-1' where name ='$_NIO_REACTOR_FRONT-'       | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='afr' where name ='complexQueryExecutor'      | Update failure.The reason is incorrect integer value: 'afr'         | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='backendBusinessExecutor'  | Update failure.The reason is incorrect integer value: 'null'        | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='BusinessExecutor'           | Column 'core_pool_size' cannot be null                              | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=-1 where name ='$_NIO_REACTOR_FRONT-'         | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
 
     # unsupported update "name/active_count/waiting_task_count/pool_size"
       | conn_0 | False   | update dble_thread_pool set name='a' where name ='$_NIO_REACTOR_FRONT-'             | Primary column 'name' can not be update, please use delete & insert     | dble_information |
@@ -105,8 +105,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-@skip
-# _restart
+@skip_restart
   Scenario: test "processors"  #2
   # on bootstrap.cnf the default value : -Dprocessors=1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -355,6 +354,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
+
 #@skip_restart
   Scenario: test "processorExecutor"  #4
   # on bootstrap.cnf the default value : -DprocessorExecutor=1
@@ -369,13 +369,13 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | select 1    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      INFO \[BusinessExecutor0\]
+      \[BusinessExecutor0\]
       """
    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      INFO \[BusinessExecutor1\]
-      INFO \[BusinessExecutor2\]
-      INFO \[BusinessExecutor3\]
+      \[BusinessExecutor1\]
+      \[BusinessExecutor2\]
+      \[BusinessExecutor3\]
       """
 
     # change core_pool_size 1-4
@@ -408,10 +408,10 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | select 1    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      INFO \[BusinessExecutor0\]
-      INFO \[BusinessExecutor1\]
-      INFO \[BusinessExecutor2\]
-      INFO \[BusinessExecutor3\]
+      \[BusinessExecutor0\]
+      \[BusinessExecutor1\]
+      \[BusinessExecutor2\]
+      \[BusinessExecutor3\]
       """
 
     # change core_pool_size 4-2
