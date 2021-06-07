@@ -82,15 +82,15 @@ Feature: test ddl closed abnormally
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                         | db      |
       | conn_2 | False   | alter table sharding_2_t1 drop name         | schema1 |
-    Then check btrace "BtraceClusterDelay.java" output in "dble-1" with "2" times
+    Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into clearIfSessionClosed,start sleep
+    get into delayDdLToDeliver
     """
     Given kill mysql query in "dble-1" forcely
     """
@@ -104,11 +104,11 @@ Feature: test ddl closed abnormally
       | conn_3 | False   | truncate table sharding_2_t1   | success     | schema1 |
 
     Then execute sql in "mysql-master1"
-      | conn    | toClose | sql                         | expect                                                                                                                           | db  |
-      | conn_11 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                                                                 | db  |
+      | conn_11 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
     Then execute sql in "mysql-master2"
-      | conn    | toClose | sql                         | expect                                                                                                                           | db  |
-      | conn_22 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                                                                 | db  |
+      | conn_22 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
 
 
    # After the select 1 returns successfully, verify that the session is alive
@@ -117,7 +117,7 @@ Feature: test ddl closed abnormally
     Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /sleepWhenClearIfSessionClosed/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
+      /delayDdLToDeliver/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(20000L)/;/\}/!ba}
       """
     Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
     Given execute sqls in "dble-1" at background
@@ -125,7 +125,7 @@ Feature: test ddl closed abnormally
       | conn_3 | False   | alter table sharding_2_t1 drop age          | schema1 |
     Then check btrace "BtraceClusterDelay.java" output in "dble-1"
     """
-    get into clearIfSessionClosed,start sleep
+    get into delayDdLToDeliver
     """
     Given kill mysql query in "dble-1" forcely
     """
@@ -136,11 +136,11 @@ Feature: test ddl closed abnormally
     Given destroy btrace threads list
 
     Then execute sql in "mysql-master1"
-      | conn    | toClose | sql                         | expect                                                                                                                           | db  |
-      | conn_11 | true    | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                        | db  |
+      | conn_11 | true    | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''))} | db1 |
     Then execute sql in "mysql-master2"
-      | conn    | toClose | sql                         | expect                                                                                                                           | db  |
-      | conn_22 | true    | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                        | db  |
+      | conn_22 | true    | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''))} | db1 |
 
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                      | expect      | db      |
