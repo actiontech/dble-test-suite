@@ -30,12 +30,12 @@ Feature: test ddl closed abnormally
     """
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
-      /-DsqlExecuteTimeout=1000/d
-      /-DrecordTxn=1/d
-      /-DxaRecoveryLogBaseName=xalog/d
-      /-DxaSessionCheckPeriod=2000/d
-      /-DxaLogCleanPeriod=100000/d
-      /-DprocessorExecutor=4/d
+      /-DsqlExecuteTimeout/d
+      /-DrecordTxn/d
+      /-DxaRecoveryLogBaseName/d
+      /-DxaSessionCheckPeriod/d
+      /-DxaLogCleanPeriod/d
+      /-DprocessorExecutor/d
 
       /# processor/a -DsqlExecuteTimeout=1000
       /# processor/a -DrecordTxn=1
