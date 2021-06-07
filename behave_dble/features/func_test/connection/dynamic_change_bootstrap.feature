@@ -105,7 +105,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-@skip_restart
+@skip
+# _restart
   Scenario: test "processors"  #2
   # on bootstrap.cnf the default value : -Dprocessors=1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -216,7 +217,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-#@skip_restart  @btrace
+@skip
+# _restart  @btrace
   Scenario: test "processors" and use btrace check method  #2.1
   # on bootstrap.cnf the default value : -Dprocessors=1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -362,7 +364,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       $a  -DuseThreadUsageStat=1
       """ 
    Then restart dble in "dble-1" success
-   Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql         | db        |
       | select 1    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -401,7 +403,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       processorExecutor=4
       """
 
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql         | db        |
       | select 1    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -436,7 +438,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       processorExecutor=2
       """
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql         | db        |
       | select 1    | schema1   |
     Then execute sql in "dble-1" in "admin" mode
@@ -470,7 +472,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
       | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
       | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
 
@@ -498,7 +500,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       writeToBackendExecutor=4
       """
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
 
@@ -527,7 +529,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       writeToBackendExecutor=2
       """
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                           | db       |
       | select * from sharding_4_t1   | schema1  |
     Then execute sql in "dble-1" in "admin" mode
@@ -560,7 +562,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
       | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
       | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                                       | db       |
       | select * from sharding_4_t1  where id in (select id from sharding_4_t1)   | schema1  |
 
@@ -587,7 +589,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       complexExecutor=4
       """
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                                           | db       |
       | select * from sharding_4_t1  where name in (select name from sharding_4_t1)   | schema1  |
 
@@ -615,7 +617,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       complexExecutor=2
       """
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                                       | db       |
       | select * from sharding_4_t1  where id in (select id from sharding_4_t1)   | schema1  |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -645,7 +647,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
       | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
       | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -681,7 +683,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       backendProcessorExecutor=4
       """
 
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
 
@@ -727,12 +729,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       backendProcessorExecutor=2
       """
 
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                  | expect                                 | db               |
-      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(2)}                            | dble_information |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(3)}                            | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -763,7 +765,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn_1  | False   | drop table if exists sharding_4_t1                      | success | schema1 |
       | conn_1  | False   | create table sharding_4_t1(id int,name varchar(20))     | success | schema1 |
       | conn_1  | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -802,7 +804,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       backendProcessorExecutor=4
       """
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
@@ -838,7 +840,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       backendProcessorExecutor=2
       """
 
-    Given execute "user" sql "20" times in "dble-1" at concurrent
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
       | sql                                                        | db        |
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
     Then execute sql in "dble-1" in "admin" mode
