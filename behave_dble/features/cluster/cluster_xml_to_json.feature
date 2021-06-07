@@ -1036,16 +1036,14 @@ Feature: test dble's config xml and table dble_config in dble_information to che
 
 
 
-@skip
-#  _restart
-  Scenario: test dble_information dble_config error dml check json on zk config #4
 
+  Scenario: test dble_information dble_config error dml check json on zk config #4
     #case error dml sql DBLE0REQ-1063
-#    Given execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                                                                                                   | expect                                                                                                    | db               |
-#      | conn_1 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group4',1,'s',1,1,100,'false')   | Insert failure.The reason is incorrect integer value: 's'                                                 | dble_information |
-#      | conn_1 | true    | insert into dble_db_instance(name,db_group,addr,min_conn_count,max_conn_count,read_weight) value ('M111','ha_group1','172.100.9.1','1','100','1')                     | Field '[port, user, password_encrypt, primary]' doesn't have a default value and cannot be null           | dble_information |
-#      | conn_1 | true    | insert into dble_rw_split_entry(id,type,db_group) value('5','rwSplitUser','ha_group1')                                                                                | Field '[username, password_encrypt, max_conn_count]' doesn't have a default value and cannot be null      | dble_information |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                                                   | expect                                                                                                    | db               |
+      | conn_1 | true    | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group4',1,'s',1,1,100,'false')   | Insert failure.The reason is incorrect integer value: 's'                                                 | dble_information |
+      | conn_1 | true    | insert into dble_db_instance(name,db_group,addr,min_conn_count,max_conn_count,read_weight) value ('M111','ha_group1','172.100.9.1','1','100','1')                     | Field '[port, user, password_encrypt, primary]' doesn't have a default value and cannot be null           | dble_information |
+      | conn_1 | true    | insert into dble_rw_split_entry(id,type,db_group) value('5','rwSplitUser','ha_group1')                                                                                | Field '[username, password_encrypt, max_conn_count]' doesn't have a default value and cannot be null      | dble_information |
 
     Given execute linux command in "dble-1"
     """
@@ -1128,17 +1126,17 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
 
 
-#    Given execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
-#      | conn_1 | true    | insert into dble_db_group value ('ha_group5','select 1',-1,1,1,100,'false','ture')                                                 | Column 'active' is not writable                     | dble_information |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
+      | conn_1 | true    | insert into dble_db_group value ('ha_group5','select 1',-1,1,1,100,'false','ture')                                                 | Column 'active' is not writable                     | dble_information |
 
-#    Given execute sql in "dble-2" in "admin" mode
-#      | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
-#      | conn_2 | true    | insert into dble_db_instance value ('M89757','ha_group5','172.0.0.1',3306,'test','111111','false','true',10,1,10)                  | Column count doesn't match value count at row 1     | dble_information |
-#
-#    Given execute sql in "dble-3" in "admin" mode
-#      | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
-#      | conn_3 | true    | insert into dble_rw_split_entry (id,username,password_encrypt,max_conn_count,db_group) value (1,'rw21','111111',10,'ha_group5')    | Column 'id' is not writable                         | dble_information |
+    Given execute sql in "dble-2" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
+      | conn_2 | true    | insert into dble_db_instance value ('M89757','ha_group5','172.0.0.1',3306,'test','111111','false','true',10,1,10)                  | Column count doesn't match value count at row 1     | dble_information |
+
+    Given execute sql in "dble-3" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                | expect                                              | db               |
+      | conn_3 | true    | insert into dble_rw_split_entry (id,username,password_encrypt,max_conn_count,db_group) value (1,'rw21','111111',10,'ha_group5')    | Column 'id' is not writable                         | dble_information |
 
     Given execute linux command in "dble-1"
     """
