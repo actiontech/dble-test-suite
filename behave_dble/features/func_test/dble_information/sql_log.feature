@@ -35,7 +35,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | source_port   | int(11)       | NO     |       | None      |         |
       | rows          | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
-      | start_time    | int(11)       | NO     |       | None      |         |
+      | start_time    | timestamp     | NO     |       | None      |         |
       | duration      | int(11)       | NO     |       | None      |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
@@ -358,6 +358,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
       | rwS2 | 111111 | conn_4 | true    | drop table if exists test_table               | success | db2 |
+
 
 
   Scenario: test samplingRate=100 and simple sql   #4

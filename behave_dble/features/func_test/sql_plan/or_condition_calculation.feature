@@ -827,6 +827,10 @@ Feature: In order to calculate the route, the where condition needs to be proces
     this condition  is always false, so this RouteCalculateUnit will be always false
     """
 
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                     | expect      | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                                                      | success     | schema1 |
@@ -1565,6 +1569,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | true    | drop table if exists schema2.sharding_4_t2                                              | success     | schema1 |
 
 
+
   Scenario:Complex query "where" more than one table shardingColumn, 2 routes  #5
     #(after calculating the route for the first time, it is found that it cannot be delivered to a node as a whole,Discard the routing result and calculate the route again in a complex query)
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -2152,7 +2157,6 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
 
 
-#@skip_restart
   Scenario: Unchanged items, unaffected   #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -2268,90 +2272,90 @@ Feature: In order to calculate the route, the where condition needs to be proces
     """
     Then check result "A" value is "0"
 
-#      #"update" / "select" / "delete" not "where" condition ,but send empty condition broadcast,have trace log
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                               | expect  | db      | charset |
-#      | conn_0 | False   | update sharding_2_t1 set age = 99 | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | update test set age = 99          | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | update tb_parent set age = 99     | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | update tb_child set age = 99      | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | update nosharding set age = 99    | success | schema1 | utf8mb4 |
-#    Then get result of oscmd named "A" in "dble-1"
-#    """
-#    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "B" in "dble-1"
-#    """
-#    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "C" in "dble-1"
-#    """
-#    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "D" in "dble-1"
-#    """
-#    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then check result "A" value is "25"
-#    Then check result "B" value is "5"
-#    Then check result "C" value is "5"
-#    Then check result "D" value is "5"
-#
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                               | expect  | db      | charset |
-#      | conn_0 | False   | select id,name from sharding_2_t1 | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | select id,name from test          | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | select id,name from tb_parent     | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | select id,name from tb_child      | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | select id,name from nosharding    | success | schema1 | utf8mb4 |
-#    Then get result of oscmd named "A" in "dble-1"
-#    """
-#    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "B" in "dble-1"
-#    """
-#    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "C" in "dble-1"
-#    """
-#    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "D" in "dble-1"
-#    """
-#    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then check result "A" value is "50"
-#    Then check result "B" value is "10"
-#    Then check result "C" value is "10"
-#    Then check result "D" value is "10"
-#
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                       | expect  | db      | charset |
-#      | conn_0 | False   | delete from sharding_2_t1 | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | delete from test          | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | delete from tb_parent     | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | delete from tb_child      | success | schema1 | utf8mb4 |
-#      | conn_0 | False   | delete from nosharding    | success | schema1 | utf8mb4 |
-#    Then get result of oscmd named "A" in "dble-1"
-#    """
-#    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "B" in "dble-1"
-#    """
-#    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "C" in "dble-1"
-#    """
-#    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then get result of oscmd named "D" in "dble-1"
-#    """
-#    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
-#    """
-#    Then check result "A" value is "75"
-#    Then check result "B" value is "15"
-#    Then check result "C" value is "15"
-#    Then check result "D" value is "15"
+      #"update" / "select" / "delete" not "where" condition ,but send empty condition broadcast,have trace log
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                               | expect  | db      | charset |
+      | conn_0 | False   | update sharding_2_t1 set age = 99 | success | schema1 | utf8mb4 |
+      | conn_0 | False   | update test set age = 99          | success | schema1 | utf8mb4 |
+      | conn_0 | False   | update tb_parent set age = 99     | success | schema1 | utf8mb4 |
+      | conn_0 | False   | update tb_child set age = 99      | success | schema1 | utf8mb4 |
+      | conn_0 | False   | update nosharding set age = 99    | success | schema1 | utf8mb4 |
+    Then get result of oscmd named "A" in "dble-1"
+    """
+    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "B" in "dble-1"
+    """
+    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "C" in "dble-1"
+    """
+    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "D" in "dble-1"
+    """
+    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then check result "A" value is "25"
+    Then check result "B" value is "5"
+    Then check result "C" value is "5"
+    Then check result "D" value is "5"
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                               | expect  | db      | charset |
+      | conn_0 | False   | select id,name from sharding_2_t1 | success | schema1 | utf8mb4 |
+      | conn_0 | False   | select id,name from test          | success | schema1 | utf8mb4 |
+      | conn_0 | False   | select id,name from tb_parent     | success | schema1 | utf8mb4 |
+      | conn_0 | False   | select id,name from tb_child      | success | schema1 | utf8mb4 |
+      | conn_0 | False   | select id,name from nosharding    | success | schema1 | utf8mb4 |
+    Then get result of oscmd named "A" in "dble-1"
+    """
+    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "B" in "dble-1"
+    """
+    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "C" in "dble-1"
+    """
+    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "D" in "dble-1"
+    """
+    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then check result "A" value is "50"
+    Then check result "B" value is "10"
+    Then check result "C" value is "10"
+    Then check result "D" value is "10"
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                       | expect  | db      | charset |
+      | conn_0 | False   | delete from sharding_2_t1 | success | schema1 | utf8mb4 |
+      | conn_0 | False   | delete from test          | success | schema1 | utf8mb4 |
+      | conn_0 | False   | delete from tb_parent     | success | schema1 | utf8mb4 |
+      | conn_0 | False   | delete from tb_child      | success | schema1 | utf8mb4 |
+      | conn_0 | False   | delete from nosharding    | success | schema1 | utf8mb4 |
+    Then get result of oscmd named "A" in "dble-1"
+    """
+    grep " TRACE " /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "B" in "dble-1"
+    """
+    grep "these conditions will try to pruning:{}" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "C" in "dble-1"
+    """
+    grep "{ RouteCalculateUnit 1 :}" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then get result of oscmd named "D" in "dble-1"
+    """
+    grep "changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]" /opt/dble/logs/ddl.log | wc -l
+    """
+    Then check result "A" value is "75"
+    Then check result "B" value is "15"
+    Then check result "C" value is "15"
+    Then check result "D" value is "15"
 
 
       #dml have "where" condition ,have simply condition ,have trace log
@@ -2363,14 +2367,12 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | create table noshard_t1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` varchar(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8          | success | schema1 | utf8mb4 |
       | conn_0 | False   | insert into noshard_t1 values(1,1,'noshard_t1中id为1',1),(2,2,'test_2',2),(3,3,'noshard_t1中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)                                                                              | success | schema1 | utf8mb4 |
       | conn_0 | False   | insert into schema2.global_4_t1 values(1,1,'global_4_t1中id为1',1),(2,2,'test_2',2),(3,3,'global_4_t1中id为3',3),(4,4,'$order$4',4),(5,5,'order...5',1),(6,6,'test6',6)                                                                 | success | schema1 | utf8mb4 |
-#    Given record current dble log line number in "log_1"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                                 |
       | conn_0 | False   | explain select * from schema2.global_4_t1 where (id=1 or id=2) and (id=3 or id=4)   |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0  | TYPE-1   | SQL/REF-2                                                                                |
       | /*AllowDiff*/dn1 | BASE SQL | SELECT * FROM global_4_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100 |
-#    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" after line "log_1" in host "dble-1"
     Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{(((schema2.global_4_t1.id = 2)) or ((schema2.global_4_t1.id = 1))) and (((schema2.global_4_t1.id = 4)) or ((schema2.global_4_t1.id = 3)))}
@@ -2381,7 +2383,6 @@ Feature: In order to calculate the route, the where condition needs to be proces
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
-    Given record current dble log line number in "log_2"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain update schema2.global_4_t1 set name='test' where id=1 and o_id=1   |
@@ -2391,7 +2392,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
       | dn3             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
       | dn4             | BASE SQL | update global_4_t1 set name='test' where id=1 and o_id=1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" after line "log_2" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{(((schema2.global_4_t1.id = 1) and (schema2.global_4_t1.o_id = 1)))}
     condition \[schema2.global_4_t1.id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2400,7 +2401,6 @@ Feature: In order to calculate the route, the where condition needs to be proces
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
-    Given record current dble log line number in "log_3"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                            |
       | conn_0 | False   | explain delete from schema2.global_4_t1 where id=1 and o_id=1  |
@@ -2410,7 +2410,7 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | dn2             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
       | dn3             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
       | dn4             | BASE SQL | delete from global_4_t1 where id=1 and o_id=1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" after line "log_3" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{(((schema2.global_4_t1.id = 1) and (schema2.global_4_t1.o_id = 1)))}
     condition \[schema2.global_4_t1.id = 1\] will be pruned for columnName is not shardingColumn/joinColumn
@@ -2420,14 +2420,13 @@ Feature: In order to calculate the route, the where condition needs to be proces
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
 
-    Given record current dble log line number in "log_4"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                                        | db      |
       | conn_0 | False   | explain select * from noshard_t1 where (id=1 or id=2) and (id=3 or id=4)   | schema1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                                               |
       | dn5             | BASE SQL | SELECT * FROM noshard_t1 WHERE (id = 1   OR id = 2)  AND (id = 3   OR id = 4) LIMIT 100 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" after line "log_4" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{(() or ()) and (() or ())}
     whereUnit \[() or ()\] will be pruned for contains useless or condition
@@ -2435,33 +2434,40 @@ Feature: In order to calculate the route, the where condition needs to be proces
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
-    Given record current dble log line number in "log_5"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                             |
       | conn_0 | False   | explain update noshard_t1 set name='test' where id=1 and t_id=1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                |
       | dn5             | BASE SQL | update noshard_t1 set name='test' where id=1 and t_id=1  |
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_5" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{}
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
-    Given record current dble log line number in "log_6"
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql                                                 |
       | conn_0 | False   | explain delete from noshard_t1 where id=1 or t_id=1 |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                   |
       | dn5             | BASE SQL | delete from noshard_t1 where id=1 or t_id=1 |
-    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" after line "log_6" in host "dble-1"
+    Then check following text exist "Y" in file "/opt/dble/logs/ddl.log" in host "dble-1"
     """
     these conditions will try to pruning:{(() or ())}
     whereUnit \[() or ()\] will be pruned for contains useless or condition
     { RouteCalculateUnit 1 :}
     changeAndToOr from \[\[\]\] and \[\[\]\] merged to \[\]
     """
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/ddl.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                                                    | expect  | db      | charset |
