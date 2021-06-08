@@ -2156,7 +2156,6 @@ Feature: In order to calculate the route, the where condition needs to be proces
 
 
 
-
   Scenario: Unchanged items, unaffected   #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -2478,3 +2477,43 @@ Feature: In order to calculate the route, the where condition needs to be proces
       | conn_0 | False   | drop table if exists nosharding                                                                        | success | schema1 | utf8mb4 |
       | conn_0 | False   | drop table if exists noshard_t1                                                                        | success | schema1 | utf8mb4 |
       | conn_0 | true    | drop table if exists schema2.global_4_t1                                                               | success | schema1 | utf8mb4 |
+    When replace new conf file "log4j2.xml" on "dble-1"
+    """
+    <?xml version="1.0" encoding="UTF-8"?>
+     <Configuration status="WARN" monitorInterval="30">
+    <Appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d [%-5p][%t] %m %throwable{full} (%C:%F:%L) %n"/>
+        </Console>
+         <RollingRandomAccessFile name="RollingFile" fileName="${sys:homePath}/logs/dble.log"
+                                 filePattern="${sys:homePath}/logs/$${date:yyyy-MM}/dble-%d{MM-dd}-%i.log.gz">
+            <PatternLayout>
+                <Pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p [%t] (%l) - %m%n</Pattern>
+            </PatternLayout>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <SizeBasedTriggeringPolicy size="250 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+            <DefaultRolloverStrategy max="100">
+                <Delete basePath="logs" maxDepth="2">
+                    <IfFileName glob="*/dble-*.log.gz">
+                        <IfLastModified age="30d">
+                            <IfAny>
+                                <IfAccumulatedFileSize exceeds="1 GB"/>
+                                <IfAccumulatedFileCount exceeds="10"/>
+                            </IfAny>
+                        </IfLastModified>
+                    </IfFileName>
+                </Delete>
+            </DefaultRolloverStrategy>
+         </RollingRandomAccessFile>
+      </Appenders>
+      <Loggers>
+        <asyncRoot level="debug" includeLocation="true">
+            <AppenderRef ref="RollingFile"/>
+        </asyncRoot>
+     </Loggers>
+    </Configuration>
+    """
+    Given Restart dble in "dble-1" success
