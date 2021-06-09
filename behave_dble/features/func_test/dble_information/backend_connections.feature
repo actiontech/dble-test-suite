@@ -6,7 +6,6 @@
 Feature:  backend_connections test
 
 
-
    Scenario:  backend_connections table #1
   #case desc backend_connections
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_1"
@@ -104,12 +103,14 @@ Feature:  backend_connections test
       | test   | INSERT INTO sharding_4_t1 VALUES (2)       | ha_group1       | db2      | 1           | true             |
       | test   | INSERT INTO sharding_4_t1 VALUES (1)       | ha_group2       | db1      | 1           | true             |
       | test   | INSERT INTO sharding_4_t1 VALUES (4)       | ha_group1       | db1      | 1           | true             |
-    Then check resultset "backend_connections_5" has not lines with following column values
-      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
-      | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
-      | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 1           | true             |
-      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 1           | true             |
+### DBLE0REQ-1188
+#    Then check resultset "backend_connections_5" has not lines with following column values
+#      | user-0 | sql-1                                      | db_group_name-2 | schema-3 | xa_status-4 | in_transaction-5 |
+#      | test   | insert into test values (1),(2)            | ha_group2       | db2      | 1           | true             |
+#      | test   | insert into test values (1),(2)            | ha_group1       | db2      | 1           | true             |
+#      | test   | INSERT INTO sharding_2_t1 VALUES (1),  (3) | ha_group2       | db1      | 1           | true             |
+#      | test   | INSERT INTO sharding_2_t1 VALUES (2),  (4) | ha_group1       | db1      | 1           | true             |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql             | expect  |
       | conn_1 | False   | commit          | success |
@@ -137,23 +138,23 @@ Feature:  backend_connections test
       | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
       | sharding.xml | {'tag':'root'} | {'tag':'shardingNode'} |
       | db.xml       | {'tag':'root'} | {'tag':'dbGroup'}      |
-      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-    <schema shardingNode="dn2" name="schema1" sqlMaxLimit="100">
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+     """
+     <schema shardingNode="dn2" name="schema1" sqlMaxLimit="100">
         <shardingTable name="sharding_2_t1" shardingNode="dn2,dn4" function="hash-two" shardingColumn="id" />
-    </schema>
+     </schema>
 
-    <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
-    <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
-    """
-      Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
+     <shardingNode dbGroup="ha_group2" database="db1" name="dn2" />
+     <shardingNode dbGroup="ha_group2" database="db2" name="dn4" />
+     """
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+     """
+     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="10" primary="true" readWeight="1"/>
         <dbInstance name="hostS1" password="111111" url="172.100.9.2:3306" user="test" maxCon="1000" minCon="10" readWeight="2"/>
-    </dbGroup>
-    """
+     </dbGroup>
+     """
     Then execute admin cmd "reload @@config"
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "backend_connections_4"
       | conn   | toClose | sql                                                                               | db               |
@@ -167,7 +168,7 @@ Feature:  backend_connections test
       | ha_group1       | hostM1             | 172.100.9.5   |
 
    #case supported select limit/order by
-      Then execute sql in "dble-1" in "admin" mode
+    Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                 | expect                                                  |
       | conn_0 | False   | select user,db_group_name from backend_connections order by schema desc limit 2     | has{(('test', 'ha_group2'), ('test', 'ha_group2'))}     |
   #case supported select max/min
