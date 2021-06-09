@@ -80,7 +80,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | sql_exec      | int(11)       | NO     |       | None      |         |
       | source_host   | varchar(20)   | NO     |       | None      |         |
       | source_port   | int(11)       | NO     |       | None      |         |
-#      | sql_ids       | VARCHAR(1024) | NO     |       | None      |         |
+      | sql_ids       | varchar(1024) | NO     |       | None      |         |
       | tx_duration   | int(11)       | NO     |       | None      |         |
       | busy_time     | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
@@ -1945,6 +1945,7 @@ sql_log_by_tx_digest_by_entry_by_user
       NullPointerException
       """
 
+
   Scenario: test samplingRate=100 and error sql   #11
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -2229,20 +2230,29 @@ sql_log_by_tx_digest_by_entry_by_user
 
 
 @skip
+#  _restart
   Scenario: test samplingRate=100 and special case  #12
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
 
-    Given execute sql "1000" times in "dble-1" at concurrent
-      | conn   | sql                   | db      |
-      | conn_0 | begin;select 2        | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 100 connection not close
+      | conn   | sql                                    | db      |
+      | conn_0 | select 2;select 3        | schema1 |
 
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                 | expect         | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+#    Given execute sql "1000" times in "dble-1" at concurrent 100
+#      | conn   | sql                                    | db      |
+#      | conn_0 | select 2;select 3        | schema1 |
+
+#    Given execute sql "1" times in "dble-1" together use 1 connection not close
+#      | conn   | sql                                    | db      |
+#      | conn_1 | select 4;select 6;select user()        | schema1 |
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                 | expect         | db               |
+#      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+
 
 
 
