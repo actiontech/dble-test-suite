@@ -137,6 +137,8 @@ def destroy_threads(context):
     for thd in btrace_threads:
         context.logger.debug("join btrace thread: {0}".format(thd.name))
         thd.join()
+    btrace_threads=[]
+
 
 @Then('check sql thread output in "{result}"')
 def step_impl(context,result):
