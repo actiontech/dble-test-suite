@@ -42,10 +42,10 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 #     unsupported update "core_pool_size" illegal number  DBLE0REQ-1149
       | conn_0 | False   | update dble_thread_pool set core_pool_size=0.5 where name ='$_NIO_REACTOR_FRONT-'        | Not Supported of Value EXPR :0.5                                    | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=0 where name ='writeToBackendExecutor'        | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size=' ' where name ='$_NIO_REACTOR_BACKEND-'      | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size=' ' where name ='$_NIO_REACTOR_BACKEND-'      | Not Supported of Value EXPR :' '                                    | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size='-1' where name ='$_NIO_REACTOR_FRONT-'       | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size='afr' where name ='complexQueryExecutor'      | Update failure.The reason is incorrect integer value: 'afr'         | dble_information |
-      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='backendBusinessExecutor'  | Update failure.The reason is incorrect integer value: 'null'        | dble_information |
+      | conn_0 | False   | update dble_thread_pool set core_pool_size='null' where name ='backendBusinessExecutor'  | Not Supported of Value EXPR :'null'                                 | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=null where name ='BusinessExecutor'           | Column 'core_pool_size' cannot be null                              | dble_information |
       | conn_0 | False   | update dble_thread_pool set core_pool_size=-1 where name ='$_NIO_REACTOR_FRONT-'         | Column 'core_pool_size' should be a positive integer greater than 0 | dble_information |
 
@@ -211,48 +211,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
-
-
 @skip
-# _restart  @btrace
-  Scenario: test "processors" and use btrace check method  #2.1
-  # on bootstrap.cnf the default value : -Dprocessors=1
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-      """
-      $a -DuseThreadUsageStat=1
-      $a -DidleTimeout=8000
-      """
-    Then restart dble in "dble-1" success
-
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect     | db               |
-      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | success    | dble_information |
-
-    Given update file content "./assets/BtraceAboutBootstrap.java" in "behave" with sed cmds
-      """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /WriteDynamicBootstrap/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
-      """
-    Given prepare a thread run btrace script "BtraceAboutBootstrap.java" in "dble-1"
-
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn    | toClose | sql                                                                                | db                 |
-      | conn_11 | True    | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_FRONT-'    | dble_information   |
-
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect                                                                                           | db               |
-      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | Other threads are executing management commands(insert/update/delete), please try again later    | dble_information |
-    # set idleTimeout
-    Given sleep "10" seconds
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
-      """
-      Lost connection to MySQL server during query
-      """
-
-
-
-
-
+#  _restart
   Scenario: test "backendProcessors"  #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -269,13 +229,13 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "5" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      INFO \[$_NIO_REACTOR_BACKEND-0-RW\]
+      \[$_NIO_REACTOR_BACKEND-0-RW\]
       """
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      INFO \[$_NIO_REACTOR_BACKEND-1-RW\]
-      INFO \[$_NIO_REACTOR_BACKEND-2-RW\]
-      INFO \[$_NIO_REACTOR_BACKEND-3-RW\]
+      \[$_NIO_REACTOR_BACKEND-1-RW\]
+      \[$_NIO_REACTOR_BACKEND-2-RW\]
+      \[$_NIO_REACTOR_BACKEND-3-RW\]
       """
 
     Then execute sql in "dble-1" in "admin" mode
@@ -307,10 +267,10 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given sleep "5" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
-      INFO \[$_NIO_REACTOR_BACKEND-0-RW\]
-      INFO \[$_NIO_REACTOR_BACKEND-1-RW\]
-      INFO \[$_NIO_REACTOR_BACKEND-2-RW\]
-      INFO \[$_NIO_REACTOR_BACKEND-3-RW\]
+      \[$_NIO_REACTOR_BACKEND-0-RW\]
+      \[$_NIO_REACTOR_BACKEND-1-RW\]
+      \[$_NIO_REACTOR_BACKEND-2-RW\]
+      \[$_NIO_REACTOR_BACKEND-3-RW\]
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
@@ -719,7 +679,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     # use dble.log check
     Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                                 | occur_times |
-      | interrupt thread:Thread\[backendBusinessExecutor    | 2           |
+      | interrupt thread:Thread\[backendBusinessExecutor    | 0           |
       | set to file success:/bootstrap.dynamic.cnf          | 2           |
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
       """
@@ -731,7 +691,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4)    | schema1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                  | expect                                 | db               |
-      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(3)}                            | dble_information |
+      | conn_0 | true    | select * from dble_thread_usage where thread_name like 'backendBusinessExecutor%'                    | length{(2)}                            | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -851,3 +811,44 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       caught err:
       NullPointerException
       """
+
+
+
+
+@skip
+# _restart  @btrace
+  Scenario: test "processors" and use btrace check method  #2.1
+  # on bootstrap.cnf the default value : -Dprocessors=1
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+      """
+      $a -DuseThreadUsageStat=1
+      $a -DidleTimeout=8000
+      """
+    Then restart dble in "dble-1" success
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect     | db               |
+      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | success    | dble_information |
+
+    Given update file content "./assets/BtraceAboutBootstrap.java" in "behave" with sed cmds
+      """
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+      /WriteDynamicBootstrap/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      """
+    Given prepare a thread run btrace script "BtraceAboutBootstrap.java" in "dble-1"
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn    | toClose | sql                                                                                | db                 |
+      | conn_11 | True    | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_FRONT-'    | dble_information   |
+
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                   | expect                                                                                           | db               |
+      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | Other threads are executing management commands(insert/update/delete), please try again later    | dble_information |
+    # set idleTimeout
+    Given sleep "10" seconds
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      Lost connection to MySQL server during query
+      """
+
+
