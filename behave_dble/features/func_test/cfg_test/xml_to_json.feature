@@ -857,6 +857,7 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
 
 
 @skip
+#   _restart
    Scenario: test dble_information dble_config dml on btrace #4
     #  DBLE0REQ-1061
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -894,15 +895,15 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                             | db               |
-      | conn_0 | true    | update dble_db_group set heartbeat_stmt='select user()',heartbeat_timeout=7877 where name = 'ha_group4'         | dble_information |
+      | conn_1 | true    | update dble_db_group set heartbeat_stmt='select user()',heartbeat_timeout=7877 where name = 'ha_group4'         | dble_information |
 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                    | db               |
-      | conn_0 | true    | update dble_db_instance set max_conn_count= '7833' where db_group = 'ha_group4'        | dble_information |
+      | conn_2 | true    | update dble_db_instance set max_conn_count= '7833' where db_group = 'ha_group4'        | dble_information |
 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                       | db               |
-      | conn_0 | true    | reload @@config_all       | dble_information |
+      | conn_3 | true    | reload @@config_all       | dble_information |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                 | expect                 | db               |
@@ -915,8 +916,118 @@ Feature: # test  dble's config xml and table dble_config in dble_information to 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                         | db               |
       | conn_1 | True    | select * from dble_config   | dble_information |
+#    Given sleep "2" seconds
+#
+#
+#    Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
+#    Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
+
+
+
+   Scenario: test dble_information dble_config dml about some special case #5
+    #  DBLE0REQ-1060
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                                                                                                                             | expect          | db               |
+      | conn_0 | false   | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group3','select 1',0,1,0,100,'false')                                                      | success         | dble_information |
+      | conn_0 | false   | insert into dble_db_instance(name,db_group,addr,port,user,password_encrypt,encrypt_configured,primary,min_conn_count,max_conn_count) value ('hostM3','ha_group3','172.100.9.1','3306','test','111111','false','true','1','99')  | success         | dble_information |
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
     Given sleep "2" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"dbGroup":\[
+    {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"heartbeat":{"value":"select user()"},"dbInstance":\[{"name":"hostM1","url":"172.100.9.5:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true}\]},
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},"dbInstance":\[{"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true}\]},
+    {"rwSplitMode":0,"name":"ha_group3","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select 1","timeout":0,"errorRetryCount":1},
+    "dbInstance":\[{"name":"hostM3","url":"172.100.9.1:3306","password":"111111","user":"test","maxCon":99,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
+    "property":\[
+    {"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},{"value":"false","name":"testOnReturn"},
+    {"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},{"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]}\]}\],
+    "schema":\[
+    {"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
+    "table":\[
+    {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
+    {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
+    {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
+    "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},{"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
+    "function":\[
+    {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
+    {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
+    {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
+    {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]}\],
+    "user":\[{"type":"ManagerUser","properties":{"name":"root","password":"111111"}},{"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"111111"}}\]}
+    """
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                                                                                                                           | expect                                                                                   | db               |
+      | conn_0 | false    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw1','111111','false','100','ha_group3')        | success                                                                                  | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count = '-1' where db_group = 'ha_group3'                                                                             | Update failure.The reason is Column 'max_conn_count' value cannot be less than 0         | dble_information |
+      | conn_0 | false    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw4','111111','false','-1','ha_group3')         | Insert failure.The reason is Column 'max_conn_count' value cannot be less than 0         | dble_information |
+      | conn_0 | false    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw4','111111','false','0','ha_group3')          | success                                                                                  | dble_information |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
+      | conn   | toClose | sql                               |
+      | conn_0 | False   | select * from dble_rw_split_entry |
+    Then check resultset "rs_A" has lines with following column values
+      | id-0 | type-1   | username-2 | encrypt_configured-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7 | max_conn_count-8 | blacklist-9 | db_group-10 |
+      | 3    | username | rw1        | false                | None            | None              | None        | 100              | None        | ha_group3   |
+      | 4    | username | rw4        | false                | None            | None              | None        | no limit         | None        | ha_group3   |
+
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    "user":\[
+    {"type":"ManagerUser","properties":{"name":"root","password":"111111"}},
+    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"111111"}},
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw1","password":"111111","usingDecrypt":"false","maxCon":100}},
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw4","password":"111111","usingDecrypt":"false","maxCon":0}}\]}
+    """
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                                | expect         | db               |
+      | conn_0 | false    | delete from dble_rw_split_entry where db_group = 'ha_group3'       | success        | dble_information |
+      | conn_0 | true     | delete from dble_rw_split_entry where id=4                         | success        | dble_information |
 
 
-    Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
+
+   Scenario: test dble_information dble_config dml about some special issue #6
+    #  DBLE0REQ-1158
+    Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+      """
+      $a sequenceHandlerType=1
+      """
+    Then Restart dble in "dble-1" success
+    When Add some data in "sequence_db_conf.properties"
+    """
+    `schema1`.`test_auto`=dn5
+    """
+    Then execute admin cmd "reload @@config_all"
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                                                                                                                                            | expect           | db               |
+      | conn_0 | true     | insert into dble_db_group(name,heartbeat_stmt,heartbeat_timeout,heartbeat_retry,rw_split_mode,delay_threshold,disable_ha) value ('ha_group4','select 1',0,1,0,100,'false')     | success          | dble_information |
+    Then execute "admin" cmd  in "dble-1" at background
+      | conn   | toClose | sql                         | db               |
+      | conn_1 | True    | select * from dble_config   | dble_information |
+    Given sleep "2" seconds
+    Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
+    """
+    {"dbGroup":\[
+    {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"heartbeat":{"value":"select user()"},"dbInstance":\[{"name":"hostM1","url":"172.100.9.5:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true}\]},
+    {"rwSplitMode":0,"name":"ha_group2","delayThreshold":100,"heartbeat":{"value":"select user()"},"dbInstance":\[{"name":"hostM2","url":"172.100.9.6:3306","password":"111111","user":"test","maxCon":1000,"minCon":10,"primary":true}\]}\],
+    "schema":\[
+    {"name":"schema1","sqlMaxLimit":100,"shardingNode":"dn5",
+    "table":\[
+    {"type":"GlobalTable","properties":{"name":"test","shardingNode":"dn1,dn2,dn3,dn4"}},
+    {"type":"ShardingTable","properties":{"function":"hash-two","shardingColumn":"id","name":"sharding_2_t1","shardingNode":"dn1,dn2"}},
+    {"type":"ShardingTable","properties":{"function":"hash-four","shardingColumn":"id","name":"sharding_4_t1","shardingNode":"dn1,dn2,dn3,dn4"}}\]}\],
+    "shardingNode":\[{"name":"dn1","dbGroup":"ha_group1","database":"db1"},{"name":"dn2","dbGroup":"ha_group2","database":"db1"},{"name":"dn3","dbGroup":"ha_group1","database":"db2"},{"name":"dn4","dbGroup":"ha_group2","database":"db2"},{"name":"dn5","dbGroup":"ha_group1","database":"db3"}\],
+    "function":\[
+    {"name":"hash-two","clazz":"Hash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
+    {"name":"hash-three","clazz":"Hash","property":\[{"value":"3","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
+    {"name":"hash-four","clazz":"Hash","property":\[{"value":"4","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]},
+    {"name":"hash-string-into-two","clazz":"StringHash","property":\[{"value":"2","name":"partitionCount"},{"value":"1","name":"partitionLength"}\]}\],
+    "user":\[{"type":"ManagerUser","properties":{"name":"root","password":"111111"}},{"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"111111"}}\],
+    "sequence_db_conf.properties":{"`schema1`.`test_auto`":"dn5"}}
+    """
