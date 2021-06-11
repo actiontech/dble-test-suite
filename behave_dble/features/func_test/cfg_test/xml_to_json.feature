@@ -2,7 +2,7 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/4/15
 
-Feature: # test  dble's config xml and table dble_config in dble_information to check json
+Feature:  test  dble's config xml and table dble_config in dble_information to check json
 
 
 

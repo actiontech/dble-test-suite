@@ -245,6 +245,14 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
     {'restore_mysql_config':{'mysql-master1':{'max_allowed_packet':8388608},'mysql-master2':{'max_allowed_packet':8388608}}}
     """
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                              | expect              | db               |
+      | conn_0 | true    | select @@max_allowed_packet      | has{((4194304,),)}  | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((4194304,),)}  | schema1   |
+
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a\-DmaxPacketSize=6291456
@@ -252,7 +260,11 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((6291456,),)}    | dble_information |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('6291456B',),)} | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((6291456,),)}  | schema1   |
 
     #case2 max_packet_size < max_allowed_packet
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
@@ -279,7 +291,11 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then restart dble in "dble-1" success
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                 | db               |
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((9437184,),)}     | dble_information |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('9437184B',),)}  | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((9437184,),)}  | schema1   |
 
     #case 3  max_packet_size > max_allowed_packet
     Given execute sql in "mysql-master1"
@@ -296,7 +312,10 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                              | expect                | db               |
       | conn_0 | true    | select variable_value from dble_variables where variable_name='maxPacketSize'    | has{(('8000000B',),)} | dble_information |
-
+      | conn_0 | true    | select @@max_allowed_packet                                                      | has{((8000000,),)}    | dble_information |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                              | expect              | db        |
+      | conn_1 | true    | select @@max_allowed_packet      | has{((8000000,),)}  | schema1   |
 
 
   @restore_view
