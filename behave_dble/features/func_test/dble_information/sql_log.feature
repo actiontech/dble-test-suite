@@ -2329,77 +2329,96 @@ sql_log_by_tx_digest_by_entry_by_user
       NullPointerException
       """
 
+
 @skip
-#  _restart @autoretry
+#  _restart
   Scenario: test samplingRate=100 and special case  ---- shardinguse   #12
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
 
-#    #### case1 select ;select
+    #### case1 select ;select
 #    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
 #      | sql                                    | db      |
 #      | select 2;select 3;select user()        | schema1 |
 #
-##    Then execute sql in "dble-1" in "admin" mode
-##      | conn   | toClose | sql                                                 | expect         | db               |
-##      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
-##      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
-##      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
-##      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
-##
-#
-#    #### case2 begin ;select
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                 | expect         | db               |
+#      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
+#      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
+#    Given execute sql "1000" times in "dble-1" at concurrent 1000
+#      | sql                                    | db      |
+#      | select 2;select 3;select user()        | schema1 |
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                 | expect         | db               |
+#      | conn_0 | False   | select * from sql_log                               | length{(2032)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
+#      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
+
+
+
+    #### case2 begin ;select
 #    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
 #      | sql                         | db      |
+#      | begin ;select 1 ;select user()        | schema1 |
+#    Given sleep "2" seconds
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                 | expect         | db               |
+#      | conn_1 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+#      | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
+#      | conn_1 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
+#      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+#      | conn_1 | true    | truncate table sql_log                              | success        | dble_information |
+#
+#    Given execute sql "1000" times in "dble-1" at concurrent 1000
+#      | sql                         | db      |
 #      | begin ;select user()        | schema1 |
-#
-##    Then execute sql in "dble-1" in "admin" mode
-##      | conn   | toClose | sql                                                 | expect         | db               |
-##      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
-##      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-##      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-##      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
-#
-#    #### case3 begin ;select ; commit
-#    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-#      | sql                                | db      |
-#      | begin ;select user();commit        | schema1 |
-#
-##    Then execute sql in "dble-1" in "admin" mode
-##      | conn   | toClose | sql                                                 | expect         | db               |
-##      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
-##      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-##      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-##      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+#    Given sleep "2" seconds
+#    Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                 | expect         | db               |
+#      | conn_0 | False   | select * from sql_log                               | length{(2032)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
+#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
+#      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
+
+
+
+
+    #### case3 begin ;select ; commit
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                | db      |
+      | begin ;select user();commit        | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
     Given execute sql "1000" times in "dble-1" at concurrent 1000
-      | sql                                    | db      |
-      | begin ;select user();commit            | schema1 |
-    Given execute sql "10000" times in "dble-1" together use 10000 connection not close
-      | sql                                    | db      |
-      | begin ;select user();commit            | schema1 |
-    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-      | sql                                    | db      |
-      | begin ;select user();commit            | schema1 |
-    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-      | sql                                    | db      |
-      | begin ;select user();commit            | schema1 |
-    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-      | sql                                    | db      |
-      | begin ;select user();commit            | schema1 |
-    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-      | sql                                    | db      |
-      | begin ;select user();commit            | schema1 |
-    Given execute "admin" sql "100" times in "dble-1" together use 100 connection not close
-      | sql                                                              | db               |
-      | select sql_ids from sql_log_by_tx_digest_by_entry_by_user        | dble_information |
+      | sql                                | db      |
+      | begin ;select user();commit        | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      NullPointerException
-      caught err:
-      java.lang.OutOfMemoryError
-      """
+#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+#      """
+#      NullPointerException
+#      caught err:
+#      java.lang.OutOfMemoryError
+#      exception occurred when the statistics were recorded
+#      """
 
 
 
@@ -2417,6 +2436,7 @@ sql_log_by_tx_digest_by_entry_by_user
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
+    <managerUser name="root" password="111111" maxCon="100"/>
     <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
     """
     Then execute admin cmd "reload @@config_all"
@@ -2428,26 +2448,48 @@ sql_log_by_tx_digest_by_entry_by_user
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
       | user   | passwd | sql                                    | db    |
       | split1 | 111111 | select 2;select 3;select user()        | db1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
-
+    Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | user   | passwd | sql                                    | db    |
+      | split1 | 111111 | select 2;select 3;select user()        | db1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
     #### case1 begin ;select
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
       | user   | passwd | sql                            | db    |
       | split1 | 111111 | begin;select 3;select 1        | db1   |
 
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
+
+    Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | user   | passwd | sql                            | db    |
+      | split1 | 111111 | begin;select 3;select 1        | db1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
 
     #### case3 begin ;select ;commit
@@ -2455,21 +2497,98 @@ sql_log_by_tx_digest_by_entry_by_user
       | user   | passwd | sql                          | db    |
       | split1 | 111111 | begin;select 3;commit        | db1   |
 
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
+
+     Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | user   | passwd | sql                            | db    |
+      | split1 | 111111 | begin;select 3;commit          | db1   |
+
+      Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
       caught err:
+      exception occurred when the statistics were recorded
       """
 
 
-  Scenario: test samplingRate>0 and samplingRate<100   #14
+
+  Scenario: test samplingRate=100 and special case  ---- oom   #14
+    Then execute admin cmd "reload @@samplingRate=100"
+    Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
+     Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+
+    Given execute "admin" sql "20" times in "dble-1" together use 20 connection not close
+      | sql                                                              | db               |
+      | select sql_ids from sql_log_by_tx_digest_by_entry_by_user        | dble_information |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      OutOfMemoryError
+      exception occurred when the statistics were recorded
+      """
+    Given execute "admin" sql "20" times in "dble-1" together use 20 connection not close
+      | sql                                                              | db               |
+      | select sql_ids from sql_log_by_tx_digest_by_entry_by_user        | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      OutOfMemoryError
+      exception occurred when the statistics were recorded
+      """
+    Given execute "admin" sql "20" times in "dble-1" together use 20 connection not close
+      | sql                                                              | db               |
+      | select sql_ids from sql_log_by_tx_digest_by_entry_by_user        | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      OutOfMemoryError
+      exception occurred when the statistics were recorded
+      """
+    Given execute "admin" sql "20" times in "dble-1" together use 20 connection not close
+      | sql                                                              | db               |
+      | select sql_ids from sql_log_by_tx_digest_by_entry_by_user        | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      OutOfMemoryError
+      exception occurred when the statistics were recorded
+      """
+    Then execute sql in "dble-1" in "user" mode
+      | toClose | sql                                         | expect   | db      |
+      | False   | drop table if exists test                   | success  | schema1 |
+
+
+  Scenario: test samplingRate>0 and samplingRate<100   #15
     Then execute admin cmd "reload @@samplingRate=40"
     Then execute admin cmd "reload @@statistic_table_size =10 where table ='sql_log'"
     Then execute sql in "dble-1" in "user" mode
