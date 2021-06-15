@@ -284,7 +284,8 @@ Feature: test addition, deletion and modification of dble_information on the man
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
     {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
     {"rwSplitMode":1,"name":"ha_group7","delayThreshold":-1,"disableHA":"false","heartbeat":{"value":"select 3","timeout":0,"errorRetryCount":1},
-    "dbInstance":\[{"name":"hostM7","url":"172.100.9.3:3306","password":"UHH6o0jOcaXRYzvyQrUN/P5avdmyoxpHO8B54y7+RkiIC73G1qgFr5X+mewtlC6p/v7Gc/NXD7sPDFB/kPM5aA==","user":"test","maxCon":9,"minCon":4,"usingDecrypt":"true","disabled":"false","id":"hostM7","readWeight":"0","primary":true,
+    "dbInstance":\[{"name":"hostM7","url":"172.100.9.3:3306","password":
+    ","user":"test","maxCon":9,"minCon":4,"usingDecrypt":"true","disabled":"false","id":"hostM7","readWeight":"0","primary":true,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
     {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
@@ -506,7 +507,8 @@ Feature: test addition, deletion and modification of dble_information on the man
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","tenant":"tenant2","name":"rw2","password":"111111","usingDecrypt":"false","whiteIPs":"172.100.9.2/20","maxCon":100}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group5","tenant":"tenant3","name":"rw3","password":"111111","usingDecrypt":"false","whiteIPs":"fe80::fea4:9473:b424:bb41/64","maxCon":1}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group6","tenant":"tenant4","name":"rw4","password":"111111","usingDecrypt":"false","whiteIPs":"172.100.9.7-172.100.9.3","maxCon":0}},
-    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw5","password":"FmMxCqFCorImAesW5TbLHbEHaaN+pHAVSXAvlDry5ZW3ZWkIymOMJyXF3Jrg9IKJVArxPQ3YKKisnGmiwCOOJg==","usingDecrypt":"true","whiteIPs":"::1","maxCon":100}},
+    {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw5","password":"
+    ","usingDecrypt":"true","whiteIPs":"::1","maxCon":100}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group3","name":"rw6","password":"111111","usingDecrypt":"false","maxCon":100}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group4","name":"rw7","password":"111111","usingDecrypt":"false","maxCon":100}},
     {"type":"RwSplitUser","properties":{"dbGroup":"ha_group5","name":"rw8","password":"111111","usingDecrypt":"false","maxCon":100}},

@@ -183,6 +183,11 @@ sql_log_by_tx_digest_by_entry_by_user
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect         | db      |
       | conn_0 | true    | drop table if exists test        | success        | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+
 
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
@@ -348,6 +353,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
 
@@ -440,7 +449,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | user | passwd | conn   | toClose | sql                                           | expect  | db  |
       | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table               | success | db1 |
       | rwS2 | 111111 | conn_4 | true    | drop table if exists test_table               | success | db2 |
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario: test samplingRate=100 and simple sql   #4
@@ -1786,7 +1798,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_31 | true    | drop table if exists test_table     | success | db1 |
       | rwS1 | 111111 | conn_41 | False   | commit                              | success | db2 |
       | rwS1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario: test samplingRate=100 and xa transaction sql  ---- shardinguser  #9
@@ -2309,7 +2324,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
       | split1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
       | split1 | 111111 | conn_3 | true    | drop table if exists test_table2                          | success | db1 |
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 @skip
 #  _restart @autoretry
@@ -2476,4 +2494,8 @@ sql_log_by_tx_digest_by_entry_by_user
       """
       mysql -uroot -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
       mysql -utest -P8066 -h172.100.9.1 -Dschema1 -e "source /opt/dble/test.sql"
+      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
       """

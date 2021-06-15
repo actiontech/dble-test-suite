@@ -305,6 +305,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Then check resultset "resultset_24" has lines with following column values
       | entry-0 | user-1 | table-2 | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_examined_rows-10 | sql_select_rows-11 |
       | 2       | test   | null    | 0                  | 0                 | 0                  | 0                 | 0                  | 0                 | 2                  | 2                           | 2                  |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario: complex sql test #2
@@ -595,6 +599,11 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | user   | passwd | conn   | toClose | sql                             | expect  | db  |
       | split1 | 111111 | conn_3 | False   | drop table if exists test_table | success | db1 |
       | split1 | 111111 | conn_3 | true    | drop table if exists test_table | success | db1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+
 
 
   Scenario: sharding user hint sql test #3
@@ -658,6 +667,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_0 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
       | conn_0 | True     | drop table if exists sharding_2_t1                                              | success | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario: transaction sql test #4
@@ -927,6 +940,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | entry-0 | user-1 | table-2         | sql_insert_count-3 | sql_insert_rows-4 | sql_update_count-5 | sql_update_rows-6 | sql_delete_count-7 | sql_delete_rows-8 | sql_select_count-9 | sql_select_examined_rows-10 | sql_select_rows-11 |
       | 1       | rwS1   | db2.test_table1 | 0                  | 0                 | 4                  | 3                 | 2                  | 2                 | 1                  | 1                           | 1                  |
       | 1       | rwS1   | db1.test_table  | 2                  | 3                 | 0                  | 0                 | 2                  | 4                 | 1                  | 2                           | 2                  |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
@@ -1015,6 +1032,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | rwS1 | 111111 | conn_31 | true    | drop table if exists test_table     | success | db1 |
       | rwS1 | 111111 | conn_41 | False   | commit                              | success | db2 |
       | rwS1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario: xa transaction sql test #5
@@ -1099,6 +1120,11 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_0 | False    | drop table if exists sharding_4_t1                                              | success | schema1 |
       | conn_0 | True     | drop table if exists sharding_2_t1                                              | success | schema1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+
 
 
   Scenario: implict commit test #6
@@ -1232,6 +1258,10 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
     Then check resultset "resultset_31" has lines with following column values
       | entry-0 | user-1 | associate_tables-2                          | sql_select_count-3 | sql_select_rows-4 | sql_select_examined_rows-5 |
       | 2       | test   | schema1.sharding_4_t1,schema1.sharding_4_t2 | 8                  | 0                 | 0                          |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
 
 
   Scenario:  error sql test #7
@@ -1493,3 +1523,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
       | split1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
