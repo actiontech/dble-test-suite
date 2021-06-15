@@ -211,8 +211,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
 
 
-@skip
-#  _restart
+
   Scenario: test "backendProcessors"  #3
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -227,16 +226,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | sql                       | db                |
       | reload @@config_all -r    | dble_information  |
     Given sleep "5" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    # use jstack check number
+    Then get result of oscmd named "A" in "dble-1"
       """
-      \[$_NIO_REACTOR_BACKEND-0-RW\]
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_BACKEND' | wc -l
       """
-    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-      """
-      \[$_NIO_REACTOR_BACKEND-1-RW\]
-      \[$_NIO_REACTOR_BACKEND-2-RW\]
-      \[$_NIO_REACTOR_BACKEND-3-RW\]
-      """
+    Then check result "A" value is "1"
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
@@ -265,13 +260,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | sql                       | db                |
       | reload @@config_all -r    | dble_information  |
     Given sleep "5" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
+    Then get result of oscmd named "A" in "dble-1"
       """
-      \[$_NIO_REACTOR_BACKEND-0-RW\]
-      \[$_NIO_REACTOR_BACKEND-1-RW\]
-      \[$_NIO_REACTOR_BACKEND-2-RW\]
-      \[$_NIO_REACTOR_BACKEND-3-RW\]
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_BACKEND' | wc -l
       """
+    Then check result "A" value is "4"
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
       | conn_0 | False   | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_BACKEND%'                     | length{(4)}                              | dble_information |
@@ -301,6 +295,11 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                 | expect                                   | db               |
       | conn_0 | true    | select * from dble_thread_usage where thread_name like '$_NIO_REACTOR_BACKEND%'                     | length{(2)}                              | dble_information |
+    Then get result of oscmd named "A1" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_BACKEND' | wc -l
+      """
+    Then check result "A1" value is "2"
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -816,8 +815,8 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 @skip
-# _restart  @btrace
-  Scenario: test "processors" and use btrace check method  #2.1
+#  _restart  @btrace
+  Scenario: test "processors" and use btrace check method  #9
   # on bootstrap.cnf the default value : -Dprocessors=1
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -830,25 +829,24 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       | conn   | toClose | sql                                                                                   | expect     | db               |
       | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | success    | dble_information |
 
-    Given update file content "./assets/BtraceAboutBootstrap.java" in "behave" with sed cmds
-      """
-      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-      /WriteDynamicBootstrap/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
-      """
-    Given prepare a thread run btrace script "BtraceAboutBootstrap.java" in "dble-1"
+#    Given update file content "./assets/BtraceAboutBootstrap.java" in "behave" with sed cmds
+#      """
+#      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+#      /reRegisterSelector/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+#      """
+#    Given prepare a thread run btrace script "BtraceAboutBootstrap.java" in "dble-1"
 
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn    | toClose | sql                                                                                | db                 |
-      | conn_11 | True    | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_FRONT-'    | dble_information   |
-
-      Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect                                                                                           | db               |
-      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | Other threads are executing management commands(insert/update/delete), please try again later    | dble_information |
-    # set idleTimeout
-    Given sleep "10" seconds
-    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
-      """
-      Lost connection to MySQL server during query
-      """
-
+#    Then execute "admin" cmd  in "dble-1" at background
+#      | conn    | toClose | sql                                                                                | db                 |
+#      | conn_11 | True    | update dble_thread_pool set core_pool_size=2 where name ='$_NIO_REACTOR_FRONT-'    | dble_information   |
+#
+#      Then execute sql in "dble-1" in "admin" mode
+#      | conn   | toClose | sql                                                                                   | expect                                                                                           | db               |
+#      | conn_1 | False   | update dble_thread_pool set core_pool_size=16 where name ='$_NIO_REACTOR_FRONT-'      | Other threads are executing management commands(insert/update/delete), please try again later    | dble_information |
+#    # set idleTimeout
+#    Given sleep "10" seconds
+#    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+#      """
+#      Lost connection to MySQL server during query
+#      """
 
