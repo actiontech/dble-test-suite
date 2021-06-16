@@ -6,7 +6,8 @@ RUN echo "Asia/shanghai" > /etc/timezone && \
     ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 
 RUN apt-get update && \
-    apt-get install -y yum-utils vim wget gcc g++ git net-tools libaio1 hwloc openssh-server openssh-clients sshpass ntp ntpdate less iproute2 && \
+#    apt-get  upgrade && \
+    apt-get install -y yum-utils vim wget gcc g++ git net-tools libaio1 hwloc openssh-server sshpass ntp ntpdate less iproute2 && \
     apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #c/cpp dependency
@@ -56,7 +57,6 @@ RUN apt-get update && \
     pyenv global 3.7.10 && \
     pip install --upgrade pip && \
     pip install pipenv && \
-    chown -R go:go /home/go/.pyenv && \
     apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #.net dependency
