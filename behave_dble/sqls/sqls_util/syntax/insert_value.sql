@@ -54,7 +54,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============binary_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,test1 binary(255))
+create table test1(id int,test1 binary(255)) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
@@ -80,7 +80,7 @@ insert into test1 values (21,"""")
 insert into test1 values (22,'\\')
 #============varbinary_columns table insert sql=====================
 drop table if exists test1
-create table test1(id int,varbinary_columns varbinary(255))
+create table test1(id int,varbinary_columns varbinary(255)) default charset=utf8
 insert into test1 values (0,NULL)
 insert into test1 values (1,'')
 insert into test1 values (2,' ')
