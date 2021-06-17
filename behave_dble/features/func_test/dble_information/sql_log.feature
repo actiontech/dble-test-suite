@@ -186,12 +186,14 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
 
   Scenario: samplingRate/sqlLogTableSize in bootstrap.cnf and reload @@samplingRate and reload @@sqlLogTableSize  #2
-
     #case check defalut values
     Then check following text exist "N" in file "/opt/dble/conf/bootstrap.cnf" in host "dble-1"
       """
@@ -334,6 +336,17 @@ sql_log_by_tx_digest_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect        | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(200)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(100)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}   | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}   | dble_information |
+      | conn_0 | true    | truncate sql_log                                    | success       | dble_information |
+
+    Given execute "user" sql "100" times in "dble-1" together use 100 connection not close
+      | sql             | db      |
+      | select 2        | schema1 |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect        | db               |
       | conn_0 | False   | select * from sql_log                               | length{(100)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(100)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}   | dble_information |
@@ -343,19 +356,25 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                 | expect      | db               |
       | conn_0 | False   | reload @@samplingRate=100                           | success     | dble_information |
       | conn_0 | False   | reload @@statistic_table_size =10000                | success     | dble_information |
+
+    # default 100 connection  100+1024+100(exit)
     Given execute sql "1024" times in "dble-1" at concurrent
       | sql             | db      |
-      | select 2        | schema1 |
+      | select 3        | schema1 |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect         | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(1124)} | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(1224)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1124)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)}    | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
+
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
@@ -455,6 +474,7 @@ sql_log_by_tx_digest_by_entry_by_user
       """
 
 
+
   Scenario: test samplingRate=100 and simple sql   #4
     #CASE PREPARE env
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
@@ -500,7 +520,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
       | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
       | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
-      | rwS1 | 111111 | conn_3 | true    | select 2                                      | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select 2                                      | success | db1 |
 #DBLE0REQ-1112
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect       | db               |
@@ -652,6 +672,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
@@ -746,7 +769,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 4               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 16              |
       | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           | 4               |
@@ -855,7 +878,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                            | db               |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 25      | 3       | test1  | 172.100.9.8   | 8066          | 25        | 1           | 2               |
       | 26      | 3       | test1  | 172.100.9.8   | 8066          | 26        | 1           | 4               |
       | 27      | 3       | test1  | 172.100.9.8   | 8066          | 27        | 1           | 4               |
@@ -948,7 +971,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 42      | 4       | rwS1   | 172.100.9.8   | 8066          | 42        | 1           | 2               |
       | 43      | 4       | rwS1   | 172.100.9.8   | 8066          | 43        | 1           | 4               |
       | 44      | 4       | rwS1   | 172.100.9.8   | 8066          | 44        | 1           | 2               |
@@ -1012,7 +1035,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 50      | 2       | test   | 172.100.9.8   | 8066          | 50        | 1           | 2               |
       | 51      | 2       | test   | 172.100.9.8   | 8066          | 51        | 1           | 0               |
       | 52      | 2       | test   | 172.100.9.8   | 8066          | 52        | 1           | 0               |
@@ -1059,6 +1082,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
@@ -1086,15 +1112,16 @@ sql_log_by_tx_digest_by_entry_by_user
       | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
       | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 5        | exit                                                                          | Other                                          | Other      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 1               |
       | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 1               |
       | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           | 0               |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 0               |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4,5       | 2           | 0               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1103,6 +1130,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 2       | test   | 1      | 0      | 0               |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2       | test   | 1      | 1      | 1               |
+      | Other                                          | 2       | test   | 1      | 0      | 0               |
       | SELECT * FROM sharding_4_t1                    | 2       | test   | 1      | 1      | 1               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 1      | 0      | 0               |
 
@@ -1111,7 +1139,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                    | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | DELETE FROM sharding_4_t1 WHERE id = ?         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         | 0                |
+      | DELETE FROM sharding_4_t1 WHERE id = ?,Other   | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 4,5       | 0                |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         | 1                |
       | SELECT * FROM sharding_4_t1                    | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         | 1                |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         | 0                |
@@ -1132,24 +1160,26 @@ sql_log_by_tx_digest_by_entry_by_user
       | 2        | /*!dble:shardingNode=dn2*/ insert into sharding_4_t1 values(666, 'name666')   | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
       | 3        | /*!dble:shardingNode=dn3*/ update sharding_4_t1 set name = 'dn1' where id=666 | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 4        | /*!dble:shardingNode=dn4*/ delete from sharding_4_t1 where id=666             | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-      | 5        | SELECT * FROM sharding_4_t1                                                   | SELECT * FROM sharding_4_t1                    | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 5      | 5                |
-      | 6        | insert into sharding_4_t1 values(666, 'name666')                              | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 6       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 7        | update sharding_4_t1 set name = 'dn1' where id=666                            | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
-      | 8        | delete from sharding_4_t1 where id=666                                        | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 5        | exit                                                                          | Other                                          | Other      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 6        | SELECT * FROM sharding_4_t1                                                   | SELECT * FROM sharding_4_t1                    | Select     | 5       | 2       | test   | 172.100.9.8   | 8066          | 5      | 5                |
+      | 7        | insert into sharding_4_t1 values(666, 'name666')                              | INSERT INTO sharding_4_t1 VALUES (?, ?)        | Insert     | 6       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 8        | update sharding_4_t1 set name = 'dn1' where id=666                            | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | Update     | 7       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 9        | delete from sharding_4_t1 where id=666                                        | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 8       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
+      | 10       | exit                                                                          | Other                                          | Other      | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
-      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1           | 1               |
-      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1           | 1               |
-      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1           | 0               |
-      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4         | 1           | 0               |
-      | 5       | 2       | test   | 172.100.9.8   | 8066          | 5         | 1           | 5               |
-      | 6       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           | 1               |
-      | 7       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           | 1               |
-      | 8       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           | 1               |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1         | 1          | 1               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 2         | 1          | 1               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 3         | 1          | 0               |
+      | 4       | 2       | test   | 172.100.9.8   | 8066          | 4,5       | 2          | 0               |
+      | 5       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1          | 5               |
+      | 6       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1          | 1               |
+      | 7       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1          | 1               |
+      | 8       | 2       | test   | 172.100.9.8   | 8066          | 9,10      | 2          | 1               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -1158,6 +1188,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 2       | test   | 2      | 1      | 1               |
       | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2       | test   | 2      | 2      | 2               |
+      | Other                                          | 2       | test   | 2      | 0      | 0               |
       | SELECT * FROM sharding_4_t1                    | 2       | test   | 2      | 6      | 6               |
       | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2       | test   | 2      | 1      | 1               |
 
@@ -1166,10 +1197,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                    | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | DELETE FROM sharding_4_t1 WHERE id = ?         | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 4,8       | 1                |
-      | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 2,6       | 2                |
-      | SELECT * FROM sharding_4_t1                    | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 1,5       | 6                |
-      | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 3,7       | 1                |
+      | DELETE FROM sharding_4_t1 WHERE id = ?,Other   | 2      | test   | 2       | 4          | 172.100.9.8   | 8066          | 4,5,9,10  | 1                |
+      | INSERT INTO sharding_4_t1 VALUES (?, ?)        | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 2,7       | 2                |
+      | SELECT * FROM sharding_4_t1                    | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 1,6       | 6                |
+      | UPDATE sharding_4_t1 SET name = ? WHERE id = ? | 2      | test   | 2       | 2          | 172.100.9.8   | 8066          | 3,8       | 1                |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
@@ -1178,6 +1209,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
@@ -1345,7 +1379,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 20       | delete from sharding_2_t1 | delete from sharding_2_t1 | Delete     | 5       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
       | 21       | begin                     | begin                     | Begin      | 5       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 22       | delete from sharding_4_t1 | delete from sharding_4_t1 | Delete     | 6       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 23       | exit                      |                           | Other      | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 23       | exit                      | Other                     | Other      | 6       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
@@ -1359,7 +1393,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0              | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      |                           | 2       | test   | 1      | 0      | 0               |
+      | Other                     | 2       | test   | 1      | 0      | 0               |
       | begin                     | 2       | test   | 1      | 0      | 0               |
       | delete from sharding_2_t1 | 2       | test   | 1      | 2      | 2               |
       | delete from sharding_4_t1 | 2       | test   | 1      | 4      | 4               |
@@ -1370,14 +1404,18 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | delete from sharding_4_t1,                        | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 22,23     | 4                |
+      | delete from sharding_4_t1,Other                   | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 22,23     | 4                |
       | start transaction,delete from sharding_2_t1,begin | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 19,20,21  | 2                |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
     Given Restart dble in "dble-1" success
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                                             | expect  | db      |
       | conn_3 | False    | set autocommit=0                                                                | success | schema1 |
@@ -1405,7 +1443,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 6        | insert into sharding_4_t1 values(3,'name3'),(4,'name4') | INSERT INTO sharding_4_t1 VALUES (?, ?)   | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
       | 7        | rollback                                                | rollback                                  | Rollback   | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from sharding_4_t1                               | delete from sharding_4_t1                 | Delete     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 9        | exit                                                    |                                           | Other      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 9        | exit                                                    | Other                                     | Other      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
@@ -1420,7 +1458,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                              | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      |                                           | 2       | test   | 1      | 0      | 0               |
+      | Other                                     | 2       | test   | 1      | 0      | 0               |
       | commit                                    | 2       | test   | 1      | 0      | 0               |
       | delete from sharding_4_t1                 | 2       | test   | 1      | 4      | 4               |
       | DELETE FROM sharding_4_t1 WHERE id IN (?) | 2       | test   | 1      | 2      | 2               |
@@ -1435,7 +1473,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | DELETE FROM sharding_4_t1 WHERE id IN (?),INSERT INTO sharding_4_t1 VALUES (?, ?),rollback | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 5,6,7     | 4                |
-      | delete from sharding_4_t1,                                                                 | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 8,9       | 4                |
+      | delete from sharding_4_t1,Other                                                            | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 8,9       | 4                |
       | SET autocommit = ?,UPDATE sharding_4_t1 SET name = ?,select * from sharding_4_t1,commit    | 1      | test   | 2       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 8                |
 
 
@@ -1477,6 +1515,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
@@ -1658,7 +1699,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 20       | delete from test_table      | delete from test_table      | Delete     | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 3      | 3                |
       | 21       | begin                       | begin                       | Begin      | 5       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
       | 22       | delete from db2.test_table1 | delete from db2.test_table1 | Delete     | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 23       | exit                        |                             | Other      | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 23       | exit                        | Other                       | Other      | 6       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
@@ -1676,7 +1717,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                      | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      |                                                   | 1       | rwS1   | 1      | 0      | 0               |
+      | Other                                             | 1       | rwS1   | 1      | 0      | 0               |
       | begin                                             | 1       | rwS1   | 3      | 0      | 0               |
       | commit                                            | 1       | rwS1   | 2      | 0      | 0               |
       | delete from db2.test_table1                       | 1       | rwS1   | 1      | 2      | 2               |
@@ -1699,7 +1740,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | tx_digest-0                                                                                                                                                           | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7      | examined_rows-10 |
       | begin,INSERT INTO test_table VALUES (?, ?, ?),DELETE FROM test_table WHERE id = ?,rollback                                                                            | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 10,11,12,13    | 3                |
       | begin,select * from test_table,INSERT INTO test_table VALUES (?, ?, ?),commit                                                                                         | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4        | 3                |
-      | delete from db2.test_table1,                                                                                                                                          | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 22,23          | 2                |
+      | delete from db2.test_table1,Other                                                                                                                                     | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 22,23          | 2                |
       | start transaction,delete from test_table,begin                                                                                                                        | 1      | rwS1   | 1       | 3          | 172.100.9.8   | 8066          | 19,20,21       | 3                |
       | start transaction,SELECT * FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = age - ? WHERE id = ?,UPDATE test_table1 SET age = age * ? WHERE id = ?,rollback | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 14,15,16,17,18 | 3                |
       | start transaction,UPDATE test_table1 SET age = ? WHERE id = ?,DELETE FROM test_table1 WHERE id = ?,UPDATE test_table1 SET age = ? WHERE id = ?,commit                 | 1      | rwS1   | 1       | 5          | 172.100.9.8   | 8066          | 5,6,7,8,9      | 1                |
@@ -1707,6 +1748,9 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
     Given Restart dble in "dble-1" success
@@ -1737,7 +1781,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 6        | insert into db2.test_table1 values(3,'name3',3),(4,'name4',4) | INSERT INTO db2.test_table1 VALUES (?, ?, ?) | Insert     | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
       | 7        | rollback                                                      | rollback                                     | Rollback   | 2       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from db2.test_table1                                   | delete from db2.test_table1                  | Delete     | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 2      | 2                |
-      | 9        | exit                                                          |                                              | Other      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 9        | exit                                                          | Other                                        | Other      | 3       | 1       | rwS1   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                          | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
@@ -1752,7 +1796,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                 | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      |                                              | 1       | rwS1   | 1      | 0      | 0               |
+      | Other                                        | 1       | rwS1   | 1      | 0      | 0               |
       | commit                                       | 1       | rwS1   | 1      | 0      | 0               |
       | delete from db2.test_table1                  | 1       | rwS1   | 1      | 2      | 2               |
       | DELETE FROM db2.test_table1 WHERE id IN (?)  | 1       | rwS1   | 1      | 1      | 1               |
@@ -1768,14 +1812,18 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                       | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
       | DELETE FROM db2.test_table1 WHERE id IN (?),INSERT INTO db2.test_table1 VALUES (?, ?, ?),rollback | 1      | rwS1   | 1       | 3          | 172.100.9.8   | 8066          | 5,6,7     | 3                |
-      | delete from db2.test_table1,                                                                      | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 8,9       | 2                |
+      | delete from db2.test_table1,Other                                                                 | 1      | rwS1   | 1       | 2          | 172.100.9.8   | 8066          | 8,9       | 2                |
       | SET autocommit = ?,UPDATE test_table SET name = ?,select * from test_table,commit                 | 1      | rwS1   | 1       | 4          | 172.100.9.8   | 8066          | 1,2,3,4   | 0                |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
     Given Restart dble in "dble-1" success
+
     Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                              | expect  | db  |
       | rwS1 | 111111 | conn_31 | False   | begin                                            | success | db1 |
@@ -1787,10 +1835,10 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               |
-      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log                                 | length{(2)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(2)}  | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(2)}  | dble_information |
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                 | expect  | db  |
@@ -1798,10 +1846,15 @@ sql_log_by_tx_digest_by_entry_by_user
       | rwS1 | 111111 | conn_31 | true    | drop table if exists test_table     | success | db1 |
       | rwS1 | 111111 | conn_41 | False   | commit                              | success | db2 |
       | rwS1 | 111111 | conn_41 | true    | drop table if exists test_table1    | success | db2 |
+
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
+
 
 
   Scenario: test samplingRate=100 and xa transaction sql  ---- shardinguser  #9
@@ -1852,7 +1905,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | 7        | delete from sharding_4_t1 where id=4           | DELETE FROM sharding_4_t1 WHERE id = ?         | Delete     | 2       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1                |
       | 8        | rollback                                       | rollback                                       | Rollback   | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 9        | delete from sharding_4_t1                      | delete from sharding_4_t1                      | Delete     | 3       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4                |
-      | 10       | exit                                           |                                                | Other      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 10       | exit                                           | Other                                          | Other      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
@@ -1867,7 +1920,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                   | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-      |                                                | 2       | test   | 1      | 0      | 0               |
+      | Other                                          | 2       | test   | 1      | 0      | 0               |
       | commit                                         | 2       | test   | 1      | 0      | 0               |
       | delete from sharding_4_t1                      | 2       | test   | 1      | 4      | 4               |
       | DELETE FROM sharding_4_t1 WHERE id = ?         | 2       | test   | 1      | 1      | 1               |
@@ -1883,7 +1936,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
       | tx_digest-0                                                                                                    | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | delete from sharding_4_t1,                                                                                     | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 9,10      | 4                |
+      | delete from sharding_4_t1,Other                                                                                | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 9,10      | 4                |
       | INSERT INTO sharding_4_t1 VALUES (?, ?),DELETE FROM sharding_4_t1 WHERE id = ?,rollback                        | 1      | test   | 2       | 3          | 172.100.9.8   | 8066          | 6,7,8     | 2                |
       | SET autocommit = ?,set xa=on,UPDATE sharding_4_t1 SET name = ? WHERE id = ?,select * from sharding_4_t1,commit | 1      | test   | 2       | 5          | 172.100.9.8   | 8066          | 1,2,3,4,5 | 5                |
 
@@ -1895,7 +1948,12 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
+
+
 
 
   Scenario: test samplingRate=100 and implict commit   #10
@@ -2040,7 +2098,12 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
+
+
 
 
   Scenario: test samplingRate=100 and error sql   #11
@@ -2156,15 +2219,16 @@ sql_log_by_tx_digest_by_entry_by_user
       | 7        | insert into test101 values (1)       | INSERT INTO test VALUES (?)         | Insert     | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 8        | delete from test102                  | DELETE FROM test                    | Delete     | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
       | 9        | update test103 set id =2 where id =1 | UPDATE test SET id = ? WHERE id = ? | Update     | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 10       | exit                                 | Other                               | Other      | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
-      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
       | 7       | 2       | test   | 172.100.9.8   | 8066          | 6         | 1           | 0               |
       | 8       | 2       | test   | 172.100.9.8   | 8066          | 7         | 1           | 0               |
       | 9       | 2       | test   | 172.100.9.8   | 8066          | 8         | 1           | 0               |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 9         | 1           | 0               |
+      | 10      | 2       | test   | 172.100.9.8   | 8066          | 9,10      | 2           | 0               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -2180,21 +2244,22 @@ sql_log_by_tx_digest_by_entry_by_user
       | SELECT USER()                       | 2       | test   | 1      | 1      | 0               |
 #      | show tables                         | 2       | test   | 1      | 0      | 0               |
       | UPDATE test SET id = ? WHERE id = ? | 2       | test   | 1      | 0      | 0               |
+      | Other                               | 2       | test   | 2      | 0      | 0               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                         | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | DELETE FROM test                    | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         | 0                |
-      | INSERT INTO test VALUES (?)         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         | 0                |
-      | SELECT * FROM test                  | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         | 0                |
-      | SELECT ?                            | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         | 1                |
-      | SELECT DATABASE()                   | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         | 0                |
-      | select user                         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         | 0                |
-      | SELECT USER()                       | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         | 0                |
-#      | show tables                         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         | 0                |
-      | UPDATE test SET id = ? WHERE id = ? | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 9         | 0                |
+      | tx_digest-0                               | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
+      | DELETE FROM test                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 8         | 0                |
+      | INSERT INTO test VALUES (?)               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 7         | 0                |
+      | SELECT * FROM test                        | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 6         | 0                |
+      | SELECT ?                                  | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 3         | 1                |
+      | SELECT DATABASE()                         | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 1         | 0                |
+      | select user                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 5         | 0                |
+      | SELECT USER()                             | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 2         | 0                |
+#      | show tables                               | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 4         | 0                |
+      | UPDATE test SET id = ? WHERE id = ?,Other | 1      | test   | 2       | 2          | 172.100.9.8   | 8066          | 9,10      | 0                |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                           | expect  | db      |
@@ -2227,17 +2292,22 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | delete schema2.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where db1.sharding_2_t1.id=2 and schema2.single_t2.id =2 | Table `db1`.`sharding_2_t1` doesn't exist         | schema1 |
       | conn_1 | False   | insert into sharding_4_t1(id,name) select s2.id,s2.name from schema2.sharding_2 s2 join test s2g on s2.id=s2g.id               | This `INSERT ... SELECT Syntax` is not supported  | schema1 |
       | conn_1 | true    | replace into test(name) select name from sharding_4_t1                                                                         | This `REPLACE ... SELECT Syntax` is not supported | schema1 |
+    #has one implict cmd "exit"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect      | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(0)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)} | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)} | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(1)} | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)} | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
+
     #case Syntax error sql will not be counted --rwSplitUser
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
@@ -2245,6 +2315,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | split1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
       | split1 | 111111 | conn_3 | true    | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
      Given Restart dble in "dble-1" success
+
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                    | expect                                      | db  |
       # ERROR 1049 (42000): Unknown database  tx_count +1  tx_rows +1 select_count +1 select_rows +1
@@ -2272,22 +2343,25 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_11" has lines with following column values
       | sql_id-0 | sql_stmt-1                                                       | sql_digest-2                                                       | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
       | 1        | use db11                                                         | use db11                                                           | Other      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
-      | 2        | delete from test_table2 where id =1                              | DELETE FROM test_table2 WHERE id = ?                               | Delete     | 2       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
-      | 3        | select * from test_table where a.id=1                            | SELECT * FROM test_table WHERE a.id = ?                            | Select     | 5       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
-      | 4        | select councat_ws('',id,age) as 'll' from test_table group by ll | SELECT councat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ll  | Select     | 6       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
-      | 5        | select concat_ws('',id,age) as 'll' from test_table group by ls  | SELECT concat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ls   | Select     | 7       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
-      | 6        | select * from (select s.sno from test_table s where s.id=1)      | SELECT * FROM (  SELECT s.sno  FROM test_table s  WHERE s.id = ? ) | Select     | 8       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 2        | exit                                                             | Other                                                              | Other      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 3        | delete from test_table2 where id =1                              | DELETE FROM test_table2 WHERE id = ?                               | Delete     | 2       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 4        | select * from test_table where a.id=1                            | SELECT * FROM test_table WHERE a.id = ?                            | Select     | 5       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 5        | select councat_ws('',id,age) as 'll' from test_table group by ll | SELECT councat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ll  | Select     | 6       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 6        | select concat_ws('',id,age) as 'll' from test_table group by ls  | SELECT concat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ls   | Select     | 7       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 7        | select * from (select s.sno from test_table s where s.id=1)      | SELECT * FROM (  SELECT s.sno  FROM test_table s  WHERE s.id = ? ) | Select     | 8       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+      | 8        | exit                                                             | Other                                                              | Other      | 8       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0                |
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_12"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_12" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6 | examined_rows-9 |
-      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 1         | 1           | 0               |
-      | 2       | 4       | split1 | 172.100.9.8   | 8066          | 2         | 1           | 0               |
-      | 5       | 4       | split1 | 172.100.9.8   | 8066          | 3         | 1           | 0               |
-      | 6       | 4       | split1 | 172.100.9.8   | 8066          | 4         | 1           | 0               |
-      | 7       | 4       | split1 | 172.100.9.8   | 8066          | 5         | 1           | 0               |
-      | 8       | 4       | split1 | 172.100.9.8   | 8066          | 6         | 1           | 0               |
+      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 1,2       | 2          | 0               |
+      | 2       | 4       | split1 | 172.100.9.8   | 8066          | 3         | 1          | 0               |
+      | 5       | 4       | split1 | 172.100.9.8   | 8066          | 4         | 1          | 0               |
+      | 6       | 4       | split1 | 172.100.9.8   | 8066          | 5         | 1          | 0               |
+      | 7       | 4       | split1 | 172.100.9.8   | 8066          | 6         | 1          | 0               |
+      | 8       | 4       | split1 | 172.100.9.8   | 8066          | 7,8       | 2          | 0               |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
       | conn   | toClose | sql                                                | db               |
@@ -2295,6 +2369,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check resultset "resulte_3" has lines with following column values
       | sql_digest-0                                                       | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
       | DELETE FROM test_table2 WHERE id = ?                               | 4       | split1 | 1      | 0      | 0               |
+      | Other                                                              | 4       | split1 | 2      | 0      | 0               |
       | SELECT * FROM (  SELECT s.sno  FROM test_table s  WHERE s.id = ? ) | 4       | split1 | 1      | 0      | 0               |
       | SELECT * FROM test_table WHERE a.id = ?                            | 4       | split1 | 1      | 0      | 0               |
       | SELECT concat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ls   | 4       | split1 | 1      | 0      | 0               |
@@ -2305,13 +2380,13 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn   | toClose | sql                                                   | db               |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
     Then check resultset "resulte_4" has lines with following column values
-      | tx_digest-0                                                        | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-      | DELETE FROM test_table2 WHERE id = ?                               | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 2         | 0                |
-      | SELECT * FROM (  SELECT s.sno  FROM test_table s  WHERE s.id = ? ) | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 6         | 0                |
-      | SELECT * FROM test_table WHERE a.id = ?                            | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 3         | 0                |
-      | SELECT concat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ls   | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 5         | 0                |
-      | SELECT councat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ll  | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 4         | 0                |
-      | use db11                                                           | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 1         | 0                |
+      | tx_digest-0                                                              | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
+      | DELETE FROM test_table2 WHERE id = ?                                     | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 3         | 0                |
+      | SELECT * FROM (  SELECT s.sno  FROM test_table s  WHERE s.id = ? ),Other | 1      | split1 | 4       | 2          | 172.100.9.8   | 8066          | 7,8       | 0                |
+      | SELECT * FROM test_table WHERE a.id = ?                                  | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 4         | 0                |
+      | SELECT concat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ls         | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 6         | 0                |
+      | SELECT councat_ws(?, id, age) AS "ll" FROM test_table GROUP BY ll        | 1      | split1 | 4       | 1          | 172.100.9.8   | 8066          | 5         | 0                |
+      | use db11,Other                                                           | 1      | split1 | 4       | 2          | 172.100.9.8   | 8066          | 1,2       | 0                |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect  | db      |
@@ -2327,67 +2402,83 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
 
 
-@skip
-#  _restart
+
+
   Scenario: test samplingRate=100 and special case  ---- shardinguse   #12
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
 
     #### case1 select ;select
-#    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-#      | sql                                    | db      |
-#      | select 2;select 3;select user()        | schema1 |
-#
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+    Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | sql                                    | db      |
+      | select 2;select 3;select user()        | schema1 |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(4000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
 #      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
-#      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
-#    Given execute sql "1000" times in "dble-1" at concurrent 1000
-#      | sql                                    | db      |
-#      | select 2;select 3;select user()        | schema1 |
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                               | length{(2032)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
-#      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                    | db      |
+      | select 2;select 3;select user()        | schema1 |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
 
-
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
+    Given Restart dble in "dble-1" success
     #### case2 begin ;select
-#    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
-#      | sql                         | db      |
-#      | begin ;select 1 ;select user()        | schema1 |
-#    Given sleep "2" seconds
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_1 | False   | select * from sql_log                               | length{(3000)} | dble_information |
-#      | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
-#      | conn_1 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
-#      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
-#      | conn_1 | true    | truncate table sql_log                              | success        | dble_information |
-#
-#    Given execute sql "1000" times in "dble-1" at concurrent 1000
-#      | sql                         | db      |
-#      | begin ;select user()        | schema1 |
-#    Given sleep "2" seconds
-#    Then execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                 | expect         | db               |
-#      | conn_0 | False   | select * from sql_log                               | length{(2032)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
-#      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
+    Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | sql                                   | db      |
+      | begin ;select user();select 1         | schema1 |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(4000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}    | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
+    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+      | sql                                        | db      |
+      | begin ;select user();select user()         | schema1 |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect         | db               |
+      | conn_1 | False   | select * from sql_log                               | length{(0)}    | dble_information |
+      | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(0)}    | dble_information |
+      | conn_1 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(0)}    | dble_information |
+      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(0)}    | dble_information |
 
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
+    Given Restart dble in "dble-1" success
 
     #### case3 begin ;select ; commit
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2406,45 +2497,56 @@ sql_log_by_tx_digest_by_entry_by_user
       | begin ;select user();commit        | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect         | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3000)} | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(4000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
-      | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}    | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
 
-#    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
-#      """
-#      NullPointerException
-#      caught err:
-#      java.lang.OutOfMemoryError
-#      exception occurred when the statistics were recorded
-#      """
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                          | expect         | db               |
+      | conn_0 | true    | truncate table sql_log       | success        | dble_information |
 
 
 
-@skip
-#_restart
+
   Scenario: test samplingRate=100 and special case  ---- rwSplitUser   #13
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
-    """
-    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
-      <heartbeat>select user()</heartbeat>
-      <dbInstance name="hostM3" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
-      <dbInstance name="hostS3" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
-    </dbGroup>
-    """
+      """
+      <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM3" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS3" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
+      </dbGroup>
+      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
-    """
-    <managerUser name="root" password="111111" maxCon="100"/>
-    <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
-    """
+      """
+      <rwSplitUser name="split1" password="111111" dbGroup="ha_group3" />
+      """
     Then execute admin cmd "reload @@config_all"
 
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
 
     #### case1 select ;select
+    Given execute sql "1000" times in "dble-1" at concurrent 1000
+      | user   | passwd | sql                                    | db    |
+      | split1 | 111111 | select 2;select 3;select user()        | db1   |
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
+
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
       | user   | passwd | sql                                    | db    |
       | split1 | 111111 | select 2;select 3;select user()        | db1   |
@@ -2454,18 +2556,15 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
-      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
-    Given execute sql "1000" times in "dble-1" at concurrent 1000
-      | user   | passwd | sql                                    | db    |
-      | split1 | 111111 | select 2;select 3;select user()        | db1   |
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                 | expect          | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
-      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
+    Given Restart dble in "dble-1" success
 
     #### case1 begin ;select
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2481,16 +2580,23 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
     Given execute sql "1000" times in "dble-1" at concurrent 1000
-      | user   | passwd | sql                            | db    |
-      | split1 | 111111 | begin;select 3;select 1        | db1   |
+      | user   | passwd | sql                                 | db    |
+      | split1 | 111111 | begin;select 3;select user()        | db1   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
-      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}     | dble_information |
+#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
 
+     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
+    Given Restart dble in "dble-1" success
 
     #### case3 begin ;select ;commit
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2499,11 +2605,11 @@ sql_log_by_tx_digest_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
-      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
+      | conn_1 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
+      | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_1 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
+      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_1 | true    | truncate table sql_log                              | success         | dble_information |
 
      Given execute sql "1000" times in "dble-1" at concurrent 1000
       | user   | passwd | sql                            | db    |
@@ -2511,28 +2617,49 @@ sql_log_by_tx_digest_by_entry_by_user
 
       Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                 | expect          | db               |
-      | conn_0 | False   | select * from sql_log                               | length{(3000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
-      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
-      | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
+      | conn_1 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
+      | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
+      | conn_1 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}     | dble_information |
+#      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
       caught err:
       exception occurred when the statistics were recorded
+      Exception processing
       """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                          | expect         | db               |
+      | conn_1 | true    | truncate table sql_log       | success        | dble_information |
 
 
 
   Scenario: test samplingRate=100 and special case  ---- oom   #14
     Then execute admin cmd "reload @@samplingRate=100"
     Then execute admin cmd "reload @@statistic_table_size =10000000 where table ='sql_log'"
-     Given execute sql "1000" times in "dble-1" at concurrent 1000
+    Given execute sql "1000" times in "dble-1" at concurrent 1
+      | sql                                    | db      |
+      | begin ;select user();select 1;commit   | schema1 |
+    Given execute sql "1000" times in "dble-1" at concurrent 2
       | sql                                    | db      |
       | begin ;select user();commit            | schema1 |
-    Given execute sql "1000" times in "dble-1" together use 1000 connection not close
+    Given execute sql "1000" times in "dble-1" at concurrent 10
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" at concurrent
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 1 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 10 connection not close
+      | sql                                    | db      |
+      | begin ;select 1;commit                 | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 100 connection not close
+      | sql                                    | db      |
+      | begin ;select user();commit            | schema1 |
+    Given execute sql "1000" times in "dble-1" together use 10000 connection not close
       | sql                                    | db      |
       | begin ;select user();commit            | schema1 |
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2582,10 +2709,13 @@ sql_log_by_tx_digest_by_entry_by_user
       caught err:
       OutOfMemoryError
       exception occurred when the statistics were recorded
+      Exception processing
       """
     Then execute sql in "dble-1" in "user" mode
       | toClose | sql                                         | expect   | db      |
-      | False   | drop table if exists test                   | success  | schema1 |
+      | true    | drop table if exists test                   | success  | schema1 |
+
+
 
 
   Scenario: test samplingRate>0 and samplingRate<100   #15
@@ -2595,16 +2725,17 @@ sql_log_by_tx_digest_by_entry_by_user
       | toClose | sql                                         | expect   | db      |
       | False   | drop table if exists test                   | success  | schema1 |
       | True    | create table test(id int,name varchar(20))  | success  | schema1 |
-    Then connect "dble-1" to insert "1000" of data for "test"
-    Given execute sql "500" times in "dble-1" at concurrent
+    Then connect "dble-1" to insert "2000" of data for "test"
+    Given execute sql "1000" times in "dble-1" at concurrent 1000
       | sql                                | db      |
       | select name from test where id ={} | schema1 |
 
     Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                          | expect       | db               |
-      | conn_0 | False   | select * from sql_log                        | length{(10)} | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | length{(10)} | dble_information |
-
+      | conn   | toClose | sql                                                 | expect          | db               |
+      | conn_0 | False   | select * from sql_log                               | length{(20)}    | dble_information |
+      | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(10)}    | dble_information |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(2)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | toClose | sql                                         | expect   | db      |
       | true    | drop table if exists test                   | success  | schema1 |
@@ -2617,4 +2748,7 @@ sql_log_by_tx_digest_by_entry_by_user
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
       NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
       """
