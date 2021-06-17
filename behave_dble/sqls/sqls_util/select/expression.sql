@@ -61,7 +61,7 @@ select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where 
 select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where +id=1
 select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where ~id=1
 select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where !id=1
-select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where ~(id=1)
+select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where ~(id=1):
 select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where !(id=10)
 select test1.id,test1.R_REGIONKEY,test1.R_NAME,test1.R_COMMENT from test1 where binary id=1
 select a.id,a.R_REGIONKEY,a.R_NAME,a.R_COMMENT from (select * from test1)a
