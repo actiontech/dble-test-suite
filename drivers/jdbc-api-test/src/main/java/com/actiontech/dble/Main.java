@@ -78,6 +78,9 @@ public class Main {
 			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp);
 			generalLogTest.start_test();
 
+			ServerSideCursorTest sideCursorTest = new ServerSideCursorTest(mysqlProp, testProp);
+			sideCursorTest.start_test();
+
 			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp);
 			capClientFoundRowsTest.start_test();
 
