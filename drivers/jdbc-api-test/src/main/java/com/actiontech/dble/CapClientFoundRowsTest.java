@@ -26,9 +26,9 @@ public class CapClientFoundRowsTest extends InterfaceTest {
             System.out.println("throw exception ====> " + e.getMessage());
             e.printStackTrace();
         }finally {
-            System.out.println("reset capClientFoundRows=false in bootstrap.cnf => start");
+            Main.print_debug("reset capClientFoundRows=false in bootstrap.cnf => start");
             resetDbleConfig(false);
-            System.out.println("reset capClientFoundRows=false in bootstrap.cnf => end");
+            Main.print_debug("reset capClientFoundRows=false in bootstrap.cnf => end");
         }
     }
 
@@ -39,30 +39,30 @@ public class CapClientFoundRowsTest extends InterfaceTest {
         String falseLogStr = "the client requested CLIENT_FOUND_ROWS capabilities is 'found rows', dble is configured as 'affect rows',pls set the same.";
 
 
-        System.out.println("step 1:----> capClientFoundRows=true, useAffectedRows=true, return found rows and check logs");
+        Main.print_debug("step 1:----> capClientFoundRows=true, useAffectedRows=true, return found rows and check logs");
         checkCapClientFoundRows(true, null, true, trueLogStr, 1);
 
-        System.out.println("step 2:----> capClientFoundRows=true, useAffectedRows=false, return found rows");
+        Main.print_debug("step 2:----> capClientFoundRows=true, useAffectedRows=false, return found rows");
         checkCapClientFoundRows(null, null, false, null, 1);
 
         //reset capClientFoundRows to default
         resetDbleConfig(false);
-        System.out.println("step 3:----> capClientFoundRows=false, useAffectedRows=true, return found rows");
+        Main.print_debug("step 3:----> capClientFoundRows=false, useAffectedRows=true, return found rows");
         checkCapClientFoundRows(false, null, true, null, 0);
 
-        System.out.println("step 4:----> capClientFoundRows=false, useAffectedRows=false, return found rows and check logs");
+        Main.print_debug("step 4:----> capClientFoundRows=false, useAffectedRows=false, return found rows and check logs");
         checkCapClientFoundRows(null, null, false, falseLogStr, 0);
 
-        System.out.println("step 5:----> enable @@cap_client_found_rows, useAffectedRows=true, return found rows and check logs");
+        Main.print_debug("step 5:----> enable @@cap_client_found_rows, useAffectedRows=true, return found rows and check logs");
         checkCapClientFoundRows(null, true, true, trueLogStr, 1);
 
-        System.out.println("step 6:----> enable @@cap_client_found_rows, useAffectedRows=false, return found rows");
+        Main.print_debug("step 6:----> enable @@cap_client_found_rows, useAffectedRows=false, return found rows");
         checkCapClientFoundRows(null, true, false, null, 1);
 
-        System.out.println("step 7:----> disable @@cap_client_found_rows, useAffectedRows=true, return found rows");
+        Main.print_debug("step 7:----> disable @@cap_client_found_rows, useAffectedRows=true, return found rows");
         checkCapClientFoundRows(null, false, true, null, 0);
 
-        System.out.println("step 8:----> disable @@cap_client_found_rows, useAffectedRows=false, return found rows and check logs");
+        Main.print_debug("step 8:----> disable @@cap_client_found_rows, useAffectedRows=false, return found rows and check logs");
         checkCapClientFoundRows(null, false, false, falseLogStr, 0);
 
         Main.print_debug("end :" + this.getClass() + " -> testCapClientFoundRows()");
