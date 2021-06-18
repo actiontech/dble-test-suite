@@ -25,7 +25,7 @@ select concat('123','测试2')
 set names 'utf8'
 select @@character_set_client,@@character_set_connection,@@character_set_results
 drop table if exists test1
-create table test1(id int,data varchar(10)) default charset=utf8
+create table test1(id int,data varchar(10))
 insert into test1 values (1,'测试1')
 select * from test1
 set @@character_set_connection='gbk'
