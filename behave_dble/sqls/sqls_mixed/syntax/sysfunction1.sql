@@ -122,7 +122,7 @@ SELECT @var1, @var2 := @var1/*allow_diff*/
 SELECT @var1, @var2/*allow_diff*/
 #
 drop table if exists sharding_4_t1
-CREATE TABLE sharding_4_t1(id VARBINARY(32), vbin2 VARBINARY(32))
+CREATE TABLE sharding_4_t1(id VARBINARY(32), vbin2 VARBINARY(32))DEFAULT CHARSET=UTF8MB4
 INSERT INTO sharding_4_t1 VALUES (3,1), (3,2), (3,3)
 SELECT HEX(id & vbin2) AS op1,HEX(id | vbin2) AS op2 FROM sharding_4_t1
 #

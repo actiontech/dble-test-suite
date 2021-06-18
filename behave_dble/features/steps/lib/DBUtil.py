@@ -21,7 +21,8 @@ class DBUtil:
                 logger.debug("conn charset is : {0}".format(mycharset))
             else:
                 self._conn = MySQLdb.connect(host=strHost, user=strUser, passwd=str(strPassword), db=strDataBase, port=strPort,
-                                         autocommit=True, charset="utf8")
+                                         autocommit=True)
+                self._conn.set_character_set("utf8")
                 logger.debug("conn charset is null")
             self._cursor = self._conn.cursor()
         except MySQLdb.Error as e:
