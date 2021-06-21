@@ -844,12 +844,12 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutBootstrap.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutBootstrap.java.log" on "dble-1"
-    Given sleep "120" seconds
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_FRONT' | wc -l
-      """
-    Then check result "A" value is "1"
+#    Given sleep "120" seconds
+#    Then get result of oscmd named "A" in "dble-1"
+#      """
+#      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_FRONT' | wc -l
+#      """
+#    Then check result "A" value is "1"
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
