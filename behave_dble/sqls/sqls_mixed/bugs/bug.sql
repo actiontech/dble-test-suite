@@ -17,8 +17,8 @@ select * from sharding_1_t1 a left join sharding_1_t2 b on a.c_char =b.c_char or
 #case from somebank
 drop table if exists sharding_4_t1
 drop table if exists schema2.sharding_4_t2
-create table sharding_4_t1(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
-create table schema2.sharding_4_t2(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20))
+create table sharding_4_t1(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20)) DEFAULT CHARSET=UTF8
+create table schema2.sharding_4_t2(id int, trancode varchar(20), RETCODE char(2), OAPP varchar(20)) DEFAULT CHARSET=UTF8
 #!multiline
 SELECT COUNT(*) FROM (
      select test1.*
@@ -41,10 +41,10 @@ drop table if exists sharding_4_t1
 drop table if exists schema2.sharding_4_t2
 drop table if exists schema3.sharding_4_t3
 drop table if exists schema2.global_4_t1
-create table sharding_4_t1(id int primary key,name varchar(10))
-create table schema2.sharding_4_t2(id int primary key,name varchar(10))
-create table schema3.sharding_4_t3(id int primary key,name varchar(10))
-create table schema2.global_4_t1(id int primary key,name varchar(10))
+create table sharding_4_t1(id int primary key,name varchar(10)) DEFAULT CHARSET=UTF8
+create table schema2.sharding_4_t2(id int primary key,name varchar(10)) DEFAULT CHARSET=UTF8
+create table schema3.sharding_4_t3(id int primary key,name varchar(10)) DEFAULT CHARSET=UTF8
+create table schema2.global_4_t1(id int primary key,name varchar(10)) DEFAULT CHARSET=UTF8
 insert into sharding_4_t1 values(1,'actiontech')
 insert into schema2.sharding_4_t2 values(1,'actiontech')
 insert into schema3.sharding_4_t3 values(1,'actiontech')
@@ -75,10 +75,10 @@ drop table if exists sharding_4_t1
 drop table if exists schema2.global_4_t1
 drop table if exists sharding_enum_string_t1
 drop table if exists sharding_date_t1
-create table sharding_4_t1(id int,c int,name varchar(20))
-create table schema2.global_4_t1(id int,c int,name varchar(20))
-create table sharding_enum_string_t1(id varchar(20) ,name varchar(20))
-create table sharding_date_t1(id Date,name varchar(20))
+create table sharding_4_t1(id int,c int,name varchar(20)) DEFAULT CHARSET=UTF8
+create table schema2.global_4_t1(id int,c int,name varchar(20)) DEFAULT CHARSET=UTF8
+create table sharding_enum_string_t1(id varchar(20) ,name varchar(20)) DEFAULT CHARSET=UTF8
+create table sharding_date_t1(id Date,name varchar(20)) DEFAULT CHARSET=UTF8
 insert into schema2.global_4_t1 values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
 insert into sharding_4_t1 values(null,1,'test_shard_1'),(null,2,'test_shard_2'),(null,3,'test_shard_3')
 insert into sharding_4_t1 set id=null,c=4,name='test_shard_4'
@@ -124,14 +124,14 @@ drop table if exists sharding_4_t1
 #github issue 651
 drop table if exists sharding_4_t1
 drop table if exists schema2.sharding_4_t2
-create table sharding_4_t1(id int primary key,name varchar(10))
-create table schema2.sharding_4_t2(id int primary key,name varchar(10))
+create table sharding_4_t1(id int primary key,name varchar(10)) DEFAULT CHARSET=UTF8
+create table schema2.sharding_4_t2(id int primary key,name varchar(10)) DEFAULT CHARSET=UTF8
 insert into sharding_4_t1 values(1,'actiontech')
 insert into schema2.sharding_4_t2 values(1,'actiontech')
 select `A`.* FROM (select sharding_4_t1.id,schema2.sharding_4_t2.name from schema2.sharding_4_t2, sharding_4_t1 where  sharding_4_t1.id = schema2.sharding_4_t2.id) `A` where `A`.id = 99 order by `A`.id
 #github issue 126
 drop table if exists sharding_4_t1
-create table sharding_4_t1(id int,c int,name varchar(20))
+create table sharding_4_t1(id int,c int,name varchar(20)) DEFAULT CHARSET=UTF8
 insert into sharding_4_t1 values(1,1,'test_global_1'),(2,2,'test_global_2'),(2,2,'test_global_3')
 update sharding_4_t1 set name ='test' wher id=1
 delete from sharding_4_t1 wher id=2
@@ -157,22 +157,22 @@ select id,t_id,name,pad from a_test_no_shard union (SELECT'20180716' AS id,'0011
 #github issue 681
 drop table if exists sharding_2_t1
 drop table if exists sharding_3_t1
-create table sharding_2_t1(id int, aa int)
-create table sharding_3_t1(id int, bb int)
+create table sharding_2_t1(id int, aa int) DEFAULT CHARSET=UTF8
+create table sharding_3_t1(id int, bb int) DEFAULT CHARSET=UTF8
 insert into sharding_2_t1 values(1,123)
 insert into sharding_3_t1 values(2,111),(2,123),(2,NULL)
 select * from sharding_2_t1 a,sharding_3_t1 b where a.aa = b.bb
 #github issue #678 #671
 drop table if exists sharding_2_t1
-create table sharding_2_t1 (id int,busidate char(20),zoneno char(20),brno int,tellerno int)
+create table sharding_2_t1 (id int,busidate char(20),zoneno char(20),brno int,tellerno int) DEFAULT CHARSET=UTF8
 SELECT T.BUSIDATE AS occurDate, T.ZONENO AS zoneNo, IFNULL(T.BRNO, 0) AS uncheckPicture, IFNULL(T.TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM sharding_2_t1 F WHERE F.id = 1 UNION ALL SELECT '20180716', '00119', 1, 0 UNION ALL SELECT '20180716', '00119', 1, 2 ) T
 SELECT BUSIDATE AS occurDate, ZONENO AS zoneNo, IFNULL(BRNO, 0) AS uncheckPicture, IFNULL(TELLERNO, 0) AS uncheckFlow FROM ( SELECT F.BUSIDATE, F.ZONENO, F.BRNO, F.TELLERNO FROM sharding_2_t1 F WHERE F.id = 1 UNION ALL SELECT '20180716' , '00119' , 0 , 0 ) T
 drop table if exists sharding_2_t1
 #github issue #717
 drop table if exists sharding_4_t1
 drop table if exists schema2.sharding_4_t2
-create table sharding_4_t1(id int, name varchar(20))
-create table schema2.sharding_4_t2(id int, name varchar(20))
+create table sharding_4_t1(id int, name varchar(20)) DEFAULT CHARSET=UTF8
+create table schema2.sharding_4_t2(id int, name varchar(20)) DEFAULT CHARSET=UTF8
 insert into sharding_4_t1 value(1,'a')
 insert into schema2.sharding_4_t2 values(1,'d'),(2,'b'),(3,'c')
 select b.* from sharding_4_t1 b left join schema2.sharding_4_t2 a on a.id=b.id where a.id is NULL
@@ -201,7 +201,7 @@ drop table if exists sharding_4_t1
 #github issue #779
 drop table if exists schema2.global_4_t1
 drop table if exists schema2.global_4_t2
-create table schema2.global_4_t1 (DATANUM int,EXPORT_DATA_FILENAME varchar(50))
+create table schema2.global_4_t1 (DATANUM int,EXPORT_DATA_FILENAME varchar(50)) DEFAULT CHARSET=UTF8
 create table schema2.global_4_t2(id int)
 SELECT tempview1.tablename,tempview1.datanum,tempview2.tablename,tempview2.datanum FROM (SELECT SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1') tablename,SUM(t.DATANUM) datanum FROM schema2.global_4_t1 t GROUP BY SUBSTRING_INDEX(t.EXPORT_DATA_FILENAME, '-', '1')) tempview1,(SELECT 'ctp_user' tablename, COUNT(1) datanum FROM schema2.global_4_t2) tempview2 WHERE tempview1.tablename = tempview2.tablename
 drop table if exists schema2.global_4_t1
@@ -217,7 +217,7 @@ set session tx_read_only=1
 set session tx_read_only=0
 #github issue 845
 drop table if exists sharding_3_t1
-create table sharding_3_t1(id int, c binary)
+create table sharding_3_t1(id int, c binary) DEFAULT CHARSET=UTF8
 insert into sharding_3_t1 values(1, 0x1),(2,0),(3,null),(4,1),(2,1),(null,0)
 select count(distinct id) from sharding_3_t1 group by c
 select count(distinct c) from sharding_3_t1 group by c
@@ -237,7 +237,7 @@ select * from sharding_4_t1 where exists(select * from sharding_4_t1 where id=1|
 drop table if exists sharding_4_t1
 #github issue 829
 drop table if exists schema2.global_4_t1
-create table schema2.global_4_t1(id int,name varchar(30),role varchar(30))
+create table schema2.global_4_t1(id int,name varchar(30),role varchar(30)) DEFAULT CHARSET=UTF8
 /* ApplicationName=DBeaver 5.2.4 - Main */ create or replace view schema2.view_tg as select name,role from schema2.global_4_t1
 /* ApplicationName=DBeaver 5.2.4 - Metadata / SHOW FULL TABLES FROM schema2 */
 drop table if exists schema2.global_4_t1
@@ -246,31 +246,31 @@ drop view if exists view_tg
 drop table if exists sharding_4_t1
 drop table if exists sharding_1_t1
 drop table if exists schema2.global_4_t1
-create table sharding_4_t1(id int,name varchar(30))
-create table sharding_1_t1(id int,name varchar(30))
-create table schema2.global_4_t1(id int,name varchar(30))
+create table sharding_4_t1(id int,name varchar(30)) DEFAULT CHARSET=UTF8
+create table sharding_1_t1(id int,name varchar(30)) DEFAULT CHARSET=UTF8
+create table schema2.global_4_t1(id int,name varchar(30)) DEFAULT CHARSET=UTF8
 select a.id,b.id,c.id from schema2.global_4_t1 a,sharding_1_t1 b,sharding_4_t1 c order by a.id,c.id
 #issue:1027
 select a.id,b.name from schema2.global_4_t1 a,sharding_4_t1 b where a.id < (select id from sharding_1_t1 where id = 1)
 #issue:1203
 drop table if exists sharding_4_t1
-create table sharding_4_t1(id int,name varchar(30))
+create table sharding_4_t1(id int,name varchar(30)) DEFAULT CHARSET=UTF8
 lock tables `sharding_4_t1` write
 insert into `sharding_4_t1` values(1,'1'),(2,'2'),(3,'3'),(4,'4')
 insert into `sharding_4_t1` values(5,'5'),(6,'6'),(7,'7'),(8,'8')
 unlock tables
 #issue:1385
 drop table if exists sharding_4_t1
-create table sharding_4_t1(id int,goods_id varchar(40),city varchar(40))
+create table sharding_4_t1(id int,goods_id varchar(40),city varchar(40)) DEFAULT CHARSET=UTF8
 insert into sharding_4_t1 values(1,"goods","city")
 drop table if exists schema2.sharding_4_t2
 drop table if exists schema2.global_4_t1
-create table schema2.sharding_4_t2(id int,goods_id varchar(40))
+create table schema2.sharding_4_t2(id int,goods_id varchar(40)) DEFAULT CHARSET=UTF8
 insert into schema2.sharding_4_t2 values(2,"goods")
-create table schema2.global_4_t1(id int,city varchar(50),wid int)
+create table schema2.global_4_t1(id int,city varchar(50),wid int) DEFAULT CHARSET=UTF8
 insert into schema2.global_4_t1 values(3,"city",4)
 drop table if exists schema3.sharding_4_t3
-create table schema3.sharding_4_t3(id int,name varchar(100))
+create table schema3.sharding_4_t3(id int,name varchar(100)) DEFAULT CHARSET=UTF8
 insert into schema3.sharding_4_t3 values(4,"12345AAA")
 select dg.id aaaa, dgw.id bbbb, ew.id cccc from schema1.sharding_4_t1 dgw inner join schema2.sharding_4_t2 dg on dgw.goods_id = dg.goods_id left join schema2.global_4_t1 dwp on dgw.city = dwp.city left join schema3.sharding_4_t3 ew on ew.id = dwp.wid where dgw.id = 1 and ew.name regexp 'AAA'
 select dg.id aaaa, dgw.id bbbb, ew.id cccc from schema1.sharding_4_t1 dgw inner join schema2.sharding_4_t2 dg on dgw.goods_id = dg.goods_id left join schema2.global_4_t1 dwp on dgw.city = dwp.city left join schema3.sharding_4_t3 ew on ew.id = dwp.wid where dgw.id = 1 and ew.name regexp 'AAA$'
