@@ -862,8 +862,6 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
 
 
 
-@skip
-#   _restart
    Scenario: test dble_information dble_config dml on btrace #4
     #  DBLE0REQ-1061
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -895,38 +893,22 @@ Feature:  test  dble's config xml and table dble_config in dble_information to c
     get into sleep
     """
     Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                                                                                               | expect                                                                                               | db               |
-      | conn_0 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group4')            | Other threads are executing management commands(insert/update/delete), please try again later        | dble_information |
-      | conn_0 | true    | select * from dble_config           | hasNoStr{rw2}                                                              | dble_information |
-
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn   | toClose | sql                                                                                                             | db               |
-      | conn_1 | true    | update dble_db_group set heartbeat_stmt='select user()',heartbeat_timeout=7877 where name = 'ha_group4'         | dble_information |
-
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn   | toClose | sql                                                                                    | db               |
-      | conn_2 | true    | update dble_db_instance set max_conn_count= '7833' where db_group = 'ha_group4'        | dble_information |
+      | conn   | toClose | sql                                                                                                                                                               | expect                                                                                                               | db               |
+      | conn_1 | false   | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group4')            | Other threads are executing reload config or management commands(insert/update/delete), please try again later       | dble_information |
+      | conn_1 | false   | update dble_db_group set heartbeat_stmt='select user()',heartbeat_timeout=7877 where name = 'ha_group4'                                                           | Other threads are executing reload config or management commands(insert/update/delete), please try again later       | dble_information |
+      | conn_1 | false   | update dble_db_instance set max_conn_count= '7833' where db_group = 'ha_group4'                                                                                   | Other threads are executing reload config or management commands(insert/update/delete), please try again later       | dble_information |
+      | conn_1 | false   | select * from dble_config           | hasNoStr{rw2}             | dble_information |
+      | conn_1 | false   | select * from dble_config           | hasNoStr{7877}            | dble_information |
+      | conn_1 | false   | select * from dble_config           | hasNoStr{7833}            | dble_information |
 
     Then execute "admin" cmd  in "dble-1" at background
       | conn   | toClose | sql                       | db               |
       | conn_3 | true    | reload @@config_all       | dble_information |
 
-    Given execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                 | expect                 | db               |
-      | conn_0 | true    | select * from dble_config           | hasNoStr{7877}         | dble_information |
-      | conn_0 | true    | select * from dble_config           | hasNoStr{7833}         | dble_information |
-
     Given stop btrace script "BtraceAboutxmlJson.java" in "dble-1"
     Given destroy btrace threads list
-    Given sleep "90" seconds
-    Then execute "admin" cmd  in "dble-1" at background
-      | conn   | toClose | sql                         | db               |
-      | conn_1 | True    | select * from dble_config   | dble_information |
-#    Given sleep "2" seconds
-#
-#
-#    Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
-#    Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutxmlJson.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutxmlJson.java.log" on "dble-1"
 
 
 

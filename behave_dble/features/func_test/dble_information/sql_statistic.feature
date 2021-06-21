@@ -871,7 +871,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_12" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3306           | -               | hostM1        | 2          | 4         | 1                  | 1                 | 2                   | 1                  | 1                   | 0                  | 1                   | 2                  |
+      | 1       | rwS1   | 172.100.9.10   | 3306           | -               | hostM1        | 4          | 4         | 1                  | 1                 | 2                   | 1                  | 1                   | 0                  | 1                   | 2                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_22"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | False   | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
@@ -903,7 +903,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3306           | -               | hostM1        | 4          | 10        | 2                  | 3                 | 4                   | 3                  | 2                   | 1                  | 2                   | 3                  |
+      | 1       | rwS1   | 172.100.9.10   | 3306           | -               | hostM1        | 8          | 10        | 2                  | 3                 | 4                   | 3                  | 2                   | 1                  | 2                   | 3                  |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
@@ -932,7 +932,7 @@ Feature: sql_statistic_by_frontend_by_backend_by_entry_by_user
       | conn_1 | False   | select entry,user,backend_host,backend_port,sharding_node,db_instance,tx_count,tx_rows,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_rows from sql_statistic_by_frontend_by_backend_by_entry_by_user | dble_information |
     Then check resultset "resultset_13" has lines with following column values
       | entry-0 | user-1 | backend_host-2 | backend_port-3 | sharding_node-4 | db_instance-5 | tx_count-6 | tx_rows-7 | sql_insert_count-8 | sql_insert_rows-9 | sql_update_count-10 | sql_update_rows-11 | sql_delete_count-12 | sql_delete_rows-13 | sql_select_count-14 | sql_select_rows-15 |
-      | 1       | rwS1   | 172.100.9.10   | 3306           | -               | hostM1        | 6          | 15        | 2                  | 3                 | 4                   | 3                  | 4                   | 6                  | 2                   | 3                  |
+      | 1       | rwS1   | 172.100.9.10   | 3306           | -               | hostM1        | 11         | 15        | 2                  | 3                 | 4                   | 3                  | 4                   | 6                  | 2                   | 3                  |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resultset_23"
       | conn   | toClose | sql                                                                 | db               |
       | conn_1 | true    | select entry,user,table,sql_insert_count,sql_insert_rows,sql_update_count,sql_update_rows,sql_delete_count,sql_delete_rows,sql_select_count,sql_select_examined_rows,sql_select_rows from sql_statistic_by_table_by_user_by_entry  | dble_information |
