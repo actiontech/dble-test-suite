@@ -453,7 +453,8 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     Given execute admin cmd "dbGroup @@enable name='ha_group1'" success
     Then check general log in host "mysql-master1" has not "SET global autocommit=1,tx_isolation='REPEATABLE-READ'"
 
-  @restore_mysql_service
+  @skip  @restore_mysql_service
+    ## due to issue:960
   Scenario: if global var detect query failed at heartbeat restore, the heartbeat restore failed #14
      """
     {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
