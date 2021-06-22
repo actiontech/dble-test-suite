@@ -311,7 +311,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-
   Scenario: test "processorExecutor"  #4
   # on bootstrap.cnf the default value : -DprocessorExecutor=1
   # check dble.log has one BusinessExecutor0
@@ -411,7 +410,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-
   Scenario: test "writeToBackendExecutor"  #5
     # writeToBackendExecutor donot exists dble.log
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -502,7 +500,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-
   Scenario: test "complexExecutor"  #6
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -583,7 +580,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       caught err:
       NullPointerException
       """
-
 
 
 
@@ -702,7 +698,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
 
 
 
-
   Scenario: test "backendProcessorExecutor" and usePerformanceMode=1 #8
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -810,7 +805,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       caught err:
       NullPointerException
       """
-
 
 
   @btrace
