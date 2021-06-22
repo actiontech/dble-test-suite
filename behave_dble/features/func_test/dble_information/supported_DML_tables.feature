@@ -689,7 +689,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-@skip_restart
+  @skip_restart
   Scenario:  test the langreage of update in dble manager ----- dble_db_group #4
 
     Given execute sql in "dble-1" in "admin" mode
@@ -819,7 +819,7 @@ Feature: test addition, deletion and modification of dble_information on the man
 
 
 
-#@skip_restart
+  @skip_restart
   Scenario:  test the langreage of update in dble manager ----- dble_db_instance #5
 
     Given execute sql in "dble-1" in "admin" mode
@@ -991,7 +991,7 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false   | update dble_db_instance set password_encrypt=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set password_encrypt=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set password_encrypt=-2 where db_group='ha_group1'                | there are some dbInstance connection failed, pls check these dbInstance:{dbInstance[ha_group1.hostM1]}            | dble_information |
-      #### user
+      #### encrypt_configured
       | conn_0 | false   | update dble_db_instance set encrypt_configured=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
       | conn_0 | false   | update dble_db_instance set encrypt_configured='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
       | conn_0 | false   | update dble_db_instance set encrypt_configured=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
@@ -1011,60 +1011,410 @@ Feature: test addition, deletion and modification of dble_information on the man
       | conn_0 | false   | update dble_db_instance set `primary`=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set `primary`=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
       | conn_0 | false   | update dble_db_instance set `primary`=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'primary' values only support 'false' or 'true'                               | dble_information |
+       ####   disabled
+      | conn_0 | false   | update dble_db_instance set disabled=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled='0B01' where db_group='ha_group1'            | Update failure.The reason is Column 'disabled' values only support 'false' or 'true'                              | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'disabled' values only support 'false' or 'true'                              | dble_information |
+       ####   max_conn_count
+      | conn_0 | false   | update dble_db_instance set max_conn_count=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count=null where db_group='ha_group1'              | Column 'max_conn_count' cannot be null                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                                      | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set max_conn_count=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'max_conn_count' value cannot be less than 0                                  | dble_information |
+       ####   min_conn_count
+      | conn_0 | false   | update dble_db_instance set min_conn_count=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count=null where db_group='ha_group1'              | Column 'min_conn_count' cannot be null                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count='0B01' where db_group='ha_group1'            | Update failure.The reason is incorrect integer value: '0B01'                                                      | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set min_conn_count=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'min_conn_count' value cannot be less than 0                                  | dble_information |
+       ####   read_weight
+      | conn_0 | false   | update dble_db_instance set read_weight=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight='0B01' where db_group='ha_group1'            | java.lang.NumberFormatException: For input string: "0B01"                                                         | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight=-2 where db_group='ha_group1'                | readWeight attribute in dbInstance[hostM1] can't be less than 0                                                   | dble_information |
+       ####   id
+      | conn_0 | false   | update dble_db_instance set id=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set id='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set id=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set id=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set id=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set id=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+
+       ####   connection_timeout
+      | conn_0 | false   | update dble_db_instance set connection_timeout=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+#      | conn_0 | false   | update dble_db_instance set connection_timeout='0B01' where db_group='ha_group1'            |                                                          | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+#      | conn_0 | false   | update dble_db_instance set connection_timeout=-2 where db_group='ha_group1'                |                                                 | dble_information |
+       ####   connection_heartbeat_timeout
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+#      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout='0B01' where db_group='ha_group1'            |                                                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+#      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=-2 where db_group='ha_group1'                |                                                    | dble_information |
+       ####   time_between_eviction_runs_millis
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+#      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis='0B01' where db_group='ha_group1'            |                                                          | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+#      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=-2 where db_group='ha_group1'                |                                                    | dble_information |
+       ####   evictor_shutdown_timeout_millis
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+#      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis='0B01' where db_group='ha_group1'            |                                                         | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+#      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=-2 where db_group='ha_group1'                |                                                    | dble_information |
+       ####   idle_timeout
+      | conn_0 | false   | update dble_db_instance set idle_timeout=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+#      | conn_0 | false   | update dble_db_instance set idle_timeout='0B01' where db_group='ha_group1'            |                                                         | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+#      | conn_0 | false   | update dble_db_instance set idle_timeout=-2 where db_group='ha_group1'                |                                                    | dble_information |
+       ####   heartbeat_period_millis
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+#      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis='0B01' where db_group='ha_group1'            |                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+#      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=-2 where db_group='ha_group1'                |                                                  | dble_information |
+       ####   test_on_create
+      | conn_0 | false   | update dble_db_instance set test_on_create=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create='0B01' where db_group='ha_group1'            | Update failure.The reason is Column 'test_on_create' values only support 'false' or 'true'                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'test_on_create' values only support 'false' or 'true'                        | dble_information |
+       ####   test_on_borrow
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow='0B01' where db_group='ha_group1'            | Update failure.The reason is Column 'test_on_borrow' values only support 'false' or 'true'                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'test_on_borrow' values only support 'false' or 'true'                        | dble_information |
+       ####   test_on_return
+      | conn_0 | false   | update dble_db_instance set test_on_return=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return='0B01' where db_group='ha_group1'            | Update failure.The reason is Column 'test_on_return' values only support 'false' or 'true'                        | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'test_on_return' values only support 'false' or 'true'                        | dble_information |
+       ####   test_while_idle
+      | conn_0 | false   | update dble_db_instance set test_while_idle=1.3 where db_group='ha_group1'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle='null' where db_group='ha_group1'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=0B01 where db_group='ha_group1'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle='0B01' where db_group='ha_group1'            | Update failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'                       | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=' ' where db_group='ha_group1'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=user*10  where db_group='ha_group1'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=SYSDATE()  where db_group='ha_group1'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=-2 where db_group='ha_group1'                | Update failure.The reason is Column 'test_while_idle' values only support 'false' or 'true'                       | dble_information |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                              | expect       | db               |
+      | conn_0 | false   | update dble_db_instance set encrypt_configured=null where db_group='ha_group1'                   | success      | dble_information |
+      | conn_0 | false   | update dble_db_instance set primary='true' where db_group='ha_group1'                            | success      | dble_information |
+      | conn_0 | false   | update dble_db_instance set disabled='true' where db_group='ha_group1'                           | success      | dble_information |
+      | conn_0 | false   | update dble_db_instance set read_weight=null where db_group='ha_group1'                          | success      | dble_information |
+      | conn_0 | false   | update dble_db_instance set id=null where db_group='ha_group1'                                   | success      | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_timeout=null where db_group='ha_group1'                   |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set connection_heartbeat_timeout=null where db_group='ha_group1'         |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set time_between_eviction_runs_millis=null where db_group='ha_group1'    |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set evictor_shutdown_timeout_millis=null where db_group='ha_group1'      |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set idle_timeout=null where db_group='ha_group1'                         |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set heartbeat_period_millis=null where db_group='ha_group1'              |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_while_idle=null where db_group='ha_group1'                      |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_return=null where db_group='ha_group1'                       |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_borrow=null where db_group='ha_group1'                       |  success     | dble_information |
+      | conn_0 | false   | update dble_db_instance set test_on_create=null where db_group='ha_group1'                       |  success     | dble_information |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+    Then execute admin cmd "reload @@config_all"
 
 
 
+  @skip_restart
+  Scenario:  test the langreage of update in dble manager ----- dble_rw_split_entry #6
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                                                  | expect  | db               |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips='::1' where id=3                                                            | success | dble_information |
+      | conn_0 | false   | update dble_Rw_split_entry set max_conn_count=200 where type='conn_attr'                                             | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=1000 where max_conn_count ='no limit'                                  | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips='::1',max_conn_count=1000 where type='conr'                                 | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips='::1',max_conn_count=1000 where type='conr' and id=4                        | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips='::1',max_conn_count=1000 where type='conr' and encrypt_configured !='true' | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=null where id in (4,5)                                                      | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=null where id not  in (134,543)                                             | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=null where id > 333                                                         | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=null where id < > -1                                                        | success | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=1000 where max_conn_count like '%limit'                                | success | dble_information |
+
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_1"
+      | conn   | toClose | sql                                          | db               |
+      | conn_0 | true    | select * from dble_rw_split_entry            | dble_information |
+    Then check resultset "dble_rw_split_entry_1" has lines with following column values
+      | id-0 | type-1    | username-2 | encrypt_configured-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7                  | max_conn_count-8 | blacklist-9 | db_group-10 |
+      | 3    | conn_attr | rw1        | false                | tenant          | tenant1           | ::1                          | 200              | None        | ha_group3   |
+      | 4    | conn_attr | rw2        | false                | tenant          | tenant2           | 172.100.9.2/20               | 200              | None        | ha_group4   |
+      | 5    | conn_attr | rw3        | false                | tenant          | tenant3           | fe80::fea4:9473:b424:bb41/64 | 200              | None        | ha_group5   |
+      | 6    | conn_attr | rw4        | false                | tenant          | tenant4           | 172.100.9.7-172.100.9.3      | 200              | None        | ha_group6   |
+      | 7    | username  | rw5        | true                 | None            | None              | ::1                          | 100              | None        | ha_group4   |
+      | 8    | username  | rw6        | false                | None            | None              | None                         | 100              | None        | ha_group3   |
+      | 9    | username  | rw7        | false                | None            | None              | None                         | 100              | None        | ha_group4   |
+      | 10   | username  | rw8        | false                | None            | None              | None                         | 100              | None        | ha_group5   |
+      | 11   | conn_attr | rw9        | false                | tenant          | tenant5           | 172.%.9.%,172.100.%.1        | 200              | None        | ha_group6   |
+      | 12   | username  | rw10       | false                | None            | None              | None                         | 100              | None        | ha_group6   |
+      | 13   | conn_attr | rw20       | false                | tenant          | tenant00          | %.%.%.1                      | 200              | None        | ha_group7   |
+      | 14   | username  | unique2    | false                | None            | None              | None                         | 13               | None        | ha_group6   |
+      | 15   | conn_attr | unique3    | false                | tenant          | 0B01              | None                         | 200              | None        | ha_group6   |
+      | 16   | conn_attr | unique4    | false                | tenant          | -1                | None                         | 200              | None        | ha_group6   |
+      | 17   | conn_attr | unique5    | false                | tenant          | 0                 | None                         | 200              | None        | ha_group6   |
+      | 18   | username  | unique6    | false                | None            | None              | None                         | 11               | None        | ha_group6   |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose  | sql                                                                                                                 | expect                                                              | db               |
+      | conn_0 | false    | update dble_rw_split_entry,DBLE_db_group set min_conn_count=10 where max_conn_count=1000                            | update syntax error, not support update Multiple-Table              | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count=10                                                                    | update syntax error, not support update without WHERE               | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count=10 where (select active from dble_db_group where heartbeat_retry=1)   | update syntax error, not support sub-query                          | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry a set a.max_conn_count=10=100 where a.max_conn_count=10                                  | update syntax error, not support update with alias                  | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count=10 where db_group='ha_group1' order by heartbeat_retry                | update syntax error, not support update with syntax :[LOW_PRIORITY] [IGNORE] ... [ORDER BY ...] [LIMIT row_count]  | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count=10 where db_group='ha_group1' limit 2                                 | update syntax error, not support update with syntax :[LOW_PRIORITY] [IGNORE] ... [ORDER BY ...] [LIMIT row_count]  | dble_information |
+      | conn_0 | false    | update LOW_PRIORITY dble_rw_split_entry set max_conn_count=10 where db_group='ha_group1'                            | update syntax error, not support update with syntax :[LOW_PRIORITY] [IGNORE] ... [ORDER BY ...] [LIMIT row_count]  | dble_information |
+      | conn_0 | false    | update IGNORE dble_rw_split_entry set max_conn_count=10 where db_group='ha_group1'                                  | update syntax error, not support update with syntax :[LOW_PRIORITY] [IGNORE] ... [ORDER BY ...] [LIMIT row_count]  | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count=10 where max_conn_count BETWEEN 0 AND 100                 | unknown error:not supportted yet!                                  | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn=10 where max_conn_count >100                                    | Unknown column 'max_conn' in 'field list'                          | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn_count=10 where conn_count >100                                  | unknown error:field not found:conn_count                           | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set max_conn=10 whre max_conn_count >100                                     | You have an error in your SQL syntax                               | dble_information |
+       #### not writable column and Primary column
+      | conn_0 | false    | update dble_rw_split_entry set blacklist='black1' where id=3            | Column 'blacklist' is not writable                                   | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set type='username' where id=3               | Column 'type' is not writable                                        | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set id=33 where id=3                         | Primary column 'id' can not be update, please use delete & insert    | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set username='unique' where id=3             | Column 'username' is not writable.Because of the logical primary key ["conn_attr_key","conn_attr_value","username"]           | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set conn_attr_key='unique' where id=3        | Column 'conn_attr_key' is not writable.Because of the logical primary key ["conn_attr_key","conn_attr_value","username"]      | dble_information |
+      | conn_0 | false    | update dble_rw_split_entry set conn_attr_value='unique' where id=3      | Column 'conn_attr_value' is not writable.Because of the logical primary key ["conn_attr_key","conn_attr_value","username"]    | dble_information |
+      #### password_encrypt
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt=1.3 where db_group='ha_group6'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt='null' where db_group='ha_group6'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt=null where db_group='ha_group6'              | Column 'password_encrypt' cannot be null                                                                          | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt=0B01 where db_group='ha_group6'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt=' ' where db_group='ha_group6'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt=user*10  where db_group='ha_group6'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set password_encrypt=SYSDATE()  where db_group='ha_group6'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      #### encrypt_configured
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=1.3 where db_group='ha_group6'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured='null' where db_group='ha_group6'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=0B01 where db_group='ha_group6'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured='0B01' where db_group='ha_group6'            | Update failure.The reason is Column 'encrypt_configured' values only support 'false' or 'true'                    | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=' ' where db_group='ha_group6'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=user*10  where db_group='ha_group6'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=SYSDATE()  where db_group='ha_group6'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=-2 where db_group='ha_group6'                | Update failure.The reason is Column 'encrypt_configured' values only support 'false' or 'true'                    | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured='true' where db_group='ha_group3'            | user rw1 password need to decrypt ,but failed                                                                     | dble_information |
+      #### white_ips
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=1.3 where db_group='ha_group6'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips='null' where db_group='ha_group6'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=0B01 where db_group='ha_group6'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips='0B01' where db_group='ha_group6'            | Update failure.The reason is The configuration contains incorrect IP["0B01"]                                      | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=' ' where db_group='ha_group6'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=user*10  where db_group='ha_group6'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=SYSDATE()  where db_group='ha_group6'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=-2 where db_group='ha_group6'                | Update failure.The reason is The configuration contains incorrect IP["-2"]                                        | dble_information |
+      #### max_conn_count
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=1.3 where db_group='ha_group6'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count='null' where db_group='ha_group6'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=null where db_group='ha_group6'              | Column 'max_conn_count' cannot be null                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=0B01 where db_group='ha_group6'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count='0B01' where db_group='ha_group6'            | Update failure.The reason is incorrect integer value: '0B01'                                                      | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=' ' where db_group='ha_group6'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=user*10  where db_group='ha_group6'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=SYSDATE()  where db_group='ha_group6'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set max_conn_count=-2 where db_group='ha_group6'                | Update failure.The reason is Column 'max_conn_count' value cannot be less than 0                                  | dble_information |
+      #### db_group
+      | conn_0 | false   | update dble_rw_split_entry set db_group=1.3 where db_group='ha_group6'               | Not Supported of Value EXPR :1.3                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group='null' where db_group='ha_group6'            | Not Supported of Value EXPR :'null'                                                                               | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group=null where db_group='ha_group6'              | Column 'db_group' cannot be null                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group=0B01 where db_group='ha_group6'              | Not Supported of Value EXPR :0B01                                                                                 | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group=' ' where db_group='ha_group6'               | Not Supported of Value EXPR :' '                                                                                  | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group=user*10  where db_group='ha_group6'          | Not Supported of Value EXPR :user * 10                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group=SYSDATE()  where db_group='ha_group6'        | Not Supported of Value EXPR :SYSDATE()                                                                            | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set db_group=-2 where db_group='ha_group6'                | Update failure.The reason is Column 'db_group' value '-2' does not exist or not active                            | dble_information |
+
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                            | expect       | db               |
+      | conn_0 | false   | update dble_rw_split_entry set encrypt_configured=null where db_group='ha_group6'              | success      | dble_information |
+      | conn_0 | false   | update dble_rw_split_entry set white_ips=null where db_group='ha_group3'                       | success      | dble_information |
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+    Then execute admin cmd "reload @@config_all"
 
 
 
+  Scenario: test the langreage of delete in dble manager   ---- dble_db_group dble_db_instance  dble_rw_split_entry #7
 
-#      | conn_0 | false   | update dble_db_instance set encrypt_configured=null where db_group='ha_group1'              | Column 'user' cannot be null                                                                                      | dble_information |
-#      | conn_0 | false   | update dble_db_instance set primary='true' where db_group='ha_group1'              | host hostM1,user test password need to decrypt, but failed !                                                      | dble_information |
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                         | expect       | db               |
+      | conn_0 | false   | select * from dble_db_instance                                              | length{(22)} | dble_information |
+      | conn_0 | false   | select * from dble_db_group                                                 | length{(16)} | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where name='0B051'                             | success      | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where name='0B05'                              | success      | dble_information |
+      | conn_0 | false   | select * from dble_db_instance                                              | length{(20)} | dble_information |
+      | conn_0 | false   | select * from dble_db_group                                                 | length{(15)} | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where name ='hostM8' and db_group ='ha_group8' | success      | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where name ='hostM10' or db_group ='ha_group9' | success      | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where max_conn_count >10000                    | success      | dble_information |
+      | conn_0 | false   | select * from dble_db_instance                                              | length{(17)} | dble_information |
+      | conn_0 | false   | select * from dble_db_group                                                 | length{(12)} | dble_information |
+      | conn_0 | false   | select * from dble_rw_split_entry                                           | length{(16)} | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where id in (3,5)                           | success      | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where username like 'unique%'               | success      | dble_information |
+      | conn_0 | false   | select * from dble_rw_split_entry                                           | length{(9)}  | dble_information |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_1"
+      | conn   | toClose | sql                          | db               |
+      | conn_0 | true    | select * from dble_db_group  | dble_information |
+    Then check resultset "dble_db_group_1" has lines with following column values
+      | name-0     | heartbeat_stmt-1  | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
+      | ha_group5  | show slave status | 888                 | 100               | 2               | 88                | true         | true     |
+      | ha_group12 | select 7          | 888                 | 1                 | 1               | 88                | false        | true     |
+      | 0B03       | select @a         | 888                 | 100               | 1               | 88                | false        | true     |
+      | ha_group2  | select user()     | 888                 | 1                 | 1               | 88                | false        | true     |
+      | 0B02       | select @a         | 888                 | 100               | 1               | 88                | false        | true     |
+      | ha_group4  | select 2          | 888                 | 100               | 1               | 88                | false        | true     |
+      | 0B04       | select @a         | 888                 | 100               | 1               | 88                | false        | true     |
+      | ha_group6  | select @a         | 888                 | 100               | 1               | 88                | true         | true     |
+      | ha_group3  | select @a         | 888                 | 100               | 1               | 88                | false        | true     |
+      | ha_group11 | select @a         | 888                 | 100               | 1               | 88                | false        | true     |
+      | ha_group7  | select @a         | 888                 | 100               | 1               | 88                | false        | true     |
+      | ha_group1  | select 55         | 888                 | 1                 | 1               | 88                | false        | true     |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_instance_1"
+      | conn   | toClose | sql                                                                                                                                                   | db               |
+      | conn_0 | true    | select name,db_group,addr,port,user,encrypt_configured,primary,disabled,min_conn_count,max_conn_count,read_weight,id from dble_db_instance            | dble_information |
+    Then check resultset "dble_db_instance_1" has lines with following column values
+      | name-0  | db_group-1 | addr-2       | port-3 | user-4 | encrypt_configured-5 | primary-6 | disabled-7 | min_conn_count-8 | max_conn_count-9 | read_weight-10 | id-11 |
+      | hostS52 | ha_group5  | 172.100.9.12 | 3306   | test   | false                | false     | false      | 0                | 1000             | 3              | test  |
+      | hostM5  | ha_group5  | 172.100.9.10 | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
+      | hostS51 | ha_group5  | 172.100.9.11 | 3306   | test   | false                | false     | false      | 0                | 1000             | 3              | test  |
+      | hostM12 | ha_group12 | 172.100.9.1  | 3306   | test   | false                | true      | false      | 9                | 1000             | 3              | test  |
+      | 0B03    | 0B03       | 172.100.9.9  | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
+      | hostM2  | ha_group2  | 172.100.9.6  | 3306   | test   | false                | true      | false      | 10               | 1000             | 3              | test  |
+      | 0B02    | 0B02       | 172.100.9.9  | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
+      | hostM4  | ha_group4  | 172.100.9.5  | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
+      | 0B04    | 0B04       | 172.100.9.9  | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
+      | hostM6  | ha_group6  | 172.100.9.9  | 3306   | test   | false                | true      | false      | 4                | 1000             | 3              | test  |
+      | hostM3  | ha_group3  | 172.100.9.1  | 3306   | test   | false                | true      | true       | 10               | 1000             | 3              | test  |
+      | hostS31 | ha_group3  | 172.100.9.2  | 3306   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
+      | hostS32 | ha_group3  | 172.100.9.3  | 3306   | test   | false                | false     | true       | 2                | 1000             | 3              | test  |
+      | hostS11 | ha_group11 | 172.100.9.10 | 3306   | test   | false                | false     | false      | 1                | 1000             | 3              | test  |
+      | hostM11 | ha_group11 | 172.100.9.9  | 3306   | test   | false                | true      | false      | 1                | 1000             | 3              | test  |
+      | hostM7  | ha_group7  | 172.100.9.3  | 3306   | test   | true                 | true      | false      | 4                | 1000             | 3              | test  |
+      | hostM1  | ha_group1  | 172.100.9.5  | 3306   | test   | false                | true      | true       | 10               | 100              | 3              | test  |
+
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_rw_split_entry_1"
+      | conn   | toClose | sql                                          | db               |
+      | conn_0 | true    | select * from dble_rw_split_entry            | dble_information |
+    Then check resultset "dble_rw_split_entry_1" has lines with following column values
+      | id-0 | type-1    | username-2 | encrypt_configured-4 | conn_attr_key-5 | conn_attr_value-6 | white_ips-7             | max_conn_count-8 | blacklist-9 | db_group-10 |
+      | 3    | conn_attr | rw2        | false                | tenant          | tenant2           | 172.100.9.2/20          | 200              | None        | ha_group4   |
+      | 4    | conn_attr | rw4        | false                | tenant          | tenant4           | 172.100.9.7-172.100.9.3 | 200              | None        | ha_group6   |
+      | 5    | username  | rw5        | true                 | None            | None              | ::1                     | 100              | None        | ha_group4   |
+      | 6    | username  | rw6        | false                | None            | None              | None                    | 100              | None        | ha_group3   |
+      | 7    | username  | rw7        | false                | None            | None              | None                    | 100              | None        | ha_group4   |
+      | 8    | username  | rw8        | false                | None            | None              | None                    | 100              | None        | ha_group5   |
+      | 9    | conn_attr | rw9        | false                | tenant          | tenant5           | 172.%.9.%,172.100.%.1   | 200              | None        | ha_group6   |
+      | 10   | username  | rw10       | false                | None            | None              | None                    | 100              | None        | ha_group6   |
+      | 11   | conn_attr | rw20       | false                | tenant          | tenant00          | %.%.%.1                 | 200              | None        | ha_group7   |
 
 
+    Given execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                                                              | expect                                                                                                                    | db               |
+      | conn_0 | false   | delete from dble_db_group,dble_db_instance where name='db_group9'                                | delete syntax error, not support delete Multiple-Table                                                                    | dble_information |
+      | conn_0 | false   | delete from dble_db_group,dble_rw_split_entry where name='db_group9'                             | delete syntax error, not support delete Multiple-Table                                                                    | dble_information |
+      | conn_0 | false   | delete from dble_db_instance,dble_rw_split_entry where name='db_group9'                          | delete syntax error, not support delete Multiple-Table                                                                    | dble_information |
+      | conn_0 | false   | delete from dble_db_group where (select active from dble_db_group where heartbeat_retry=1)       | delete syntax error, not support sub-query                                                                                | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where (select active from dble_db_group where heartbeat_retry=1)    | delete syntax error, not support sub-query                                                                                | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where (select active from dble_db_group where heartbeat_retry=1) | delete syntax error, not support sub-query                                                                                | dble_information |
+      | conn_0 | false   | delete from dble_db_group                                                                        | delete syntax error, not support delete without WHERE                                                                     | dble_information |
+      | conn_0 | false   | delete from dble_db_instance                                                                     | delete syntax error, not support delete without WHERE                                                                     | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry                                                                  | delete syntax error, not support delete without WHERE                                                                     | dble_information |
+      | conn_0 | false   | delete LOW_PRIORITY from dble_db_group where name='db_group9'                                    | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete QUICK from dble_db_group where name='db_group9'                                           | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete IGNORE from dble_db_group where name='db_group9'                                          | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_db_group where name='db_group9' order by heartbeat_retry                        | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_db_group where name='db_group9' limit 2                                         | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_db_group a where name='db_group9'                                               | delete syntax error, not support delete with alias                                                                        | dble_information |
+      | conn_0 | false   | delete LOW_PRIORITY from dble_db_instance where name='db_group9'                                 | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete QUICK from dble_db_instance where name='db_group9'                                        | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete IGNORE from dble_db_instance where name='db_group9'                                       | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where name='db_group9' order by heartbeat_retry                     | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where name='db_group9' limit 2                                      | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_db_instance a where name='db_group9'                                            | delete syntax error, not support delete with alias                                                                        | dble_information |
+      | conn_0 | false   | delete LOW_PRIORITY from dble_rw_split_entry where db_group='db_group9'                          | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete QUICK from dble_rw_split_entry where db_group='db_group9'                                 | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete IGNORE from dble_rw_split_entry where db_group='db_group9'                                | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where db_group='db_group9' order by heartbeat_retry              | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where db_group='db_group9' limit 2                               | delete syntax error, not support delete with syntax :[LOW_PRIORITY] [QUICK] [IGNORE] ... [ORDER BY ...] [LIMIT row_count] | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry a where db_group='db_group9'                                     | delete syntax error, not support delete with alias                                                                        | dble_information |
+      | conn_0 | false   | delete from dble_db_grou where name='db_group9'                                                  | Table `dble_information`.`dble_db_grou` doesn't exist           | dble_information |
+      | conn_0 | false   | delete from dble_db_instan where name='db_group9'                                                | Table `dble_information`.`dble_db_instan` doesn't exist         | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_ent where name='db_group9'                                             | Table `dble_information`.`dble_rw_split_ent` doesn't exist      | dble_information |
+      | conn_0 | false   | delete from dble_db_group where username='db_group9'                                             | unknown error:field not found:username        | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where group='db_group9'                                             | unknown error:field not found:group           | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where white_ip='db_group9'                                       | unknown error:field not found:white_ip        | dble_information |
+      | conn_0 | false   | delete from dble_db_group where heartbeat_retry BETWEEN 0 AND 2                                  | unknown error:not supportted yet!        | dble_information |
+      | conn_0 | false   | delete from dble_db_instance where max_conn_count BETWEEN 0 AND 2                                | unknown error:not supportted yet!        | dble_information |
+      | conn_0 | false   | delete from dble_rw_split_entry where max_conn_count BETWEEN 0 AND 2                             | unknown error:not supportted yet!        | dble_information |
 
+      | conn_0 | false   | delete from dble_db_group where active ='true'                                 | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_user`(`db_group`) REFERENCES `dble_db_group`(`name`)        | dble_information |
+      | conn_0 | false   | delete from dble_db_group where name ='ha_group2'                              | Delete failure.The reason is Cannot delete or update a parent row: a foreign key constraint fails `dble_db_instance`(`db_group`) REFERENCES `dble_db_group`(`name`)    | dble_information |
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-#  Scenario: test the langreage of delete in dble manager #3
-#    Given execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                      | expect  | db               |
-#      | conn_0 | true   | delete from dble_db_group where name='db_group9';                         | success | dble_information |
-#      | conn_0 | true   | delete from dble_db_group where disable_ha='true';                        | success | dble_information |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_db_group_2"
-#      | conn   | toClose | sql                             | db               |
-#      | conn_0 | true    | select * from dble_db_group     | dble_information |
-#    Then check resultset "dble_db_group_2" has lines with following column values
-#      | name-0    | heartbeat_stmt-1 | heartbeat_timeout-2 | heartbeat_retry-3 | rw_split_mode-4 | delay_threshold-5 | disable_ha-6 | active-7 |
-#      | ha_group1 | select user()    | 0                   | 11                | 0               | 100               | false        | true     |
-#      | ha_group2 | select user()    | 0                   | 11                | 0               | 100               | false        | true     |
-#      | ha_group3 | select 1         | 0                   | 1                 | 0               | 100               | false        | false    |
-#      | ha_group7 | select user()    | 1                   | 1                 | 1               | -1                | false        | false    |
-#      | ha_group8 | select user()    | 1                   | 1                 | 1               | -1                | false        | false    |
-#      | dbGrou-p  | select 1         | 0                   | 1                 | 0               | 100               | false        | false    |
-#    Given execute sql in "dble-1" in "admin" mode
-#      | conn   | toClose | sql                                                                                         | expect                                                 | db               |
-#      | conn_0 | true    | delete from dble_db_group,dble_db_instance where name='db_group9';                          | delete syntax error, not support delete Multiple-Table | dble_information |
-#      | conn_0 | true    | delete from dble_db_group where (select active from dble_db_group where heartbeat_retry=1); | delete syntax error, not support sub-query             | dble_information |
-#      | conn_0 | true    | delete LOW_PRIORITY from dble_db_group where name='db_group9';                              | delete syntax error, not support delete with syntax    | dble_information |
-#      | conn_0 | true    | delete QUICK from dble_db_group where name='db_group9';                                     | delete syntax error, not support delete with syntax    | dble_information |
-#      | conn_0 | true    | delete IGNORE from dble_db_group where name='db_group9';                                    | delete syntax error, not support delete with syntax    | dble_information |
-#      | conn_0 | true    | delete from dble_db_group where name='db_group9' order by heartbeat_retry;                  | delete syntax error, not support delete with syntax    | dble_information |
-#      | conn_0 | true    | delete from dble_db_group where name='db_group9' limit 2;                                   | delete syntax error, not support delete with syntax    | dble_information |
-#      | conn_0 | true    | delete from dble_db_grou where name='db_group9';                                            | Table `dble_information`.`dble_db_grou` doesn't exist  | dble_information |
-#      | conn_0 | true    | delete from dble_db_group;                                                                  | delete syntax error, not support delete without WHERE  | dble_information |
-#      | conn_0 | true    | delete from dble_db_group a where name='db_group9';                                         | delete syntax error, not support delete with alias     | dble_information |
-
-
-#delete from dble_rw_split_entry where conn_attr_key=null
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      """
+    Then execute admin cmd "reload @@config_all"
