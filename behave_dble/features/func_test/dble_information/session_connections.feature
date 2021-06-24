@@ -4,7 +4,7 @@
 
 Feature:  session_connections test
 
-   Scenario:  session_connections table #1
+  Scenario:  session_connections table #1
   #case desc session_connections
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_1"
       | conn   | toClose | sql                      | db               |
@@ -28,7 +28,9 @@ Feature:  session_connections test
       | conn_estab_time      | int(11)       | NO     |       | None      |         |
       | conn_recv_buffer     | int(11)       | NO     |       | None      |         |
       | conn_send_task_queue | int(11)       | NO     |       | None      |         |
+      | conn_recv_task_queue | int(11)       | NO     |       | None      |         |
       | in_transaction       | varchar(5)    | NO     |       | None      |         |
+      | xa_id                | varchar(5)    | NO     |       | None      |         |
       | entry_id             | int(11)       | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect         | db               |
@@ -38,7 +40,7 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_2" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-17  | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-18  | entry_id-20 |
       | 9066          | root   | NULL     | dble_information | select * from session_connections | Manager connection | Manager connection | 1           |
   #case change user.xml and reload success,check remote_addr,remote_port,user,tenant,schema,sql,sql_stage,entry_id
     Given delete the following xml segment
@@ -74,7 +76,7 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_4" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-17  | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7         | sql-8                             | sql_stage-11       | in_transaction-18  | entry_id-20 |
       | 8066          | test   | NULL     | schema1          | create table test1 (id int)       | Finished           | false              | 2           |
       | 9066          | root   | NULL     | dble_information | select * from session_connections | Manager connection | Manager connection | 1           |
     Then execute sql in "dble-1" in "user" mode
@@ -89,7 +91,7 @@ Feature:  session_connections test
       | conn_0 | False   | select * from session_connections | dble_information |
 #case DBLE0REQ-774
     Then check resultset "session_connections_5" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-17 | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8     | sql_stage-11 | in_transaction-18 | entry_id-20 |
       | 8066          | test   | NULL     | schema1  | set xa=on | Finished     | true              | 2           |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  |
@@ -98,7 +100,7 @@ Feature:  session_connections test
       | conn   | toClose | sql                               | db               |
       | conn_0 | False   | select * from session_connections | dble_information |
     Then check resultset "session_connections_6" has lines with following column values
-      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                            | sql_stage-11 | in_transaction-17 | entry_id-18 |
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                            | sql_stage-11 | in_transaction-18 | entry_id-20 |
       | 8066          | test   | NULL     | schema1  | insert into sharding_2_t1 values (1),(2),(3),(4) | Finished     | true              | 2           |
 
     Then execute sql in "dble-1" in "user" mode
@@ -107,9 +109,41 @@ Feature:  session_connections test
       | conn_1 | False   | set autocommit=1                       | success |
       | conn_1 | False   | set xa=off                             | success |
       | conn_1 | True    | drop table if exists sharding_2_t1     | success |
+
+
+  #rwSplitUser DBLE0REQ-1133
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+    """
+    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+        <heartbeat>select user()</heartbeat>
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
+    </dbGroup>
+    """
+    #1 more than one rwSplitUsers can use the same dbGroup
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+    """
+    <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group3" />
+    """
+    Then execute admin cmd "reload @@config"
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
+      | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table                           | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name varchar(20),age int)  | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,'1',1),(2, '2',2)        | success | db1 |
+  Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_6"
+      | conn   | toClose | sql                               | db               |
+      | conn_0 | False   | select * from session_connections | dble_information |
+    Then check resultset "session_connections_6" has lines with following column values
+      | remote_port-2 | user-5 | tenant-6 | schema-7 | sql-8                                              | sql_stage-11 | in_transaction-18 | entry_id-20 |
+      | 8066          | rwS1   | NULL     | db1      | insert into test_table values (1,'1',1),(2, '2',2) | NULL         | false             | 1           |
+
+    Then execute sql in "dble-1" in "user" mode
+      | user | passwd | conn   | toClose | sql                                                       | expect  | db  |
+      | rwS1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
   #case unsupported update/delete/insert
       Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                   | expect                                                                                                        |
+      | conn   | toClose | sql                                                                   | expect                                              |
       | conn_0 | False   | delete from session_connections where remote_port=8066                | Access denied for table 'session_connections'       |
       | conn_0 | False   | update session_connections set entry_id=2 where entry_id=1            | Access denied for table 'session_connections'       |
       | conn_0 | True    | insert into session_connections values ('a',1,2,3)                    | Access denied for table 'session_connections'       |
