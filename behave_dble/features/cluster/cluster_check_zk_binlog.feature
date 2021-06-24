@@ -17,6 +17,7 @@ Feature: test "binlog" in zk cluster
      /server-id/a binlog_format=row
      /server-id/a relay-log=mysql-relay-bin
      """
+    Given sleep "11" seconds
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
         <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
@@ -64,7 +65,6 @@ Feature: test "binlog" in zk cluster
       | conn_0 | False   | create table child1 (fid int,name int)                       | success | schema1 |
       | conn_0 | False   | create table sing1 (id int)                                  | success | schema1 |
       | conn_0 | True    | create table no_sharding1 (id int, name int)                 | success | schema1 |
-
 
 
   Scenario: during "transaction",happen bad block,check "showBinlogStatusTimeout" #1

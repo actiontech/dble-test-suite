@@ -173,7 +173,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_zk_sequences.log" in host "dble-2"
       """
-      {"sequence_db_conf.properties":"{\\\"`schema1`.`test_auto`\\\":\\\"dn1\\\"}"
+      {"sequence_db_conf.properties":{"`schema1`.`test_auto`":"dn1"}}}
       """
     Given execute linux command in "dble-3"
       """
