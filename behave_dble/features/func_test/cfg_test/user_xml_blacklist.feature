@@ -6,10 +6,19 @@ Feature: test user.xml blacklist
 
 
 
-  Scenario: test user.xml blacklist  -- DML  #1
+  Scenario: test user.xml blacklist  -- DML on DMP SQL firewall #1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+        <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
+          <heartbeat>select user()</heartbeat>
+          <dbInstance name="hostM1" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
+          <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
+        </dbGroup>
+      """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
+       <rwSplitUser name="rwSp1" password="111111" dbGroup="ha_group3" blacklist="blacklist1"/>
        <blacklist name="blacklist1">
             <property name="insertAllow">false</property>
             <property name="deleteAllow">false</property>
@@ -19,6 +28,7 @@ Feature: test user.xml blacklist
        </blacklist>
       """
     Then execute admin cmd "reload @@config_all"
+
     Then execute sql in "dble-1" in "user" mode
       | user   | passwd   | conn   | toClose | sql                                         | expect      | db      |
       | test1  | 111111   | conn_0 | False   | drop table if exists test                   | success     | schema1 |
@@ -28,6 +38,16 @@ Feature: test user.xml blacklist
       | test1  | 111111   | conn_0 | False   | replace into test(id) values (2)            | Intercepted by suspected configuration [replaceAllow] in the blacklist of user 'test1', so it is considered unsafe SQL            | schema1 |
       | test1  | 111111   | conn_0 | False   | update test set id=2 where id=1             | Intercepted by suspected configuration [updateAllow] in the blacklist of user 'test1', so it is considered unsafe SQL             | schema1 |
       | test1  | 111111   | conn_0 | true    | select * from test where id=1               | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'test1', so it is considered unsafe SQL            | schema1 |
+
+#    Then execute sql in "dble-1" in "user" mode
+#      | user   | passwd   | conn   | toClose | sql                                         | expect      | db  |
+#      | rwSp1  | 111111   | conn_2 | False   | drop table if exists test                   | success     | db1 |
+#      | rwSp1  | 111111   | conn_2 | False   | create table test(id int)                   | success     | db1 |
+#      | rwSp1  | 111111   | conn_2 | False   | insert into test values (1)                 | Intercepted by suspected configuration [insertAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL             | db1 |
+#      | rwSp1  | 111111   | conn_2 | False   | delete from test                            | Intercepted by suspected configuration [deleteAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL             | db1 |
+#      | rwSp1  | 111111   | conn_2 | False   | replace into test(id) values (2)            | Intercepted by suspected configuration [replaceAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL            | db1 |
+#      | rwSp1  | 111111   | conn_2 | False   | update test set id=2 where id=1             | Intercepted by suspected configuration [updateAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL             | db1 |
+#      | rwSp1  | 111111   | conn_2 | true    | select * from test where id=1               | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL            | db1 |
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
@@ -53,7 +73,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | drop table if exists test                   | success     | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- DDL  #2
+  Scenario: test user.xml blacklist  -- DDL on DMP SQL firewall #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -92,7 +112,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | drop table if exists test1                  | success                   | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- DAL  #3
+  Scenario: test user.xml blacklist  -- DAL on DMP SQL firewall #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -122,7 +142,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | set @@autocommit = 0    | success    | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- Transaction and lock  #4
+  Scenario: test user.xml blacklist  -- Transaction and lock on DMP SQL firewall #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -168,7 +188,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | commit                    | success | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- Functions and operators and SQL injection #5
+  Scenario: test user.xml blacklist  -- Functions and operators and SQL injection on DMP SQL firewall #5
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -227,7 +247,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | drop table if exists test2       | success | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- Misoperation  #6
+  Scenario: test user.xml blacklist  -- Misoperation on DMP SQL firewall  #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -274,7 +294,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | drop table if exists test              | success | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- Bad operation  #7
+  Scenario: test user.xml blacklist  -- Bad operation on DMP SQL firewall  #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -337,7 +357,7 @@ Feature: test user.xml blacklist
       | conn_1 | true    | drop table if exists test1                   | success | schema1 |
 
 
-  Scenario: test user.xml blacklist  -- other operation  #7
+  Scenario: test user.xml blacklist  -- other operation on DMP SQL firewall #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
@@ -374,11 +394,112 @@ Feature: test user.xml blacklist
       | conn_1 | False   | drop table if exists test                    | success | schema1 |
 
 
+  Scenario: test user.xml blacklist  -- some operation on dble's documentation  #9
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
+       <blacklist name="blacklist1">
+            <property name="selectAllColumnAllow">false</property>
+            <property name="selectIntoOutfileAllow">false</property>
+            <property name="selectIntoAllow">false</property>
+            <property name="mergeAllow">false</property>
+            <property name="selectWhereAlwayTrueCheck">false</property>
+            <property name="selectHavingAlwayTrueCheck">false</property>
+            <property name="deleteWhereAlwayTrueCheck">false</property>
+            <property name="updateWhereAlayTrueCheck">false</property>
+       </blacklist>
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd   | conn   | toClose | sql                                 | expect     | db      |
+      | test1  | 111111   | conn_0 | False   | drop table if exists test           | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | create table test(id int)           | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | insert into test set id=1           | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | select * from test                  | Intercepted by suspected configuration [selelctAllow,selectAllColumnAllow] in the blacklist of user 'test1', so it is considered unsafe SQL   | schema1 |
+      | test1  | 111111   | conn_0 | False   | select id into @1 from test         | Intercepted by suspected configuration [selectIntoAllow] in the blacklist of user 'test1', so it is considered unsafe SQL                     | schema1 |
+      | test1  | 111111   | conn_0 | False   | select id into outfile '/test.txt' from test        | Intercepted by suspected configuration [selectIntoAllow] in the blacklist of user 'test1', so it is considered unsafe SQL     | schema1 |
+      | test1  | 111111   | conn_0 | False   | select * from test where id = 2-1 and hujh = hujh/*lxxt*/        | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test1', so it is considered unsafe SQL                     | schema1 |
+      | test1  | 111111   | conn_0 | False   | select id from test having id = 2-1 and hujh = hujh/*lxxt*/      | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test1', so it is considered unsafe SQL                     | schema1 |
+      | test1  | 111111   | conn_0 | False   | delete from test where id = 2-1 and hujh = hujh/*lxxt*/          | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test1', so it is considered unsafe SQL                     | schema1 |
+      | test1  | 111111   | conn_0 | true    | update test set id=2 where id = 1 and hujh = hujh/*lxxt*/        | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test1', so it is considered unsafe SQL                     | schema1 |
 
 
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist2"/>
+       <blacklist name="blacklist2">
+            <property name="selectAllColumnAllow">true</property>
+            <property name="selectIntoOutfileAllow">true</property>
+            <property name="selectIntoAllow">true</property>
+            <property name="mergeAllow">true</property>
+            <property name="selectWhereAlwayTrueCheck">true</property>
+            <property name="selectHavingAlwayTrueCheck">true</property>
+            <property name="deleteWhereAlwayTrueCheck">true</property>
+            <property name="updateWhereAlayTrueCheck">true</property>
+       </blacklist>
+     """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                          | expect  | db      |
+      | conn_1 | False   | drop table if exists test                    | success | schema1 |
+      | conn_1 | False   | create table test(id int)                    | success | schema1 |
+      | conn_1 | False   | insert into test set id=1                    | success | schema1 |
+      | conn_1 | False   | select * from test                           | success | schema1 |
+      | conn_1 | False   | select id into @1 from test                       | select ... into is not supported | schema1 |
+      | conn_1 | False   | select id into outfile '/test.txt' from test      | select ... into is not supported | schema1 |
+      | conn_1 | False   | select * from test where id = 2-1 and hujh = hujh/*lxxt*/     | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test', so it is considered unsafe SQL                     | schema1 |
+      | conn_1 | False   | select id from test having id = 2-1 and hujh = hujh/*lxxt*/   | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test', so it is considered unsafe SQL                     | schema1 |
+      | conn_1 | False   | delete from test where id = 2-1 and hujh = hujh/*lxxt*/       | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test', so it is considered unsafe SQL                     | schema1 |
+      | conn_1 | False   | update test set id=2 where id = 1 and hujh = hujh/*lxxt*/     | Intercepted by suspected configuration [selectWhereAlwayTrueCheck,selectHavingAlwayTrueCheck,deleteWhereAlwayTrueCheck,updateWhereAlayTrueCheck,conditionAndAlwayTrueAllow] in the blacklist of user 'test', so it is considered unsafe SQL                     | schema1 |
+      | conn_1 | true    | drop table if exists test                    | success | schema1 |
 
 
+  Scenario: test user.xml blacklist  -- some operation on dble's documentation  #10
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
+       <blacklist name="blacklist1">
+            <property name="selectMinusCheck">true</property>
+            <property name="selectExceptCheck">true</property>
+            <property name="selectIntersectCheck">true</property>
+       </blacklist>
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd   | conn   | toClose | sql                                 | expect     | db      |
+      | test1  | 111111   | conn_0 | False   | drop table if exists test           | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | create table test(id int)           | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | insert into test set id=1           | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | drop table if exists test1          | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | create table test1(id int)          | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | insert into test1 set id=1          | success    | schema1 |
+      | test1  | 111111   | conn_0 | False   | select * from test where id=1 minus select * from test1          | You have an error in your SQL syntax;MINUS                   | schema1 |
+      | test1  | 111111   | conn_0 | False   | select * from test where id=1 except select * from test1         | You have an error in your SQL syntax;EXCEPT                  | schema1 |
+      | test1  | 111111   | conn_0 | true    | select * from test where id=1 INTERSECT select * from test1      | You have an error in your SQL syntax;INTERSECT               | schema1 |
 
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist2"/>
+       <blacklist name="blacklist2">
+            <property name="selectMinusCheck">false</property>
+            <property name="selectExceptCheck">false</property>
+            <property name="selectIntersectCheck">false</property>
+       </blacklist>
+     """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                          | expect  | db      |
+      | conn_1 | False   | drop table if exists test                    | success | schema1 |
+      | conn_1 | False   | create table test(id int)                    | success | schema1 |
+      | conn_1 | False   | insert into test set id=1                    | success | schema1 |
+      | conn_1 | False   | drop table if exists test1                   | success | schema1 |
+      | conn_1 | False   | create table test1(id int)                   | success | schema1 |
+      | conn_1 | False   | insert into test1 set id=1                   | success | schema1 |
+      | conn_1 | False   | select * from test where id=1 minus select * from test1          | You have an error in your SQL syntax;MINUS                   | schema1 |
+      | conn_1 | False   | select * from test where id=1 except select * from test1         | You have an error in your SQL syntax;EXCEPT                  | schema1 |
+      | conn_1 | False   | select * from test where id=1 INTERSECT select * from test1      | You have an error in your SQL syntax;INTERSECT               | schema1 |
+      | conn_1 | False   | drop table if exists test                    | success | schema1 |
+      | conn_1 | true    | drop table if exists test1                   | success | schema1 |
 
 
 
