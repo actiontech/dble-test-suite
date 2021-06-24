@@ -227,7 +227,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":10,"errorRetryCount":0},
     "dbInstance":\[
-    {"name":"hostM1","url":"172.100.9.5:3306","password":"EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
+    {"name":"hostM1","url":"172.100.9.5:3306","password":
+    "user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
     "property":\[
     {"value":"true","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},{"value":"true","name":"testOnReturn"},
     {"value":"false","name":"testWhileIdle"},{"value":"53000","name":"connectionTimeout"},{"value":"5200","name":"connectionHeartbeatTimeout"},
@@ -291,10 +292,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"name":"date_rule","clazz":"Date","property":\[{"value":"yyyy-MM-dd","name":"dateFormat"},{"value":"2016-12-01","name":"sBeginDate"},{"value":"2017-01-9","name":"sEndDate"},{"value":"10","name":"sPartionDay"}\]},
     {"name":"date_default_rule","clazz":"Date","property":\[{"value":"yyyy-MM-dd","name":"dateFormat"},{"value":"2016-12-01","name":"sBeginDate"},{"value":"2017-01-9","name":"sEndDate"},{"value":"10","name":"sPartionDay"},{"value":"0","name":"defaultNode"}\]}\],
     "user":\[
-    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":"CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g==","usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
+    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":"
+    "usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
     {"type":"ManagerUser","properties":{"readOnly":true,"name":"root1","password":"111111","usingDecrypt":"false","whiteIPs":"172.100.9.8","maxCon":0}},
     {"type":"ManagerUser","properties":{"name":"root2","password":"111111","whiteIPs":"127.0.0.1,0:0:0:0:0:0:0:1"}},
-    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"ZOCAWNiqk8c5e0/A9hi7vwiyVdJyuKrlIcdeohsZ7w5p0rI5S5io92tFActLroFjzaWWlav9Zlx39AKgwHr2Lw==","usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
+    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"
+    ","usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema2","tenant":"tenant1","readOnly":false,"name":"test1","password":"111111","usingDecrypt":"false","whiteIPs":""}},
     {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test2","password":"111111","usingDecrypt":"false","whiteIPs":"2001:3984:3989::12,2001:3984:3989:0:0:0:0:13"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema3","tenant":"tenant2","readOnly":true,"blacklist":"blacklist1","name":"test3","password":"111111","usingDecrypt":"false","maxCon":0}},
@@ -319,7 +322,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":10,"errorRetryCount":0},
     "dbInstance":\[
-    {"name":"hostM1","url":"172.100.9.5:3306","password":"EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
+    {"name":"hostM1","url":"172.100.9.5:3306","password":"
+    "user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
     "property":\[
     {"value":"true","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},{"value":"true","name":"testOnReturn"},
     {"value":"false","name":"testWhileIdle"},{"value":"53000","name":"connectionTimeout"},{"value":"5200","name":"connectionHeartbeatTimeout"},
@@ -383,10 +387,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"name":"date_rule","clazz":"Date","property":\[{"value":"yyyy-MM-dd","name":"dateFormat"},{"value":"2016-12-01","name":"sBeginDate"},{"value":"2017-01-9","name":"sEndDate"},{"value":"10","name":"sPartionDay"}\]},
     {"name":"date_default_rule","clazz":"Date","property":\[{"value":"yyyy-MM-dd","name":"dateFormat"},{"value":"2016-12-01","name":"sBeginDate"},{"value":"2017-01-9","name":"sEndDate"},{"value":"10","name":"sPartionDay"},{"value":"0","name":"defaultNode"}\]}\],
     "user":\[
-    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":"CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g==","usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
+    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":
+    "usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
     {"type":"ManagerUser","properties":{"readOnly":true,"name":"root1","password":"111111","usingDecrypt":"false","whiteIPs":"172.100.9.8","maxCon":0}},
     {"type":"ManagerUser","properties":{"name":"root2","password":"111111","whiteIPs":"127.0.0.1,0:0:0:0:0:0:0:1"}},
-    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"ZOCAWNiqk8c5e0/A9hi7vwiyVdJyuKrlIcdeohsZ7w5p0rI5S5io92tFActLroFjzaWWlav9Zlx39AKgwHr2Lw==","usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
+    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"
+    "usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema2","tenant":"tenant1","readOnly":false,"name":"test1","password":"111111","usingDecrypt":"false","whiteIPs":""}},
     {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test2","password":"111111","usingDecrypt":"false","whiteIPs":"2001:3984:3989::12,2001:3984:3989:0:0:0:0:13"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema3","tenant":"tenant2","readOnly":true,"blacklist":"blacklist1","name":"test3","password":"111111","usingDecrypt":"false","maxCon":0}},
@@ -411,7 +417,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":10,"errorRetryCount":0},
     "dbInstance":\[
-    {"name":"hostM1","url":"172.100.9.5:3306","password":"EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA==","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
+    {"name":"hostM1","url":"172.100.9.5:3306","password":
+    "user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
     "property":\[
     {"value":"true","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},{"value":"true","name":"testOnReturn"},
     {"value":"false","name":"testWhileIdle"},{"value":"53000","name":"connectionTimeout"},{"value":"5200","name":"connectionHeartbeatTimeout"},
@@ -475,10 +482,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"name":"date_rule","clazz":"Date","property":\[{"value":"yyyy-MM-dd","name":"dateFormat"},{"value":"2016-12-01","name":"sBeginDate"},{"value":"2017-01-9","name":"sEndDate"},{"value":"10","name":"sPartionDay"}\]},
     {"name":"date_default_rule","clazz":"Date","property":\[{"value":"yyyy-MM-dd","name":"dateFormat"},{"value":"2016-12-01","name":"sBeginDate"},{"value":"2017-01-9","name":"sEndDate"},{"value":"10","name":"sPartionDay"},{"value":"0","name":"defaultNode"}\]}\],
     "user":\[
-    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":"CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g==","usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
+    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":
+    "usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
     {"type":"ManagerUser","properties":{"readOnly":true,"name":"root1","password":"111111","usingDecrypt":"false","whiteIPs":"172.100.9.8","maxCon":0}},
     {"type":"ManagerUser","properties":{"name":"root2","password":"111111","whiteIPs":"127.0.0.1,0:0:0:0:0:0:0:1"}},
-    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"ZOCAWNiqk8c5e0/A9hi7vwiyVdJyuKrlIcdeohsZ7w5p0rI5S5io92tFActLroFjzaWWlav9Zlx39AKgwHr2Lw==","usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
+    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"
+    "usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema2","tenant":"tenant1","readOnly":false,"name":"test1","password":"111111","usingDecrypt":"false","whiteIPs":""}},
     {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test2","password":"111111","usingDecrypt":"false","whiteIPs":"2001:3984:3989::12,2001:3984:3989:0:0:0:0:13"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema3","tenant":"tenant2","readOnly":true,"blacklist":"blacklist1","name":"test3","password":"111111","usingDecrypt":"false","maxCon":0}},
@@ -548,7 +557,8 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     {"dbGroup":\[
     {"rwSplitMode":0,"name":"ha_group1","delayThreshold":100,"disableHA":"false","heartbeat":{"value":"select user()","timeout":10,"errorRetryCount":0},
     "dbInstance":\[
-    {"name":"hostM1","url":"172.100.9.5:3306","password":"EZGuPOlq+lyYvtnAHPYN7NOido4idWDJfdH0aAWsXzfPhxDw0FWIDoYtxy0LL45slFFtLXl9NukyJujadQEoUA\\\u003d\\\u003d","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
+    {"name":"hostM1","url":"172.100.9.5:3306","password":
+    "user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"true","primary":true,
     "property":\[
     {"value":"true","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},{"value":"true","name":"testOnReturn"},
     {"value":"false","name":"testWhileIdle"},{"value":"53000","name":"connectionTimeout"},{"value":"5200","name":"connectionHeartbeatTimeout"},
@@ -584,10 +594,12 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     Then check following text exist "Y" in file "/tmp/dble_zk_user.log" in host "dble-3"
     """
     "user":\[
-    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":"CrdAFIIPXnXdq7Tc2RRejBwN5pBt0diz/MM9nbLEC7IW62kIJ6Umo0DWjH6KmRGtLF7fmi6rZBB+2TEfqLMf4g\\\u003d\\\u003d","usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
+    {"type":"ManagerUser","properties":{"readOnly":false,"name":"root","password":
+    "usingDecrypt":"true","whiteIPs":"172.100.9.8,127.0.0.1,0:0:0:0:0:0:0:1","maxCon":1000}},
     {"type":"ManagerUser","properties":{"readOnly":true,"name":"root1","password":"111111","usingDecrypt":"false","whiteIPs":"172.100.9.8","maxCon":0}},
     {"type":"ManagerUser","properties":{"name":"root2","password":"111111","whiteIPs":"127.0.0.1,0:0:0:0:0:0:0:1"}},
-    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":"ZOCAWNiqk8c5e0/A9hi7vwiyVdJyuKrlIcdeohsZ7w5p0rI5S5io92tFActLroFjzaWWlav9Zlx39AKgwHr2Lw\\\u003d\\\u003d","usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
+    {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test","password":
+    "usingDecrypt":"true","whiteIPs":"0:0:0:0:0:0:0:1"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema2","tenant":"tenant1","readOnly":false,"name":"test1","password":"111111","usingDecrypt":"false","whiteIPs":""}},
     {"type":"ShardingUser","properties":{"schemas":"schema1","name":"test2","password":"111111","usingDecrypt":"false","whiteIPs":"2001:3984:3989::12,2001:3984:3989:0:0:0:0:13"}},
     {"type":"ShardingUser","properties":{"schemas":"schema1,schema3","tenant":"tenant2","readOnly":true,"blacklist":"blacklist1","name":"test3","password":"111111","usingDecrypt":"false","maxCon":0}},
@@ -607,7 +619,7 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Then check following text exist "Y" in file "/tmp/dble_zk_sequences.log" in host "dble-3"
     """
-    {"sequence_conf.properties":"{\\\"`schema2`.`GLOBAL`.MINID\\\":\\\"10001\\\",\\\"`schema2`.`GLOBAL`.MAXID\\\":\\\"20000\\\",\\\"`schema2`.`GLOBAL`.CURID\\\":\\\"10000\\\"}"}
+    {"sequence_conf.properties":{"`schema2`.`GLOBAL`.MINID":"10001","`schema2`.`GLOBAL`.MAXID":"20000","`schema2`.`GLOBAL`.CURID":"10000"}}}
     """
 
 
@@ -1033,7 +1045,6 @@ Feature: test dble's config xml and table dble_config in dble_information to che
       | conn_3 | true     | select * from dble_schema           | hasStr{schema2}      | dble_information |
       | conn_3 | true     | select * from dble_table            | hasStr{global99}     | dble_information |
       | conn_3 | true     | select * from dble_table            | hasNoStr{sharding44} | dble_information |
-
 
 
 
@@ -1673,17 +1684,17 @@ Feature: test dble's config xml and table dble_config in dble_information to che
     """
     Given execute sql in "dble-2" in "admin" mode
       | conn   | toClose | sql                                                                   | expect                                                     | db               |
-      | conn_2 | true    | delete from dble_db_instance where db_group = 'ha_group3'             | Other instance is reloading, please try again later        | dble_information |
+      | conn_2 | true    | delete from dble_db_instance where db_group = 'ha_group3'             | Other instance are executing reload config or management commands(insert/update/delete), please try again later        | dble_information |
       | conn_2 | true    | select * from dble_config                                             | hasStr{ha_group3}                                          | dble_information |
     Given execute sql in "dble-3" in "admin" mode
       | conn   | toClose | sql                                                                   | expect                                                     | db               |
-      | conn_3 | true    | delete from dble_db_group where name='ha_group3'                      | Other instance is reloading, please try again later        | dble_information |
+      | conn_3 | true    | delete from dble_db_group where name='ha_group3'                      | Other instance are executing reload config or management commands(insert/update/delete), please try again later        | dble_information |
       | conn_3 | true    | select * from dble_config                                             | hasStr{ha_group3}                                          | dble_information |
       | conn_3 | true    | reload @@config_all                                                   | Other instance is reloading, please try again later        | dble_information |
 
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                                                                                                        | expect                                                     | db               |
-      | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group3')                     | Other instance is reloading, please try again later        | dble_information |
+      | conn_1 | true    | insert into dble_rw_split_entry(username,password_encrypt,encrypt_configured,max_conn_count,db_group) value ('rw2','111111','false','100','ha_group3')                     | Other instance are executing reload config or management commands(insert/update/delete), please try again later       | dble_information |
       | conn_1 | true    | select * from dble_config                                                                                                                                                  | hasNoStr{rw2}                                              | dble_information |
 
     Given execute linux command in "dble-2"
