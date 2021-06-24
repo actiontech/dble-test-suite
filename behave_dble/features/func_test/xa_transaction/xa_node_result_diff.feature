@@ -73,6 +73,10 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | conn_4 | False   | set global log_output=file                     |
       | conn_4 | False   | set global general_log_file='/tmp/general.log' |
       | conn_4 | False   | set global general_log=on                      |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                          | expect  | db      |
+      | conn_1 | False   | drop table if exists sharding_4_t1           | success | schema1 |
+      | conn_1 | False   | create table sharding_4_t1 (id int,name int) | success | schema1 |
 
     Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
     """
@@ -101,10 +105,10 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
       | conn   | toClose | expect  |
       | conn_3 | False   | success |
     Given destroy sql threads list
-    Then check sql thread output in "err"
-    """
-    The XID already exists
-    """
+#    Then check sql thread output in "err"
+#    """
+#    The XID already exists
+#    """
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
     Then execute sql in "dble-1" in "user" mode
@@ -128,10 +132,10 @@ Feature: xa prepare/start is abnormal: some nodes prepare/start successfully and
     """
     grep -c -i 'quit' /tmp/general.log
     """
-    Then check result "rs_B" value is "1"
-    Then check result "rs_C" value is "1"
-    Then check result "rs_D" value is "1"
-    Then check result "rs_E" value is "1"
+    Then check result "rs_B" value is "2"
+    Then check result "rs_C" value is "0"
+    Then check result "rs_D" value is "2"
+    Then check result "rs_E" value is "0"
     Then execute sql in "mysql-master1"
       | conn   | toClose | sql                        | expect  |
       | conn_0 | True    | set global general_log=off | success |
