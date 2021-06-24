@@ -31,7 +31,7 @@ select _utf8'你'
 #!share_conn
 SET NAMES sjis
 SELECT HEX('à\n'), HEX(_latin1'à\n')
-#!share_conn
+#end share_conn
 set names gbk
 select '好'
 SELECT N'hello你'
@@ -59,7 +59,7 @@ insert into sharding_4_t1 values(1,'a你')
 insert into sharding_4_t1 values(2,_utf8'a你')
 select * from sharding_4_t1;
 select * from sharding_4_t1
-alter table sharding_4_t1 modify c varchar(50) character set utf8
+alter table sharding_4_t1 modify c varchar(50)
 insert into sharding_4_t1 values(3,'你')
 #!share_conn_2
 select * from sharding_4_t1;
