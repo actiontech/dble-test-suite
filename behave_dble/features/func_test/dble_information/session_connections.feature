@@ -32,7 +32,7 @@ Feature:  session_connections test
       | entry_id             | int(11)       | NO     |       | None      |         |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect         | db               |
-      | conn_0 | False   | desc session_connections             | length{(19)}   | dble_information |
+      | conn_0 | False   | desc session_connections             | length{(21)}   | dble_information |
       | conn_0 | False   | select * from session_connections    | length{(1)}    | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_connections_2"
       | conn   | toClose | sql                               | db               |
