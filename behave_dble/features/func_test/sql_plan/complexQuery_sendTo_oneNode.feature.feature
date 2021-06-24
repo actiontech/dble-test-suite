@@ -18,7 +18,7 @@ Feature: following complex queries are able to send one datanode
       #11.explain select * from sharding_two_node a where a.id =1 and exists(select * from sharding_two_node2 b where a.c_flag=b.c_flag and b.id =1);
       #12.explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 ;
 
-
+@skip_restart
    Scenario: execute "explain sql" and check result #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
@@ -111,31 +111,28 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select count(*) from aly_test a where a.id =1 group by id          |
     Then check resultset "rs_5" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
+      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                 |
       | dn2             | BASE SQL | select count(*) from aly_test a where a.id =1 group by id |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_6"
-      | conn   | toClose | sql                                                                        |
-      | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1) |
+      | conn   | toClose | sql                                                                                                            |
+      | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
     Then check resultset "rs_6" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                               |
-      | dn1_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | dn2_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | dn3_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | dn4_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                    |
-      | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                                                             |
-      | /*AllowDiff*/dn2_1         | BASE SQL                 | select `test_global`.`id`,`test_global`.`cc` from  `test_global`                                                              |
-      | merge_1                    | MERGE                    | /*AllowDiff*/dn2_1                                                                                                            |
-      | join_1                     | JOIN                     | shuffle_field_1; merge_1                                                                                                      |
-      | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                                                        |
-      | /*AllowDiff*/dn2_2         | BASE SQL                 | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1 ORDER BY `aly_test`.`id` ASC |
-      | merge_2                    | MERGE                    | /*AllowDiff*/dn2_2                                                                                                            |
-      | distinct_1                 | DISTINCT                 | merge_2                                                                                                                       |
-      | shuffle_field_4            | SHUFFLE_FIELD            | distinct_1                                                                                                                    |
-      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_4                                                                                                               |
-      | shuffle_field_5            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                    |
-      | join_2                     | JOIN                     | shuffle_field_2; shuffle_field_5                                                                                              |
-      | shuffle_field_3            | SHUFFLE_FIELD            | join_2                                                                                                                        |
+      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                                                                                                 |
+      | dn2_0              | BASE SQL              | select `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                                   |
+      | merge_1            | MERGE                 | dn2_0                                                                                                                     |
+      | shuffle_field_1    | SHUFFLE_FIELD         | merge_1                                                                                                                   |
+      | in_sub_query_1     | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
+      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn2_1              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn3_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn4_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | merge_2            | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
+      | shuffle_field_2    | SHUFFLE_FIELD         | merge_2                                                                                                                   |
+      | /*AllowDiff*/dn1_1 | BASE SQL(May No Need) | in_sub_query_1; select `test_global`.`id`,`test_global`.`cc` from  `test_global`                                          |
+      | merge_3            | MERGE                 | /*AllowDiff*/dn1_1                                                                                                        |
+      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
+      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                    |
+
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_7"
       | conn   | toClose | sql                                                                        |
       | conn_0 | False   | explain select * from aly_order where id=(select 1)                        |
@@ -378,25 +375,20 @@ Feature: following complex queries are able to send one datanode
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | False   | explain select * from aly_order join test_global_1 where aly_order.id in ( select id from aly_test where id=1) |
     Then check resultset "rs_31" has lines with following column values
-      | SHARDING_NODE-0            | TYPE-1                   | SQL/REF-2                                               |
-      | dn1_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | dn2_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | dn3_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | dn4_0                      | BASE SQL                 | select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` ORDER BY `aly_order`.`id` ASC                                       |
-      | merge_and_order_1          | MERGE_AND_ORDER          | dn1_0; dn2_0; dn3_0; dn4_0                                                                                                    |
-      | shuffle_field_1            | SHUFFLE_FIELD            | merge_and_order_1                                                                                                             |
-      | dn1_1                      | BASE SQL                 | select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`                                                        |
-      | merge_1                    | MERGE                    | dn1_1                                                                                                                         |
-      | join_1                     | JOIN                     | shuffle_field_1; merge_1                                                                                                      |
-      | shuffle_field_2            | SHUFFLE_FIELD            | join_1                                                                                                                        |
-      | dn2_1                      | BASE SQL                 | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1 ORDER BY `aly_test`.`id` ASC |
-      | merge_2                    | MERGE                    | dn2_1                                                                                                                         |
-      | distinct_1                 | DISTINCT                 | merge_2                                                                                                                       |
-      | shuffle_field_4            | SHUFFLE_FIELD            | distinct_1                                                                                                                    |
-      | rename_derived_sub_query_1 | RENAME_DERIVED_SUB_QUERY | shuffle_field_4                                                                                                               |
-      | shuffle_field_5            | SHUFFLE_FIELD            | rename_derived_sub_query_1                                                                                                    |
-      | join_2                     | JOIN                     | shuffle_field_2; shuffle_field_5                                                                                              |
-      | shuffle_field_3            | SHUFFLE_FIELD            | join_2                                                                                                                        |
+      | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2                                                                                                                 |
+      | dn2_0           | BASE SQL              | select `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                                   |
+      | merge_1         | MERGE                 | dn2_0                                                                                                                     |
+      | shuffle_field_1 | SHUFFLE_FIELD         | merge_1                                                                                                                   |
+      | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
+      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn3_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn4_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | merge_2         | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
+      | shuffle_field_2 | SHUFFLE_FIELD         | merge_2                                                                                                                   |
+      | dn1_1           | BASE SQL(May No Need) | in_sub_query_1; select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`                                    |
+      | merge_3         | MERGE                 | dn1_1                                                                                                                     |
+      | join_1          | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | True    | explain select * from aly_test a,  test_global_1 where a.c=test_global_1.cc and a.id =3 and test_global_1.id=1 |
