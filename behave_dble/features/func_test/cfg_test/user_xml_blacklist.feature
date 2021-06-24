@@ -299,13 +299,10 @@ Feature: test user.xml blacklist
       """
        <shardingUser name="test1" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
        <blacklist name="blacklist1">
-            <property name="conditionOpBitwseAllow">false</property>
             <property name="selectUnionCheck">true</property>
             <property name="limitZeroAllow">false</property>
             <property name="conditionLikeTrueAllow">false</property>
-            <property name="conditionOpXorAllow">false</property>
             <property name="constArithmeticAllow">false</property>
-            <property name="mustParameterized">true</property>
        </blacklist>
       """
     Then execute admin cmd "reload @@config_all"
@@ -318,11 +315,44 @@ Feature: test user.xml blacklist
       | test1  | 111111   | conn_0 | False   | create table test1(id int)          | success    | schema1 |
       | test1  | 111111   | conn_0 | False   | insert into test1 values (1)        | success    | schema1 |
       | test1  | 111111   | conn_0 | False   | select * from test limit 0          | Intercepted by suspected configuration [limitZeroAllow] in the blacklist of user 'test1', so it is considered unsafe SQL             | schema1 |
-      | test1  | 111111   | conn_0 | False   | select * from test where id = 2-1   | Intercepted by suspected configuration [mustParameterized] in the blacklist of user 'test1', so it is considered unsafe SQL          | schema1 |
+      | test1  | 111111   | conn_0 | False   | select * from test where id = 2-1   | Intercepted by suspected configuration [constArithmeticAllow] in the blacklist of user 'test1', so it is considered unsafe SQL          | schema1 |
 #      | test1  | 111111   | conn_0 | true    | select * from test union select * from test1                     |    | schema1 |
 #      | test1  | 111111   | conn_0 | true    | select * from test where id like '%'                             |    | schema1 |
-#      | test1  | 111111   | conn_0 | true    | select 1 & 2                                                     |    | schema1 |
-#      | test1  | 111111   | conn_0 | true    | select 0 xor 0                                                   |    | schema1 |
+
+
+     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <shardingUser name="test2" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist3"/>
+       <blacklist name="blacklist3">
+            <property name="conditionOpBitwseAllow">false</property>
+            <property name="conditionOpXorAllow">false</property>
+       </blacklist>
+      """
+    Then execute admin cmd "reload @@config_all"
+
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd   | conn   | toClose | sql                                 | expect     | db      |
+      | test2  | 111111   | conn_2 | False   | drop table if exists test           | success    | schema1 |
+      | test2  | 111111   | conn_2 | False   | create table test(id int)           | success    | schema1 |
+      | test2  | 111111   | conn_2 | False   | insert into test values (1)         | success    | schema1 |
+      | test2  | 111111   | conn_2 | False   | select * from test where  1 & 2     | Intercepted by suspected configuration [conditionOpBitwseAllow] in the blacklist of user 'test2', so it is considered unsafe SQL   | schema1 |
+      | test2  | 111111   | conn_2 | true    | select * from test where  0 xor 1   | Intercepted by suspected configuration [conditionOpXorAllow] in the blacklist of user 'test2', so it is considered unsafe SQL      | schema1 |
+
+     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <shardingUser name="test3" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist4"/>
+       <blacklist name="blacklist4">
+            <property name="mustParameterized">true</property>
+       </blacklist>
+      """
+    Then execute admin cmd "reload @@config_all"
+
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd   | conn   | toClose | sql                                 | expect     | db      |
+      | test3  | 111111   | conn_3 | False   | drop table if exists test           | success    | schema1 |
+      | test3  | 111111   | conn_3 | False   | create table test(id int)           | success    | schema1 |
+      | test3  | 111111   | conn_3 | False   | insert into test values (1)         | success    | schema1 |
+      | test3  | 111111   | conn_3 | true    | select * from test where id=1       | Intercepted by suspected configuration [mustParameterized] in the blacklist of user 'test3', so it is considered unsafe SQL   | schema1 |
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
@@ -350,8 +380,8 @@ Feature: test user.xml blacklist
       | conn_1 | False   | select * from test where id = 2-1            | success | schema1 |
       | conn_1 | False   | select * from test union select * from test1 | success | schema1 |
       | conn_1 | False   | select * from test where id like '%'         | success | schema1 |
-      | conn_1 | False   | select 1 & 2                                 | success | schema1 |
-      | conn_1 | False   | select 0 xor 0                               | success | schema1 |
+      | conn_1 | False   | select * from test where  1 & 2              | success | schema1 |
+      | conn_1 | False   | select * from test where  0 xor 1            | success | schema1 |
       | conn_1 | False   | update test set id=2                         | success | schema1 |
       | conn_1 | False   | drop table if exists test                    | success | schema1 |
       | conn_1 | true    | drop table if exists test1                   | success | schema1 |
