@@ -140,7 +140,7 @@ select * from sharding_4_t1 where id=3 orde by id
 drop table if exists sharding_4_t1
 #github issue 666
 drop table if exists sharding_4_t1
-CREATE TABLE sharding_4_t1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8
+CREATE TABLE sharding_4_t1(`id` int(10) unsigned NOT NULL,`t_id` int(10) unsigned NOT NULL DEFAULT '0',`name` char(120) NOT NULL DEFAULT '',`pad` int(11) NOT NULL,PRIMARY KEY (`id`),KEY `k_1` (`t_id`))DEFAULT CHARSET=UTF8MB4
 insert into sharding_4_t1 values(1,1,'test中id为1',1),(2,2,'test_2',2),(3,3,'test中id为3',4),(4,4,'$test$4',3),(5,5,'test...5',1),(6,6,'test6',6)
 select id a,t_id b,name c,pad d from (select * from sharding_4_t1 union SELECT'20180716' AS BUSIDATE,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO)t order by a
 select id,t_id,name,pad from sharding_4_t1 union (SELECT'20180716' AS id,'00119' AS ZONENO,'260' AS BRNO,'34890' AS TELLERNO) order by id
@@ -362,3 +362,39 @@ SELECT tb.id,tb.APPLY_TIME,tb.CREAT_TIME,CURDATE(),DATEDIFF(tb.APPLY_TIME, CURDA
 SELECT tb.id,tb.APPLY_TIME,tb.CREAT_TIME,CURDATE(),DATEDIFF(tb.APPLY_TIME, CURDATE()) T1,DATEDIFF(tb.APPLY_TIME, NOW()) T2,DATEDIFF('2020-07-08', '2020-07-02') T3,DATEDIFF(tb.CREAT_TIME, CURDATE()) T4 FROM sharding_2_t1 tb WHERE tb.id=1
 drop table if exists sharding_2_t1
 drop table if exists sharding_2_t2
+#github issue:1455 same with 1650 above
+#github issue:1446
+drop table if exists sharding_2_t2
+drop table if exists sharding_2_t1
+create table sharding_2_t2(id int);
+create table sharding_2_t1 (id int(4) default null,B float(8,2) default null)
+insert into sharding_2_t2 values(1),(2)
+insert into sharding_2_t1 values(1,5),(2,67.29)
+select b.id from sharding_2_t2 join sharding_2_t1 b on sharding_2_t2.id/b.id>1.001
+drop table if exists sharding_2_t2
+drop table if exists sharding_2_t
+#github issue:1453
+drop table if exists sharding_2_t1
+drop table if exists schema2.sharding_4_t2
+create table sharding_2_t1(id int(4), B float(8,2))
+insert into sharding_2_t1 values(1,234.25),(2,67.29),(3,1.25),(12,1),(1,234.25)
+create table schema2.sharding_4_t2(id int(4), B int(4))
+insert into schema2.sharding_4_t2 values (10, 1),(11, 2),(10,2)
+SELECT * FROM sharding_2_t1 a left join schema2.sharding_4_t2 c  on a.id=c.id and a.id=@id_a
+set @id_a=2,@id_b=10
+(SELECT id FROM sharding_2_t1 WHERE id=@id_a AND B=67.29) UNION (SELECT id FROM schema2.sharding_4_t2 WHERE id=@id_b AND B=2)
+(SELECT id FROM sharding_2_t1 WHERE id=@id_a AND B=67.29) UNION (SELECT id FROM schema2.sharding_4_t2 WHERE id=@id_b AND B=2) UNION (SELECT id FROM sharding_2_t1 WHERE id=@id_a+@id_b AND B=1)
+drop table if exists sharding_2_t1
+drop table if exists schema2.sharding_4_t2
+#github issue:1451
+drop table if exists sharding_2_t1
+create table sharding_2_t1 (id int ,areaId int ,name char(10))
+insert into sharding_2_t1 values(1,2,'q'),(4,5,'f'),(7,8,'h')
+select id as areaIda,count(1) as count from sharding_2_t1 group by id
+drop table if exists sharding_2_t1
+#github issue:1525
+drop table if exists sharding_2_t1
+create table sharding_2_t1 (id int)
+insert into sharding_2_t1 values(1),(2),(3),(4),(5)
+select * from (select * from sharding_2_t1) b limit 0
+drop table if exists sharding_2_t1
