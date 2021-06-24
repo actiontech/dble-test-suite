@@ -7,6 +7,7 @@ import re
 import shutil
 from queue import Queue
 from time import sleep
+import collections
 
 import MySQLdb
 from behave import *
@@ -133,6 +134,55 @@ def do_query(context, line_nu, sql, to_close):
     return result2
 
 
+def decode_counter(context, result_counter):
+    new_result_counter = {}
+    for counter_key in result_counter.keys():
+        if type(counter_key) is tuple:
+            key_list = list(counter_key)
+            for i, key in enumerate(key_list):
+                try:
+                    if key and str(key).find("b'") > -1:
+                        new_key = key.decode('UTF-8', 'strict')
+                        key_list[i] = new_key
+                except UnicodeDecodeError as err1:
+                    print(f"except key: {counter_key}, err1: {err1}")
+                except AttributeError as err2:
+                    print(f"except key: {counter_key}, err2: {err2}")
+            new_counter_key = tuple(key_list)
+            new_result_counter[new_counter_key] = result_counter[counter_key]
+    return new_result_counter
+
+
+def compare_tuple(context, mysql_result, dble_result):
+    dble_b = dble_result.__str__().find("(b'") > -1
+    mysql_b = mysql_result.__str__().find("(b'") > -1
+
+    if dble_b or mysql_b:
+        dble_list = list(dble_result)
+        mysql_list = list(mysql_result)
+        mysql_result_counter = collections.Counter(mysql_list)
+        dble_result_counter = collections.Counter(dble_list)
+        context.logger.debug(f"mysql_result_counter : {mysql_result_counter}")
+        context.logger.debug(f"dble_result_counter : {dble_result_counter}")
+
+        if mysql_result_counter == dble_result_counter:
+            return True
+
+        if mysql_b:
+            mysql_result_counter = decode_counter(context, mysql_result_counter)
+
+        if dble_b:
+            dble_result_counter = decode_counter(context, dble_result_counter)
+
+        context.logger.debug(f"after decode mysql_result_counter : {mysql_result_counter}")
+        context.logger.debug(f"after decode dble_result_counter : {dble_result_counter}")
+
+        if mysql_result_counter == dble_result_counter:
+            return True
+
+    return False
+
+
 def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
     if len(sql) > 1000: sql = "{0}...{1}".format(sql[0:300], sql[-50:])
     a = re.compile(r'\/\*\s*allow_diff_sequence\s*\*\/')
@@ -164,7 +214,14 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
                 isAllowTen = True
                 context.logger.info("Meet the condition of g>0.9,and now isAllowTen is:{0}".format(isAllowTen))
 
-    isResultSame = dble_result==mysql_result or (isNoErr and isAllowDiff) or (isNoErr and isAllowTen)
+    isResultSame = dble_result == mysql_result or (isNoErr and isAllowDiff) or (isNoErr and isAllowTen)
+    context.logger.debug(f"dble_result == mysql_result {dble_result == mysql_result}, isNoErr {isNoErr}, isAllowDiff {isAllowDiff}, isAllowTen {isAllowTen}")
+
+    if not isResultSame:
+        if dble_result.__str__().find("(b'") > -1 or mysql_result.__str__().find("(b'") > -1:
+            isResultSame = compare_tuple(context, mysql_result, dble_result)
+            context.logger.debug(f"compare_tuple {isResultSame}")
+            isResultSame = isResultSame or (isNoErr and isAllowDiff) or (isNoErr and isAllowTen)
 
     dble_re = "dble:[" + str(dble_result) + "]\n"
     mysql_re = "mysql:[" + str(mysql_result) + "]\n"
@@ -314,7 +371,7 @@ def step_impl(context, filename):
             default_db = default_db.strip()
         else:
             default_db = context.cfg_sys['default_db']
-        step_len = 1;
+        step_len = 1
         next_line = lines[0].strip()
         for idx in range(0, total_lines):
             if line_nu > idx: continue
@@ -366,7 +423,7 @@ def step_impl(context, filename):
                 if line.find("#end multiline") != -1 and len(sql) == 0:
                     is_multiline = False
 
-                continue;
+                continue
 
             if is_multiline:
                 sql = sql + line + "\n"
