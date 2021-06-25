@@ -24,7 +24,7 @@ from steps.lib.utils import get_node
 
 from steps.mysql_steps import execute_sql_in_host
 
-logger = logging.getLogger('steps.dble_steps')
+logger = logging.getLogger('root')
 
 
 @When('execute admin cmd "{adminsql}" success')

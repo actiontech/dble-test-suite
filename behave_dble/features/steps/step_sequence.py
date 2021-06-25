@@ -11,7 +11,7 @@ from hamcrest import *
 
 from step_reload import get_dble_conn
 
-LOGGER = logging.getLogger('steps.sequence')
+LOGGER = logging.getLogger('root')
 
 def insertOneRow(context, table, rowsPerThread):
     conn = get_dble_conn(context)

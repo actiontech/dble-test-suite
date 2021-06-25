@@ -11,7 +11,7 @@ from hamcrest import *
 
 from steps.lib.utils import get_node
 
-logger = logging.getLogger('steps.server_steps')
+logger = logging.getLogger('root')
 
 
 @Given('execute linux command in "{host_name}"')

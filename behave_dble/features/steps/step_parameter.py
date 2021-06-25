@@ -9,7 +9,7 @@ import re
 from behave import Then, Given
 from steps.mysql_steps import execute_sql_in_host
 
-logger = logging.getLogger('steps.step_parameter')
+logger = logging.getLogger('root')
 
 @Then('execute the sql in "{host_name}" in "{mode_name}" mode by parameter from resultset "{rs_name}"')
 @Given('execute the sql in "{host_name}" in "{mode_name}" mode by parameter from resultset "{rs_name}"')

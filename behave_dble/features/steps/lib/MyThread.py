@@ -8,7 +8,7 @@
 import logging
 from threading import Thread
 
-logger = logging.getLogger("sqls")
+logger = logging.getLogger('root')
 class MyThread(Thread):
     def __init__(self, threadID, func, sql_queue, sql_res_queue, current_thd_idx):
         Thread.__init__(self, name=threadID)

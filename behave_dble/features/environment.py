@@ -12,7 +12,7 @@ from steps.step_install import replace_config, set_dbles_log_level, restart_dble
     install_dble_in_all_nodes
 from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
 
-logger = logging.getLogger('environment')
+logger = logging.getLogger('root')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()

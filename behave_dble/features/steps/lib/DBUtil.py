@@ -3,7 +3,7 @@
 import MySQLdb
 import logging
 
-logger = logging.getLogger('lib')
+logger = logging.getLogger('root')
 class DBUtil:
     def __init__(self, strHost, strUser, strPassword, strDataBase, strPort, context):
         self._context = context
