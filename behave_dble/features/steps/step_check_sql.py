@@ -145,9 +145,9 @@ def decode_counter(context, result_counter):
                         new_key = key.decode('UTF-8', 'strict')
                         key_list[i] = new_key
                 except UnicodeDecodeError as err1:
-                    print(f"except key: {counter_key}, err1: {err1}")
+                    context.logger.debug(f"except key: {counter_key}, err1: {err1}")
                 except AttributeError as err2:
-                    print(f"except key: {counter_key}, err2: {err2}")
+                    context.logger.debug(f"except key: {counter_key}, err2: {err2}")
             new_counter_key = tuple(key_list)
             new_result_counter[new_counter_key] = result_counter[counter_key]
     return new_result_counter
@@ -158,10 +158,8 @@ def compare_tuple(context, mysql_result, dble_result):
     mysql_b = mysql_result.__str__().find("(b'") > -1
 
     if dble_b or mysql_b:
-        dble_list = list(dble_result)
-        mysql_list = list(mysql_result)
-        mysql_result_counter = collections.Counter(mysql_list)
-        dble_result_counter = collections.Counter(dble_list)
+        mysql_result_counter = collections.Counter(mysql_result)
+        dble_result_counter = collections.Counter(dble_result)
         context.logger.debug(f"mysql_result_counter : {mysql_result_counter}")
         context.logger.debug(f"dble_result_counter : {dble_result_counter}")
 
