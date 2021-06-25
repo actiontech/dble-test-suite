@@ -1,17 +1,16 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-import os
-import threading
-from behave_dble.features.steps.lib.utils import get_node
-
 coding= 'utf8'
+
+import threading
 import logging
 from behave import *
 from hamcrest import *
 
 from steps.step_reload import get_dble_conn
 
-LOGGER = logging.getLogger('steps.sequence')
+LOGGER = logging.getLogger('root')
+
 
 def insertOneRow(context, table, rowsPerThread):
     conn = get_dble_conn(context)

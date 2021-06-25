@@ -1,6 +1,5 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
-import datetime
 import difflib
 import os
 import re
@@ -140,17 +139,27 @@ def decode_counter(context, result_counter):
         if type(counter_key) is tuple:
             key_list = list(counter_key)
             for i, key in enumerate(key_list):
-                try:
-                    if key and str(key).find("b'") > -1:
-                        new_key = key.decode('UTF-8', 'strict')
-                        key_list[i] = new_key
-                except UnicodeDecodeError as err1:
-                    context.logger.debug(f"except key: {counter_key}, err1: {err1}")
-                except AttributeError as err2:
-                    context.logger.debug(f"except key: {counter_key}, err2: {err2}")
+                new_key = decode_str(context, key)
+                key_list[i] = new_key
             new_counter_key = tuple(key_list)
             new_result_counter[new_counter_key] = result_counter[counter_key]
+        else:
+            new_counter_key = decode_str(context, counter_key)
+            new_result_counter[new_counter_key] = result_counter[counter_key]
     return new_result_counter
+
+
+def decode_str(context, key):
+    new_key = key
+    if key and str(key).find("b'") > -1:
+        try:
+            new_key = key.decode('UTF-8', 'strict')
+        except UnicodeDecodeError as err1:
+            context.logger.debug(f"except key: {key}, err1: {err1}")
+        except AttributeError as err2:
+            context.logger.debug(f"except key: {key}, err2: {err2}")
+
+    return new_key
 
 
 def compare_tuple(context, mysql_result, dble_result):
@@ -249,6 +258,8 @@ def compare_result(context, id, sql, mysql_result, dble_result, err1, err2):
                 log_file = context.cur_warn_log
             else:
                 log_file = context.cur_serious_warn_log
+
+            context.logger.info('the log file is  {0}'.format(log_file))
 
             with open(log_file, 'a') as fpW:
                 fpW.writelines("===file:{2}, id:{0}, sql:[{1}]===\n".format(id, sql, context.sql_file))

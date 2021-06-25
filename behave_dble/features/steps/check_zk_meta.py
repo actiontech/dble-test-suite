@@ -12,7 +12,8 @@ from hamcrest import *
 from steps.lib.DBUtil import *
 from steps.lib.utils import get_node, get_ssh
 
-LOGGER = logging.getLogger('steps.check_zk_meta')
+LOGGER = logging.getLogger('root')
+
 
 @Then('get {path} on zkCli.sh for {info} on dble-1')
 def get_zk_meta_on_zkCli_sh(context, path, info):

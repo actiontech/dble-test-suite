@@ -24,7 +24,9 @@ from steps.lib.generate_util import generate
 from behave import *
 from hamcrest import *
 from steps.step_reload import get_admin_conn, get_dble_conn
-logger = logging.getLogger('steps.function')
+
+logger = logging.getLogger('root')
+
 
 @then('Test the data types supported by the sharding column in "{sql_name}"')
 def test_data_type(context, sql_name):
@@ -205,11 +207,19 @@ def step_impl(context,filename,hostname):
     rc, stdout, stderr = ssh.exec_command(cmd)
     assert_that(len(stderr)==0 ,"get err {0} with deleting {1}".format(stderr,filename))
 
+
+@Then('execute oscmd in "{hostname}" by parameter from resultset "{rs_name}"')
 @Given('execute oscmd in "{hostname}" and "{num}" less than result')
 @Given('execute oscmd in "{hostname}"')
-def step_impl(context,hostname,num=None):
+def step_impl(context,hostname,num=None,rs_name=None):
     cmd = context.text.strip()
     ssh = get_ssh(hostname)
+
+    if rs_name is not None:
+        param_value = getattr(context, rs_name)
+        assert param_value, "expect parameter not found in {0}".format(rs_name)
+        cmd = cmd.format(param_value)
+
 
     rc, stdout, stderr = ssh.exec_command(cmd)
     stderr =  stderr.lower()
