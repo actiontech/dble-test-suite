@@ -11,7 +11,8 @@ import collections
 from steps.lib.ObjectFactory import ObjectFactory
 from hamcrest import *
 
-logger = logging.getLogger('steps.lib.MySQLObject')
+logger = logging.getLogger('root')
+
 
 class PostQueryCheck(object):
     def __init__(self, real_res, real_err=None, time_cost=0, query_meta=None):

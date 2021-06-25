@@ -131,12 +131,15 @@ def step_impl(context,btraceScript,host):
     if isBtraceRunning:
         stop_btrace(sshClient, btraceScript)
 
+
 @Given('destroy btrace threads list')
 def destroy_threads(context):
     global btrace_threads
     for thd in btrace_threads:
         context.logger.debug("join btrace thread: {0}".format(thd.name))
         thd.join()
+    btrace_threads = []
+
 
 @Then('check sql thread output in "{result}"')
 def step_impl(context,result):
