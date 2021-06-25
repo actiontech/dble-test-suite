@@ -11,9 +11,11 @@ from hamcrest import *
 
 from steps.step_reload import get_dble_conn
 
-LOGGER = logging.getLogger('steps.createConn')
+LOGGER = logging.getLogger('root')
 
-my_thread={}
+my_thread = {}
+
+
 def createConn(context,num,sql):
     num = int(num)
     global errs
