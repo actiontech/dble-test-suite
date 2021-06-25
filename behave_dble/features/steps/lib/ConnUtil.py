@@ -7,7 +7,7 @@
 import MySQLdb
 import logging
 
-logger = logging.getLogger('lib.MysqlConnUtil')
+logger = logging.getLogger('root')
 class MysqlConnUtil:
     def __init__(self, *args, **kwargs):
         logger.debug('create query connection with args:{}, kwargs:{}'.format(args, kwargs))

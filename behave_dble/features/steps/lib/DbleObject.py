@@ -7,7 +7,7 @@ import logging
 
 from .MySQLObject import MySQLObject
 
-logger = logging.getLogger('DbleObject')
+logger = logging.getLogger('root')
 
 
 class DbleObject(MySQLObject):

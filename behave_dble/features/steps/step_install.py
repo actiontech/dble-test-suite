@@ -14,7 +14,7 @@ from lib.DbleMeta import DbleMeta
 from lib.DBUtil import *
 from lib.utils import get_node, get_ssh
 
-LOGGER = logging.getLogger('steps.install')
+LOGGER = logging.getLogger('root')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):

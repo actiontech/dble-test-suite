@@ -17,7 +17,7 @@ from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 
 
-logger = logging.getLogger('lib.utils')
+logger = logging.getLogger('root')
 
 def log_it(func):
     @wraps(func)
