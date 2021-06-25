@@ -5,7 +5,7 @@
 
 Feature:  session_variables test
 
-  @skip_restart
+
    Scenario:  session_variables table #1
   #case desc session_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_1"

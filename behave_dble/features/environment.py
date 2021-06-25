@@ -150,5 +150,12 @@ def before_step(context, step):
     logger.debug(step.name)
 
 def after_step(context, step):
-    logger.info('{0}, status:{1}'.format(step.name, step.status))
+    # logger.info('{0}, status:{1}'.format(step.name, step.status))
+    if step.status == "failed":
+        logger.error('{0}, status:{1}'.format(step.name, step.status))
+    else:
+        logger.info('{0}, status:{1}'.format(step.name, step.status))
+
+
+
 
