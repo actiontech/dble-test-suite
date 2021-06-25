@@ -14,7 +14,7 @@ import time
 from steps.lib.ConnUtil import MysqlConnUtil
 from steps.lib.utils import update_file_with_sed,get_mysql_cnf_path
 
-logger = logging.getLogger('lib.MySQLObject')
+logger = logging.getLogger('root')
 
 
 class MySQLObject(object):
@@ -80,7 +80,7 @@ class MySQLObject(object):
             success_p = "sandbox server started"
             obj = re.search(success_p, out)
             isSuccess = obj is not None
-            assert isSuccess, "start mysql err: {1}".format(err)
+            assert isSuccess, "start mysql err: {0}".format(err)
 
             logger.debug("start mysql connect_test")
             self.connect_test()
