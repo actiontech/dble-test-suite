@@ -11,7 +11,7 @@ Feature: test online ddl
   
 
 
-   @skip @skip_restart
+  @skip_restart
   Scenario: prepare env and data    #1
     Given delete the following xml segment
       | file          | parent           | child               |
@@ -151,7 +151,7 @@ Feature: test online ddl
       | conn_2 | False   | insert into schema2.ver(id,name) select id,name from schema2.ver         | success | schema2 |
 
 
-   @skip @skip_restart
+  @skip_restart
   Scenario: supported CREATE INDEX name ON table (col_list) / ALTER TABLE tbl_name ADD INDEX name (col_list)    #2
     #nosharding table
     Given record current dble log line number in "log_linenu"
@@ -255,7 +255,7 @@ Feature: test online ddl
        """
 
 
-   @skip @skip_restart
+  @skip_restart
   Scenario: ALTER TABLE tbl_name DROP INDEX i1, ADD INDEX i1(key_part,... ) USING BTREE, ALGORITHM=INSTANT    #3
     #nosharding table
     Given record current dble log line number in "log_linenu"
@@ -341,7 +341,7 @@ Feature: test online ddl
        """
 
 
-   @skip @skip_restart
+  @skip_restart
   Scenario: DROP INDEX name ON table / ALTER TABLE tbl_name DROP INDEX name   #4
     #case drop index time is less,don't check dml
     #nosharding table
@@ -406,7 +406,6 @@ Feature: test online ddl
        """
 
 
-   @skip @skip_restart
  Scenario: ALTER TABLE tbl_name ALTER COLUMN col SET DEFAULT literal, ALGORITHM=INSTANT/ ALTER TABLE tbl ALTER COLUMN col DROP DEFAULT, ALGORITHM=INSTANT   #5
     Given record current dble log line number in "log_linenu"
     Then execute sql in "dble-1" in "user" mode
