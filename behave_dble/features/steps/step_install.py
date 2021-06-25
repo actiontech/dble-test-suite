@@ -4,17 +4,17 @@ import os
 import re
 import time
 import subprocess
-
+import logging
 import MySQLdb
 from behave import *
 from hamcrest import *
 
-from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.DBUtil import *
 from steps.lib.utils import get_node, get_ssh
 
-LOGGER = logging.getLogger('steps.install')
+LOGGER = logging.getLogger('root')
+
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
@@ -154,10 +154,11 @@ def start_dble_in_node(context, node, expect_success=True):
         assert_that(context.dble_start_success==expect_success, "Expect restart dble {0} success {1}".format(node.host_name, expect_success))
 
         if not expect_success:
-            expect_errInfo = context.text.strip()
-            cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(expect_errInfo)
-            rc, sto, ste = node.ssh_conn.exec_command(cmd)
-            assert_that(sto, not equal_to_ignoring_whitespace("0"), "expect dble restart failed for {0}".format(expect_errInfo))
+            expect_err_info = context.text.strip()
+            for row in expect_err_info.splitlines():
+                cmd = "grep -i \"{0}\" /opt/dble/logs/wrapper.log | wc -l".format(row.strip())
+                rc, sto, ste = node.ssh_conn.exec_command(cmd)
+                assert_that(str(sto).strip() is not "0", "expect dble restart failed for {0}".format(row))
 
 def check_dble_started(context, node):
     if not hasattr(context, "retry_start_dble"):

@@ -13,11 +13,13 @@ from steps.lib.PreQueryPrepare import PreQueryPrepare
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.ObjectFactory import ObjectFactory
 from behave import *
+import time
 
 global sql_threads
 sql_threads = []
 
-logger = logging.getLogger('steps.mysql_steps')
+logger = logging.getLogger('root')
+
 
 @Given('restart mysql in "{host_name}" with sed cmds to update mysql config')
 @Given('restart mysql in "{host_name}"')
@@ -94,20 +96,23 @@ def execute_sql_in_host(host_name, info_dic, mode="mysql"):
 
     return res, err
 
+
 @Given('execute sql "{num}" times in "{host_name}" at concurrent')
 @Given('execute sql "{num}" times in "{host_name}" at concurrent {concur}')
-def step_impl(context, host_name, num, concur="100"):
+@Given('execute "{mode_name}" sql "{num}" times in "{host_name}" at concurrent')
+def step_impl(context, host_name, num, concur="100", mode_name="user"):
     row = context.table[0]
     num = int(num)
     info_dic = row.as_dict()
     concur = min(int(concur), num)
 
     tasks_per_thread = int(num/concur)
-    mod_tasks = num%concur
+    mod_tasks = num % concur
+    timestamp = int(round(time.time() * 1000))
 
     def do_thread_tasks(host_name, info_dic, base_id, tasks_count, eflag):
         my_dic = info_dic.copy()
-        my_dic["conn"] = "concurr_conn_{}".format(i)
+        my_dic["conn"] = "concurr_conn_{0}_{1}".format(timestamp, i)
         my_dic["toClose"] = "False"
         last_count = tasks_count-1
         sql_raw = my_dic["sql"]
@@ -118,7 +123,10 @@ def step_impl(context, host_name, num, concur="100"):
             my_dic["sql"] = sql_raw.format(id)
             # logger.debug("debug1, my_dic:{}, conn:{}".format(my_dic["sql"], my_dic["conn"]))
             try:
-                execute_sql_in_host(host_name, my_dic, "user")
+                if mode_name == "admin":
+                    execute_sql_in_host(host_name, my_dic, "admin")
+                else:
+                    execute_sql_in_host(host_name, my_dic, "user")
             except Exception as e:
                 eflag.exception = e
 
@@ -151,6 +159,7 @@ def execute_sql_backgroud(context, conn, sql):
     setattr(context,"sql_thread_result",res)
     setattr(context,"sql_thread_err",err)
 
+
 @Given('destroy sql threads list')
 def step_impl(context):
     global sql_threads
@@ -170,6 +179,7 @@ def step_impl(context, host_name, exclude_conn_ids=None):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_all_conns(exclude_ids)
 
+
 @Given('kill mysql conns in "{host_name}" in "{conn_ids}"')
 def step_impl(context, host_name, conn_ids):
     conn_ids = getattr(context, conn_ids, None)
@@ -177,3 +187,48 @@ def step_impl(context, host_name, conn_ids):
     mysql = ObjectFactory.create_mysql_object(host_name)
     mysql.kill_conns(conn_ids)
 
+
+@Given('execute sql "{num}" times in "{host_name}" together use {concur} connection not close')
+@Given('execute "{mode_name}" sql "{num}" times in "{host_name}" together use {concur} connection not close')
+def step_impl(context, host_name, num, concur="100", mode_name="user"):
+    row = context.table[0]
+    num = int(num)
+    info_dic = row.as_dict()
+    concur = min(int(concur), num)
+
+    tasks_per_thread = num/concur
+    mod_tasks = num%concur
+    timestamp = int(round(time.time() * 1000))
+
+    def do_thread_tasks(host_name, info_dic, base_id, tasks_count, eflag):
+        my_dic = info_dic.copy()
+        my_dic["conn"] = "concurr_conn_{0}_{1}".format(timestamp,i)
+        my_dic["toClose"] = "False"
+        last_count = tasks_count-1
+        sql_raw = my_dic["sql"]
+        for k in range(tasks_count):
+            if k==last_count:
+                my_dic["toClose"] = "False"
+            id = base_id+k
+            my_dic["sql"] = sql_raw.format(id)
+            # logger.debug("debug1, my_dic:{}, conn:{}".format(my_dic["sql"], my_dic["conn"]))
+            try:
+              if mode_name == "admin":
+                execute_sql_in_host(host_name, my_dic, "admin")
+              else:
+                execute_sql_in_host(host_name, my_dic, "user")
+            except Exception as e:
+              eflag.exception = e
+
+    for i in range(concur):
+        if i < mod_tasks:
+            tasks_count = tasks_per_thread + 1
+        else:
+            tasks_count = tasks_per_thread
+        base_id = i*tasks_per_thread
+        thd = Thread(target=do_thread_tasks, args=(host_name, info_dic, base_id, tasks_count, Flag))
+        thd.start()
+        thd.join()
+
+        if Flag.exception:
+            raise Flag.exception

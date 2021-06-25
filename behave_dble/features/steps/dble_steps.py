@@ -5,26 +5,18 @@
 # @Author  : irene-coming
 import logging
 import os
-import random
-
 import time
-import MySQLdb
 
 from steps.mysql_steps import *
-from steps.lib.DBUtil import DBUtil
 from behave import *
 from hamcrest import *
-
-from steps.lib.ObjectFactory import ObjectFactory
-from steps.lib.PostQueryCheck import PostQueryCheck
-from steps.lib.PreQueryPrepare import PreQueryPrepare
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.generate_util import generate
 from steps.lib.utils import get_node
 
 from steps.mysql_steps import execute_sql_in_host
 
-logger = logging.getLogger('steps.dble_steps')
+logger = logging.getLogger('root')
 
 
 @When('execute admin cmd "{adminsql}" success')

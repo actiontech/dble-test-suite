@@ -13,7 +13,8 @@ from hamcrest import *
 
 from steps.lib.DBUtil import DBUtil
 
-LOGGER = logging.getLogger('steps.safety')
+LOGGER = logging.getLogger('root')
+
 
 @Then('test only schema level privilege configed')
 def test_schema_permission(context):
