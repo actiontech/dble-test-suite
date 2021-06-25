@@ -4,11 +4,6 @@
 # Created by wangjuan at 2020/12/25
 
 
-
-
-  @skip
-
-  # because DBLE0REQ-768
 Feature: check txIsolation supports tx_/transaction_ variables
 
   @restore_mysql_service
