@@ -2,11 +2,10 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # update by quexiuping at 2020/8/26
 
-@skip
 
-  # because DBLE0REQ-768
 Feature:  session_variables test
 
+  @skip_restart
    Scenario:  session_variables table #1
   #case desc session_variables
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_1"
@@ -21,7 +20,7 @@ Feature:  session_variables test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                | expect        | db               |
       | conn_0 | False   | desc session_variables             | length{(4)}   | dble_information |
-      | conn_0 | False   | select * from session_variables    | length{(6)}   | dble_information |
+      | conn_0 | False   | select * from session_variables    | length{(8)}   | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_2"
       | conn   | toClose | sql                             | db               |
       | conn_0 | False   | select * from session_variables | dble_information |
@@ -33,6 +32,9 @@ Feature:  session_variables test
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
+      | transaction_read_only    | false             | sys             |
+      | tx_read_only             | false             | sys             |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  |
       | conn_1 | False   | use schema1                            | success |
@@ -47,15 +49,19 @@ Feature:  session_variables test
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
+      | transaction_read_only    | false             | sys             |
+      | tx_read_only             | false             | sys             |
       | autocommit               | true              | sys             |
       | character_set_client     | latin1            | sys             |
       | collation_connection     | latin1_swedish_ci | sys             |
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
+      | transaction_read_only    | false             | sys             |
+      | tx_read_only             | false             | sys             |
       | xa                       | false             | sys             |
       | trace                    | false             | sys             |
-      | transaction_read_only    | false             | sys             |
+
 #case set xa=on to check xa values
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  |
@@ -66,22 +72,25 @@ Feature:  session_variables test
       | conn_0 | True    | select * from session_variables | dble_information |
     Then check resultset "session_variables_4" has lines with following column values
       | variable_name-1          | variable_value-2  | variable_type-3 |
-      | autocommit               | true              | sys             |
-      | character_set_client     | latin1            | sys             |
-      | collation_connection     | latin1_swedish_ci | sys             |
-      | character_set_results    | latin1            | sys             |
-      | character_set_connection | latin1_swedish_ci | sys             |
-      | transaction_isolation    | repeatable-read   | sys             |
       | autocommit               | false             | sys             |
       | character_set_client     | latin1            | sys             |
       | collation_connection     | latin1_swedish_ci | sys             |
       | character_set_results    | latin1            | sys             |
       | character_set_connection | latin1_swedish_ci | sys             |
       | transaction_isolation    | repeatable-read   | sys             |
-      | xa                       | true              | sys             |
-      | trace                    | false             | sys             |
       | transaction_read_only    | false             | sys             |
       | tx_read_only             | false             | sys             |
+      | xa                       | true              | sys             |
+      | trace                    | false             | sys             |
+      | autocommit               | true              | sys             |
+      | character_set_client     | latin1            | sys             |
+      | collation_connection     | latin1_swedish_ci | sys             |
+      | character_set_results    | latin1            | sys             |
+      | character_set_connection | latin1_swedish_ci | sys             |
+      | transaction_isolation    | repeatable-read   | sys             |
+      | transaction_read_only    | false             | sys             |
+      | tx_read_only             | false             | sys             |
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                    | expect  |
       | conn_1 | False   | set autocommit=1                       | success |
