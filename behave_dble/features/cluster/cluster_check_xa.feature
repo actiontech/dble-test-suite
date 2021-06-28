@@ -21,11 +21,14 @@ Feature: on zookeeper to check "xa"
       """
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given prepare a thread execute sql "commit" with "conn_1"
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1 | grep "xalog" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1  >/tmp/dble_zk_xa.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_xa.log" in host "dble-1"
+      """
+      xalog
+      """
     #sleep 10s, because btrace sleep 10s
     Given sleep "10" seconds
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
@@ -40,3 +43,7 @@ Feature: on zookeeper to check "xa"
       | conn_1 | false    | set xa=off                            | success      | schema1  |
       | conn_1 | false    | select * from sharding_4_t1           | length{(4)}  | schema1  |
       | conn_1 | True     | drop table if exists sharding_4_t1    | success      | schema1  |
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """

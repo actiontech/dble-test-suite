@@ -248,7 +248,7 @@ Feature: check mysql 8.0 authentication plugin
     """
     Then restart dble in "dble-1" failed for
     """
-    Can't get variables from shardingNode
+    Can't get variables from all dbGroups
     """
 
     Then execute sql in "mysql8-master1"
