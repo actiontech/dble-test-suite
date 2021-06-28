@@ -35,10 +35,10 @@ Feature: test fresh backend connection pool
       | fresh conn forced where dbGroup ='ha_group2'                                  | success |dble_information   |
     # all the connections(include connections in transaction) in ha_group2 will be refresh when the command contains force keyword
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                               | expect                         | db      |
-      | conn_0 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  MySQL server has gone away   | schema1  |
-      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}   | schema1  |
-      | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}    | schema1  |
+      | conn   | toClose | sql                                                       |  expect                                         | db      |
+      | conn_0 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  Lost connection to MySQL server during query   | schema1  |
+      | conn_1 | True    | /*!dble:shardingNode=dn2*/SELECT @@session.tx_isolation   |  has{('READ-UNCOMMITTED',),}                    | schema1  |
+      | conn_2 | True    | /*!dble:shardingNode=dn1*/SELECT @@session.tx_isolation   |  has{('REPEATABLE-READ',),}                     | schema1  |
 
   @CRITICAL @btrace
   Scenario: execute fresh command during executing reload command, fresh command will return error #2
