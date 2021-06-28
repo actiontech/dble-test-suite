@@ -86,7 +86,7 @@ SELECT LEAST(34.0,3.0,5.0,767.0)
 SELECT LEAST('B','A','C')
 SELECT 2 < 2
 SELECT 0.1 <= 2
-SELECT 'ä' LIKE 'ae' COLLATE latin1_german2_ci
+SELECT 'ä' LIKE 'ae' COLLATE utf8_general_ci
 SELECT 'a' = 'a ', 'a' LIKE 'a '
 SELECT 'David!' LIKE 'David_'
 SELECT 2 NOT BETWEEN 1 AND 3, 4 not BETWEEN 1 AND 3
