@@ -98,7 +98,7 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     Then restart dble in "dble-1" failed for
     """
-    com.actiontech.dble.config.util.ConfigException: the dble version[=8.0.21] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node.
+    com.actiontech.dble.config.util.ConfigException: the dble version\[=8.0.21\] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node.
     """
 
 # fakeMySQLVersion is 8.0.21, backend mysql version is 5.7.13 and 8.0.21
@@ -112,7 +112,7 @@ Feature: test fakeMySQLVersion support mysql8.0
     """
     Then restart dble in "dble-1" failed for
     """
-    com.actiontech.dble.config.util.ConfigException: the dble version[=8.0.21] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node.
+    com.actiontech.dble.config.util.ConfigException: the dble version\[=8.0.21\] cannot be higher than the minimum version of the backend mysql node,pls check the backend mysql node.
     """
 
 # fakeMySQLVersion is 8.0.21, backend mysql version is 8.0.21, mysql client version is 5.7.13
