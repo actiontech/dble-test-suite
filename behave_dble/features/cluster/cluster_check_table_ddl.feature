@@ -378,7 +378,7 @@ Feature: test "ddl" in zk cluster
     get into delayAfterDdlLockMeta
     """
     Then Restart dble in "dble-1" success
-    Given sleep "2" seconds
+    Given sleep "10" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     waiting for DDL finished
