@@ -12,10 +12,10 @@ Feature: change xaRetryCount value and check result
     """
    Then restart dble in "dble-1" failed for
     """
-    Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
+    Property \[ xaRetryCount \] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced
     """
     Then check "dble.log" in "dble-1" has the warnings
-      | TYPE-0 | LEVEL-1 | DETAIL-2                                                                |
+      | TYPE-0 | LEVEL-1 | DETAIL-2                                                                                                  |
       | Xml    | WARNING | Property [ xaRetryCount ] '-1' in bootstrap.cnf is illegal, you may need use the default value 0 replaced |
 
   @btrace @restore_mysql_service
