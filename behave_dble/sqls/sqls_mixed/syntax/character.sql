@@ -31,13 +31,13 @@ select _utf8'你'
 #!share_conn
 SET NAMES sjis
 SELECT HEX('à\n'), HEX(_latin1'à\n')
-#end share_conn
+#end
 set names gbk
 select '好'
 SELECT N'hello你'
 SELECT n'你hello'
 SELECT _utf8'hello你'
-#!share_conn
+#end
 set names default
 select '好'
 SELECT n'hello'
