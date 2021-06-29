@@ -31,4 +31,19 @@ public final class BtraceAboutConnection {
         BTraceUtils.println("time["+endTime+"], end ... " );
         BTraceUtils.println();
     }
+
+    @OnMethod(
+            clazz = "com.actiontech.dble.backend.mysql.nio.handler.ConnectionHeartBeatHandler",
+            method = "ping"
+    )
+    public static void ping(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        long startTime = System.currentTimeMillis();
+        BTraceUtils.println("time["+startTime+"], start ... " );
+        BTraceUtils.println("sending ping signal");
+        BTraceUtils.println();
+        Thread.sleep(10L);
+        long endTime = System.currentTimeMillis();
+        BTraceUtils.println("time["+endTime+"], end ... " );
+        BTraceUtils.println();
+    }
 }
