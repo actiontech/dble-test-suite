@@ -186,6 +186,8 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
       """
     Then check "/opt/dble/conf/bootstrap.dynamic.cnf" in "dble-1" was empty
 
+
+
   Scenario: if bootstrap.cnf is empty, check the log #5
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -195,6 +197,8 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
     homePath is not set
     """
+
+
 
   Scenario: config cluster.cnf with illegal values, restart dble fail #6
     Given update file content "/opt/dble/conf/cluster.cnf" in "dble-1" with sed cmds
@@ -221,6 +225,8 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     property \[ showBinlogStatusTimeout \] '60000.1' data type should be long
     """
 
+
+
   Scenario: config bootstrap.cnf with unrecognized value, restart dble fail #7
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
@@ -230,6 +236,9 @@ Feature: if childnodes value of system in bootstrap.cnf are invalid, replace the
     """
     These properties in bootstrap.cnf or bootstrap.dynamic.cnf are not recognized: testcon
     """
+
+
+
 
   @restore_mysql_config
   Scenario:config  MaxPacketSize in bootstrap.cnf, dble will get the lower value of MaxPacketSize and (max_allowed_packet-1024) #8
