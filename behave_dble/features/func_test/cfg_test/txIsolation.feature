@@ -4,11 +4,6 @@
 # Created by wangjuan at 2020/12/25
 
 
-
-
-  @skip
-
-  # because DBLE0REQ-768
 Feature: check txIsolation supports tx_/transaction_ variables
 
   @restore_mysql_service
@@ -77,13 +72,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start writeHost
     Given stop mysql in host "mysql-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.6:3307[]] setError
     """
     Given start mysql in host "mysql-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                                                       | expect                                |
       | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -94,13 +89,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start readHost
     Given stop mysql in host "mysql8-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.11:3307[]] setError
     """
     Given start mysql in host "mysql8-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql8-slave1"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -175,13 +170,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start writeHost
     Given stop mysql in host "mysql8-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.10:3307[]] setError
     """
     Given start mysql in host "mysql8-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql8-master2"
       | conn   | toClose | sql                                                                                | expect                                |
       | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -192,13 +187,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start readHost
     Given stop mysql in host "mysql-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.2:3307[]] setError
     """
     Given start mysql in host "mysql-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                                                                       | expect                                |
       | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -280,13 +275,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start writeHost
     Given stop mysql in host "mysql8-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.10:3307[]] setError
     """
     Given start mysql in host "mysql8-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql8-master2"
     | conn   | toClose | sql                                                                                | expect                                |
     | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -297,13 +292,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start readHost
     Given stop mysql in host "mysql8-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.11:3307[]] setError
     """
     Given start mysql in host "mysql8-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql8-slave1"
     | conn   | toClose | sql                                                                                | expect                                |
     | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@transaction_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -379,13 +374,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start writeHost
     Given stop mysql in host "mysql-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.6:3307[]] setError
     """
     Given start mysql in host "mysql-master2"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql-master2"
     | conn   | toClose | sql                                                                       | expect                                |
     | conn_5 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |
@@ -396,13 +391,13 @@ Feature: check txIsolation supports tx_/transaction_ variables
 
 # stop, start readHost
     Given stop mysql in host "mysql-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
     """
     heartbeat to [[]172.100.9.2:3307[]] setError
     """
     Given start mysql in host "mysql-slave1"
-    Given sleep "30" seconds
+    Given sleep "40" seconds
     Then execute sql in "mysql-slave1"
     | conn   | toClose | sql                                                                       | expect                                |
     | conn_6 | True    | select @@lower_case_table_names,@@autocommit, @@tx_isolation, @@read_only | has{((0, 0, 'READ-UNCOMMITTED', 0),)} |

@@ -440,6 +440,7 @@ Feature: general log test
     /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGeneralLog.java" in "dble-1"
+    Given sleep "5" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_0"
     Then check btrace "BtraceGeneralLog.java" output in "dble-1"
     """
@@ -486,7 +487,7 @@ Feature: general log test
     Given delete file "/opt/dble/BtraceGeneralLog.java.log" on "dble-1"
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-  Scenario: check general log records - manager user #5
+  Scenario: check general log records - manager user #6
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                          | expect                           | db               |
@@ -498,7 +499,6 @@ Feature: general log test
       | conn_0 | false   | show @@pause                                                                 | success                          | dble_information |
       | conn_0 | false   | RESUME                                                                       | No shardingNode paused           | dble_information |
       | conn_0 | false   | reload @@config_all                                                          | success                          | dble_information |
-      | conn_0 | false   | file @@list                                                                  | success                          | dble_information |
       | conn_0 | false   | dryrun                                                                       | success                          | dble_information |
       | conn_0 | false   | check full @@metadata where schema="schema1" and table="sharding_4_t1"       | success                          | dble_information |
       | conn_0 | false   | reload @@metadata                                                            | success                          | dble_information |
@@ -544,7 +544,6 @@ Feature: general log test
       show @@pause
       RESUME
       reload @@config_all
-      file @@list
       dryrun
       check full @@metadata where schema="schema1" and table="sharding_4_t1"
       reload @@metadata
@@ -580,7 +579,7 @@ Feature: general log test
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-  Scenario: check general log records - sharding user #6
+  Scenario: check general log records - sharding user #7
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -696,14 +695,14 @@ Feature: general log test
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
-  Scenario: check general log records - rwSplitUser #7
+  Scenario: check general log records - rwSplitUser #8
     Given delete file "/opt/dble/general/general.log" on "dble-1"
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
     <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3306" user="test" maxCon="100" minCon="10" primary="true" />
-        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3306" user="test" maxCon="100" minCon="10" primary="false" />
+        <dbInstance name="hostM1" password="111111" url="172.100.9.10:3307" user="test" maxCon="100" minCon="10" primary="true" />
+        <dbInstance name="hostS1" password="111111" url="172.100.9.11:3307" user="test" maxCon="100" minCon="10" primary="false" />
     </dbGroup>
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -773,4 +772,7 @@ Feature: general log test
       Quit
       """
     Given delete file "/opt/dble/general/general.log" on "dble-1"
-
+    Then execute sql in "dble-1" in "user" mode
+      | user   | passwd | conn   | toClose | sql                                                          | expect  | db  |
+      | split1 | 111111 | conn_1 | False   | drop table if exists test_table2                             | success | db2 |
+      | split1 | 111111 | conn_1 | true    | drop table if exists test_table1                             | success | db1 |

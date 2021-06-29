@@ -16,7 +16,7 @@ Feature: ddl metalock in dble test suites
       | truncate table sharding_4_t1/*id123*/ | schema1 |
     Then check btrace "BtraceAddMetaLock.java" output in "dble-1"
     """
-    enter metalock and start sleep
+    get into addMetaLock,start sleep
     """
     Given kill mysql query in "dble-1" forcely
     """
