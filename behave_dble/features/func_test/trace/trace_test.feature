@@ -92,5 +92,8 @@ Feature: track SQL and analyze SQL execution
       | AGGREGATE        | aggregate_1        | merge_2                                                                                                        |
       | SHUFFLE_FIELD    | shuffle_field_2    | aggregate_1                                                                                                    |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                      | expect  | db      |
+      | conn   | toClose | sql                      | expect                               | db      |
+      #case DBLE0REQ-257: if an illegal command is executed before 'show trace' is executed, execute 'show trace' don't returns to NPE
+      | conn_0 | False   | show @@trace             | You have an error in your SQL syntax | schema1 |
+      | conn_0 | False   | show trace               | success | schema1 |
       | conn_0 | true    | drop table sharding_4_t1 | success | schema1 |
