@@ -84,8 +84,7 @@ Feature: test high-availability related commands
     | DB_GROUP-0 | NAME-1   | HOST-2        | PORT-3 | W/R-4  | ACTIVE-5| DISABLED-10 |
     | ha_group2  | hostM2   | 172.100.9.6   | 3307   | R      |     0   | false       |
     | ha_group2  | slave1   | 172.100.9.2   | 3307   | W      |     0   | false       |
-#     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'hostM2'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
-#     Then check exist xml node "{'tag':'dbGroup/dbinstance','kv_map':{'name':'slave1'}}" in " /opt/dble/conf/db.xml" in host "dble-1"
+
 #    dble-2 is slave1's server
     Then execute sql in "mysql-slave1"
       | conn   | toClose | sql                             | expect  |

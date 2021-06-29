@@ -416,4 +416,17 @@ public final class BtraceClusterDelay {
         BTraceUtils.println("sleep end ");
         BTraceUtils.println(" __________________________ ");
     }
+
+
+    @OnMethod(
+            clazz = "com.actiontech.dble.btrace.provider.ClusterDelayProvider",
+            method = "delayDdLToDeliver"
+    )
+    public static void delayDdLToDeliver(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into delayDdLToDeliver");
+        BTraceUtils.print(" for order __________________________ ");
+        Thread.sleep(30000L);
+    }
+
+
 }

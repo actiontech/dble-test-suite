@@ -7,7 +7,7 @@ Feature: test group by
   Scenario: the version of all backend mysql nodes are 5.7.* #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
           """
-           <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+           <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
               <heartbeat>select user()</heartbeat>
               <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
               </dbInstance>
@@ -106,7 +106,7 @@ Feature: test group by
       | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                    |
       | dn2 | BASE SQL | select name from sharding_2_t1 group by name |
 
-  @NORMAL @skip # skip for mysql8.0 replication env
+  @NORMAL
   Scenario: Scenario: the version of all backend mysql nodes are 8.0.* #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -115,7 +115,7 @@ Feature: test group by
       <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
       </dbGroup>
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <dbInstance name="hostM2" password="111111" url="172.100.9.10:3307" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
@@ -223,7 +223,7 @@ Feature: test group by
       <dbInstance name="hostM1" password="111111" url="172.100.9.9:3307" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>
       </dbGroup>
-    <dbGroup rwSplitMode="2" name="ha_group2" delayThreshold="100" >
+    <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
       <heartbeat>select user()</heartbeat>
       <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="10" primary="true">
       </dbInstance>

@@ -26,11 +26,14 @@ Feature: test view in zk cluster
       | conn   | toClose | sql                                                     | db      |
       | conn_1 | false   | create view view_test as select * from sharding_4_t1    | schema1 |
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock | grep "schema1:view_test" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1:view_test
+      """
     Then execute sql in "dble-2" in "user" mode
       | conn   | toClose | sql                                                     | expect                                                                                  | db      |
       | conn_2 | true    | create view view_test as select * from sharding_4_t1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
@@ -42,11 +45,14 @@ Feature: test view in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-1"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock | grep "schema1:view_test" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1:view_test
+      """
     Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
       ERROR
@@ -153,11 +159,15 @@ Feature: test view in zk cluster
       | conn   | toClose | sql                                                                | db      |
       | conn_2 | True    | alter view view_view as select * from sharding_4_t1 where id =1    | schema1 |
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-2"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock | grep "schema1:view_view" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1:view_view
+      """
+
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                                | expect                                                                                  | db      |
       | conn_1 | true    | alter view view_view as select * from sharding_4_t1 where id =1    | other session/dble instance is operating view, try it later or check the cluster lock   | schema1 |
@@ -169,11 +179,14 @@ Feature: test view in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-2"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock | grep "schema1:view_view" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1:view_view
+      """
     Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-2"
       """
       ERROR
@@ -226,11 +239,14 @@ Feature: test view in zk cluster
       | conn   | toClose | sql                                                             | db      |
       | conn_3 | True    | alter view view_3 as select * from sharding_4_t1 where id =2    | schema1 |
     #case check lock on zookeeper values is 1
-    Then get result of oscmd named "A" in "dble-2"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock | grep "schema1:view_3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "1"
+    Then check following text exist "Y" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1:view_3
+      """
     Then stop dble in "dble-1"
     #sleep 2s, to check dble-1 has stop
     Given sleep "2" seconds
@@ -244,11 +260,14 @@ Feature: test view in zk cluster
     Given stop btrace script "BtraceClusterDelay.java" in "dble-3"
     Given destroy btrace threads list
     #case check lock on zookeeper values is 0
-    Then get result of oscmd named "A" in "dble-3"
+    Given execute linux command in "dble-1"
       """
-      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock | grep "schema1:view_3" | wc -l
+      cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1/lock/view_lock  >/tmp/dble_zk_lock.log 2>&1 &
       """
-    Then check result "A" value is "0"
+    Then check following text exist "N" in file "/tmp/dble_zk_lock.log" in host "dble-1"
+      """
+      schema1:view_3
+      """
     Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-3"
       """
       ERROR
@@ -282,3 +301,7 @@ Feature: test view in zk cluster
       | conn   | toClose | sql                                   | expect      | db      |
       | conn_1 | false   | drop view view_3                      | success     | schema1 |
       | conn_1 | true    | drop table if exists sharding_4_t1    | success     | schema1 |
+    Given execute linux command in "dble-1"
+    """
+    rm -rf /tmp/dble_*
+    """
