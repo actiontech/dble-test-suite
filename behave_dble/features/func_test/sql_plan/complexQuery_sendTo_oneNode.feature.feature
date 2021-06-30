@@ -120,6 +120,7 @@ Feature: following complex queries are able to send one datanode
       | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                                                                                                 |
       | dn2_0              | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
       | merge_1            | MERGE                 | dn2_0                                                                                                                     |
+      | distinct_1         | DISTINCT              | merge_1                                                                                                                   |
       | shuffle_field_1    | SHUFFLE_FIELD         | distinct_1                                                                                                                |
       | in_sub_query_1     | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
       | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
