@@ -78,8 +78,8 @@ Feature: Before the xa transaction is rolled back, open the firewall to the dble
     """
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                           | expect                                    | db      |
-      | conn_0 | False   | select * from sharding_4_t1                   | MySQL server has gone away                | schema1 |
+      | conn   | toClose | sql                                           | expect                                       | db      |
+      | conn_0 | False   | select * from sharding_4_t1                   | Lost connection to MySQL server during query | schema1 |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                           | expect                     | db      |
