@@ -162,10 +162,11 @@ Feature: following complex queries are not able to send one shardingnode
       | conn_0 | False   | explain select a.* from sharding_two_node2 a where a.id =2 or a.id in (select b.id from sharding_two_node b ) order by a.id |
     Then check resultset "rs_1" has lines with following column values
       | SHARDING_NODE-0   | TYPE-1                | SQL/REF-2                                                                                                                                                      |
-      | dn1_0             | BASE SQL              | select `b`.`id` as `autoalias_scalar` from  `sharding_two_node` `b`                                                                                            |
-      | dn2_0             | BASE SQL              | select `b`.`id` as `autoalias_scalar` from  `sharding_two_node` `b`                                                                                            |
+      | dn1_0             | BASE SQL              | select DISTINCT `b`.`id` as `autoalias_scalar` from  `sharding_two_node` `b`                                                                                   |
+      | dn2_0             | BASE SQL              | select DISTINCT `b`.`id` as `autoalias_scalar` from  `sharding_two_node` `b`                                                                                   |
       | merge_1           | MERGE                 | dn1_0; dn2_0                                                                                                                                                   |
-      | shuffle_field_1   | SHUFFLE_FIELD         | merge_1                                                                                                                                                        |
+      | distinct_1        | DISTINCT              | merge_1                                                                                                                                                        |
+      | shuffle_field_1   | SHUFFLE_FIELD         | distinct_1                                                                                                                                                     |
       | in_sub_query_1    | IN_SUB_QUERY          | shuffle_field_1                                                                                                                                                |
       | dn1_1             | BASE SQL(May No Need) | in_sub_query_1; select `a`.`id`,`a`.`name` from  `sharding_two_node2` `a` where  ( `a`.`id` in ('{NEED_TO_REPLACE}') OR `a`.`id` in (2)) ORDER BY `a`.`id` ASC |
       | dn2_1             | BASE SQL(May No Need) | in_sub_query_1; select `a`.`id`,`a`.`name` from  `sharding_two_node2` `a` where  ( `a`.`id` in ('{NEED_TO_REPLACE}') OR `a`.`id` in (2)) ORDER BY `a`.`id` ASC |
