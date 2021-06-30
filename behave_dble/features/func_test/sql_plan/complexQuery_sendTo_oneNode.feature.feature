@@ -118,9 +118,9 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
     Then check resultset "rs_6" has lines with following column values
       | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                                                                                                 |
-      | dn2_0              | BASE SQL              | select `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                                   |
+      | dn2_0              | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
       | merge_1            | MERGE                 | dn2_0                                                                                                                     |
-      | shuffle_field_1    | SHUFFLE_FIELD         | merge_1                                                                                                                   |
+      | shuffle_field_1    | SHUFFLE_FIELD         | distinct_1                                                                                                                |
       | in_sub_query_1     | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
       | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
       | dn2_1              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
@@ -376,9 +376,10 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | explain select * from aly_order join test_global_1 where aly_order.id in ( select id from aly_test where id=1) |
     Then check resultset "rs_31" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2                                                                                                                 |
-      | dn2_0           | BASE SQL              | select `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                                   |
+      | dn2_0           | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
       | merge_1         | MERGE                 | dn2_0                                                                                                                     |
-      | shuffle_field_1 | SHUFFLE_FIELD         | merge_1                                                                                                                   |
+      | distinct_1      | DISTINCT              | merge_1                                                                                                                   |
+      | shuffle_field_1 | SHUFFLE_FIELD         | distinct_1                                                                                                                |
       | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
       | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
       | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
@@ -389,6 +390,7 @@ Feature: following complex queries are able to send one datanode
       | dn1_1           | BASE SQL(May No Need) | in_sub_query_1; select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`                                    |
       | merge_3         | MERGE                 | dn1_1                                                                                                                     |
       | join_1          | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
+      | shuffle_field_3 | SHUFFLE_FIELD         | join_1                                                                                                                    |
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | True    | explain select * from aly_test a,  test_global_1 where a.c=test_global_1.cc and a.id =3 and test_global_1.id=1 |
