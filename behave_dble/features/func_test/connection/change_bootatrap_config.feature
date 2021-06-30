@@ -18,7 +18,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
     Then restart dble in "dble-1" success
     # keepAlivetime is 60s, 'complexExecutor' heartbeat and 9066 cmd would use it
-    Given sleep "60" seconds
+    Given sleep "61" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_thread_pool_1"
       | conn   | toClose | sql                            | db                |
       | conn_0 | False   | select * from dble_thread_pool | dble_information  |
@@ -102,7 +102,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                              | expect                                                | db               |
       | conn_0 | False   | select core_pool_size from dble_thread_pool      | has{((1,), (10,), (10,), (10,), (10,), (10,), (10,))} | dble_information |
-
 
 
 
@@ -805,6 +804,7 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       caught err:
       NullPointerException
       """
+
 
 
   @btrace
