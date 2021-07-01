@@ -18,7 +18,7 @@ Feature: following complex queries are able to send one datanode
       #11.explain select * from sharding_two_node a where a.id =1 and exists(select * from sharding_two_node2 b where a.c_flag=b.c_flag and b.id =1);
       #12.explain select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 ;
 
-@skip_restart
+
    Scenario: execute "explain sql" and check result #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
