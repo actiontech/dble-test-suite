@@ -3,7 +3,8 @@
 # Created by wujinling at 2021/02/24
 Feature: test connection pool
 
-  @NORMAL
+  @NORMAL @skip
+    # due to when use illegal values,the dble can't reload success and restart dble success  DBLE0REQ-920
   Scenario: connection validation test #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
