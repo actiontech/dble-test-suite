@@ -17,8 +17,41 @@ public class ServerSideCursorTest extends InterfaceTest {
     }
 
     public void start() throws SQLException {
+        testCursor();
+    }
+
+    private void testCursor() throws SQLException {
+        SSHCommandExecutor sshExecutor = new SSHCommandExecutor(dbleProp.serverName, Config.SSH_USER,
+                Config.SSH_PASSWORD);
+
+        //check enableCursor
+        String adminCmd = Config.getdbleAdminCmd("select variable_value from dble_information.dble_variables where variable_name like '%enableCursor%';");
+        sshExecutor.execute(adminCmd);
+        System.out.println("current enableCursor is : " + sshExecutor.getStandardOutput().lastElement().trim().split("\n")[1]);
+
+        //enableCursor default value is false
         executeCursor(true);
         executeCursor(false);
+
+        //set enableCursor=true
+        String cmd = "sed -i -e '/-DenableCursor/d' -e '$a -DenableCursor=true' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
+        sshExecutor.execute(cmd);
+        try {
+            Thread.sleep(8000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        //check enableCursor
+        sshExecutor.execute(adminCmd);
+        System.out.println("current enableCursor is : " + sshExecutor.getStandardOutput().lastElement().trim().split("\n")[1]);
+
+        executeCursor(true);
+        executeCursor(false);
+
+        //reset enableCursor=false
+        cmd = "sed -i -e '/-DenableCursor/d' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
+        sshExecutor.execute(cmd);
     }
 
     private void executeCursor(boolean useCursorFetch) throws SQLException {
@@ -42,8 +75,8 @@ public class ServerSideCursorTest extends InterfaceTest {
             System.out.println("pass! server side cursor test success, useCursorFetch = " + useCursorFetch);
 
         } catch (Exception exception) {
-            exception.printStackTrace();
-            System.out.println("failed! erver side cursor test failed => " + exception.getMessage());
+            System.out.println("failed! server side cursor test failed => " + exception.getMessage());
+            exception.printStackTrace(System.err);
         }finally {
             if(connection != null){
                 dropTable(connection);
