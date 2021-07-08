@@ -103,4 +103,3 @@ Feature: config db config files incorrect and restart dble or reload configs
       4,14d
     """
     Then execute admin cmd "reload @@config_all"
-    Given Restart dble in "dble-1" success

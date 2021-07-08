@@ -148,7 +148,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
 
   Scenario:  config two blacklists with the same name, reload failed #11
-    Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
+    Given add xml segment to node with attribute "{'tag':'root', 'prev':'shardingUser'}" in "user.xml" with duplicate name
     """
       <blacklist name="blacklist1">
         <property name="selectHavingAlwayTrueCheck">true</property>
@@ -163,7 +163,7 @@ Feature:  config user config files incorrect and restart dble or reload configs
     """
 
   Scenario:  config wrong blacklist property, reload failed #12
-    Given add xml segment to node with attribute "{'tag':'root', 'prev':'rwSplitUser'}" in "user.xml" with duplicate name
+    Given add xml segment to node with attribute "{'tag':'root', 'prev':'shardingUser'}" in "user.xml" with duplicate name
     """
       <blacklist name="blacklist1">
         <property name="selectHavingAlwayTrueCheck_fake">true</property>
