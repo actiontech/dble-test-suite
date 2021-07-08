@@ -58,7 +58,7 @@ Feature: test "pause/resume" manager cmd
         | conn_0 | False    | insert into test values(1,'test1'),(2,'test2'),(3,'test3') | success | schema1 |
       Then execute sql in "dble-1" in "admin" mode
         | conn   | toClose  | sql                                                                       | expect                                              |
-        | new    | False    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | The backend connection recycle failure,try it later |
+        | new    | False    | pause @@shardingNode = 'dn1,dn2,dn3,dn4' and timeout = 5,queue=1,wait_limit=1 | The backend connection recycle failure, try it later |
       Then execute sql in "dble-1" in "user" mode
         | conn   | toClose | sql     | expect  | db       |
         | conn_0 | True    | commit  | success | schema1  |
@@ -112,7 +112,7 @@ Feature: test "pause/resume" manager cmd
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "admin" mode
       | sql                                                                        | expect                                              |
-      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | The backend connection recycle failure,try it later |
+      | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 5 | The backend connection recycle failure, try it later |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      | db      |
       | conn_0 | false   | select *  from sharding_4_t1 | length{(4)} | schema1 |
@@ -135,7 +135,7 @@ Feature: test "pause/resume" manager cmd
       | resume | success |
     Then check log "/tmp/dble_query.log" output in "dble-1"
     """
-    Pause resume when recycle connection ,pause revert
+    Pause resume when recycle connection, pause revert
     """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                          | expect      |
