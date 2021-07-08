@@ -20,7 +20,6 @@ public class BtraceGroupByThread {
         BTraceUtils.println("get into groupByBucket.start");
         BTraceUtils.println("---------------");
         BTraceUtils.Threads.jstack();
-        BTraceUtils.println(BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss"));
         Thread.sleep(1000L);
         BTraceUtils.println(BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss") + ", end groupByBucket.start");
         BTraceUtils.println("---------------");
