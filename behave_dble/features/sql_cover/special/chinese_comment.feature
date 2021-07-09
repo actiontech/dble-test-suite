@@ -120,11 +120,11 @@ Feature: verify issue http://10.186.18.21/universe/ushard/issues/92 #Enter featu
       | conn_0 | False   | SELECT CONCAT(c_year, '年') AS xValue, statTime , SUBSTRING(statTime, 1, 4) AS queryTimeHistogram , IFNULL(dataValue, 0) AS dataValue, ':statTime' AS queryStatTime , '41101' AS orgNo FROM ( SELECT YEAR(NOW()) AS c_year FROM DUAL UNION ALL (SELECT YEAR(NOW()) - 1 AS c_year FROM DUAL) UNION ALL (SELECT YEAR(NOW()) - 2 AS c_year FROM DUAL) UNION ALL (SELECT YEAR(NOW()) - 3 AS c_year FROM DUAL) UNION ALL (SELECT YEAR(NOW()) - 4 AS c_year FROM DUAL) ) ttt LEFT JOIN ( SELECT tem.stat_time AS statTime , round((tem.gong - tem.shou) / tem.gong * 100, 2) AS dataValue FROM ( SELECT a.stat_time , sum(CASE  WHEN a.IDX_NO = 'JYGK41101030000000338' THEN a.DATA_VALUE ELSE 0 END) AS gong , sum(CASE  WHEN a.IDX_NO = 'JYGK41101030000000339' THEN a.DATA_VALUE ELSE 0 END) AS shou FROM cl_idx_data_monitor a WHERE LENGTH(STAT_TIME) = 8 AND a.theme_no = 'IND_08_TGLOSSYEAR' AND a.stat_calibre = CASE  WHEN LENGTH('41101') = 5 THEN '01' WHEN LENGTH('41101') = 7 THEN '03' WHEN LENGTH('41101') = 8 THEN '04' END AND BUSI_CODE = '03' AND MAJOR_NO = '08' AND a.org_no = '41101' AND a.idx_no IN ('JYGK41101030000000338', 'JYGK41101030000000339') GROUP BY a.stat_time ) tem ) ddd ON ttt.c_year = SUBSTRING(ddd.statTime, 1, 4) ORDER BY c_year| schema1 | utf8mb4 |
     Then check resultset "6" has lines with following column values
       | xValue-0  | statTime-1 | queryTimeHistogram-2 | dataValue-3 | queryStatTime-4 | orgNo-5 |
-      | 2016年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2017年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2018年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2019年    | None       | None                 | 0           | :statTime       | 41101   |
       | 2020年    | None       | None                 | 0           | :statTime       | 41101   |
+      | 2021年    | None       | None                 | 0           | :statTime       | 41101   |
 
 
 ##case the filed support utf8  https://support.actionsky.com/service_desk/browse/ATK-1400

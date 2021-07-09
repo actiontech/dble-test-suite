@@ -5,14 +5,64 @@
 
 Feature: # dryrun test
 
-  Scenario: # from DBLE0REQ-721  #1
+  Scenario: check cmd "dryrun" # from DBLE0REQ-721 #1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+       """
+       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+       </schema>
+       """
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "A"
       | sql         |
       | dryrun      |
     Then check resultset "A" has lines with following column values
       | TYPE-0  | LEVEL-1 | DETAIL-2                                                                  |
-      | Meta    | WARNING | Table schema1.test don't exists in shardingNode[dn1,dn2,dn3,dn4]          |
-      | Meta    | WARNING | Table schema1.sharding_2_t1 don't exists in shardingNode[dn1,dn2]         |
-      | Meta    | WARNING | Table schema1.sharding_4_t1 don't exists in shardingNode[dn1,dn2,dn3,dn4] |
 #      | Xml     | NOTICE  | There is No RWSplit User                                                  |
       | Cluster | NOTICE  | Dble is in single mod                                                     |
+
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+       """
+       <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+          <globalTable name="global" shardingNode="dn1,dn2,dn3,dn4" />
+          <singleTable name="sing" shardingNode="dn5" />
+          <shardingTable name="sharding_4" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+       </schema>
+
+       <schema name="schema2" >
+           <shardingTable name="sharding_2" shardingNode="dn1,dn3" function="hash-two" shardingColumn="id"/>
+       </schema>
+       """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "B"
+      | sql         |
+      | dryrun      |
+    Then check resultset "B" has lines with following column values
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                                               |
+      | Meta    | WARNING | Table schema1.global don't exists in shardingNode[dn1,dn2,dn3,dn4]     |
+      | Meta    | WARNING | Table schema1.sing don't exists in shardingNode[dn5]                   |
+      | Meta    | WARNING | Table schema1.sharding_4 don't exists in shardingNode[dn1,dn2,dn3,dn4] |
+      | Meta    | WARNING | Table schema2.sharding_2 don't exists in shardingNode[dn1,dn3]         |
+      | Xml     | WARNING | Schema:schema2 has no user                                             |
+#      | Xml     | NOTICE  | There is No RWSplit User                                               |
+      | Cluster | NOTICE  | Dble is in single mod                                                  |
+
+    Given delete the following xml segment
+      | file       | parent         | child                  |
+      | user.xml   | {'tag':'root'} | {'tag':'shardingUser'} |
+    Given add xml segment to node with attribute "{'tag':'root','prev':'managerUser'}" in "user.xml"
+    """
+       <rwSplitUser name="rwS1" password="111111" dbGroup="ha_group1" maxCon="0"/>
+    """
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "C"
+      | sql         |
+      | dryrun      |
+    Then check resultset "C" has lines with following column values
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                                               |
+      | Meta    | WARNING | Table schema1.global don't exists in shardingNode[dn1,dn2,dn3,dn4]     |
+      | Meta    | WARNING | Table schema1.sing don't exists in shardingNode[dn5]                   |
+      | Meta    | WARNING | Table schema1.sharding_4 don't exists in shardingNode[dn1,dn2,dn3,dn4] |
+      | Meta    | WARNING | Table schema2.sharding_2 don't exists in shardingNode[dn1,dn3]         |
+      | Xml     | WARNING | There is No Server User                                                |
+      | Cluster | NOTICE  | Dble is in single mod                                                  |
+    Then check resultset "C" has not lines with following column values
+      | TYPE-0  | LEVEL-1 | DETAIL-2                                                               |
+      | Xml     | WARNING | Schema:schema2 has no user                                             |
+#      | Xml     | NOTICE  | There is No RWSplit User                                               |
