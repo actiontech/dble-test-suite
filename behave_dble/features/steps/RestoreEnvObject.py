@@ -16,7 +16,7 @@ import re
 
 from hamcrest import *
 
-logger = logging.getLogger('environment.after_scenario')
+logger = logging.getLogger('root')
 class RestoreEnvObject(object):
     def __init__(self,scenario):
         self._scenario = scenario

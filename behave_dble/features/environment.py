@@ -10,8 +10,9 @@ from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_s
 from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
     install_dble_in_all_nodes
+from behave.contrib.scenario_autoretry import patch_scenario_with_autoretry
 
-logger = logging.getLogger('environment')
+logger = logging.getLogger('root')
 
 def init_dble_conf(context, para_dble_conf):
     para_dble_conf_lower = para_dble_conf.lower()
@@ -101,6 +102,10 @@ def before_feature(context, feature):
             logger.info(desc)
             context.execute_steps(desc)
 
+    for scenario in feature.scenarios:
+        if "autoretry" in scenario.effective_tags:
+            patch_scenario_with_autoretry(scenario, max_attempts=3)
+
 def after_feature(context, feature):
     logger.info('Feature end: <{0}><{1}>'.format(feature.filename,feature.name))
     logger.info('*' * 30)
@@ -145,5 +150,12 @@ def before_step(context, step):
     logger.debug(step.name)
 
 def after_step(context, step):
-    logger.info('{0}, status:{1}'.format(step.name, step.status))
+    # logger.info('{0}, status:{1}'.format(step.name, step.status))
+    if step.status == "failed":
+        logger.error('{0}, status:{1}'.format(step.name, step.status))
+    else:
+        logger.info('{0}, status:{1}'.format(step.name, step.status))
+
+
+
 

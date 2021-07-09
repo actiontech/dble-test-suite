@@ -11,6 +11,8 @@
 -Xmx1G
 -Xms1G
 -XX:MaxDirectMemorySize=1G
+-XX:+HeapDumpOnOutOfMemoryError
+-XX:HeapDumpPath="/tmp"
 #  base config
 -DhomePath=.
 -DinstanceName=1

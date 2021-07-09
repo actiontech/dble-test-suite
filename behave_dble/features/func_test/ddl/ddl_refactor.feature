@@ -83,7 +83,7 @@ Feature: test ddl refactor
 
 
    Scenario:  can‘t support ddl in xa transaction  #4
-#case  https://github.com/actiontech/dble/issues/1760
+     #case  https://github.com/actiontech/dble/issues/1760
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                          | expect                                                           | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1           | success                                                          | schema1 |
@@ -97,4 +97,22 @@ Feature: test ddl refactor
       | conn_0 | true    | drop table if exists sharding_4_t1           | success                                                          | schema1 |
 
 
+
+   Scenario: Multiple ddl is executed concurrently, the id in the dble log is correct #5
+     #### dble-9042
+    Given execute sql "2345" times in "dble-1" together use 2345 connection not close
+      | sql                                                                          | db      |
+      | drop table if exists sharding_4_t1;create table sharding_4_t1(id int)        | schema1 |
+
+    Then check the occur times of following key in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                           | occur_times |
+      | NEW DDL START:\[DDL\]         | 4690        |
+      | DDL END:\[DDL\]               | 4690        |
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      java.nio.channels.AsynchronousCloseException: null
+      caught err:
+      """
 

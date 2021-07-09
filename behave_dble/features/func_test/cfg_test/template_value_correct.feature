@@ -270,17 +270,17 @@ Feature: config all dble config files correct and restart dble
       <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" disableHA="false">
         <heartbeat timeout="0" errorRetryCount="0">select user()</heartbeat>
         <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" usingDecrypt="false" maxCon="1000" minCon="10" readWeight="0" primary="true" disabled="false">
-          <property name="evictorShutdownTimeoutMillis">10L * 1000L</property>
+          <property name="evictorShutdownTimeoutMillis">1000</property>
           <property name="numTestsPerEvictionRun">3</property>
           <property name="testOnCreate">false</property>
           <property name="testOnBorrow">false</property>
           <property name="testOnReturn">false</property>
           <property name="testWhileIdle">false</property>
-          <property name="connectionTimeout">10s</property>
-          <property name="connectionHeartbeatTimeout">20ms</property>
-          <property name="timeBetweenEvictionRunsMillis">30s</property>
-          <property name="idleTimeout">10minute</property>
-          <property name="heartbeatPeriodMillis">10s</property>
+          <property name="connectionTimeout">10</property>
+          <property name="connectionHeartbeatTimeout">20</property>
+          <property name="timeBetweenEvictionRunsMillis">30</property>
+          <property name="idleTimeout">10</property>
+          <property name="heartbeatPeriodMillis">10</property>
         </dbInstance>
       </dbGroup>
     """

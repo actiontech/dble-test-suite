@@ -398,3 +398,9 @@ create table sharding_2_t1 (id int)
 insert into sharding_2_t1 values(1),(2),(3),(4),(5)
 select * from (select * from sharding_2_t1) b limit 0
 drop table if exists sharding_2_t1
+#issue DBLE0REQ-1150
+drop table if exists sharding_2_t1
+create table sharding_2_t1 (id int)
+insert into sharding_2_t1 values(1),(2),(3),(4),(5)
+SELECT count(id) FROM sharding_2_t1 WHERE id = 1 OR id IN (2) GROUP BY id = 1
+drop table if exists sharding_2_t1

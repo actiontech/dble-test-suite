@@ -12,7 +12,7 @@ class Logging(object):
         self._logger = self._get_logger()
 
     def _get_logger(self):
-        return logging.getLogger(self._logger_name)
+        return logging.getLogger('root')
 
     @property
     def _logger_name(self):

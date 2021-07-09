@@ -14,7 +14,7 @@ from lib.DbleMeta import DbleMeta
 from lib.DBUtil import *
 from lib.utils import get_node, get_ssh
 
-LOGGER = logging.getLogger('steps.install')
+LOGGER = logging.getLogger('root')
 
 @Given('a clean environment in all dble nodes')
 def clean_dble_in_all_nodes(context):
@@ -96,7 +96,7 @@ def download_dble(context, dble_packet_name):
     LOGGER.debug("cmd:{0}, exit_status:{1}".format(cmd, exit_status))
 
     if context.cfg_dble['packet_name'].find("{0}") == -1:
-        cmd = 'cd {0} && wget --user=ftp --password=ftp -nv {1}'.format(context.cfg_sys['share_path_docker'],
+        cmd = 'cd {0} && wget --user=ftpuser --password=ftpuser -nv {1}'.format(context.cfg_sys['share_path_docker'],
                                                                         rpm_ftp_url)
     else:
         cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'],

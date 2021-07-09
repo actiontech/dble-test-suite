@@ -406,7 +406,7 @@ Feature: test online ddl
        """
 
 
-  Scenario: ALTER TABLE tbl_name ALTER COLUMN col SET DEFAULT literal, ALGORITHM=INSTANT/ ALTER TABLE tbl ALTER COLUMN col DROP DEFAULT, ALGORITHM=INSTANT   #5
+ Scenario: ALTER TABLE tbl_name ALTER COLUMN col SET DEFAULT literal, ALGORITHM=INSTANT/ ALTER TABLE tbl ALTER COLUMN col DROP DEFAULT, ALGORITHM=INSTANT   #5
     Given record current dble log line number in "log_linenu"
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                       | expect           | db      |
