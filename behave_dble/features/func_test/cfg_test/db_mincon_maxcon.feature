@@ -9,7 +9,7 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="100" minCon="20" primary="true" />
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="100" minCon="20" primary="true" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -21,7 +21,7 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="10" minCon="10" primary="true" />
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="10" minCon="10" primary="true" />
     </dbGroup>
     """
     Given Restart dble in "dble-1" success
@@ -34,7 +34,7 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1000" minCon="1" primary="true" />
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1000" minCon="1" primary="true" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -51,7 +51,7 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="5" minCon="10" primary="true" />
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="5" minCon="10" primary="true" />
     </dbGroup>
     """
     Then execute admin cmd "reload @@config_all"
@@ -68,7 +68,7 @@ Feature: check minCon and maxCon in db.xml DBLE0REQ-1246
     """
     <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3306" user="test" maxCon="1" minCon="2" primary="true" />
+        <dbInstance name="hostM2" password="111111" url="172.100.9.6:3307" user="test" maxCon="1" minCon="2" primary="true" />
     </dbGroup>
     """
     Given delete the following xml segment
