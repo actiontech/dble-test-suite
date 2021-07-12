@@ -359,3 +359,4 @@ Feature: test "create databsae @@shardingnode='dn1,dn2,...' and drop databsae @@
     Then execute sql in "mysql"
       | conn   | toClose  | sql                           | expect           |
       | conn_0 | true     | show databases like 'db4'     | has{('db4',),}   |
+    Then execute admin cmd "create database @@shardingNode ='dn1,dn2,dn3,dn4,dn5'"
