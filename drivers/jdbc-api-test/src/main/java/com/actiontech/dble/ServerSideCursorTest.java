@@ -37,7 +37,7 @@ public class ServerSideCursorTest extends InterfaceTest {
         String cmd = "sed -i -e '/-DenableCursor/d' -e '$a -DenableCursor=true' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
         sshExecutor.execute(cmd);
         try {
-            Thread.sleep(8000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class ServerSideCursorTest extends InterfaceTest {
         cmd = "sed -i -e '/-DenableCursor/d' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
         sshExecutor.execute(cmd);
         try {
-            Thread.sleep(5000);
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
