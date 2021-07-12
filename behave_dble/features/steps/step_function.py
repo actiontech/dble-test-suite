@@ -110,7 +110,7 @@ def step_impl(context):
       #1.4 with replace into in load data
       Given create local and server file "test4.txt" and fill with text
       """
-      1,1,,
+      1,1,
       """    
       #1.5 more than 1w lines in file
       Given create local and server file "test.txt" and fill with text
