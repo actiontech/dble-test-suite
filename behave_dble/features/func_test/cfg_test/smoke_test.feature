@@ -40,5 +40,5 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
       | Variable_name-0         | Value-1 |
       | autocommit              | ON      |
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                             | expect                                                       | db      |
-      | conn_0 | true    | drop table if exists sharding_4_t1              | DDL is not allowed to be executed in xa transaction          | schema1 |
+      | conn   | toClose | sql                                             | expect                                                                    | db      |
+      | conn_0 | true    | drop table if exists sharding_4_t1              | Implicit commit statement cannot be executed when xa transaction          | schema1 |
