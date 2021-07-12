@@ -8,12 +8,12 @@ cd ${DIR}/../../behave_dble/compose/docker-build-behave && bash resetReplication
 #restart dble
 cd ${DIR}/../../behave_dble && behave --stop -D dble_conf=sql_cover_sharding features/setup.feature
 
-#driver java test code is compiled in connector_j.jar
-cp /var/lib/go-agent/pipelines/connector_j.jar ${DIR}/target/
+echo '=======                       package                                ======='
+cd ${DIR} && /usr/local/apache-maven-3.6.3/bin/mvn -DskipTest clean package assembly:assembly
 
-#do run driver test
-cd ${DIR} && bash do_run_connector_J.sh connector_j.jar -c
+echo '=======                        driver test                           ======='
+cd ${DIR}/ && bash do_run_connector_J.sh Jconnector-5.1.35-jar-with-dependencies.jar -c
 
-#save logs for ci artifacts
+echo '=======                   save logs for ci artifacts                 ======='
 scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
 mv ${DIR}/sql_logs ${DIR}/dble_logs/sql_logs
