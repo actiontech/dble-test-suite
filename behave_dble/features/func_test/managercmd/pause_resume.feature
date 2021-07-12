@@ -144,8 +144,6 @@ Feature: test "pause/resume" manager cmd
       | conn_0 | true    | drop table if exists sharding_4_t1         | success     |
     Given delete file "/tmp/dble_admin_query.log" on "dble-1"
 
-
-
   @CRITICAL
   Scenario: execute manager cmd "pause @@shardingNode" different  #7
 
@@ -160,3 +158,51 @@ Feature: test "pause/resume" manager cmd
       | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =10 ,queue = 1,wait_limit = 15  | success                                                                                              |
       | pause @@shardingNode = 'dn1,dn2,dn3' and timeout =100 ,queue = 1,wait_limit = 15 | You are paused already                                                                               |
       | resume                                                                           | success                                                                                              |
+
+
+
+  Scenario: execute manager cmd "pause  resume " more time  #8
+  # DBLE0REQ-1102
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                           | expect  |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
+      """
+    Then check result "A" value is "9"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                           | expect  |
+      | resume                                                                        | success |
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
+      """
+    Then check result "A" value is "0"
+
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                           | expect  |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+      | resume                                                                        | success |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+      | resume                                                                        | success |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+      | resume                                                                        | success |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+      | resume                                                                        | success |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+      | resume                                                                        | success |
+      | pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10 | success |
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
+      """
+    Then check result "A" value is "9"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                                           | expect  |
+      | resume                                                                        | success |
+    Then get result of oscmd named "A" in "dble-1"
+      """
+      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep 'pause' | wc -l
+      """
+    Then check result "A" value is "0"
