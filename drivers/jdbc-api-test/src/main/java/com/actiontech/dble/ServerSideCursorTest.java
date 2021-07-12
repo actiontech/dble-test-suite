@@ -52,6 +52,11 @@ public class ServerSideCursorTest extends InterfaceTest {
         //reset enableCursor=false
         cmd = "sed -i -e '/-DenableCursor/d' /opt/dble/conf/bootstrap.cnf && /opt/dble/bin/dble restart";
         sshExecutor.execute(cmd);
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void executeCursor(boolean useCursorFetch) throws SQLException {
