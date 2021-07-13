@@ -2,6 +2,8 @@
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 Feature: test config in user.xml
 
+
+
   @TRIVIAL
   Scenario: add client user with illegal label, reload fail #1
      #1.1  client user with illegal label got error
@@ -15,6 +17,8 @@ Feature: test config in user.xml
     Attribute 'test' is not allowed to appear in element 'shardingUser'
     """
 
+
+
   @TRIVIAL
   Scenario: add client user with schema which does not exist, start dble fail #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -26,6 +30,8 @@ Feature: test config in user.xml
      """
      User\[name:test_user3\]'s schema \[testdb\] is not exist!
      """
+
+
 
   @BLOCKER
   Scenario: add client user with usingDecrypt=1, start/reload success, query success #3
@@ -40,6 +46,8 @@ Feature: test config in user.xml
       | sql      |
       | select 1 |
 
+
+
   @TRIVIAL
   Scenario: both single & multiple manager user reload and do management cmd success #4
     Then execute admin cmd "reload @@config_all"
@@ -50,6 +58,8 @@ Feature: test config in user.xml
     """
     Then execute admin cmd "reload @@config_all"
     Then execute admin cmd "show @@version" with user "test_user" passwd "test_password"
+
+
 
   @CRITICAL
   Scenario:config ip white dbInstance to both management and client user, client user not in white dbInstance access denied #5
@@ -70,6 +80,7 @@ Feature: test config in user.xml
         | user        | passwd | conn   | toClose | sql      | expect  | db      |
         | test        | 111111 | conn_0 | True    | select 1 |success  | schema1 |
         | test_user   | 111111 | conn_0 | True    | select 1 |Access denied for user 'test_user' | schema1 |
+
 
 
   @CRITICAL
@@ -141,19 +152,49 @@ Feature: test config in user.xml
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
     """
         <blacklist name="blacklist1">
-                <property name="selelctAllow">false</property>
-                <property name="createTableAllow">false</property>
-                <property name="showAllow">false</property>
+          <property name="selelctAllow">false</property>
+          <property name="createTableAllow">false</property>
+          <property name="showAllow">false</property>
         </blacklist>
     """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                               | expect  | db     |
-      | conn_0 | False   | create table if not exists test_table_1(id int);   |success | schema1 |
-      | conn_0 | False   | select * from test_table_1 where 1 = 1 and 2 = 1; |error totally whack | schema1 |
-      | conn_0 | False   | show tables                                       |success | schema1 |
-      | new | False   | create table if not exists test_table_1(id int);   |error totally whack | schema1 |
-      | new| False   | show tables                                       |error totally whack | schema1 |
+      | conn   | toClose | sql                                                | expect              | db     |
+      | conn_0 | False   | create table if not exists test_table_1(id int)    | success             | schema1 |
+      | conn_0 | False   | select * from test_table_1 where 1 = 1 and 2 = 1   | error totally whack | schema1 |
+      | conn_0 | False   | show tables                                        | success             | schema1 |
+      | new    | False   | create table if not exists test_table_1(id int)    | error totally whack | schema1 |
+      | new    | False   | show tables                                        | error totally whack | schema1 |
+
+
+
+
+  Scenario: config sql blacklist add illegal values ,then restart dble failed # DBLE0REQ-920 # 6.1
+    Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
+      """
+       <managerUser name="root" password="111111"/>
+       <shardingUser name="test" password="111111" schemas="schema1" readOnly="false" blacklist="blacklist1"/>
+       <blacklist name="blacklist1">
+            <property name="conditionDoubleConstAllow">0</property>
+            <property name="conditionAndAlwayFalseAllow">-1</property>
+             <property name="conditionAndAlwayTrueAllow"> </property>
+             <property name="constArithmeticAllow">adv</property>
+             <property name="alterTableAllow">null</property>
+       </blacklist>
+      """
+    Then execute admin cmd "reload @@config_all" get the following output
+      """
+      Reload config failure
+      """
+    Then restart dble in "dble-1" failed for
+      """
+      property \[ alterTableAllow \] 'null' data type should be boolean
+      property \[ conditionAndAlwayFalseAllow \] '-1' data type should be boolean
+      property \[ conditionAndAlwayTrueAllow \] '' data type should be boolean
+      property \[ conditionDoubleConstAllow \] '0' data type should be boolean
+      property \[ constArithmeticAllow \] 'adv' data type should be boolean
+      """
+
 
   @CRITICAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) greater than 0 #7
@@ -179,6 +220,8 @@ Feature: test config in user.xml
       | new    | False   | show @@version | too many connections for this user |
       | new    | False   | show @@version | root |
 
+
+
   @NORMAL
   Scenario: config "user" attr "maxCon" (front-end maxCon) 0 means using no checking, without "system" property "maxCon" configed #8
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -194,6 +237,8 @@ Feature: test config in user.xml
         | test   | 111111    | conn_5 | False   | select 1 | success | schema1 |
         | action | action    | conn_6 | False   | select 1 | success | schema1 |
         | action | action    | conn_7 | False   | select 1 | success | schema1 |
+
+
 
   @CRITICAL
   Scenario: config sum(all "user" attr "maxCon") > "system" property "maxCon", exceeding connection will fail #9
@@ -216,6 +261,8 @@ Feature: test config in user.xml
     Then execute sql in "dble-1" in "admin" mode
       | sql            |
       | show @@version |
+
+    
 
   Scenario: test tableStructureCheckTask from issue:1098 #10
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -245,12 +292,15 @@ Feature: test config in user.xml
       | sql                             | expect          |db       |
       | drop table if exists test_table | success         | schema1 |
 
+
+
+
   Scenario: test 'sqlExecuteTimeout' from issue:1286 #11
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
     $a -DfakeMySQLVersion=5.7.13
     $a -DprocessorCheckPeriod=10
-    $a -DsqlExecuteTimeout=60
+    $a -DsqlExecuteTimeout=20
     """
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
@@ -275,11 +325,12 @@ Feature: test config in user.xml
       | conn_0  | False    | create table test_table(id int,name char(20)) | success                | schema1 |
       | conn_0  | False    | insert into test_table values(1,11),(2,22)    | success                | schema1 |
       | conn_0  | False    | select sleep(3)                               | success                | schema1 |
-      | conn_0  | False    | select sleep(30)                              | success                | schema1 |
-      | conn_0  | False    | select sleep(50)                              | success                | schema1 |
-      | conn_0  | False    | select sleep(60),id from test_table           | reason is [sql timeout]| schema1 |
-      | conn_0  | False    | select sleep(61)                              | reason is [sql timeout]| schema1 |
-      | conn_0  | True     | select sleep(70),id from test_table           | reason is [sql timeout]| schema1 |
+      | conn_0  | False    | select sleep(19)                              | success                | schema1 |
+      | conn_0  | False    | select sleep(20),id from test_table           | reason is [sql timeout]| schema1 |
+      | conn_0  | False    | select sleep(21)                              | reason is [sql timeout]| schema1 |
+      | conn_0  | True     | select sleep(25),id from test_table           | reason is [sql timeout]| schema1 |
+
+
 
   @NORMAL
   Scenario: test rwSplitUsers in user.xml #12
@@ -302,7 +353,7 @@ Feature: test config in user.xml
     """
     Then execute admin cmd "reload @@config"
     Then execute sql in "dble-1" in "user" mode
-    |user |passwd | conn    | toClose  | sql                                               | expect                 |db  |
+    | user |passwd | conn    | toClose  | sql                                               | expect                 |db  |
     | rwS1|111111| conn_0  | False    | drop table if exists test_table                 | success                | db1|
     | rwS1|111111| conn_0  | False    | create table test_table(id int,name char(20)) | success                | db1 |
     | rwS1|111111| conn_0  | False    | insert into test_table values(1,11),(2,22)    | success                | db1 |
