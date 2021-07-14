@@ -26,7 +26,7 @@ Feature: db basic config test
       """
       <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
         <heartbeat>select user()</heartbeat>
-        <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="11" minCon="5" primary="true" readWeight="1"  id="xx1">
+        <dbInstance name="M1" password="111111" url="172.100.9.5:3307" user="test" maxCon="11" minCon="5" primary="true" readWeight="1"  id="xx1">
              <property name="testOnCreate">-1</property>
              <property name="testOnBorrow">4</property>
              <property name="testOnReturn">string</property>
