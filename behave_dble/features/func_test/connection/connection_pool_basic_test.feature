@@ -377,7 +377,7 @@ Feature: connection pool basic test
         <dbInstance name="M1" password="111111" url="172.100.9.5:3306" user="test" maxCon="20" minCon="4" primary="true">
              <property name="heartbeatPeriodMillis">180000</property>
              <property name="idleTimeout">1000</property>
-             <property name="timeBetweenEvictionRunsMillis">-2</property>
+             <property name="timeBetweenEvictionRunsMillis">30000</property>
         </dbInstance>
      </dbGroup>
      """
