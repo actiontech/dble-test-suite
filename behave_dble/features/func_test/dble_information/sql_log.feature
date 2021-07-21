@@ -2424,7 +2424,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                               | length{(4000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(3000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(2)}    | dble_information |
       | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2457,7 +2457,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                               | length{(4000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
       | conn_0 | true    | truncate table sql_log                              | success        | dble_information |
 
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2500,7 +2500,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                               | length{(4000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)} | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}    | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}    | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -2544,7 +2544,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(3)}     | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
       | conn_0 | true    | truncate table sql_log                              | success         | dble_information |
 
     Given execute sql "1000" times in "dble-1" together use 1000 connection not close
@@ -2587,7 +2587,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}     | dble_information |
-#      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
 
      Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -2620,7 +2620,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | select * from sql_log                               | length{(4000)}  | dble_information |
       | conn_1 | False   | select * from sql_log_by_tx_by_entry_by_user        | length{(1000)}  | dble_information |
       | conn_1 | False   | select * from sql_log_by_digest_by_entry_by_user    | length{(4)}     | dble_information |
-#      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
+      | conn_1 | true    | select * from sql_log_by_tx_digest_by_entry_by_user | length{(1)}     | dble_information |
 
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """

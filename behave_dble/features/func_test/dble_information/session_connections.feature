@@ -148,3 +148,42 @@ Feature:  session_connections test
       | conn_0 | False   | delete from session_connections where remote_port=8066                | Access denied for table 'session_connections'       |
       | conn_0 | False   | update session_connections set entry_id=2 where entry_id=1            | Access denied for table 'session_connections'       |
       | conn_0 | True    | insert into session_connections values ('a',1,2,3)                    | Access denied for table 'session_connections'       |
+
+
+
+  Scenario:  session_connections issue case  DBLE0REQ-1259  #2
+
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                            | expect     | db               |
+      | conn_1 | False   | select conn_send_task_queue,sql from session_connections       | success    | dble_information |
+
+    Given update file content "./assets/BtraceAboutNPE.java" in "behave" with sed cmds
+      """
+      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+      /beforeAuthSuccess/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+      """
+    Given prepare a thread run btrace script "BtraceAboutNPE.java" in "dble-1"
+
+    Then execute "user" cmd  in "dble-1" at background
+      | conn    | toClose | sql        | db        |
+      | conn_11 | True    | select 1   | schema1   |
+    Then check btrace "BtraceAboutNPE.java" output in "dble-1"
+       """
+       get into beforeAuthSuccess
+       """
+    Then execute sql in "dble-1" in "admin" mode
+      | conn   | toClose | sql                                                            | expect     | db               |
+      | conn_1 | False   | select conn_send_task_queue,sql from session_connections       | success    | dble_information |
+
+    Given stop btrace script "BtraceAboutNPE.java" in "dble-1"
+    Given destroy btrace threads list
+    Given delete file "/opt/dble/BtraceAboutNPE.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutNPE.java.log" on "dble-1"
+
+    Then check following text exist "N" in file "/opt/dble/logs/dble.log" in host "dble-1"
+      """
+      NullPointerException
+      caught err:
+      exception occurred when the statistics were recorded
+      Exception processing
+      """
