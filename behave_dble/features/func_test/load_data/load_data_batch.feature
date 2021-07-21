@@ -117,7 +117,7 @@ Feature: case about load data batch
         | maxRowSizeToFile        | 60000            |
         | enableBatchLoadData     | false            |
 
-  @btrace @skip
+  @btrace
   Scenario: test with Btrace script to check file slice is right     #3
     #Preparation: Create test file and table  for loading data
     Given execute oscmd in "dble-1"
@@ -275,7 +275,7 @@ Feature: case about load data batch
     Given delete file "/opt/dble/BtraceAboutloadDataBatch.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutloadDataBatch.java.log" on "dble-1"
     Given delete file "/opt/dble/data.txt" on "dble-1"
-  @skip
+
   Scenario: test something wrong with file , the logic of load data batch          #4
     #for Multi-node-sharding table
     Given execute oscmd in "dble-1"
@@ -440,7 +440,7 @@ Feature: case about load data batch
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Given delete file "/opt/dble/data.txt" on "dble-1"
-  @skip
+
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
     Given execute admin cmd "enable @@load_data_batch" success
@@ -561,7 +561,7 @@ Feature: case about load data batch
       | conn_2 | true    | select count(*) from test1 | has{(5000000,),} | schema1 |
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Given remove local and server file "data1.txt"
-  @skip
+
   Scenario: test with kill @@load_data                    #6
     Given execute oscmd in "dble-1"
     """
