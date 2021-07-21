@@ -67,6 +67,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | conn_0 | False   | update dble_status set comment='number of requests' where variable_value='0'           | Access denied for table 'dble_status'   |
       | conn_0 | True    | insert into dble_status values ('a','b','c')                                           | Access denied for table 'dble_status'   |
 
+
+
    Scenario: check questions/transactions - shardingUser #2
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      |
@@ -177,6 +179,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
    Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                               |
       | conn_1 | True    | drop table if exists test         |
+
+
 
    Scenario: check questions/transactions in transaction - shardingUser #3
    Then execute sql in "dble-1" in "user" mode
@@ -425,6 +429,8 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | conn   | toClose | sql                       | db      |
       | conn_2 | True    | drop table if exists test | schema1 |
 
+
+
    Scenario: check questions/transactions error sql - shardingUser #4
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                       |
@@ -554,7 +560,65 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn   | toClose | sql                       | db      |
      | conn_1 | True    | drop table if exists test | schema1 |
 
-   Scenario: check questions/transactions set command - shardingUser #5
+
+
+   Scenario: check questions/transactions error sql and implict commit - shardingUser #5
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                        | expect  | db       |
+     | conn_1 | False   | use schema1                | success | schema1  |
+     | conn_1 | False   | drop table if exists test  | success | schema1  |
+     | conn_1 | False   | create table test (id int) | success | schema1  |
+     | conn_1 | False   | drop view if exists view1  | success | schema1  |
+
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                             | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '4',), ('transactions', '4',))} | dble_information |
+
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                     | expect                       | db      |
+      | conn_1 | False   | set autocommit = 1                      | success                      | schema1 |
+      | conn_1 | False   | create view view1 as select * from test | success                      | schema1 |
+      | conn_1 | False   | create view view1 as select * from test | Table 'view1' already exists | schema1 |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                             | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '7',), ('transactions', '7',))} | dble_information |
+
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                            | expect                       | db      |
+      | conn_1 | False   | drop view view1,view2          | Unknown view 'view2'         | schema1 |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                             | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '8',), ('transactions', '8',))} | dble_information |
+
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                            | expect                                      | db      |
+      | conn_1 | False   | lock table test1 read          | Table 'schema1.test1' doesn't exist         | schema1 |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                             | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '9',), ('transactions', '9',))} | dble_information |
+
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                       | expect                | db      |
+      | conn_1 | False   | unlock table test1        | Unknown command       | schema1 |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                               | db               |
+     | conn_0 | False   | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '10',), ('transactions', '10',))} | dble_information |
+
+   Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                         | expect                                | db      |
+      | conn_1 | False   | truncate table test1        | Table 'db3.test1' doesn't exist       | schema1 |
+   Then execute sql in "dble-1" in "admin" mode
+     | conn   | toClose | sql                                                                                     | expect                                               | db               |
+     | conn_0 | true    | select variable_name,variable_value from dble_status where variable_name like '%tions%' | has{(('questions', '11',), ('transactions', '11',))} | dble_information |
+
+   Then execute sql in "dble-1" in "user" mode
+     | conn   | toClose | sql                        | expect  | db       |
+     | conn_1 | False   | drop table if exists test  | success | schema1  |
+     | conn_1 | true    | drop view if exists view1  | success | schema1  |
+
+
+
+   Scenario: check questions/transactions set command - shardingUser #6
    # questions + 3, transactions + 1
    Then execute sql in "dble-1" in "user" mode
      | conn   | toClose | sql                                    |
@@ -672,10 +736,11 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | conn_0 | True    | show @@questions | dble_information  |
    Then check resultset "dble_status_7" has lines with following column values
      | Questions-0 | Transactions-1 |
-     | 20          | 11             |
+     | 20          | 11             6
 
 
-   Scenario: check questions/transactions - rwSplitUser #6
+
+   Scenario: check questions/transactions - rwSplitUser #7
    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
    """
    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
@@ -818,7 +883,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | user  | passwd | conn   | toClose | sql                               |
       | split | 111111 | conn_1 | True    | drop table if exists test_3       |
 
-   Scenario: check questions/transactions in transaction - rwSplitUser #7
+
+
+   Scenario: check questions/transactions in transaction - rwSplitUser #8
    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
    """
    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
@@ -1117,7 +1184,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
       | user  | passwd | conn   | toClose | sql                               | db  |
       | split | 111111 | conn_2 | True    | drop table if exists test_2       | db1 |
 
-   Scenario: check questions/transactions set command - rwSplitUser #8
+
+
+   Scenario: check questions/transactions set command - rwSplitUser #9
    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
    """
    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
@@ -1243,7 +1312,9 @@ Feature:  dble_status test and check questions/transactions DBLE0REQ-67, DBLE0RE
      | Questions-0 | Transactions-1 |
      | 19          | 10             |
 
-   Scenario: check questions/transactions error sql - rwSplitUser #9
+
+
+   Scenario: check questions/transactions error sql - rwSplitUser #10
    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
    """
    <dbGroup rwSplitMode="0" name="ha_group3" delayThreshold="100" >
