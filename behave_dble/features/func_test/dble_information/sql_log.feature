@@ -25,7 +25,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | source_port   | int(11)       | NO     |       | None      |         |
       | rows          | int(11)       | NO     |       | None      |         |
       | examined_rows | int(11)       | NO     |       | None      |         |
-      | start_time    | int(11)       | NO     |       | None      |         |
+      | start_time    | timestamp     | NO     |       | None      |         |
       | duration      | int(11)       | NO     |       | None      |         |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "table_2"
@@ -190,7 +190,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect        | db               |
-      | conn_0 | False   | select * from sql_log                        | length{(100)} | dble_information |
+      | conn_0 | False   | select * from sql_log                        | length{(200)} | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | length{(100)} | dble_information |
 
 
@@ -319,7 +319,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | rwS1 | 111111 | conn_3 | False   | drop table if exists test_table               | success | db1 |
       | rwS1 | 111111 | conn_3 | False   | create table test_table(id int,name char(20)) | success | db1 |
       | rwS1 | 111111 | conn_3 | False   | insert into test_table values (1,2)           | success | db1 |
-      | rwS1 | 111111 | conn_3 | true    | select 2                                      | success | db1 |
+      | rwS1 | 111111 | conn_3 | False   | select 2                                      | success | db1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                 | expect       | db               |
       | conn_0 | False   | select * from sql_log                                               | length{(12)} | dble_information |
@@ -688,7 +688,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_1 | False    | /*!dble:shardingNode=dn1*/ select * from sharding_4_t1                                    | success | schema1 |
       | conn_1 | False    | /*!dble:shardingNode=dn1*/ insert into sharding_4_t1 values(666, 'name666')               | success | schema1 |
       | conn_1 | False    | /*!dble:shardingNode=dn1*/ update sharding_4_t1 set name = 'dn1' where id=666             | success | schema1 |
-      | conn_1 | True     | /*!dble:shardingNode=dn1*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
+      | conn_1 | False    | /*!dble:shardingNode=dn1*/ delete from sharding_4_t1 where id=666                         | success | schema1 |
 
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
@@ -1084,8 +1084,8 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | rwS1 | 111111 | conn_41 | False   | update test_table1 set age =44 where id=100        | success | db2 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                   | expect       | db               |
-      | conn_0 | False   | select * from sql_log                                 | length{(0)}  | dble_information |
-      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(0)}  | dble_information |
+      | conn_0 | False   | select * from sql_log                                 | length{(2)}  | dble_information |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user          | length{(2)}  | dble_information |
 
      Then execute sql in "dble-1" in "user" mode
       | user | passwd | conn    | toClose | sql                                 | expect  | db  |
@@ -1211,13 +1211,13 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | sql_id-0 | sql_stmt-1                                                                      | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
       | 1        | begin                                                                           | Begin      | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 2        | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | Insert     | 1       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
-      | 3        | create table sharding_4_t2(id int, name varchar(20))                            | DDL        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 3        | create table sharding_4_t2(id int, name varchar(20))                            | DDL        | 1       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 4        | begin                                                                           | Begin      | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 5        | insert into sharding_4_t2 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | Insert     | 2       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
-      | 6        | create index index_name1 on sharding_4_t1 (name)                                | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 6        | create index index_name1 on sharding_4_t1 (name)                                | DDL        | 2       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 7        | begin                                                                           | Begin      | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 8        | update sharding_4_t1 set name='dn1' where id=4                                  | Update     | 3       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
-      | 9        | drop index index_name1 on sharding_4_t1                                         | DDL        | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 9        | drop index index_name1 on sharding_4_t1                                         | DDL        | 3       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 10       | begin                                                                           | Begin      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 11       | select * from sharding_4_t1                                                     | Select     | 4       | 2       | test   | 172.100.9.8   | 8066          | 4      | 4               |
       | 12       | begin                                                                           | Begin      | 4       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
@@ -1230,27 +1230,27 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | 19       | set autocommit=1                                                                | Set        | 8       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 20       | begin                                                                           | Begin      | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 21       | delete from sharding_4_t1 where id=1                                            | Delete     | 9       | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
-      | 22       | truncate table sharding_4_t2                                                    | DDL        | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 22       | truncate table sharding_4_t2                                                    | DDL        | 9       | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 23       | begin                                                                           | Begin      | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
       | 24       | delete from sharding_4_t1 where id=2                                            | Delete     | 10      | 2       | test   | 172.100.9.8   | 8066          | 1      | 1               |
-      | 25       | drop table if exists sharding_4_t2                                              | DDL        | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
-      | 26       | drop table if exists sharding_4_t1                                              | DDL        | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 4               |
+      | 25       | drop table if exists sharding_4_t2                                              | DDL        | 10      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
+      | 26       | drop table if exists sharding_4_t1                                              | DDL        | 11      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0               |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                          | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
-      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3     | 3           | 8               |
-      | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6     | 3           | 8               |
-      | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8,9     | 3           | 5               |
+      | 1       | 2       | test   | 172.100.9.8   | 8066          | 1,2,3     | 3           | 4               |
+      | 2       | 2       | test   | 172.100.9.8   | 8066          | 4,5,6     | 3           | 4               |
+      | 3       | 2       | test   | 172.100.9.8   | 8066          | 7,8,9     | 3           | 1               |
       | 4       | 2       | test   | 172.100.9.8   | 8066          | 10,11,12  | 3           | 4               |
       | 5       | 2       | test   | 172.100.9.8   | 8066          | 13        | 1           | 0               |
       | 6       | 2       | test   | 172.100.9.8   | 8066          | 14,15     | 2           | 1               |
       | 7       | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           | 0               |
       | 8       | 2       | test   | 172.100.9.8   | 8066          | 17,18,19  | 3           | 4               |
-      | 9       | 2       | test   | 172.100.9.8   | 8066          | 20,21,22  | 3           | 5               |
-      | 10      | 2       | test   | 172.100.9.8   | 8066          | 23,24,25  | 3           | 5               |
-      | 11      | 2       | test   | 172.100.9.8   | 8066          | 26        | 1           | 4               |
+      | 9       | 2       | test   | 172.100.9.8   | 8066          | 20,21,22  | 3           | 1               |
+      | 10      | 2       | test   | 172.100.9.8   | 8066          | 23,24,25  | 3           | 1               |
+      | 11      | 2       | test   | 172.100.9.8   | 8066          | 26        | 1           | 0               |
 
 
   Scenario: test samplingRate=100 and error sql   #11
@@ -1330,12 +1330,12 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_1 | False   | select * from test100                 | Table 'db3.test100' doesn't exist      | schema1 |
       | conn_1 | False   | insert into test101 values (1)        | Table 'db3.test101' doesn't exist      | schema1 |
       | conn_1 | False   | delete from test102                   | Table 'db3.test102' doesn't exist      | schema1 |
-      | conn_1 | true    | update test103 set id =2 where id =1  | Table 'db3.test103' doesn't exist      | schema1 |
+      | conn_1 | False   | update test103 set id =2 where id =1  | Table 'db3.test103' doesn't exist      | schema1 |
       #case schema2 has not default shardingnode ,dont count
       | conn_2 | False   | select * from test1000                | Table 'schema2.test1000' doesn't exist | schema2 |
       | conn_2 | False   | insert into test1001 values (1)       | Table 'schema2.test1001' doesn't exist | schema2 |
       | conn_2 | False   | delete from test1002                  | Table 'schema2.test1002' doesn't exist | schema2 |
-      | conn_2 | true    | update test1003 set id =2 where id =1 | Table 'schema2.test1003' doesn't exist | schema2 |
+      | conn_2 | False   | update test1003 set id =2 where id =1 | Table 'schema2.test1003' doesn't exist | schema2 |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
@@ -1385,7 +1385,7 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | conn_1 | False   | delete db1.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where schema1.sharding_2_t1.id=2 and schema2.single_t2.id =2 | Table `db1`.`single_t2` doesn't exist             | schema1 |
       | conn_1 | False   | delete schema2.single_t2 from schema1.sharding_2_t1,schema2.single_t2 where db1.sharding_2_t1.id=2 and schema2.single_t2.id =2 | Table `db1`.`sharding_2_t1` doesn't exist         | schema1 |
       | conn_1 | False   | insert into sharding_4_t1(id,name) select s2.id,s2.name from schema2.sharding_2 s2 join test s2g on s2.id=s2g.id               | This `INSERT ... SELECT Syntax` is not supported  | schema1 |
-      | conn_1 | true    | replace into test(name) select name from sharding_4_t1                                                                         | This `REPLACE ... SELECT Syntax` is not supported | schema1 |
+      | conn_1 | False   | replace into test(name) select name from sharding_4_t1                                                                         | This `REPLACE ... SELECT Syntax` is not supported | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect      | db               |
       | conn_0 | False   | select * from sql_log                        | length{(0)} | dble_information |
@@ -1426,30 +1426,33 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
     Then check resultset "resulte_11" has lines with following column values
       | sql_id-0 | sql_stmt-1                                                       | sql_type-2 | tx_id-3 | entry-4 | user-5 | source_host-6 | source_port-7 | rows-8 | examined_rows-9 |
       | 1        | use db11                                                         | Other      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
-      | 2        | delete from test_table2 where id =1                              | Delete     | 2       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
-      | 3        | select * from test_table where a.id=1                            | Select     | 5       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
-      | 4        | select councat_ws('',id,age) as 'll' from test_table group by ll | Select     | 6       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
-      | 5        | select concat_ws('',id,age) as 'll' from test_table group by ls  | Select     | 7       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
-      | 6        | select * from (select s.sno from test_table s where s.id=1)      | Select     | 8       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 2        | exit                                                             | Other      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 3        | delete from test_table2 where id =1                              | Delete     | 2       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 4        | select * from test_table where a.id=1                            | Select     | 5       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 5        | select councat_ws('',id,age) as 'll' from test_table group by ll | Select     | 6       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 6        | select concat_ws('',id,age) as 'll' from test_table group by ls  | Select     | 7       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 7        | select * from (select s.sno from test_table s where s.id=1)      | Select     | 8       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+      | 8        | exit                                                             | Other      | 8       | 4       | split1 | 172.100.9.8   | 8066          | 0      | 0               |
+
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
       | conn   | toClose | sql                                            | db               |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
     Then check resultset "resulte_2" has lines with following column values
       | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_count-6 | examined_rows-9 |
-      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 1         | 1           | 0               |
-      | 2       | 4       | split1 | 172.100.9.8   | 8066          | 2         | 1           | 0               |
-      | 5       | 4       | split1 | 172.100.9.8   | 8066          | 3         | 1           | 0               |
-      | 6       | 4       | split1 | 172.100.9.8   | 8066          | 4         | 1           | 0               |
-      | 7       | 4       | split1 | 172.100.9.8   | 8066          | 5         | 1           | 0               |
-      | 8       | 4       | split1 | 172.100.9.8   | 8066          | 6         | 1           | 0               |
+      | 1       | 4       | split1 | 172.100.9.8   | 8066          | 1,2       | 2           | 0               |
+      | 2       | 4       | split1 | 172.100.9.8   | 8066          | 3         | 1           | 0               |
+      | 5       | 4       | split1 | 172.100.9.8   | 8066          | 4         | 1           | 0               |
+      | 6       | 4       | split1 | 172.100.9.8   | 8066          | 5         | 1           | 0               |
+      | 7       | 4       | split1 | 172.100.9.8   | 8066          | 6         | 1           | 0               |
+      | 8       | 4       | split1 | 172.100.9.8   | 8066          | 7,8       | 2           | 0               |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                               | expect  | db      |
-      | conn_1 | False   | drop table if exists test                         | success | schema1 |
-      | conn_1 | False   | drop table if exists sharding_2_t1                | success | schema1 |
-      | conn_1 | False   | drop table if exists schema2.test1                | success | schema1 |
-      | conn_1 | False   | drop table if exists sharding_4_t1                | success | schema1 |
-      | conn_1 | true    | drop table if exists schema2.sharding_2           | success | schema1 |
+      | conn_7 | False   | drop table if exists test                         | success | schema1 |
+      | conn_7 | False   | drop table if exists sharding_2_t1                | success | schema1 |
+      | conn_7 | False   | drop table if exists schema2.test1                | success | schema1 |
+      | conn_7 | False   | drop table if exists sharding_4_t1                | success | schema1 |
+      | conn_7 | true    | drop table if exists schema2.sharding_2           | success | schema1 |
      Then execute sql in "dble-1" in "user" mode
       | user   | passwd | conn   | toClose | sql                                                       | expect  | db  |
       | split1 | 111111 | conn_3 | true    | drop table if exists test_table                           | success | db1 |
@@ -1464,13 +1467,13 @@ Feature:test sql_log and sql_log_by_tx_by_entry_by_user
       | False   | drop table if exists test                   | success  | schema1 |
       | True    | create table test(id int,name varchar(20))  | success  | schema1 |
     Then connect "dble-1" to insert "1000" of data for "test"
-    Given execute sql "500" times in "dble-1" at concurrent
+    Given execute sql "500" times in "dble-1" at concurrent 500
       | sql                                | db      |
       | select name from test where id ={} | schema1 |
 
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                          | expect       | db               |
-      | conn_0 | False   | select * from sql_log                        | length{(10)} | dble_information |
+      | conn_0 | False   | select * from sql_log                        | length{(20)} | dble_information |
       | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user | length{(10)} | dble_information |
     Then execute sql in "dble-1" in "user" mode
       | toClose | sql                                         | expect   | db      |
