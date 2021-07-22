@@ -143,7 +143,7 @@ def step_impl(context,rs_name1,rs_name2,table_type):
     rs1 = getattr(context,rs_name1)
     rs2 = getattr(context,rs_name2)
     if table_type == "sharding_table":
-        expect_num = int((2500000 - rs2[0][0])/100000)
+        expect_num = int((500000 - rs2[0][0])/50000)
     else:
-        expect_num = int((5000000 - rs2[0][0])/100000)
+        expect_num = int((1000000 - rs2[0][0])/50000)
     assert int(rs1) == expect_num, "expect file num is {0}, but is {1}".format(expect_num,rs1)    
