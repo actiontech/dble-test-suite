@@ -444,8 +444,8 @@ Feature: case about load data batch
   Scenario: test during execute load data, backend mysql disconnected, the logic of load data batch       #5
     Given execute admin cmd "kill @@load_data" success
     Given execute admin cmd "enable @@load_data_batch" success
-    Given execute admin cmd "reload @@load_data.num=100000" success
-    Given create local and server file "data1.txt" with "5000000" lines
+    Given execute admin cmd "reload @@load_data.num=50000" success
+    Given create local and server file "data1.txt" with "1000000" lines
 
     #for Multi-node-global table
     Then execute sql in "dble-1" in "user" mode
@@ -455,18 +455,18 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                               | db      |
       | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test fields terminated by ',' lines terminated by '\n' | schema1 |
-    Given sleep "30" seconds
+    Given sleep "8" seconds
     Given restart mysql in "mysql-master1"
-    Given sleep "120" seconds
+    Given sleep "15" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Then execute sql in "mysql-master2" in "mysql" mode
       | conn   | toClose | sql                       | expect           | db  |
-      | conn_0 | false   | select count(*) from test | has{(5000000,),} | db1 |
-      | conn_0 | true    | select count(*) from test | has{(5000000,),} | db2 |
+      | conn_0 | false   | select count(*) from test | has{(1000000,),} | db1 |
+      | conn_0 | true    | select count(*) from test | has{(1000000,),} | db2 |
     Given execute single sql in "mysql-master1" in "mysql" mode and save resultset in "A"
       | conn   | toClose | sql                       | expect              | db  |
-      | conn_0 | true    | select count(*) from test | hasnot{(5000000,),} | db1 |
+      | conn_0 | true    | select count(*) from test | hasnot{(1000000,),} | db1 |
     Then get result of oscmd named "B" in "dble-1"
     """
     ls -l /opt/dble/temp/file|grep 'dn1.txt'|wc -l
@@ -474,7 +474,7 @@ Feature: case about load data batch
     Then Check "B" is calculated by "A" according to a certain relationship with "global_table"
     Given execute single sql in "mysql-master1" in "mysql" mode and save resultset in "C"
       | conn   | toClose | sql                       | expect              | db  |
-      | conn_1 | true    | select count(*) from test | hasnot{(5000000,),} | db2 |
+      | conn_1 | true    | select count(*) from test | hasnot{(1000000,),} | db2 |
     Then get result of oscmd named "D" in "dble-1"
     """
     ls -l /opt/dble/temp/file|grep 'dn3.txt'|wc -l
@@ -485,11 +485,11 @@ Feature: case about load data batch
       | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test fields terminated by ',' lines terminated by '\n' | success| schema1 |
     Then execute sql in "mysql-master1" in "mysql" mode
       | conn   | toClose | sql                       | expect           | db  |
-      | conn_2 | false   | select count(*) from test | has{(5000000,),} | db1 |
-      | conn_2 | true    | select count(*) from test | has{(5000000,),} | db2 |
+      | conn_2 | false   | select count(*) from test | has{(1000000,),} | db1 |
+      | conn_2 | true    | select count(*) from test | has{(1000000,),} | db2 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                       | expect           | db      |
-      | conn_3 | true    | select count(*) from test | has{(5000000,),} | schema1 |
+      | conn_3 | true    | select count(*) from test | has{(1000000,),} | schema1 |
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
 
     #for Multi-node-sharding table
@@ -501,17 +501,17 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                                        | db      |
       | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n' | schema1 |
-    Given sleep "30" seconds
+    Given sleep "4" seconds
     Given restart mysql in "mysql-master1"
-    Given sleep "120" seconds
+    Given sleep "10" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Then execute sql in "mysql-master2" in "mysql" mode
       | conn   | toClose | sql                                | expect           | db  |
-      | conn_0 | true    | select count(*) from sharding_2_t1 | has{(2500000,),} | db1 |
+      | conn_0 | true    | select count(*) from sharding_2_t1 | has{(500000,),} | db1 |
     Given execute single sql in "mysql-master1" in "mysql" mode and save resultset in "E"
       | conn   | toClose | sql                       | expect                       | db  |
-      | conn_0 | true    | select count(*) from sharding_2_t1 | hasnot{(2500000,),} | db1 |
+      | conn_0 | true    | select count(*) from sharding_2_t1 | hasnot{(500000,),} | db1 |
     Then get result of oscmd named "F" in "dble-1"
     """
     ls -l /opt/dble/temp/file|grep 'dn1.txt'|wc -l
@@ -522,10 +522,10 @@ Feature: case about load data batch
       | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.sharding_2_t1 fields terminated by ',' lines terminated by '\n'  | success| schema1 |
     Then execute sql in "mysql-master1" in "mysql" mode
       | conn   | toClose | sql                                | expect           | db  |
-      | conn_1 | true    | select count(*) from sharding_2_t1 | has{(2500000,),} | db1 |
+      | conn_1 | true    | select count(*) from sharding_2_t1 | has{(500000,),} | db1 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect           | db      |
-      | conn_3 | true    | select count(*) from sharding_2_t1 | has{(5000000,),} | schema1 |
+      | conn_3 | true    | select count(*) from sharding_2_t1 | has{(1000000,),} | schema1 |
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
 
     #for single-node table
@@ -537,14 +537,14 @@ Feature: case about load data batch
     Then execute "user" cmd  in "dble-1" at background
       | conn   | toClose | sql                                                                                                                | db      |
       | conn_1 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test1 fields terminated by ',' lines terminated by '\n'  | schema1 |
-    Given sleep "30" seconds
+    Given sleep "5" seconds
     Given restart mysql in "mysql-master1"
     Given sleep "10" seconds
     Then check path "/opt/dble/temp/file" in "dble-1" should exist
     Then check path "/opt/dble/temp/error" in "dble-1" should not exist
     Given execute single sql in "mysql-master1" in "mysql" mode and save resultset in "G"
       | conn   | toClose | sql                        | expect                   | db  |
-      | conn_0 | true    | select count(*) from test1 | hasnot{(5000000,),}      | db3 |
+      | conn_0 | true    | select count(*) from test1 | hasnot{(1000000,),}      | db3 |
     Then get result of oscmd named "H" in "dble-1"
     """
     ls -l /opt/dble/temp/file|grep 'dn5.txt'|wc -l
@@ -555,10 +555,10 @@ Feature: case about load data batch
       | conn_2 | true    | load data infile '/opt/dble/data1.txt' into table schema1.test1 fields terminated by ',' lines terminated by '\n'  | success| schema1 |
     Given execute sql in "mysql-master1" in "mysql" mode
       | conn   | toClose | sql                        | expect                | db  |
-      | conn_1 | true    | select count(*) from test1 | has{(5000000,),}      | db3 |
+      | conn_1 | true    | select count(*) from test1 | has{(1000000,),}      | db3 |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                        | expect           | db      |
-      | conn_2 | true    | select count(*) from test1 | has{(5000000,),} | schema1 |
+      | conn_2 | true    | select count(*) from test1 | has{(1000000,),} | schema1 |
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
     Given remove local and server file "data1.txt"
 
