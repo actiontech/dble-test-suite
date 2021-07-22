@@ -156,20 +156,19 @@ def decode_counter(context, result_counter):
 
 def decode_str(context, key):
     new_key = key
-    if key and str(key).find("b'") > -1:
+    if key and (str(key).find("b'") > -1 or str(key).find("b\"") > -1):
         try:
             new_key = key.decode('UTF-8', 'strict')
         except UnicodeDecodeError as err1:
             context.logger.debug(f"except key: {key}, err1: {err1}")
         except AttributeError as err2:
             context.logger.debug(f"except key: {key}, err2: {err2}")
-
     return new_key
 
 
 def compare_tuple(context, mysql_result, dble_result):
-    dble_b = dble_result.__str__().find("(b'") > -1
-    mysql_b = mysql_result.__str__().find("(b'") > -1
+    dble_b = dble_result.__str__().find("(b'") > -1 or dble_result.__str__().find("(b\"")
+    mysql_b = mysql_result.__str__().find("(b'") > -1 or mysql_result.__str__().find("(b\"")
 
     if dble_b or mysql_b:
         mysql_result_counter = collections.Counter(mysql_result)
