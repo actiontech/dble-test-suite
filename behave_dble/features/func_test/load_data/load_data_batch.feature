@@ -148,14 +148,14 @@ Feature: case about load data batch
       | enableBatchLoadData     | true             |
 
     #CASE1:  execute load data  with Btrace script to check file slice is right
-    Given delete file "/opt/dble/BtraceAboutloadDataBatch.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutloadDataBatch.java.log" on "dble-1"
-    Given update file content "./assets/BtraceAboutloadDataBatch.java" in "behave" with sed cmds
+    Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java.log" on "dble-1"
+    Given update file content "./assets/BtraceAboutLoadDataBatch.java" in "behave" with sed cmds
     """
      s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
      /delayBeforeLoadData/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
-    Given prepare a thread run btrace script "BtraceAboutloadDataBatch.java" in "dble-1"
+    Given prepare a thread run btrace script "BtraceAboutLoadDataBatch.java" in "dble-1"
 
     # for Multi-node-sharding table
     Then execute "user" cmd  in "dble-1" at background
@@ -266,14 +266,14 @@ Feature: case about load data batch
       | conn_2 | true    | select * from schema1.test1                  | length{(13)}    | schema1 |
     #check dir /opt/dble/temp/file is deleted
     Then check path "/opt/dble/temp/file" in "dble-1" should not exist
-    Then check btrace "BtraceAboutloadDataBatch.java" output in "dble-1" with "3" times
+    Then check btrace "BtraceAboutLoadDataBatch.java" output in "dble-1" with "3" times
     """
     get into delayBeforeLoadData
     """
-    Given stop btrace script "BtraceAboutloadDataBatch.java" in "dble-1"
+    Given stop btrace script "BtraceAboutLoadDataBatch.java" in "dble-1"
     Given destroy btrace threads list
-    Given delete file "/opt/dble/BtraceAboutloadDataBatch.java" on "dble-1"
-    Given delete file "/opt/dble/BtraceAboutloadDataBatch.java.log" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceAboutLoadDataBatch.java.log" on "dble-1"
     Given delete file "/opt/dble/data.txt" on "dble-1"
 
   Scenario: test something wrong with file , the logic of load data batch          #4

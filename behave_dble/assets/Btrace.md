@@ -204,6 +204,7 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.GeneralProvider|onOffGeneralLog|开启general log|
 |com.actiontech.dble.btrace.provider.GeneralProvider|updateGeneralLogFile|reload general log日志文件|
 |com.actiontech.dble.btrace.provider.GeneralProvider|showGeneralLog|查看general log参数|
+|com.actiontech.dble.btrace.provider.ClusterDelayProvider|delayBeforeLoadData|load data batch模式时检查切片文件的正确性|
 
 
 ### 小版本改动：
