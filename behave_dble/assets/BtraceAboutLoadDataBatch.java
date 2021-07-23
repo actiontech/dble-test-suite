@@ -4,8 +4,8 @@ import com.sun.btrace.BTraceUtils;
 import com.sun.btrace.annotations.*;
 
 @BTrace(unsafe = true)
-public final class BtraceAboutloadDataBatch {
-    private BtraceAboutloadDataBatch() {
+public final class BtraceAboutLoadDataBatch {
+    private BtraceAboutLoadDataBatch() {
 
     }
 
