@@ -52,7 +52,3 @@ Feature: test flow control manager command
        enableFlowControl=false
        flowControlStartThreshold=1024
        """
-
-
-
-
