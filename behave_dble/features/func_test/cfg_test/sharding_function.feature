@@ -9,6 +9,7 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
 # NumberRange NumberRange
 # StringHash StringHash
 # hash hash
+
   @NORMAL
   Scenario: config Hash sharding will reload success #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -69,3 +70,29 @@ Feature: Verify that Reload @@config_all would success with correct sharding rul
     9=3
     """
     Then execute admin cmd "reload @@config_all"
+
+
+  Scenario: config jumpStringHash sharding has default hashSlice will relaod success #4
+     ### DBLE0REQ-1272    default  :<property name="hashSlice">0:-1</property>
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      """
+        <schema shardingNode="dn5" name="schema1" sqlMaxLimit="100">
+          <shardingTable name="test" shardingNode="dn1,dn2" function="func_jumpHash" shardingColumn="id"/>
+        </schema>
+
+         <function name="func_jumpHash" class="jumpStringHash">
+         <property name="partitionCount">2</property>
+         </function>
+      """
+    Then execute admin cmd "Reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose  | sql                          | db      |
+      | conn_0 | False    | drop table if exists test    | schema1 |
+      | conn_0 | False    | create table test(id int)    | schema1 |
+      | conn_0 | False    | insert into test values(11)  | schema1 |
+      | conn_0 | False    | insert into test values(12)  | schema1 |
+      | conn_0 | False    | insert into test values(13)  | schema1 |
+      | conn_0 | False    | insert into test values(14)  | schema1 |
+      | conn_0 | true     | drop table if exists test    | schema1 |
+
+
