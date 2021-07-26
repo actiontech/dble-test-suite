@@ -50,19 +50,19 @@ Feature: test online ddl
       | conn_1 | False   | insert into sharding2(id,name) values (1,1),(2,null),(3,null),(4,4)      | success | schema1 |
       | conn_2 | False   | insert into schema2.ver(id,name) values (1,1),(2,null)                   | success | schema2 |
     #prepare more data
-    Given execute sql "19" times in "dble-1" at concurrent 20
+    Given execute sql "19" times in "dble-1" at concurrent 19
       | sql                                                                    | db      |
       | insert into nosharding(id,name) select id,name from nosharding         | schema1 |
-    Given execute sql "19" times in "dble-1" at concurrent 20
+    Given execute sql "19" times in "dble-1" at concurrent 19
       | sql                                                       | db      |
       | insert into sing(id,name) select id,name from sing        | schema1 |
-    Given execute sql "19" times in "dble-1" at concurrent 20
+    Given execute sql "19" times in "dble-1" at concurrent 19
       | sql                                                           | db      |
       | insert into global(id,name) select id,name from global        | schema1 |
-    Given execute sql "19" times in "dble-1" at concurrent 20
+    Given execute sql "19" times in "dble-1" at concurrent 19
       | sql                                                                     | db      |
       | insert into schema2.ver(id,name) select id,name from schema2.ver        | schema1 |
-    Given execute sql "19" times in "dble-1" at concurrent 20
+    Given execute sql "19" times in "dble-1" at concurrent 19
       | sql                                                                 | db      |
       | insert into sharding2(id,name) select id,name from sharding2        | schema1 |
 
