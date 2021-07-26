@@ -49,13 +49,14 @@ Feature: sharding basic config test
     """
     Reload config failure
     """
+
   @NORMAL
   Scenario: config <shardingNode> with "$" preseting range, reload success #4
     Given delete the following xml segment
-      |file        | parent          | child               |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'schema'}    |
-      |sharding.xml  |{'tag':'root'}   | {'tag':'shardingNode'}  |
-      |db.xml  |{'tag':'root'}   | {'tag':'dbGroup'}  |
+      | file          | parent           | child                   |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
+      | db.xml        | {'tag':'root'}   | {'tag':'dbGroup'}       |
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
      """
      <schema name="schema1" shardingNode="dn1" sqlMaxLimit="100">
@@ -88,6 +89,7 @@ Feature: sharding basic config test
     """
     Reload config failure
     """
+
   @TRIVIAL
   Scenario:.when <read dbInstance > put outside <wirte dbInstance>, reload fail #6
     Given add xml segment to node with attribute "{'tag':'root','kv_map':{'name':'ha_group2'}}" in "db.xml"
@@ -98,6 +100,7 @@ Feature: sharding basic config test
     """
     Reload config failure
     """
+
   @NORMAL
   Scenario: config table sharding rule not defined in sharding.xml, reload fail #7
     Given add xml segment to node with attribute "{'tag':'schema'}" in "sharding.xml"
@@ -337,4 +340,24 @@ Feature: sharding basic config test
       | conn_0 | False   | show @@Algorithm where schema='schema-1' and table='test-1'      |
       | conn_0 | True    | show @@shardingNode where schema='schema-1' and table='test-1'      |
 
+  Scenario: config with fake dbGroup in shardingNode in shardingNode.xml, expect restart failed #12
+ ### DBLE0REQ-1265
+    Given delete the following xml segment
+      | file          | parent           | child                   |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'schema'}        |
+      | sharding.xml  | {'tag':'root'}   | {'tag':'shardingNode'}  |
 
+    Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
+      """
+        <schema shardingNode="dn1" name="test1" sqlMaxLimit="100">
+        <globalTable name="test" shardingNode="dn1,dn2"/>
+        </schema>
+
+        <shardingNode dbGroup="dbGroup1" database="db1" name="dn1"/>
+        <shardingNode dbGroup="dbGroup2" database="db1" name="dn2"/>
+      """
+
+    Then Restart dble in "dble-1" failed for
+      """
+      Invalid content was found starting with element 'schema'. One of '{dbGroup}' is expected.
+      """
