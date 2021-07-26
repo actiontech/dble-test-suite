@@ -47,11 +47,11 @@ Feature: test flow_control about simple query
     #####  case 1: broadcast select #####
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                               | db      | charset |
-      | conn_2  | false   | select * from sharding_2_t1 limit 10000000000     | schema1 | utf8mb4 |
+      | conn_2  | true    | select * from sharding_2_t1 limit 10000000000     | schema1 | utf8mb4 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                     | expect  | db               |
-      | conn_0 | False   | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
-      | conn_0 | False   | flow_control @@list                                                                     | success | dble_information |
+      | conn_0 | true    | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
+      | conn_0 | true    | flow_control @@list                                                                     | success | dble_information |
 
     Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
@@ -61,8 +61,8 @@ Feature: test flow_control about simple query
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                     | expect  | db               |
-      | conn_0 | False   | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
-      | conn_0 | False   | flow_control @@list                                                                     | success | dble_information |
+      | conn_0 | true    | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
+      | conn_0 | true    | flow_control @@list                                                                     | success | dble_information |
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -88,11 +88,11 @@ Feature: test flow_control about simple query
     #####  case 2: single select #####
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                               | db      | charset |
-      | conn_3  | false   | select * from test1 limit 10000000000     | schema1 | utf8mb4 |
+      | conn_3  | true    | select * from test1 limit 10000000000     | schema1 | utf8mb4 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                     | expect  | db               |
-      | conn_0 | False   | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
-      | conn_0 | False   | flow_control @@list                                                                     | success | dble_information |
+      | conn_0 | true    | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
+      | conn_0 | true    | flow_control @@list                                                                     | success | dble_information |
 
     Then check following text exist "N" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
@@ -106,8 +106,8 @@ Feature: test flow_control about simple query
       """
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                                                     | expect  | db               |
-      | conn_0 | False   | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
-      | conn_0 | False   | flow_control @@list                                                                     | success | dble_information |
+      | conn_0 | true    | select conn_send_task_queue,sql from session_connections                                | success | dble_information |
+      | conn_0 | true    | flow_control @@list                                                                     | success | dble_information |
 
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" in host "dble-1"
       """
@@ -125,5 +125,5 @@ Feature: test flow_control about simple query
       """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                      | expect  | db      | charset |
-      | conn_1 | False   | drop table if exists sharding_2_t1       | success | schema1 | utf8mb4 |
-      | conn_1 | False   | drop table if exists test1               | success | schema1 | utf8mb4 |
+      | conn_1 | true    | drop table if exists sharding_2_t1       | success | schema1 | utf8mb4 |
+      | conn_1 | true    | drop table if exists test1               | success | schema1 | utf8mb4 |
