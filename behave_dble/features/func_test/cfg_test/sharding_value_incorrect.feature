@@ -39,8 +39,6 @@ Feature: config sharding config files incorrect and restart dble or reload confi
       | conn_0 | True    | select schema1.Tb_Single.id from schema1.Tb_Single | success                  | schema1 |
 
 
-
-
   Scenario: config sharding property, reload the configs #1
     Given update file content "/opt/dble/conf/sharding.xml" in "dble-1" with sed cmds
     """
@@ -50,6 +48,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
       shardingNode 'dn5' is not found!
     """
+
 
   Scenario: config sharding property, reload the configs #2
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -61,6 +60,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
       sharding schema1 didn't config tables,so you must set shardingNode property
     """
 
+
   Scenario: config sharding property, reload the configs #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -71,6 +71,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
       Attribute 'database' must appear on element 'shardingNode'
     """
 
+
   Scenario: config sharding property, reload the configs #4
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
     """
@@ -80,6 +81,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
       shardingNode  define error ,attribute can't be empty
     """
+
 
   Scenario: config sharding property, reload the configs #6
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -93,6 +95,7 @@ Feature: config sharding config files incorrect and restart dble or reload confi
     """
       These properties of function [hash-two-fake] is not recognized: partitionLength_fake,partitionCount_fake
     """
+
 
   Scenario: shardingnode duplicate in one shardtable, reload the configs #7
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
