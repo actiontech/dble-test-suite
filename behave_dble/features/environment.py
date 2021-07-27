@@ -75,7 +75,6 @@ def before_all(context):
 
 def reset_dble(context):
     replace_config(context)
-    set_dbles_log_level(context, DbleMeta.dbles, 'debug')
     restart_dbles(context, DbleMeta.dbles)
 
 def after_all(context):
