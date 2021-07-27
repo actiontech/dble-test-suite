@@ -4,7 +4,7 @@
 # Created by wangjuan at 2021/7/20
 
 # DBLE0REQ-1003
-Feature: dble_xa_recover test and exception xa transactions
+Feature: check dble_xa_recover and exception xa transactions
 
    @restore_xa_recover
    Scenario: check dble_xa_recover table #1
