@@ -98,6 +98,7 @@ Feature: config db config files incorrect and restart dble or reload configs
 
   @test-no-dbgroup
   Scenario: config db property, reload the configs #8
+    ####  dmp initialization config
     Given update file content "/opt/dble/conf/db.xml" in "dble-1" with sed cmds
       """
       4,14d
@@ -107,9 +108,16 @@ Feature: config db config files incorrect and restart dble or reload configs
       4,14d
       """
     Then execute admin cmd "reload @@config_all"
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose  | sql                          | expect                                                                               | db      |
-      | conn_0 | true     | drop table if exists test    | Access denied for user 'test', because there are some empty dbGroup/fake dbInstance  | schema1 |
+    Then restart dble in "dble-1" failed for
+      """
+      User\[name:test\]'s schema \[schema1\] is not exist
+      """
+    Given update file content "/opt/dble/conf/user.xml" in "dble-1" with sed cmds
+      """
+      5d
+      """
+    Given Restart dble in "dble-1" success
+
 
 
   Scenario: dbInstance's url duplicate in one dbGroup, reload the configs #9

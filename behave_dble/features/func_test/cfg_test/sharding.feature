@@ -357,6 +357,10 @@ Feature: sharding basic config test
         <shardingNode dbGroup="dbGroup2" database="db1" name="dn2"/>
       """
 
+    Then execute admin cmd "reload @@config_all" get the following output
+      """
+      Reload config failure
+      """
     Then Restart dble in "dble-1" failed for
       """
       Invalid content was found starting with element 'schema'. One of '{dbGroup}' is expected.
