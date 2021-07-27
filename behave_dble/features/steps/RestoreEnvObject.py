@@ -125,6 +125,31 @@ class RestoreEnvObject(object):
                 mysql = ObjectFactory.create_mysql_object(host_name)
                 mysql.restart(sed_str)
 
+        if "restore_xa_recover" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'restore_xa_recover'")
+
+            if params_dic:
+                paras = params_dic["restore_xa_recover"]
+            else:
+                paras = {}
+
+            logger.debug("try to restore_xa_recover of mysqls: {0}".format(paras))
+
+            for host_name in paras:
+                if host_name.find('dble') != -1:
+                    mode = "user"
+                else:
+                    mode = "mysql"
+                logger.debug("the value of host_name is: {0}, mode: {1}".format(host_name, mode))
+                sql = "xa recover"
+                res, err = execute_sql_in_host(host_name, {"sql": sql}, mode)
+                if res:
+                    for data in res:
+                        sql = "xa rollback '{0}'".format(data[3])
+                        execute_sql_in_host(host_name, {"sql": sql}, mode)
+
+
+
     def get_tag_params(self, tagKey):
         description = self._scenario.description
         logger.debug("scenario description:{0}".format(type(description)))
