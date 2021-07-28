@@ -12,7 +12,7 @@
 -Xms1G
 -XX:MaxDirectMemorySize=1G
 -XX:+HeapDumpOnOutOfMemoryError
--XX:HeapDumpPath="/tmp"
+-XX:HeapDumpPath=/tmp/java_error_in_idea.hprof
 #  base config
 -DhomePath=.
 -DinstanceName=1
