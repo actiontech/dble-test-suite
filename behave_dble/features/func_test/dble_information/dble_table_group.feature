@@ -4,8 +4,11 @@
 
 Feature:  dble_table test
 
-  @skip_restart
+  @skip_restart  @restore_mysql_config
   Scenario:  dble_table  table #1
+   """
+   {'restore_mysql_config':{'mysql-master1':{'lower_case_table_names':0},'mysql-master2':{'lower_case_table_names':0}}}
+   """
   #case desc dble_table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_1"
       | conn   | toClose | sql             | db               |
@@ -20,7 +23,18 @@ Feature:  dble_table test
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                         | expect       | db               |
       | conn_0 | True    | desc dble_table             | length{(5)}  | dble_information |
-#case change sharding/user.xml add some schema and reload
+
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 1
+     """
+    #case change sharding/user.xml add some schema and reload
     Given delete the following xml segment
       | file         | parent         | child                  |
       | sharding.xml | {'tag':'root'} | {'tag':'schema'}       |
@@ -60,8 +74,9 @@ Feature:  dble_table test
     """
     <shardingUser name="test" password="111111" schemas="schema1,schema2,schema3,schema4"/>
     """
-    Then execute admin cmd "reload @@config"
-#clear all table if exists table and restart dble to reset id values
+    Given Restart dble in "dble-1" success
+
+   #clear all table if exists table and restart dble to reset id values
     Given execute oscmd in "dble-1"
        """
        mysql -uroot -p111111 -P9066 -h172.100.9.1 -Ddble_information -e "select concat('drop table if exists ',name,';') as 'select 1;' from dble_table" >/opt/dble/test.sql && \
@@ -70,38 +85,41 @@ Feature:  dble_table test
        mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema3 -e "source /opt/dble/test.sql" && \
        mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema4 -e "source /opt/dble/test.sql"
       """
-
-    Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect       | db               |
       | conn_1 | True    | show tables                 | length{(0)}  | schema1          |
       | conn_1 | True    | show tables                 | length{(0)}  | schema2          |
       | conn_1 | True    | show tables                 | length{(0)}  | schema3          |
       | conn_1 | True    | show tables                 | length{(0)}  | schema4          |
-# case check "SHARDING" "GLOBAL" "SINGLE" "CHILD" table
+   # case check "SHARDING" "GLOBAL" "SINGLE" "CHILD" table
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_2"
       | conn   | toClose | sql                       | db               |
       | conn_0 | False   | select * from dble_table  | dble_information |
     Then check resultset "dble_table_2" has lines with following column values
-      | name-1     | schema-2 | max_limit-3 | type-4   |
-      | sharding_2 | schema1  | 100         | SHARDING |
-      | sharding_4 | schema1  | 100         | SHARDING |
-      | er_parent  | schema1  | 100         | SHARDING |
-      | er_child   | schema1  | 90          | CHILD    |
-      | global1    | schema1  | 100         | GLOBAL   |
-      | sharding_3 | schema2  | 1000        | SHARDING |
-      | global2    | schema2  | 1000        | GLOBAL   |
-      | sing1      | schema2  | 1000        | SINGLE   |
-      | sing2      | schema3  | -1          | SINGLE   |
+      | id-0 | name-1     | schema-2 | max_limit-3 | type-4   |
+      | C1   | global1    | schema1  | 100         | GLOBAL   |
+      | C2   | sharding_2 | schema1  | 100         | SHARDING |
+      | C3   | sharding_4 | schema1  | 100         | SHARDING |
+      | C4   | er_parent  | schema1  | 100         | SHARDING |
+      | C5   | er_child   | schema1  | 90          | CHILD    |
+      | C6   | sing1      | schema2  | 1000        | SINGLE   |
+      | C7   | sharding_3 | schema2  | 1000        | SHARDING |
+      | C8   | global2    | schema2  | 1000        | GLOBAL   |
+      | C9   | sing2      | schema3  | -1          | SINGLE   |
+
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect       | db               |
       | conn_0 | True    | select * from dble_table             | length{(9)}  | dble_information |
   #case create new tables to check "NO_SHARDING" table,the vertical table is special NO_SHARDING table
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                     | expect  | db      |
+      | conn_1 | True    | drop table if exists schema1.no_s1      | success | schema1 |
       | conn_1 | True    | create table schema1.no_s1 (id int)     | success | schema1 |
+      | conn_1 | True    | drop table if exists schema2.no_s2      | success | schema2 |
       | conn_1 | True    | create table schema2.no_s2 (id int)     | success | schema2 |
+      | conn_1 | True    | drop table if exists schema3.no_s3      | success | schema3 |
       | conn_1 | True    | create table schema3.no_s3 (id int)     | success | schema3 |
+      | conn_1 | True    | drop table if exists schema4.vertical   | success | schema4 |
       | conn_1 | True    | create table schema4.vertical (id int)  | success | schema4 |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                  | expect        | db               |
@@ -110,11 +128,43 @@ Feature:  dble_table test
       | conn   | toClose | sql                                                 | db               |
       | conn_0 | True    | select * from dble_table where type ='NO_SHARDING'  | dble_information |
     Then check resultset "dble_table_3" has lines with following column values
-      | name-1   | schema-2 | max_limit-3 | type-4      |
-      | no_s1    | schema1  | 100         | NO_SHARDING |
-      | no_s2    | schema2  | 1000        | NO_SHARDING |
-      | no_s3    | schema3  | -1          | NO_SHARDING |
-      | vertical | schema4  | -1          | NO_SHARDING |
+      | id-0 | name-1     | schema-2 | max_limit-3 | type-4      |
+      | M1   | no_s1      | schema1  | 100         | NO_SHARDING |
+      | M2   | no_s2      | schema2  | 1000        | NO_SHARDING |
+      | M3   | no_s3      | schema3  | -1          | NO_SHARDING |
+      | M4   | vertical   | schema4  | -1          | NO_SHARDING |
+
+    Given restart mysql in "mysql-master1" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 0
+     """
+    Given restart mysql in "mysql-master2" with sed cmds to update mysql config
+    """
+     /lower_case_table_names/d
+     /server-id/a lower_case_table_names = 0
+     """
+    Given Restart dble in "dble-1" success
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "dble_table_4"
+      | conn   | toClose | sql                       | db               |
+      | conn_0 | False   | select * from dble_table  | dble_information |
+    Then check resultset "dble_table_4" has lines with following column values
+      | id-0 | name-1     | schema-2 | max_limit-3 | type-4      |
+      | C1   | global1    | schema1  | 100         | GLOBAL      |
+      | C2   | sharding_2 | schema1  | 100         | SHARDING    |
+      | C3   | sharding_4 | schema1  | 100         | SHARDING    |
+      | C4   | er_parent  | schema1  | 100         | SHARDING    |
+      | C5   | er_child   | schema1  | 90          | CHILD       |
+      | C6   | sing1      | schema2  | 1000        | SINGLE      |
+      | C7   | sharding_3 | schema2  | 1000        | SHARDING    |
+      | C8   | global2    | schema2  | 1000        | GLOBAL      |
+      | C9   | sing2      | schema3  | -1          | SINGLE      |
+#      | M1   | no_s1      | schema1  | 100         | NO_SHARDING |
+#      | M2   | no_s2      | schema2  | 1000        | NO_SHARDING |
+#      | M3   | no_s3      | schema3  | -1          | NO_SHARDING |
+#      | M4   | vertical   | schema4  | -1          | NO_SHARDING |
+
+
 
   @skip_restart
    Scenario:  dble_global_table table #2
