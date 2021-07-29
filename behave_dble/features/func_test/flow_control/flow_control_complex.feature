@@ -340,7 +340,7 @@ Feature: test flow_control about complex query
       closed
       Lost connection
       """
-    Given sleep "5" seconds
+    Given sleep "10" seconds
     Given kill mysql query in "dble-1" forcely
       """
       select * from sharding_2_t1 order by id limit 1000000000
