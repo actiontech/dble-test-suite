@@ -129,6 +129,9 @@ def after_scenario(context, scenario):
     MySQLObject.long_live_conns.clear()
 
     if not context.userDebug:
+        if "init_dble_meta" in scenario.tags:
+            init_meta(context, "dble")
+
         if "restore_sys_time" in scenario.tags:
             restore_sys_time()
 
