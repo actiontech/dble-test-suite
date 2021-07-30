@@ -366,7 +366,7 @@ Feature: db.xml support fake host
       | conn_0 | false   | select * from session_connections              | length{(1)} | dble_information |
       | conn_0 | true    | select * from backend_connections              | length{(0)} | dble_information |
 
-@skip_restart
+
   Scenario: fake host doesn't support ipv6 and local ip address #10
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
