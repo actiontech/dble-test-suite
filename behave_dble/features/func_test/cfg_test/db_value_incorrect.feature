@@ -108,6 +108,10 @@ Feature: config db config files incorrect and restart dble or reload configs
       4,14d
       """
     Then execute admin cmd "reload @@config_all"
+    Given execute linux command in "dble-1" and contains exception "Access denied for user 'test', because there are some empty dbGroup/fake dbInstance"
+    """
+    mysql -utest -p111111 -P8066 -h172.100.9.1 -Dschema1 -e "select version()"
+    """
     Then restart dble in "dble-1" failed for
       """
       User\[name:test\]'s schema \[schema1\] is not exist
