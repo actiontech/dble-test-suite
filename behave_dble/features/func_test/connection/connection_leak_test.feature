@@ -9,6 +9,7 @@ Feature: connection leak test
   @btrace
   Scenario: modify table's configuration that has been created, reload @@config_all not hang when backend mysql disconnected
 
+    Given record current dble log line number in "log_1"
     Given delete file "/opt/dble/BtraceLineDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceLineDelay.java.log" on "dble-1"
     Then execute sql in "dble-1" in "user" mode
