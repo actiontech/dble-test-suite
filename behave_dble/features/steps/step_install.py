@@ -263,11 +263,15 @@ def check_restart_dble_failed(context,hostname):
 def check_restart_dble_failed(context,hostname):
     node = get_node(hostname)
     start_dble_in_node(context, node, False)
-    
+
+
+@Then('Restart dble in "{hostname}" success use manager port "{manager_port}"')
 @Given('Restart dble in "{hostname}" success')
 @Then('Restart dble in "{hostname}" success')
-def step_impl(context, hostname):
+def step_impl(context, hostname, manager_port=None):
     node = get_node(hostname)
+    if manager_port:
+        node.manager_port = int(manager_port)
     restart_dble(context, node)
 
 def restart_dble(context, node, expect_success=True):
