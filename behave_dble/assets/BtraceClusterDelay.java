@@ -452,6 +452,13 @@ public final class BtraceClusterDelay {
         BTraceUtils.print(" for order __________________________ ");
         Thread.sleep(30000L);
     }
-
-
+    @OnMethod(
+            clazz = "com.actiontech.dble.services.mysqlsharding.MySQLResponseService",
+            method = "synAndDoExecute"
+    )
+    public static void query(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
+        BTraceUtils.print("get into query");
+        BTraceUtils.print(" __________________________ ");
+        Thread.sleep(10000L);
+    }
 }
