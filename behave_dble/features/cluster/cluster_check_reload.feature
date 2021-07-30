@@ -886,8 +886,7 @@ Feature: test "reload @@config" in zk cluster
         """
         <shardingTable name="sharding" shardingNode="dn3,dn4" shardingColumn="id" function="hash-two"/>
         """
-      Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
-      Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
+
       Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
         """
         s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
