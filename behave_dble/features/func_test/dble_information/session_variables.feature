@@ -144,13 +144,16 @@ Feature:  session_variables test
       | variable_name-1          | variable_value-2  | variable_type-3 |
       | transaction_isolation    | read-uncommitted  | sys             |
 
-  #case  SET @@tx_read_only  or set @@session.transaction_read_only
+  #case  SET @@tx_read_only  or set @@session.transaction_read_only or set session transaction read only
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect  |
       | conn_1 | False   | set @@session.transaction_read_only=1 | success |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect  |
-      | conn_2 | False   | use schema1                           | success |
+      | conn_2 | False   | set session transaction read only     | success |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                   | expect  |
+      | conn_3 | False   | use schema1                           | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_8"
       | conn   | toClose | sql                                                                                                         | db               |
       | conn_0 | False   | select * from session_variables where variable_name='transaction_read_only' or variable_name='tx_read_only' | dble_information |
@@ -158,11 +161,18 @@ Feature:  session_variables test
       | variable_name-1       | variable_value-2 | variable_type-3 |
       | transaction_read_only | true             | sys             |
       | tx_read_only          | true             | sys             |
+      | transaction_read_only | true             | sys             |
+      | tx_read_only          | true             | sys             |
+      | transaction_read_only | false            | sys             |
+      | tx_read_only          | false            | sys             |
       | transaction_read_only | false            | sys             |
       | tx_read_only          | false            | sys             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                  | expect  |
       | conn_1 | False   | SET @@tx_read_only=0 | success |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                | expect  |
+      | conn_2 | False   | set session transaction read write | success |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "session_variables_9"
       | conn   | toClose | sql                                                                                                         | db               |
       | conn_0 | False   | select * from session_variables where variable_name='transaction_read_only' or variable_name='tx_read_only' | dble_information |
@@ -172,9 +182,17 @@ Feature:  session_variables test
       | tx_read_only          | false            | sys             |
       | transaction_read_only | false            | sys             |
       | tx_read_only          | false            | sys             |
+      | transaction_read_only | false            | sys             |
+      | tx_read_only          | false            | sys             |
+      | transaction_read_only | false            | sys             |
+      | tx_read_only          | false            | sys             |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                         | expect                    |
       | conn_1 | False   | SET @@global.tx_read_only=1 | unsupport global          |
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                   | expect                                                                            |
+      | conn_2 | False   | set transaction read only             | setting transaction without any SESSION or GLOBAL keyword is not supported now    |
+      | conn_2 | False   | set global transaction read only      | setting GLOBAL value is not supported                                             |
 
   #case  set @@character_set_results='utf8mb4'
     Then execute sql in "dble-1" in "user" mode

@@ -11,8 +11,8 @@ public class BtraceLineDelay{
             location=@Location(value=Kind.LINE,line=157)
     )
     public static void args(@Self Object self, @ProbeMethodName String pmn, int line) throws Exception {
-        BTraceUtils.print("delay for NP test");
-        BTraceUtils.print("for print order ...................");
+        BTraceUtils.println("delay for NP test");
+        BTraceUtils.println("for print order ...................");
         Thread.sleep(10000L);
     }
 }
