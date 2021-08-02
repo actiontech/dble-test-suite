@@ -128,11 +128,11 @@ Feature:  dble_table test
       | conn   | toClose | sql                                                 | db               |
       | conn_0 | True    | select * from dble_table where type ='NO_SHARDING'  | dble_information |
     Then check resultset "dble_table_3" has lines with following column values
-      | id-0 | name-1     | schema-2 | max_limit-3 | type-4      |
-      | M1   | no_s1      | schema1  | 100         | NO_SHARDING |
-      | M2   | no_s2      | schema2  | 1000        | NO_SHARDING |
-      | M3   | no_s3      | schema3  | -1          | NO_SHARDING |
-      | M4   | vertical   | schema4  | -1          | NO_SHARDING |
+      | name-1     | schema-2 | max_limit-3 | type-4      |
+      | no_s1      | schema1  | 100         | NO_SHARDING |
+      | no_s2      | schema2  | 1000        | NO_SHARDING |
+      | no_s3      | schema3  | -1          | NO_SHARDING |
+      | vertical   | schema4  | -1          | NO_SHARDING |
 
     Given restart mysql in "mysql-master1" with sed cmds to update mysql config
     """
