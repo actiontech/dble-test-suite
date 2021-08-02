@@ -32,10 +32,10 @@ Feature: connection leak test
        | conn_1 | False     |  show @@shardingNodes where schema=schema1 and table=sharding_4_t1       |
     Then check resultset "A" has lines with following column values
        | NAME-0 |SEQUENCE-1 | HOST-2         | PORT-3   | PHYSICAL_SCHEMA-4 |  USER-5 | PASSWORD-6 |
-       | dn1    | 0         | 172.100.9.5    | 3306     |   db1             |  test   | 111111     |
-       | dn2    | 1         | 172.100.9.6    | 3306     |   db1             |  test   | 111111     |
-       | dn3    | 2         | 172.100.9.5    | 3306     |   db2             |  test   | 111111     |
-       | dn4    | 3         | 172.100.9.6    | 3306     |   db2             |  test   | 111111     |
+       | dn1    | 0         | 172.100.9.5    | 3307     |   db1             |  test   | 111111     |
+       | dn2    | 1         | 172.100.9.6    | 3307     |   db1             |  test   | 111111     |
+       | dn3    | 2         | 172.100.9.5    | 3307     |   db2             |  test   | 111111     |
+       | dn4    | 3         | 172.100.9.6    | 3307     |   db2             |  test   | 111111     |
     Given prepare a thread run btrace script "BtraceLineDelay.java" in "dble-1"
     Given sleep "5" seconds
     Then execute sql in "dble-1" in "admin" mode
@@ -57,8 +57,8 @@ Feature: connection leak test
        | conn_1 | true      |  show @@shardingNodes where schema=schema1 and table=sharding_4_t1       |
     Then check resultset "B" has lines with following column values
        | NAME-0 |SEQUENCE-1 | HOST-2         | PORT-3   | PHYSICAL_SCHEMA-4 |  USER-5 | PASSWORD-6 |
-       | dn1    | 0         | 172.100.9.5    | 3306     |   db1             |  test   | 111111     |
-       | dn3    | 1         | 172.100.9.5    | 3306     |   db2             |  test   | 111111     |
+       | dn1    | 0         | 172.100.9.5    | 3307     |   db1             |  test   | 111111     |
+       | dn3    | 1         | 172.100.9.5    | 3307     |   db2             |  test   | 111111     |
     Given stop btrace script "BtraceLineDelay.java" in "dble-1"
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceLineDelay.java" on "dble-1"
@@ -86,7 +86,7 @@ Feature: connection leak test
       """
          <dbGroup rwSplitMode="0" name="ha_group1" delayThreshold="100" >
              <heartbeat>select user()</heartbeat>
-             <dbInstance name="hostM1" password="111111" url="172.100.9.5:3306" user="test" maxCon="4" minCon="0" primary="true">
+             <dbInstance name="hostM1" password="111111" url="172.100.9.5:3307" user="test" maxCon="4" minCon="0" primary="true">
              </dbInstance>
          </dbGroup>
        """
@@ -118,7 +118,7 @@ Feature: connection leak test
     Given sleep "5" seconds
     Then check sql thread output in "err"
       """
-        1105, "java.io.IOException: the dbInstance[172.100.9.5:3306] can't reach. Please check the dbInstance status"
+        1105, "java.io.IOException: the dbInstance[172.100.9.5:3307] can't reach. Please check the dbInstance status"
       """
     Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
     Given destroy btrace threads list

@@ -847,3 +847,265 @@ Feature: test "reload @@config" in zk cluster
     """
     rm -rf /tmp/dble_*
     """
+
+    @btrace
+    Scenario: when reload hang,emergency ways to deal with it
+
+#CASE1: change sharding.xml and reload hang on the same dble
+      Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
+      Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-1"
+      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+        """
+        s/-Dprocessors=1/-Dprocessors=4/
+        s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+        """
+      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+        """
+        s/-Dprocessors=1/-Dprocessors=4/
+        s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+        """
+      Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+        """
+        s/-Dprocessors=1/-Dprocessors=4/
+        s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+        """
+      Then restart dble in "dble-1" success
+      Then restart dble in "dble-2" success
+      Then restart dble in "dble-3" success
+
+      Then execute sql in "dble-1" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_10 | False     | show @@reload_status       | dble_information | length{(0)}  |
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_20 | true      | show @@reload_status       | dble_information | length{(0)}  |
+      Then execute sql in "dble-3" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_30 | true      | show @@reload_status       | dble_information | length{(0)}  |
+      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+        """
+        <shardingTable name="sharding" shardingNode="dn3,dn4" shardingColumn="id" function="hash-two"/>
+        """
+
+      Given update file content "./assets/BtraceClusterDelay.java" in "behave" with sed cmds
+        """
+        s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
+        /countdown/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
+        """
+      Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-1"
+      Given sleep "5" seconds
+      Given prepare a thread execute sql "reload @@config_all" with "conn_10"
+      Then check btrace "BtraceClusterDelay.java" output in "dble-1"
+        """
+        get into countdown
+        """
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1A"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_11 | true      | show @@reload_status   |  dble_information  |
+      Then check resultset "1A" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3 | LAST_RELOAD_END-5 | TRIGGER_TYPE-6  | END_TYPE-7 |
+        |   0     | zk        | RELOAD_ALL    | META_RELOAD     |                   |  LOCAL_COMMAND  |            |
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_21 | true      | show @@reload_status        | dble_information | length{(0)} |
+      Then execute sql in "dble-3" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_31 | true      | show @@reload_status       | dble_information | length{(0)}  |
+
+      Then execute sql in "dble-1" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect   |
+        | conn_12 | False     | release @@reload_metadata  | dble_information | success  |
+      Given sleep "10" seconds
+      Then check sql thread output in "err"
+        """
+        Reload config failure.
+        """
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1B"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_12 | False     | show @@reload_status   |  dble_information  |
+      Then check resultset "1B" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3  | TRIGGER_TYPE-6  | END_TYPE-7   |
+        |   0     | zk        | RELOAD_ALL    | NOT_RELOADING    |  LOCAL_COMMAND  | INTERRUPUTED |
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                         | db               | expect      |
+        | conn_22 | true      | show @@reload_status        | dble_information | length{(0)} |
+      Then execute sql in "dble-3" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_32 | true      | show @@reload_status       | dble_information | length{(0)}  |
+      Then check resultsets "1A" and "1B" are same in following columns
+        | column                    | column_index |
+        | LAST_RELOAD_START         |   4          |
+      Given stop btrace script "BtraceClusterDelay.java" in "dble-1"
+      Given destroy btrace threads list
+
+      Then execute sql in "dble-1" in "admin" mode
+        | conn    | toClose   | sql                     | db               | expect   |
+        | conn_13 | False     | reload @@metadata       | dble_information | success  |
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1C"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_13 | true      | show @@reload_status   |  dble_information  |
+      Then check resultset "1C" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3  | TRIGGER_TYPE-6  | END_TYPE-7   |
+        |   1     | zk        | RELOAD_META    | NOT_RELOADING    |  LOCAL_COMMAND  | RELOAD_END   |
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                         | db               | expect      |
+        | conn_23 | true      | show @@reload_status        | dble_information | length{(0)} |
+      Then execute sql in "dble-3" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect       |
+        | conn_33 | true      | show @@reload_status       | dble_information | length{(0)}  |
+
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1C"
+        | conn    | toClose   | sql                                                            |  db                |
+        | conn_14 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
+      Then check resultset "1C" has lines with following column values
+        | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
+        | dn3    | 0          | 172.100.9.5   | 3307   | db2               | test   | 111111     |
+        | dn4    | 1          | 172.100.9.6   | 3307   | db2               | test   | 111111     |
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                                                           | db               | expect      |
+        | conn_24 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | dble_information | length{(0)} |
+      Then execute sql in "dble-3" in "admin" mode
+        | conn    | toClose   | sql                                                           | db               | expect      |
+        | conn_34 | true      | show @@shardingnodes where schema=schema1 and table=sharding  | dble_information | length{(0)} |
+
+     Then execute sql in "dble-1" in "admin" mode
+       | conn    | toClose    | sql                        | db               | expect   |
+       | conn_15 | False      | reload @@config_all        | dble_information | success  |
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1D"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_15 | true      | show @@reload_status   |  dble_information  |
+      Then check resultset "1D" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3  | TRIGGER_TYPE-6   | END_TYPE-7 |
+        |     2   | zk        | RELOAD_ALL    | NOT_RELOADING    | LOCAL_COMMAND    | RELOAD_END |
+      Given execute single sql in "dble-2" in "admin" mode and save resultset in "2A"
+        | conn    | toClose   | sql                         | db               |
+        | conn_15 | true      | show @@reload_status        | dble_information |
+      Then check resultset "2A" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3  | TRIGGER_TYPE-6   | END_TYPE-7 |
+        |     0   | zk        | RELOAD_ALL    | NOT_RELOADING    | CLUSTER_NOTIFY   | RELOAD_END |
+      Given execute single sql in "dble-3" in "admin" mode and save resultset in "3A"
+        | conn    | toClose   | sql                         | db               |
+        | conn_25 | true      | show @@reload_status        | dble_information |
+      Then check resultset "3A" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2 | RELOAD_STATUS-3  | TRIGGER_TYPE-6   | END_TYPE-7 |
+        |     0   | zk        | RELOAD_ALL    | NOT_RELOADING    | CLUSTER_NOTIFY   | RELOAD_END |
+
+      Given execute single sql in "dble-2" in "admin" mode and save resultset in "2B"
+        | conn    | toClose   | sql                                                            |  db                |
+        | conn_26 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
+      Then check resultset "2B" has lines with following column values
+        | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
+        | dn3    | 0          | 172.100.9.5   | 3307   | db2               | test   | 111111     |
+        | dn4    | 1          | 172.100.9.6   | 3307   | db2               | test   | 111111     |
+      Given execute single sql in "dble-3" in "admin" mode and save resultset in "3B"
+        | conn    | toClose   | sql                                                            |  db                |
+        | conn_36 | true      | show @@shardingnodes where schema=schema1 and table=sharding   |  dble_information  |
+      Then check resultsets "2B" and "3B" are same in following columns
+        | column                    | column_index |
+        | NAME                      |   0          |
+        | SEQUENCE                  |   1          |
+        | HOST                      |   2          |
+        | PORT                      |   3          |
+        | PHYSICAL_SCHEMA           |   4          |
+        | SUER                      |   5          |
+        | PASSWORD                  |   6          |
+
+#CASE2: change sharding.xml and reload hang on the different dble
+      Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-2"
+      Given delete file "/opt/dble/BtraceClusterDelay.java.log" on "dble-2"
+      Given add xml segment to node with attribute "{'tag':'schema','kv_map':{'name':'schema1'}}" in "sharding.xml"
+        """
+        <shardingTable name="sharding_2" shardingNode="dn1,dn2" shardingColumn="id" function="hash-two"/>
+        """
+      Given prepare a thread run btrace script "BtraceClusterDelay.java" in "dble-2"
+      Given sleep "5" seconds
+      Given prepare a thread execute sql "reload @@config_all" with "conn_10"
+      Then check btrace "BtraceClusterDelay.java" output in "dble-2"
+        """
+        get into countdown
+        """
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1a"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_1A | true      | show @@reload_status   |  dble_information  |
+      Then check resultset "1a" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3   | LAST_RELOAD_END-5|TRIGGER_TYPE-6  | END_TYPE-7   |
+        |   3     | zk        | RELOAD_ALL     | WAITING_OTHERS    |                  |LOCAL_COMMAND   |              |
+      Given execute single sql in "dble-2" in "admin" mode and save resultset in "2a"
+        | conn    | toClose   | sql                         | db               |
+        | conn_2A | true      | show @@reload_status        | dble_information |
+      Then check resultset "2a" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3   | LAST_RELOAD_END-5|TRIGGER_TYPE-6   | END_TYPE-7   |
+        |   1     | zk        | RELOAD_ALL     | META_RELOAD       |                  |CLUSTER_NOTIFY   |              |
+      Given execute single sql in "dble-3" in "admin" mode and save resultset in "3a"
+        | conn    | toClose   | sql                        | db               |
+        | conn_3A | true      | show @@reload_status       | dble_information |
+      Then check resultset "3a" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3     |TRIGGER_TYPE-6   | END_TYPE-7   |
+        |   1     | zk        | RELOAD_ALL     | NOT_RELOADING       |CLUSTER_NOTIFY   | RELOAD_END   |
+
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                        | db               | expect   |
+        | conn_2B | False     | release @@reload_metadata  | dble_information | success  |
+      Given sleep "10" seconds
+      Then check sql thread output in "err"
+        """
+        Reload config failed partially.
+        """
+
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1b"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_1B | true      | show @@reload_status   |  dble_information  |
+      Then check resultset "1b" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3   |TRIGGER_TYPE-6  | END_TYPE-7   |
+        |   3     | zk        | RELOAD_ALL     | NOT_RELOADING     |LOCAL_COMMAND   | RELOAD_END   |
+      Given execute single sql in "dble-2" in "admin" mode and save resultset in "2b"
+        | conn    | toClose   | sql                         | db               |
+        | conn_2B | true      | show @@reload_status        | dble_information |
+      Then check resultset "2b" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3   |TRIGGER_TYPE-6   | END_TYPE-7   |
+        |   1     | zk        | RELOAD_ALL     | NOT_RELOADING     |CLUSTER_NOTIFY   | INTERRUPUTED |
+      Given execute single sql in "dble-3" in "admin" mode and save resultset in "3b"
+        | conn    | toClose   | sql                        | db               |
+        | conn_3B | true      | show @@reload_status       | dble_information |
+      Then check resultset "3b" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3     | TRIGGER_TYPE-6   | END_TYPE-7   |
+        |   1     | zk        | RELOAD_ALL     | NOT_RELOADING       | CLUSTER_NOTIFY   | RELOAD_END   |
+
+      Given stop btrace script "BtraceClusterDelay.java" in "dble-2"
+      Given destroy btrace threads list
+
+      Then execute sql in "dble-2" in "admin" mode
+        | conn    | toClose   | sql                | db               | expect   |
+        | conn_2C | False     | reload @@metadata  | dble_information | success  |
+
+      Given execute single sql in "dble-1" in "admin" mode and save resultset in "1c"
+        | conn    | toClose   | sql                    |  db                |
+        | conn_1C | true      | show @@reload_status   |  dble_information  |
+      Then check resultset "1c" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3   |TRIGGER_TYPE-6  | END_TYPE-7   |
+        |   3     | zk        | RELOAD_ALL     | NOT_RELOADING     |LOCAL_COMMAND   | RELOAD_END   |
+      Given execute single sql in "dble-2" in "admin" mode and save resultset in "2c"
+        | conn    | toClose   | sql                         | db               |
+        | conn_2C | true      | show @@reload_status        | dble_information |
+      Then check resultset "2c" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2   | RELOAD_STATUS-3   |TRIGGER_TYPE-6   | END_TYPE-7   |
+        |   2     | zk        | RELOAD_META     | NOT_RELOADING     |LOCAL_COMMAND    | RELOAD_END   |
+      Given execute single sql in "dble-3" in "admin" mode and save resultset in "3c"
+        | conn    | toClose   | sql                        | db               |
+        | conn_3C | true      | show @@reload_status       | dble_information |
+      Then check resultset "3c" has lines with following column values
+        | INDEX-0 | CLUSTER-1 | RELOAD_TYPE-2  | RELOAD_STATUS-3     | TRIGGER_TYPE-6   | END_TYPE-7   |
+        |   1     | zk        | RELOAD_ALL     | NOT_RELOADING       | CLUSTER_NOTIFY   | RELOAD_END   |
+
+      Given execute single sql in "dble-2" in "admin" mode and save resultset in "2d"
+        | conn    | toClose   | sql                                                              |  db                |
+        | conn_2D | true      | show @@shardingnodes where schema=schema1 and table=sharding_2   |  dble_information  |
+      Then check resultset "2d" has lines with following column values
+        | NAME-0 | SEQUENCE-1 | HOST-2        | PORT-3 | PHYSICAL_SCHEMA-4 | USER-5 | PASSWORD-6 |
+        | dn1    | 0          | 172.100.9.5   | 3307   | db1               | test   | 111111     |
+        | dn2    | 1          | 172.100.9.6   | 3307   | db1               | test   | 111111     |
+
+      Given delete file "/opt/dble/BtraceCluster.java" on "dble-1"
+      Given delete file "/opt/dble/BtraceCluster.java.log" on "dble-1"
+      Given delete file "/opt/dble/BtraceCluster.java" on "dble-2"
+      Given delete file "/opt/dble/BtraceCluster.java.log" on "dble-2"
