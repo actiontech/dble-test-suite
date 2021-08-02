@@ -25,6 +25,10 @@ Feature: test flow_control about complex query
        $a -DsqlExecuteTimeout=1800000
        $a -DidleTimeout=1800000
        """
+    Given update file content "/opt/dble/conf/log4j2.xml" in "dble-1" with sed cmds
+      """
+      s/debug/info/g
+      """
     Then Restart dble in "dble-1" success
 
     Then execute sql in "dble-1" in "user" mode
@@ -201,7 +205,7 @@ Feature: test flow_control about complex query
       closed
       Lost connection
       """
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Given kill mysql query in "dble-1" forcely
       """
       select * from sharding_2_t1 where id in (select id from sharding_4_t1) order by id
@@ -294,7 +298,7 @@ Feature: test flow_control about complex query
       closed
       Lost connection
       """
-#    Given sleep "2" seconds
+    Given sleep "5" seconds
     Given kill mysql query in "dble-1" forcely
       """
       select * from sharding_2_t1 union all select * from sharding_4_t1
@@ -340,7 +344,7 @@ Feature: test flow_control about complex query
       closed
       Lost connection
       """
-    Given sleep "5" seconds
+    Given sleep "20" seconds
     Given kill mysql query in "dble-1" forcely
       """
       select * from sharding_2_t1 order by id limit 1000000000
