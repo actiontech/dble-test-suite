@@ -457,8 +457,8 @@ public final class BtraceClusterDelay {
             method = "synAndDoExecute"
     )
     public static void query(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception {
-        BTraceUtils.print("get into query");
-        BTraceUtils.print(" __________________________ ");
+        BTraceUtils.println("get into query");
+        BTraceUtils.println(" __________________________ ");
         Thread.sleep(10000L);
     }
 }
