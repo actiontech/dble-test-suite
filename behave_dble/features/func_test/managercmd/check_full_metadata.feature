@@ -38,6 +38,8 @@ Feature: test "check full @@metadata...'"
       | conn_2 | False   | check full @@metadata where schema='schema1' and table='test_shard' | hasStr{`id` int(11) DEFAULT NULL}    |
       | conn_2 | True    | check full @@metadata where schema='testdb' and table='test_shard'  | hasStr{`age` int(11) DEFAULT NULL}   |
 
+
+
   @CRITICAL
   Scenario: config no-sharding table's name is same as sharding table's name, their metadatas are not affected by each other #2
     Then execute sql in "dble-1" in "user" mode
@@ -79,6 +81,8 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | check full @@metadata where schema='schema1' and table='test1' | hasNoStr{`name2`}                  |
       | conn_0 | True    | check @@metadata                                               | success                            |
 
+
+
   @CRITICAL
   Scenario: config no-sharding table's name is same as global table's name, their metadatas are not affected by each other #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
@@ -115,6 +119,8 @@ Feature: test "check full @@metadata...'"
       | conn   | toClose | sql                                                           | expect                               |
       | conn_0 | False   | check full @@metadata where schema='testdb' and table='test1' | hasNoStr{`age` int(11) DEFAULT NULL} |
       | conn_0 | True    | check full @@metadata where schema='testdb' and table='test1' | hasStr{`name`}                       |
+
+
 
   @CRITICAL
   Scenario: config no tables in node schema, then create 1 table in default node and do ddl,reload @@metadata, check table's metadata during the procedure #4
@@ -156,6 +162,8 @@ Feature: test "check full @@metadata...'"
     Then execute sql in "dble-1" in "user" mode
       | sql                       | expect  | db      |
       | drop table if exists test | success | schema1 |
+
+
 
   @CRITICAL @current
   Scenario: backend tables in shardingnode are inconsistent or lack in some shardingnode for a config sharding/global table, check metadata and query #5
@@ -275,6 +283,8 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test5  | success                          | schema1   |
       | conn_0 | True    | drop table if exists test2  | success                          | schema1   |
 
+
+
   @NORMAL @restore_mysql_service
   Scenario: Some of dbGroup's dbInstance(with or dbInstance ) cannot be connectted, check metadata and query #6
      """
@@ -346,6 +356,8 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test_two      | success | schema1 |
       | conn_0 | True    | drop table if exists test_no_shard | success | schema1 |
 
+
+
   @regression @restore_view
   Scenario: default schema table or sharding table contains view in part of backend database,  check metadata and query #7
      """
@@ -393,6 +405,7 @@ Feature: test "check full @@metadata...'"
       | conn   | toClose | sql                                | expect   | db      |
       | conn_0 | False   | drop table if exists test_shard    | success  | schema1 |
       | conn_0 | True    | drop table if exists test_no_shard | success  | schema1 |
+
 
 
   @regression
@@ -560,7 +573,7 @@ Feature: test "check full @@metadata...'"
 
 
 
-  @regression @skip_restart
+  @regression
     #coz DBLE0REQ-1276
   Scenario: meta data check has DEFAULT CHARSET, check mconsistent_in_memory #10
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
