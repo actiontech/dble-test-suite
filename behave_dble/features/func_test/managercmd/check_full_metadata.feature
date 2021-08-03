@@ -550,29 +550,6 @@ Feature: test "check full @@metadata...'"
 
 
 
-  @regression @skip_restart
-    #coz DBLE0REQ-1276
-  Scenario: meta data check has DEFAULT CHARSET, check mconsistent_in_memory #10
-    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
-       """
-       /-DcheckTableConsistency/d
-       /-DcheckTableConsistencyPeriod/d
-       $a -DcheckTableConsistency=1
-       $a -DcheckTableConsistencyPeriod=100
-       """
-    Given Restart dble in "dble-1" success
-    Then execute sql in "dble-1" in "user" mode
-      | conn   | toClose | sql                                                                                                                                              | expect  | db      | charset |
-      | conn_1 | false   | drop table if exists sharding_2_t1                                                                                                               | success | schema1 | utf8mb4 |
-      | conn_1 | false   | drop table if exists sharding_4_t1                                                                                                               | success | schema1 | utf8mb4 |
-      | conn_1 | false   | create table sharding_2_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) ENGINE=InnoDB CHARSET=utf8mb4                | success | schema1 | utf8mb4 |
-      | conn_1 | true    | create table sharding_4_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4        | success | schema1 | utf8mb4 |
-    Given sleep "2" seconds
-    Then execute sql in "dble-1" in "admin" mode
-
-
-
-
   @regression
     #coz DBLE0REQ-1276
   Scenario: meta data check has DEFAULT CHARSET, check mconsistent_in_memory #10
