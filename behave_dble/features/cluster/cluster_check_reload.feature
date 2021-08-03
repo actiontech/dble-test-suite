@@ -1,6 +1,7 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2020/12/11
+# Update by caiwei at 2021/08/02
 
 
 Feature: test "reload @@config" in zk cluster
@@ -849,7 +850,7 @@ Feature: test "reload @@config" in zk cluster
     """
 
     @btrace
-    Scenario: when reload hang,emergency ways to deal with it
+    Scenario: when reload hang,emergency ways to deal with it       #5
 
 #CASE1: change sharding.xml and reload hang on the same dble
       Given delete file "/opt/dble/BtraceClusterDelay.java" on "dble-1"
