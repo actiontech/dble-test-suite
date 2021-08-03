@@ -394,6 +394,7 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | drop table if exists test_shard    | success  | schema1 |
       | conn_0 | True    | drop table if exists test_no_shard | success  | schema1 |
 
+
   @regression
     #coz DBLE0REQ-870
   Scenario: meta data check should ignore AUTO_INCREMENT difference, check matadate、rload and dble.log #8
@@ -450,7 +451,7 @@ Feature: test "check full @@metadata...'"
       CREATE TABLE `test_shard`
       """
     Then execute sql in "dble-1" in "admin" mode
-      | sql                                                      | expect                  |
+      | sql                                                          | expect                  |
       | check full @@metadata where consistent_in_sharding_nodes =0  | hasNoStr{`test_shard`}  |
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                      | expect   | db     |
@@ -534,3 +535,59 @@ Feature: test "check full @@metadata...'"
       | conn_0 | False   | check full @@metadata where schema='schema1'                       | hasNoStr{name}    |
       | conn_0 | True    | reload @@metadata where schema=schema2                             | success           |
 
+
+
+  @regression @skip_restart
+    #coz DBLE0REQ-1276
+  Scenario: meta data check has DEFAULT CHARSET, check mconsistent_in_memory #10
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+       """
+       /-DcheckTableConsistency/d
+       /-DcheckTableConsistencyPeriod/d
+       $a -DcheckTableConsistency=1
+       $a -DcheckTableConsistencyPeriod=100
+       """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                              | expect  | db      | charset |
+      | conn_1 | false   | drop table if exists sharding_2_t1                                                                                                               | success | schema1 | utf8mb4 |
+      | conn_1 | false   | drop table if exists sharding_4_t1                                                                                                               | success | schema1 | utf8mb4 |
+      | conn_1 | false   | create table sharding_2_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) ENGINE=InnoDB CHARSET=utf8mb4                | success | schema1 | utf8mb4 |
+      | conn_1 | true    | create table sharding_4_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4        | success | schema1 | utf8mb4 |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+
+
+
+
+  @regression @skip_restart
+    #coz DBLE0REQ-1276
+  Scenario: meta data check has DEFAULT CHARSET, check mconsistent_in_memory #10
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+       """
+       /-DcheckTableConsistency/d
+       /-DcheckTableConsistencyPeriod/d
+       $a -DcheckTableConsistency=1
+       $a -DcheckTableConsistencyPeriod=100
+       """
+    Given Restart dble in "dble-1" success
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                                                                              | expect  | db      | charset |
+      | conn_1 | false   | drop table if exists sharding_2_t1                                                                                                               | success | schema1 | utf8mb4 |
+      | conn_1 | false   | drop table if exists sharding_4_t1                                                                                                               | success | schema1 | utf8mb4 |
+      | conn_1 | false   | create table sharding_2_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) ENGINE=InnoDB CHARSET=utf8mb4                | success | schema1 | utf8mb4 |
+      | conn_1 | true    | create table sharding_4_t1 (id int,a varchar(120) ,b varchar(120) ,c varchar(120) ,d varchar(120) ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4        | success | schema1 | utf8mb4 |
+    Given sleep "2" seconds
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                          | expect                          |
+      | check full @@metadata where consistent_in_sharding_nodes = 0 | hasNoStr{`sharding_2_t1`}       |
+      | check full @@metadata where consistent_in_sharding_nodes = 0 | hasNoStr{`sharding_4_t1`}       |
+      | check full @@metadata where consistent_in_sharding_nodes = 1 | hasStr{`sharding_2_t1`}         |
+      | check full @@metadata where consistent_in_sharding_nodes = 1 | hasStr{`sharding_4_t1`}         |
+    Then execute admin cmd "reload @@metadata"
+    Then execute sql in "dble-1" in "admin" mode
+      | sql                                                          | expect                          |
+      | check full @@metadata where consistent_in_sharding_nodes = 0 | hasNoStr{`sharding_2_t1`}       |
+      | check full @@metadata where consistent_in_sharding_nodes = 0 | hasNoStr{`sharding_4_t1`}       |
+      | check full @@metadata where consistent_in_sharding_nodes = 1 | hasStr{`sharding_2_t1`}         |
+      | check full @@metadata where consistent_in_sharding_nodes = 1 | hasStr{`sharding_4_t1`}         |
