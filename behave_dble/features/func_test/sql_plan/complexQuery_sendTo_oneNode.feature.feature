@@ -2,6 +2,7 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by wujinling at 2020/12/01
+# Update by caiwei at 2021/08/03
 
 #2.20.04.0#dble-8184
 Feature: following complex queries are able to send one datanode
@@ -87,12 +88,6 @@ Feature: following complex queries are able to send one datanode
     Then check resultset "rs_2" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
       | dn1             | BASE SQL | select id a from sharding_two_node b where b.id=1       |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_3"
-      | conn   | toClose | sql                                                              |
-      | conn_0 | False   | explain select count(*) from aly_test a where a.id=1             |
-    Then check resultset "rs_3" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                               |
-      | dn2             | BASE SQL | select count(*) from aly_test a where a.id=1            |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_4"
       | conn   | toClose | sql                                                                          |
@@ -415,3 +410,261 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | drop table if exists test_global        | success | schema1 |
       | conn_0 | False   | drop table if exists sharding_two_node2 | success | schema1 |
       | conn_0 | true    | drop table if exists sharding_two_node  | success | schema1 |
+
+  # DBLE0REQ-504  3.21.06.0 added
+  Scenario: add some complex query optimized can send to one datanode    #2
+
+    Given delete the following xml segment
+      |file           | parent          | child                     |
+      |sharding.xml   |{'tag':'root'}   | {'tag':'schema'}          |
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+      """
+        <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+            <globalTable name="gtable1" shardingNode="dn1,dn2,dn3" />
+            <globalTable name="gtable2" shardingNode="dn1,dn2,dn3" />
+            <shardingTable name="ptable" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id">
+                <childTable name="ctable" joinColumn="fid" parentColumn="id" />
+            </shardingTable>
+            <shardingTable name="tabler" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id"/>
+        </schema>
+      """
+    Then execute admin cmd "reload @@config_all"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                    | expect  | db      |
+      | conn_0 | False   | drop table if exists gtable1                                                           | success | schema1 |
+      | conn_0 | False   | create table gtable1(name varchar(50),test_id int)                                     | success | schema1 |
+      | conn_0 | False   | drop table if exists gtable2                                                           | success | schema1 |
+      | conn_0 | False   | create table gtable2(name varchar(50),test_id int)                                     | success | schema1 |
+      | conn_0 | False   | drop table if exists ctable                                                            | success | schema1 |
+      | conn_0 | False   | create table ctable(fid int, name varchar(50),test_id int)                             | success | schema1 |
+      | conn_0 | False   | drop table if exists tabler                                                            | success | schema1 |
+      | conn_0 | False   | create table tabler(id int,name varchar(50), test_id int)                              | success | schema1 |
+      | conn_0 | False   | insert into gtable1 values('dog',1),('cat',2),('pander',3),('deer',4),('monkey',5),('lion',1) | success | schema1 |
+      | conn_0 | False   | insert into gtable2 values('cat',1),('dog',2),('deer',3),('monkey',4),('lion',5),('pander',1) | success | schema1 |
+      | conn_0 | Fals    | insert into tabler values(1,'L',6),(2,'D',5),(3,'P',1),(4,'C',3),(5,'M',4),(6,'D',2)   | success | schema1 |
+      | conn_0 | False   | insert into ctable(fid, name, test_id) values(1,'lion_c',1)                            | success | schema1 |
+      | conn_0 | False   | insert into ctable(fid, name, test_id) values(2,'deer_a',2)                            | success | schema1 |
+      | conn_0 | False   | insert into ctable(fid, name, test_id) values(3,'pander_o',3)                          | success | schema1 |
+      | conn_0 | False   | insert into ctable(fid, name, test_id) values(4,'cat_s',4)                            | success | schema1 |
+      | conn_0 | False   | insert into ctable(fid, name, test_id) values(5,'monkey_j',5)                         | success | schema1 |
+      | conn_0 | False   | insert into ctable(fid, name, test_id) values(6,'dog_w',6)                            | success | schema1 |
+
+    # globalTable1 && globalTable1
+    Given execute sql in "dble-1" in "user" mode
+      |conn   | toClose | sql                                                                                                                 | db      | expect     |
+      |conn_1 | False   | explain select a.name from gtable1 a join gtable1 b on a.test_id = b.test_id where a.test_id = 3                    | schema1 | length{(1)}|
+      |conn_1 | False   | explain select a.name from gtable1 a inner join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
+      |conn_1 | False   | explain select a.name from gtable1 a cross join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
+      |conn_1 | False   | explain select a.name from gtable1 a STRAIGHT_JOIN gtable1 b on a.test_id = b.test_id where a.test_id = 3           | schema1 | length{(1)}|
+      |conn_1 | False   | explain select a.name from gtable1 a left join gtable1 b on a.name = b.name where b.test_id = 1                     | schema1 | length{(1)}|
+      |conn_1 | False   | explain select a.name from gtable1 a right join gtable1 b on a.name = b.name where b.test_id = 1                    | schema1 | length{(1)}|
+      |conn_1 | true    | explain select a.name from gtable1 a where a.test_id = 1 union all select b.name from gtable1 b where b.test_id = 1 | schema1 | length{(1)}|
+
+      #shardingTable && shardingTable
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
+      |conn   | toClose | sql                                                                                                                     | db      |
+      |conn_2 | False   | explain select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
+    Then check resultset "A" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                    |
+      | dn2             | BASE SQL   | select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
+      |conn   | toClose | sql                                                                                                                     | db      |
+      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1    |schema1  |
+    Then check resultset "B" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                    |
+      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1 |
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "C"
+      |conn   | toClose | sql                                                                                                                      | db      |
+      |conn_2 | False   | explain select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
+    Then check resultset "C" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                     |
+      | dn2             | BASE SQL   | select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "D"
+      |conn   | toClose | sql                                                                                                                      | db      |
+      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1    |schema1  |
+    Then check resultset "D" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                     |
+      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1 |
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "E"
+      |conn   | toClose | sql                                                                                                                      | db      |
+      |conn_2 | False   | explain select a.name from tabler a where a.id = 5 union all select b.name from tabler b where b.id = 1                  | schema1 |
+    Then check resultset "E" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                        |
+      | dn2             | BASE SQL   | select a.name from tabler a where a.id = 5 union all select b.name from tabler b where b.id = 1  |
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "F"
+      |conn   | toClose | sql                                                                                                                   | db      |
+      |conn_2 | False   | explain select a.name from tabler a left join tabler b on a.name = b.name and b.id = 2 where a.id = 2                  | schema1 |
+    Then check resultset "F" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                              |
+      | dn3             | BASE SQL   | select a.name from tabler a left join tabler b on a.name = b.name and b.id = 2 where a.id = 2   |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "G"
+      |conn   | toClose | sql                                                                                                                      | db      |
+      |conn_2 | False   | explain select a.name,a.test_id,b.id from tabler a right join tabler b on a.name = b.name and a.id =3 where b.id = 3     |schema1  |
+    Then check resultset "G" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                    |
+      | dn4             | BASE SQL   | select a.name,a.test_id,b.id from tabler a right join tabler b on a.name = b.name and a.id =3 where b.id = 3 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "H"
+      |conn   | toClose | sql                                                                                                       | db      |
+      |conn_2 | False   | explain select a.name from tabler a inner join tabler b on a.name = b.name where a.id =2 and b.id = 2     |schema1  |
+    Then check resultset "H" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                     |
+      | dn3             | BASE SQL   | select a.name from tabler a inner join tabler b on a.name = b.name where a.id =2 and b.id = 2 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "I"
+      |conn   | toClose | sql                                                                                                                                                                                                                 | db      |
+      |conn_2 | False   | explain select a.name from tabler a inner join tabler b on a.name = b.name and b.id = 2 where a.id = 2 union all select a.name from tabler a left join tabler b on a.name = b.name and b.id = 2 where a.id = 2     |schema1  |
+    Then check resultset "I" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                                                                                                              |
+      | dn3             | BASE SQL   | select a.name from tabler a inner join tabler b on a.name = b.name and b.id = 2 where a.id = 2 union all select a.name from tabler a left join tabler b on a.name = b.name and b.id = 2 where a.id = 2 |
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "J"
+      |conn   | toClose | sql                                                                                                            | db      |
+      |conn_2 | False   | explain select a.name from tabler a CROSS join tabler b on a.test_id = b.test_id where a.id = 1 and b.id=5     |schema1  |
+    Then check resultset "J" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                          |
+      | dn2             | BASE SQL   | select a.name from tabler a CROSS join tabler b on a.test_id = b.test_id where a.id = 1 and b.id=5 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "K"
+      |conn   | toClose | sql                                                                                                              | db      |
+      |conn_2 | true    | explain select a.name from tabler a STRAIGHT_JOIN tabler b on a.test_id = b.test_id where a.id = 1 and b.id=5    |schema1  |
+    Then check resultset "K" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                             |
+      | dn2             | BASE SQL   | select a.name from tabler a STRAIGHT_JOIN tabler b on a.test_id = b.test_id where a.id = 1 and b.id=5 |
+
+    #globalTable1 && globaleTable2
+     Given execute sql in "dble-1" in "user" mode
+       |conn   | toClose | sql                                                                                                                 | db      | expect     |
+       |conn_3 | False   | explain select a.name from gtable1 a join gtable2 b on a.test_id = b.test_id where a.test_id=1 and b.test_id=5      | schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a inner join gtable2 b on a.test_id = b.test_id where a.test_id=1 and b.test_id=5| schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a cross join gtable2 b on a.test_id = b.test_id where a.test_id=1 and b.test_id=5| schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a STRAIGHT_JOIN gtable2 b on a.test_id = b.test_id where a.test_id=1 and b.test_id=5| schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a left join gtable2 b on a.test_id = b.test_id where a.test_id = 1               | schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a right join gtable2 b on a.test_id = b.test_id where a.test_id = 1              | schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a where a.test_id = 5 union all select b.name from gtable2 b where b.test_id = 1 | schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a join gtable2 b on a.test_id = b.test_id join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a inner join gtable2 b on a.test_id = b.test_id inner join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+       |conn_3 | False   | explain select a.name from gtable1 a CROSS join gtable2 b on a.test_id = b.test_id CROSS join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+       |conn_3 | true    | explain select a.name from gtable1 a STRAIGHT_JOIN gtable2 b on a.test_id = b.test_id STRAIGHT_JOIN gtable1 c on a.test_id = c.test_id where a.test_id = 1| schema1 | length{(1)}|
+
+    #globalTable && shardingTable
+    # exists issue :http://10.186.18.11/jira/browse/DBLE0REQ-1241, wait to update here
+     Given execute single sql in "dble-1" in "user" mode and save resultset in "L"
+       |conn   | toClose | sql                                                                                        | db      |
+       |conn_4 | False  | explain select a.name from gtable1 a join tabler b on a.test_id = b.test_id where b.id=5    |schema1  |
+     Then check resultset "L" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                       |
+       | dn2             | BASE SQL   | select a.name from gtable1 a join tabler b on a.test_id = b.test_id where b.id=5|
+     Given execute single sql in "dble-1" in "user" mode and save resultset in "M"
+       |conn   | toClose | sql                                                                                              | db      |
+       |conn_4 | False  | explain select a.name from gtable1 a inner join tabler b on a.test_id = b.test_id where b.id=5    |schema1  |
+     Then check resultset "M" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                             |
+       | dn2             | BASE SQL   | select a.name from gtable1 a inner join tabler b on a.test_id = b.test_id where b.id=5|
+     Given execute single sql in "dble-1" in "user" mode and save resultset in "N"
+       |conn   | toClose | sql                                                                                              | db      |
+       |conn_4 | False  | explain select a.name from gtable1 a cross join tabler b on a.test_id = b.test_id where b.id=5    |schema1  |
+     Then check resultset "N" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                             |
+       | dn2             | BASE SQL   | select a.name from gtable1 a cross join tabler b on a.test_id = b.test_id where b.id=5|
+     Given execute single sql in "dble-1" in "user" mode and save resultset in "O"
+       |conn   | toClose | sql                                                                                                 | db      |
+       |conn_4 | False  | explain select a.name from gtable1 a STRAIGHT_JOIN tabler b on a.test_id = b.test_id where b.id=5    |schema1  |
+     Then check resultset "O" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                |
+       | dn2             | BASE SQL   | select a.name from gtable1 a STRAIGHT_JOIN tabler b on a.test_id = b.test_id where b.id=5|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "O"
+       |conn   | toClose | sql                                                                                                  | db      |
+       |conn_4 | true    | explain select a.name from gtable1 a STRAIGHT_JOIN tabler b on a.test_id = b.test_id where b.id=5    |schema1  |
+    Then check resultset "O" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                |
+       | dn2             | BASE SQL   | select a.name from gtable1 a STRAIGHT_JOIN tabler b on a.test_id = b.test_id where b.id=5|
+
+    #shardingTable && childTable
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "P"
+       |conn   | toClose | sql                                                                                                     | db      |
+       |conn_5 | False   |explain select a.name from tabler a join ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5      |schema1  |
+    Then check resultset "P" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                  |
+       | dn2             | BASE SQL   | select a.name from tabler a join ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "Q"
+       |conn   | toClose | sql                                                                                                           | db      |
+       |conn_5 | False   |explain select a.name from tabler a inner join ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5      |schema1  |
+    Then check resultset "Q" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                        |
+       | dn2             | BASE SQL   | select a.name from tabler a inner join ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "R"
+       |conn   | toClose | sql                                                                                                           | db      |
+       |conn_5 | False   |explain select a.name from tabler a cross join ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5      |schema1  |
+    Then check resultset "R" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                        |
+       | dn2             | BASE SQL   | select a.name from tabler a cross join ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "S"
+       |conn   | toClose | sql                                                                                                              | db      |
+       |conn_5 | False   |explain select a.name from tabler a STRAIGHT_JOIN ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5      |schema1  |
+    Then check resultset "S" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                            |
+       | dn2             | BASE SQL   | select a.name from tabler a STRAIGHT_JOIN ctable b on a.test_id = b.test_id where a.id=1 and b.fid=5|
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "T"
+       |conn   | toClose | sql                                                                                                                 | db      |
+       |conn_5 | False   |explain select a.fid from ctable a join tabler b on a.fid = b.id join ctable c on a.fid = c.fid where a.fid = 1      |schema1  |
+    Then check resultset "T" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                        |
+       | dn2             | BASE SQL   | select a.fid from ctable a join tabler b on a.fid = b.id join ctable c on a.fid = c.fid where a.fid = 1|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "T"
+       |conn   | toClose | sql                                                                                                       | db      |
+       |conn_5 | False   |explain select a.name from tabler a join ctable b on a.name=b.name and a.id=1 and b.fid=1 where a.id=1     |schema1  |
+    Then check resultset "T" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                     |
+       | dn2             | BASE SQL   | select a.name from tabler a join ctable b on a.name=b.name and a.id=1 and b.fid=1 where a.id=1|
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "U"
+       |conn   | toClose | sql                                                                                       | db      |
+       |conn_5 | False   | explain select a.name from tabler a left join ctable b on a.id = b.fid where a.id = 1     |schema1  |
+    Then check resultset "U" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                    |
+       | dn2             | BASE SQL   | select a.name from tabler a left join ctable b on a.id = b.fid where a.id = 1|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "V"
+       |conn   | toClose | sql                                                                                        | db      |
+       |conn_5 | False   | explain select a.name from tabler a right join ctable b on a.id = b.fid where a.id = 1     |schema1  |
+    Then check resultset "V" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                     |
+       | dn2             | BASE SQL   | select a.name from tabler a right join ctable b on a.id = b.fid where a.id = 1|
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "W"
+       |conn   | toClose | sql                                                                                                         | db      |
+       |conn_5 | False   | explain select a.name from tabler a where a.id = 5 union all select b.name from ctable b where b.fid = 1    |schema1  |
+    Then check resultset "W" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                        |
+       | dn2             | BASE SQL   | select a.name from tabler a where a.id = 5 union all select b.name from ctable b where b.fid = 1 |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "X"
+       |conn   | toClose | sql                                                                                                                                                                                                                 | db      |
+       |conn_5 | False   | explain select a.name from tabler a inner join ctable b on a.name = b.name and b.fid = 2 where a.id = 2 union all select a.name from  tabler a inner join ctable b on a.name = b.name and b.fid = 2 where a.id = 2  |schema1  |
+    Then check resultset "X" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                       |
+       | dn3             | BASE SQL   | select a.name from tabler a inner join ctable b on a.name = b.name and b.fid = 2 where a.id = 2 union all select a.name from  tabler a inner join ctable b on a.name = b.name and b.fid = 2 where a.id = 2|
+
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "Y"
+       |conn   | toClose | sql                                                                                                       | db      |
+       |conn_5 | False   | explain select name from tabler where id = 5  and test_id = (select test_id from ctable where fid = 5)    |schema1  |
+    Then check resultset "Y" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                       |
+       | dn2             | BASE SQL   | select name from tabler where id = 5  and test_id = (select test_id from ctable where fid = 5)  |
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "Z"
+       |conn   | toClose | sql                                                                                                                                                                                         | db      |
+       |conn_5 | False   | explain select a.fid from ctable a join tabler b on a.fid = b.id where a.fid=(select min(test_id) from ctable c where c.fid=1) and b.id=(select min(test_id) from tabler d where d.id=1)    |schema1  |
+    Then check resultset "Z" has lines with following column values
+       | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                                                                                         |
+       | dn2             | BASE SQL   | select a.fid from ctable a join tabler b on a.fid = b.id where a.fid=(select min(test_id) from ctable c where c.fid=1) and b.id=(select min(test_id) from tabler d where d.id=1)  |
+
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                                                    | expect  | db      |
+      | conn_6 | False   | drop table if exists gtable1                                                           | success | schema1 |
+      | conn_6 | False   | drop table if exists gtable2                                                           | success | schema1 |
+      | conn_6 | False   | drop table if exists ctable                                                            | success | schema1 |
+      | conn_6 | true    | drop table if exists tabler                                                            | success | schema1 |
+
+
+
+
+
