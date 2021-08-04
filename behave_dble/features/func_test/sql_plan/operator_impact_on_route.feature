@@ -5,7 +5,7 @@
   #DBLE0REQ-911
 Feature: The impact of testing operators on shardingTable routing
 
-  Scenario: group by and order by‘s sharding column condition should not take as routing condition
+  Scenario: group by and order by‘s sharding column condition should not take as routing condition   #1
 
     #prepare the test sharding table
     Given execute sql in "dble-1" in "user" mode
@@ -107,7 +107,7 @@ Feature: The impact of testing operators on shardingTable routing
       | limit_1           | LIMIT           | merge_and_order_1                                                                                                                              |
       | shuffle_field_1   | SHUFFLE_FIELD   | limit_1                                                                                                                                        |
 
-  Scenario: Extract some operators as where sharding column condition to verify no impact on routing
+  Scenario: Extract some operators as where sharding column condition to verify no impact on routing     #2
      # not
     Given execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                              | db    | expect                              |
