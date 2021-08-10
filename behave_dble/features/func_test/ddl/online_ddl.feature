@@ -79,7 +79,7 @@ Feature: test online ddl
       | conn_2 | false   | insert into nosharding(id,name) values (3,'nosh')      | success            | schema1 |
       | conn_2 | false   | show index from nosharding                             | hasNoStr{ceshi1}   | schema1 |
       | conn_2 | false   | show index from nosharding                             | hasNoStr{index1}   | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect          | db      |
       | conn_1 | false   | show index from nosharding       | hasStr{ceshi1}  | schema1 |
@@ -99,7 +99,7 @@ Feature: test online ddl
       | conn_2 | false   | insert into sing(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | false   | show index from sing                             | hasNoStr{ceshi2}   | schema1 |
       | conn_2 | false   | show index from sing                             | hasNoStr{index2} | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect           | db      |
       | conn_1 | false   | show index from sing             | hasStr{ceshi2}   | schema1 |
@@ -119,7 +119,7 @@ Feature: test online ddl
       | conn_2 | false   | insert into global(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | false   | show index from global                             | hasNoStr{ceshi3}   | schema1 |
       | conn_2 | false   | show index from global                             | hasNoStr{index3}   | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect           | db      |
       | conn_1 | false   | show index from global             | hasStr{ceshi3}   | schema1 |
@@ -139,7 +139,7 @@ Feature: test online ddl
       | conn_2 | false   | insert into sharding2(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | false   | show index from sharding2                             | hasNoStr{ceshi4}   | schema1 |
       | conn_2 | true    | show index from sharding2                             | hasNoStr{index4}   | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect           | db      |
       | conn_1 | false   | show index from sharding2             | hasStr{ceshi4}   | schema1 |
@@ -159,7 +159,7 @@ Feature: test online ddl
       | conn_4 | false   | insert into ver(id,name) values (3,'sing')      | success          | schema2 |
       | conn_4 | false   | show index from ver                             | hasNoStr{ceshi5} | schema2 |
       | conn_4 | true    | show index from ver                             | hasNoStr{index5} | schema2 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                             | expect         | db      |
       | conn_3 | false   | show index from ver             | hasStr{ceshi5} | schema2 |
@@ -181,7 +181,7 @@ Feature: test online ddl
       | conn   | toClose | sql                                                    | expect             | db      |
       | conn_2 | false   | insert into nosharding(id,name) values (3,'nosh')      | success            | schema1 |
       | conn_2 | false   | show index from nosharding                             | hasNoStr{aks1}     | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect              | db      |
       | conn_1 | false   | show index from nosharding       | hasStr{aks1}        | schema1 |
@@ -195,7 +195,7 @@ Feature: test online ddl
       | conn   | toClose | sql                                              | expect             | db      |
       | conn_2 | false   | insert into sing(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | false   | show index from sing                             | hasNoStr{aks2}     | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                              | expect           | db      |
       | conn_1 | false   | show index from sing             | hasStr{aks2}     | schema1 |
@@ -212,7 +212,7 @@ Feature: test online ddl
       | conn   | toClose | sql                                                | expect             | db      |
       | conn_2 | false   | insert into global(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | false   | show index from global                             | hasNoStr{aks3}     | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                | expect         | db      |
       | conn_1 | false   | show index from global             | hasStr{aks3}   | schema1 |
@@ -229,7 +229,7 @@ Feature: test online ddl
       | conn   | toClose | sql                                                   | expect             | db      |
       | conn_2 | false   | insert into sharding2(id,name) values (3,'sing')      | success            | schema1 |
       | conn_2 | true    | show index from sharding2                             | hasNoStr{aks4}     | schema1 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                   | expect           | db      |
       | conn_1 | true    | show index from sharding2             | hasStr{aks4}     | schema1 |
@@ -246,7 +246,7 @@ Feature: test online ddl
       | conn   | toClose | sql                                             | expect           | db      |
       | conn_4 | false   | insert into ver(id,name) values (3,'sing')      | success          | schema2 |
       | conn_4 | true    | show index from ver                             | hasNoStr{aks5}   | schema2 |
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                             | expect         | db      |
       | conn_3 | true    | show index from ver             | hasStr{aks5}   | schema2 |
