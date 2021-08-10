@@ -838,12 +838,6 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
     Given destroy btrace threads list
     Given delete file "/opt/dble/BtraceAboutBootstrap.java" on "dble-1"
     Given delete file "/opt/dble/BtraceAboutBootstrap.java.log" on "dble-1"
-#    Given sleep "120" seconds
-#    Then get result of oscmd named "A" in "dble-1"
-#      """
-#      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_FRONT' | wc -l
-#      """
-#    Then check result "A" value is "1"
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
       """
@@ -891,27 +885,11 @@ Feature: Dynamically adjust parameters on bootstrap use "update dble_thread_pool
       """
       $a  -DbackendProcessorExecutor=1
       $a  -DwriteToBackendExecutor=1
-      $a  -DbackendProcessors=1
+      $a  -DbackendProcessors=8
       $a  -DcomplexExecutor=2
       $a  -DuseThreadUsageStat=1
       """
     Then restart dble in "dble-1" success
-
-    Then execute sql in "dble-1" in "admin" mode
-      | conn   | toClose | sql                                                                                   | expect    | db               |
-      | conn_3 | true    | update dble_thread_pool set core_pool_size=4 where name ='$_NIO_REACTOR_BACKEND-'     | success   | dble_information |
-
-    Given execute "admin" sql "100" times in "dble-1" together use 500 connection not close
-      | sql                       | db                |
-      | reload @@config_all -r    | dble_information  |
-    Given sleep "5" seconds
-    # use jstack check number
-    Then get result of oscmd named "A" in "dble-1"
-      """
-      jstack `jps | grep WrapperSimpleApp | awk '{print $1}'` | grep '$_NIO_REACTOR_BACKEND' | wc -l
-      """
-    Then check result "A" value is "4"
-
     Given update file content "./assets/BtraceAboutBootstrap.java" in "behave" with sed cmds
       """
       s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
