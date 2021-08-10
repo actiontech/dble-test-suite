@@ -102,13 +102,14 @@ Feature: test ddl closed abnormally
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                            | expect      | db      |
       | conn_3 | False   | truncate table sharding_2_t1   | success     | schema1 |
+      | conn_3 | False   | desc sharding_2_t1             | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))}     | schema1 |
 
     Then execute sql in "mysql-master1"
-      | conn    | toClose | sql                         | expect                                                                                 | db  |
-      | conn_11 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                                                                                                           | db  |
+      | conn_11 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
     Then execute sql in "mysql-master2"
-      | conn    | toClose | sql                         | expect                                                                                 | db  |
-      | conn_22 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                                                                                                            | db  |
+      | conn_22 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, '') , ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
 
 
    # After the select 1 returns successfully, verify that the session is alive
@@ -136,11 +137,11 @@ Feature: test ddl closed abnormally
     Given destroy btrace threads list
 
     Then execute sql in "mysql-master1"
-      | conn    | toClose | sql                         | expect                                        | db  |
-      | conn_11 | true    | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                                                                                                           | db  |
+      | conn_11 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''), ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
     Then execute sql in "mysql-master2"
-      | conn    | toClose | sql                         | expect                                        | db  |
-      | conn_22 | true    | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, ''))} | db1 |
+      | conn    | toClose | sql                         | expect                                                                                                                            | db  |
+      | conn_22 | False   | desc sharding_2_t1          | has{(('id', 'int(11)', 'YES', '', None, '') , ('name', 'int(11)', 'YES', '', None, ''), ('age', 'int(11)', 'YES', '', None, ''))} | db1 |
 
     Then execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                      | expect      | db      |
