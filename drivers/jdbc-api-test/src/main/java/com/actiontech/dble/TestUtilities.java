@@ -173,22 +173,37 @@ public class TestUtilities {
 		return conn;
 	}
 
-	public Connection getConnectionAllowMultiQuery(ConnProperties prop) throws SQLException {
+	public Connection getConnectionAllowMultiQuery(ConnProperties prop, boolean isMysqlDriver) throws Exception {
 		Connection conn = null;
 		Properties connectionProps = new Properties();
 		connectionProps.put("user", prop.userName);
 		connectionProps.put("password", prop.password);
 
-		String urlString = "jdbc:mysql://" + prop.serverName +
-				":" + prop.portNumber + "";
-		String fullUrlString = urlString + "?useSSL=false&&allowMultiQueries=true";
-		prop.urlString = urlString;
+        if (isMysqlDriver) {
+            Class.forName("com.mysql.jdbc.Driver");
+            String urlString = "jdbc:mysql://" + prop.serverName +
+                    ":" + prop.portNumber + "";
+            String fullUrlString = urlString + "?useSSL=false&&allowMultiQueries=true";
+            prop.urlString = urlString;
 
-		Main.print_debug(fullUrlString + ",user "+connectionProps.getProperty("user")+", password "+connectionProps.getProperty("password"));
+            Main.print_debug(fullUrlString + ",user "+connectionProps.getProperty("user")+", password "+connectionProps.getProperty("password"));
 
-		conn = DriverManager.getConnection(fullUrlString,
-				connectionProps);
-		System.out.println("connect success!");
+            conn = DriverManager.getConnection(fullUrlString,
+                    connectionProps);
+            System.out.println(prop.serverName + "  connection created by mysql_driver success!");
+		} else {
+            Class.forName("org.mariadb.jdbc.Driver");
+			String urlString = "jdbc:mariadb://" + prop.serverName +
+					":" + prop.portNumber + "";
+			String fullUrlString = urlString + "?useSSL=false&&allowMultiQueries=true";
+			prop.urlString = urlString;
+
+			Main.print_debug(fullUrlString + ",user "+connectionProps.getProperty("user")+", password "+connectionProps.getProperty("password"));
+
+			conn = DriverManager.getConnection(fullUrlString,
+					connectionProps);
+			System.out.println(prop.serverName + "  connection created by mariadb_driver success");
+		}
 		//TestUtilities.executeUpdate(conn, "create database if not exists schema1");
 		//conn.setCatalog(prop.dbName);
 //		System.out.println("set catalog success!");
