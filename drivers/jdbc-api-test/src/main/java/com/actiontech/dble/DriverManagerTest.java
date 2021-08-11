@@ -13,11 +13,11 @@ import java.util.Vector;
 
 public class DriverManagerTest extends InterfaceTest{
 
-	public DriverManagerTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public DriverManagerTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp, isMysqlDriver);
 	}
 
-	protected void create_compare_conns(){
+	protected void create_compare_conns(boolean isMysqlDriver){
 
 	}
 

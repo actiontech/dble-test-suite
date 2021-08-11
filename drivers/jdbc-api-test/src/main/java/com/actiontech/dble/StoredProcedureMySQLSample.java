@@ -38,8 +38,8 @@ import java.sql.Types;
 
 public class StoredProcedureMySQLSample extends InterfaceTest {
 
-	public StoredProcedureMySQLSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public StoredProcedureMySQLSample(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp, isMysqlDriver);
 	}
 
 	public void start()throws SQLException{
