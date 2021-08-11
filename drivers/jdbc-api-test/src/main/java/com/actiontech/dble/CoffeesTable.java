@@ -44,8 +44,8 @@ import java.util.Set;
 
 public class CoffeesTable extends InterfaceTest {
 
-	public CoffeesTable(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public CoffeesTable(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp, isMysqlDriver);
 	}
 
 	public void start()throws SQLException{

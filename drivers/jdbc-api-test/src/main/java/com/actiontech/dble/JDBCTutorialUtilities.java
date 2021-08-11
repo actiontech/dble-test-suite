@@ -37,8 +37,8 @@ import java.sql.SQLException;
 
 public class JDBCTutorialUtilities extends InterfaceTest {
 
-	public JDBCTutorialUtilities(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public JDBCTutorialUtilities(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp, isMysqlDriver);
 	}
 
 	protected void start()throws SQLException{

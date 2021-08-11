@@ -44,8 +44,8 @@ import javax.sql.rowset.JoinRowSet;
 
 public class JoinSample extends InterfaceTest {
 
-	public JoinSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public JoinSample(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp, isMysqlDriver);
 	}
 
 	public static void getCoffeesBoughtBySupplier(String supplierName,

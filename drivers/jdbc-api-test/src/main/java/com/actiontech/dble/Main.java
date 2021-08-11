@@ -38,51 +38,62 @@ public class Main {
 			mysqlProp = new ConnProperties("mysql");
 			testProp = new ConnProperties("test");
 
-			ConnectionTest connTest = new ConnectionTest(mysqlProp, testProp);
+			System.out.println('\n' + "-----------------------------------start mysql_driver test-----------------------------------");
+
+			ConnectionTest connTest = new ConnectionTest(mysqlProp, testProp, true);
 			connTest.start_test();
 
-			StatementTest stmtTest = new StatementTest(mysqlProp, testProp);
+			StatementTest stmtTest = new StatementTest(mysqlProp, testProp, true);
 			stmtTest.start_test();
 
-			JDBCTutorialUtilities tu = new JDBCTutorialUtilities(mysqlProp, testProp);
+			JDBCTutorialUtilities tu = new JDBCTutorialUtilities(mysqlProp, testProp, true);
 			tu.start_test();
 
-			CachedRowSetSample myCachedRowSetSample = new CachedRowSetSample(mysqlProp, testProp);
+			CachedRowSetSample myCachedRowSetSample = new CachedRowSetSample(mysqlProp, testProp, true);
 			myCachedRowSetSample.start_test();
 
-			ClobSample myClobSample = new ClobSample(mysqlProp, testProp);
+			ClobSample myClobSample = new ClobSample(mysqlProp, testProp, true);
 			myClobSample.start_test();
 
-			FilteredRowSetSample myFilteredRowSetSample = new FilteredRowSetSample(mysqlProp, testProp);
+			FilteredRowSetSample myFilteredRowSetSample = new FilteredRowSetSample(mysqlProp, testProp, true);
 			myFilteredRowSetSample.start_test();
 
-			JdbcRowSetSample myJdbcRowSetSample = new JdbcRowSetSample(mysqlProp, testProp);
+			JdbcRowSetSample myJdbcRowSetSample = new JdbcRowSetSample(mysqlProp, testProp, true);
 		    myJdbcRowSetSample.start_test();
 
-		    CoffeesTable coffeesTable = new CoffeesTable(mysqlProp, testProp);
+		    CoffeesTable coffeesTable = new CoffeesTable(mysqlProp, testProp, true);
 		    coffeesTable.start_test();
 
-			JoinSample myJoinSample = new JoinSample(mysqlProp, testProp);
+			JoinSample myJoinSample = new JoinSample(mysqlProp, testProp, true);
 			myJoinSample.start_test();
 
 			//not support
-//			StoredProcedureMySQLSample myStoredProcedureSample = new StoredProcedureMySQLSample(mysqlProp, testProp);
+//			StoredProcedureMySQLSample myStoredProcedureSample = new StoredProcedureMySQLSample(mysqlProp, testProp, true);
 //			myStoredProcedureSample.start_test();
 
-			WebRowSetSample myWebRowSetSample = new WebRowSetSample(mysqlProp, testProp);
+			WebRowSetSample myWebRowSetSample = new WebRowSetSample(mysqlProp, testProp, true);
 			myWebRowSetSample.start_test();
 
-			DriverManagerTest dmt = new DriverManagerTest(mysqlProp, testProp);
+			DriverManagerTest dmt = new DriverManagerTest(mysqlProp, testProp, true);
 			dmt.start_test();
 
-			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp);
+			GeneralLogTest generalLogTest = new GeneralLogTest(mysqlProp, testProp, true);
 			generalLogTest.start_test();
 
-			ServerSideCursorTest sideCursorTest = new ServerSideCursorTest(mysqlProp, testProp);
+			ServerSideCursorTest sideCursorTest = new ServerSideCursorTest(mysqlProp, testProp, true);
 			sideCursorTest.start_test();
 
-			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp);
+			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp, true);
 			capClientFoundRowsTest.start_test();
+
+			System.out.println("----------------------------------- mysql_driver test all interface passed-----------------------------------");
+			System.out.println('\n' + "-----------------------------------start mariadb_driver test-----------------------------------");
+
+			StatementTest mariadb_stmt = new StatementTest(mysqlProp, testProp, false);
+			mariadb_stmt.start_test();
+
+			System.out.println("----------------------------------- mariadb_driver test all interface passed-----------------------------------");
+			System.out.println('\n');
 
 			System.out.println("Congratulations, all interfaces passed!");
 //			CoffeesFrame qf = new CoffeesFrame(mysqlProp, dbleProp);
