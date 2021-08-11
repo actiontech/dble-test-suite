@@ -12,8 +12,8 @@ import java.sql.*;
  **/
 public class ServerSideCursorTest extends InterfaceTest {
 
-    public ServerSideCursorTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-        super(mysqlProp, dbleProp);
+    public ServerSideCursorTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+        super(mysqlProp, dbleProp, isMysqlDriver);
     }
 
     public void start() throws SQLException {

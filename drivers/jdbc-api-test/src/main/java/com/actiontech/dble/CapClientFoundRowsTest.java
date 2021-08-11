@@ -15,8 +15,8 @@ import java.util.Vector;
  */
 public class CapClientFoundRowsTest extends InterfaceTest {
 
-    public CapClientFoundRowsTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-        super(mysqlProp, dbleProp);
+    public CapClientFoundRowsTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+        super(mysqlProp, dbleProp, isMysqlDriver);
     }
 
     protected void start() throws SQLException {

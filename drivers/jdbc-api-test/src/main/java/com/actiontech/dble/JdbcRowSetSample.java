@@ -39,8 +39,8 @@ import com.sun.rowset.JdbcRowSetImpl;
 
 public class JdbcRowSetSample extends InterfaceTest{
 
-	public JdbcRowSetSample(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-		super(mysqlProp, dbleProp);
+	public JdbcRowSetSample(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+		super(mysqlProp, dbleProp, isMysqlDriver);
 	}
 
 	private void updateRow(JdbcRowSet jdbcRs)throws SQLException{
