@@ -13,8 +13,8 @@ import java.util.Vector;
  * @modifiedBy
  **/
 public class GeneralLogTest extends InterfaceTest {
-    public GeneralLogTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
-        super(mysqlProp, dbleProp);
+    public GeneralLogTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
+        super(mysqlProp, dbleProp, isMysqlDriver);
     }
 
     protected void start() throws SQLException {

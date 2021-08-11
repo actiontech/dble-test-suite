@@ -17,20 +17,20 @@ public class InterfaceTest {
 	protected ConnProperties mysqlProp;
 	protected ConnProperties dbleProp;
 
-	public InterfaceTest(ConnProperties mysqlProp, ConnProperties dbleProp) throws SQLException {
+	public InterfaceTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
 		this.mysqlProp = mysqlProp;
 		this.dbleProp = dbleProp;
-		create_compare_conns();
+		create_compare_conns(isMysqlDriver);
 	}
 
-	protected void create_compare_conns(){
+	protected void create_compare_conns(boolean isMysqlDriver){
 		System.out.println("create compare conns:");
 		TestUtilities interfaceUtilities;
 		try {
 			interfaceUtilities = new TestUtilities();
-			mysqlConn = interfaceUtilities.getConnectionAllowMultiQuery(mysqlProp);
+			mysqlConn = interfaceUtilities.getConnectionAllowMultiQuery(mysqlProp, isMysqlDriver);
 			//dble not supported allowMultiQuery
-			dbleConn = interfaceUtilities.getConnectionAllowMultiQuery(dbleProp);
+			dbleConn = interfaceUtilities.getConnectionAllowMultiQuery(dbleProp, isMysqlDriver);
 
 
 			String dropDb = "DROP DATABASE IF EXISTS ";
