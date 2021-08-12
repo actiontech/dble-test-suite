@@ -254,4 +254,9 @@ public class CachedRowSetSample extends InterfaceTest {
 			if (dble_stmt != null) { dble_stmt.close(); }
 		}
 	}
+
+	@Override
+	public String toString() {
+        return "CachedRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

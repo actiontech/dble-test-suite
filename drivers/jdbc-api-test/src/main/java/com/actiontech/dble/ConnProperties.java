@@ -55,4 +55,9 @@ public class ConnProperties {
 		System.out.println("portNumber: " + portNumber);
 	}
 
+	@Override
+	public String toString() {
+        return "ConnProperties{" + "serverName='" + serverName + '\'' + '}';
+	}
+
 }

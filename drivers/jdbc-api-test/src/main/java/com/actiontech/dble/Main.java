@@ -38,13 +38,14 @@ public class Main {
 			mysqlProp = new ConnProperties("mysql");
 			testProp = new ConnProperties("test");
 
-			System.out.println('\n' + "-----------------------------------start mysql_driver test-----------------------------------");
-
 			ConnectionTest connTest = new ConnectionTest(mysqlProp, testProp, true);
 			connTest.start_test();
 
-			StatementTest stmtTest = new StatementTest(mysqlProp, testProp, true);
-			stmtTest.start_test();
+			StatementTest mysql_stmt = new StatementTest(mysqlProp, testProp, true);
+			mysql_stmt.start_test();
+
+			StatementTest mariadb_stmt = new StatementTest(mysqlProp, testProp, false);
+			mariadb_stmt.start_test();
 
 			JDBCTutorialUtilities tu = new JDBCTutorialUtilities(mysqlProp, testProp, true);
 			tu.start_test();
@@ -85,15 +86,6 @@ public class Main {
 
 			CapClientFoundRowsTest capClientFoundRowsTest = new CapClientFoundRowsTest(mysqlProp, testProp, true);
 			capClientFoundRowsTest.start_test();
-
-			System.out.println("----------------------------------- mysql_driver test all interface passed-----------------------------------");
-			System.out.println('\n' + "-----------------------------------start mariadb_driver test-----------------------------------");
-
-			StatementTest mariadb_stmt = new StatementTest(mysqlProp, testProp, false);
-			mariadb_stmt.start_test();
-
-			System.out.println("----------------------------------- mariadb_driver test all interface passed-----------------------------------");
-			System.out.println('\n');
 
 			System.out.println("Congratulations, all interfaces passed!");
 //			CoffeesFrame qf = new CoffeesFrame(mysqlProp, dbleProp);

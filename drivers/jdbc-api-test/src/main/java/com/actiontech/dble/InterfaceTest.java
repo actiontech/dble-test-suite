@@ -17,9 +17,12 @@ public class InterfaceTest {
 	protected ConnProperties mysqlProp;
 	protected ConnProperties dbleProp;
 
+	protected boolean isMysqlDriver;
+
 	public InterfaceTest(ConnProperties mysqlProp, ConnProperties dbleProp, boolean isMysqlDriver) throws SQLException {
 		this.mysqlProp = mysqlProp;
 		this.dbleProp = dbleProp;
+		this.isMysqlDriver = isMysqlDriver;
 		create_compare_conns(isMysqlDriver);
 	}
 
@@ -178,7 +181,7 @@ public class InterfaceTest {
 	protected void start()throws SQLException{}
 
 	public void start_test(){
-		System.out.println("******************** "+this.getClass()+" test *****************************");
+		System.out.println("******************** "+this.toString()+" test *****************************");
 		try{
 			start();
 		}catch (SQLException e) {
@@ -363,5 +366,10 @@ public class InterfaceTest {
 			System.exit(status);
 
 		}
+	}
+
+	@Override
+	public String toString() {
+        return "InterfaceTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }
