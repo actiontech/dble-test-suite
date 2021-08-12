@@ -257,6 +257,6 @@ public class CachedRowSetSample extends InterfaceTest {
 
 	@Override
 	public String toString() {
-        return "ConnectionTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "CachedRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

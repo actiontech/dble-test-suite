@@ -154,6 +154,6 @@ public class FilteredRowSetSample extends InterfaceTest {
 
 	@Override
 	public String toString() {
-        return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "FilteredRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

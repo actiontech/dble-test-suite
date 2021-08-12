@@ -147,6 +147,6 @@ public class JoinSample extends InterfaceTest {
 
 	@Override
 	public String toString() {
-		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+		return "JoinSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

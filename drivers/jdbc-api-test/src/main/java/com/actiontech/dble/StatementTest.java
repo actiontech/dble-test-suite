@@ -315,6 +315,6 @@ public class StatementTest extends InterfaceTest {
 
 	@Override
 	public String toString() {
-		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+		return "StatementTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

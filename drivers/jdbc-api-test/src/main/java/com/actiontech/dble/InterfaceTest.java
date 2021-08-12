@@ -370,6 +370,6 @@ public class InterfaceTest {
 
 	@Override
 	public String toString() {
-        return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "InterfaceTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

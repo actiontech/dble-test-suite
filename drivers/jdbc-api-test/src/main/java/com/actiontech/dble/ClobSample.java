@@ -154,6 +154,6 @@ public class ClobSample extends InterfaceTest{
 
     @Override
 	public String toString() {
-        return "ConnectionTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "ClobSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

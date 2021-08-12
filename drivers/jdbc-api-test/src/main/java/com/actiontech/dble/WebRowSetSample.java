@@ -138,6 +138,6 @@ public class WebRowSetSample extends InterfaceTest {
 
 	@Override
 	public String toString() {
-		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+		return "WebRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

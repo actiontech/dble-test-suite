@@ -100,6 +100,6 @@ public class JDBCTutorialUtilities extends InterfaceTest {
 
 	@Override
 	public String toString() {
-		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+		return "JDBCTutorialUtilities{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

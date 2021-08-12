@@ -266,6 +266,6 @@ public class ServerSideCursorTest extends InterfaceTest {
 
     @Override
 	public String toString() {
-		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+		return "ServerSideCursorTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

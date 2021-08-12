@@ -338,6 +338,6 @@ public class CoffeesTable extends InterfaceTest {
 
 	@Override
 	public String toString() {
-        return "ConnectionTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "CoffeesTable{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

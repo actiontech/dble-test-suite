@@ -297,6 +297,6 @@ public class StoredProcedureMySQLSample extends InterfaceTest {
 
 	@Override
 	public String toString() {
-		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+		return "StoredProcedureMySQLSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

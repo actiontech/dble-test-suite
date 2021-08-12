@@ -240,6 +240,6 @@ public class CapClientFoundRowsTest extends InterfaceTest {
 
     @Override
 	public String toString() {
-        return "ConnectionTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "CapClientFoundRowsTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }

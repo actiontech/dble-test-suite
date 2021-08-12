@@ -113,6 +113,6 @@ public class DriverManagerTest extends InterfaceTest{
 
 	@Override
 	public String toString() {
-        return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+        return "DriverManagerTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }
