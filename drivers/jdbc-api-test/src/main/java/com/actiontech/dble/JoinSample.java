@@ -144,4 +144,9 @@ public class JoinSample extends InterfaceTest {
 		testJoinRowSet("Acme, Inc.");
 		System.out.println("pass! join row set!");
 	}
+
+	@Override
+	public String toString() {
+		return "JoinSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }
