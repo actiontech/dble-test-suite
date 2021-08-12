@@ -165,4 +165,9 @@ public class GeneralLogTest extends InterfaceTest {
 
         return flag;
     }
+
+    @Override
+	public String toString() {
+        return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

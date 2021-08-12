@@ -97,4 +97,9 @@ public class JDBCTutorialUtilities extends InterfaceTest {
 			on_assert_fail("fail! ROWID type is diff");
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }
