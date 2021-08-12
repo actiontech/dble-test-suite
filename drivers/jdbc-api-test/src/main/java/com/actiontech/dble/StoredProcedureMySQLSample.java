@@ -294,4 +294,9 @@ public class StoredProcedureMySQLSample extends InterfaceTest {
 			if (cs_mysql != null) { cs_mysql.close(); }
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "StoredProcedureMySQLSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

@@ -263,4 +263,9 @@ public class ServerSideCursorTest extends InterfaceTest {
             statement.close();
         }
     }
+
+    @Override
+	public String toString() {
+		return "ServerSideCursorTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }
