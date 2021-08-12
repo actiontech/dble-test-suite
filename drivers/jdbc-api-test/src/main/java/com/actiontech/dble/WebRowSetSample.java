@@ -135,4 +135,9 @@ public class WebRowSetSample extends InterfaceTest {
 			System.out.println("Error....serializing/deserializng the WebRowSet");
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "WebRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

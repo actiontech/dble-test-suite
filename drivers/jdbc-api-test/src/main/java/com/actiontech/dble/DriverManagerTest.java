@@ -110,4 +110,9 @@ public class DriverManagerTest extends InterfaceTest{
 			System.out.println("one fconn share the same instance of pstmt if their constructed string is same");
 		}
 	}
+
+	@Override
+	public String toString() {
+        return "DriverManagerTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }
