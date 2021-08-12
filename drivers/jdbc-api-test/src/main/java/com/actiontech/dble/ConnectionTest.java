@@ -630,6 +630,13 @@ public class ConnectionTest extends InterfaceTest {
 		System.out.println("pass! rollback(Savepoint savepoint)!");
 		System.out.println("pass! rollback()!");
 	}
+
+	@Override
+	public String toString() {
+		return "ConnectionTest{" +
+				"isMysqlDriver=" + isMysqlDriver +
+				'}';
+	}
 }
 
 class AbortExecutor implements Executor {

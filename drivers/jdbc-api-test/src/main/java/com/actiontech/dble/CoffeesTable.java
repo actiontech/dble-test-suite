@@ -335,4 +335,11 @@ public class CoffeesTable extends InterfaceTest {
 		return keys;
 
 	}
+
+	@Override
+    public String toString() {
+        return "CapClientFoundRowsTest{" +
+                "isMysqlDriver=" + isMysqlDriver +
+                '}';
+    }
 }
