@@ -246,7 +246,7 @@ public class ConnectionTest extends InterfaceTest {
 			System.out.println("InterruptedException:"+e.getMessage());
 		}
 
-		create_compare_conns();
+		create_compare_conns(isMysqlDriver);
 	}
 
 	/*
@@ -629,6 +629,11 @@ public class ConnectionTest extends InterfaceTest {
 		System.out.println("pass! releaseSavepoint()!");
 		System.out.println("pass! rollback(Savepoint savepoint)!");
 		System.out.println("pass! rollback()!");
+	}
+
+	@Override
+	public String toString() {
+		return "ConnectionTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
 	}
 }
 

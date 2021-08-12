@@ -335,4 +335,9 @@ public class CoffeesTable extends InterfaceTest {
 		return keys;
 
 	}
+
+	@Override
+	public String toString() {
+        return "CoffeesTable{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

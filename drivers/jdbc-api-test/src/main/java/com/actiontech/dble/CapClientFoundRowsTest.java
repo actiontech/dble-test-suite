@@ -237,4 +237,9 @@ public class CapClientFoundRowsTest extends InterfaceTest {
                 Config.SSH_PASSWORD);
 		sshExecutor.execute(cmd);
     }
+
+    @Override
+	public String toString() {
+        return "CapClientFoundRowsTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

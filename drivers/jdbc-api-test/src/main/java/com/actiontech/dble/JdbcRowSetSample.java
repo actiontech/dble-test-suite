@@ -113,4 +113,9 @@ public class JdbcRowSetSample extends InterfaceTest{
 		testJdbcRowSet();
 		System.out.println("pass! test jdbc row set.");
 	}
+
+	@Override
+	public String toString() {
+        return "JdbcRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }
