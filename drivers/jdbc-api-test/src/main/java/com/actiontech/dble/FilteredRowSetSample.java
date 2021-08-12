@@ -151,4 +151,9 @@ public class FilteredRowSetSample extends InterfaceTest {
 		this.viewFilteredRowSet(frs_mysql, frs_dble);
 		System.out.println("dble is same with mysql after set filter at second time!");
 	}
+
+	@Override
+	public String toString() {
+        return "FilteredRowSetSample{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }

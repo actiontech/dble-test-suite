@@ -312,4 +312,9 @@ public class StatementTest extends InterfaceTest {
 			close_stmt(stmt);
 		}
 	}
+
+	@Override
+	public String toString() {
+		return "StatementTest{" + "isMysqlDriver=" + isMysqlDriver + '}';
+	}
 }
