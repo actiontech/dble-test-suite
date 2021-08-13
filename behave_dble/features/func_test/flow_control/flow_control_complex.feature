@@ -5,7 +5,7 @@
 
 Feature: test flow_control about complex query
 
-
+@skip
   Scenario: test flow_control about complex query   # 1
     # prepare data
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
