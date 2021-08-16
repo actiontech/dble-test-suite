@@ -746,7 +746,7 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | update test set name= '4' where name in (select name from schema2.global2 )                                            | success | schema1 |
       | conn_1 | False   | update sharding_2_t1 a,schema2.sharding2 b set a.name=b.name where a.id=2 and b.id=2                                   | success | schema1 |
       | conn_1 | False   | delete schema1.sharding_2_t1 from sharding_2_t1,schema2.sharding2 where sharding_2_t1.id=1 and schema2.sharding2.id =1 | success | schema1 |
-    Given sleep "2" seconds
+    Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |
