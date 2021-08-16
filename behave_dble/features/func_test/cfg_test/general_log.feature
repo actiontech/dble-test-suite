@@ -437,10 +437,9 @@ Feature: general log test
     Given update file content "./assets/BtraceGeneralLog.java" in "behave" with sed cmds
     """
     s/Thread.sleep([0-9]*L)/Thread.sleep(1L)/
-    /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(15000L)/;/\}/!ba}
+    /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGeneralLog.java" in "dble-1"
-    Given sleep "5" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_0"
     Then check btrace "BtraceGeneralLog.java" output in "dble-1"
     """
@@ -449,6 +448,7 @@ Feature: general log test
     Then execute sql in "dble-1" in "admin" mode
     | conn   | toClose | sql                                          | db               |
     | conn_1 | true    | reload @@general_log_file='general/test.log' | dble_information |
+    Given sleep "10" seconds
     Then check sql thread output in "res"
     """
     ('general_log', 'OFF'), ('general_log_file', '/opt/dble/general/general.log')
