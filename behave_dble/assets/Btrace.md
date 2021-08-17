@@ -205,6 +205,11 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.btrace.provider.GeneralProvider|updateGeneralLogFile|reload general log日志文件|
 |com.actiontech.dble.btrace.provider.GeneralProvider|showGeneralLog|查看general log参数|
 |com.actiontech.dble.btrace.provider.ClusterDelayProvider|delayBeforeLoadData|load data batch模式时检查切片文件的正确性|
+|com.actiontech.dble.backend.mysql.store.CursorCacheForGeneral|add|游标maxHeapTableSize参数监听|
+|com.actiontech.dble.backend.mysql.store.diskbuffer.UnSortedResultDiskBuffer|next|游标heapTableBufferChunkSize参数监听|
+|com.actiontech.dble.backend.mysql.nio.handler.query.impl.groupby.directgroupby.GroupByBucket|start|group by线程检测|
+|com.actiontech.dble.backend.mysql.nio.handler.query.impl.MultiNodeMergeAndOrderHandler|186|MultiNodeMergeAndOrderHandler.ownThread线程检测|
+
 
 
 ### 小版本改动：
