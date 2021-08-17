@@ -16,6 +16,7 @@ import re
 import operator
 
 import time
+import datetime
 
 from steps.lib.DBUtil import DBUtil
 from steps.lib.utils import get_sftp,get_ssh,get_node
@@ -131,7 +132,7 @@ def step_impl(context, fildername,hostname):
     assert_that(len(stderr) == 0, "create filder content with:{1}, got err:{0}".format(stderr, cmd))
 
 
-@Given('create local and server file "{filename}" with "{num}" lines')    
+@Given('create local and server file "{filename}" with "{num}" lines')
 @Given('create local and server file "{filename}" and fill with text')
 def step_impl(context, filename, num=None):
     logger.debug("*** debug context.text:{0}".format(context.text))
@@ -596,3 +597,41 @@ def step_impl(context, filename, hostname):
     logger.debug("filename is ".format(only_filename))
     remote_file = "{0}/{1}".format(node.install_dir,only_filename)
     node.sftp_conn.sftp_put(local_file, remote_file)
+
+
+@Then('check the time interval of following key after line "{line_num_rs}" in file "{filename}" in "{hostname}"')
+def step_impl(context, filename, hostname, line_num_rs=None):
+    ssh = get_ssh(hostname)
+    for row in context.table:
+        key = row["key"]
+        interval = row["interval_times"]
+        if line_num_rs:
+            line_num = getattr(context, line_num_rs, 0)
+            logger.debug("line_num {0}".format(line_num))
+            cmd = "tail -n +{2} {1} | grep -n \'{0}\'".format(key, filename, line_num)
+        else:
+            cmd = "grep \'{0}\' {1}".format(key, filename)
+        rc, stdout, stderr = ssh.exec_command(cmd)
+
+        str_list = stdout.splitlines()
+        pre_datetime = ""
+        for info in str_list:
+            line_data = re.search(r"(\d{4}-\d{1,2}-\d{1,2}\s\d{1,2}:\d{1,2}:\d{1,2})", info)
+            logger.debug("log datetime is {0}".format(line_data.groups()))
+            if line_data:
+                line_datetime = line_data.groups()[0]
+                datetime1 = datetime.datetime.strptime(line_datetime, '%Y-%m-%d %H:%M:%S')
+                if pre_datetime:
+                    datetime2 = datetime.datetime.strptime(pre_datetime, '%Y-%m-%d %H:%M:%S')
+                    datetime_interval = (datetime1-datetime2).seconds
+                    logger.debug("datetime interval is {0}".format(int(datetime_interval) == int(interval)))
+                    assert_that(int(datetime_interval) == int(interval),
+                                "last datetime is {0}, current datetime is {1}, "
+                                "expect the time interval of \"{2}\" is {3} in {4}, "
+                                "but the actual value is {5}".format(pre_datetime, line_datetime, key, interval, filename, datetime_interval))
+                    pre_datetime = line_datetime
+                else:
+                    pre_datetime = line_datetime
+                    continue
+            else:
+                continue
