@@ -261,6 +261,21 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
         else:#default take flag as Y
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
 
+@Then('check following two texts exist at least one in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
+def check_text_from_line_at_least_one(context,filename,hostname,checkFromLine):
+    checkFromLineNum = getattr(context, checkFromLine, 0)
+    check_text_at_least_one(context,filename,hostname,checkFromLineNum)
+
+@Then('check following two texts exist at least one in file "{filename}" in host "{hostname}"')
+def check_text_at_least_one(context,filename,hostname,checkFromLine=0):
+    strs = context.text.strip()
+    strs_list = strs.splitlines()
+
+    ssh = get_ssh(hostname)
+    cmd = "tail -n +{3} {2} | grep -n -e \'{0}\' -e \'{1}\'".format(strs_list[0],strs_list[1],filename,checkFromLine)
+    rc, stdout, stderr = ssh.exec_command(cmd)
+    assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1} at least one,but has not both ".format(strs_list,filename))
+
 @Then ('check following "{flag}" exist in dir "{dirname}" in "{hostname}"')
 def step_impl(context,flag,dirname,hostname):
     strs = context.text.strip()

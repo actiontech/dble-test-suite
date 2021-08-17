@@ -274,9 +274,11 @@ Feature: test connection pool
     Given record current dble log line number in "log_linenu"
     #sleep timeBetweenEvictionRunsMillis seconds to check idle connections
     Given sleep "5" seconds
-    Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
+    #when check time come, new connections may rebuild already or not
+    Then check following two texts exist at least one in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
      """
      db instance\[M1\] stats (total=5, active=2, idle=3, idleTest=0 waiting=0)
+     db instance\[M1\] stats (total=7, active=2, idle=5, idleTest=0 waiting=0)
      """
 
   @NAOMAL @restore_mysql_service
