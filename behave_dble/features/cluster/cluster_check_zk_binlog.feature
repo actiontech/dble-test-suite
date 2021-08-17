@@ -370,7 +370,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                               | db      |
       | conn_11 | true    | alter table sing1 add age int default 2020122004  | schema1 |
-    Given sleep "1" seconds
+    Given sleep "5" seconds
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
@@ -395,7 +395,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                                      | db      |
       | conn_11 | true    | alter table no_sharding1 add age int default 2020122005  | schema1 |
-    Given sleep "1" seconds
+    Given sleep "5" seconds
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
@@ -420,7 +420,7 @@ Feature: test "binlog" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn    | toClose | sql                                                      | db      |
       | conn_11 | true    | alter table vertical1 add age int default 2020122006     | schema2 |
-    Given sleep "1" seconds
+    Given sleep "5" seconds
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
