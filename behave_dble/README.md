@@ -54,50 +54,50 @@ jdbc 5.1.39
 
 ### 测试命令集
 #### 1.通过ftp包安装单节点并启动
-behave -Dreset=false features/install_uninstall/install_dble.feature
+pipenv run behave -Dreset=false features/install_uninstall/install_dble.feature
 
 #### 2.通过ftp包解压安装dble到所有节点，配置使用zk，启动集群内所有节点(-Dreset=false 参数仅为初始安装dble的必要参数)
-behave -Dreset=false -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature 
+pipenv run behave -Dreset=false -Dis_cluster=true features/install_uninstall/install_dble_cluster.feature 
 
 #### 3.通过ftp包解压安装dble到所有节点，配置使用zk，启动所有节点，集群到单节点转换(-Dreset=false 参数仅为初始安装dble的必要参数)
-behave -Dreset=false -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
+pipenv run behave -Dreset=false -Dis_cluster=true features/install_uninstall/single_dble_and_zk_cluster.feature
 
 #### 4.使用特定配置启动dble
-behave --stop -D dble_conf={sql_cover_sharding | sql_cover_nosharding | sql_cover_global | sql_cover_mixed | template} features/setup.feature
+pipenv run behave --stop -D dble_conf={sql_cover_sharding | sql_cover_nosharding | sql_cover_global | sql_cover_mixed | template} features/setup.feature
 
 #### 5.各种表类型的sql覆盖测试
 - sqls_mixed: 用于默认sql覆盖，包含混合表类型
 - sqls_util: 所有表类型的sql覆盖都需要分别覆盖
 
 #### 6.不适合批量测试的特殊sql语句的测试专项覆盖
-behave -D dble_conf=sql_cover_mixed features/sql_cover/special/
+pipenv run behave -D dble_conf=sql_cover_mixed features/sql_cover/special/
 
 #### 7.全局表sql测试套件覆盖
-behave -Ddble_conf=sql_cover_global features/sql_cover/sql_global.feature
+pipenv run behave -Ddble_conf=sql_cover_global features/sql_cover/sql_global.feature
 
 #### 8.混合类型表sql测试套件覆盖
-behave -Ddble_conf=sql_cover_mixed features/sql_cover/sql_mixed.feature
+pipenv run behave -Ddble_conf=sql_cover_mixed features/sql_cover/sql_mixed.feature
 
 #### 9.分片表sql测试套件覆盖
-behave -Ddble_conf=sql_cover_sharding features/sql_cover/sql_sharding.feature
+pipenv run behave -Ddble_conf=sql_cover_sharding features/sql_cover/sql_sharding.feature
 
 #### 10.非分片表sql测试套件覆盖
-behave --stop -Ddble_conf=sql_cover_nosharding features/sql_cover/sql_nosharding.feature
+pipenv run behave --stop -Ddble_conf=sql_cover_nosharding features/sql_cover/sql_nosharding.feature
 
 #### 11.分片算法测试套件覆盖
-behave -D dble_conf=template features/func_test/sharding_func_test/
+pipenv run behave -D dble_conf=template features/func_test/sharding_func_test/
 
 #### 12.配置测试套件覆盖
-behave -D dble_conf=template features/func_test/cfg_test/
+pipenv run behave -D dble_conf=template features/func_test/cfg_test/
 
 #### 13.全局序列功能测试
-behave -D dble_conf=template features/func_test/sequence/sequence.feature
+pipenv run behave -D dble_conf=template features/func_test/sequence/sequence.feature
 
 #### 14.安全性测试套件覆盖
-behave -D dble_conf=template features/func_test/safety/safety.feature
+pipenv run behave -D dble_conf=template features/func_test/safety/safety.feature
 
 #### 15.运维命令测试套件覆盖
-behave -D dble_conf=template features/func_test/managercmd/
+pipenv run behave -D dble_conf=template features/func_test/managercmd/
 
 ### zk 使用说明
 #### 1.更新dble/conf/cluster.cnf配置：
