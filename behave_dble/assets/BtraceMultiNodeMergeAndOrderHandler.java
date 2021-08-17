@@ -19,12 +19,12 @@ public class BtraceMultiNodeMergeAndOrderHandler {
             //location=@Location(value=Kind.LINE,line=182) for 3.20.10, 3.21.02
             location=@Location(value=Kind.LINE,line=186)
     )
-    public static void groupByBucket(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception  {
-        BTraceUtils.println("get into rowEofResponse");
+    public static void ownThread(@ProbeClassName String probeClass, @ProbeMethodName String probeMethod) throws Exception  {
+        BTraceUtils.println("get into ownThread");
         BTraceUtils.println("---------------");
         BTraceUtils.Threads.jstack();
-        Thread.sleep(5000L);
-        BTraceUtils.println(BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss") + ", end rowEofResponse");
+        Thread.sleep(1000L);
+        BTraceUtils.println(BTraceUtils.Time.timestamp("yyyy-MM-dd HH:mm:ss") + ", end ownThread");
         BTraceUtils.println("---------------");
     }
 }
