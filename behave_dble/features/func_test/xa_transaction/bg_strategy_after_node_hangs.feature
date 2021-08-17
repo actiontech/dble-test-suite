@@ -267,3 +267,81 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
 
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+
+  @btrace @restore_mysql_service
+  Scenario: mysql node hangs causing xa transaction fail to commit, automatic recovery in background attempts and check xaSessionCheckPeriod #6
+    """
+    {'restore_mysql_service':{'mysql-master1':{'start_mysql':1}}}
+    """
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
+      | conn_0 | False   | create table sharding_4_t1(id int,name char)            | success | schema1 |
+      | conn_0 | False   | set autocommit=0                                        | success | schema1 |
+      | conn_0 | False   | set xa=on                                               | success | schema1 |
+      | conn_0 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given update file content "./assets/BtraceXaDelay.java" in "behave" with sed cmds
+    """
+    s/Thread.sleep([0-9]*L)/Thread.sleep(100L)/
+    /delayBeforeXaCommit/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(10000L)/;/\}/!ba}
+    """
+    Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
+    Given sleep "5" seconds
+    Given prepare a thread execute sql "commit" with "conn_0"
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before xa commit
+    """
+    Given stop mysql in host "mysql-master1"
+    Given sleep "10" seconds
+    Given destroy sql threads list
+    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
+    Given destroy btrace threads list
+    Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_1"
+    Given sleep "60" seconds
+    Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | interval_times |
+      | at the 0th time in background              | 1              |
+    Given start mysql in host "mysql-master1"
+    Given sleep "10" seconds
+
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-DxaSessionCheckPeriod=6000
+    """
+    Then Restart dble in "dble-1" success
+    Given sleep "10" seconds
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                                     | expect  | db      |
+      | conn_2 | False   | set autocommit=0                                        | success | schema1 |
+      | conn_2 | False   | set xa=on                                               | success | schema1 |
+      | conn_2 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+    Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
+    Given sleep "5" seconds
+    Given prepare a thread execute sql "commit" with "conn_2"
+    Then check btrace "BtraceXaDelay.java" output in "dble-1" with "4" times
+    """
+    before xa commit
+    """
+    Given stop mysql in host "mysql-master1"
+    Given sleep "10" seconds
+    Given destroy sql threads list
+    Given stop btrace script "BtraceXaDelay.java" in "dble-1"
+    Given destroy btrace threads list
+    Given record current dble log "/opt/dble/logs/dble.log" line number in "log_num_2"
+    Given sleep "60" seconds
+    Then check the time interval of following key after line "log_num_2" in file "/opt/dble/logs/dble.log" in "dble-1"
+      | key                                        | interval_times |
+      | at the 0th time in background              | 6              |
+    Given start mysql in host "mysql-master1"
+    Given sleep "10" seconds
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                 | expect      | db      |
+      | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 |
+      | conn_1 | False   | delete from sharding_4_t1           | success     | schema1 |
+      | conn_1 | True    | drop table if exists sharding_4_t1  | success     | schema1 |
+
+    Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
+    Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
