@@ -7,7 +7,7 @@ RUN echo "Asia/shanghai" > /etc/timezone && \
 
 RUN apt-get update && \
 #    apt-get  upgrade && \
-    apt-get install -y yum-utils vim wget gcc g++ git net-tools libaio1 hwloc openssh-server sshpass ntp ntpdate less iproute2 && \
+    apt-get install --fix-missing -y yum-utils vim wget gcc g++ git net-tools libaio1 hwloc openssh-server sshpass ntp ntpdate less iproute2 && \
     apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 #c/cpp dependency
@@ -61,17 +61,13 @@ RUN apt-get update && \
 
 #.net dependency
 RUN apt-get update && \
-    apt-get install -y gnupg ca-certificates && \
+    apt-get install -y sudo && \
+    apt-get install -y dirmngr gnupg apt-transport-https ca-certificates && \
     apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF && \
     echo "deb https://download.mono-project.com/repo/ubuntu stable-bionic main" | sudo tee /etc/apt/sources.list.d/mono-official-stable.list && \
     apt-get update && \
     apt-get install -y mono-complete && \
     apt-get autoclean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-#download latest released dble
-RUN version=$(curl "https://github.com/actiontech/dble/releases/latest"|awk -F "/" '{print $8}') && \
-    wget -P /opt/share https://github.com/actiontech/dble/releases/download/$version%2Ftag/actiontech-dble-$version.tar.gz
 
 #install maven
 COPY apache-maven-3.6.3-bin.tar.gz /docker-build/apache-maven-3.6.3-bin.tar.gz
@@ -87,10 +83,10 @@ RUN echo "export PATH=/opt/jdk/bin:/usr/local/apache-maven/bin:$PATH">>/etc/bash
 
 RUN mkdir ~/.ssh
 RUN sed -i -e "s/#PermitRootLogin prohibit-password/PermitRootLogin yes/g" /etc/ssh/sshd_config
-RUN ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
-RUN ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
-RUN ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
-RUN ssh-keygen -t rsa -N ""  -f "/root/.ssh/id_rsa"
+RUN yes 'y'|ssh-keygen -q -t rsa -b 2048 -f /etc/ssh/ssh_host_rsa_key -N ''
+RUN yes 'y'|ssh-keygen -q -t ecdsa -f /etc/ssh/ssh_host_ecdsa_key -N ''
+RUN yes 'y'|ssh-keygen -t dsa -f /etc/ssh/ssh_host_ed25519_key -N ''
+RUN yes 'y'|ssh-keygen -t rsa -N ""  -f "/root/.ssh/id_rsa"
 RUN echo root:sshpass|chpasswd
 
 COPY * /docker-build/
