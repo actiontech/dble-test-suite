@@ -275,6 +275,12 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     """
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    $a\-DxaSessionCheckPeriod=20000
+    """
+    Then Restart dble in "dble-1" success
+    Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_0 | False   | drop table if exists sharding_4_t1                      | success | schema1 |
@@ -303,7 +309,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
     Given sleep "60" seconds
     Then check the time interval of following key after line "log_num_1" in file "/opt/dble/logs/dble.log" in "dble-1"
       | key                                        | interval_times |
-      | at the 0th time in background              | 1              |
+      | at the 0th time in background              | 20             |
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
 
