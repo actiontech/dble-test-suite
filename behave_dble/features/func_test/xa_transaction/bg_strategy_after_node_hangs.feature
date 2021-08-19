@@ -323,7 +323,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | conn   | toClose | sql                                                     | expect  | db      |
       | conn_2 | False   | set autocommit=0                                        | success | schema1 |
       | conn_2 | False   | set xa=on                                               | success | schema1 |
-      | conn_2 | False   | insert into sharding_4_t1 values(1,1),(2,2),(3,3),(4,4) | success | schema1 |
+      | conn_2 | False   | insert into sharding_4_t1 values(5,5),(6,6),(7,7),(8,8) | success | schema1 |
     Given prepare a thread run btrace script "BtraceXaDelay.java" in "dble-1"
     Given sleep "5" seconds
     Given prepare a thread execute sql "commit" with "conn_2"
@@ -342,7 +342,7 @@ Feature: retry policy after xa transaction commit failed for mysql service stopp
       | key                                        | interval_times |
       | at the 0th time in background              | 6              |
     Given start mysql in host "mysql-master1"
-    Given sleep "10" seconds
+    Given sleep "15" seconds
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                 | expect      | db      |
       | conn_1 | False   | select * from sharding_4_t1         | length{(8)} | schema1 |
