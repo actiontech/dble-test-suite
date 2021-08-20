@@ -5,7 +5,7 @@
 
 Feature: on zookeeper to check start config
 
-@skip_restart
+
   Scenario:  when one dble start success ,the config sync other dble #1
     Given stop dble cluster and zk service
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -44,8 +44,6 @@ Feature: on zookeeper to check start config
       """
 
     Given stop dble cluster and zk service
-    Given a clean environment in all dble nodes
-    Given install dble in all dble nodes
     Given replace config files in all dbles with command line config
     Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
       """
@@ -157,6 +155,6 @@ Feature: on zookeeper to check start config
       """
 
     Given execute linux command in "dble-1"
-    """
-    rm -rf /tmp/dble_*
-    """
+      """
+      rm -rf /tmp/dble_*
+      """
