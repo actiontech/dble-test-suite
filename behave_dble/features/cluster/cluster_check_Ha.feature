@@ -296,6 +296,8 @@ Feature: test "ha" in zk cluster
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-2 mysql-master2 dble-3
       """
+    ###  heartbeatPeriodMillis  default 10s,  let restore heartbeat
+    Given sleep "10" seconds
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS1'"
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
       """
@@ -627,6 +629,8 @@ Feature: test "ha" in zk cluster
       """
       bash ./compose/docker-build-behave/ChangeMaster.sh dble-3 mysql-master2 dble-2
      """
+    ###  heartbeatPeriodMillis  default 10s,  let restore heartbeat
+    Given sleep "10" seconds
     Then execute admin cmd "dbGroup @@switch name = 'ha_group2' master = 'hostS2'"
 
     Then check following text exist "Y" in file "/opt/dble/conf/db.xml" in host "dble-1"
