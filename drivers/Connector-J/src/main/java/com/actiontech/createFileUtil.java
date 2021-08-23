@@ -18,7 +18,7 @@ public class createFileUtil {
     public static boolean createDir(String destDirName) {
         File dir = new File(destDirName);
         if (dir.exists()) {
-            System.out.println("Create failed! " + destDirName + " existed");
+//             System.out.println(destDirName + " is already existed! ");
             return true;
         }
         if (!destDirName.endsWith(File.separator)) {
@@ -26,10 +26,10 @@ public class createFileUtil {
         }
 
         if (dir.mkdirs()) {
-            System.out.println("create " + destDirName + " success！");
+            System.out.println("create " + destDirName + " success! ");
             return true;
         } else {
-            System.out.println("create " + destDirName + " success！");
+            System.out.println("create " + destDirName + " failed! ");
             return false;
         }
     }
@@ -39,7 +39,7 @@ public class createFileUtil {
         File dir = new File(filePath);
         if (!dir.exists() && !dir.isDirectory()) {
             if (!createDir(filePath)) {
-                System.out.println("create failed！");
+                System.out.println("create failed! ");
                 //return null;
                 System.exit(-1);
             }
@@ -56,16 +56,16 @@ public class createFileUtil {
 
             try {
                 if (file.createNewFile()) {
-                    System.out.println("create " + destFileNames[i] + " success！");
+                    System.out.println("create " + destFileNames[i] + " success!");
                     newfiles.add(fpath);
                 } else {
-                    System.out.println("create" + destFileNames[i] + " failed！");
+                    System.out.println("create" + destFileNames[i] + " failed! ");
                     //return null;
                     System.exit(-1);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                System.out.println("create " + destFileNames[i] + " failed！" + e.getMessage());
+                System.out.println("create " + destFileNames[i] + " failed! " + e.getMessage());
                 //return null;
                 System.exit(-1);
             }
