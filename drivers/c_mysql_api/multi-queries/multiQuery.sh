@@ -1,5 +1,7 @@
 #!/bin/bash
+set -e
 dble_version=$1
+
 DIR="$( cd "$( dirname "$0" )" && pwd )"
 cd ${DIR}/../../../behave_dble/compose/docker-build-behave && bash resetReplication.sh
 
@@ -20,7 +22,3 @@ if [[ $? -eq 0 ]]; then
 else
     echo ${asExpect}
 fi
-
-#save logs for ci artifacts
-scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
-mv ${DIR}/curr.output ${DIR}/dble_logs/
