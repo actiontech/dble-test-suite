@@ -440,6 +440,7 @@ Feature: general log test
     /showGeneralLog/{:a;n;s/Thread.sleep([0-9]*L)/Thread.sleep(5000L)/;/\}/!ba}
     """
     Given prepare a thread run btrace script "BtraceGeneralLog.java" in "dble-1"
+    Given sleep "2" seconds
     Given prepare a thread execute sql "show @@general_log" with "conn_0"
     Then check btrace "BtraceGeneralLog.java" output in "dble-1"
     """
