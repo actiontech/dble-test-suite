@@ -3,8 +3,15 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 
+docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
+docker rm $(docker ps -a | awk '{ print $1}' | tail -n +2)
+docker network rm dble_test
+docker rmi $(docker images | awk '{print $3}' |tail -n +2)
+rm -rf /opt/behave/
+
 mkdir /opt/behave/
-cd /opt/behave/ && git clone https://github.com/actiontech/dble-test-suite.git
+#cd /opt/behave/ && git clone https://github.com/actiontech/dble-test-suite.git
+cd /opt/behave/ && git clone git@github.com:actiontech/dble-test-suite.git
 cd /opt/behave/dble-test-suite/behave_dble/compose/
 docker network create -d bridge --ipv6 --subnet "2001:3984:3989::/64" --gateway "2001:3984:3989::1" --gateway 172.100.9.253 --subnet 172.100.9.0/24 dble_test
 docker-compose -f docker-compose.yml up -d --force
