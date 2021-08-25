@@ -6,6 +6,7 @@ echo ${base_dir}
 cd /opt/behave/dble-test-suite/behave_dble/compose/
 docker-compose down -v
 docker network rm dble_test
+docker rmi $(docker images | grep dble/ | awk '{print $3}')
 rm -rf /opt/behave/ /opt/dble-* /opt/mysql* /opt/c-plus-driver /opt/share
 
 mkdir /opt/behave/
