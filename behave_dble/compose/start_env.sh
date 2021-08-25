@@ -3,11 +3,10 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 
-docker stop $(docker ps -a | awk '{ print $1}' | tail -n +2)
-docker rm $(docker ps -a | awk '{ print $1}' | tail -n +2)
+cd /opt/behave/dble-test-suite/behave_dble/compose/
+docker-compose down -v
 docker network rm dble_test
-docker rmi $(docker images | awk '{print $3}' |tail -n +2)
-rm -rf /opt/behave/
+rm -rf /opt/behave/ /opt/dble-* /opt/mysql* /opt/c-plus-driver /opt/share
 
 mkdir /opt/behave/
 #cd /opt/behave/ && git clone https://github.com/actiontech/dble-test-suite.git
