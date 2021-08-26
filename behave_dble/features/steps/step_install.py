@@ -33,37 +33,66 @@ def unistall_dble_by_hostname(context, hostname):
     node = get_node(hostname)
     uninstall_dble_in_node(context, node)
 
-def get_dble_install_packet_name(context):
+
+def get_dble_install_packet_name(context, version):
     dble_packet = context.cfg_dble['packet_name']
 
     if dble_packet.find("{0}") != -1:
-        cmd = "curl -s 'https://github.com/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
-        version = subprocess.check_output(cmd,shell=True)
-        version = version.strip("\n")
-        dble_packet = dble_packet.format(version)
+        download_host = context.cfg_dble['download_host']
+        download_path = f"{download_host}/actiontech/dble/releases/tag/{version}/tag/"
+        cmd = "curl -s '" + download_path + "' | grep '\-linux.tar.gz' | awk -F '-linux.tar.gz' '{print $1}' | awk -F 'dble-' '{print $2}' | awk 'NR==1' "
+        retry = 0
+        while retry < 5:
+            packet_name = subprocess.check_output(cmd, shell=True)
+            if isinstance(packet_name, bytes):
+                packet_name = packet_name.decode("utf-8").strip("\n")
+            packet_name = packet_name.strip("\n")
+
+            if packet_name:
+                context.logger.debug("get dble latest packet name {0}".format(packet_name))
+                break
+            retry = retry + 1
+            time.sleep(2)
+
+        dble_packet = dble_packet.format(packet_name)
 
     LOGGER.debug("dble packet to install: {0}".format(dble_packet))
     return dble_packet
 
-def get_download_ftp_path(context):
+
+def get_download_version(context):
+    version = ""
     ftp_path = context.cfg_dble['ftp_path']
 
     if ftp_path.find("{0}") != -1:
-        cmd = "curl -s 'https://github.com/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
-        version = subprocess.check_output(cmd,shell=True)
+        download_host = context.cfg_dble['download_host']
+        cmd = "curl -s '" + download_host + "/actiontech/dble/releases/latest' | awk -F '/' '{print $8}'"
+        version = subprocess.check_output(cmd, shell=True)
+        if isinstance(version, bytes):
+            version = version.decode("utf-8")
         version = version.strip("\n")
-        ftp_path = ftp_path.format(version)
+    return version
+
+
+def get_download_ftp_path(context, version):
+    ftp_path = context.cfg_dble['ftp_path']
+
+    if ftp_path.find("{0}") != -1:
+        download_host = context.cfg_dble['download_host']
+        ftp_path = ftp_path.format(download_host, version)
 
     LOGGER.debug("download dble ftp path : {0}".format(ftp_path))
     return ftp_path
 
+
 def install_dble_in_node(context, node):
-    dble_packet = get_dble_install_packet_name(context)
+    version = get_download_version(context)
+    dble_packet = get_dble_install_packet_name(context, version)
 
     if context.need_download:
-        download_dble(context, dble_packet)
+        download_dble(context, dble_packet, version)
 
-    ssh_client =node.ssh_conn
+    ssh_client = node.ssh_conn
 
     cmd = "cd {0} && rm -rf dble".format(node.install_dir)
     ssh_client.exec_command(cmd)
@@ -84,11 +113,12 @@ def install_dble_in_all_nodes(context):
     for node in DbleMeta.dbles:
         install_dble_in_node(context, node)
 
-def download_dble(context, dble_packet_name):
+
+def download_dble(context, dble_packet_name, version):
     LOGGER.debug("delete local dble packet")
     rpm_local_path = "{0}/{1}".format(context.cfg_sys['share_path_docker'],
                                       dble_packet_name)
-    ftp_path = get_download_ftp_path(context)
+    ftp_path = get_download_ftp_path(context, version)
     rpm_ftp_url = "{0}{1}".format(ftp_path,
                                   dble_packet_name)
     cmd = 'rm -rf {0}'.format(rpm_local_path)
@@ -97,15 +127,16 @@ def download_dble(context, dble_packet_name):
 
     if context.cfg_dble['packet_name'].find("{0}") == -1:
         cmd = 'cd {0} && wget --user=ftpuser --password=ftpuser -nv {1}'.format(context.cfg_sys['share_path_docker'],
-                                                                        rpm_ftp_url)
+                                                                                rpm_ftp_url)
+        os.popen(cmd)
+        # sleep 5s to wait download over
+        time.sleep(5)
     else:
-        cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'],
-                                                                    rpm_ftp_url)
+        cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'], rpm_ftp_url)
+        os.popen(cmd)
+        time.sleep(10)
 
     LOGGER.debug(cmd)
-    os.popen(cmd)
-    #sleep 5s to wait download over
-    time.sleep(5)
     cmd = "find {0} -maxdepth 1 -name {1} | wc -l".format(context.cfg_sys['share_path_docker'],
                                                           dble_packet_name)
     LOGGER.debug(cmd)
@@ -164,7 +195,7 @@ def check_dble_started(context, node):
     if not hasattr(context, "retry_start_dble"):
         context.retry_start_dble = 0
         context.dble_start_success= False
-        
+
     dble_conn = None
     try:
         dble_conn = DBUtil(node.ip, node.manager_user, node.manager_password, "",
@@ -305,11 +336,11 @@ def start_zk_service(context, node):
     cmd_start = "{0}/bin/zkServer.sh start".format(context.cfg_zookeeper['home'])
     cmd_check_port ="netstat -anp|grep 2181"
     cmd_check_pid = "ps -ef | grep 'zookeeper' | grep -v grep | awk '{print $2}'"
-    
+
     rc, sto, ste = ssh_client.exec_command(cmd_start)
     rc1, sto1, ste1 = ssh_client.exec_command(cmd_check_port)
     rc2, sto2, ste2 = ssh_client.exec_command(cmd_check_pid)
-   
+
     if (sto.rfind('STARTED') == -1):
         LOGGER.debug("The use of port number 2181:{0}".format(sto1))
         LOGGER.debug("the pid of zookeeper:{0}".format(sto2))
@@ -460,7 +491,7 @@ def replace_config_in_node(context, node):
 def reset_zk_nodes(context):
     if not hasattr(context, "reset_zk_time"):
         context.reset_zk_time = 0
-		
+
     node = get_node("dble-1")
     ssh_client = node.ssh_conn
     resetCmd = "cd {0}/zookeeper/bin && sh zkCli.sh deleteall /dble".format(node.install_dir)
@@ -468,16 +499,16 @@ def reset_zk_nodes(context):
     if context.reset_zk_time < 3:
 	    context.reset_zk_time = context.reset_zk_time + 1
 	    reset_zk_nodes(context)
-	
-    
+
+
 @Then ('Monitored folling nodes online')
 def step_impl(context):
     text = context.text.strip()
     expectNodes = text.splitlines()
-    
+
     check_cluster_successd(context, expectNodes)
     assert_that(context.check_zk_nodes_success == True, "Expect the online dbles detected by zk meet expectations,but failed")
-    
+
 def check_cluster_successd(context, expectNodes):
     if not hasattr(context, "retry_check_zk_nodes"):
         context.retry_check_zk_nodes = 0
