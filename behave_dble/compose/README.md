@@ -7,7 +7,15 @@ linux Centos7 ，基础环境依赖自行安装: docker, docker-compose, git, wg
      wget https://raw.githubusercontent.com/actiontech/dble-test-suite/master/behave_dble/compose/start_env.sh
      bash start_env.sh
 
-    注：之前下载过的请先关闭所有docker并删除，删除所有相关image和network，重新下载start_env.sh并bash，如果不需要可在脚本中注释掉相关脚本。
+    注：之前下载过的请先关闭所有docker并删除，删除所有相关image和network，重新下载start_env.sh并bash，删除docker和image脚本如下
+    
+    cd /opt/behave/dble-test-suite/behave_dble/compose/
+    docker-compose down -v
+    docker network rm dble_test
+    docker rmi $(docker images | grep dble/ | awk '{print $3}')
+    rm -rf /opt/behave/ /opt/dble-* /opt/mysql* /opt/c-plus-driver /opt/share
+
+
 
 ### 三、执行测试
 
