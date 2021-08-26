@@ -3,7 +3,6 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 
-cd /opt/behave/dble-test-suite/behave_dble/compose/
 docker-compose down -v
 docker network rm dble_test
 docker rmi $(docker images | grep dble/ | awk '{print $3}')
