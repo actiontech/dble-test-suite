@@ -3,12 +3,6 @@
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 
-cd /opt/behave/dble-test-suite/behave_dble/compose/
-docker-compose down -v
-docker network rm dble_test
-docker rmi $(docker images | grep dble/ | awk '{print $3}')
-rm -rf /opt/behave/ /opt/dble-* /opt/mysql* /opt/c-plus-driver /opt/share
-
 mkdir /opt/behave/
 #cd /opt/behave/ && git clone https://github.com/actiontech/dble-test-suite.git
 cd /opt/behave/ && git clone git@github.com:actiontech/dble-test-suite.git
