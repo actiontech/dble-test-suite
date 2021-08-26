@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker exec -it behave bash -c "cd /init_assets/dble-test-suite/behave_dble&&pipenv install&&pipenv run behave -Dreset=false -Dinstall_from_local=true -Dtest_config=auto_test_dble_release.yaml features/install_uninstall/install_dble.feature;pipenv run behave -Ddble_conf=sql_cover_global -Dtest_config=auto_test_dble_release.yaml features/sql_cover/sql_global.feature;pipenv run behave -Dtest_config=auto_test_dble_release.yaml features/func_test/"
+docker exec -it behave bash -c "cd /init_assets/dble-test-suite/behave_dble && pipenv install && pipenv run behave -Dreset=false -Dinstall_from_local=false -Dtest_config=auto_test_dble_release.yaml features/install_uninstall/install_dble.feature;pipenv run behave -Ddble_conf=sql_cover_global -Dtest_config=auto_test_dble_release.yaml features/sql_cover/sql_global.feature;pipenv run behave -Dtest_config=auto_test_dble_release.yaml features/func_test/"
