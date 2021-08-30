@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 base_dir=$( dirname ${BASH_SOURCE[0]} )
 echo ${base_dir}
 #clean mysqld before testing, including: drop none-sys databases, reset replication relation, prepare uproxy wanted database and table for delay checking
