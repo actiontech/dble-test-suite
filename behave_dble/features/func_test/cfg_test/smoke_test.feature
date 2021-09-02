@@ -13,6 +13,7 @@ Feature: test with usePerformanceMode & usingAIO & useThreadUsageStat & useCostT
     $a\-DuseThreadUsageStat=1
     $a\-DuseCostTimeStat=1
     $a\-DuseCompression=1
+    $a\-DbackendProcessors=16
     """
     Then Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
