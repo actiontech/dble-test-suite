@@ -52,7 +52,7 @@ show @@sql.sum.user
 show @@sql.sum.user true
 show @@sql.sum.table
 show @@sql.sum.table true
-show @@syslog limit=2
+#show @@syslog limit=2
 show @@sysparam
 show @@threadpool
 show @@thread_used
@@ -83,12 +83,12 @@ reload @@query_cf=NULL
 #rollback @@config
 offline
 online
-file @@list
-file @@show schema.xml
+#file @@list
+#file @@show schema.xml
 #file @@upload schema.xml <table name="test_global11" 整个文件
-log @@limit=0,5000
-log @@key='select *'
-log @@regex=from\saly_test$
+#log @@limit=0,5000
+#log @@key='select *'
+#log @@regex=from\saly_test$
 #log @@file=dble.log @@limit='0:5000' @@key='select *' @@regex='*from aly_test'
 dryrun
 pause @@shardingNode = 'dn1,dn2' and timeout = 10 ,queue = 10,wait_limit = 10
