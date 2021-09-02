@@ -5,7 +5,7 @@ mysql: [(1064): You have an error in your SQL syntax; check the manual that corr
 dble: [(4004): not support assignment]
 mysql: []
 ===file:assets/sql/driver_test_client.sql,id:37,sql:select pad,count(id) t from schema2.test2 group by pad having t>1;===
-dble: [{COUNT(id)=2, pad=1}]
+dble: [{pad=1, count(id)=2}]
 mysql: [{pad=1, t=2}]
 ===file:assets/sql/driver_test_client.sql,id:38,sql:select pad,count(id) t from schema2.test2 group by pad with rollup;===
 dble: [(4004): with rollup is not supported yet!]
