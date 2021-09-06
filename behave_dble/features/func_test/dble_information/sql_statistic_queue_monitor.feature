@@ -53,7 +53,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启采样统计
+    # reload @@samplingRate = 20;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | reload @@samplingRate = 20;         | success  | dble_information   |
@@ -65,16 +65,16 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 20            |
       | queueMonitor             | -             |
-    # 开启队列统计
+    # start @@statistic_queue_monitor;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | start @@statistic_queue_monitor;       | success      | dble_information   |
-    # 因为需要等到第一条统计数据统计进结果中去才可以断言通过
+    # Because you need to wait until the first statistic data is counted in the result before you can assert that it passes
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}  | dble_information   |
-    # 查看queueMonitor状态，因为它的状态变更需要时间
+    # Check the status of queueMonitor, because its status change takes time
     Given sleep "4" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_3"
       | conn   | toClose  | sql                             | db               |
@@ -84,7 +84,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF            |
       | samplingRate             | 20             |
       | queueMonitor             | monitoring     |
-    # 需要超过默认的observeTime 1min时间长度至少再加一个intervalTime的长度，再去查看show @@statistic_queue.usage;是否停更才有意义
+    # we need at least [observeTime (1min)+ 1* intervalTime] ，Then the result of "show @@statistic_queue.usage;" will tell us that statistic finished
     Given sleep "65" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -124,7 +124,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计
+    # enable @@statistic;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                 | success  | dble_information   |
@@ -136,16 +136,16 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON            |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启队列统计 observeTime，intervalTime均为非默认合法值
+    # start queue statistics with both observeTime and intervalTime are non-default legal values
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                           | expect       | db                 |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 1h and intervalTime = 2s;       | success      | dble_information   |
-    # 因为需要等到第一条统计数据统计进结果中去才可以断言通过
+    # Because you need to wait until the first statistical data is counted in the result before you can assert that it passes
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}  | dble_information   |
-    # 查看queueMonitor状态，因为它的状态变更需要时间
+    # Check the status of queueMonitor, because its status change takes time
     Given sleep "4" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_6"
       | conn   | toClose  | sql                             | db               |
@@ -155,7 +155,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON             |
       | samplingRate             | 0              |
       | queueMonitor             | monitoring     |
-    # 再sleep 1s 凑足6s 开始中断队列监控
+    # one more seconds is needed, in addition to the previous sleep duration, the actual total is 6s,then "stop @@statistic_queue_monitor;"
     Given sleep "1" seconds
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect       | db                 |
@@ -163,7 +163,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
-    # 再sleep 2s，一个intervalTime周期，再次查看sql统计条数没有增加
+    # we need a intervalTime，checking "show @@statistic_queue.usage;"
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -203,7 +203,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计和采样统计
+    # enable @@statistic; & reload @@samplingRate = 20;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                 | success  | dble_information   |
@@ -216,7 +216,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON            |
       | samplingRate             | 20            |
       | queueMonitor             | -             |
-    # 开启队列统计 observeTime为默认合法值，而intervalTime为指定值，并省略单位，默认单位为s
+    #  test default observeTime & given normal intervalTime (default unit for observeTime & intervalTime is seconds)
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                  | expect                                                                                       | db               |
       | conn_0 | False    | start @@statistic_queue_monitor intervalTime = 10;   | The sql does not match: start @@statistic_queue_monitor observeTime = ? and intervalTime = ? | dble_information |
@@ -231,11 +231,11 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
-    # 开启队列统计 intervalTime为默认合法值，而observeTime为指定值，并省略单位，默认单位为s
+    # test default intervalTime & given normal observeTime (default unit for observeTime & intervalTime is seconds)
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                  | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 10;    | success  | dble_information |
-    # sleep 5s，查看监控状态
+    # sleep 5s，a default intervalTime cycle
     Given sleep "5" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_10"
       | conn   | toClose  | sql                             | db               |
@@ -245,7 +245,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | ON            |
       | samplingRate             | 20            |
       | queueMonitor             | monitoring    |
-    # 再 sleep 10s，加上之前的5s，是observeTime加上一个intervalTime周期，查看监控状态
+    # more 10s，equal [observeTime + a intervalTime cycle]，checking queueMonitor
     Given sleep "10" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_11"
       | conn   | toClose  | sql                             | db               |
@@ -258,7 +258,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(3)}   | dble_information   |
-    # 清理历史statistic_queue.usage信息
+    # clean env
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
@@ -286,7 +286,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计和采样统计
+    # enable @@statistic; & reload @@samplingRate = 20;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                 | success  | dble_information   |
@@ -300,7 +300,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | -             |
 
-    # 开启队列监控，首次
+    # start @@statistic_queue_monitor，the first time
     #start @@statistic_queue_monitor observeTime =10min and intervalTime = 2;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect   | db               |
@@ -308,7 +308,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_13"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
-    # 查看queueMonitor状态，因为它的状态变更需要时间
+    # Check the status of queueMonitor, because its status change takes time
     Given sleep "3" seconds
     Then check resultset "res_13" has lines with following column values
       | NAME-0                   | VALUE-1       |
@@ -318,11 +318,11 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
-    # 开启队列监控时，再次 开启队列监控会报错
+    # start @@statistic_queue_monitor，the second time,error occurred with the first statistic_queue_monitor is running
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                       | expect                                                                                  | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =4M and intervalTime = 3;     | In the monitoring..., can use 'stop @@statistic_queue_monitor' to interrupt monitoring  | dble_information |
-    # sleep 3s，查看监控状态，如果是旧的规则，则会有4条记录，若新的规则生效则会有2条数据
+    # sleep 3s，checking statistic_queue_monitor，the second statistic_queue_monitor didn't work
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -337,7 +337,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | monitoring    |
 
-    # 关全量统计，查看队列监控的状态，由于采样统计仍为开启的状态，所以队列监控的状态仍然在继续
+    #disable statistics and check the status of queue monitoring. Since sampling statistics are still open, the status of queue monitoring is still continuing
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | disable @@statistic;                     | success  | dble_information   |
@@ -349,7 +349,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 20            |
       | queueMonitor             | monitoring    |
-    # 查看监控状态，仍然会有4条记录，下次过了一个intervalTime后，会增加一条记录，说明队列监控确实没有停
+    # Check the monitoring status, there will still be 4 records.
+    # Next time after a intervalTime cycle, a new record will be added, indicating that the queue monitoring does not stop.
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
@@ -360,7 +361,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
 
-    # 也关闭采样统计，查看队列监控的状态，由于全量和采样统计都关闭了，所以队列监控也应该是关闭的状态
+    # Also close the sampling statistics and check the status of the queue monitoring.
+    # Since the full volume and sampling statistics are closed, the queue monitoring should also be closed.
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | reload @@samplingRate = 0;               | success  | dble_information   |
@@ -372,7 +374,8 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 查看监控状态，仍然会有4条记录，下次过了一个intervalTime后，并没有增加一条记录，说明队列监控确实被关闭
+    # Check the monitoring status, there will still be 4 records.
+    # After an intervalTime cycle , no new record is added again, indicating that the queue monitoring is indeed closed.
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
@@ -383,7 +386,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
 
-    # 清理历史statistic_queue.usage信息
+    # clean env
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
@@ -412,7 +415,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计和采样统计
+    # enable @@statistic; & reload @@samplingRate = 20;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                 | success  | dble_information   |
@@ -426,13 +429,13 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | -             |
 
-    #  intervalTime为默认合法值，而observeTime为指定非法值/observeTime为合法值，但observeTime<intervalTime ，开启队列监控，失败
+    # Error occurred when intervalTime defalut value,but observeTime illegal/(observeTime legal value & observeTime < intervalTime)
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                  | expect                                                                           | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = -1h;   | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 0min;  | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 2s;    | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
-    #  intervalTime为指定合法值，而observeTime为指定非法值/observeTime为合法值，但observeTime<intervalTime ，开启队列监控，失败
+    # Error occurred when intervalTime given value,but observeTime illegal/(observeTime legal value & observeTime < intervalTime)
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                            | expect                                                                           | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = -1h and intervalTime = 3;        | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
@@ -442,7 +445,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_17"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
-    # 查看queueMonitor状态,未开启 值为空
+    # check queueMonitor status is "-"
     Then check resultset "res_17" has lines with following column values
       | NAME-0                   | VALUE-1       |
       | statistic                | ON            |
@@ -452,12 +455,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
 
-    # observeTime为合法值，但intervalTime为异常值 ，开启队列监控，失败
+    # Error occurred when intervalTime using illegal value
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect                                                                           | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =10H and intervalTime = -3s;   | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =3MIN and intervalTime = 0s;   | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
-    # observeTime,intervalTime均为异常值 ，开启队列监控，失败
+    # Error occurred when both intervalTime and observeTime using illegal value
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect                                                                           | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =0H and intervalTime = -12s;   | Rule: must be a positive integer, observeTime > intervalTime, Unit: (s,m/min,h)  | dble_information |
@@ -466,7 +469,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_18"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
-    # 查看queueMonitor状态,未开启 值为空
+    # check queueMonitor status is "-"
     Then check resultset "res_18" has lines with following column values
       | NAME-0                   | VALUE-1       |
       | statistic                | ON            |
@@ -476,7 +479,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
 
-    # 清理历史statistic_queue.usage信息
+    # clean env
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
@@ -504,7 +507,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计
+    # enable @@statistic;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                 | success  | dble_information   |
@@ -517,7 +520,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 0             |
       | queueMonitor             | -             |
 
-    # 开启队列监控
+    # start @@statistic_queue_monitor
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 2H and intervalTime = 1S;    | success  | dble_information |
@@ -532,11 +535,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(1)}   | dble_information   |
-    # 执行reload @@samplingRate = 0;关闭采样统计(由于采样统计本来就是关闭状态，则这个操作不应该影响正在运行的sql全量统计和队列使用率监控)
+    # reload @@samplingRate = 0;Since the sampling statistics are closed before, this operation should not affect the running statistics and queue usage monitoring
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect   | db               |
       | conn_0 | False    | reload @@samplingRate = 0;             | success  | dble_information |
-    # sleep 1s，查看监控状态，由于采样统计仍为开启的状态，所以队列监控的状态仍然在继续
+    # sleep 1s，check the monitoring status.
+      # Since the sampling statistics are still runningn, the queue monitoring status is still continuing
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -551,11 +555,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 0             |
       | queueMonitor             | monitoring    |
 
-    # 关全量统计，查看队列监控的状态，由于采样统计已为关闭的状态，所以队列监控的状态应该被停掉
+    # Turn off the full statistics and check the status of the queue monitoring.
+      # Since the sampling statistics has been turned off, the status of the queue monitoring should be stopped
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | disable @@statistic;                     | success  | dble_information   |
-    # sleep 1s，即一个 intervalTime周期，查看监控输出，没有新增，查看状态，队列监控停止
+    # sleep 1s，an intervalTime cycle,Check the monitoring output, there is no new addition, the queue monitoring stops
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -570,7 +575,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 0             |
       | queueMonitor             | -             |
 
-    # 清理历史statistic_queue.usage信息
+    # clean env
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
@@ -598,7 +603,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计
+    # reload @@samplingRate = 20;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | reload @@samplingRate = 20;         | success  | dble_information   |
@@ -611,14 +616,14 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | -             |
 
-    # 开启队列监控
+    # start @@statistic_queue_monitor
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime = 30 and intervalTime = 2;     | success  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_24"
       | conn   | toClose  | sql                             | db               |
       | conn_0 | False    | show @@statistic;               | dble_information |
-    # 查看queueMonitor状态，因为它的状态变更需要时间
+    # Check the status of queueMonitor, because its status change takes time
     Given sleep "2" seconds
     Then check resultset "res_24" has lines with following column values
       | NAME-0                   | VALUE-1       |
@@ -628,11 +633,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
-    # 执行disable @@statistic;关闭sql全量统计(由于全量统计本来就是关闭状态，则这个操作不应该影响正在运行的sql采样统计和队列使用率监控)
+    # disable @@statistic;Since the full statistics was closed before, this operation should not affect the running sampling statistics and queue usage monitoring
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect   | db               |
       | conn_0 | False    | disable @@statistic;                   | success  | dble_information |
-    # sleep 2s 一个intervalTime周期，查看监控状态，由于采样统计仍为开启的状态，所以队列监控的状态仍然在继续
+    # sleep 2s an intervalTime cycle,Check the monitoring status.
+      # Since the sampling statistics are still running, the queue monitoring status is still continuing
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -647,11 +653,12 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | monitoring    |
 
-    # 关采样统计，查看队列监控的状态，由于全量统计已为关闭的状态，所以队列监控的状态应该被停掉
+    # Turn off the sampling statistics and check the status of the queue monitoring.
+      # Since the full statistics has been turned off, the status of the queue monitoring should be stopped
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                      | expect   | db                 |
       | conn_0 | False    | reload @@samplingRate = 0;               | success  | dble_information   |
-    # sleep 2s，即一个 intervalTime周期，查看监控输出，没有新增，查看状态，队列监控停止
+    # sleep 2s，an intervalTime cycle,Check the monitoring output, there is no new addition, check the status, the queue monitoring stops
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
@@ -666,7 +673,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 0             |
       | queueMonitor             | -             |
 
-    # 清理历史statistic_queue.usage信息
+    # clean env
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
@@ -694,7 +701,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | statistic                | OFF           |
       | samplingRate             | 0             |
       | queueMonitor             | -             |
-    # 开启sql全量统计和采样统计
+    # enable @@statistic; & reload @@samplingRate = 20;
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                 | expect   | db                 |
       | conn_0 | False    | enable @@statistic;                 | success  | dble_information   |
@@ -708,11 +715,11 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | samplingRate             | 20            |
       | queueMonitor             | -             |
 
-    # 开启队列监控
+    # start @@statistic_queue_monitor
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                                                        | expect   | db               |
       | conn_0 | False    | start @@statistic_queue_monitor observeTime =10MIN and intervalTime = 2;   | success  | dble_information |
-    # 查看queueMonitor状态，因为它的状态变更需要时间
+    # Check the status of queueMonitor, because its status change takes time
     Given sleep "2" seconds
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_28"
       | conn   | toClose  | sql                             | db               |
@@ -725,7 +732,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | True     | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
-    # 重启dble后，检测队列监控的情况，sql统计仍然开启，但队列使用率的状态为停止状态
+    # after restart dble, checking statistic & samplingRate still working while check queueMonitor status is "-"
     Given Restart dble in "dble-1" success
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_29"
       | conn   | toClose  | sql                             | db               |
@@ -740,7 +747,7 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
 
-    # 清理历史statistic_queue.usage信息
+    # clean env
     Given execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
