@@ -28,7 +28,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                       | expect                                              | db               |
       | conn_0 | False    | start @@statistic_queue_monitor;          | Statistic is disabled and samplingRate value is 0   | dble_information |
-      | conn_0 | False    | show @@statistic_queue.usage;             | success                                             | dble_information |
       | conn_0 | False    | show @@statistic_queue.usage;             | length{(0)}                                         | dble_information |
       | conn_0 | False    | stop @@statistic_queue_monitor;           | success                                             | dble_information |
       | conn_0 | False    | drop @@statistic_queue.usage;             | success                                             | dble_information |
@@ -102,7 +101,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -181,7 +179,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -264,7 +261,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -326,7 +322,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given sleep "3" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_14"
       | conn   | toClose  | sql                             | db               |
@@ -353,12 +348,10 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     # Next time after a intervalTime cycle, a new record will be added, indicating that the queue monitoring does not stop.
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(4)}   | dble_information   |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
 
     # Also close the sampling statistics and check the status of the queue monitoring.
@@ -378,12 +371,10 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     # After an intervalTime cycle , no new record is added again, indicating that the queue monitoring is indeed closed.
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(5)}   | dble_information   |
 
     # clean env
@@ -392,7 +383,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -485,7 +475,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -544,7 +533,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_21"
       | conn   | toClose  | sql                             | db               |
@@ -564,7 +552,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given sleep "1" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(2)}   | dble_information   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_22"
       | conn   | toClose  | sql                             | db               |
@@ -581,7 +568,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -642,7 +628,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(3)}   | dble_information   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_25"
       | conn   | toClose  | sql                             | db               |
@@ -662,7 +647,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
     Given sleep "2" seconds
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(3)}   | dble_information   |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "res_26"
       | conn   | toClose  | sql                             | db               |
@@ -679,7 +663,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
@@ -744,7 +727,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | queueMonitor             | -             |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
 
     # clean env
@@ -753,7 +735,6 @@ Feature: start @@statistic_queue_monitor [observeTime = ? [and intervalTime = ?]
       | conn_0 | False    | drop @@statistic_queue.usage;          | success       | dble_information   |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose  | sql                                    | expect        | db                 |
-      | conn_0 | False    | show @@statistic_queue.usage;          | success       | dble_information   |
       | conn_0 | False    | show @@statistic_queue.usage;          | length{(0)}   | dble_information   |
       | conn_0 | False    | disable @@statistic;                   | success       | dble_information   |
       | conn_0 | True     | reload @@samplingRate = 0;             | success       | dble_information   |
