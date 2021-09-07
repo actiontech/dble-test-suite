@@ -82,7 +82,7 @@ Feature: test show @@help
       | online                                                                                              | Change Server status to ON                                                        |
       | flow_control @@show                                                                                 | Show the current config of the flow control                                       |
       | flow_control @@list                                                                                 | List all the connection be flow-control now                                       |
-      | flow_control @@set [enableFlowControl = true/false] [flowControlStart = ?] [flowControlEnd = ?]     | Change the config of flow control                                                 |
+      | flow_control @@set [enableFlowControl = true/false] [flowControlHighLevel = ?] [flowControlLowLevel = ?] | Change the config of flow control                                                 |
       | dryrun                                                                                              | Dry run to check config before reload xml                                         |
       | pause @@shardingNode = 'dn1,dn2,....' and timeout = ? [,queue = ?,wait_limit = ?]                   | Block query requests witch specified shardingNodes involved                       |
       | RESUME                                                                                              | Resume the query requests of the paused shardingNodes                             |
