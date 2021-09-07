@@ -31,10 +31,18 @@ done
 #clear xa id in mysql-master
 for((i=1; i<5; i=i+1)); do
 	echo "clear xa in ${mysql_install_all[$i]}"
-	xid=(`ssh root@${mysql_install_all[$i]}  "mysql -uroot -p111111 -e 'xa recover'|grep -v data|awk '{print $4}'"`)
-	for ((j=0;j<${#xid[@]};j++));do
+	xid=(`ssh root@${mysql_install_all[$i]}  "mysql -uroot -p111111 -e 'xa recover'|grep -v data|cut -f 4"`)
+	#check if remained xid or not
+	if [ ${#xid[@]} -eq 0 ];then
+	  echo "There is no remained xid in ${mysql_install_all[$i]}"
+	  continue
+	else
+	  echo "need rollback xids in ${mysql_install_all[$i]} are ${xid}"
+	  for ((j=0;j<${#xid[@]};j++));do
+	      echo "rollback xid is ${xid[j]}"
         ssh root@${mysql_install_all[$i]}  "mysql -uroot -p111111 -e\"xa rollback '${xid[j]}'\""
     done
+	fi
 done
 
 echo "reset replication for mysql5.7"
