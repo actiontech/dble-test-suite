@@ -171,7 +171,7 @@ Feature: sharding basic config test
       | conn_0 | False   | reload @@slow_query.flushsize = 500                                                    | success        |
       | conn_0 | True    | show @@slow_query.flushsize                                                            | has{('500',)}  |
 
-      | conn_0 | False   | flow_control @@set enableFlowControl = true flowControlStart= 200 flowControlEND = 100 | success        |
+      | conn_0 | False   | flow_control @@set enableFlowControl = true flowControlHighLevel= 200 flowControlLowLevel = 100 | success        |
 
     Then check following text exist "Y" in file "/opt/dble/conf/bootstrap.dynamic.cnf" in host "dble-1"
     """
@@ -180,8 +180,8 @@ Feature: sharding basic config test
     flushSlowLogPeriod=200
     sqlSlowTime=200
     enableFlowControl=true
-    flowControlStartThreshold=200
-    flowControlStopThreshold=100
+    flowControlHighLevel=200
+    flowControlLowLevel=100
     """
 
     Then Restart dble in "dble-1" success
@@ -193,8 +193,8 @@ Feature: sharding basic config test
     flushSlowLogPeriod=200
     sqlSlowTime=200
     enableFlowControl=true
-    flowControlStartThreshold=200
-    flowControlStopThreshold=100
+    flowControlHighLevel=200
+    flowControlLowLevel=100
     """
 
   Scenario: config with Multi_sharding tables, reload success #10
