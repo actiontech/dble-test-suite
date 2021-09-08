@@ -280,7 +280,7 @@ Feature: check dble_xa_recover and exception xa transactions
     """
     XA COMMIT
     Dble_Server.1.1.db1.schema1.sharding_4_t1
-    con query sql:XA RECOVER to con:BackendConnection
+    XA RECOVER to con:BackendConnection
     """
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
