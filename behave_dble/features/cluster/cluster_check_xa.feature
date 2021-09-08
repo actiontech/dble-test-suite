@@ -5,8 +5,11 @@
 
 Feature: on zookeeper to check "xa"
 
-  @btrace
+  @btrace @restore_xa_recover
   Scenario: check during xa ,check xalog on zookeeper #1
+   """
+   {'restore_xa_recover':['mysql-master1', 'mysql-master2']}
+   """
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose  | sql                                                     | expect   | db       |
       | conn_1 | False    | drop table if exists sharding_4_t1                      | success  | schema1  |
@@ -25,6 +28,8 @@ Feature: on zookeeper to check "xa"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1  >/tmp/dble_zk_xa.log 2>&1 &
       """
+    #sleep 1s, in case of dble_zk_xa.log not generated(add due to historic ci issue)
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_zk_xa.log" in host "dble-1"
       """
       xalog
