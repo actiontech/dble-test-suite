@@ -113,7 +113,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                                                           | expect                                                        |
       | conn_0 | false   | show @@data_distribution where table ='schema1.test'          | has{(('dn1', 770), ('dn2', 768), ('dn3', 769), ('dn4', 768))} |
-#case 2.3.2  backend mysql drop table,the result will be reture "occur Exception"
+#case 2.3.2  backend mysql drop table,the result will be return "occur Exception"
     Given record current dble log line number in "log_linenu"
     Then execute sql in "mysql-master2"
       | conn   | toClose | sql                                          | expect       | db  |
@@ -124,7 +124,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     error response errNo:1146, Table
-    exist from of sql :SELECT COUNT
+    SELECT COUNT
     AS COUNT FROM test
     """
 #case 2.4 :insert more values on sharding table function :Hash,the result will be correct
@@ -174,7 +174,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     error response errNo:1146, Table
-    exist from of sql :SELECT COUNT
+    SELECT COUNT
     AS COUNT FROM sharding_2_t1
     """
 #case 2.5 :insert more values on sharding table function :fixed_uniform_string_rule ,the result will be correct
@@ -227,7 +227,7 @@ Feature: test manager command :show @@data_distribution where table ='schema.tab
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
     error response errNo:1146, Table
-    exist from of sql :SELECT COUNT
+    SELECT COUNT
     AS COUNT FROM sharding_4_t3
     """
     Then execute sql in "dble-1" in "user" mode
