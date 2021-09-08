@@ -248,7 +248,7 @@ Feature: heartbeat basic test
     #DBLE0REQ-960
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-   \[select user()\] is closed, due to stream closed by peer, we will try again immediately
+    select user()\] is closed, due to stream closed by peer, we will try again immediately
     retry to do heartbeat for the 3 times
     """
     Then execute sql in "dble-1" in "user" mode
