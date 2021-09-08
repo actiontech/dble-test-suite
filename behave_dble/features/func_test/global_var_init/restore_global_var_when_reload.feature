@@ -24,7 +24,7 @@ Feature: if dble rebuild conn pool with reload, then global vars dble concerned 
     When execute admin cmd "reload @@config_all -r" success
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
     """
-    con query sql:select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
+    select @@lower_case_table_names,@@autocommit,@@read_only,@@max_allowed_packet,@@tx_isolation
     """
     Then check general log in host "mysql-master1" has not "set global autocommit=1"
     Then check general log in host "mysql-master2" has not "set global autocommit=1"
