@@ -252,44 +252,44 @@ Feature: test addition, deletion and modification of dble_information on the man
     "dbInstance":\[{"name":"hostM3","url":"172.100.9.1:3307","password":"111111","user":"test","maxCon":1000,"minCon":10,"usingDecrypt":"false","disabled":"true","id":"hostM3","readWeight":"1","primary":true,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"200","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},
     {"value":"false","name":"testOnBorrow"},{"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"1","name":"timeBetweenEvictionRunsMillis"},
-    {"value":"1","name":"evictorShutdownTimeoutMillis"},{"value":"1","name":"idleTimeout"},{"value":"1","name":"heartbeatPeriodMillis"}\]
+    {"value":"1","name":"evictorShutdownTimeoutMillis"},{"value":"1","name":"idleTimeout"},{"value":"1","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"name":"hostS31","url":"172.100.9.2:3307","password":"111111","user":"test","maxCon":10,"minCon":1,"usingDecrypt":"false","disabled":"false","id":"hostS31","readWeight":"2","primary":false,
     "property":\[{"value":"3","name":"connectionTimeout"},{"value":"1","name":"connectionHeartbeatTimeout"},{"value":"true","name":"testOnCreate"},{"value":"true","name":"testOnBorrow"},
     {"value":"true","name":"testOnReturn"},{"value":"true","name":"testWhileIdle"},{"value":"2","name":"timeBetweenEvictionRunsMillis"},{"value":"2","name":"evictorShutdownTimeoutMillis"},
-    {"value":"2","name":"idleTimeout"},{"value":"2","name":"heartbeatPeriodMillis"}\]
+    {"value":"2","name":"idleTimeout"},{"value":"2","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"name":"hostS32","url":"172.100.9.3:3307","password":"111111","user":"test","maxCon":99,"minCon":2,"usingDecrypt":"false","disabled":"true","id":"hostS32","readWeight":"3","primary":false,
     "property":\[{"value":"5","name":"connectionTimeout"},{"value":"2","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"1","name":"timeBetweenEvictionRunsMillis"},{"value":"1","name":"evictorShutdownTimeoutMillis"},
-    {"value":"1","name":"idleTimeout"},{"value":"1","name":"heartbeatPeriodMillis"}\]
+    {"value":"1","name":"idleTimeout"},{"value":"1","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"rwSplitMode":2,"name":"ha_group4","delayThreshold":1000,"disableHA":"false","heartbeat":{"value":"select 2","timeout":100,"errorRetryCount":1},
     "dbInstance":\[{"name":"hostM4","url":"172.100.9.5:3307","password":"111111","user":"test","maxCon":99,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
-    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
+    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"rwSplitMode":2,"name":"ha_group5","delayThreshold":999,"disableHA":"true","heartbeat":{"value":"show slave status","timeout":88,"errorRetryCount":1},
     "dbInstance":\[{"name":"hostM5","url":"172.100.9.10:3307","password":"111111","user":"test","maxCon":99,"minCon":1,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
-    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
+    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"name":"hostS51","url":"172.100.9.11:3307","password":"111111","user":"test","maxCon":99,"minCon":0,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":false,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
-    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
+    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"name":"hostS52","url":"172.100.9.12:3307","password":"111111","user":"test","maxCon":99,"minCon":0,"usingDecrypt":"false","disabled":"false","readWeight":"3","primary":false,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
-    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
+    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"rwSplitMode":0,"name":"ha_group6","delayThreshold":-1,"disableHA":"true","heartbeat":{"value":"select @@read_only","timeout":1,"errorRetryCount":2},
     "dbInstance":\[{"name":"hostM6","url":"172.100.9.9:3307","password":"111111","user":"test","maxCon":9,"minCon":4,"usingDecrypt":"false","disabled":"false","readWeight":"0","primary":true,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
-    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
+    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     {"rwSplitMode":1,"name":"ha_group7","delayThreshold":-1,"disableHA":"false","heartbeat":{"value":"select 3","timeout":0,"errorRetryCount":1},
     "dbInstance":\[{"name":"hostM7","url":"172.100.9.3:3307","password":
     ","user":"test","maxCon":9,"minCon":4,"usingDecrypt":"true","disabled":"false","id":"hostM7","readWeight":"0","primary":true,
     "property":\[{"value":"30000","name":"connectionTimeout"},{"value":"20","name":"connectionHeartbeatTimeout"},{"value":"false","name":"testOnCreate"},{"value":"false","name":"testOnBorrow"},
     {"value":"false","name":"testOnReturn"},{"value":"false","name":"testWhileIdle"},{"value":"30000","name":"timeBetweenEvictionRunsMillis"},{"value":"10000","name":"evictorShutdownTimeoutMillis"},
-    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"}\]
+    {"value":"600000","name":"idleTimeout"},{"value":"10000","name":"heartbeatPeriodMillis"},{"value":"4194304","name":"flowHighLevel"},{"value":"262144","name":"flowLowLevel"}\]
     """
 
 
