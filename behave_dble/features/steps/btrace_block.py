@@ -59,10 +59,7 @@ def step_impl(context, btraceScript, host):
 
         thd.setDaemon(True)
         thd.start()
-
-        # for btrace into work
-        time.sleep(2)
-        # run_btrace_script(sshClient, remoteFile)
+        thd.join()
 
 @Given('execute sqls in "{host}" at background')
 def step_impl(context, host):

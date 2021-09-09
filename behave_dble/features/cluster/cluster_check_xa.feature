@@ -28,8 +28,6 @@ Feature: on zookeeper to check "xa"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh  ls /dble/cluster-1  >/tmp/dble_zk_xa.log 2>&1 &
       """
-    #sleep 1s, in case of dble_zk_xa.log not generated(add due to historic ci issue)
-    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_zk_xa.log" in host "dble-1"
       """
       xalog
