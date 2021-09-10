@@ -13,7 +13,6 @@ from behave import *
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.utils import get_sftp, get_ssh, get_node
 
-global btraceRunningSuccess
 global btrace_threads
 btrace_threads = []
 
@@ -58,7 +57,7 @@ def step_impl(context, btraceScript, host):
         remoteFile = "{0}/dble/{1}".format(node.install_dir, btraceScript)
         sftpClient.sftp_put(localFile, remoteFile)
 
-        global btrace_threads, btraceRunningSuccess
+        global btrace_threads
         thd = Thread(target=run_btrace_script, args=(sshClient, remoteFile), name=btraceScript)
         btrace_threads.append(thd)
 
