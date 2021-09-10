@@ -65,10 +65,15 @@ def step_impl(context, btraceScript, host):
         thd.start()
 
         # make sure the btrace is working
-        btraceRunningSuccess = False
-        while not btraceRunningSuccess:
-            btraceRunningSuccess = check_btrace_running(sshClient, btraceScript)
-            time.sleep(2)
+        btraceRunningSuccess = check_btrace_running(sshClient, btraceScript)
+        while True:
+            if btraceRunningSuccess:
+                context.logger.debug("isBtraceRunning: {0} after try to run {1}".format(btraceRunningSuccess, btraceScript))
+                break
+            else:
+                context.logger.debug("isBtraceRunning: {0} after try to run {1}, sleep 2s to wait for btrace running!".format(btraceRunningSuccess, btraceScript))
+                time.sleep(2)
+                btraceRunningSuccess = check_btrace_running(sshClient, btraceScript)
 
 
 @Given('execute sqls in "{host}" at background')
