@@ -13,6 +13,7 @@ from behave import *
 from steps.lib.QueryMeta import QueryMeta
 from steps.lib.utils import get_sftp, get_ssh, get_node
 
+global btraceRunningSuccess
 global btrace_threads
 btrace_threads = []
 
@@ -57,7 +58,7 @@ def step_impl(context, btraceScript, host):
         remoteFile = "{0}/dble/{1}".format(node.install_dir, btraceScript)
         sftpClient.sftp_put(localFile, remoteFile)
 
-        global btrace_threads
+        global btrace_threads, btraceRunningSuccess
         thd = Thread(target=run_btrace_script, args=(sshClient, remoteFile), name=btraceScript)
         btrace_threads.append(thd)
 
@@ -65,15 +66,18 @@ def step_impl(context, btraceScript, host):
         thd.start()
 
         # make sure the btrace is working
-        btraceRunningSuccess = check_btrace_running(sshClient, btraceScript)
-        while True:
-            if btraceRunningSuccess:
-                context.logger.debug("isBtraceRunning: {0} after try to run {1}".format(btraceRunningSuccess, btraceScript))
-                break
-            else:
-                context.logger.debug("isBtraceRunning: {0} after try to run {1}, sleep 2s to wait for btrace running!".format(btraceRunningSuccess, btraceScript))
-                time.sleep(2)
+        check_btrace_status_count = 0
+        while check_btrace_status_count <= 5:
+            try:
                 btraceRunningSuccess = check_btrace_running(sshClient, btraceScript)
+                if btraceRunningSuccess:
+                    context.logger.debug("isBtraceRunning: {0} after try to run {1}, total sleep {2} seconds waiting for the btrace started".format(btraceRunningSuccess, btraceScript, check_btrace_status_count * 2))
+                    break
+                else:
+                    time.sleep(2)
+                    check_btrace_status_count = check_btrace_status_count + 1
+            except Exception as e:
+                raise
 
 
 @Given('execute sqls in "{host}" at background')
