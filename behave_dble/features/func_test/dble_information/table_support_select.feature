@@ -16,7 +16,7 @@ Feature:  show databases/use dble_information/show tables [like]
 #case  begin query with error shcema or not exists schema
       | conn_0 | False   | desc dble_infor.version                | Unknown database 'dble_infor'                                          |
       | conn_0 | False   | describe schema1.version               | Unknown database 'schema1'                                             |
-      | conn_0 | False   | select * from schema1.version          | get error call manager command schema schema1 doesn't exist!           |
+      | conn_0 | False   | select * from schema1.version          | get error call manager command: schema schema1 doesn't exist!           |
 #case show databases correct or erroneous spelling
       | conn_0 | False   | show database                          | Unsupported statement                                                  |
       | conn_0 | False   | show databasesl                        | Unsupported statement                                                  |
@@ -42,7 +42,7 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | descc version                          | Unsupported statement                                                  |
       | conn_0 | False   | desc versio                            | Table `dble_information`.`versio` doesn't exist                        |
       | conn_0 | False   | select * froom version                 | Unsupported statement                                                  |
-      | conn_0 | False   | select * from versio                   | get error call manager command table versio doesn't exist!             |
+      | conn_0 | False   | select * from versio                   | get error call manager command: table versio doesn't exist!             |
 #case Unsupported create database/table or alter table
       | conn_0 | False   | create database test                                       | The sql did not match create\|drop database @@shardingNode ='dn......' |
       | conn_0 | False   | create table test (id int)                                 | The sql did not match create\|drop database @@shardingNode ='dn......' |
