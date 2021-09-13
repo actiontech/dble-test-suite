@@ -9,7 +9,7 @@ Feature: test show @@help
   Scenario: test "show @@help" #1
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose | sql                     | expect         | db               |
-      | conn_0 | False   | show @@help             | length{(111)}  | dble_information |
+      | conn_0 | False   | show @@help             | length{(112)}  | dble_information |
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "rs_A"
       | sql         |
       | show @@help |
@@ -21,6 +21,7 @@ Feature: test show @@help
       | show @@version                                                                                      | Report Server version                                                             |
       | show @@server                                                                                       | Report server status                                                              |
       | show @@threadpool                                                                                   | Report threadPool status                                                          |
+      | show @@threadpool.task                                                                              | Report status of threadPool task                                                  |
       | show @@database                                                                                     | Report databases                                                                  |
       | show @@shardingNode [where schema = ?]                                                              | Report shardingNodes                                                              |
       | show @@dbinstance [where shardingNode = ?]                                                          | Report dbinstance                                                                 |
