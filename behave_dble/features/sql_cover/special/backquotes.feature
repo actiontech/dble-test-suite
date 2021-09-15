@@ -37,6 +37,6 @@ Feature: verify table name or schema name enclosed by backquotes can work fine
       | test | 111111 | conn_0 | False    |   explain select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having `sid` > 1 | success  | schema1 |
       | test | 111111 | conn_0 | False    |   explain select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1   | success  | schema1 |
       | test | 111111 | conn_0 | True     |   explain select `a`.`id_0` as sid from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1   | success  | schema1 |
-      | test | 111111 | conn_0 | False    |   select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having `sid` > 1 | hasStr{(2L,)}  | schema1 |
+      | test | 111111 | conn_0 | False    |   select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having `sid` > 1 | hasStr{(2,)}  | schema1 |
       | test | 111111 | conn_0 | False    |   select `a`.`id_0` as `sid` from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1   | length{(1)}  | schema1 |
       | test | 111111 | conn_0 | True     |   select `a`.`id_0` as sid from `sharding_enum_string_t1` as `a` where id in ('aaa', 'bbb') having sid > 1   | length{(1)}  | schema1 |

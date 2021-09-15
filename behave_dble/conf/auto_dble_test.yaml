@@ -28,7 +28,7 @@ cfg_dble:
       ip: 172.100.9.3
       hostname: dble-3
   packet_name: actiontech-dble.tar.gz
-  ftp_path: ftp://10.186.18.20/actiontech-dble/qa/2.19.11.99/
+  ftp_path: ftp://10.186.18.90/actiontech-dble/qa/2.19.11.99/
   sql_cover_log: sql_cover_log
 cfg_mysql:
   user: test
