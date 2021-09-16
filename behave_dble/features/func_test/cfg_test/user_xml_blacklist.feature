@@ -104,6 +104,7 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
             <property name="alterTableAllow">false</property>
             <property name="renameTableAllow">false</property>
             <property name="createTableAllow">false</property>
+            <property name="noneBaseStatementAllow">false</property>
        </blacklist>
       """
     Then execute admin cmd "reload @@config_all"
@@ -112,14 +113,16 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
       | test1  | 111111   | conn_0 | False   | drop table if exists test                   | Intercepted by suspected configuration [dropTableAllow] in the blacklist of user 'test1', so it is considered unsafe SQL    | schema1 |
       | test1  | 111111   | conn_0 | False   | create table test(id int)                   | Intercepted by suspected configuration [createTableAllow] in the blacklist of user 'test1', so it is considered unsafe SQL  | schema1 |
       | test1  | 111111   | conn_0 | False   | alter table test add id2 int                | Intercepted by suspected configuration [alterTableAllow] in the blacklist of user 'test1', so it is considered unsafe SQL   | schema1 |
-      | test1  | 111111   | conn_0 | true    | rename table test to test1                  | Intercepted by suspected configuration [renameTableAllow] in the blacklist of user 'test1', so it is considered unsafe SQL  | schema1 |
+      | test1  | 111111   | conn_0 | False   | rename table test to test1                  | Intercepted by suspected configuration [renameTableAllow] in the blacklist of user 'test1', so it is considered unsafe SQL  | schema1 |
+      | test1  | 111111   | conn_0 | true    | set session transaction isolation level read committed | Intercepted by suspected configuration [noneBaseStatementAllow] in the blacklist of user 'test1', so it is considered unsafe SQL | schema1|
 
     Then execute sql in "dble-1" in "user" mode
       | user   | passwd   | conn   | toClose | sql                                         | expect                                                                                                                      | db      |
       | rwSp1  | 111111   | conn_2 | False   | drop table if exists test                   | Intercepted by suspected configuration [dropTableAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL    | db1     |
       | rwSp1  | 111111   | conn_2 | False   | create table test(id int)                   | Intercepted by suspected configuration [createTableAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL  | db1     |
       | rwSp1  | 111111   | conn_2 | False   | alter table test add id2 int                | Intercepted by suspected configuration [alterTableAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL   | db1     |
-      | rwSp1  | 111111   | conn_2 | true    | rename table test to test1                  | Intercepted by suspected configuration [renameTableAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL  | db1     |
+      | rwSp1  | 111111   | conn_2 | False   | rename table test to test1                  | Intercepted by suspected configuration [renameTableAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL  | db1     |
+      | rwSp1  | 111111   | conn_2 | true    | set session transaction isolation level read committed | Intercepted by suspected configuration [noneBaseStatementAllow] in the blacklist of user 'rwSp1', so it is considered unsafe SQL | db1|
 
     Given add xml segment to node with attribute "{'tag':'root'}" in "user.xml"
       """
@@ -131,24 +134,27 @@ Feature: test user.xml blacklist  -- including sharding user & rwSplit user
             <property name="alterTableAllow">true</property>
             <property name="renameTableAllow">true</property>
             <property name="createTableAllow">true</property>
+            <property name="noneBaseStatementAllow">true</property>
        </blacklist>
       """
     Then execute admin cmd "reload @@config_all"
     Then execute sql in "dble-1" in "user" mode
-      | user  | passwd  | conn   | toClose | sql                                         | expect                    | db      |
-      | test  | 111111  | conn_1 | False   | drop table if exists test                   | success                   | schema1 |
-      | test  | 111111  | conn_1 | False   | create table test(id int)                   | success                   | schema1 |
-      | test  | 111111  | conn_1 | False   | alter table test add id2 int                | success                   | schema1 |
-      | test  | 111111  | conn_1 | False   | rename table test to test1                  | Unsupported statement     | schema1 |
-      | test  | 111111  | conn_1 | true    | drop table if exists test1                  | success                   | schema1 |
+      | user  | passwd  | conn   | toClose | sql                                                     | expect                    | db      |
+      | test  | 111111  | conn_1 | False   | drop table if exists test                               | success                   | schema1 |
+      | test  | 111111  | conn_1 | False   | create table test(id int)                               | success                   | schema1 |
+      | test  | 111111  | conn_1 | False   | alter table test add id2 int                            | success                   | schema1 |
+      | test  | 111111  | conn_1 | False   | rename table test to test1                              | Unsupported statement     | schema1 |
+      | test  | 111111  | conn_1 | False   | drop table if exists test1                              | success                   | schema1 |
+      | test  | 111111  | conn_1 | true    | set session transaction isolation level read committed  | success                   | schema1 |
 
     Then execute sql in "dble-1" in "user" mode
-      | user   | passwd   | conn   | toClose | sql                                         | expect                 | db      |
-      | rwSp2  | 111111   | conn_3 | False   | drop table if exists test                   | success                | db1     |
-      | rwSp2  | 111111   | conn_3 | False   | create table test(id int)                   | success                | db1     |
-      | rwSp2  | 111111   | conn_3 | False   | alter table test add id2 int                | success                | db1     |
-      | rwSp2  | 111111   | conn_3 | False   | drop table if exists test1                  | success                | db1     |
-      | rwSp2  | 111111   | conn_3 | true    | rename table test to test1                  | success                | db1     |
+      | user   | passwd   | conn   | toClose | sql                                                     | expect                 | db      |
+      | rwSp2  | 111111   | conn_3 | False   | drop table if exists test                               | success                | db1     |
+      | rwSp2  | 111111   | conn_3 | False   | create table test(id int)                               | success                | db1     |
+      | rwSp2  | 111111   | conn_3 | False   | alter table test add id2 int                            | success                | db1     |
+      | rwSp2  | 111111   | conn_3 | False   | drop table if exists test1                              | success                | db1     |
+      | rwSp2  | 111111   | conn_3 | False   | rename table test to test1                              | success                | db1     |
+      | rwSp2  | 111111   | conn_3 | true    | set session transaction isolation level read committed  | success                | db1     |
 
   Scenario: test user.xml blacklist  -- DAL on DMP SQL firewall #3
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
