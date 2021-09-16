@@ -1,10 +1,9 @@
 # Copyright (C) 2016-2021 ActionTech.
 # License: https://www.mozilla.org/en-US/MPL/2.0 MPL version 2 or higher.
 # Created by quexiuping at 2021/6/22
+# add rwSplit blacklist by caiwei at 2021/09/16
 
-Feature: test user.xml blacklist
-
-
+Feature: test user.xml blacklist  -- including sharding user & rwSplit user
 
   Scenario: test user.xml blacklist  -- DML on DMP SQL firewall #1
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
