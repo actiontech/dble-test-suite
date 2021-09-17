@@ -181,9 +181,8 @@ def reset_repl(context):
     import subprocess
     try:
         out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
+        logger.debug("script resetReplication.sh run success!")
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
         logger.debug(out_bytes.decode('utf-8'))
         raise
-    finally:
-        logger.debug("script resetReplication.sh run success!")
