@@ -181,7 +181,8 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.backend.datasource.PhysicalDbInstance#getConnection||获取实例的连接|
 |com.actiontech.dble.services.manager.response.DryRun#execute||重载|
 |com.actiontech.dble.services.manager.response.ShowBinlogStatus#getQueryResult||dble层执行show @@binlog.status命令时，下发SHOW MASTER STATUS至mysql，获取的结果集|
-|com.actiontech.dble.meta.table.GetConfigTablesHandler#handleFinished||处理配置中的表|
+|com.actiontech.dble.meta.table.GetConfigTablesHandler#handleFinished||处理配置中的表| #3.21.10废弃
+|com.actiontech.dble.btrace.provider.GeneralProvider#showTableByNodeUnitHandlerFinished||处理配置中的表| #3.21.10引入
 |com.actiontech.dble.server.NonBlockingSession#resetCommitNodesHandler||【移除】|
 |com.actiontech.dble.btrace.provider.ClusterDelayProvider#delayAfterMasterRollback||【移除】|
 |com.actiontech.dble.btrace.provider.ClusterDelayProvider#delayBeforeSlaveRollback||【移除】|
