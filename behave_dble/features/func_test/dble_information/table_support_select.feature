@@ -269,11 +269,11 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn   | toClose | sql                                                                                                                                  | db               |
       | conn_0 | True    | SELECT * FROM dble_table a LEFT JOIN dble_schema b ON a.schema = b.NAME where a.id NOT IN (SELECT id FROM dble_table_sharding_node)  | dble_information |
     Then check resultset "4" has lines with following column values
-      | id-0 | name-1   | schema-2 | max_limit-3 | type-4      | name-5  | sharding_node-6 | sql_max_limit-7 |
-      | M1   | no_s1    | schema1  | 100         | NO_SHARDING | schema1 | dn1             | 100             |
-      | M2   | no_s2    | schema2  | 1000        | NO_SHARDING | schema2 | dn2             | 1000            |
-      | M3   | no_s3    | schema3  | 100         | NO_SHARDING | schema3 | dn4             | 100             |
-      | M4   | vertical | schema5  | -1          | NO_SHARDING | schema5 | dn6             | -1              |
+      | id-0 | name-1   | schema-2 | max_limit-3 | type-4      | name-5  | sharding_node-6 | function-7 | sql_max_limit-8  |
+      | M1   | no_s1    | schema1  | 100         | NO_SHARDING | schema1 | dn1             | -          |  100             |
+      | M2   | no_s2    | schema2  | 1000        | NO_SHARDING | schema2 | dn2             | -          |  1000            |
+      | M3   | no_s3    | schema3  | 100         | NO_SHARDING | schema3 | dn4             | -          |  100             |
+      | M4   | vertical | schema5  | -1          | NO_SHARDING | schema5 | dn6             | -          |  -1              |
 #case supported subquery with some
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "5"
       | conn   | toClose | sql                                                                                                          | db               |
