@@ -405,7 +405,7 @@ Feature: test "reload @@config" in zk cluster
       """
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-1"
       """
-      Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : ID > table shardingNode size : 2, please make sure table shardingnode size = function partition size
+      Illegal table conf : table \[ sharding4 \] rule function \[ hash-three \] partition size : 3 > table shardingNode size : 2, please make sure table shardingnode size = function partition size
       """
     #case check on zookeeper
     Given execute linux command in "dble-1"
