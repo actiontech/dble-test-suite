@@ -184,5 +184,6 @@ def reset_repl(context):
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
         logger.debug(out_bytes.decode('utf-8'))
+        raise
     finally:
-        logger.debug(out_bytes.decode('utf-8'))
+        logger.debug("script resetReplication.sh run success!")
