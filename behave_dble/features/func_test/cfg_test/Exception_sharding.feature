@@ -407,4 +407,4 @@ Feature: sharding basic config test
       | conn_0 | False   | create table sharding_2_t1(id int,name char(120)) | success                                                | schema1 |
       | conn_0 | False   | insert into sharding_2_t1 value(1,'a')            | success                                                | schema1 |
       | conn_0 | False   | select * from sharding_2_t1 where id =1           | success                                                | schema1 |
-      | conn_0 | False   | select * from sharding_2_t1 where name ='a'       | route rule for table schema1.sharding_2_t1 is required | schema1 |
+      | conn_0 | False   | select * from sharding_2_t1 where name ='a'       | sqlRequiredSharding is true,the table 'schema1.sharding_2_t1' requires the condition in sql to include the sharding column 'ID' | schema1 |
