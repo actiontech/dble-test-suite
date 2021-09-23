@@ -51,7 +51,7 @@ def step_impl(context,num,maxNum):
     if context.text:
         assert len(errs)>0, "expect get err,but no err"
 
-        hasExpect = re.search(context.text, errs[0][1], re.I)
+        hasExpect = re.search(context.text.strip(), errs[0][1], re.I)
         assert hasExpect, "expect err:{0}, but real err is: {1}".format(context.text, errs[0])
     else:
         if errs:
