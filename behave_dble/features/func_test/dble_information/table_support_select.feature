@@ -45,9 +45,9 @@ Feature:  show databases/use dble_information/show tables [like]
       | conn_0 | False   | select * from versio                   | get error call manager command: table versio doesn't exist!             |
 #case Unsupported create database/table or alter table
       | conn_0 | False   | create database test                                       | The sql did not match create\|drop database @@shardingNode ='dn......' |
-      | conn_0 | False   | create table test (id int)                                 | The sql did not match create\|drop database @@shardingNode ='dn......' |
+      | conn_0 | False   | create table test (id int)                                 | Unsupported statement                                                  |
       | conn_0 | False   | drop database dble_information                             | The sql did not match create\|drop database @@shardingNode ='dn......' |
-      | conn_0 | False   | drop table dble_status                                     | The sql did not match create\|drop database @@shardingNode ='dn......' |
+      | conn_0 | False   | drop table dble_status                                     | Unsupported statement                                                  |
       | conn_0 | False   | alter table version add id int                             | Unsupported statement                                                  |
       | conn_0 | False   | alter table dble_status drop variable_value                | Unsupported statement                                                  |
       | conn_0 | False   | alter table dble_schema modify sql_max_limit varchar       | Unsupported statement                                                  |
