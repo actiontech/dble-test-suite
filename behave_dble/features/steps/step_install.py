@@ -95,13 +95,14 @@ def install_dble_in_node(context, node):
     ssh_client = node.ssh_conn
 
     cmd = "cd {0} && rm -rf dble".format(node.install_dir)
-    ssh_client.exec_command(cmd)
+    rc, sto, ste = ssh_client.exec_command(cmd)
+    assert_that(len(ste) == 0, "exec with command:{0}, got err:{1}".format(cmd, ste))
 
-    cmd = "cd {0} && cp -r {1} {2}".format(context.cfg_sys['share_path_docker'], dble_packet,
-                                           node.install_dir)
-    ssh_client.exec_command(cmd)
-    cmd = "cd {0} && tar xf {1}".format(node.install_dir, dble_packet)
-    ssh_client.exec_command(cmd)
+
+    cmd = "cd {0} && tar xf {1} -C {2}".format(context.cfg_sys['share_path_docker'], dble_packet, node.install_dir)
+    rc, sto, ste = ssh_client.exec_command(cmd)
+    assert_that(len(ste) == 0, "exec with command:{0}, got err:{1}".format(cmd, ste))
+
 
 @Given('install dble in "{hostname}"')
 def install_dble_in_host(context, hostname):
