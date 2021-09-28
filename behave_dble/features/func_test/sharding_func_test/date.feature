@@ -14,7 +14,7 @@ Feature:Date sharding function
     """
     Then execute admin cmd "reload @@config_all" get the following output
     """
-    java.lang.RuntimeException: sBeginDate can not be null
+    sBeginDate can not be null
     """
 
     #test: sBegin < sEndDate-nodes*sPartition+1
