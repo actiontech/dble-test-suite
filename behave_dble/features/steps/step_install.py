@@ -130,8 +130,8 @@ def download_dble(context, dble_packet_name, version):
         cmd = 'cd {0} && wget --user=ftpuser --password=ftpuser -nv {1}'.format(context.cfg_sys['share_path_docker'],
                                                                                 rpm_ftp_url)
         os.popen(cmd)
-        # sleep 5s to wait download over
-        time.sleep(5)
+        # sleep 10s to wait download over
+        time.sleep(10)
     else:
         cmd = 'cd {0} && wget {1}'.format(context.cfg_sys['share_path_docker'], rpm_ftp_url)
         os.popen(cmd)

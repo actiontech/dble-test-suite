@@ -283,9 +283,10 @@ def step_impl(context,flag,dirname,hostname):
     strs_list = strs.splitlines()
 
     ssh = get_ssh(hostname)
-    for str in strs_list[1:]:
+    for str in strs_list:
         cmd = "find {0} -name {1}".format(dirname, str)
         rc, stdout, stderr = ssh.exec_command(cmd)
+        assert_that(len(stderr) == 0, "exec command: {0} failed for: {1}".format(cmd, stderr[0:200]))
         if flag == "not":
             assert_that(len(stdout) == 0, "expect \"{0}\" not exist in dir {1},but exist".format(str, dirname))
         else:

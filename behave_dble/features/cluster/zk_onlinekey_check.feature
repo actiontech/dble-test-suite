@@ -9,9 +9,9 @@ Feature: check in zk online key
 
   Scenario: dble-1 stop,change bootstrap.cnf the same of dble-2,start dble-1,the result will be wrong  #1
     Given reset dble registered nodes in zk
-    Then check following " " exist in dir "/opt/dble/conf/bootstrap.cnf" in "dble-2"
+    Then check following text exist " " in file "/opt/dble/conf/bootstrap.cnf" in host "dble-2"
       """
-      -DinstanceName=2
+      \-DinstanceName=2
       """
     Given update file content "{install_dir}/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
     """
