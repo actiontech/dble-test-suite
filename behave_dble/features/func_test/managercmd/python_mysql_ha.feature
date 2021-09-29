@@ -29,7 +29,7 @@ Feature: test python script "custom_mysql_ha.py" to change mysql master
     """
     Then execute admin cmd "reload @@config"
     Given stop mysql in host "mysql-master2"
-    Then check following "N" exist in dir "/opt/dble/logs" in "dble-1"
+    Then check following "not" exist in dir "/opt/dble/logs" in "dble-1"
       """
       custom_mysql_ha.log
       """
