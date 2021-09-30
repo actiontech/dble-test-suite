@@ -80,7 +80,7 @@ Feature: Cluster file synchronization test
     Then execute sql in "dble-1" in "admin" mode
       |conn   | toClose | sql                              | expect   |
       |conn_1 | true    | reload @@config_all              | success  |
-    Then check following text exist "Y" in file "/opt/dble/conf/enum.txt" in host "dble-3"
+    Then check following text exist "Y" in file "/opt/dble/conf/enum.txt" in host "dble-2"
       """
       1=0
       2=0
