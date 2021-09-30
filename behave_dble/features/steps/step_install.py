@@ -170,9 +170,9 @@ def set_dble_log_level(context, node, log_level):
         return True
 
 
-@Given('Start dble in "{hostname}" success')
-@When('Start dble in "{hostname}" success')
-@Then('Start dble in "{hostname}" success')
+@Given('Start dble in "{hostname}"')
+@When('Start dble in "{hostname}"')
+@Then('Start dble in "{hostname}"')
 def start_dble_in_hostname(context, hostname):
     node = get_node(hostname)
     start_dble_in_node(context, node)
