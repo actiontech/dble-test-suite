@@ -44,7 +44,7 @@ Feature: Cluster file synchronization test
       3=1
       4=1
       """
-    Then Start dble in "dble-2" success
+    Then Start dble in "dble-2"
     Given execute linux command in "dble-1"
       """
       cd /opt/zookeeper/bin && ./zkCli.sh ls /dble/cluster-1/online  >/tmp/dble_zk_online.log 2>&1 &
