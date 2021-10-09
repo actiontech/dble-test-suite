@@ -40,7 +40,7 @@ def test_use_limit(context):
     map = eval(context.text)
     tb = map["table"]
     t_key = map["key"]
-    
+
     conn = get_dble_conn(context)
 
     drop_sql = "drop table if exists {0}".format(tb)
@@ -142,7 +142,7 @@ def step_impl(context, filename, num=None):
     # remove old file in behave resides server
     if os.path.exists(filename):
         os.remove(filename)
-    
+
     if num is None:
         if operator.eq(text, '10000+lines'):
             with open(filename, 'w') as fp:
@@ -261,6 +261,25 @@ def check_text(context,flag,filename,hostname,checkFromLine=0):
             assert_that(len(stdout) == 0,"expect \"{0}\" not exist in file {1},but exist".format(str,filename))
         else:#default take flag as Y
             assert_that(len(stdout) > 0, "expect \"{0}\" exist in file {1},but not".format(str, filename))
+
+
+@Then('check following text exists in file "{filename}" after line "{checkFromLine}" in host "{hostname}" with "{num}" times')
+def check_text_from_line_times(context, filename, checkFromLine, hostname, num):
+    checkFromLineNum=getattr(context, checkFromLine, 0)
+    check_text_times(context, filename, hostname, num, checkFromLineNum)
+
+
+@Then('check following text exists in file "{filename}" in host "{hostname}" with "{num}" times')
+def check_text_times(context, filename, hostname, num, checkFromLine=0):
+    strs = context.text.strip()
+    strs_list = strs.splitlines()
+
+    ssh = get_ssh(hostname)
+    for str in strs_list:
+        cmd = "tail -n +{2} {1} | grep -n \'{0}\' | wc -l".format(str, filename, checkFromLine)
+        rc, stdout, stderr = ssh.exec_command(cmd)
+        assert_that(stdout == num,"expect \"{0}\" exists in file {1} with {2} times, but was {3} times".format(str, filename, num, stdout))
+
 
 @Then('check following two texts exist at least one in file "{filename}" after line "{checkFromLine}" in host "{hostname}"')
 def check_text_from_line_at_least_one(context,filename,hostname,checkFromLine):
