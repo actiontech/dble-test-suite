@@ -16,7 +16,6 @@ from hamcrest import *
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 
-
 logger = logging.getLogger('root')
 
 
@@ -33,10 +32,12 @@ def log_it(func):
 
     return logged_function
 
+
 def init_log_dir(log_dir):
     if os.path.exists(log_dir):
         shutil.rmtree(log_dir)
     os.mkdir(log_dir)
+
 
 def setup_logging(logging_cfg_file):
     init_log_dir('logs')
@@ -45,15 +46,17 @@ def setup_logging(logging_cfg_file):
             dict_config = yaml.load(f.read(), Loader=yaml.FullLoader)
         logging.config.dictConfig(dict_config)
 
+
 @log_it
 def load_yaml_config(config_path):
     with open(config_path, 'r') as f:
         parsed = yaml.load(f, Loader=yaml.FullLoader)
     return parsed
 
+
 @log_it
 def init_meta(context, flag):
-    if flag=="dble":
+    if flag == "dble":
         cfg_dic = {}
         cfg_dic.update(context.cfg_dble[flag])
         cfg_dic.update(context.cfg_server)
@@ -85,14 +88,16 @@ def init_meta(context, flag):
     else:
         assert False, "get_nodes expect parameter enum in 'dble', 'dble_cluser', 'mysqls'"
 
+
 @Given('sleep "{num}" seconds')
 def step_impl(context, num):
     int_num = int(num)
     time.sleep(int_num)
 
-@Given ('update config of mysql "{mysql_version}" in "{mysql_type}" type in "{host_name}" with sed cmds')
-def update_file_content(context,mysql_version,host_name,mysql_type,sed_str=None):
-    if not sed_str and len(context.text)>0:
+
+@Given('update config of mysql "{mysql_version}" in "{mysql_type}" type in "{host_name}" with sed cmds')
+def update_file_content(context, mysql_version, host_name, mysql_type, sed_str=None):
+    if not sed_str and len(context.text) > 0:
         sed_str = context.text
 
     if host_name == "behave":
@@ -100,15 +105,16 @@ def update_file_content(context,mysql_version,host_name,mysql_type,sed_str=None)
     else:
         node = get_node(host_name)
 
-    mysql_cnf_path = get_mysql_cnf_path(mysql_version,mysql_type)
+    mysql_cnf_path = get_mysql_cnf_path(mysql_version, mysql_type)
 
-# replace all vars in file name with corresponding node attribute value
+    # replace all vars in file name with corresponding node attribute value
     vars = re.findall(r'\{(.*?)\}', mysql_cnf_path, re.I)
     logger.debug("debug vars: {}".format(vars))
     for var in vars:
-        mysql_cnf_path = mysql_cnf_path.replace("{"+var+"}", getattr(node,var))
+        mysql_cnf_path = mysql_cnf_path.replace("{" + var + "}", getattr(node, var))
 
     update_file_with_sed(sed_str, mysql_cnf_path, node)
+
 
 def get_mysql_cnf_path(version='5.7.25', type='single'):
     prefix = version.replace('.', '_')
@@ -116,9 +122,10 @@ def get_mysql_cnf_path(version='5.7.25', type='single'):
         prefix = 'msb_' + prefix
     return f"/root/sandboxes/{prefix}/my.sandbox.cnf"
 
-@Given ('update file content "{filename}" in "{host_name}" with sed cmds')
-def update_file_content(context,filename, host_name, sed_str=None):
-    if not sed_str and len(context.text)>0:
+
+@Given('update file content "{filename}" in "{host_name}" with sed cmds')
+def update_file_content(context, filename, host_name, sed_str=None):
+    if not sed_str and len(context.text) > 0:
         sed_str = context.text
 
     if host_name == "behave":
@@ -126,13 +133,14 @@ def update_file_content(context,filename, host_name, sed_str=None):
     else:
         node = get_node(host_name)
 
-# replace all vars in file name with corresponding node attribute value
+    # replace all vars in file name with corresponding node attribute value
     vars = re.findall(r'\{(.*?)\}', filename, re.I)
     logger.debug("debug vars: {}".format(vars))
     for var in vars:
-        filename = filename.replace("{"+var+"}", getattr(node,var))
+        filename = filename.replace("{" + var + "}", getattr(node, var))
 
     update_file_with_sed(sed_str, filename, node)
+
 
 def update_file_with_sed(sed_str, filename, node):
     sed_cmd = merge_cmd_strings(filename, sed_str)
@@ -143,7 +151,8 @@ def update_file_with_sed(sed_str, filename, node):
         status = os.system(sed_cmd)
         assert status == 0, "change {0} failed".format(filename)
 
-def merge_cmd_strings(filename,sedStr):
+
+def merge_cmd_strings(filename, sedStr):
     sed_cmd_str = sedStr.strip()
     sed_cmd_list = sed_cmd_str.splitlines()
     cmd = "sed -i"
@@ -153,36 +162,59 @@ def merge_cmd_strings(filename,sedStr):
     logger.debug("sed cmd: {0}".format(cmd))
     return cmd
 
+
 def restore_sys_time():
     import subprocess
-    res=subprocess.Popen('ntpdate -u 0.centos.pool.ntp.org',shell=True,stdout=subprocess.PIPE)
+    res = subprocess.Popen('ntpdate -u 0.centos.pool.ntp.org', shell=True, stdout=subprocess.PIPE)
     out, err = res.communicate()
     assert_that(err is None, "expect no err, but err is: {0}".format(err))
 
+
 def get_node(host):
     logger.debug("try to get meta of '{}'".format(host))
-    for node in MySQLMeta.mysqls+DbleMeta.dbles:
+    for node in MySQLMeta.mysqls + DbleMeta.dbles:
         if node.host_name == host or node.ip == host:
             return node
     assert False, 'Can not find node {0}'.format(host)
 
+
 # get ssh by host or ip
-def get_ssh( host):
+def get_ssh(host):
     node = get_node(host)
     return node.ssh_conn
+
 
 # get sftp by host or ip
 def get_sftp(host):
     node = get_node(host)
     return node.sftp_conn
 
+
 @Given('reset replication and none system databases')
 def reset_repl(context):
+    global out_bytes
     import subprocess
     try:
         out_bytes = subprocess.check_output(['bash', 'compose/docker-build-behave/resetReplication.sh'])
         logger.debug("script resetReplication.sh run success!")
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
-        logger.debug(out_bytes.decode('utf-8'))
-        raise
+        out_bytes.decode('utf-8')
+        assert False, "resetReplication.sh script run with failure,output: {0}".format(out_bytes)
+    finally:
+        logger.info(out_bytes.decode('utf-8'))
+
+
+# delete backend mysql tables from db1 ~ db4
+@Given('delete all backend mysql tables')
+def delete_all_mysql_tables(context):
+    global out_bytes
+    import subprocess
+    try:
+        out_bytes = subprocess.check_output(['bash', 'delete_all_mysql_tables.sh'])
+    except subprocess.CalledProcessError as e:
+        out_bytes = e.output
+        out_bytes = out_bytes.decode('utf-8')
+        assert False, "delete_all_mysql_tables.sh script run with failure,output: {0}".format(out_bytes)
+    finally:
+        logger.info(out_bytes.decode('utf-8'))
