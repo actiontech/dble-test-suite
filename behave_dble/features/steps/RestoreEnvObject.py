@@ -10,7 +10,7 @@ from steps.lib import utils
 from steps.lib.ObjectFactory import ObjectFactory
 from steps.mysql_steps import execute_sql_in_host
 # from steps.lib.utils import get_ssh
-from steps.lib.utils import get_sftp, get_ssh,get_node
+from steps.lib.utils import get_sftp, get_ssh, get_node
 
 import re
 
@@ -20,9 +20,9 @@ logger = logging.getLogger('root')
 
 
 class RestoreEnvObject(object):
-    def __init__(self,scenario):
+    def __init__(self, scenario):
         self._scenario = scenario
-        
+
     def restore(self):
         # if "restore_sys_time" in self._scenario.tags:
         #     utils.restore_sys_time()
@@ -38,7 +38,6 @@ class RestoreEnvObject(object):
                 # paras = paras.split(",")
             else:
                 paras = ""
-
 
             logger.debug("try to restore_network: {0}".format(paras))
             for host_name in paras:
@@ -56,18 +55,18 @@ class RestoreEnvObject(object):
                 paras = {}
 
             for host_name, mysql_vars in paras.items():
-                if host_name.find('dble')!=-1:
-                    mode="user"
+                if host_name.find('dble') != -1:
+                    mode = "user"
                 else:
                     mode = "mysql"
                 for k, v in mysql_vars.items():
                     list_value = filter(lambda x: x, v.split(","))
-                    view_value=""
+                    view_value = ""
                     for value in list_value:
-                        view_value=view_value + "{0}.{1},".format(k, value)
+                        view_value = view_value + "{0}.{1},".format(k, value)
                     query = "drop view if exists " + view_value
 
-                sql = query[:-1]#delete the last ','
+                sql = query[:-1]  # delete the last ','
                 # logger.debug("the sql is: {0}".format(sql))
                 execute_sql_in_host(host_name, {"sql": sql}, mode)
 
@@ -102,7 +101,7 @@ class RestoreEnvObject(object):
                 for k, v in mysql_vars.items():
                     query = query + "{0}={1},".format(k, v)
 
-                sql = query[:-1]#delete the last ','
+                sql = query[:-1]  # delete the last ','
                 execute_sql_in_host(mysql, {"sql": sql})
 
         if "restore_mysql_config" in self._scenario.tags:
@@ -120,7 +119,7 @@ class RestoreEnvObject(object):
                 for k, v in mysql_vars.items():
                     m = ['log-bin', 'binlog_format', 'relay-log']
                     if k in m:
-                        sed_str +="/{0}/d\n".format(k)
+                        sed_str += "/{0}/d\n".format(k)
                     else:
                         sed_str += "/{0}/d\n/server-id/a {0}={1}\n".format(k, v)
 
@@ -150,7 +149,34 @@ class RestoreEnvObject(object):
                         sql = "xa rollback '{0}'".format(data[3])
                         execute_sql_in_host(host_name, {"sql": sql}, mode)
 
+        if "delete_mysql_tables" in self._scenario.tags:
+            params_dic = self.get_tag_params("{'delete_mysql_tables'")
 
+            if params_dic:
+                paras = params_dic["delete_mysql_tables"]
+            else:
+                paras = {}
+
+            logger.debug("try to delete_mysql_tables of mysqls: {0}".format(paras))
+
+            # only delete tables from db1~db4, because only these four databases are installed when the environment is initialized
+            db_list = ["db1", "db2", "db3", "db4"]
+            for host_name in paras:
+                ssh = get_ssh(host_name)
+
+                if host_name.find("dble") != -1:
+                    mode = "user"
+                else:
+                    mode = "mysql"
+                logger.debug("the value of host_name is: {0}, mode: {1}".format(host_name, mode))
+                generate_drop_tables_sql = "select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema like 'db%' into outfile '/tmp/tables.txt'"
+                execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
+                for db in db_list:
+                    # MySQLDB not support source grammar,replace with ssh cmd
+                    ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(db))
+                ssh.exec_command("rm -rf /tmp/tables.txt")
+
+                logger.debug("{0} tables has been delete success".format(paras))
 
     def get_tag_params(self, tagKey):
         description = self._scenario.description
