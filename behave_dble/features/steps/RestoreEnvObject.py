@@ -176,7 +176,7 @@ class RestoreEnvObject(object):
                     ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(db))
                 ssh.exec_command("rm -rf /tmp/tables.txt")
 
-                logger.debug("{0} tables has been delete success".format(paras))
+                logger.debug("{0} tables has been delete success".format(host_name))
 
     def get_tag_params(self, tagKey):
         description = self._scenario.description
