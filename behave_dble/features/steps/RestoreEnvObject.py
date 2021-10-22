@@ -169,6 +169,12 @@ class RestoreEnvObject(object):
                 else:
                     mode = "mysql"
                 logger.debug("the value of host_name is: {0}, mode: {1}".format(host_name, mode))
+
+                # in case of program exits unexpected, tables.txt Residue in /tmp
+                rc, stdout, stderr = ssh.exec_command("find /tmp -name tables.txt")
+                if len(stdout) > 0:
+                    ssh.exec_command("rm -rf /tmp/tables.txt")
+
                 generate_drop_tables_sql = "select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema like 'db%' into outfile '/tmp/tables.txt'"
                 execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
                 for db in db_list:
