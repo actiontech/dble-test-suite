@@ -14,6 +14,8 @@ count_V8=${#mysql_install_V8[@]}
 count_db=${#db[@]}
 
 for((i=0; i<count_V5; i=i+1)); do
+  #in case of /tmp/tables.txt already exists
+  ssh root@${mysql_install_V5[$i]} "rm -rf /tmp/tables.txt"
   for((j=0; j<count_db; j=j+1)); do
       ssh root@${mysql_install_V5[$i]} "mysql -uroot -p111111 -e \"select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema like 'db%' into outfile '/tmp/tables.txt';\" "
       ssh root@${mysql_install_V5[$i]}  "mysql -uroot -p111111 -D${db[$j]} -e \"source /tmp/tables.txt;\" "
@@ -22,6 +24,8 @@ for((i=0; i<count_V5; i=i+1)); do
 done
 
 for((i=0; i<count_V8; i=i+1)); do
+  #in case of /tmp/tables.txt already exists
+  ssh root@${mysql_install_V8[$i]} "rm -rf /tmp/tables.txt"
   for((j=0; j<count_db; j=j+1)); do
     ssh root@${mysql_install_V8[$i]} "mysql -uroot -p111111 -e \"select concat('drop table if exists ',table_name,';') from information_schema.TABLES where table_schema like 'db%' into outfile '/tmp/tables.txt';\" "
     ssh root@${mysql_install_V8[$i]}  "mysql -uroot -p111111 -D${db[$j]} -e \"source /tmp/tables.txt;\" "
