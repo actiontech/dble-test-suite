@@ -128,6 +128,24 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/tmp/dble_zk_online.log" on "dble-1"
 
   Scenario: check cluster @@detach, cluster @@attach command #2
+    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
+    """
+    /sequenceHandlerType/d
+    $a sequenceHandlerType=4
+    """
+    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-2" with sed cmds
+    """
+    /sequenceHandlerType/d
+    $a sequenceHandlerType=4
+    """
+    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-3" with sed cmds
+    """
+    /sequenceHandlerType/d
+    $a sequenceHandlerType=4
+    """
+    Given Restart dble in "dble-1" success
+    Given Restart dble in "dble-2" success
+    Given Restart dble in "dble-3" success
     Given add xml segment to node with attribute "{'tag':'root'}" in "db.xml"
     """
      <dbGroup rwSplitMode="0" name="ha_group2" delayThreshold="100" >
@@ -149,37 +167,7 @@ Feature: check single dble detach or attach from cluster
     `schema1`.`sharding_4_t1`.MAXID=20000
     `schema1`.`sharding_4_t1`.CURID=1000
     """
-    When Add some data in "sequence_conf.properties" in dble "dble-2"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-3"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
     Then execute admin cmd "reload @@config_all"
-    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
-    """
-    /sequenceHandlerType/d
-    $a sequenceHandlerType=4
-    """
-    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-2" with sed cmds
-    """
-    /sequenceHandlerType/d
-    $a sequenceHandlerType=4
-    """
-    Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-3" with sed cmds
-    """
-    /sequenceHandlerType/d
-    $a sequenceHandlerType=4
-    """
-    Given Restart dble in "dble-1" success
-    Given Restart dble in "dble-2" success
-    Given Restart dble in "dble-3" success
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose   | sql                                                    | expect  | db      |
@@ -230,14 +218,15 @@ Feature: check single dble detach or attach from cluster
       | conn_0 | False     | drop table if exists sharding_4_t2                       | cluster is detached, you should attach cluster first. | schema1 |
       | conn_0 | False     | create view test_view as select * from sharding_4_t2     | cluster is detached, you should attach cluster first. | schema1 |
       | conn_0 | False     | begin;insert into sharding_4_t2 values(1,1),(2,2);commit | success | schema1 |
-      | conn_0 | False     | select * from sharding_4_t2                              | success | schema1 |
+      | conn_0 | False     | select * from sharding_4_t2                              | has{((1,'1'),(2,'2'),)} | schema1 |
       | conn_0 | False     | update sharding_4_t2 set name=0 where id=1               | success | schema1 |
       | conn_0 | False     | delete from sharding_4_t2                                | success | schema1 |
       | conn_0 | False     | set xa=on; set autocommit=0                              | success | schema1 |
       | conn_0 | True      | insert into sharding_4_t2 values(3,3),(4,4);commit       | cluster is detached, you should attach cluster first. | schema1 |
+      | conn_0 | False     | select * from sharding_4_t2                              | length{(0)} | schema1 |
       | conn_0 | False     | create view test_view as select * from sharding_4_t1     | cluster is detached, you should attach cluster first. | schema1 |
       | conn_0 | False     | insert into sharding_4_t1 (id, name) values (1,1),(2,2)  | cluster is detached, you should attach cluster first. | schema1 |
-      | conn_0 | False     | select * from sharding_4_t1                              | success | schema1 |
+      | conn_0 | False     | select * from sharding_4_t1                              | length{(0)} | schema1 |
       | conn_0 | False     | update sharding_4_t1 set name=0 where id=1               | success | schema1 |
       | conn_0 | False     | begin;delete from sharding_4_t1;commit                   | success | schema1 |
 
@@ -419,31 +408,6 @@ Feature: check single dble detach or attach from cluster
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
   Scenario: check cluster @@detach and timeout greater than default value when other sql is being executed #5
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
-      </schema>
-    """
-    When Add some data in "sequence_conf.properties"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-2"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-3"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     /sequenceHandlerType/d
@@ -462,6 +426,19 @@ Feature: check single dble detach or attach from cluster
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
+      </schema>
+    """
+    When Add some data in "sequence_conf.properties"
+    """
+    `schema1`.`sharding_4_t1`.MINID=1001
+    `schema1`.`sharding_4_t1`.MAXID=20000
+    `schema1`.`sharding_4_t1`.CURID=1000
+    """
+    Then execute admin cmd "reload @@config_all"
 
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
@@ -677,31 +654,6 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
 
   Scenario: check cluster @@detach, cluster @@attach when other sql will be executed #9
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
-      </schema>
-    """
-    When Add some data in "sequence_conf.properties"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-2"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-3"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     /sequenceHandlerType/d
@@ -720,6 +672,19 @@ Feature: check single dble detach or attach from cluster
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
+      </schema>
+    """
+    When Add some data in "sequence_conf.properties"
+    """
+    `schema1`.`sharding_4_t1`.MINID=1001
+    `schema1`.`sharding_4_t1`.MAXID=20000
+    `schema1`.`sharding_4_t1`.CURID=1000
+    """
+    Then execute admin cmd "reload @@config_all"
 
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java.log" on "dble-1"
@@ -876,31 +841,6 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach2.java" on "dble-1"
 
   Scenario: one dble is executing detach command, another dble is executing cluster sql #10
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
-      </schema>
-    """
-    When Add some data in "sequence_conf.properties"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-2"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-3"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     /sequenceHandlerType/d
@@ -919,6 +859,19 @@ Feature: check single dble detach or attach from cluster
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
+      </schema>
+    """
+    When Add some data in "sequence_conf.properties"
+    """
+    `schema1`.`sharding_4_t1`.MINID=1001
+    `schema1`.`sharding_4_t1`.MAXID=20000
+    `schema1`.`sharding_4_t1`.CURID=1000
+    """
+    Then execute admin cmd "reload @@config_all"
 
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java.log" on "dble-1"
@@ -1057,31 +1010,6 @@ Feature: check single dble detach or attach from cluster
     Given delete file "/opt/dble/BtraceClusterDetachAttach5.java" on "dble-1"
 
   Scenario: one dble is executing detach command, another dble will execute cluster sql #11
-    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
-    """
-      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
-         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
-      </schema>
-    """
-    When Add some data in "sequence_conf.properties"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-2"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    When Add some data in "sequence_conf.properties" in dble "dble-3"
-    """
-    `schema1`.`sharding_4_t1`.MINID=1001
-    `schema1`.`sharding_4_t1`.MAXID=20000
-    `schema1`.`sharding_4_t1`.CURID=1000
-    """
-    Then execute admin cmd "reload @@config_all"
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     /sequenceHandlerType/d
@@ -1100,6 +1028,19 @@ Feature: check single dble detach or attach from cluster
     Given Restart dble in "dble-1" success
     Given Restart dble in "dble-2" success
     Given Restart dble in "dble-3" success
+    Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
+    """
+      <schema name="schema1" sqlMaxLimit="100" shardingNode="dn5">
+         <shardingTable name="sharding_4_t1" shardingNode="dn1,dn2,dn3,dn4" function="hash-four" shardingColumn="id" incrementColumn="pid" />
+      </schema>
+    """
+    When Add some data in "sequence_conf.properties"
+    """
+    `schema1`.`sharding_4_t1`.MINID=1001
+    `schema1`.`sharding_4_t1`.MAXID=20000
+    `schema1`.`sharding_4_t1`.CURID=1000
+    """
+    Then execute admin cmd "reload @@config_all"
 
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach6.java.log" on "dble-1"
