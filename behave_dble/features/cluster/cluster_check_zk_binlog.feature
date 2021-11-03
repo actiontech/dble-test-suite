@@ -374,6 +374,7 @@ Feature: test "binlog" in zk cluster
     Then execute "admin" cmd  in "dble-2" at background
       | conn    | toClose | sql                  | db               |
       | conn_21 | true    | show @@binlog.status | dble_information |
+    Given sleep "2" seconds
     Then check following text exist "Y" in file "/tmp/dble_admin_query.log" in host "dble-2"
       """
       172.100.9.6:3307
