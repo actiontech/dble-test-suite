@@ -98,6 +98,8 @@ btrace -u 28060 ${脚本的路径}
 |resetCommitNodesHandler||丢弃|
 |com.actiontech.dble.btrace.provider.ClusterDelayProvider#setRunOnSlave||执行ddl时，hang住|
 |com.actiontech.dble.cluster.logic.delayReadyToDeliver||binlog|
+|com.actiontech.dble.cluster.general.response.ConfigStatusResponse#onEvent||dble-1脱离集群时,dble-2正在执行管理端命令|
+|com.actiontech.dble.cluster.general.impl.UcoreSender#detachCluster||dble-1脱离集群时,dble-2有即将执行的管理端命令|
 
 
 * 简单sql语句执行流程可断点
@@ -210,8 +212,12 @@ btrace -u 28060 ${脚本的路径}
 |com.actiontech.dble.backend.mysql.store.diskbuffer.UnSortedResultDiskBuffer|next|游标heapTableBufferChunkSize参数监听|
 |com.actiontech.dble.backend.mysql.nio.handler.query.impl.groupby.directgroupby.GroupByBucket|start|group by线程检测|
 |com.actiontech.dble.backend.mysql.nio.handler.query.impl.MultiNodeMergeAndOrderHandler|186|MultiNodeMergeAndOrderHandler.ownThread线程检测|
-
-
+|com.actiontech.dble.cluster.zkprocess.zktoxml.listen.ConfigStatusListener#onEvent||dble-1脱离集群时,dble-2正在执行管理端命令|
+|com.actiontech.dble.cluster.zkprocess.ZkSender#detachCluster||dble-1脱离集群时,dble-2有即将执行的管理端命令|
+|com.actiontech.dble.btrace.provider.ClusterDelayProvider#delayBeforeDiffOnlineMap||集群中执行reload @@config时,检查匹配online信息|
+|com.actiontech.dble.services.manager.handler.ClusterManageHandler#handle||脱离/加入集群时，集群中有正在执行的sql，hang脱离/加入集群命令|
+|com.actiontech.dble.btrace.provider.GeneralProvider#afterDelayServiceMarkDoing||脱离/加入集群时，集群中有正在执行的sql，hang正在执行的sql|
+|com.actiontech.dble.services.manager.handler.ClusterManageHandler#waitOtherSessionBlocked||脱离/加入集群时，集群中有即将执行的sql，hang脱离/加入集群命令|
 
 ### 小版本改动：
 * 版本号
