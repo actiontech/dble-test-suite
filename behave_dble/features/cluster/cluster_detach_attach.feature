@@ -291,6 +291,25 @@ Feature: check single dble detach or attach from cluster
       | conn_0 | True      | drop table if exists sharding_4_t2                       | success | schema1 |
 
   Scenario: check cluster @@detach and timeout less than default value when other sql is being executed #3
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Then restart dble in "dble-1" success
+    Then restart dble in "dble-2" success
+    Then restart dble in "dble-3" success
+
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
@@ -346,6 +365,25 @@ Feature: check single dble detach or attach from cluster
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
   Scenario: check cluster @@detach and timeout use default value when other sql is being executed #4
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Then restart dble in "dble-1" success
+    Then restart dble in "dble-2" success
+    Then restart dble in "dble-3" success
+
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
@@ -408,6 +446,21 @@ Feature: check single dble detach or attach from cluster
       | conn_1 | True      | cluster @@attach | illegal state: cluster is not detached |
 
   Scenario: check cluster @@detach and timeout greater than default value when other sql is being executed #5
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
     Given update file content "{install_dir}/dble/conf/cluster.cnf" in "dble-1" with sed cmds
     """
     /sequenceHandlerType/d
@@ -494,6 +547,24 @@ Feature: check single dble detach or attach from cluster
       | conn_3  | true      | drop table if exists sharding_4_t1 | success     | schema1 |
 
   Scenario: check cluster @@attach and timeout less than default value when other sql is being executed #6
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Then restart dble in "dble-1" success
+    Then restart dble in "dble-2" success
+    Then restart dble in "dble-3" success
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
@@ -549,6 +620,24 @@ Feature: check single dble detach or attach from cluster
       | conn_1 | true      | cluster @@attach | success |
 
   Scenario: check cluster @@attach and timeout use default value when other sql is being executed #7
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-2" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-3" with sed cmds
+    """
+    s/-Dprocessors=1/-Dprocessors=4/
+    s/-DprocessorExecutor=1/-DprocessorExecutor=4/
+    """
+    Then restart dble in "dble-1" success
+    Then restart dble in "dble-2" success
+    Then restart dble in "dble-3" success
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach1.java.log" on "dble-1"
     Given delete file "/opt/dble/BtraceClusterDetachAttach3.java" on "dble-1"
