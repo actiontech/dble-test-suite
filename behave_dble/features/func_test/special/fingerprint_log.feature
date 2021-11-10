@@ -746,8 +746,8 @@ Feature: check fingerprint log
       | conn_1 | False   | drop table if exists sharding_4_t1                                              | success | schema1 |
       | conn_1 | False   | create table sharding_4_t1(id int,name varchar(10))                             | success | schema1 |
       | conn_1 | False   | create index id_index on sharding_4_t1(id)                                      | success | schema1 |
-      | conn_1 | False   | insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4') | success | schema1 |
-      | conn_1 | False   | update sharding_4_t1 set name='33' where id=3                                   | success | schema1 |
+      | conn_1 | False   | insert into sharding_4_t1 values(1,"name1"),(2,"name2"),(3,"name3"),(4,"name4") | success | schema1 |
+      | conn_1 | False   | update sharding_4_t1 set name="33" where id=3                                   | success | schema1 |
       | conn_1 | False   | delete from sharding_4_t1                                                       | success | schema1 |
       | conn_1 | False   | drop index id_index on sharding_4_t1                                            | success | schema1 |
       | conn_1 | False   | create view test_view as select * from sharding_4_t1                            | success | schema1 |
@@ -755,16 +755,16 @@ Feature: check fingerprint log
       | conn_1 | False   | drop view test_view                                                             | success | schema1 |
     Then check following text exist "N" in file "/opt/dble/logs/dble.log" after line "log_linenu" in host "dble-1"
       """
-      /drop table if exists sharding_4_t1
-      /create table sharding_4_t1(id int,name varchar(10))
-      /create index id_index on sharding_4_t1(id)
-      /insert into sharding_4_t1 values(1,'name1'),(2,'name2'),(3,'name3'),(4,'name4')
-      /update sharding_4_t1 set name='33' where id=3
-      /delete from sharding_4_t1
-      /drop index id_index on sharding_4_t1
-      /create view test_view as select * from sharding_4_t1
-      /select * from test_view
-      /drop view test_view
+      \*/drop table if exists sharding_4_t1
+      \*/create table sharding_4_t1(id int,name varchar(10))
+      \*/create index id_index on sharding_4_t1(id)
+      \*/insert into sharding_4_t1 values(1,"name1"),(2,"name2"),(3,"name3"),(4,"name4")
+      \*/update sharding_4_t1 set name="33" where id=3
+      \*/delete from sharding_4_t1
+      \*/drop index id_index on sharding_4_t1
+      \*/create view test_view as select * from sharding_4_t1
+      \*/select * from test_view
+      \*/drop view test_view
       """
     Given sleep "10" seconds
     Then check general log in host "mysql-master1" has "/\*# from=instance-test reason=heartbeat\*/select user()" occured ">0" times
