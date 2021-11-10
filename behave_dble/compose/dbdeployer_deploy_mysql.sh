@@ -23,4 +23,7 @@ rm -f /tmp/mysql.sock  && ln -s /tmp/mysql_sandbox3307.sock /tmp/mysql.sock
 rm -f /root/sandboxes/msb_${mysql_version}/data/auto.cnf
 /root/sandboxes/msb_${mysql_version}/restart
 
+#add login mysql with no-password
+touch /etc/my.cnf && echo -e "[client] \nuser=test \npassword=111111 \nhost=127.0.0.1 \n" >>/etc/my.cnf
+
 echo "mysql all install success"
