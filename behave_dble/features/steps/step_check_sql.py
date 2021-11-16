@@ -93,17 +93,30 @@ def get_compare_conn(context, default_db="schema1"):
 
     return conn_mysql, conn_dble
 
-def destroy_share_n_conn(context):
+
+def destroy_shareAndThread_n_conn(context):
     for i in range(1, 10):
-        dble_conn_name = "share_conn_{0}".format(i)
-        mysql_conn_name = "{0}_mysql".format(dble_conn_name)
-        if hasattr(context, dble_conn_name):
-            conn_dble = getattr(context, dble_conn_name)
-            conn_mysql = getattr(context, mysql_conn_name)
-            conn_dble.close()
-            conn_mysql.close()
-            delattr(context, dble_conn_name)
-            delattr(context, mysql_conn_name)
+        dble_share_conn_name = "share_conn_{0}".format(i)
+        mysql_share_conn_name = "{0}_mysql".format(dble_share_conn_name)
+
+        dble_thread_conn_name = "sql_thread_{0}".format(i)
+        mysql_thread_conn_name = "{0}_mysql".format(dble_thread_conn_name)
+
+        if hasattr(context, dble_share_conn_name):
+            share_conn_dble = getattr(context, dble_share_conn_name)
+            share_conn_mysql = getattr(context, mysql_share_conn_name)
+            share_conn_dble.close()
+            share_conn_mysql.close()
+            delattr(context, dble_share_conn_name)
+            delattr(context, mysql_share_conn_name)
+
+        if hasattr(context, dble_thread_conn_name):
+            thread_conn_dble = getattr(context, dble_thread_conn_name)
+            thread_conn_mysql = getattr(context, mysql_thread_conn_name)
+            thread_conn_dble.close()
+            thread_conn_mysql.close()
+            delattr(context, dble_thread_conn_name)
+            delattr(context, mysql_thread_conn_name)
 
 
 def do_query(context, line_nu, sql, to_close):
@@ -503,11 +516,16 @@ def step_impl(context, filename):
 
                 # This is just for #!share_conn connections
                 if is_share_conn and to_close:
+                    context.logger.debug("to_close: True, need to close share_conn")
+                    conn_mysql = getattr(context, mysql_conn_name)
+                    conn_dble = getattr(context, dble_conn_name)
+                    conn_mysql.close()
+                    conn_dble.close()
                     delattr(context, mysql_conn_name)
                     delattr(context, dble_conn_name)
                 sql = ''
                 is_multiline = False
-    destroy_share_n_conn(context)
+    destroy_shareAndThread_n_conn(context)
     destroy_sub_threads(context)
 
 
