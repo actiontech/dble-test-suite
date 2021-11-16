@@ -93,12 +93,16 @@ Feature: test view in zk cluster
       | conn_1 | true    | insert into sharding_4_t1 values (1,1),(2,null),(3,'a'),(4,'aa')   | success   | schema1 |
     Then execute sql in "dble-3" in "user" mode
       | conn   | toClose  | sql                                                                | expect       | db      |
-      | conn_3 | false    | select * from view_test where id=1                                 | length{(1)}  | schema1 |
+      # for DBLE0REQ-1466 begin
+#      | conn_3 | false    | select * from view_test where id=1                                 | length{(1)}  | schema1 |
+      # for DBLE0REQ-1466 end
       | conn_3 | true     | insert into sharding_4_t1 values (1,1),(2,null),(3,'a'),(4,'aa')   | success      | schema1 |
      Then execute sql in "dble-2" in "user" mode
       | conn   | toClose | sql                                                              | expect        | db      |
       | conn_2 | false   | select * from view_test                                          | length{(8)}   | schema1 |
-      | conn_2 | false   | select * from view_test where id=1                               | length{(2)}   | schema1 |
+      # for DBLE0REQ-1466 begin
+#      | conn_2 | false   | select * from view_test where id=1                               | length{(2)}   | schema1 |
+      # for DBLE0REQ-1466 end
       | conn_2 | true    | alter view view_test as select * from sharding_4_t1 where id =1  | success       | schema1 |
     #case check alter view
     Given execute single sql in "dble-2" in "user" mode and save resultset in "Res_A"
@@ -127,7 +131,9 @@ Feature: test view in zk cluster
     #case check drop view
      Then execute sql in "dble-3" in "user" mode
       | conn   | toClose | sql                          | expect                                    | db      |
-      | conn_3 | false   | select * from view_test      | length{(2)}                               | schema1 |
+      # for DBLE0REQ-1466 begin
+#      | conn_3 | false   | select * from view_test      | length{(2)}                               | schema1 |
+      # for DBLE0REQ-1466 end
       | conn_3 | false   | drop view view_test          | success                                   | schema1 |
       | conn_3 | true    | show create view view_test   | Table 'schema1.view_test' doesn't exist   | schema1 |
      Then execute sql in "dble-2" in "user" mode
