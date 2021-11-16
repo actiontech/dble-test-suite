@@ -57,5 +57,8 @@ Feature: test xml
       | conn    | toClose | sql                                  | expect       | db      |
       | conn_1  | false   | drop table if exists test            | success      | schema1 |
       | conn_1  | false   | create table test (id int)           | success      | schema1 |
-      | conn_1  | false   | create view view_test as select * from test             | success      | schema1 |
-      | conn_1  | true    | select * from view_test                                 | success      | schema1 |
+      | conn_1  | false   | create view view_test as select * from test         | success | schema1 |
+      # for DBLE0REQ-1466 begin
+#      | conn_1  | false   | select * from view_test              | success      | schema1 |
+      # for DBLE0REQ-1466 end
+      | conn_1  | true    | drop view if exists view_test        | success      | schema1 |

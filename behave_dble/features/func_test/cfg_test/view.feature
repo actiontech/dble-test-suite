@@ -32,7 +32,9 @@ Feature: #view test except sql cover
      Then execute admin cmd "reload @@config_all"
      Then execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                               | expect    | db      |
-       | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
+       # for DBLE0REQ-1466 begin
+#       | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
+       # for DBLE0REQ-1466 end
        | conn_0 | True     | drop view view_test               | success   | schema1 |
       #github :2063
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
