@@ -20,15 +20,19 @@ Feature: The impact of testing operators on shardingTable routing
     Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
       | conn     | toClose | sql                                                        | db      |
       | conn_1   | true    | explain select count(id) from sharding_2_t1 group by id=1  | schema1 |
-    Then check resultset "A" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                               |
-      | dn1_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id = 1 as `rpda_1`,sharding_2_t1.id = 1 as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` = 1 ORDER BY `sharding_2_t1`.`id` = 1 ASC |
-      | dn2_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id = 1 as `rpda_1`,sharding_2_t1.id = 1 as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` = 1 ORDER BY `sharding_2_t1`.`id` = 1 ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                                                            |
-      | aggregate_1       | AGGREGATE       | merge_and_order_1                                                                                                                                                                       |
-      | order_1           | ORDER           | aggregate_1                                                                                                                                                                             |
-      | limit_1           | LIMIT           | order_1                                                                                                                                                                                 |
-      | shuffle_field_1   | SHUFFLE_FIELD   | limit_1                                                                                                                                                                                 |
+
+# for DBLE0REQ-1467 begin
+#    Then check resultset "A" has lines with following column values
+#      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                               |
+#      | dn1_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id = 1 as `rpda_1`,sharding_2_t1.id = 1 as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` = 1 ORDER BY `sharding_2_t1`.`id` = 1 ASC |
+#      | dn2_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id = 1 as `rpda_1`,sharding_2_t1.id = 1 as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` = 1 ORDER BY `sharding_2_t1`.`id` = 1 ASC |
+#      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                                                            |
+#      | aggregate_1       | AGGREGATE       | merge_and_order_1                                                                                                                                                                       |
+#      | order_1           | ORDER           | aggregate_1                                                                                                                                                                             |
+#      | limit_1           | LIMIT           | order_1                                                                                                                                                                                 |
+#      | shuffle_field_1   | SHUFFLE_FIELD   | limit_1                                                                                                                                                                                 |
+# for DBLE0REQ-1467 end
+
     #group by id having [ id condition ]
     Given execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                                               | db    | expect      |
@@ -70,14 +74,18 @@ Feature: The impact of testing operators on shardingTable routing
     Given execute single sql in "dble-1" in "user" mode and save resultset in "D"
       | conn     | toClose | sql                                                                  | db      |
       | conn_4   | true    | explain select count(id) from sharding_2_t1 group by id in(1)        | schema1 |
-    Then check resultset "D" has lines with following column values
-      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                           |
-      | dn1_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id IN (1) as `rpda_1`,sharding_2_t1.id IN (1) as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` in (1) ORDER BY `sharding_2_t1`.`id` in (1) ASC |
-      | dn2_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id IN (1) as `rpda_1`,sharding_2_t1.id IN (1) as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` in (1) ORDER BY `sharding_2_t1`.`id` in (1) ASC |
-      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                                                                        |
-      | order_1           | ORDER           | aggregate_1                                                                                                                                                                                         |
-      | limit_1           | LIMIT           | order_1                                                                                                                                                                                             |
-      | shuffle_field_1   | SHUFFLE_FIELD   | limit_1                                                                                                                                                                                             |
+
+# for DBLE0REQ-1467 begin
+#    Then check resultset "D" has lines with following column values
+#      | SHARDING_NODE-0   | TYPE-1          | SQL/REF-2                                                                                                                                                                                           |
+#      | dn1_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id IN (1) as `rpda_1`,sharding_2_t1.id IN (1) as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` in (1) ORDER BY `sharding_2_t1`.`id` in (1) ASC |
+#      | dn2_0             | BASE SQL        | select count(id) as `_$COUNT$_rpda_0`,id IN (1) as `rpda_1`,sharding_2_t1.id IN (1) as `rpda_2` from  `sharding_2_t1` GROUP BY `sharding_2_t1`.`id` in (1) ORDER BY `sharding_2_t1`.`id` in (1) ASC |
+#      | merge_and_order_1 | MERGE_AND_ORDER | dn1_0; dn2_0                                                                                                                                                                                        |
+#      | order_1           | ORDER           | aggregate_1                                                                                                                                                                                         |
+#      | limit_1           | LIMIT           | order_1                                                                                                                                                                                             |
+#      | shuffle_field_1   | SHUFFLE_FIELD   | limit_1                                                                                                                                                                                             |
+# for DBLE0REQ-1467 end
+
      #order by [id condition]
     Given execute sql in "dble-1" in "user" mode
       | conn    | toClose | sql                                             | db    | expect                              |
