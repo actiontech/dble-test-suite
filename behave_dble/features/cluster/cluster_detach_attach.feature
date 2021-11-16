@@ -188,8 +188,8 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_A" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 0            | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 8            | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 8            | false       |
       | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | 0           | 0            | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                               | expect                                                |
@@ -200,8 +200,8 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_B" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 0            | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 8            | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 8            | false       |
       | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | 0           | 0            | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect                                                |
@@ -242,8 +242,8 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_C" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | true        |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 0           | 0            | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 6           | 14           | true        |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | W     | 0        | 6           | 16           | false       |
       | ha_group2  | hostS2 | 172.100.9.2 | 3307   | R     | 0        | 0           | 0            | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                               | expect  |
@@ -254,8 +254,8 @@ Feature: check single dble detach or attach from cluster
       | show @@dbinstance |
     Then check resultset "Res_D" has lines with following column values
       | DB_GROUP-0 | NAME-1 | HOST-2      | PORT-3 | W/R-4 | ACTIVE-5 | READ_LOAD-8 | WRITE_LOAD-9 | DISABLED-10 |
-      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 0           | 0            | false       |
-      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 0           | 0            | false       |
+      | ha_group1  | hostM1 | 172.100.9.5 | 3307   | W     | 0        | 6           | 14           | false       |
+      | ha_group2  | hostM2 | 172.100.9.6 | 3307   | R     | 0        | 6           | 16           | false       |
       | ha_group2  | hostS2 | 172.100.9.2 | 3307   | W     | 0        | 0           | 0            | false       |
     Then execute sql in "dble-1" in "admin" mode
       | conn   | toClose   | sql                                                                           | expect  |
