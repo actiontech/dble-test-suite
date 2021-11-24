@@ -199,8 +199,7 @@ def reset_repl(context):
         logger.debug("script resetReplication.sh run success!")
     except subprocess.CalledProcessError as e:
         out_bytes = e.output  # Output generated before error
-        out_bytes.decode('utf-8')
-        assert False, "resetReplication.sh script run with failure,output: {0}".format(out_bytes)
+        assert False, "resetReplication.sh script run with failure,output: {0}".format(out_bytes.decode('utf-8'))
     finally:
         logger.info(out_bytes.decode('utf-8'))
 
