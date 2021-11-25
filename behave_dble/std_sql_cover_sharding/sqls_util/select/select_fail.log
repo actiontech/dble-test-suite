@@ -38,7 +38,7 @@ mysql:[((16, -1), (0, 0), (1, 1), (5, 1), (2, 2), (6, 2), (10, 3), (9, 3), (7, 3
 ===file:sqls_util/select/select.sql, id:184, sql:[select id,k,c,pad from test1 where id=@var1 := 1]===
 dble:[None]
 mysql:[((1, 1, 'id1', 1),)]
-dble err:(1064, 'sql syntax error, no terminated. COLONEQ')
+dble err:(1064, 'druid not support sql syntax, the reason is sql syntax error, no terminated. COLONEQ')
 ===file:sqls_util/select/select.sql, id:188, sql:[select id,k,c,pad from test1 where id in(2,3,6.4,7,12)]===
 dble:[None]
 mysql:[((2, 2, 'id2', 2), (3, 3, 'id3', 3), (7, 7, 'id7', 3), (12, 12, '_g', 5))]

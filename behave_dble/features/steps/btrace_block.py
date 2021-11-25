@@ -101,7 +101,7 @@ def step_impl(context, host):
 def check_btrace_output(sshClient, btraceScript, expectTxt, context, num_expr):
     retry = 0
     isFound = False
-    while retry < 500:
+    while retry < 150:
         time.sleep(2)  # a interval wait for query run into
         cmd = "cat {0}.log | grep -o '{1}' | wc -l".format(btraceScript, expectTxt)
         rc, sto, ste = sshClient.exec_command(cmd)
@@ -109,7 +109,7 @@ def check_btrace_output(sshClient, btraceScript, expectTxt, context, num_expr):
         isFound_str = "{}{}".format(sto, num_expr)
         isFound = eval(isFound_str)
         if isFound:
-            context.logger.debug("query blocked by btrace is found in {0}s".format((retry + 1) * 5))
+            context.logger.debug("query blocked by btrace is found in {0}s".format((retry + 1) * 2))
             break
 
         retry = retry + 1
