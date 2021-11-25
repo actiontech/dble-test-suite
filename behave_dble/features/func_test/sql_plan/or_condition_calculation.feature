@@ -653,10 +653,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql          |
       | conn_0 | False   | show trace   |
-    Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                        |
-      | Execute_SQL   | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
-      | Fetch_result  | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
+
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1490 begin
+#    Then check resultset "rs_1" has lines with following column values
+#      | OPERATION-0   | SHARDING_NODE-4   | SQL/REF-5                                                                                                        |
+#      | Execute_SQL   | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
+#      | Fetch_result  | dn2               | select * from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13) |
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1490 end
+
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_4" in host "dble-1"
     """
     these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id = 5) and (a.id = 5)) or ((a.id = 1) and (b.id = 1)))) and ((a.id =) and (b.id =) and (((b.id = 13) and (a.id = 13)) or ((a.id = 9) and (b.id = 9))))}
@@ -808,10 +812,14 @@ Feature: In order to calculate the route, the where condition needs to be proces
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_1"
       | conn   | toClose | sql          |
       | conn_0 | true    | show trace   |
-    Then check resultset "rs_1" has lines with following column values
-      | OPERATION-0      | SHARDING_NODE-4    | SQL/REF-5                                                                                                                                  |
-      | Execute_SQL      | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
-      | Fetch_result     | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
+
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1490 begin
+#    Then check resultset "rs_1" has lines with following column values
+#      | OPERATION-0      | SHARDING_NODE-4    | SQL/REF-5                                                                                                                                  |
+#      | Execute_SQL      | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
+#      | Fetch_result     | dn2                | select * from (select a.id,b.age from sharding_4_t1 a join sharding_4_t2 b on a.id=b.id where (a.id=1 or b.id=5) and (a.id=9 or b.id=13))m |
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1490 end
+
     Then check following text exist "Y" in file "/opt/dble/logs/dble.log" after line "log_11" in host "dble-1"
     """
     these conditions will try to pruning:{((a.id =) and (b.id =) and (((b.id = 5) and (a.id = 5)) or ((a.id = 1) and (b.id = 1)))) and ((a.id =) and (b.id =) and (((b.id = 13) and (a.id = 13)) or ((a.id = 9) and (b.id = 9))))}

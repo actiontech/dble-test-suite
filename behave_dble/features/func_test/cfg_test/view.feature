@@ -32,9 +32,7 @@ Feature: #view test except sql cover
      Then execute admin cmd "reload @@config_all"
      Then execute sql in "dble-1" in "user" mode
        | conn   | toClose  | sql                               | expect    | db      |
-       # for DBLE0REQ-1466 begin
-#       | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
-       # for DBLE0REQ-1466 end
+       | conn_0 | False    | select * from schema1.view_test   | success   | schema1 |
        | conn_0 | True     | drop view view_test               | success   | schema1 |
       #github :2063
      Given add xml segment to node with attribute "{'tag':'root'}" in "sharding.xml"
@@ -125,9 +123,7 @@ Feature: #view test except sql cover
       | conn_0 | False   | show all tables                                      | hasStr{sharding_1_t1}, hasnot{('view_sharding_1_t1'),} | schema1 |
       | conn_0 | False   | show full tables                                     | hasStr{sharding_1_t1}, hasnot{('view_sharding_1_t1'),} | schema1 |
       | conn_0 | False   | select * from schema2.view_test10 join sharding_1_t1 | length{(20)}                                           | schema1 |
-      # for http://10.186.18.11/jira/browse/DBLE0REQ-1476 begin
-#      | conn_0 | False   | select * from schema2.view_test10 join sharding_4_t1 | length{(15)}                                           | schema1 |
-      # for http://10.186.18.11/jira/browse/DBLE0REQ-1476 end
+      | conn_0 | False   | select * from schema2.view_test10 join sharding_4_t1 | length{(15)}                                           | schema1 |
 
        #vertical-node-view can drop in dble
       | conn_0 | False   | drop view schema2.view_test10                        | success                                                | schema1 |
