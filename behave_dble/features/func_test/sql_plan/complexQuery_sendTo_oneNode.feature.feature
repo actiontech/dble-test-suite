@@ -109,28 +109,26 @@ Feature: following complex queries are able to send one datanode
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                 |
       | dn2             | BASE SQL | select count(*) from aly_test a where a.id =1 group by id |
 
-# for DBLE0REQ-1460 begin
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_6"
-#      | conn   | toClose | sql                                                                                                            |
-#      | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
-#    Then check resultset "rs_6" has lines with following column values
-#      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                                                                                                 |
-#      | dn2_0              | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
-#      | merge_1            | MERGE                 | dn2_0                                                                                                                     |
-#      | distinct_1         | DISTINCT              | merge_1                                                                                                                   |
-#      | shuffle_field_1    | SHUFFLE_FIELD         | distinct_1                                                                                                                |
-#      | in_sub_query_1     | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
-#      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | dn2_1              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | dn3_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | dn4_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | merge_2            | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
-#      | shuffle_field_2    | SHUFFLE_FIELD         | merge_2                                                                                                                   |
-#      | /*AllowDiff*/dn1_1 | BASE SQL(May No Need) | in_sub_query_1; select `test_global`.`id`,`test_global`.`cc` from  `test_global`                                          |
-#      | merge_3            | MERGE                 | /*AllowDiff*/dn1_1                                                                                                        |
-#      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
-#      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                    |
-# for DBLE0REQ-1460 end
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_6"
+      | conn   | toClose | sql                                                                                                            |
+      | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
+    Then check resultset "rs_6" has lines with following column values
+      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2                                                                                                                 |
+      | dn2_0              | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
+      | merge_1            | MERGE                 | dn2_0                                                                                                                     |
+      | distinct_1         | DISTINCT              | merge_1                                                                                                                   |
+      | shuffle_field_1    | SHUFFLE_FIELD         | distinct_1                                                                                                                |
+      | in_sub_query_1     | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
+      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn2_1              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn3_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn4_0              | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | merge_2            | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
+      | shuffle_field_2    | SHUFFLE_FIELD         | merge_2                                                                                                                   |
+      | /*AllowDiff*/dn1_1 | BASE SQL(May No Need) | in_sub_query_1; select `test_global`.`id`,`test_global`.`cc` from  `test_global`                                          |
+      | merge_3            | MERGE                 | /*AllowDiff*/dn1_1                                                                                                        |
+      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
+      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                    |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_7"
       | conn   | toClose | sql                                                                        |
@@ -370,28 +368,26 @@ Feature: following complex queries are able to send one datanode
       | SHARDING_NODE-0 | TYPE-1        | SQL/REF-2                                               |
       | dn1             | BASE SQL      | select * from sharding_two_node where id =1 union select * from sharding_two_node2 where id =1 |
 
-# for DBLE0REQ-1460 begin
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_31"
-#      | conn   | toClose | sql                                                                                                            |
-#      | conn_0 | False   | explain select * from aly_order join test_global_1 where aly_order.id in ( select id from aly_test where id=1) |
-#    Then check resultset "rs_31" has lines with following column values
-#      | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2                                                                                                                 |
-#      | dn2_0           | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
-#      | merge_1         | MERGE                 | dn2_0                                                                                                                     |
-#      | distinct_1      | DISTINCT              | merge_1                                                                                                                   |
-#      | shuffle_field_1 | SHUFFLE_FIELD         | distinct_1                                                                                                                |
-#      | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
-#      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | dn3_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | dn4_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
-#      | merge_2         | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
-#      | shuffle_field_2 | SHUFFLE_FIELD         | merge_2                                                                                                                   |
-#      | dn1_1           | BASE SQL(May No Need) | in_sub_query_1; select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`                                    |
-#      | merge_3         | MERGE                 | dn1_1                                                                                                                     |
-#      | join_1          | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
-#      | shuffle_field_3 | SHUFFLE_FIELD         | join_1                                                                                                                    |
-# for DBLE0REQ-1460 end
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_31"
+      | conn   | toClose | sql                                                                                                            |
+      | conn_0 | False   | explain select * from aly_order join test_global_1 where aly_order.id in ( select id from aly_test where id=1) |
+    Then check resultset "rs_31" has lines with following column values
+      | SHARDING_NODE-0 | TYPE-1                | SQL/REF-2                                                                                                                 |
+      | dn2_0           | BASE SQL              | select DISTINCT `aly_test`.`id` as `autoalias_scalar` from  `aly_test` where `aly_test`.`id` = 1                          |
+      | merge_1         | MERGE                 | dn2_0                                                                                                                     |
+      | distinct_1      | DISTINCT              | merge_1                                                                                                                   |
+      | shuffle_field_1 | SHUFFLE_FIELD         | distinct_1                                                                                                                |
+      | in_sub_query_1  | IN_SUB_QUERY          | shuffle_field_1                                                                                                           |
+      | dn1_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn2_1           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn3_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | dn4_0           | BASE SQL(May No Need) | in_sub_query_1; select `aly_order`.`id`,`aly_order`.`c` from  `aly_order` where `aly_order`.`id` in ('{NEED_TO_REPLACE}') |
+      | merge_2         | MERGE                 | dn1_0; dn2_1; dn3_0; dn4_0                                                                                                |
+      | shuffle_field_2 | SHUFFLE_FIELD         | merge_2                                                                                                                   |
+      | dn1_1           | BASE SQL(May No Need) | in_sub_query_1; select `test_global_1`.`id`,`test_global_1`.`cc` from  `test_global_1`                                    |
+      | merge_3         | MERGE                 | dn1_1                                                                                                                     |
+      | join_1          | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
+      | shuffle_field_3 | SHUFFLE_FIELD         | join_1                                                                                                                    |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
       | conn   | toClose | sql                                                                                                            |
@@ -456,42 +452,46 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | insert into ctable(fid, name, test_id) values(6,'dog_w',6)                            | success | schema1 |
 
     # globalTable1 && globalTable1
-    Given execute sql in "dble-1" in "user" mode
-      |conn   | toClose | sql                                                                                                                 | db      | expect     |
-      |conn_1 | False   | explain select a.name from gtable1 a join gtable1 b on a.test_id = b.test_id where a.test_id = 3                    | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a inner join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a cross join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a STRAIGHT_JOIN gtable1 b on a.test_id = b.test_id where a.test_id = 3           | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a left join gtable1 b on a.name = b.name where b.test_id = 1                     | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a right join gtable1 b on a.name = b.name where b.test_id = 1                    | schema1 | length{(1)}|
-      |conn_1 | true    | explain select a.name from gtable1 a where a.test_id = 1 union all select b.name from gtable1 b where b.test_id = 1 | schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 begin
+#    Given execute sql in "dble-1" in "user" mode
+#      |conn   | toClose | sql                                                                                                                 | db      | expect     |
+#      |conn_1 | False   | explain select a.name from gtable1 a join gtable1 b on a.test_id = b.test_id where a.test_id = 3                    | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a inner join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a cross join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a STRAIGHT_JOIN gtable1 b on a.test_id = b.test_id where a.test_id = 3           | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a left join gtable1 b on a.name = b.name where b.test_id = 1                     | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a right join gtable1 b on a.name = b.name where b.test_id = 1                    | schema1 | length{(1)}|
+#      |conn_1 | true    | explain select a.name from gtable1 a where a.test_id = 1 union all select b.name from gtable1 b where b.test_id = 1 | schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 end
 
       #shardingTable && shardingTable
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
-      |conn   | toClose | sql                                                                                                                     | db      |
-      |conn_2 | False   | explain select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
-    Then check resultset "A" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                    |
-      | dn2             | BASE SQL   | select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1 |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
-      |conn   | toClose | sql                                                                                                                     | db      |
-      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1    |schema1  |
-    Then check resultset "B" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                    |
-      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1 |
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 begin
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
+#      |conn   | toClose | sql                                                                                                                     | db      |
+#      |conn_2 | False   | explain select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
+#    Then check resultset "A" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                    |
+#      | dn2             | BASE SQL   | select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
+#      |conn   | toClose | sql                                                                                                                     | db      |
+#      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1    |schema1  |
+#    Then check resultset "B" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                    |
+#      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "C"
+#      |conn   | toClose | sql                                                                                                                      | db      |
+#      |conn_2 | False   | explain select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
+#    Then check resultset "C" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                     |
+#      | dn2             | BASE SQL   | select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "D"
+#      |conn   | toClose | sql                                                                                                                      | db      |
+#      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1    |schema1  |
+#    Then check resultset "D" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                     |
+#      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1 |
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 end
 
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "C"
-      |conn   | toClose | sql                                                                                                                      | db      |
-      |conn_2 | False   | explain select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
-    Then check resultset "C" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                     |
-      | dn2             | BASE SQL   | select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1 |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "D"
-      |conn   | toClose | sql                                                                                                                      | db      |
-      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1    |schema1  |
-    Then check resultset "D" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                     |
-      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "E"
       |conn   | toClose | sql                                                                                                                      | db      |
@@ -548,10 +548,12 @@ Feature: following complex queries are able to send one datanode
        |conn_3 | False   | explain select a.name from gtable1 a left join gtable2 b on a.test_id = b.test_id where a.test_id = 1               | schema1 | length{(1)}|
        |conn_3 | False   | explain select a.name from gtable1 a right join gtable2 b on a.test_id = b.test_id where a.test_id = 1              | schema1 | length{(1)}|
        |conn_3 | False   | explain select a.name from gtable1 a where a.test_id = 5 union all select b.name from gtable2 b where b.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | False   | explain select a.name from gtable1 a join gtable2 b on a.test_id = b.test_id join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | False   | explain select a.name from gtable1 a inner join gtable2 b on a.test_id = b.test_id inner join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | False   | explain select a.name from gtable1 a CROSS join gtable2 b on a.test_id = b.test_id CROSS join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | true    | explain select a.name from gtable1 a STRAIGHT_JOIN gtable2 b on a.test_id = b.test_id STRAIGHT_JOIN gtable1 c on a.test_id = c.test_id where a.test_id = 1| schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 begin
+#       |conn_3 | False   | explain select a.name from gtable1 a join gtable2 b on a.test_id = b.test_id join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+#       |conn_3 | False   | explain select a.name from gtable1 a inner join gtable2 b on a.test_id = b.test_id inner join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+#       |conn_3 | False   | explain select a.name from gtable1 a CROSS join gtable2 b on a.test_id = b.test_id CROSS join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+#       |conn_3 | true    | explain select a.name from gtable1 a STRAIGHT_JOIN gtable2 b on a.test_id = b.test_id STRAIGHT_JOIN gtable1 c on a.test_id = c.test_id where a.test_id = 1| schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 end
 
     #globalTable && shardingTable
     # exists issue :http://10.186.18.11/jira/browse/DBLE0REQ-1241, wait to update here
