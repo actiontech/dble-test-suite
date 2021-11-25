@@ -612,55 +612,53 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |
 
-# for DBLE0REQ-1466 begin
-#    Then execute sql in "dble-1" in "user" mode
-#      | conn   | toClose | sql                                              | expect  | db      |
-#      | conn_1 | False   | drop view if exists view_test                    | success | schema1 |
-#      | conn_1 | False   | create view view_test as select * from test1     | success | schema1 |
-#      | conn_1 | False   | select * from view_test                          | success | schema1 |
-#      | conn_1 | False   | drop view view_test                              | success | schema1 |
-#      | conn_1 | False   | truncate  test1                                  | success | schema1 |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
-#      | conn   | toClose | sql                     | db               |
-#      | conn_0 | False   | select * from sql_log   | dble_information |
-#    Then check resultset "resulte_1" has lines with following column values
-#      | sql_id-0 | sql_stmt-1                                   | sql_digest-2                                 | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
-#      | 13       | drop view if exists view_test                | DROP VIEW IF EXISTS view_test                | Other      | 13      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-#      | 14       | create view view_test as select * from test1 | CREATE VIEW view_test AS SELECT * FROM test1 | Other      | 14      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-#      | 15       | select * from view_test                      | select * from view_test                      | Select     | 15      | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
-#      | 16       | drop view view_test                          | DROP VIEW view_test                          | Other      | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-#      | 17       | truncate  test1                              | truncate  test1                              | DDL        | 17      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
-#      | conn   | toClose | sql                                            | db               |
-#      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
-#    Then check resultset "resulte_2" has lines with following column values
-#      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
-#      | 13      | 2       | test   | 172.100.9.8   | 8066          | 13        | 1           | 0               |
-#      | 14      | 2       | test   | 172.100.9.8   | 8066          | 14        | 1           | 0               |
-#      | 15      | 2       | test   | 172.100.9.8   | 8066          | 15        | 1           | 2               |
-#      | 16      | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           | 0               |
-#      | 17      | 2       | test   | 172.100.9.8   | 8066          | 17        | 1           | 0               |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
-#      | conn   | toClose | sql                                                | db               |
-#      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
-#    Then check resultset "resulte_3" has lines with following column values
-#      | sql_digest-0                                 | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
-#      | CREATE VIEW view_test AS SELECT * FROM test1 | 2       | test   | 1      | 0      | 0               |
-#      | DROP VIEW IF EXISTS view_test                | 2       | test   | 1      | 0      | 0               |
-#      | DROP VIEW view_test                          | 2       | test   | 1      | 0      | 0               |
-#      | select * from view_test                      | 2       | test   | 1      | 2      | 2               |
-#      | truncate  test1                              | 2       | test   | 1      | 0      | 0               |
-#    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
-#      | conn   | toClose | sql                                                   | db               |
-#      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
-#    Then check resultset "resulte_4" has lines with following column values
-#      | tx_digest-0                                  | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
-#      | CREATE VIEW view_test AS SELECT * FROM test1 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 14        | 0                |
-#      | DROP VIEW IF EXISTS view_test                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 13        | 0                |
-#      | DROP VIEW view_test                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 16        | 0                |
-#      | select * from view_test                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 15        | 2                |
-#      | truncate  test1                              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 17        | 0                |
-# for DBLE0REQ-1466 end
+    Then execute sql in "dble-1" in "user" mode
+      | conn   | toClose | sql                                              | expect  | db      |
+      | conn_1 | False   | drop view if exists view_test                    | success | schema1 |
+      | conn_1 | False   | create view view_test as select * from test1     | success | schema1 |
+      | conn_1 | False   | select * from view_test                          | success | schema1 |
+      | conn_1 | False   | drop view view_test                              | success | schema1 |
+      | conn_1 | False   | truncate  test1                                  | success | schema1 |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
+      | conn   | toClose | sql                     | db               |
+      | conn_0 | False   | select * from sql_log   | dble_information |
+    Then check resultset "resulte_1" has lines with following column values
+      | sql_id-0 | sql_stmt-1                                   | sql_digest-2                                 | sql_type-3 | tx_id-4 | entry-5 | user-6 | source_host-7 | source_port-8 | rows-9 | examined_rows-10 |
+      | 13       | drop view if exists view_test                | DROP VIEW IF EXISTS view_test                | Other      | 13      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 14       | create view view_test as select * from test1 | CREATE VIEW view_test AS SELECT * FROM test1 | Other      | 14      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 15       | select * from view_test                      | select * from view_test                      | Select     | 15      | 2       | test   | 172.100.9.8   | 8066          | 2      | 2                |
+      | 16       | drop view view_test                          | DROP VIEW view_test                          | Other      | 16      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+      | 17       | truncate  test1                              | truncate  test1                              | DDL        | 17      | 2       | test   | 172.100.9.8   | 8066          | 0      | 0                |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_2"
+      | conn   | toClose | sql                                            | db               |
+      | conn_0 | true    | select * from sql_log_by_tx_by_entry_by_user   | dble_information |
+    Then check resultset "resulte_2" has lines with following column values
+      | tx_id-0 | entry-1 | user-2 | source_host-3 | source_port-4 | sql_ids-5 | sql_exec-6  | examined_rows-9 |
+      | 13      | 2       | test   | 172.100.9.8   | 8066          | 13        | 1           | 0               |
+      | 14      | 2       | test   | 172.100.9.8   | 8066          | 14        | 1           | 0               |
+      | 15      | 2       | test   | 172.100.9.8   | 8066          | 15        | 1           | 2               |
+      | 16      | 2       | test   | 172.100.9.8   | 8066          | 16        | 1           | 0               |
+      | 17      | 2       | test   | 172.100.9.8   | 8066          | 17        | 1           | 0               |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_3"
+      | conn   | toClose | sql                                                | db               |
+      | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user   | dble_information |
+    Then check resultset "resulte_3" has lines with following column values
+      | sql_digest-0                                 | entry-1 | user-2 | exec-3 | rows-5 | examined_rows-6 |
+      | CREATE VIEW view_test AS SELECT * FROM test1 | 2       | test   | 1      | 0      | 0               |
+      | DROP VIEW IF EXISTS view_test                | 2       | test   | 1      | 0      | 0               |
+      | DROP VIEW view_test                          | 2       | test   | 1      | 0      | 0               |
+      | select * from view_test                      | 2       | test   | 1      | 2      | 2               |
+      | truncate  test1                              | 2       | test   | 1      | 0      | 0               |
+    Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_4"
+      | conn   | toClose | sql                                                   | db               |
+      | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | dble_information |
+    Then check resultset "resulte_4" has lines with following column values
+      | tx_digest-0                                  | exec-1 | user-2 | entry-3 | sql_exec-4 | source_host-5 | source_port-6 | sql_ids-7 | examined_rows-10 |
+      | CREATE VIEW view_test AS SELECT * FROM test1 | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 14        | 0                |
+      | DROP VIEW IF EXISTS view_test                | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 13        | 0                |
+      | DROP VIEW view_test                          | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 16        | 0                |
+      | select * from view_test                      | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 15        | 2                |
+      | truncate  test1                              | 1      | test   | 2       | 1          | 172.100.9.8   | 8066          | 17        | 0                |
 
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                       | expect  | db      |
