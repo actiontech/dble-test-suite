@@ -17,7 +17,7 @@ generate_simple_cmp_file () {
 		else
 #		    echo "source: $1/$s, dest:"$2/$s""
             mkdir -p "$2"
-            grep '===file:' "$1/$s" > "$2/$s"
+            grep '===file:\|dble err' "$1/$s" > "$2/$s"
             #added by zhaohongjie(for driver testing)
             #grep '===id:' "$1/$s" >> "$2/$s"
         fi
