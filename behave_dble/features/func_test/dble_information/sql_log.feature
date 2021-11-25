@@ -612,7 +612,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_0 | False   | select * from sql_log_by_digest_by_entry_by_user      | length{(0)}  | dble_information |
       | conn_0 | False   | select * from sql_log_by_tx_digest_by_entry_by_user   | length{(0)}  | dble_information |
 
-
     Then execute sql in "dble-1" in "user" mode
       | conn   | toClose | sql                                              | expect  | db      |
       | conn_1 | False   | drop view if exists view_test                    | success | schema1 |
@@ -620,7 +619,6 @@ sql_log_by_tx_digest_by_entry_by_user
       | conn_1 | False   | select * from view_test                          | success | schema1 |
       | conn_1 | False   | drop view view_test                              | success | schema1 |
       | conn_1 | False   | truncate  test1                                  | success | schema1 |
-
     Given execute single sql in "dble-1" in "admin" mode and save resultset in "resulte_1"
       | conn   | toClose | sql                     | db               |
       | conn_0 | False   | select * from sql_log   | dble_information |

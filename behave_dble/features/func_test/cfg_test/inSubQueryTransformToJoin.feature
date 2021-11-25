@@ -651,6 +651,7 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs10"
       | conn   | toClose | sql                                                                                                                                                                        | expect  | db      |
       | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
+
     Then check resultset "join_rs10" has lines with following column values
       | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
       | dn5_0              | BASE SQL              | select `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                                  |

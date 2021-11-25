@@ -239,6 +239,7 @@ Feature: test "ha" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global1 values (1)     | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
       the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status
@@ -247,6 +248,7 @@ Feature: test "ha" in zk cluster
     Given execute sqls in "dble-1" at background
       | conn   | toClose | sql                                | db      |
       | conn_0 | true    | insert into global2 values (2)     | schema1 |
+    Given sleep "1" seconds
     Then check following text exist "Y" in file "/tmp/dble_user_query.log" in host "dble-1"
       """
       the dbInstance\[172.100.9.6:3307\] is disable. Please check the dbInstance disable status

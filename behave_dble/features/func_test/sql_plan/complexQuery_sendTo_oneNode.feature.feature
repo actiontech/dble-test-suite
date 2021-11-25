@@ -108,6 +108,7 @@ Feature: following complex queries are able to send one datanode
     Then check resultset "rs_5" has lines with following column values
       | SHARDING_NODE-0 | TYPE-1   | SQL/REF-2                                                 |
       | dn2             | BASE SQL | select count(*) from aly_test a where a.id =1 group by id |
+
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_6"
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | False   | explain select * from aly_order join test_global where aly_order.id in ( select id from aly_test where id=1)   |
@@ -387,6 +388,7 @@ Feature: following complex queries are able to send one datanode
       | merge_3         | MERGE                 | dn1_1                                                                                                                     |
       | join_1          | JOIN                  | shuffle_field_2; merge_3                                                                                                  |
       | shuffle_field_3 | SHUFFLE_FIELD         | join_1                                                                                                                    |
+
     Given execute single sql in "dble-1" in "user" mode and save resultset in "rs_32"
       | conn   | toClose | sql                                                                                                            |
       | conn_0 | True    | explain select * from aly_test a,  test_global_1 where a.c=test_global_1.cc and a.id =3 and test_global_1.id=1 |
@@ -450,42 +452,46 @@ Feature: following complex queries are able to send one datanode
       | conn_0 | False   | insert into ctable(fid, name, test_id) values(6,'dog_w',6)                            | success | schema1 |
 
     # globalTable1 && globalTable1
-    Given execute sql in "dble-1" in "user" mode
-      |conn   | toClose | sql                                                                                                                 | db      | expect     |
-      |conn_1 | False   | explain select a.name from gtable1 a join gtable1 b on a.test_id = b.test_id where a.test_id = 3                    | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a inner join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a cross join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a STRAIGHT_JOIN gtable1 b on a.test_id = b.test_id where a.test_id = 3           | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a left join gtable1 b on a.name = b.name where b.test_id = 1                     | schema1 | length{(1)}|
-      |conn_1 | False   | explain select a.name from gtable1 a right join gtable1 b on a.name = b.name where b.test_id = 1                    | schema1 | length{(1)}|
-      |conn_1 | true    | explain select a.name from gtable1 a where a.test_id = 1 union all select b.name from gtable1 b where b.test_id = 1 | schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 begin
+#    Given execute sql in "dble-1" in "user" mode
+#      |conn   | toClose | sql                                                                                                                 | db      | expect     |
+#      |conn_1 | False   | explain select a.name from gtable1 a join gtable1 b on a.test_id = b.test_id where a.test_id = 3                    | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a inner join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a cross join gtable1 b on a.test_id = b.test_id where a.test_id = 3              | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a STRAIGHT_JOIN gtable1 b on a.test_id = b.test_id where a.test_id = 3           | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a left join gtable1 b on a.name = b.name where b.test_id = 1                     | schema1 | length{(1)}|
+#      |conn_1 | False   | explain select a.name from gtable1 a right join gtable1 b on a.name = b.name where b.test_id = 1                    | schema1 | length{(1)}|
+#      |conn_1 | true    | explain select a.name from gtable1 a where a.test_id = 1 union all select b.name from gtable1 b where b.test_id = 1 | schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 end
 
       #shardingTable && shardingTable
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
-      |conn   | toClose | sql                                                                                                                     | db      |
-      |conn_2 | False   | explain select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
-    Then check resultset "A" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                    |
-      | dn2             | BASE SQL   | select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1 |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
-      |conn   | toClose | sql                                                                                                                     | db      |
-      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1    |schema1  |
-    Then check resultset "B" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                    |
-      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1 |
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 begin
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "A"
+#      |conn   | toClose | sql                                                                                                                     | db      |
+#      |conn_2 | False   | explain select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
+#    Then check resultset "A" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                    |
+#      | dn2             | BASE SQL   | select a.name from tabler a left join tabler b on a.id = b.id where a.id = 1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "B"
+#      |conn   | toClose | sql                                                                                                                     | db      |
+#      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1    |schema1  |
+#    Then check resultset "B" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                    |
+#      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id left join tabler c on a.id = c.id where a.id = 1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "C"
+#      |conn   | toClose | sql                                                                                                                      | db      |
+#      |conn_2 | False   | explain select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
+#    Then check resultset "C" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                     |
+#      | dn2             | BASE SQL   | select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1 |
+#    Given execute single sql in "dble-1" in "user" mode and save resultset in "D"
+#      |conn   | toClose | sql                                                                                                                      | db      |
+#      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1    |schema1  |
+#    Then check resultset "D" has lines with following column values
+#      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                     |
+#      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1 |
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 end
 
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "C"
-      |conn   | toClose | sql                                                                                                                      | db      |
-      |conn_2 | False   | explain select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1                                    | schema1 |
-    Then check resultset "C" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                     |
-      | dn2             | BASE SQL   | select a.name from tabler a right join tabler b on a.id = b.id where a.id = 1 |
-    Given execute single sql in "dble-1" in "user" mode and save resultset in "D"
-      |conn   | toClose | sql                                                                                                                      | db      |
-      |conn_2 | False   | explain select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1    |schema1  |
-    Then check resultset "D" has lines with following column values
-      | SHARDING_NODE-0 | TYPE-1     | SQL/REF-2                                                                                                     |
-      | dn2             | BASE SQL   | select a.id from tabler a left join tabler b on a.id = b.id right join tabler c on a.id = c.id where a.id = 1 |
 
     Given execute single sql in "dble-1" in "user" mode and save resultset in "E"
       |conn   | toClose | sql                                                                                                                      | db      |
@@ -542,10 +548,12 @@ Feature: following complex queries are able to send one datanode
        |conn_3 | False   | explain select a.name from gtable1 a left join gtable2 b on a.test_id = b.test_id where a.test_id = 1               | schema1 | length{(1)}|
        |conn_3 | False   | explain select a.name from gtable1 a right join gtable2 b on a.test_id = b.test_id where a.test_id = 1              | schema1 | length{(1)}|
        |conn_3 | False   | explain select a.name from gtable1 a where a.test_id = 5 union all select b.name from gtable2 b where b.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | False   | explain select a.name from gtable1 a join gtable2 b on a.test_id = b.test_id join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | False   | explain select a.name from gtable1 a inner join gtable2 b on a.test_id = b.test_id inner join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | False   | explain select a.name from gtable1 a CROSS join gtable2 b on a.test_id = b.test_id CROSS join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
-       |conn_3 | true    | explain select a.name from gtable1 a STRAIGHT_JOIN gtable2 b on a.test_id = b.test_id STRAIGHT_JOIN gtable1 c on a.test_id = c.test_id where a.test_id = 1| schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 begin
+#       |conn_3 | False   | explain select a.name from gtable1 a join gtable2 b on a.test_id = b.test_id join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+#       |conn_3 | False   | explain select a.name from gtable1 a inner join gtable2 b on a.test_id = b.test_id inner join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+#       |conn_3 | False   | explain select a.name from gtable1 a CROSS join gtable2 b on a.test_id = b.test_id CROSS join gtable1 c on a.test_id = c.test_id where a.test_id = 1 | schema1 | length{(1)}|
+#       |conn_3 | true    | explain select a.name from gtable1 a STRAIGHT_JOIN gtable2 b on a.test_id = b.test_id STRAIGHT_JOIN gtable1 c on a.test_id = c.test_id where a.test_id = 1| schema1 | length{(1)}|
+# for http://10.186.18.11/jira/browse/DBLE0REQ-1491 end
 
     #globalTable && shardingTable
     # exists issue :http://10.186.18.11/jira/browse/DBLE0REQ-1241, wait to update here

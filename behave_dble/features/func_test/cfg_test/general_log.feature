@@ -694,6 +694,7 @@ Feature: general log test
       /\*!dble:shardingNode=dn1\*/ delete from sharding_4_t1 where id=66
       Quit
       """
+
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 
   Scenario: check general log records - rwSplitUser #8
