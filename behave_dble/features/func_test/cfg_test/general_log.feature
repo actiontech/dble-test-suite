@@ -615,11 +615,7 @@ Feature: general log test
       # view
       | conn_3 | False   | drop view if exists view_test                                                | success                          | schema1 |
       | conn_3 | False   | create view view_test as select * from no_sharding_t1                        | success                          | schema1 |
-
-# for DBLE0REQ-1466 begin
-#      | conn_3 | False   | select * from view_test                                                      | success                          | schema1 |
-# for DBLE0REQ-1466 end
-
+      | conn_3 | False   | select * from view_test                                                      | success                          | schema1 |
       | conn_3 | False   | drop view view_test                                                          | success                          | schema1 |
       # sharding table
       | conn_4 | False   | drop table if exists sharding_4_t1                                           | success                          | schema1 |
@@ -672,6 +668,7 @@ Feature: general log test
       delete from no_sharding_t1 where name="name3"
       drop view if exists view_test
       create view view_test as select \* from no_sharding_t1
+      select \* from view_test
       drop view view_test
       drop table if exists sharding_4_t1
       create table sharding_4_t1(id int, name varchar(20), age int)
@@ -697,9 +694,6 @@ Feature: general log test
       /\*!dble:shardingNode=dn1\*/ delete from sharding_4_t1 where id=66
       Quit
       """
-# for DBLE0REQ-1466 begin
-    #      select \* from view_test
-# for DBLE0REQ-1466 end
 
     Given delete file "/opt/dble/general/general.log" on "dble-1"
 

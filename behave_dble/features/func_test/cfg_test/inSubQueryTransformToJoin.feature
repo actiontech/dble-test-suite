@@ -154,55 +154,53 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | shuffle_field_1    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
 
     # join contain in-subquery
-#for DBLE0REQ-1460 begin
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs9"
-#      | conn   | toClose | sql                                                                                                                                                                          | expect  | db      |
-#      | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
-#    Then check resultset "join_rs9" has lines with following column values
-#      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
-#      | dn5_0              | BASE SQL              | select  distinct `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                        |
-#      | merge_1            | MERGE                 | dn5_0                                                                                                                                         |
-#      | in_sub_query_1     | IN_SUB_QUERY          | merge_1                                                                                                                                       |
-#      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `a`.`id` as `autoalias_scalar` from  `single_t1` `a` where `a`.`id` in ('{NEED_TO_REPLACE}') LIMIT 2                   |
-#      | merge_2            | MERGE                 | dn1_0                                                                                                                                         |
-#      | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
-#      | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
-#      | scalar_sub_query_1 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
-#      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
-#      | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
-#      | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_1; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
-#      | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
-#      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
-#      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
-#    # join contain = subquery
-#    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs10"
-#      | conn   | toClose | sql                                                                                                                                                                        | expect  | db      |
-#      | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
-#    Then check resultset "join_rs10" has lines with following column values
-#      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
-#      | dn5_0              | BASE SQL              | select `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                                  |
-#      | merge_1            | MERGE                 | dn5_0                                                                                                                                         |
-#      | scalar_sub_query_1 | SCALAR_SUB_QUERY      | merge_1                                                                                                                                       |
-#      | dn1_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `a`.`id` as `autoalias_scalar` from  `single_t1` `a` where `a`.`id` = '{NEED_TO_REPLACE}' LIMIT 2                  |
-#      | merge_2            | MERGE                 | dn1_0                                                                                                                                         |
-#      | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
-#      | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
-#      | scalar_sub_query_2 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
-#      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
-#      | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
-#      | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_2; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
-#      | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
-#      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
-#      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
-#for DBLE0REQ-1460 end
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs9"
+      | conn   | toClose | sql                                                                                                                                                                          | expect  | db      |
+      | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id IN ( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
+    Then check resultset "join_rs9" has lines with following column values
+      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
+      | dn5_0              | BASE SQL              | select  distinct `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                        |
+      | merge_1            | MERGE                 | dn5_0                                                                                                                                         |
+      | in_sub_query_1     | IN_SUB_QUERY          | merge_1                                                                                                                                       |
+      | dn1_0              | BASE SQL(May No Need) | in_sub_query_1; select `a`.`id` as `autoalias_scalar` from  `single_t1` `a` where `a`.`id` in ('{NEED_TO_REPLACE}') LIMIT 2                   |
+      | merge_2            | MERGE                 | dn1_0                                                                                                                                         |
+      | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
+      | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
+      | scalar_sub_query_1 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
+      | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
+      | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_1; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
+      | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
+      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
+      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
+    # join contain = subquery
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs10"
+      | conn   | toClose | sql                                                                                                                                                                        | expect  | db      |
+      | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
+    Then check resultset "join_rs10" has lines with following column values
+      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
+      | dn5_0              | BASE SQL              | select `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                                  |
+      | merge_1            | MERGE                 | dn5_0                                                                                                                                         |
+      | scalar_sub_query_1 | SCALAR_SUB_QUERY      | merge_1                                                                                                                                       |
+      | dn1_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `a`.`id` as `autoalias_scalar` from  `single_t1` `a` where `a`.`id` = '{NEED_TO_REPLACE}' LIMIT 2                  |
+      | merge_2            | MERGE                 | dn1_0                                                                                                                                         |
+      | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
+      | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
+      | scalar_sub_query_2 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
+      | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
+      | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_2; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
+      | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
+      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
+      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
 
     # order by contain in-subquery
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs11"
@@ -654,28 +652,26 @@ Feature: test inSubQueryTransformToJoin in bootstrap.cnf
       | conn   | toClose | sql                                                                                                                                                                        | expect  | db      |
       | conn_1 | False   | explain SELECT c.* FROM sharding_4_t1 c JOIN single_t1 b on (SELECT a.id FROM single_t1 a WHERE a.id =( SELECT cc.id FROM no_sharding_t1 cc limit 1)) = c.id order by c.id | success | schema1 |
 
-# for DBLE0REQ-1460 begin
-#    Then check resultset "join_rs10" has lines with following column values
-#      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
-#      | dn5_0              | BASE SQL              | select `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                                  |
-#      | merge_1            | MERGE                 | dn5_0                                                                                                                                         |
-#      | scalar_sub_query_1 | SCALAR_SUB_QUERY      | merge_1                                                                                                                                       |
-#      | dn1_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `a`.`id` as `autoalias_scalar` from  `single_t1` `a` where `a`.`id` = '{NEED_TO_REPLACE}' LIMIT 2                  |
-#      | merge_2            | MERGE                 | dn1_0                                                                                                                                         |
-#      | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
-#      | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
-#      | scalar_sub_query_2 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
-#      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
-#      | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
-#      | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
-#      | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_2; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
-#      | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
-#      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
-#      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
-# for DBLE0REQ-1460 end
+    Then check resultset "join_rs10" has lines with following column values
+      | SHARDING_NODE-0    | TYPE-1                | SQL/REF-2 |
+      | dn5_0              | BASE SQL              | select `cc`.`id` as `autoalias_scalar` from  `no_sharding_t1` `cc` limit 0,1                                                                  |
+      | merge_1            | MERGE                 | dn5_0                                                                                                                                         |
+      | scalar_sub_query_1 | SCALAR_SUB_QUERY      | merge_1                                                                                                                                       |
+      | dn1_0              | BASE SQL(May No Need) | scalar_sub_query_1; select `a`.`id` as `autoalias_scalar` from  `single_t1` `a` where `a`.`id` = '{NEED_TO_REPLACE}' LIMIT 2                  |
+      | merge_2            | MERGE                 | dn1_0                                                                                                                                         |
+      | limit_1            | LIMIT                 | merge_2                                                                                                                                       |
+      | shuffle_field_1    | SHUFFLE_FIELD         | limit_1                                                                                                                                       |
+      | scalar_sub_query_2 | SCALAR_SUB_QUERY      | shuffle_field_1                                                                                                                               |
+      | dn1_1              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn2_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn3_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | dn4_0              | BASE SQL(May No Need) | scalar_sub_query_2; select `c`.`id`,`c`.`name`,`c`.`age` from  `sharding_4_t1` `c` where '{NEED_TO_REPLACE}' = `c`.`id` ORDER BY `c`.`id` ASC |
+      | merge_and_order_1  | MERGE_AND_ORDER       | dn1_1; dn2_0; dn3_0; dn4_0                                                                                                                    |
+      | shuffle_field_2    | SHUFFLE_FIELD         | merge_and_order_1                                                                                                                             |
+      | dn1_2              | BASE SQL(May No Need) | scalar_sub_query_2; select `b`.`id`,`b`.`code` from  `single_t1` `b`                                                                          |
+      | merge_3            | MERGE                 | dn1_2                                                                                                                                         |
+      | join_1             | JOIN                  | shuffle_field_2; merge_3                                                                                                                      |
+      | shuffle_field_3    | SHUFFLE_FIELD         | join_1                                                                                                                                        |
 
     # order by contain in-subquery
     Given execute single sql in "dble-1" in "user" mode and save resultset in "join_rs11"
