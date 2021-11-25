@@ -57,7 +57,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
 
 
 
-  @btrace @restore_network
+  @btrace @restore_network @skip
   Scenario: mysql node network shock causing xa transaction fail to commit, automatic recovery in background attempts #2
     """
     {'restore_network':'mysql-master1'}
@@ -108,13 +108,14 @@ Feature: retry policy after xa transaction commit failed for network anomaly
 #    Given destroy sql threads list
     Given stop btrace script "BtraceXaDelay.java" in "dble-1"
     Given destroy btrace threads list
-    #sleep 6s for inner retry phase 5 times over and go into background retry phase
+    #sleep 6s for inner retry phase 5 times over and go into background retry phase，precondition is: xa commit need return error
     Given sleep "6" seconds
     #the first inner retry will not reflect in logs, so the 4th time means the 5th time here
-    Given execute oscmd in "dble-1"
+    Then get result of oscmd named "rs_A" in "dble-1"
     """
     cat /opt/dble/logs/dble.log |grep "at the 4th time" |wc -l
     """
+    Then check result "rs_A" value is "1"
     Given execute oscmd in "mysql-master1"
     """
     iptables -D INPUT -s 172.100.9.1 -j REJECT
@@ -132,7 +133,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_network @skip #skip coz run for a long time on "Given destroy sql threads list"
+  @btrace @restore_network @skip
   Scenario:  mysql node network shock causing xa transaction fail to commit, close background attempts, execute 'kill @@session.xa' and 'xa commit'  #3
     """
     {'restore_network':'mysql-master1'}
@@ -202,7 +203,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_network   @skip #skip coz run for a long time on "Given destroy sql threads list"
+  @btrace @restore_network
   Scenario: mysql node network shock causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #4
     """
     {'restore_network':'mysql-master1'}
