@@ -53,7 +53,7 @@ select count(*) from (select * from sharding_4_t1 where pad=(select pad from sha
 #
 #Second supplement
 #
-select (select name from sharding_4_t1 order by id limit 1)
+#select (select name from sharding_4_t1 order by id limit 1)
 select * from sharding_4_t1 where 'test_2'=(select name from sharding_2_t1 where id=2)
 select * from sharding_4_t1 where 5=(select count(*) from sharding_2_t1)
 select * from sharding_4_t1 where 'test_2' like(select name from sharding_2_t1 where id=2)
