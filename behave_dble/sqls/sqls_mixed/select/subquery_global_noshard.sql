@@ -53,7 +53,7 @@ select count(*) from (select * from schema2.global_4_t1 where pad=(select pad fr
 #
 #Second supplement
 #
-select (select name from schema2.global_4_t1 limit 1)
+#select (select name from schema2.global_4_t1 limit 1)
 select id,t_id,name,pad from schema2.global_4_t1 where 'test_2'=(select name from noshard_t1 where id=2)
 select id,t_id,name,pad from schema2.global_4_t1 where 5=(select count(*) from noshard_t1)
 select id,t_id,name,pad from schema2.global_4_t1 where 'test_2' like(select name from noshard_t1 where id=2)

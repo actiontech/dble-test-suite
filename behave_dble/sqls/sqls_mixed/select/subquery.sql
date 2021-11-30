@@ -23,8 +23,8 @@ select a.id,b.id,b.pad,a.t_id from sharding_4_t1 a,(select * from schema2.shardi
 select * from (select schema2.sharding_4_t2.pad from sharding_4_t1 left join schema2.sharding_4_t2 on sharding_4_t1.pad=schema2.sharding_4_t2.pad) a
 select * from (select * from sharding_4_t1 union select * from schema2.sharding_4_t2) a where a.id >3
 select id,pad from sharding_4_t1 where pad=(select min(id) from schema2.sharding_4_t2)
-select (select name from sharding_4_t1 order by id limit 1)
-select (select name from sharding_4_t1 order by id limit 1),id from schema2.sharding_4_t2 order by id
+#select (select name from sharding_4_t1 order by id limit 1)
+#select (select name from sharding_4_t1 order by id limit 1),id from schema2.sharding_4_t2 order by id
 select upper('test'),id from schema2.sharding_4_t2
 select id,pad,name from (select * from sharding_4_t1 where pad>2) a where id<5
 select pad,count(*) from (select * from sharding_4_t1 where pad>2) a group by pad

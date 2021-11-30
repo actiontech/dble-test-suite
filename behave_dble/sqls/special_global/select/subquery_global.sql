@@ -52,7 +52,7 @@ select count(*) from (select * from test1 where pad=(select pad from schema3.tes
 #
 #Second supplement
 #
-select (select name from test1 limit 1)
+#select (select name from test1 limit 1)
 select id,t_id,name,pad from test1 where 'test_2'=(select name from schema3.test3 where id=2)
 select id,t_id,name,pad from test1 where 5=(select count(*) from schema3.test3)
 select id,t_id,name,pad from test1 where 'test_2' like(select name from schema3.test3 where id=2)
