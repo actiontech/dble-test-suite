@@ -4,6 +4,7 @@
 # Modified by wujinling at 2019/8/29
 Feature: to verify issue https://github.com/actiontech/dble/issues/1000
 
+  @skip
   Scenario: config parameter "maxCharsPerColumn " in server.xml to limit characters per column #1
     #create file with 68888 characters for one column
      Given create local and server file "test68888.txt" and fill with text
