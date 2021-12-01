@@ -203,7 +203,7 @@ Feature: retry policy after xa transaction commit failed for network anomaly
     Given delete file "/opt/dble/BtraceXaDelay.java" on "dble-1"
     Given delete file "/opt/dble/BtraceXaDelay.java.log" on "dble-1"
 
-  @btrace @restore_network
+  @btrace @restore_network @skip
   Scenario: mysql node network shock causing xa transaction perpare to fail and keep rolling back,but recovered during background attempts #4
     """
     {'restore_network':'mysql-master1'}
