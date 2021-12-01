@@ -13,7 +13,7 @@ echo '=======                       package                                =====
 cd ${DIR} && /usr/local/apache-maven-3.6.3/bin/mvn -DskipTest clean package assembly:assembly
 
 echo '=======                        driver test                           ======='
-cd ${DIR}/ && bash do_run_connector_J.sh Jconnector-5.1.35-jar-with-dependencies.jar -c
+cd ${DIR}/ && bash do_run_connector_J.sh Jconnector-5.1.35.jar -c
 
 echo '=======                   save logs for ci artifacts                 ======='
 scp -r root@dble-1:/opt/dble/logs ${DIR}/dble_logs
