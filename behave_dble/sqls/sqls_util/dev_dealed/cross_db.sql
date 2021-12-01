@@ -21,4 +21,4 @@ select * from schema1.test1 join schema2.test2 join schema3.test3;
 use schema1;
 select * from test1 join schema2.test2 join schema3.test3;
 #issue 1255
-select a.id,b.* from schema2.test2 a inner join test1 b on a.id+1 =b.id+2;
+#select a.id,b.* from schema2.test2 a inner join test1 b on a.id+1 =b.id+2;
