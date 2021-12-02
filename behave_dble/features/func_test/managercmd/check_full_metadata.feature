@@ -333,7 +333,7 @@ Feature: test "check full @@metadata...'"
       | user | passwd | conn   | toClose | sql                                    | expect              | db     |
       | test | 111111 | conn_0 | True    | insert into test_shard values(2,2,2)   | success             | schema1 |
       | test | 111111 | conn_0 | True    | alter table test_no_shard drop age     | success             | schema1 |
-      | test | 111111 | conn_0 | True    | alter table test_shard drop name       | error totally whack | schema1 |
+      | test | 111111 | conn_0 | True    | alter table test_shard drop name       | java.lang.RuntimeException: DataNode[ha_group2]'s init error, please check it can be connected. The current Node is {DataHost[172.100.9.6:3306,Schema[db1]} | schema1 |
     Then execute sql in "dble-1" in "admin" mode
       | user | passwd | conn   | toClose | sql                                                                   | expect                             | db  |
       | root | 111111 | conn_0 | True    | check full @@metadata where schema='schema1' and table='test_shard'    | hasStr{`name` }                    |     |
