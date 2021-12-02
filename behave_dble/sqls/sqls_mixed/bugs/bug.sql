@@ -97,7 +97,7 @@ select id,c from sharding_4_t1 group by id,c order by id,c limit 1,2
 select * from sharding_4_t1 a join schema2.global_4_t1 as b on a.id=b.id order by b.id
 select * from sharding_4_t1 a inner join schema2.global_4_t1 as b on a.id=b.id order by b.id
 select * from sharding_4_t1 a cross join schema2.global_4_t1 as b on a.id=b.id order by b.id
-#select * from sharding_4_t1 a straight_join (select * from schema2.global_4_t1 where c>0) b on a.id<b.id
+select * from sharding_4_t1 a straight_join (select * from schema2.global_4_t1 where c>0) b on a.id<b.id
 select a.id,a.c from sharding_4_t1 a left join (select * from schema2.global_4_t1 where c>2) b on a.id=b.id
 select * from sharding_4_t1 a right join (select * from schema2.global_4_t1 where c>2) b on a.id=b.id
 select * from (select * from sharding_4_t1 where id>1) a natural left join (select * from schema2.global_4_t1 where id>3) b order by a.id,b.id
