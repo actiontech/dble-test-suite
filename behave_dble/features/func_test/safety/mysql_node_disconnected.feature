@@ -57,9 +57,9 @@ Feature: #mysql node disconnected,check the change of dble
       | root  | 111111    | conn_0 | True    | reload @@config_all   | there are some datasource connection failed                                                        |     |
     Given Restart dble in "dble-1" success
     Then execute sql in "dble-1" in "user" mode
-      | user | passwd | conn   | toClose | sql                                       | expect                 | db      |
+      | user | passwd | conn   | toClose | sql                                   | expect                 | db      |
       | test | 111111 | conn_0 | True    | insert into test_table values(1,3)    | success                | schema1 |
-      | test | 111111 | conn_0 | True    | insert into test_table values(2,4)    | error totally whack  | schema1 |
+      | test | 111111 | conn_0 | True    | insert into test_table values(2,4)    | DataNode[ha_group1]'s init error, please check it can be connected. The current Node is {DataHost[172.100.9.5:3306,Schema[db2]}  | schema1 |
     Given start mysql in host "mysql-master1"
     Given sleep "10" seconds
     Then execute sql in "dble-1" in "user" mode
