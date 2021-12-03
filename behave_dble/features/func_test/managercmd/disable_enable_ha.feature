@@ -38,7 +38,7 @@ Feature: test high-availability related commands
 #    The expect fail msg is tmp,for github issue:#1528
     Then execute sql in "dble-1" in "user" mode
         | user | passwd | conn   | toClose  | sql                                        | expect              | db       |
-        | test | 111111 | conn_0 | true     | insert into sharding_4_t1 values(1),(2)    | error totally whack |  schema1  |
+        | test | 111111 | conn_0 | true     | insert into sharding_4_t1 values(1),(2)    | java.lang.IllegalArgumentException: [ha_group2.hostM2] is disabled |  schema1  |
     Then get resultset of admin cmd "show @@backend" named "show_be_rs"
     Then check resultset "show_be_rs" has not lines with following column values
     | HOST-3      | PORT-4 |
