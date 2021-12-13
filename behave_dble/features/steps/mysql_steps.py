@@ -8,6 +8,7 @@ from threading import Thread
 
 from steps.lib.Flag import Flag
 from steps.lib.MySQLObject import MySQLObject
+from steps.lib.DbleObject import DbleObject
 from steps.lib.PostQueryCheck import PostQueryCheck
 from steps.lib.PreQueryPrepare import PreQueryPrepare
 from steps.lib.QueryMeta import QueryMeta
@@ -145,8 +146,8 @@ def step_impl(context, host_name, num, concur="100", mode_name="user"):
 
 @Given('prepare a thread execute sql "{sql}" with "{conn_type}"')
 def step_impl(context, sql, conn_type=''):
-    conn = MySQLObject.long_live_conns.get(conn_type,None)
-    assert conn, "conn '{0}' is not exists in long_live_conns".format(conn_type)
+    conn = DbleObject.dble_long_live_conns.get(conn_type, None)
+    assert conn, "conn '{0}' is not exists in dble_long_live_conns".format(conn_type)
     global sql_threads
     thd = Thread(target=execute_sql_backgroud, args=(context, conn, sql), name=sql)
     sql_threads.append(thd)
