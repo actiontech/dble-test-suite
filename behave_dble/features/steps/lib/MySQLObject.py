@@ -19,7 +19,7 @@ logger = logging.getLogger('root')
 
 class MySQLObject(object):
     # store long live conns in dictionary, key is conn id ,value is conn object
-    long_live_conns = {}
+    mysql_long_live_conns = {}
 
     def __init__(self, mysql_meta):
         self._mysql_meta = mysql_meta
@@ -180,11 +180,11 @@ class MySQLObject(object):
             assert 0 == int(sto), "expect general log has no {0}, but it occurs {1} times".format(query, sto);
 
     def do_execute_query(self, query_meta):
-        conn = MySQLObject.long_live_conns.get(query_meta.conn_id,None)
+        conn = MySQLObject.mysql_long_live_conns.get(query_meta.conn_id,None)
         if conn:
-            logger.debug("find a exist conn '{0}' to execute query".format(query_meta.conn_id))
+            logger.debug("find a exist mysql conn '{0}' to execute query".format(query_meta.conn_id))
         else:
-            logger.debug("Can't find a exist conn '{0}', try to create a new conn".format(query_meta.conn_id))
+            logger.debug("Can't find a exist mysql conn '{0}', try to create a new conn".format(query_meta.conn_id))
             try:
                 conn = MysqlConnUtil(host=query_meta.ip, user=query_meta.user, passwd=query_meta.passwd, db=query_meta.db, port=query_meta.port, autocommit=True, charset=query_meta.charset)
             except MySQLdb.Error as e:
@@ -202,9 +202,9 @@ class MySQLObject(object):
         logger.debug("to close {0} {1}".format(query_meta.conn_id, query_meta.bClose))
 
         if query_meta.bClose.lower() == "false":
-            MySQLObject.long_live_conns.update({query_meta.conn_id:conn})
+            MySQLObject.mysql_long_live_conns.update({query_meta.conn_id:conn})
         else:
-            MySQLObject.long_live_conns.pop(query_meta.conn_id, None)
+            MySQLObject.mysql_long_live_conns.pop(query_meta.conn_id, None)
             conn.close()
 
         return res, err, time_cost
