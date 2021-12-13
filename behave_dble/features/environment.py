@@ -6,6 +6,7 @@ from steps.RestoreEnvObject import RestoreEnvObject
 from steps.lib.DbleMeta import DbleMeta
 from steps.lib.MySQLMeta import MySQLMeta
 from steps.lib.MySQLObject import MySQLObject
+from steps.lib.DbleObject import DbleObject
 from steps.lib.utils import setup_logging ,load_yaml_config, init_meta,restore_sys_time,reset_repl, get_sftp,get_ssh
 from steps.mysql_steps import restart_mysql
 from steps.step_install import replace_config, set_dbles_log_level, restart_dbles, disable_cluster_config_in_node, \
@@ -122,10 +123,15 @@ def after_scenario(context, scenario):
             conn = getattr(context, conn_name)
             conn.close()
             delattr(context, conn_name)
-    for conn_id,conn in MySQLObject.long_live_conns.items():
+    for conn_id, conn in MySQLObject.mysql_long_live_conns.items():
         logger.debug("to close mysql conn: {}".format(conn_id))
         conn.close()
-    MySQLObject.long_live_conns.clear()
+    for conn_id, conn in DbleObject.dble_long_live_conns.items():
+        logger.debug("to close dble conn: {}".format(conn_id))
+        conn.close()
+
+    MySQLObject.mysql_long_live_conns.clear()
+    DbleObject.dble_long_live_conns.clear()
 
     if not context.userDebug:
         if "init_dble_meta" in scenario.tags:
