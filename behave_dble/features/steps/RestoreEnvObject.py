@@ -179,7 +179,9 @@ class RestoreEnvObject(object):
                 execute_sql_in_host(host_name, {"sql": generate_drop_tables_sql}, mode)
                 for db in db_list:
                     # MySQLDB not support source grammar,replace with ssh cmd
-                    ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(db))
+                    rc, stdout, stderr = ssh.exec_command("mysql -uroot -p111111 -D{0} -e 'source /tmp/tables.txt'".format(db))
+                    stderr = stderr.lower()
+                    assert stderr.find("error") == -1, "deletet mysql in {0}:{1} failed, err: {2}".format(host_name, db, stderr)
                 ssh.exec_command("rm -rf /tmp/tables.txt")
 
                 logger.debug("{0} tables has been delete success".format(host_name))
