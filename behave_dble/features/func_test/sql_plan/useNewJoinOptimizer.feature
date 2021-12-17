@@ -10,7 +10,7 @@ Feature: test with useNewJoinOptimizer=true
   @delete_mysql_tables
   Scenario: shardingTable  + shardingTable  +  shardingTable                              #1
     """
-    {'delete_mysql_tables':['mysql-master1','mysql-master2']}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -1273,19 +1273,33 @@ Feature: test with useNewJoinOptimizer=true
         | conn   | toClose | sql                                                         | db|
         | conn_52| true    | SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a INNER JOIN Info c on a.name=c.name INNER JOIN Dept b on a.DeptName= b.DeptName or b.DeptName=c.DeptName order by a.name  | schema1|
 
-
-    Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose  | sql                           | db       | expect |
-      | conn_49 | false    | drop table if exists Employee | schema1  | success|
-      | conn_49 | false    | drop table if exists Dept     | schema1  | success|
-      | conn_49 | false    | drop table if exists Level    | schema1  | success|
-      | conn_49 | true     | drop table if exists Info     | schema1  | success|
+    #optimization about undirected graph : inner join & inner join & inner join & three ER, ER first
+    Given execute single sql in "dble-1" in "user" mode and save resultset in "Z"
+         | conn    | toClose | sql                                                         | db|
+         | conn_53 | false   | explain SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a INNER JOIN Dept b on a.DeptName = b.DeptName INNER JOIN Info c on  a.DeptName=c.DeptName and b.DeptName=c.DeptName INNER JOIN Level d on c.age=d.levelid order by a.Name | schema1|
+    Then check resultset "Z" has lines with following column values
+        | SHARDING_NODE-0     | TYPE-1            | SQL/REF-2                                                                                         |
+        | dn3_0             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  (  `Info` `c` join  `Dept` `b` on `c`.`DeptName` = `b`.`DeptName` )  join  `Employee` `a` on `b`.`DeptName` = `a`.`DeptName` and `c`.`DeptName` = `a`.`DeptName` where 1=1  ORDER BY `c`.`age` ASC |
+        | dn4_0             | BASE SQL        | select `c`.`name`,`c`.`age`,`c`.`country`,`c`.`deptname`,`b`.`deptname`,`b`.`deptid`,`b`.`manager`,`a`.`name`,`a`.`empid`,`a`.`deptname`,`a`.`level` from  (  `Info` `c` join  `Dept` `b` on `c`.`DeptName` = `b`.`DeptName` )  join  `Employee` `a` on `b`.`DeptName` = `a`.`DeptName` and `c`.`DeptName` = `a`.`DeptName` where 1=1  ORDER BY `c`.`age` ASC |
+        | merge_and_order_1 | MERGE_AND_ORDER | dn3_0; dn4_0                                                                                                                                                                                                                                                                                                                                                  |
+        | shuffle_field_1   | SHUFFLE_FIELD   | merge_and_order_1                                                                                                                                                                                                                                                                                                                                             |
+        | dn1_0             | BASE SQL        | select `d`.`levelname`,`d`.`levelid`,`d`.`salary` from  `Level` `d` ORDER BY `d`.`levelid` ASC                                                                                                                                                                                                                                                                |
+        | dn2_0             | BASE SQL        | select `d`.`levelname`,`d`.`levelid`,`d`.`salary` from  `Level` `d` ORDER BY `d`.`levelid` ASC                                                                                                                                                                                                                                                                |
+        | dn3_1             | BASE SQL        | select `d`.`levelname`,`d`.`levelid`,`d`.`salary` from  `Level` `d` ORDER BY `d`.`levelid` ASC                                                                                                                                                                                                                                                                |
+        | merge_and_order_2 | MERGE_AND_ORDER | dn1_0; dn2_0; dn3_1                                                                                                                                                                                                                                                                                                                                           |
+        | shuffle_field_3   | SHUFFLE_FIELD   | merge_and_order_2                                                                                                                                                                                                                                                                                                                                             |
+        | join_1            | JOIN            | shuffle_field_1; shuffle_field_3                                                                                                                                                                                                                                                                                                                              |
+        | order_1           | ORDER           | join_1                                                                                                                                                                                                                                                                                                                                                        |
+        | shuffle_field_2   | SHUFFLE_FIELD   | order_1                                                                                                                                                                                                                                                                                                                                                       |
+    Then execute sql in "dble-1" and the result should be consistent with mysql
+        | conn   | toClose | sql                                                         | db|
+        | conn_53| true    | SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a INNER JOIN Dept b on a.DeptName = b.DeptName INNER JOIN Info c on  a.DeptName=c.DeptName and b.DeptName=c.DeptName INNER JOIN Level d on c.age=d.levelid order by a.Name  | schema1|
 
 
    @delete_mysql_tables
   Scenario: shardingTable  + GlobalTable  +  GlobalTable                     #2
     """
-    {'delete_mysql_tables':['mysql-master1','mysql-master2']}
+    {'delete_mysql_tables': {'mysql-master1': ['db1', 'db2', 'db3'], 'mysql-master2': ['db1', 'db2', 'db3']}}
     """
 
     Given update file content "/opt/dble/conf/bootstrap.cnf" in "dble-1" with sed cmds
@@ -1745,16 +1759,3 @@ Feature: test with useNewJoinOptimizer=true
         | conn    | toClose  | sql                                                         | db|
         | conn_18 | true     | SELECT a.Name,a.DeptName,b.Manager,c.country FROM Employee a INNER JOIN Dept b LEFT JOIN Info c on a.DeptName=c.DeptName and b.DeptName=c.DeptName order by a.Name   | schema1|
 
-    Then execute sql in "dble-1" in "user" mode
-      | conn    | toClose  | sql                           | db       | expect |
-      | conn_19 | false    | drop table if exists Employee | schema1  | success|
-      | conn_19 | false    | drop table if exists Dept     | schema1  | success|
-      | conn_19 | false    | drop table if exists Level    | schema1  | success|
-      | conn_19 | true     | drop table if exists Info     | schema1  | success|
-
-    Then execute sql in "mysql" in "mysql" mode
-      | conn    | toClose  | sql                           | db       | expect |
-      | conn_20 | false    | drop table if exists Employee | schema1  | success|
-      | conn_20 | false    | drop table if exists Dept     | schema1  | success|
-      | conn_20 | false    | drop table if exists Level    | schema1  | success|
-      | conn_20 | true     | drop table if exists Info     | schema1  | success|
